@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>Gsheets || Second Edition</title>
+		<link href="https://fonts.googleapis.com/css2?family=Almendra:wght@400;700&family=Metamorphous&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="css/style.css">
+	</head>
+	<body>
+		<div class="wrap">
+			<header>
+			  <div>
+				<h1>Gsheets || Second Edition</h1>
+				<div class="subtitle">Multiple characters supported in tabs</div>
+			  </div>
+			</header>
+
+			<!-- Added: Light/Dark toggle control (matches second file’s control) -->
+			<div class="tdnn" onclick="tdnn()">
+				<div class="moon"></div>
+			</div>
+			<div class="tabs" id="tab-bar">
+				<div class="tab active" data-id="default">
+					<span class="label">Character 1</span>
+					<span class="close">×</span>
+				</div>
+				<button id="add-tab" class="ghost">+ New Tab</button>
+			</div>
+			<div id="tab-contents">
+				<div class="tab-content active" data-id="default">
+					<div class="grid sheet-container"></div>
+				</div>
+			</div>
+				<footer class="wrap small">Gsheets v.7.94 || 2nd Edition Character Sheet Editor.  © 2025 C.O.Boatwright</footer>
+			</div>
+	  <script src="js/tables.js"></script>
+	  <script src="js/kits.js"></script>
+	  <script src="js/spells.js"></script>
+	  <script src="js/languages.js"></script>
+	  <script src="js/equipment.js"></script>
+	  <script src="js/weapons.js"></script>
+	  <script src="js/ammunition.js"></script>
+	  <script src="js/armor.js"></script>
+	  <script src="js/wp.js"></script>
+	  <script src="js/nwp.js"></script>
+	  <script src="js/conditions.js"></script>
+	  <script src="js/multiclass.js"></script>
+	  <script src="js/dualclass.js"></script>
+	  <script src="js/sheet_template.js"></script>
+	  <script src="js/calc.js"></script>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+	  <script src="js/print.js"></script>
+	  <script src="js/app.js"></script>
+	</body>
+</html>
