@@ -1,0 +1,1506 @@
+[
+  {
+    "Language": "Common",
+    "Language Class": "Human languages",
+    "Root Language": "None",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Baklunish",
+    "Language Class": "Human languages",
+    "Root Language": "None",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": "spoken in Ekbir, Ketalongside Common, Tiger Nomads, Tusmit, Ull, Wolf Nomads, and Zeif"
+  },
+  {
+    "Language": "Flan",
+    "Language Class": "Human languages",
+    "Root Language": "None",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": "spoken in Geoffalongside Common, Rovers of the Barrens, and Tenh"
+  },
+  {
+    "Language": "Old Oeridian",
+    "Language Class": "Human languages",
+    "Root Language": "None",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": "spoken in Great Kingdomincluding Medegia, North Province, Rel Astra, and South Province and Ratik, generally alongside Common"
+  },
+  {
+    "Language": "Rhennee",
+    "Language Class": "Human languages",
+    "Root Language": "None",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": "spoken by the Rhennee people, alongside Common"
+  },
+  {
+    "Language": "Fruz",
+    "Language Class": "Human regional dialects",
+    "Root Language": "Suloise/Flan",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": "Suloise/Flan dialect spoken by the Frost, Ice, and Snow Barbarians and in Stonefist - 40% compatible with Suloise and Flan"
+  },
+  {
+    "Language": "Keolandish",
+    "Language Class": "Human regional dialects",
+    "Root Language": "Old Oeridian",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": "Oeridian dialect spoken in Bissel, Gran March, Keoland, Sea Princes, the Ulek States, and the Yeomanry, often alongside Common - 60% compatible with Oeridian and Common"
+  },
+  {
+    "Language": "Lendorian",
+    "Language Class": "Human regional dialects",
+    "Root Language": "Suloise",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": "Suloise dialect spoken alongside Common in the Spindrift Isles - 60% compatible with Suloise and Common"
+  },
+  {
+    "Language": "Nyrondese",
+    "Language Class": "Human regional dialects",
+    "Root Language": "Oeridian",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": "Oeridian dialect spoken by peasants and shopkeepers in Almor and Nyrondalongside Common for learned people - 60% compatible with Oeridian and Common"
+  },
+  {
+    "Language": "Velondi",
+    "Language Class": "Human regional dialects",
+    "Root Language": "Oeridian",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": "Oeridian dialect spoken by rural folk in Furyondy, Veluna, and Verbobonc - 60% compatible with Oeridian"
+  },
+  {
+    "Language": "Ancient Baklunish",
+    "Language Class": "Archaic human languages",
+    "Root Language": "Baklunish",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": "ancient version of Baklunish still spoken in Plains of the Paynimsalongside Common for traders and educated folk - 60% compatible with modern Baklunish"
+  },
+  {
+    "Language": "Suloise",
+    "Language Class": "Archaic human languages",
+    "Root Language": "None",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": "dead language now read only by scholars"
+  },
+  {
+    "Language": "Changoli",
+    "Language Class": "Human foreign languages",
+    "Root Language": "None",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Gondurian",
+    "Language Class": "Human foreign languages",
+    "Root Language": "None",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Hepmoni",
+    "Language Class": "Human foreign languages",
+    "Root Language": "None",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Jahindi",
+    "Language Class": "Human foreign languages",
+    "Root Language": "None",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Mulwari",
+    "Language Class": "Human foreign languages",
+    "Root Language": "None",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Olman",
+    "Language Class": "Human foreign languages",
+    "Root Language": "None",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "High Suhfangese",
+    "Language Class": "Human foreign languages",
+    "Root Language": "Suhfangese",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Low Suhfangese",
+    "Language Class": "Human foreign languages",
+    "Root Language": "Suhfangese",
+    "Native Race": "Human",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Bugbear",
+    "Language Class": "Common non-human languages",
+    "Root Language": "None",
+    "Native Race": "Bugbear",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Dwarvish",
+    "Language Class": "Common non-human languages",
+    "Root Language": "None",
+    "Native Race": "Dwarf",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Elvish",
+    "Language Class": "Common non-human languages",
+    "Root Language": "None",
+    "Native Race": "Elf",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Hill Giant",
+    "Language Class": "Common non-human languages",
+    "Root Language": "None",
+    "Native Race": "Giant",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Gnome",
+    "Language Class": "Common non-human languages",
+    "Root Language": "None",
+    "Native Race": "Gnome",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Goblin",
+    "Language Class": "Common non-human languages",
+    "Root Language": "None",
+    "Native Race": "Goblin",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Halfling",
+    "Language Class": "Common non-human languages",
+    "Root Language": "None",
+    "Native Race": "Halfling",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Hobgoblin",
+    "Language Class": "Common non-human languages",
+    "Root Language": "None",
+    "Native Race": "Hobgoblin",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Kobold",
+    "Language Class": "Common non-human languages",
+    "Root Language": "None",
+    "Native Race": "Kobold",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Lizardman",
+    "Language Class": "Common non-human languages",
+    "Root Language": "None",
+    "Native Race": "Lizardman",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Ogrish",
+    "Language Class": "Common non-human languages",
+    "Root Language": "None",
+    "Native Race": "Ogre",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Orcish",
+    "Language Class": "Common non-human languages",
+    "Root Language": "None",
+    "Native Race": "Orc",
+    "Rarity": "Common",
+    "Description": ""
+  },
+  {
+    "Language": "Booka",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Booka",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Diakk",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Diakk",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Black Dragon",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Black Dragon",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Brass Dragon",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Brass Dragon",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Copper Dragon",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Copper Dragon",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "White Dragon",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "White Dragon",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Gargoyle",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Gargoyle",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Fire Giant",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Fire Giant",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Stone Giant",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Stone Giant",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Gnoll",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Gnoll",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Grimlock",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Grimlock",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Jermlaine",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Jermlaine",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Wererat",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Wererat",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Werewolf",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Werewolf",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Manticore",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Manticore",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Meazel",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Meazel",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Merman",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Merman",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Water Naga",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Water Naga",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Merrow",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "Ogrish",
+    "Native Race": "Ogre",
+    "Rarity": "Uncommon",
+    "Description": "dialect of Ogrish"
+  },
+  {
+    "Language": "Ophidian",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Ophidian",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Otyugh",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Otyugh",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Sahuagin",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Sahuagin",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Satyr",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Satyr",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Troglodyte",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Troglodyte",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Troll",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Troll",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Xvart",
+    "Language Class": "Uncommon non-human languages",
+    "Root Language": "None",
+    "Native Race": "Xvart",
+    "Rarity": "Uncommon",
+    "Description": ""
+  },
+  {
+    "Language": "Carnivorous Ape",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Ape",
+    "Rarity": "Rare",
+    "Description": "rudimentary language"
+  },
+  {
+    "Language": "Aspis",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Aspis",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Atomie",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "Sprite",
+    "Native Race": "Sprite",
+    "Rarity": "Rare",
+    "Description": "dialect of Sprite"
+  },
+  {
+    "Language": "Blink Dog",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Blink Dog",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Brownie",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Brownie",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Bullywug",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Bullywug",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Centaur",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Centaur",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Crabman",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Crabman",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Dao",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Dao",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Dark Creeper",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Dark Creeper",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Dire Corby",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Dire Corby",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Blue Dragon",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Blue Dragon",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Bronze Dragon",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Bronze Dragon",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Green Dragon",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Green Dragon",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Red Dragon",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Red Dragon",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Pan Lung/Shen Lung",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Pan Lung/Shen Lung",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Mist Dragon",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Mist Dragon",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Giant Eagle",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Giant Eagle",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Firenewt",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Firenewt",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Cloud Giant",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Cloud Giant",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Frost Giant",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Frost Giant",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Storm Giant",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Storm Giant",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Grell",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Grell",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Grippli",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Grippli",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Harpy",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Harpy",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Hippocampus",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Hippocampus",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Hybsil",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Hybsil",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Lammasu",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Lammasu",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Locathah",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Locathah",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Werebear",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Werebear",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Wereboar",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Wereboar",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Giant Lynx",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Giant Lynx",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Medusian",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Medusian",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Mimic",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Mimic",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Mind Flayer",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Mind Flayer",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Minotaur",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Minotaur",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Moon Dog",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Moon Dog",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Muckdweller",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Muckdweller",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Spirit Naga",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Spirit Naga",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Nixie",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Nixie",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Giant Owl",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Giant Owl",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Pech",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Pech",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Peryton",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Peryton",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Qullan",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Qullan",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Salamander",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Salamander",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Shedu",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Shedu",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Sirine",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Sirine",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Andro-/Gynosphinx",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Andro-/Gynosphinx",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Criosphinx",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Criosphinx",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Heiracosphinx",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Heiracosphinx",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Sprite",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Sprite",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Tabaxi",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Tabaxi",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Tasloi",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Tasloi",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Thri-kreen",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Thri-kreen",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Tiger Fly",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Tiger Fly",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Ice Toad",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Ice Toad",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Treant",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Treant",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Triton",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Triton",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Umber Hulk",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Umber Hulk",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Unicorn",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Unicorn",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Worg",
+    "Language Class": "Rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Worg",
+    "Rarity": "Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Aarakocra",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Aarakocra",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Annis",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Annis",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Banderlog",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Banderlog",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Beholder",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Beholder",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Derro",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Derro",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Djinni",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Djinni",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Gold Dragon",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Gold Dragon",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Silver Dragon",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Silver Dragon",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Lung Wang",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Lung Wang",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "T'ien Lung",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "T'ien Lung",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Cloud Dragon",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Cloud Dragon",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Faerie Dragon",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Faerie Dragon",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Dragon Turtle",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Dragon Turtle",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Dryad",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Dryad",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Duergar",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Duergar",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Dune Stalker",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Dune Stalker",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Eblis",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Eblis",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Drow",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Drow",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Ettin",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Ettin",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Firefriend",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Firefriend",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Foo Creature",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Foo Creature",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Fog Giant",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Fog Giant",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Mountain Giant",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Mountain Giant",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Githyanki",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Githyanki",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Githzerai",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Githzerai",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Greenhag",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "Annis",
+    "Native Race": "Hag",
+    "Rarity": "Very Rare",
+    "Description": "dialect of Annis"
+  },
+  {
+    "Language": "Grig",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Grig",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Invisible Stalker",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Invisible Stalker",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Ixitxachitl",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Ixitxachitl",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Ki-rin",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Ki-rin",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Kuo-Toan",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Kuo-Toan",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Lava Child",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Lava Child",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Weretiger",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Weretiger",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Foxwoman",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Foxwoman",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Seawolf",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Seawolf",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Wereshark",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Wereshark",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Meenlock",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Meenlock",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Morkoth",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Morkoth",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Guardian Naga",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Guardian Naga",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Nymph",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Nymph",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Ogre Magian",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Ogre Magian",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Phoenix",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Phoenix",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Pixie",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Pixie",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Quickling",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Quickling",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Svirfneblin",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "Gnomish",
+    "Native Race": "Gnome",
+    "Rarity": "Very Rare",
+    "Description": "dialect of Gnome - 60% compatible"
+  },
+  {
+    "Language": "Sylph",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Sylph",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Titan",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Titan",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Wemic",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Wemic",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Winter Wolf",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Winter Wolf",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Xorn",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Xorn",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Yeti",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Yeti",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Yuan-ti",
+    "Language Class": "Very rare non-human languages",
+    "Root Language": "None",
+    "Native Race": "Yuan-ti",
+    "Rarity": "Very Rare",
+    "Description": ""
+  },
+  {
+    "Language": "Demonic",
+    "Language Class": "Other-planar languages",
+    "Root Language": "Demon",
+    "Native Race": "",
+    "Rarity": "Exotic",
+    "Description": ""
+  },
+  {
+    "Language": "Common Tongue of Hades",
+    "Language Class": "Other-planar languages",
+    "Root Language": "Demon",
+    "Native Race": "Demonic",
+    "Rarity": "Exotic",
+    "Description": ""
+  },
+  {
+    "Language": "Modron",
+    "Language Class": "Other-planar languages",
+    "Root Language": "",
+    "Native Race": "",
+    "Rarity": "Exotic",
+    "Description": ""
+  },
+  {
+    "Language": "Slaad",
+    "Language Class": "Other-planar languages",
+    "Root Language": "",
+    "Native Race": "",
+    "Rarity": "Exotic",
+    "Description": ""
+  },
+  {
+    "Language": "Alignment Languages (chaotic-evil)",
+    "Language Class": "Secret/special languages",
+    "Root Language": "None",
+    "Native Race": "None",
+    "Rarity": "Secret",
+    "Description": ""
+  },
+  {
+    "Language": "Alignment Languages (chaotic-good)",
+    "Language Class": "Secret/special languages",
+    "Root Language": "None",
+    "Native Race": "None",
+    "Rarity": "Secret",
+    "Description": ""
+  },
+  {
+    "Language": "Alignment Languages (chaotic-neutral)",
+    "Language Class": "Secret/special languages",
+    "Root Language": "None",
+    "Native Race": "None",
+    "Rarity": "Secret",
+    "Description": ""
+  },
+  {
+    "Language": "Alignment Languages (neutral-evil)",
+    "Language Class": "Secret/special languages",
+    "Root Language": "None",
+    "Native Race": "None",
+    "Rarity": "Secret",
+    "Description": ""
+  },
+  {
+    "Language": "Alignment Languages (neutral-good)",
+    "Language Class": "Secret/special languages",
+    "Root Language": "None",
+    "Native Race": "None",
+    "Rarity": "Secret",
+    "Description": ""
+  },
+  {
+    "Language": "Alignment Languages (true neutral)",
+    "Language Class": "Secret/special languages",
+    "Root Language": "None",
+    "Native Race": "None",
+    "Rarity": "Secret",
+    "Description": ""
+  },
+  {
+    "Language": "Alignment Languages (lawful-evil)",
+    "Language Class": "Secret/special languages",
+    "Root Language": "None",
+    "Native Race": "None",
+    "Rarity": "Secret",
+    "Description": ""
+  },
+  {
+    "Language": "Alignment Languages (lawful-good)",
+    "Language Class": "Secret/special languages",
+    "Root Language": "None",
+    "Native Race": "None",
+    "Rarity": "Secret",
+    "Description": ""
+  },
+  {
+    "Language": "Alignment Languages (lawful-neutral)",
+    "Language Class": "Secret/special languages",
+    "Root Language": "None",
+    "Native Race": "None",
+    "Rarity": "Secret",
+    "Description": ""
+  },
+  {
+    "Language": "Druidic",
+    "Language Class": "Secret/special languages",
+    "Root Language": "None",
+    "Native Race": "Human",
+    "Rarity": "Secret",
+    "Description": ""
+  },
+  {
+    "Language": "Ferral",
+    "Language Class": "Secret/special languages",
+    "Root Language": "Oeridian",
+    "Native Race": "Human",
+    "Rarity": "Secret",
+    "Description": "Oeridian dialect now used as a secret code language among officials of the Iron League - 60% compatible with Oeridian"
+  },
+  {
+    "Language": "Undercommon",
+    "Language Class": "Secret/special languages",
+    "Root Language": "None",
+    "Native Race": "None",
+    "Rarity": "Secret",
+    "Description": "Subterranean Trade Language"
+  },
+  {
+    "Language": "Thieves Cant",
+    "Language Class": "Secret/special languages",
+    "Root Language": "None",
+    "Native Race": "Human",
+    "Rarity": "Secret",
+    "Description": ""
+  }
+]

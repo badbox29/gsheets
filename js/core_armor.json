@@ -1,0 +1,461 @@
+[
+  {
+    "Armor Name": "None",
+    "Armor Type": "None",
+    "AC": "10",
+    "Weight": "0 lb",
+    "Cost": "0 gp",
+    "Movement": "12",
+    "Notes": "No armor worn"
+  },
+  {
+    "Armor Name": "Padded Armor",
+    "Armor Type": "Light",
+    "AC": "8",
+    "Weight": "10 lb",
+    "Cost": "4 gp",
+    "Movement": "9",
+    "Notes": "Quilted cloth armor"
+  },
+  {
+    "Armor Name": "Leather Armor",
+    "Armor Type": "Light",
+    "AC": "8",
+    "Weight": "15 lb",
+    "Cost": "5 gp",
+    "Movement": "12",
+    "Notes": "Soft leather, breastplate and shoulder protection"
+  },
+  {
+    "Armor Name": "Studded Leather",
+    "Armor Type": "Light",
+    "AC": "7",
+    "Weight": "20 lb",
+    "Cost": "20 gp",
+    "Movement": "9",
+    "Notes": "Leather armor reinforced with metal studs"
+  },
+  {
+    "Armor Name": "Ring Mail",
+    "Armor Type": "Medium",
+    "AC": "7",
+    "Weight": "30 lb",
+    "Cost": "100 gp",
+    "Movement": "9",
+    "Notes": "Metal rings sewn to leather backing"
+  },
+  {
+    "Armor Name": "Scale Mail",
+    "Armor Type": "Medium",
+    "AC": "6",
+    "Weight": "40 lb",
+    "Cost": "120 gp",
+    "Movement": "6",
+    "Notes": "Overlapping metal scales on leather backing"
+  },
+  {
+    "Armor Name": "Hide Armor",
+    "Armor Type": "Medium",
+    "AC": "6",
+    "Weight": "30 lb",
+    "Cost": "15 gp",
+    "Movement": "9",
+    "Notes": "Thick animal hides, crude armor"
+  },
+  {
+    "Armor Name": "Chain Mail",
+    "Armor Type": "Medium",
+    "AC": "5",
+    "Weight": "40 lb",
+    "Cost": "75 gp",
+    "Movement": "9",
+    "Notes": "Interlocking metal rings"
+  },
+  {
+    "Armor Name": "Brigandine",
+    "Armor Type": "Medium",
+    "AC": "6",
+    "Weight": "35 lb",
+    "Cost": "120 gp",
+    "Movement": "9",
+    "Notes": "Small metal plates riveted to fabric or leather"
+  },
+  {
+    "Armor Name": "Splint Mail",
+    "Armor Type": "Heavy",
+    "AC": "4",
+    "Weight": "40 lb",
+    "Cost": "80 gp",
+    "Movement": "6",
+    "Notes": "Metal strips on leather backing with chain mail"
+  },
+  {
+    "Armor Name": "Banded Mail",
+    "Armor Type": "Heavy",
+    "AC": "4",
+    "Weight": "35 lb",
+    "Cost": "90 gp",
+    "Movement": "9",
+    "Notes": "Overlapping metal bands on chain mail and leather"
+  },
+  {
+    "Armor Name": "Bronze Plate Mail",
+    "Armor Type": "Heavy",
+    "AC": "4",
+    "Weight": "45 lb",
+    "Cost": "400 gp",
+    "Movement": "6",
+    "Notes": "Bronze plates covering vital areas"
+  },
+  {
+    "Armor Name": "Plate Mail",
+    "Armor Type": "Heavy",
+    "AC": "3",
+    "Weight": "50 lb",
+    "Cost": "600 gp",
+    "Movement": "6",
+    "Notes": "Interlocking metal plates covering most of the body"
+  },
+  {
+    "Armor Name": "Field Plate",
+    "Armor Type": "Heavy",
+    "AC": "2",
+    "Weight": "60 lb",
+    "Cost": "2000 gp",
+    "Movement": "6",
+    "Notes": "High-quality plate armor with superior workmanship"
+  },
+  {
+    "Armor Name": "Full Plate",
+    "Armor Type": "Heavy",
+    "AC": "1",
+    "Weight": "70 lb",
+    "Cost": "4000+ gp",
+    "Movement": "6",
+    "Notes": "Best armor available, custom-fitted articulated plate"
+  },
+  {
+    "Armor Name": "Elven Chain Mail",
+    "Armor Type": "Medium (Special)",
+    "AC": "5",
+    "Weight": "15 lb",
+    "Cost": "5000+ gp",
+    "Movement": "12",
+    "Notes": "Magical elven-made chain, lighter and quieter. Usable by wizards and thieves."
+  },
+  {
+    "Armor Name": "Shield, Buckler",
+    "Armor Type": "Shield",
+    "AC": "-1",
+    "Weight": "3 lb",
+    "Cost": "1 gp",
+    "Movement": "0",
+    "Notes": "Small shield, -1 to AC. Does not protect against rear attacks."
+  },
+  {
+    "Armor Name": "Shield, Small",
+    "Armor Type": "Shield",
+    "AC": "-1",
+    "Weight": "5 lb",
+    "Cost": "3 gp",
+    "Movement": "0",
+    "Notes": "Small wooden or metal shield, -1 to AC"
+  },
+  {
+    "Armor Name": "Shield, Medium",
+    "Armor Type": "Shield",
+    "AC": "-1",
+    "Weight": "10 lb",
+    "Cost": "7 gp",
+    "Movement": "0",
+    "Notes": "Standard shield, -1 to AC"
+  },
+  {
+    "Armor Name": "Shield, Body",
+    "Armor Type": "Shield",
+    "AC": "-1",
+    "Weight": "15 lb",
+    "Cost": "10 gp",
+    "Movement": "0",
+    "Notes": "Large shield covering most of body, -1 to AC, additional protection vs missiles"
+  },
+  {
+    "Armor Name": "Helmet, Leather Cap",
+    "Armor Type": "Helmet",
+    "AC": "0",
+    "Weight": "1 lb",
+    "Cost": "1 sp",
+    "Movement": "0",
+    "Notes": "Soft leather cap, minimal protection"
+  },
+  {
+    "Armor Name": "Helmet, Padded Coif",
+    "Armor Type": "Helmet",
+    "AC": "0",
+    "Weight": "1 lb",
+    "Cost": "2 sp",
+    "Movement": "0",
+    "Notes": "Quilted cloth helmet"
+  },
+  {
+    "Armor Name": "Helmet, Metal Helm",
+    "Armor Type": "Helmet",
+    "AC": "0",
+    "Weight": "10 lb",
+    "Cost": "10 gp",
+    "Movement": "0",
+    "Notes": "Standard metal helmet, protects against critical hits (optional rule)"
+  },
+  {
+    "Armor Name": "Helmet, Great Helm",
+    "Armor Type": "Helmet",
+    "AC": "0",
+    "Weight": "15 lb",
+    "Cost": "30 gp",
+    "Movement": "0",
+    "Notes": "Full face coverage, -1 to initiative, limits vision"
+  },
+  {
+    "Armor Name": "Helmet, Basinet",
+    "Armor Type": "Helmet",
+    "AC": "0",
+    "Weight": "8 lb",
+    "Cost": "8 gp",
+    "Movement": "0",
+    "Notes": "Close-fitting helmet with visor"
+  },
+  {
+    "Armor Name": "Gauntlets, Leather",
+    "Armor Type": "Gauntlets",
+    "AC": "0",
+    "Weight": "1 lb",
+    "Cost": "3 sp",
+    "Movement": "0",
+    "Notes": "Leather gloves, basic hand protection"
+  },
+  {
+    "Armor Name": "Gauntlets, Metal",
+    "Armor Type": "Gauntlets",
+    "AC": "0",
+    "Weight": "2 lb",
+    "Cost": "2 gp",
+    "Movement": "0",
+    "Notes": "Metal gauntlets, full hand protection. Improves unarmed damage."
+  },
+  {
+    "Armor Name": "Boots, Soft Leather",
+    "Armor Type": "Boots",
+    "AC": "0",
+    "Weight": "3 lb",
+    "Cost": "3 sp",
+    "Movement": "0",
+    "Notes": "Soft leather boots"
+  },
+  {
+    "Armor Name": "Boots, Hard Leather",
+    "Armor Type": "Boots",
+    "AC": "0",
+    "Weight": "4 lb",
+    "Cost": "6 sp",
+    "Movement": "0",
+    "Notes": "Hardened leather boots with reinforced toes"
+  },
+  {
+    "Armor Name": "Boots, Metal-Shod",
+    "Armor Type": "Boots",
+    "AC": "0",
+    "Weight": "5 lb",
+    "Cost": "1 gp",
+    "Movement": "0",
+    "Notes": "Boots with metal reinforcement"
+  },
+  {
+    "Armor Name": "Cloak",
+    "Armor Type": "Clothing",
+    "AC": "0",
+    "Weight": "3 lb",
+    "Cost": "5 sp - 5 gp",
+    "Movement": "0",
+    "Notes": "Standard traveling cloak"
+  },
+  {
+    "Armor Name": "Robes",
+    "Armor Type": "Clothing",
+    "AC": "0",
+    "Weight": "5 lb",
+    "Cost": "5 sp - 20 gp",
+    "Movement": "0",
+    "Notes": "Wizard or priest robes"
+  },
+  {
+    "Armor Name": "Tunic and Pants",
+    "Armor Type": "Clothing",
+    "AC": "0",
+    "Weight": "3 lb",
+    "Cost": "5 sp - 2 gp",
+    "Movement": "0",
+    "Notes": "Common clothing"
+  },
+  {
+    "Armor Name": "Leather Jacket",
+    "Armor Type": "Clothing",
+    "AC": "0",
+    "Weight": "4 lb",
+    "Cost": "3 gp",
+    "Movement": "0",
+    "Notes": "Heavy leather jacket, minimal armor value"
+  },
+  {
+    "Armor Name": "O-Yoroi",
+    "Armor Type": "Heavy (Oriental)",
+    "AC": "1",
+    "Weight": "50 lb",
+    "Cost": "2000 gp",
+    "Movement": "6",
+    "Notes": "Japanese great armor, equivalent to field plate"
+  },
+  {
+    "Armor Name": "Do-Maru",
+    "Armor Type": "Medium (Oriental)",
+    "AC": "4",
+    "Weight": "40 lb",
+    "Cost": "200 gp",
+    "Movement": "9",
+    "Notes": "Japanese body wrap armor"
+  },
+  {
+    "Armor Name": "Leather Lamellar",
+    "Armor Type": "Light (Oriental)",
+    "AC": "8",
+    "Weight": "25 lb",
+    "Cost": "30 gp",
+    "Movement": "9",
+    "Notes": "Lacquered leather strips laced together"
+  },
+  {
+    "Armor Name": "Kozane",
+    "Armor Type": "Medium (Oriental)",
+    "AC": "6",
+    "Weight": "35 lb",
+    "Cost": "150 gp",
+    "Movement": "9",
+    "Notes": "Scale armor made from individual metal scales"
+  },
+  {
+    "Armor Name": "Tatami-Do",
+    "Armor Type": "Medium (Oriental)",
+    "AC": "6",
+    "Weight": "30 lb",
+    "Cost": "100 gp",
+    "Movement": "9",
+    "Notes": "Folding armor, can be stored in small container"
+  },
+  {
+    "Armor Name": "Padded Silk Armor",
+    "Armor Type": "Light (Oriental)",
+    "AC": "8",
+    "Weight": "8 lb",
+    "Cost": "150 gp",
+    "Movement": "12",
+    "Notes": "Multiple layers of silk, resistant to some weapons"
+  },
+  {
+    "Armor Name": "Dastana",
+    "Armor Type": "Bracers",
+    "AC": "-1",
+    "Weight": "5 lb",
+    "Cost": "5 gp",
+    "Movement": "0",
+    "Notes": "Armored vambraces, -1 to AC when used with other armor"
+  },
+  {
+    "Armor Name": "Greaves",
+    "Armor Type": "Leg Armor",
+    "AC": "0",
+    "Weight": "6 lb",
+    "Cost": "6 gp",
+    "Movement": "0",
+    "Notes": "Metal shin guards"
+  },
+  {
+    "Armor Name": "Cuirass",
+    "Armor Type": "Partial Plate",
+    "AC": "5",
+    "Weight": "25 lb",
+    "Cost": "100 gp",
+    "Movement": "9",
+    "Notes": "Breastplate and backplate only"
+  },
+  {
+    "Armor Name": "Breastplate",
+    "Armor Type": "Partial Plate",
+    "AC": "5",
+    "Weight": "20 lb",
+    "Cost": "50 gp",
+    "Movement": "9",
+    "Notes": "Front torso protection only"
+  },
+  {
+    "Armor Name": "Barding, Leather",
+    "Armor Type": "Horse Armor",
+    "AC": "6",
+    "Weight": "60 lb",
+    "Cost": "30 gp",
+    "Movement": "-3",
+    "Notes": "Horse armor, leather"
+  },
+  {
+    "Armor Name": "Barding, Scale Mail",
+    "Armor Type": "Horse Armor",
+    "AC": "4",
+    "Weight": "75 lb",
+    "Cost": "150 gp",
+    "Movement": "-6",
+    "Notes": "Horse armor, scale mail"
+  },
+  {
+    "Armor Name": "Barding, Chain Mail",
+    "Armor Type": "Horse Armor",
+    "AC": "3",
+    "Weight": "70 lb",
+    "Cost": "500 gp",
+    "Movement": "-6",
+    "Notes": "Horse armor, chain mail"
+  },
+  {
+    "Armor Name": "Barding, Banded Mail",
+    "Armor Type": "Horse Armor",
+    "AC": "2",
+    "Weight": "80 lb",
+    "Cost": "750 gp",
+    "Movement": "-6",
+    "Notes": "Horse armor, banded mail"
+  },
+  {
+    "Armor Name": "Barding, Plate Mail",
+    "Armor Type": "Horse Armor",
+    "AC": "1",
+    "Weight": "90 lb",
+    "Cost": "2000 gp",
+    "Movement": "-9",
+    "Notes": "Horse armor, plate mail"
+  },
+  {
+    "Armor Name": "Gladiator Armor",
+    "Armor Type": "Light (Special)",
+    "AC": "7",
+    "Weight": "15 lb",
+    "Cost": "25 gp",
+    "Movement": "12",
+    "Notes": "Partial armor for arena combat - shoulder guard, arm guard, minimal torso coverage"
+  },
+  {
+    "Armor Name": "Ceremonial Armor",
+    "Armor Type": "Varies",
+    "AC": "Varies",
+    "Weight": "Varies",
+    "Cost": "2x-10x normal",
+    "Movement": "As base type",
+    "Notes": "Decorative armor for parades and ceremonies, typically as protective as base type but ornate"
+  }
+]

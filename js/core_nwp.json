@@ -1,0 +1,695 @@
+[
+  {
+    "Proficiency Name": "Agriculture",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Int / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Knowledge of farming, planting, harvesting, and soil conditions"
+  },
+  {
+    "Proficiency Name": "Animal Handling",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Wis / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "General care and treatment of normal animals, calming frightened animals"
+  },
+  {
+    "Proficiency Name": "Animal Training",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Wis / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Train one type of animal (must specialize). Takes 2d6 weeks per animal."
+  },
+  {
+    "Proficiency Name": "Artistic Ability",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Wis / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Create works of art in one field (painting, sculpture, poetry, etc.). Must specialize."
+  },
+  {
+    "Proficiency Name": "Blacksmithing",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Str / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Create and repair metal objects. Requires forge and tools."
+  },
+  {
+    "Proficiency Name": "Brewing",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Int / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Prepare alcoholic beverages including beer, mead, and wine"
+  },
+  {
+    "Proficiency Name": "Carpentry",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Str / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Build wooden structures and items. Requires tools."
+  },
+  {
+    "Proficiency Name": "Cobbling",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Dex / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Make and repair shoes, boots, and sandals"
+  },
+  {
+    "Proficiency Name": "Cooking",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Int / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Prepare tasty, nourishing meals. Can identify spoiled food."
+  },
+  {
+    "Proficiency Name": "Dancing",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Dex / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Skilled at various dance styles. Impresses audiences."
+  },
+  {
+    "Proficiency Name": "Direction Sense",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Wis / +1",
+    "Modifier": "+1",
+    "Source": "PHB",
+    "Notes": "Instinctively know direction of north. Less chance of getting lost."
+  },
+  {
+    "Proficiency Name": "Etiquette",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Cha / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Know proper behavior for social situations in a specific culture"
+  },
+  {
+    "Proficiency Name": "Fire-Building",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Wis / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Start fires quickly even in adverse conditions"
+  },
+  {
+    "Proficiency Name": "Fishing",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Wis / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Catch fish with hook, net, or spear. Provides food."
+  },
+  {
+    "Proficiency Name": "Heraldry",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Int / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Identify symbols, crests, and coats of arms. Know lineages."
+  },
+  {
+    "Proficiency Name": "Languages, Modern",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Int / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Learn to speak and read a modern language fluently"
+  },
+  {
+    "Proficiency Name": "Leatherworking",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Int / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Tan and treat leather. Create leather goods and armor."
+  },
+  {
+    "Proficiency Name": "Mining",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Wis / -3",
+    "Modifier": "-3",
+    "Source": "PHB",
+    "Notes": "Knowledge of mining techniques. Assess tunnel safety. Identify valuable ores."
+  },
+  {
+    "Proficiency Name": "Pottery",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Dex / -2",
+    "Modifier": "-2",
+    "Source": "PHB",
+    "Notes": "Create pottery and ceramic items"
+  },
+  {
+    "Proficiency Name": "Reading/Writing",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Int / +1",
+    "Modifier": "+1",
+    "Source": "PHB",
+    "Notes": "Literate in a language you can speak"
+  },
+  {
+    "Proficiency Name": "Religion",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Wis / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Knowledge of mythology, rituals, and beliefs of a specific religion"
+  },
+  {
+    "Proficiency Name": "Rope Use",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Dex / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Tie knots, lash objects, use rope and tackle effectively"
+  },
+  {
+    "Proficiency Name": "Seamanship",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Dex / +1",
+    "Modifier": "+1",
+    "Source": "PHB",
+    "Notes": "Knowledge of sailing, rigging, and general ship operations"
+  },
+  {
+    "Proficiency Name": "Seamstress/Tailor",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Dex / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Sew, mend, and create clothing of quality"
+  },
+  {
+    "Proficiency Name": "Singing",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Cha / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Sing pleasingly and know many ballads and songs"
+  },
+  {
+    "Proficiency Name": "Stonemasonry",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Str / -2",
+    "Modifier": "-2",
+    "Source": "PHB",
+    "Notes": "Shape and set stone. Create stone structures. Requires tools."
+  },
+  {
+    "Proficiency Name": "Swimming",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Str / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Swim with ease. Can swim half movement rate without checks."
+  },
+  {
+    "Proficiency Name": "Weather Sense",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Wis / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Predict weather accurately for next 6-12 hours"
+  },
+  {
+    "Proficiency Name": "Weaving",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Int / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Create cloth, rugs, tapestries on a loom"
+  },
+  {
+    "Proficiency Name": "Ancient History",
+    "Category": "Wizard",
+    "Slots": "1",
+    "Ability Check": "Int / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Knowledge of historical events, personalities, wars, migrations, etc."
+  },
+  {
+    "Proficiency Name": "Astrology",
+    "Category": "Wizard",
+    "Slots": "2",
+    "Ability Check": "Int / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Cast horoscopes and make predictions. Not always accurate."
+  },
+  {
+    "Proficiency Name": "Engineering",
+    "Category": "Wizard",
+    "Slots": "2",
+    "Ability Check": "Int / -3",
+    "Modifier": "-3",
+    "Source": "PHB",
+    "Notes": "Design and build large structures, siege engines, and fortifications"
+  },
+  {
+    "Proficiency Name": "Gem Cutting",
+    "Category": "Wizard",
+    "Slots": "2",
+    "Ability Check": "Dex / -2",
+    "Modifier": "-2",
+    "Source": "PHB",
+    "Notes": "Cut and polish gems to enhance value. Identify gems."
+  },
+  {
+    "Proficiency Name": "Herbalism",
+    "Category": "Wizard",
+    "Slots": "2",
+    "Ability Check": "Int / -2",
+    "Modifier": "-2",
+    "Source": "PHB",
+    "Notes": "Identify plants. Create healing salves and poultices."
+  },
+  {
+    "Proficiency Name": "Languages, Ancient",
+    "Category": "Wizard",
+    "Slots": "1",
+    "Ability Check": "Int / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Read and write a dead or ancient language"
+  },
+  {
+    "Proficiency Name": "Navigation",
+    "Category": "Wizard",
+    "Slots": "1",
+    "Ability Check": "Int / -2",
+    "Modifier": "-2",
+    "Source": "PHB",
+    "Notes": "Plot course using instruments and charts. Reduce chance of getting lost."
+  },
+  {
+    "Proficiency Name": "Reading Lips",
+    "Category": "Wizard",
+    "Slots": "2",
+    "Ability Check": "Int / -2",
+    "Modifier": "-2",
+    "Source": "PHB",
+    "Notes": "Understand speech by watching lips. Must see face clearly."
+  },
+  {
+    "Proficiency Name": "Spellcraft",
+    "Category": "Wizard",
+    "Slots": "1",
+    "Ability Check": "Int / -2",
+    "Modifier": "-2",
+    "Source": "PHB",
+    "Notes": "Identify spells being cast. Recognize magical items."
+  },
+  {
+    "Proficiency Name": "Armorer",
+    "Category": "Warrior",
+    "Slots": "2",
+    "Ability Check": "Int / -2",
+    "Modifier": "-2",
+    "Source": "PHB",
+    "Notes": "Make and repair metal armor and shields. Requires forge."
+  },
+  {
+    "Proficiency Name": "Blind-Fighting",
+    "Category": "Warrior",
+    "Slots": "2",
+    "Ability Check": "N/A",
+    "Modifier": "N/A",
+    "Source": "PHB",
+    "Notes": "Reduce penalties for fighting in darkness. Never completely surprised."
+  },
+  {
+    "Proficiency Name": "Bowyer/Fletcher",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "Dex / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Make and repair bows, crossbows, and arrows/bolts"
+  },
+  {
+    "Proficiency Name": "Charioteering",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "Dex / +2",
+    "Modifier": "+2",
+    "Source": "PHB",
+    "Notes": "Drive chariots and similar vehicles in combat"
+  },
+  {
+    "Proficiency Name": "Endurance",
+    "Category": "Warrior",
+    "Slots": "2",
+    "Ability Check": "Con / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Perform strenuous activity longer. Resist effects of heat, cold, hunger."
+  },
+  {
+    "Proficiency Name": "Gaming",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "Cha / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Skilled at games of chance and strategy. Better chance of winning."
+  },
+  {
+    "Proficiency Name": "Hunting",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "Wis / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Track and hunt wild game. Provides food for several people."
+  },
+  {
+    "Proficiency Name": "Mountaineering",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "N/A",
+    "Modifier": "N/A",
+    "Source": "PHB",
+    "Notes": "Climb mountains safely. Better chance to succeed on difficult climbs."
+  },
+  {
+    "Proficiency Name": "Running",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "Con / -6",
+    "Modifier": "-6",
+    "Source": "PHB",
+    "Notes": "Run at faster speed for extended periods without tiring"
+  },
+  {
+    "Proficiency Name": "Set Snares",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "Dex / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Create and set snares and traps to catch game or enemies"
+  },
+  {
+    "Proficiency Name": "Survival",
+    "Category": "Warrior",
+    "Slots": "2",
+    "Ability Check": "Int / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Find food, water, shelter in wilderness. Must specialize by terrain type."
+  },
+  {
+    "Proficiency Name": "Tracking",
+    "Category": "Warrior",
+    "Slots": "2",
+    "Ability Check": "Wis / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Follow tracks and trail of creatures. Identify tracks."
+  },
+  {
+    "Proficiency Name": "Weaponsmithing",
+    "Category": "Warrior",
+    "Slots": "3",
+    "Ability Check": "Int / -3",
+    "Modifier": "-3",
+    "Source": "PHB",
+    "Notes": "Make and repair weapons. Must specialize by weapon type. Requires forge."
+  },
+  {
+    "Proficiency Name": "Ancient Languages",
+    "Category": "Priest",
+    "Slots": "1",
+    "Ability Check": "Int / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Read and write ancient or dead languages"
+  },
+  {
+    "Proficiency Name": "Healing",
+    "Category": "Priest",
+    "Slots": "2",
+    "Ability Check": "Wis / -2",
+    "Modifier": "-2",
+    "Source": "PHB",
+    "Notes": "Restore 1d3 hp to wounded character. Tends diseases and poisons."
+  },
+  {
+    "Proficiency Name": "Local History",
+    "Category": "Priest",
+    "Slots": "1",
+    "Ability Check": "Cha / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Know details about a specific region: rulers, legends, events, etc."
+  },
+  {
+    "Proficiency Name": "Musical Instrument",
+    "Category": "Priest",
+    "Slots": "1",
+    "Ability Check": "Dex / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Play one type of musical instrument. Must specialize."
+  },
+  {
+    "Proficiency Name": "Reading/Writing",
+    "Category": "Priest",
+    "Slots": "1",
+    "Ability Check": "Int / +1",
+    "Modifier": "+1",
+    "Source": "PHB",
+    "Notes": "Literate in a language you can speak. Priests start with this."
+  },
+  {
+    "Proficiency Name": "Disguise",
+    "Category": "Rogue",
+    "Slots": "1",
+    "Ability Check": "Cha / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Alter appearance with clothing, makeup, and props"
+  },
+  {
+    "Proficiency Name": "Forgery",
+    "Category": "Rogue",
+    "Slots": "1",
+    "Ability Check": "Dex / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Create fake documents and signatures. Detect forgeries."
+  },
+  {
+    "Proficiency Name": "Gaming",
+    "Category": "Rogue",
+    "Slots": "1",
+    "Ability Check": "Cha / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Skilled at games of chance. Know how to cheat effectively."
+  },
+  {
+    "Proficiency Name": "Juggling",
+    "Category": "Rogue",
+    "Slots": "1",
+    "Ability Check": "Dex / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Juggle and perform entertaining tricks. Entertain audiences."
+  },
+  {
+    "Proficiency Name": "Jumping",
+    "Category": "Rogue",
+    "Slots": "1",
+    "Ability Check": "Str / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Make impressive leaps. Add to jumping distance."
+  },
+  {
+    "Proficiency Name": "Set Snares",
+    "Category": "Rogue",
+    "Slots": "1",
+    "Ability Check": "Dex / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Create and set traps. Covers both hunting and security traps."
+  },
+  {
+    "Proficiency Name": "Tightrope Walking",
+    "Category": "Rogue",
+    "Slots": "1",
+    "Ability Check": "Dex / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Walk along narrow surfaces like ropes, ledges, beams"
+  },
+  {
+    "Proficiency Name": "Tumbling",
+    "Category": "Rogue",
+    "Slots": "1",
+    "Ability Check": "Dex / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Perform acrobatic maneuvers: rolls, flips, falls. Reduce falling damage."
+  },
+  {
+    "Proficiency Name": "Ventriloquism",
+    "Category": "Rogue",
+    "Slots": "1",
+    "Ability Check": "Int / -2",
+    "Modifier": "-2",
+    "Source": "PHB",
+    "Notes": "Make voice appear to come from somewhere else"
+  },
+  {
+    "Proficiency Name": "Alertness",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Wis / +1",
+    "Modifier": "+1",
+    "Source": "Complete Fighter",
+    "Notes": "+1 bonus to surprise rolls. Notice small details others miss."
+  },
+  {
+    "Proficiency Name": "Animal Lore",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Int / 0",
+    "Modifier": "0",
+    "Source": "Complete Ranger",
+    "Notes": "Identify species, habits, and abilities of animals"
+  },
+  {
+    "Proficiency Name": "Appraising",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Int / 0",
+    "Modifier": "0",
+    "Source": "Complete Thief",
+    "Notes": "Estimate value of common and precious items accurately"
+  },
+  {
+    "Proficiency Name": "Boating",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Wis / +1",
+    "Modifier": "+1",
+    "Source": "Complete Ranger",
+    "Notes": "Handle small boats, rafts, canoes in calm or rough water"
+  },
+  {
+    "Proficiency Name": "Hiding",
+    "Category": "Rogue",
+    "Slots": "1",
+    "Ability Check": "Dex / -1",
+    "Modifier": "-1",
+    "Source": "Complete Thief",
+    "Notes": "Blend into shadows and backgrounds. Works with Move Silently."
+  },
+  {
+    "Proficiency Name": "Intimidation",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "Str or Cha / 0",
+    "Modifier": "0",
+    "Source": "Complete Fighter",
+    "Notes": "Frighten or bully others into cooperation through threats"
+  },
+  {
+    "Proficiency Name": "Riding, Airborne",
+    "Category": "Warrior",
+    "Slots": "2",
+    "Ability Check": "Wis / -2",
+    "Modifier": "-2",
+    "Source": "Complete Fighter",
+    "Notes": "Ride flying mounts like griffons, hippogriffs, pegasi"
+  },
+  {
+    "Proficiency Name": "Riding, Land-Based",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "Wis / +3",
+    "Modifier": "+3",
+    "Source": "PHB",
+    "Notes": "Ride horses and similar land mounts. Covers one type of animal."
+  },
+  {
+    "Proficiency Name": "Sound Analysis",
+    "Category": "Wizard",
+    "Slots": "1",
+    "Ability Check": "Wis / -1",
+    "Modifier": "-1",
+    "Source": "Complete Wizard",
+    "Notes": "Identify sounds and their sources. Estimate distances by sound."
+  },
+  {
+    "Proficiency Name": "Information Gathering",
+    "Category": "Rogue",
+    "Slots": "1",
+    "Ability Check": "Int / 0",
+    "Modifier": "0",
+    "Source": "Complete Thief",
+    "Notes": "Find rumors, gossip, and information in settlements"
+  },
+  {
+    "Proficiency Name": "Observation",
+    "Category": "Rogue",
+    "Slots": "1",
+    "Ability Check": "Int / 0",
+    "Modifier": "0",
+    "Source": "Complete Thief",
+    "Notes": "Notice small details and remember them accurately"
+  },
+  {
+    "Proficiency Name": "Trailing",
+    "Category": "Rogue",
+    "Slots": "1",
+    "Ability Check": "Dex / 0",
+    "Modifier": "0",
+    "Source": "Complete Thief",
+    "Notes": "Follow someone in urban areas without being noticed"
+  }
+]
