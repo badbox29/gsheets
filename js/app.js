@@ -4619,7 +4619,13 @@ function kvPushDebounced() {
 async function kvPush() {
   const cfg = getKvConfig();
   if (!cfg.workerUrl || !cfg.kvToken) return;
-  const charMap  = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
+  const rawMap   = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
+  const charMap  = {};
+  Object.entries(rawMap).forEach(([name, data]) => {
+    const charName = (data?.meta?.name || '').trim();
+    if (charName && charName.toLowerCase() !== 'unnamed') charMap[name] = data;
+  });
+  if (Object.keys(charMap).length === 0) return;
   const now      = Date.now();
   const envelope = {
     version:   1,
