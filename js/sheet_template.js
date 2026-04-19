@@ -1882,6 +1882,7 @@ const SHEET_HTML = `
         <button class="import-json">Import</button>
 		<button class="delete-char">Delete</button>
         <button class="print">Print</button>
+		<button class="kv-settings">⚙ Settings</button>
 		<input class="file-input import-file" type="file" accept="application/json">
       </div>
     </div>
@@ -2034,4 +2035,64 @@ const SHEET_HTML = `
 	
 	<!-- Drawer Backdrop (for closing when clicking outside) -->
 	<div class="drawer-backdrop"></div>
+
+	<!-- KV Sync Settings Modal -->
+	<div class="kv-modal-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:10000;justify-content:center;align-items:center;">
+	  <div style="background:var(--panel);border-radius:8px;max-width:480px;width:90%;max-height:85vh;overflow-y:auto;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+	    <h2 style="margin:0 0 4px 0;font-size:16px;">⚙ Settings</h2>
+	    <p style="font-size:12px;color:var(--muted);margin:0 0 16px;">Cloud sync for your character data via Cloudflare KV storage.</p>
+
+	    <!-- Worker URL -->
+	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px;">Worker URL</label>
+	    <p style="font-size:11px;color:var(--muted);margin:0 0 6px;">Deploy the gsheets-worker to your Cloudflare account and paste the URL here.</p>
+	    <div style="display:flex;gap:6px;margin-bottom:4px;">
+	      <input type="text" class="kv-worker-url-inp" placeholder="https://gsheets-worker.your-subdomain.workers.dev" style="flex:1;padding:6px 8px;font-size:12px;background:var(--glass);border:1px solid var(--border);border-radius:4px;color:var(--text);">
+	      <button class="kv-save-worker-url" style="padding:6px 12px;font-size:12px;">Save</button>
+	    </div>
+	    <div class="kv-worker-url-status" style="font-size:11px;color:var(--accent-light);min-height:16px;margin-bottom:16px;"></div>
+
+	    <hr style="border:none;border-top:1px solid var(--border);margin:0 0 16px;">
+
+	    <!-- Sync Token -->
+	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px;">☁️ KV Sync</label>
+	    <p style="font-size:11px;color:var(--muted);margin:0 0 8px;">Syncs your characters across browsers via KV storage. Each user gets a unique sync token. To set up a new browser, follow the steps below in order.</p>
+
+	    <p style="font-size:11px;margin:0 0 6px;"><strong>Step 1</strong> — Enter and save your Worker URL above.</p>
+	    <p style="font-size:11px;margin:0 0 6px;"><strong>Step 2</strong> — Your sync token is your identity. Copy it and keep it safe. On a new browser, use <em>Enter Token</em> to paste it so both devices share the same KV namespace. Your token is also included in any JSON export.</p>
+
+	    <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
+	      <input type="text" class="kv-token-display" readonly style="flex:1;padding:6px 8px;font-size:11px;font-family:monospace;background:var(--glass);border:1px solid var(--border);border-radius:4px;color:var(--muted);">
+	      <button class="kv-copy-token" style="padding:6px 10px;font-size:11px;">Copy</button>
+	      <button class="kv-enter-token" style="padding:6px 10px;font-size:11px;">Enter Token</button>
+	      <button class="kv-reset-token" style="padding:6px 10px;font-size:11px;">Reset</button>
+	    </div>
+	    <p style="font-size:10px;color:var(--muted);margin:0 0 12px;">Reset generates a new token and permanently disconnects this browser from its current KV data.</p>
+
+	    <p style="font-size:11px;margin:0 0 6px;"><strong>Step 3</strong> — On a new browser, after entering the token, click <em>Pull from KV</em> to download your characters. On your primary browser, use <em>Push to KV</em> to force an immediate upload.</p>
+	    <div style="display:flex;gap:8px;margin-bottom:4px;">
+	      <button class="kv-push-manual" style="font-size:11px;padding:6px 12px;">⬆ Push to KV</button>
+	      <button class="kv-pull-manual" style="font-size:11px;padding:6px 12px;">⬇ Pull from KV</button>
+	    </div>
+	    <div class="kv-token-status" style="font-size:11px;color:var(--accent-light);min-height:14px;margin-bottom:12px;"></div>
+
+	    <!-- Auto Sync Toggle -->
+	    <div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--glass);border-radius:4px;margin-bottom:8px;">
+	      <input type="checkbox" class="kv-enabled-chk" style="width:16px;height:16px;cursor:pointer;">
+	      <span style="font-size:12px;">Enable automatic KV sync</span>
+	      <span class="kv-sync-status" style="margin-left:auto;font-size:11px;color:var(--muted);"></span>
+	    </div>
+	    <p style="font-size:10px;color:var(--muted);margin:0 0 12px;">When enabled, changes will be pushed to KV automatically within a few seconds and pulled on every page load.</p>
+
+	    <!-- Timestamps -->
+	    <div class="kv-timestamps" style="display:none;font-size:11px;color:var(--muted);margin-bottom:16px;padding-top:8px;border-top:1px solid var(--border);">
+	      <div>⬆ Last pushed: <span class="kv-last-push-display" style="color:var(--text);">—</span></div>
+	      <div>⬇ Last pulled: <span class="kv-last-pull-display" style="color:var(--text);">—</span></div>
+	    </div>
+
+	    <hr style="border:none;border-top:1px solid var(--border);margin:0 0 16px;">
+	    <div style="display:flex;justify-content:flex-end;">
+	      <button class="kv-modal-close" style="padding:8px 20px;">Close</button>
+	    </div>
+	  </div>
+	</div>
 `;

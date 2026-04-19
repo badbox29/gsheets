@@ -1,8 +1,37 @@
 // Shortcuts & constants
 const $ = id => document.getElementById(id);
 const CHAR_MAP_KEY = 'adnd2e_characters_map';
+const KV_CONFIG_KEY = 'adnd2e_kv_config';
 const AVATAR_MAX_SIZE = 1024 * 1024; // 1 MB
 const AUTOSAVE_INTERVAL = 60; // seconds between autosaves
+
+// ===== KV Sync — token generation =====
+function generateSyncToken() {
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// ===== KV Sync — config helpers =====
+// KV settings are stored separately from character data so they persist
+// independently of character saves and exports.
+function getKvConfig() {
+  try {
+    const raw = localStorage.getItem(KV_CONFIG_KEY);
+    const cfg = raw ? JSON.parse(raw) : {};
+    if (!cfg.kvToken)    cfg.kvToken    = generateSyncToken();
+    if (!cfg.kvEnabled)  cfg.kvEnabled  = false;
+    if (!cfg.workerUrl)  cfg.workerUrl  = '';
+    if (!cfg.kvLastPush) cfg.kvLastPush = 0;
+    if (!cfg.kvLastPull) cfg.kvLastPull = 0;
+    return cfg;
+  } catch(e) {
+    return { kvToken: generateSyncToken(), kvEnabled: false, workerUrl: '', kvLastPush: 0, kvLastPull: 0 };
+  }
+}
+function saveKvConfig(cfg) {
+  localStorage.setItem(KV_CONFIG_KEY, JSON.stringify(cfg));
+}
 
 const tabBar = $('tab-bar');
 const tabContents = $('tab-contents');
@@ -144,6 +173,7 @@ function performAutosave(tab, root){
   tab.classList.remove('unsaved');
   stopAutosaveForTab(tab.dataset.id);
   showSidebarAutosaved(root);
+  kvPushDebounced();
 }
 
 // Finds the correct sheet root element given any inside element (button, tab, etc.)
@@ -4209,6 +4239,8 @@ function bindSheet(root, tab){
   };
   qs(root,'.export-json').onclick = ()=>{
     const obj = collectSheet(root);
+    const kvCfgExp = getKvConfig();
+    if (kvCfgExp.kvToken) obj._kvToken = kvCfgExp.kvToken;
     const sanitize = s => (s||'').toString().trim().replace(/\s+/g,'_').replace(/[^A-Za-z0-9_\-]/g,'');
 
     const charName = sanitize(obj.meta.name) || 'Unnamed';
@@ -4242,6 +4274,15 @@ function bindSheet(root, tab){
       try{
         const obj=JSON.parse(ev.target.result);
         const nm = (obj.meta&&obj.meta.name)||'Imported Character';
+        // If the exported file carries a KV token, adopt it (but don't
+        // overwrite an existing token — only use it if we have none yet)
+        if (obj._kvToken) {
+          const cfg = getKvConfig();
+          if (!cfg.kvToken) {
+            cfg.kvToken = obj._kvToken;
+            saveKvConfig(cfg);
+          }
+        }
         openIntoCurrentOrNew(nm, obj);
       }catch(err){ alert('Invalid JSON: '+err.message); }
     };
@@ -4275,7 +4316,21 @@ function bindSheet(root, tab){
   };
   qs(root,'.print').onclick = ()=> generateCharacterPDF(root);
 
-// Condition tracker
+  // KV Settings modal
+  qs(root, '.kv-settings').onclick = () => openKvSettingsModal(root);
+  qs(root, '.kv-modal-close').onclick = () => closeKvSettingsModal(root);
+  qs(root, '.kv-modal-overlay').addEventListener('click', e => {
+    if (e.target === qs(root, '.kv-modal-overlay')) closeKvSettingsModal(root);
+  });
+  qs(root, '.kv-save-worker-url').onclick  = () => kvSaveWorkerUrl(root);
+  qs(root, '.kv-copy-token').onclick       = () => kvCopyToken(root);
+  qs(root, '.kv-enter-token').onclick      = () => kvEnterToken(root);
+  qs(root, '.kv-reset-token').onclick      = () => kvResetToken(root);
+  qs(root, '.kv-push-manual').onclick      = () => kvPushManual(root);
+  qs(root, '.kv-pull-manual').onclick      = () => kvPullManual(root);
+  qs(root, '.kv-enabled-chk').onchange     = e  => kvSaveEnabled(e.target.checked, root);
+
+  // Condition tracker
   const addConditionBtn = qs(root, '.add-condition');
   if (addConditionBtn) {
     addConditionBtn.onclick = () => addConditionDialog(root, tab);
@@ -4410,7 +4465,8 @@ function initMobileDrawer(root) {
     '.export-json',
     '.import-json',
     '.delete-char',
-    '.print'
+    '.print',
+    '.kv-settings'
   ];
   
   closeOnClick.forEach(selector => {
@@ -4425,6 +4481,237 @@ function initMobileDrawer(root) {
       });
     }
   });
+}
+
+// ===== KV Sync — modal UI functions =====
+
+function openKvSettingsModal(root) {
+  const cfg = getKvConfig();
+  qs(root, '.kv-worker-url-inp').value = cfg.workerUrl || '';
+  qs(root, '.kv-token-display').value  = cfg.kvToken   || '';
+  qs(root, '.kv-enabled-chk').checked  = !!cfg.kvEnabled;
+  qs(root, '.kv-worker-url-status').textContent = '';
+  qs(root, '.kv-token-status').textContent      = '';
+  updateKvSyncStatus(root, cfg);
+  qs(root, '.kv-modal-overlay').style.display = 'flex';
+}
+
+function closeKvSettingsModal(root) {
+  qs(root, '.kv-modal-overlay').style.display = 'none';
+}
+
+function updateKvSyncStatus(root, cfg) {
+  if (!cfg) cfg = getKvConfig();
+  const statusEl    = qs(root, '.kv-sync-status');
+  const timestampEl = qs(root, '.kv-timestamps');
+  const pushEl      = qs(root, '.kv-last-push-display');
+  const pullEl      = qs(root, '.kv-last-pull-display');
+  if (statusEl) {
+    statusEl.textContent = cfg.kvEnabled ? '● Active' : '○ Disabled';
+    statusEl.style.color = cfg.kvEnabled ? 'var(--accent-light)' : 'var(--muted)';
+  }
+  const fmt = ts => ts ? new Date(ts).toLocaleString() : '—';
+  if (cfg.kvLastPush || cfg.kvLastPull) {
+    if (timestampEl) timestampEl.style.display = 'block';
+    if (pushEl) pushEl.textContent = fmt(cfg.kvLastPush);
+    if (pullEl) pullEl.textContent = fmt(cfg.kvLastPull);
+  } else {
+    if (timestampEl) timestampEl.style.display = 'none';
+  }
+}
+
+async function kvSaveWorkerUrl(root) {
+  const inp    = qs(root, '.kv-worker-url-inp');
+  const status = qs(root, '.kv-worker-url-status');
+  const url    = (inp.value || '').trim();
+  const cfg    = getKvConfig();
+  cfg.workerUrl = url;
+  saveKvConfig(cfg);
+  if (!url) {
+    status.style.color = 'var(--muted)';
+    status.textContent = '✓ Cleared.';
+    setTimeout(() => { status.textContent = ''; }, 3000);
+    return;
+  }
+  status.style.color = 'var(--muted)';
+  status.textContent = 'Verifying…';
+  try {
+    const res  = await fetch(url.replace(/\/+$/, '') + '/ping');
+    const data = await res.json();
+    if (data.ok) {
+      status.style.color = 'var(--accent-light)';
+      status.textContent = '✓ Worker reachable — URL saved.';
+    } else {
+      status.style.color = 'orange';
+      status.textContent = '⚠ Worker responded unexpectedly. URL saved anyway.';
+    }
+  } catch(e) {
+    status.style.color = 'orange';
+    status.textContent = '⚠ Could not reach worker — check the URL. Saved anyway.';
+  }
+  setTimeout(() => { status.textContent = ''; }, 4000);
+}
+
+function kvCopyToken(root) {
+  const cfg = getKvConfig();
+  if (!cfg.kvToken) return;
+  navigator.clipboard.writeText(cfg.kvToken).then(() => {
+    const btn = qs(root, '.kv-copy-token');
+    if (btn) {
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = orig; }, 2000);
+    }
+  });
+}
+
+function kvEnterToken(root) {
+  const newToken = (prompt('Paste the sync token from your other device:') || '').trim();
+  if (!newToken) return;
+  const status = qs(root, '.kv-token-status');
+  if (newToken.length < 32) {
+    status.style.color = '#d9534f';
+    status.textContent = '✗ Token too short — make sure you copied the full token.';
+    setTimeout(() => { status.textContent = ''; }, 3000);
+    return;
+  }
+  const cfg      = getKvConfig();
+  cfg.kvToken    = newToken;
+  cfg.kvLastPush = 0;
+  cfg.kvLastPull = 0;
+  saveKvConfig(cfg);
+  qs(root, '.kv-token-display').value = newToken;
+  status.style.color = 'var(--accent-light)';
+  status.textContent = '✓ Token saved — use Pull from KV to download your characters.';
+  setTimeout(() => { status.textContent = ''; }, 4000);
+}
+
+function kvResetToken(root) {
+  if (!confirm('This will generate a new sync token and disconnect from your current KV data.\n\nYour local characters are safe. Are you sure?')) return;
+  const cfg      = getKvConfig();
+  cfg.kvToken    = generateSyncToken();
+  cfg.kvLastPush = 0;
+  cfg.kvLastPull = 0;
+  saveKvConfig(cfg);
+  qs(root, '.kv-token-display').value = cfg.kvToken;
+  updateKvSyncStatus(root, cfg);
+}
+
+function kvSaveEnabled(checked, root) {
+  const cfg     = getKvConfig();
+  cfg.kvEnabled = checked;
+  saveKvConfig(cfg);
+  updateKvSyncStatus(root, cfg);
+  if (checked) kvPull(false);
+}
+
+// ===== KV Sync — push / pull =====
+
+let _kvPushTimer = null;
+
+function kvPushDebounced() {
+  const cfg = getKvConfig();
+  if (!cfg.kvEnabled) return;
+  clearTimeout(_kvPushTimer);
+  _kvPushTimer = setTimeout(kvPush, 5000);
+}
+
+async function kvPush() {
+  const cfg = getKvConfig();
+  if (!cfg.workerUrl || !cfg.kvToken) return;
+  const charMap  = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
+  const now      = Date.now();
+  const envelope = {
+    version:   1,
+    updatedAt: now,
+    clientId:  cfg.clientId || 'unknown',
+    payload: {
+      characters: charMap,
+      kvToken:    cfg.kvToken,
+    }
+  };
+  try {
+    const res = await fetch(cfg.workerUrl.replace(/\/+$/, '') + '/kv', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Sync-Token': cfg.kvToken },
+      body:    JSON.stringify(envelope),
+    });
+    if (res.ok) {
+      cfg.kvLastPush = now;
+      saveKvConfig(cfg);
+    }
+  } catch(e) { console.warn('[KV] push failed:', e); }
+}
+
+async function kvPull(overwrite = false) {
+  const cfg = getKvConfig();
+  if (!cfg.workerUrl || !cfg.kvToken) return 0;
+  try {
+    const res = await fetch(cfg.workerUrl.replace(/\/+$/, '') + '/kv', {
+      method:  'GET',
+      headers: { 'X-Sync-Token': cfg.kvToken },
+    });
+    if (!res.ok) return 0;
+    const { found, data } = await res.json();
+    if (!found || !data || !data.payload) return 0;
+    const remoteChars = data.payload.characters || {};
+    const localMap    = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
+    let added = 0;
+    Object.entries(remoteChars).forEach(([name, charData]) => {
+      if (overwrite || !(name in localMap)) {
+        localMap[name] = charData;
+        added++;
+      }
+    });
+    if (added > 0) localStorage.setItem(CHAR_MAP_KEY, JSON.stringify(localMap));
+    const now      = Date.now();
+    cfg.kvLastPull = now;
+    saveKvConfig(cfg);
+    return added;
+  } catch(e) {
+    console.warn('[KV] pull failed:', e);
+    return 0;
+  }
+}
+
+async function kvPushManual(root) {
+  const status  = qs(root, '.kv-token-status');
+  const warning =
+    'This will overwrite the KV data for this sync token with your current local characters.\n\n' +
+    '⚠ If you are setting up a new browser, click Cancel and use "Pull from KV" first.\n\n' +
+    'Type PUSH below to confirm:';
+  const answer = (prompt(warning) || '').trim();
+  if (answer !== 'PUSH') {
+    status.style.color = 'var(--muted)';
+    status.textContent = 'Push cancelled.';
+    setTimeout(() => { status.textContent = ''; }, 2000);
+    return;
+  }
+  status.style.color = 'var(--accent-light)';
+  status.textContent = '⬆ Pushing to KV…';
+  await kvPush();
+  status.textContent = '✓ Pushed successfully.';
+  updateKvSyncStatus(root, getKvConfig());
+  setTimeout(() => { status.textContent = ''; }, 3000);
+}
+
+async function kvPullManual(root) {
+  const status = qs(root, '.kv-token-status');
+  status.style.color = 'var(--accent-light)';
+  status.textContent = '⬇ Pulling from KV…';
+  const added = await kvPull(false);
+  if (added === 0) {
+    status.style.color = 'var(--muted)';
+    status.textContent = '✓ No new characters found in KV.';
+  } else if (added > 0) {
+    status.style.color = 'var(--accent-light)';
+    status.textContent = `✓ ${added} character(s) pulled. Use Open… to load them.`;
+  } else {
+    status.style.color = '#d9534f';
+    status.textContent = '✗ Pull failed — check your Worker URL and token.';
+  }
+  updateKvSyncStatus(root, getKvConfig());
+  setTimeout(() => { status.textContent = ''; }, 4000);
 }
 
 // Filter memorized spells by level
@@ -5549,7 +5836,32 @@ function makeCharacterJournalEntry(data = {}, onChange) {
 
   // Ensure a clean start
   hideSidebarMessage(firstContainer);
+
+  // KV Sync — ensure token exists, pull on load if enabled
+  const _kvCfgInit = getKvConfig();
+  saveKvConfig(_kvCfgInit);
+  if (_kvCfgInit.kvEnabled && _kvCfgInit.workerUrl) {
+    kvPull(false).then(added => {
+      if (added > 0) console.log(`[KV] Pulled ${added} character(s) on load.`);
+    });
+  }
 })();
+
+// KV Sync — flush pending push when tab is hidden or closed
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden' && _kvPushTimer) {
+    clearTimeout(_kvPushTimer);
+    _kvPushTimer = null;
+    kvPush();
+  }
+});
+window.addEventListener('pagehide', () => {
+  if (_kvPushTimer) {
+    clearTimeout(_kvPushTimer);
+    _kvPushTimer = null;
+    kvPush();
+  }
+});
 
 // ===== Multiple Spellbooks Management =====
 
