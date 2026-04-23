@@ -12,6 +12,8 @@ This tool provides a lightweight, interactive character sheet for AD&D 2E that r
 
 The focus is on usability, speed, and staying true to the structure of 2nd Edition character data.
 
+Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because the character I was playing in the campaign that was active at the time I set out to create this thing was a Gnome... Super-creative, am I right?
+
 ## Features
 
 * Multi-character support via tabbed interface
