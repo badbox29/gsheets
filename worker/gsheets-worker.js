@@ -32,6 +32,11 @@
  *
  * Size limit:  4 MB per user (Cloudflare KV value limit)
  * Expiration:  90 days, reset on every successful push
+ *
+ * Access control (optional — configure via Cloudflare Worker env variables):
+ *   ALLOWED_ORIGINS — Comma-separated list of allowed origins, e.g.:
+ *                     https://yourdomain.com,https://www.yourdomain.com
+ *                     If not set, the origin check is skipped entirely.
  */
 
 // ── CORS headers ─────────────────────────────────────────────────────────────
@@ -53,6 +58,30 @@ const json = (data, status = 200) => new Response(JSON.stringify(data), {
 function getToken(request) {
   const token = (request.headers.get('X-Sync-Token') || '').trim();
   return token.length >= 32 ? token : null;
+}
+
+// ── Origin check ──────────────────────────────────────────────────────────────
+//
+// Reads ALLOWED_ORIGINS from the Worker environment (comma-separated list of
+// allowed origins, e.g. "https://yourdomain.com,https://www.yourdomain.com").
+// If the env var is not set, the check is skipped and all origins are allowed.
+// Returns a 403 Response if the origin is not on the list, otherwise null.
+
+function checkOrigin(request, env) {
+  const allowed = (env.ALLOWED_ORIGINS || '')
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean);
+
+  if (allowed.length === 0) return null; // not configured — skip check
+
+  const origin   = request.headers.get('Origin') || '';
+  const referer  = request.headers.get('Referer') || '';
+  const source   = origin || (referer ? new URL(referer).origin : '');
+
+  if (allowed.includes(source)) return null; // allowed
+
+  return json({ error: 'Origin not allowed' }, 403);
 }
 
 // ── /ping handler ─────────────────────────────────────────────────────────────
@@ -150,6 +179,10 @@ export default {
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: CORS_HEADERS });
     }
+
+    // Origin check — returns 403 if ALLOWED_ORIGINS is set and origin doesn't match
+    const originError = checkOrigin(request, env);
+    if (originError) return originError;
 
     const path = new URL(request.url).pathname.replace(/\/+$/, '');
 
