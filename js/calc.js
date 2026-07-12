@@ -2991,6 +2991,31 @@ async function renderNWPBrowser(root) {
     );
   }
   
+  // Several proficiencies appear once per Table 37 group they belong to (e.g.
+  // Reading/Writing exists as both Priest and Wizard). That duplication is
+  // needed so getNWPSlotCost() can apply the Table 38 crossover surcharge --
+  // but the player should only ever see ONE entry per proficiency. Collapse
+  // duplicates, preferring the variant that is IN the character's own groups
+  // (cheapest), falling back to any variant if none are.
+  const allowedGroups = getAllowedNWPGroups(root);
+
+  if (!categoryFilter) {
+    const byName = new Map();
+    filteredNWPs.forEach(nwp => {
+      const name = nwp['Proficiency Name'];
+      const existing = byName.get(name);
+      if (!existing) {
+        byName.set(name, nwp);
+        return;
+      }
+      // Prefer an in-group variant over an out-of-group one.
+      const cost    = getNWPSlotCost({ slots: nwp.Slots, category: nwp.Category }, allowedGroups);
+      const oldCost = getNWPSlotCost({ slots: existing.Slots, category: existing.Category }, allowedGroups);
+      if (cost < oldCost) byName.set(name, nwp);
+    });
+    filteredNWPs = Array.from(byName.values());
+  }
+
   // Sort alphabetically if no filter, otherwise group by category
   if (!categoryFilter) {
     // No filter - sort alphabetically by name only
@@ -3017,7 +3042,16 @@ async function renderNWPBrowser(root) {
     const nwpDiv = document.createElement('div');
     nwpDiv.className = 'nwp-result-item';
     nwpDiv.style.cssText = 'padding:8px;margin-bottom:4px;border:1px solid var(--border);border-radius:4px;display:flex;justify-content:space-between;align-items:center;transition:background 0.2s;';
-    
+
+    // Effective cost for THIS character, including the Table 38 surcharge.
+    const baseSlots = parseInt(nwp.Slots, 10) || 1;
+    const effCost   = getNWPSlotCost({ slots: nwp.Slots, category: nwp.Category }, allowedGroups);
+    const isCrossover = effCost > baseSlots;
+
+    const slotText = isCrossover
+      ? `<span style="color:var(--error, #ff6b6b);" title="Out-of-group proficiency: +1 slot (PHB Table 38)">Slots: ${effCost} (${baseSlots} +1 out-of-group)</span>`
+      : `Slots: ${effCost}`;
+
     const infoDiv = document.createElement('div');
     infoDiv.style.flex = '1';
     infoDiv.innerHTML = `
@@ -3026,7 +3060,7 @@ async function renderNWPBrowser(root) {
         <span style="margin-left:8px;font-size:11px;color:var(--muted);">${nwp.Category || ''}</span>
       </div>
       <div style="font-size:11px;color:var(--muted);margin-top:2px;">
-        Slots: ${nwp.Slots || '1'} | Check: ${nwp['Ability Check'] || 'N/A'}
+        ${slotText} | Check: ${nwp['Ability Check'] || 'N/A'}
       </div>
       ${nwp.Notes ? `<div style="font-size:11px;color:var(--muted);margin-top:4px;font-style:italic;">${nwp.Notes}</div>` : ''}
     `;
