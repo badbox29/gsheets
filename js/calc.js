@@ -2382,19 +2382,38 @@ function renderLanguageProficiencies(root) {
   
   const languages = root._languages || [];
   
-  // Calculate language limit using INT_TABLE
+  // Intelligence language cap (PHB Table 4). The NATIVE tongue is excluded --
+  // Table 4 counts languages learned IN ADDITION to it.
   const int = parseInt(val(root, 'int') || 0, 10);
   const intData = INT_TABLE[int];
   const languageLimit = intData ? intData[0] : 0;
-  
+
+  const countedLangs = languages.filter(countsAgainstLanguageCap).length;
+  const nativeCount  = languages.filter(l => l.isNative).length;
+  const grantedCount = languages.filter(l => l.isGranted && !l.isNative).length;
+  const slotsSpent   = getLanguageSlotsSpent(root);
+
   listDiv.innerHTML = '';
-  
-  // Add language count header
+
+  // Header
   const headerDiv = document.createElement('div');
   headerDiv.style.cssText = 'padding:8px;margin-bottom:8px;background:var(--glass);border-radius:4px;font-size:13px;';
-  const atLimit = languages.length >= languageLimit;
-  const color = atLimit ? 'var(--error, #ff6b6b)' : 'var(--muted)';
-  headerDiv.innerHTML = `<strong>Languages Known:</strong> <span style="color:${color}">${languages.length} / ${languageLimit}</span> (based on INT ${int})`;
+  const atLimit = countedLangs >= languageLimit;
+  const color = atLimit ? 'var(--error, #ff6b6b)' : 'var(--accent-light)';
+
+  let extras = [];
+  if (nativeCount)  extras.push(`+${nativeCount} native`);
+  if (grantedCount) extras.push(`${grantedCount} granted`);
+  const extraText = extras.length ? ` <span style="color:var(--muted);">(${extras.join(', ')})</span>` : '';
+
+  headerDiv.innerHTML =
+    `<strong>Languages Known:</strong> <span style="color:${color}">${countedLangs} / ${languageLimit}</span>` +
+    `${extraText} <span style="color:var(--muted);">&middot; ${slotsSpent} NWP slot${slotsSpent === 1 ? '' : 's'} spent</span>`;
+  headerDiv.title =
+    `Intelligence ${int} allows ${languageLimit} language${languageLimit === 1 ? '' : 's'} beyond your native tongue (PHB Table 4).\n\n` +
+    `NATIVE: free -- costs no slot, not counted against the cap.\n` +
+    `GRANTED: given by the DM at character creation -- costs no slots, but DOES count against the cap.\n` +
+    `Otherwise: 1 slot to speak, +1 slot for literacy (Read and Write are a single purchase).`;
   listDiv.appendChild(headerDiv);
   
   if (languages.length === 0) {
@@ -2408,33 +2427,71 @@ function renderLanguageProficiencies(root) {
   languages.forEach((lang, index) => {
     const langDiv = document.createElement('div');
     langDiv.className = 'language-prof-item';
-    langDiv.style.cssText = 'padding:8px;margin-bottom:8px;border:1px solid var(--border);border-radius:4px;background:var(--glass);';
-    
+
+    const cost = getLanguageSlotCost(lang);
+    const border = lang.isNative ? 'var(--accent-light)' : 'var(--border)';
+    langDiv.style.cssText = `padding:8px;margin-bottom:8px;border:1px solid ${border};border-radius:4px;background:var(--glass);`;
+
+    // Badges
+    let badges = '';
+    if (lang.isNative) {
+      badges += `<span style="margin-left:8px;font-size:10px;padding:1px 6px;border-radius:8px;background:var(--accent-light);color:#000;font-weight:600;"
+                       title="Native tongue -- free, and not counted against your Intelligence language cap.">NATIVE</span>`;
+    }
+    if (lang.isGranted && !lang.isNative) {
+      badges += `<span style="margin-left:8px;font-size:10px;padding:1px 6px;border-radius:8px;background:var(--border);color:var(--text);"
+                       title="Granted by the DM at character creation -- costs no proficiency slots, but still counts against your Intelligence cap.">GRANTED</span>`;
+    }
+
+    const costText = cost === 0
+      ? `<span style="color:var(--accent-light);">Free</span>`
+      : `${cost} slot${cost === 1 ? '' : 's'}`;
+
+    // "Set as Native" only offered on languages that aren't already native.
+    const nativeBtn = lang.isNative
+      ? ''
+      : `<button class="set-native-language" data-index="${index}" style="padding:4px 8px;font-size:11px;margin-left:8px;"
+                 title="Mark this as your native tongue. Free, and not counted against your Intelligence cap.">Set as Native</button>`;
+
     langDiv.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
         <div style="flex:1;">
           <strong>${lang.name}</strong>
           <span style="margin-left:8px;font-size:11px;color:var(--muted);">${lang.rarity}</span>
-          ${lang.languageClass ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;">${lang.languageClass}</div>` : ''}
+          ${badges}
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">
+            ${lang.languageClass || ''}${lang.languageClass ? ' &middot; ' : ''}Cost: ${costText}
+          </div>
           ${lang.description ? `<div style="font-size:11px;color:var(--muted);margin-top:4px;font-style:italic;">${lang.description}</div>` : ''}
         </div>
-        <button class="delete-language" data-index="${index}" style="padding:4px 8px;font-size:11px;margin-left:8px;">Delete</button>
+        <div style="display:flex;align-items:center;flex-shrink:0;">
+          ${nativeBtn}
+          <button class="delete-language" data-index="${index}" style="padding:4px 8px;font-size:11px;margin-left:8px;">Delete</button>
+        </div>
       </div>
-      <div style="display:flex;gap:12px;font-size:12px;">
-        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;">
+      <div style="display:flex;gap:12px;font-size:12px;flex-wrap:wrap;">
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;" title="Speak the language. 1 slot (PHB: 'Languages, Modern').">
+          <input type="checkbox" class="lang-speak" data-index="${index}" ${lang.canSpeak !== false ? 'checked' : ''}>
+          <span>Speak</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;" title="Read and Write are a SINGLE purchase -- 1 slot covers both (PHB: 'Reading/Writing').">
           <input type="checkbox" class="lang-read" data-index="${index}" ${lang.canRead ? 'checked' : ''}>
           <span>Read</span>
         </label>
-        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;">
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;" title="Read and Write are a SINGLE purchase -- 1 slot covers both (PHB: 'Reading/Writing').">
           <input type="checkbox" class="lang-write" data-index="${index}" ${lang.canWrite ? 'checked' : ''}>
           <span>Write</span>
         </label>
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;margin-left:auto;" title="The DM gave you this language at character creation. Costs no slots, but still counts against your Intelligence cap.">
+          <input type="checkbox" class="lang-granted" data-index="${index}" ${lang.isGranted ? 'checked' : ''}>
+          <span style="color:var(--muted);">Granted by DM</span>
+        </label>
       </div>
     `;
-    
+
     listDiv.appendChild(langDiv);
   });
-  
+
   // Attach event listeners
   listDiv.querySelectorAll('.delete-language').forEach(btn => {
     btn.onclick = () => {
@@ -2442,20 +2499,46 @@ function renderLanguageProficiencies(root) {
       deleteLanguageProficiency(root, index);
     };
   });
-  
-  listDiv.querySelectorAll('.lang-read').forEach(cb => {
-    cb.onchange = () => {
-      const index = parseInt(cb.getAttribute('data-index'), 10);
-      updateLanguageFlag(root, index, 'canRead', cb.checked);
+
+  [['lang-speak', 'canSpeak'], ['lang-read', 'canRead'], ['lang-write', 'canWrite'], ['lang-granted', 'isGranted']]
+    .forEach(([cls, field]) => {
+      listDiv.querySelectorAll('.' + cls).forEach(cb => {
+        cb.onchange = () => {
+          const index = parseInt(cb.getAttribute('data-index'), 10);
+          updateLanguageFlag(root, index, field, cb.checked);
+        };
+      });
+    });
+
+  listDiv.querySelectorAll('.set-native-language').forEach(btn => {
+    btn.onclick = () => {
+      const index = parseInt(btn.getAttribute('data-index'), 10);
+      setNativeLanguage(root, index);
     };
   });
-  
-  listDiv.querySelectorAll('.lang-write').forEach(cb => {
-    cb.onchange = () => {
-      const index = parseInt(cb.getAttribute('data-index'), 10);
-      updateLanguageFlag(root, index, 'canWrite', cb.checked);
-    };
-  });
+}
+
+// Mark a language as the character's native tongue. Only one language can be
+// native, so this clears the flag from any other and warns before overriding.
+function setNativeLanguage(root, index) {
+  if (!root._languages || !root._languages[index]) return;
+
+  const lang = root._languages[index];
+  const current = root._languages.find(l => l.isNative);
+
+  if (current && current !== lang) {
+    if (!confirm(`${current.name} is currently your native language.\n\nReplace it with ${lang.name}?`)) return;
+  }
+
+  root._languages.forEach(l => { l.isNative = false; });
+  lang.isNative = true;
+  lang.canSpeak = true;  // you always speak your native tongue
+
+  renderLanguageProficiencies(root);
+  if (typeof renderProficiencySlots === 'function') renderProficiencySlots(root);
+
+  const tab = document.querySelector('.tab.active');
+  if (tab) markUnsaved(tab, true, root);
 }
 
 // Delete a language proficiency
