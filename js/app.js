@@ -3709,6 +3709,7 @@ function bindSheet(root, tab){
   renderLanguageProficiencies(root);
   renderWeaponProficiencies(root);
   renderNWProficiencies(root);
+  renderProficiencySlots(root);
   renderMemorizedSpellStatus(root);
   toggleSpellbookSection(root);
   bindDiceRollers(root);
