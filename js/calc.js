@@ -1137,8 +1137,12 @@ function renderEncumbrance(root) {
   
   if (!currentLoadEl || !maxCarryEl || !categoryEl) return;
   
-  // Get max carry from STR weight allowance (already calculated)
-  const strWeightAllowance = parseFloat(val(root, "str_weight").replace(/[^\d.]/g, '')) || 0;
+  // PHB Table 47 -- absolute pound thresholds keyed by STR score.
+  // getEncumbranceData() handles exceptional 18/xx (warriors only).
+  const encStr = parseInt(val(root, "str") || 0, 10);
+  const encExceptional = val(root, "str_exceptional") || "";
+  const encClazz = val(root, "clazz") || "";
+  const encData = getEncumbranceData(encStr, encExceptional, encClazz);
   
   // Calculate total weight carried
   let totalWeight = 0;
@@ -1188,40 +1192,48 @@ function renderEncumbrance(root) {
   // Set current load
   currentLoadEl.value = totalWeight.toFixed(1);
   
-  // Set max carry
-  maxCarryEl.value = strWeightAllowance.toFixed(0);
-  
-  // Calculate encumbrance category
+  // Set max carried weight -- PHB Table 47's rightmost column, which is the
+  // "severe" ceiling. NOTE: this is NOT the STR weight allowance (that is the
+  // *unencumbered* ceiling). For 18/00 those are 480 and 335 respectively.
+  const maxCarried = encData ? encData[4] : 0;
+  maxCarryEl.value = maxCarried ? maxCarried.toFixed(0) : "";
+
+  // Determine encumbrance category by absolute weight (PHB Table 47)
   let category = "";
   let tooltip = "";
-  
-  if (strWeightAllowance === 0) {
+
+  if (!encData) {
     category = "—";
     tooltip = "Enter STR to calculate";
   } else {
-    const ratio = totalWeight / strWeightAllowance;
-    
-    if (ratio <= 0.33) {
+    const [unenc, light, moderate, heavy, severe] = encData;
+
+    if (totalWeight <= unenc) {
       category = "Unencumbered";
-      tooltip = "0-33% of max load\nNo penalties";
-    } else if (ratio <= 0.67) {
+    } else if (totalWeight <= light) {
       category = "Light";
-      tooltip = "34-67% of max load\nMovement slightly reduced";
-    } else if (ratio <= 1.0) {
+    } else if (totalWeight <= moderate) {
       category = "Moderate";
-      tooltip = "68-100% of max load\nMovement reduced, combat penalties";
-    } else if (ratio <= 1.5) {
+    } else if (totalWeight <= heavy) {
       category = "Heavy";
-      tooltip = "101-150% of max load\nSevere movement penalty\n-4 AC, -2 attack";
-    } else if (ratio <= 2.0) {
+    } else if (totalWeight <= severe) {
       category = "Severe";
-      tooltip = "151-200% of max load\nCan barely move\n-6 AC, -4 attack";
     } else {
       category = "Overloaded!";
-      tooltip = "Over 200% of max load\nCannot move!";
     }
+
+    const eff = ENCUMBRANCE_EFFECTS[category] || ENCUMBRANCE_EFFECTS["Overloaded"];
+    tooltip =
+      `${category} (PHB Table 47)\n` +
+      `Unencumbered: 0-${unenc} lbs\n` +
+      `Light: ${unenc + 1}-${light} lbs\n` +
+      `Moderate: ${light + 1}-${moderate} lbs\n` +
+      `Heavy: ${moderate + 1}-${heavy} lbs\n` +
+      `Severe: ${heavy + 1}-${severe} lbs\n` +
+      `Max carried: ${severe} lbs\n\n` +
+      eff.desc;
   }
-  
+
   categoryEl.value = category;
   categoryEl.title = tooltip;
   
