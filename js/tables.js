@@ -476,6 +476,116 @@ function getProficiencySlots(clazz, level) {
   };
 }
 
+// Full proficiency slot budget for a character, accounting for character type,
+// Intelligence bonus slots, and manual adjustments.
+//
+// Returns:
+//   {
+//     wpBase, nwpBase   -- from class/level (PHB Table 34)
+//     intBonus          -- bonus NWP slots from Intelligence (general purpose)
+//     wpAdj, nwpAdj     -- manual adjustments (kits, DM rulings, etc.)
+//     wpTotal, nwpTotal -- the numbers the player actually spends
+//     sources           -- human-readable breakdown for the tooltip
+//     valid             -- false if the class couldn't be resolved
+//   }
+function getCharacterProficiencySlots(root) {
+  const charType = (val(root, "char_type") || "single").toLowerCase();
+
+  let wpBase = 0;
+  let nwpBase = 0;
+  let valid = false;
+  const sources = [];
+
+  if (charType === "multi") {
+    // Multi-class: take the BEST value from each class group -- slots are not
+    // summed. WP and NWP are maximized independently.
+    const classes = [
+      { c: val(root, "mc_class1") || "", l: parseInt(val(root, "mc_level1") || 0, 10) },
+      { c: val(root, "mc_class2") || "", l: parseInt(val(root, "mc_level2") || 0, 10) },
+      { c: val(root, "mc_class3") || "", l: parseInt(val(root, "mc_level3") || 0, 10) }
+    ];
+
+    classes.forEach(entry => {
+      if (!entry.c || !entry.l) return;
+      const s = getProficiencySlots(entry.c, entry.l);
+      if (!s) return;
+      valid = true;
+      if (s.wp  > wpBase)  wpBase  = s.wp;
+      if (s.nwp > nwpBase) nwpBase = s.nwp;
+      sources.push(`${entry.c} ${entry.l}: ${s.wp} WP / ${s.nwp} NWP`);
+    });
+
+    if (valid) sources.push("Multi-class: best of each, not summed");
+
+  } else if (charType === "dual") {
+    // Dual-class: the character progresses in the NEW class. While dormant
+    // (new level <= original level) only the new class's abilities are
+    // available; once active, use whichever class grants more slots.
+    const origClass = val(root, "dc_original_class") || "";
+    const origLevel = parseInt(val(root, "dc_original_level") || 0, 10);
+    const newClass  = val(root, "dc_new_class") || "";
+    const newLevel  = parseInt(val(root, "dc_new_level") || 0, 10);
+
+    const dormant = newLevel <= origLevel;
+
+    const sNew = newClass && newLevel ? getProficiencySlots(newClass, newLevel) : null;
+    if (sNew) {
+      valid = true;
+      wpBase = sNew.wp;
+      nwpBase = sNew.nwp;
+      sources.push(`${newClass} ${newLevel}: ${sNew.wp} WP / ${sNew.nwp} NWP`);
+    }
+
+    if (!dormant) {
+      const sOld = origClass && origLevel ? getProficiencySlots(origClass, origLevel) : null;
+      if (sOld) {
+        valid = true;
+        if (sOld.wp  > wpBase)  wpBase  = sOld.wp;
+        if (sOld.nwp > nwpBase) nwpBase = sOld.nwp;
+        sources.push(`${origClass} ${origLevel}: ${sOld.wp} WP / ${sOld.nwp} NWP`);
+      }
+    } else if (origClass) {
+      sources.push(`${origClass} ${origLevel}: DORMANT (not counted)`);
+    }
+
+  } else {
+    // Single class
+    const clazz = val(root, "clazz") || "";
+    const level = parseInt(val(root, "level") || 1, 10);
+    const s = getProficiencySlots(clazz, level);
+    if (s) {
+      valid = true;
+      wpBase = s.wp;
+      nwpBase = s.nwp;
+      sources.push(`${clazz} ${level}: ${s.wp} WP / ${s.nwp} NWP`);
+    }
+  }
+
+  // Intelligence bonus NWP slots -- general purpose, spendable on any
+  // nonweapon proficiency (including languages).
+  const int = parseInt(val(root, "int") || 0, 10);
+  const intBonus = (typeof INT_BONUS_PROFS !== "undefined" && INT_BONUS_PROFS[int]) || 0;
+  if (intBonus > 0) sources.push(`Intelligence ${int}: +${intBonus} NWP`);
+
+  // Manual adjustments -- absorb kit bonuses, DM rulings, anything non-standard.
+  const wpAdj  = parseInt(val(root, "prof_wp_adj")  || 0, 10) || 0;
+  const nwpAdj = parseInt(val(root, "prof_nwp_adj") || 0, 10) || 0;
+  if (wpAdj)  sources.push(`Manual adjustment: ${wpAdj > 0 ? "+" : ""}${wpAdj} WP`);
+  if (nwpAdj) sources.push(`Manual adjustment: ${nwpAdj > 0 ? "+" : ""}${nwpAdj} NWP`);
+
+  return {
+    valid:    valid,
+    wpBase:   wpBase,
+    nwpBase:  nwpBase,
+    intBonus: intBonus,
+    wpAdj:    wpAdj,
+    nwpAdj:   nwpAdj,
+    wpTotal:  Math.max(0, wpBase  + wpAdj),
+    nwpTotal: Math.max(0, nwpBase + intBonus + nwpAdj),
+    sources:  sources
+  };
+}
+
 // HP bonus per level: [non-warrior, warrior]
 const CON_HP_BONUS = {
   1:[-3,-3], 2:[-2,-2], 3:[-2,-2], 4:[-1,-1], 5:[-1,-1],
