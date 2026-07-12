@@ -866,6 +866,14 @@ const ENCUMBRANCE_EFFECTS = {
   "Overloaded":   { moveMult: 0,     attack: -4, ac: 3, desc: "Over max carried weight -- cannot move." }
 };
 
+// === Optional Rule toggle: encumbrance combat/movement effects ===
+// The PHB labels encumbrance an OPTIONAL RULE, so ignoring it entirely is RAW.
+// When false, encumbrance is purely INFORMATIONAL -- the category, weight
+// breakdown, and max carried weight still display, but nothing is deducted from
+// movement, AC, or attack rolls. Flip to true (or wire to a Settings checkbox)
+// to apply the PHB penalties.
+const ENCUMBRANCE_RULES_ENABLED = false;
+
 // === Dexterity Table (AD&D 2E) ===
 // Format: [reaction adjustment, missile attack adjustment, defensive adjustment (AC)]
 const DEX_TABLE = {
