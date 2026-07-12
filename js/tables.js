@@ -682,31 +682,6 @@ function getSpecializationCost(group) {
   return 1;                    // melee weapons and crossbows
 }
 
-  // Intelligence bonus NWP slots -- general purpose, spendable on any
-  // nonweapon proficiency (including languages).
-  const int = parseInt(val(root, "int") || 0, 10);
-  const intBonus = (typeof INT_BONUS_PROFS !== "undefined" && INT_BONUS_PROFS[int]) || 0;
-  if (intBonus > 0) sources.push(`Intelligence ${int}: +${intBonus} NWP`);
-
-  // Manual adjustments -- absorb kit bonuses, DM rulings, anything non-standard.
-  const wpAdj  = parseInt(val(root, "prof_wp_adj")  || 0, 10) || 0;
-  const nwpAdj = parseInt(val(root, "prof_nwp_adj") || 0, 10) || 0;
-  if (wpAdj)  sources.push(`Manual adjustment: ${wpAdj > 0 ? "+" : ""}${wpAdj} WP`);
-  if (nwpAdj) sources.push(`Manual adjustment: ${nwpAdj > 0 ? "+" : ""}${nwpAdj} NWP`);
-
-  return {
-    valid:    valid,
-    wpBase:   wpBase,
-    nwpBase:  nwpBase,
-    intBonus: intBonus,
-    wpAdj:    wpAdj,
-    nwpAdj:   nwpAdj,
-    wpTotal:  Math.max(0, wpBase  + wpAdj),
-    nwpTotal: Math.max(0, nwpBase + intBonus + nwpAdj),
-    sources:  sources
-  };
-}
-
 // HP bonus per level: [non-warrior, warrior]
 const CON_HP_BONUS = {
   1:[-3,-3], 2:[-2,-2], 3:[-2,-2], 4:[-1,-1], 5:[-1,-1],
