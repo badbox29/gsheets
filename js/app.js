@@ -3133,14 +3133,13 @@ function loadSheet(root, data){
   renderLanguageProficiencies(root);
   renderWeaponProficiencies(root);
   renderNWProficiencies(root);
+  renderProficiencySlots(root);
   renderThiefSkills(root);
   updateThiefSkillsAccessibility(root); // NEW LINE - Update skill accessibility
   renderThiefSkillsSection(root);
   renderThiefPointsSection(root);
   updateThiefPointsDisplay(root);
   renderCharacterBonuses(root);
-  renderWeaponProficiencies(root);  // re-renders spec checkboxes if class changed
-  renderProficiencySlots(root);
   // Check dwarven abilities on load
   checkDwarvenAbilities(root);
   renderCharacterBonuses(root);
@@ -3670,6 +3669,8 @@ function bindSheet(root, tab){
 	  checkDwarvenAbilities(root);
 	  renderCharacterBonuses(root);
       markUnsaved(tab, true, root);
+	  renderNWProficiencies(root);
+      renderProficiencySlots(root);
     });
   }
   
