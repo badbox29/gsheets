@@ -23,19 +23,6 @@ const WIS_IMMUNITIES = {
   25:"cause fear, charm person, command, friends, hypnotism, forget, hold person, ray of enfeeblement, scare, fear, charm monster, confusion, emotion, fumble, suggestion, chaos, feeblemind, hold monster, magic jar, quest, geas, mass suggestion, rod of rulership, antipathy/sympathy, death spell, mass charm"
 };
 	
-// Wisdom spell failure (for priests only)
-const WIS_SPELL_FAILURE = {
-  1: "80%",
-  2: "80%",
-  3: "50%",
-  4: "30%",
-  5: "30%",
-  6: "20%",
-  7: "20%",
-  8: "20%"
-  // 9+ = none
-};
-
 // Charisma Table
 const CHA_TABLE = {
   1:  { reaction: -7, henchmen: 0, loyalty: -8 },
@@ -709,13 +696,6 @@ const WIS_BONUS_SPELLS = {
   25:[4,3,3,3,3,3,1,0,0]
 };
 	
-// === Wisdom save adjustments (AD&D 2E) ===
-const WIS_SAVE_ADJ = {
-  1: -6, 2: -4, 3: -3, 4: -2, 5: -1,
-  6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0,
-  15: +1, 16: +2, 17: +3, 18: +4, 19: +4, 20: +4, 21: +4, 22: +4, 23: +4, 24: +4, 25: +4
-};
-
 // === Strength Tables (AD&D 2E) ===
 // Format: [to-hit, damage, weight allowance, open doors, bend bars %]
 const STR_TABLE = {
