@@ -6597,12 +6597,11 @@ function bindDiceRollers(root) {
         case 'initiative':
           result = rollDiceFormula('1d10');
           result.formula = 'Initiative (d10)';
-          // DEX reaction adjustment (initiative modifier)
-          const dexData = (typeof DEX_TABLE !== 'undefined' && DEX_TABLE[dex]) ? DEX_TABLE[dex] : null;
-          if (dexData) {
-            const reactionAdj = dexData[0]; // Reaction/initiative adj is index 0
-            modifiers = `DEX modifier: ${reactionAdj >= 0 ? '+' : ''}${reactionAdj}\nModified roll: ${result.total + reactionAdj}`;
-          }
+          // PHB Ch.9: LOW ROLL WINS initiative. Dexterity is NOT an initiative
+          // modifier in 2e -- Table 2 has no initiative column, and Tables 55/56
+          // (which list every initiative modifier) never mention Dexterity.
+          // The DEX Reaction Adjustment modifies the two-weapon fighting penalty.
+          modifiers = 'Low roll wins initiative.\nModifiers (PHB Tables 55/56): hasted -2, slowed +2,\nhigher ground -1, set vs charge -2, waiting +1,\nweapon speed / casting time (optional rules).';
           break;
           
         case 'surprise':
