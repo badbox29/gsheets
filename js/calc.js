@@ -2726,6 +2726,8 @@ function addWeaponProficiency(root, weapon) {
 
 // Render weapon proficiencies list
 function renderWeaponProficiencies(root) {
+  renderProficiencySlots(root);
+
   const listDiv = root.querySelector('.weapon-profs-list');
   
   if (!listDiv) return;
@@ -2957,6 +2959,8 @@ function addNWProficiency(root, nwp) {
 
 // Render non-weapon proficiencies list
 function renderNWProficiencies(root) {
+  renderProficiencySlots(root);
+
   const listDiv = root.querySelector('.nwp-list');
   
   if (!listDiv) return;
