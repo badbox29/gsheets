@@ -200,6 +200,14 @@
     "Description": ""
   },
   {
+    "Language": "Burrowing Mammal Speech",
+    "Language Class": "Secret/special languages",
+    "Root Language": "None",
+    "Native Race": "Gnome",
+    "Rarity": "Rare",
+    "Description": "The simple common speech of burrowing mammals -- moles, badgers, weasels, shrews, ground squirrels, and the like. Gnomes may learn this as one of their initial languages (PHB, Gnomes). It conveys only basic concepts; it is not a full language."
+  },
+  {
     "Language": "Goblin",
     "Language Class": "Common non-human languages",
     "Root Language": "None",
