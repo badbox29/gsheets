@@ -13,25 +13,27 @@ function renderWisdomPriestEffects(root) {
   // Magical Defense Adj.
   mdaEl.value = (WIS_MDA[wis] !== undefined ? (WIS_MDA[wis] >=0 ? "+" : "")+WIS_MDA[wis] : "—");
 
-  // Only for priests (cleric/druid)
-  const isPriest = clazz.includes("cleric") || clazz.includes("druid") || clazz.includes("paladin") || clazz.includes("ranger");
-  
+ // Spell Immunity — PHB Table 5. Keys off the WIS score ALONE, no class gate.
+  // A WIS 19 fighter is just as immune to charm person as a WIS 19 cleric.
+  if (wis >= 19) {
+    immunityEl.value = WIS_IMMUNITIES[wis] || "—";
+  } else {
+    immunityEl.value = "—";
+  }
+
+  // Bonus spells and spell failure are PRIEST CLASSES ONLY (clerics + druids).
+  // Paladins and rangers cast priest spells but are warriors — per PHB they get
+  // no WIS bonus spells and are not subject to WIS spell failure.
+  const isPriest = isPriestClass(clazz);
+
   if (!isPriest) {
     failureEl.value = "";
-    immunityEl.value = "";
     bonusSpellsEl.value = "";
     return;
   }
 
-  // Spell failure
-  failureEl.value = (wis <= 8 ? WIS_SPELL_FAILURE[wis] || "" : "—");
-
-  // Immunities
-  if (wis >= 19) {
-    immunityEl.value = WIS_IMMUNITIES[wis] || WIS_IMMUNITIES[23];
-  } else {
-    immunityEl.value = "—";
-  }
+  // Spell failure — PHB Table 5: 80% at WIS 1 sliding to 5% at WIS 12, 0% at 13+.
+  failureEl.value = (wis <= 12 ? (WIS_FAILURE[wis] || "—") : "0%");
   
   // Bonus Spells
   const bonusSpells = WIS_BONUS_SPELLS[wis];
@@ -52,7 +54,7 @@ function renderWisdomSaveAdjustments(root) {
   const wis = parseInt(val(root,"wis")||0,10);
   if (!wis || wis < 1 || wis > 25) return;
 
-  const adj = WIS_SAVE_ADJ[wis] || 0;
+  const adj = WIS_MDA[wis] || 0;
 
   // Save vs Spell base (save5) — unchanged, no WIS modifier applied here
   const spellSaveEl = root.querySelector('[data-field="save5"]');
@@ -154,15 +156,11 @@ function renderCombatQuickReference(root) {
   const initiative = dexData ? dexData[0] : 0; // Reaction adjustment is index 0
   const initiativeStr = (initiative >= 0 ? '+' : '') + initiative;
   
-  // Calculate STR bonuses
+  // Calculate STR bonuses — shared helper handles exceptional 18/xx (warriors only)
   let strToHit = 0;
   let strDamage = 0;
-  if (typeof STR_TABLE !== 'undefined' && STR_TABLE[str]) {
-    let strData = STR_TABLE[str];
-    // Handle exceptional strength for 18
-    if (str === 18 && strExceptional && typeof STR_EXCEPTIONAL !== 'undefined' && STR_EXCEPTIONAL[strExceptional]) {
-      strData = STR_EXCEPTIONAL[strExceptional];
-    }
+  const strData = getStrengthData(str, strExceptional, clazz);
+  if (strData) {
     strToHit = strData[0] || 0;
     strDamage = strData[1] || 0;
   }
