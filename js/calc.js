@@ -2374,6 +2374,61 @@ function addLanguageProficiency(root, lang) {
   if (tab) markUnsaved(tab, true, root);
 }
 
+// Ensure the character's native language is present and tagged.
+//
+// NON-DESTRUCTIVE by design:
+//   - never deletes or renames an existing language
+//   - never overrides a native tag the player has already set
+//   - only ADDS the racial native language if the character has none at all
+//     (so a player who deliberately removed it won't have it forced back)
+//
+// PHB: the native tongue is free -- it costs no proficiency slot and is not
+// counted against the Intelligence language cap (Table 4 counts languages
+// learned IN ADDITION to it).
+function ensureNativeLanguage(root) {
+  if (!root._languages) root._languages = [];
+
+  // Player has already nominated a native language -- leave it alone.
+  if (root._languages.some(l => l.isNative)) return false;
+
+  const race = val(root, 'race') || '';
+  const racial = (typeof getRacialLanguages === 'function') ? getRacialLanguages(race) : null;
+  if (!racial || !racial.native) return false;
+
+  // Retro-tag: the language is already in the list, just untagged.
+  const existing = root._languages.find(
+    l => (l.name || '').toLowerCase() === racial.native.toLowerCase()
+  );
+  if (existing) {
+    existing.isNative = true;
+    existing.canSpeak = true;
+    return true;
+  }
+
+  // Only auto-add when the character has no languages yet (i.e. new character).
+  if (root._languages.length > 0) return false;
+
+  const src = (typeof LANGUAGES_DATA !== 'undefined' && LANGUAGES_DATA.length)
+    ? LANGUAGES_DATA.find(l => l.Language === racial.native)
+    : null;
+
+  root._languages.push({
+    name:          racial.native,
+    rarity:        src ? (src.Rarity || 'Common') : 'Common',
+    languageClass: src ? (src['Language Class'] || '') : '',
+    nativeRace:    src ? (src['Native Race'] || '') : '',
+    rootLanguage:  src ? (src['Root Language'] || 'None') : 'None',
+    description:   src ? (src.Description || '') : '',
+    canSpeak:      true,
+    canRead:       false,
+    canWrite:      false,
+    isNative:      true,
+    isGranted:     false
+  });
+
+  return true;
+}
+
 // Render language proficiencies list
 function renderLanguageProficiencies(root) {
   const listDiv = root.querySelector('.language-profs-list');
