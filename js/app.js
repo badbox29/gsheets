@@ -771,13 +771,15 @@ function renderAttackMatrix(root) {
   // Fallback to a sane default if tables failed to return something
   if (typeof thac0Base !== 'number' || Number.isNaN(thac0Base)) thac0Base = 20;
 
-  // --- Ability adjustments for melee/missile THAC0s ---
+ // --- Ability adjustments for melee/missile THAC0s ---
   const str = parseInt(val(root, "str") || 0, 10);
   const dex = parseInt(val(root, "dex") || 0, 10);
+  const strExceptional = val(root, "str_exceptional") || "";
 
-  // STR_TABLE[str][0] = melee to-hit adj
+  // Shared helper handles exceptional 18/xx (warriors only). Index 0 = melee to-hit adj.
+  // Reuses `clazz`, already declared at the top of renderAttackMatrix().
   let strToHit = 0;
-  const strData = (typeof STR_TABLE !== "undefined" && STR_TABLE[str]) ? STR_TABLE[str] : null;
+  const strData = getStrengthData(str, strExceptional, clazz);
   if (strData) strToHit = strData[0];
 
   // DEX_TABLE[dex][1] = missile to-hit adj
