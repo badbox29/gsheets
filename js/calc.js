@@ -2795,14 +2795,29 @@ function renderProficiencySlots(root) {
 
   if (wpBoxEl) {
     let t = `Weapon Proficiency Slots (PHB Table 34)\n${breakdown}\n\nAvailable: ${budget.wpTotal}\nSpent: ${wpSpent}`;
-    const specialized = weaponProfs.filter(w => w.specialized).length;
-    if (specialized > 0) t += `\n  (includes ${specialized} specialization${specialized > 1 ? 's' : ''} at +1 slot each)`;
+    if (specCount > 0) {
+      t += `\n  (includes ${specCount} specialization${specCount > 1 ? 's' : ''};`;
+      t += `\n   melee/crossbow +1 slot, bow +2 slots)`;
+    }
+    if (!canSpecialize(root)) {
+      t += `\n\nSpecialization is available to single-class\nfighters only (PHB).`;
+    }
     if (wpOver) t += `\n\nOVER BUDGET by ${wpSpent - budget.wpTotal}`;
     wpBoxEl.title = t;
   }
 
   if (nwpBoxEl) {
     let t = `Nonweapon Proficiency Slots (PHB Table 34)\n${breakdown}\n\nAvailable: ${budget.nwpTotal}\nSpent: ${nwpSpent}`;
+    if (crossoverCount > 0) {
+      t += `\n  (includes ${crossoverCount} out-of-group proficienc${crossoverCount > 1 ? 'ies' : 'y'}`;
+      t += `\n   at +1 slot each -- PHB Table 38)`;
+    }
+    if (allowedGroups && allowedGroups.size > 0) {
+      const groupList = Array.from(allowedGroups)
+        .map(g => g.charAt(0).toUpperCase() + g.slice(1))
+        .join(', ');
+      t += `\n\nYour groups (no surcharge): ${groupList}`;
+    }
     t += `\n\nIntelligence bonus slots are general purpose --\nthey may be spent on any nonweapon proficiency,\nincluding languages.`;
     if (nwpOver) t += `\n\nOVER BUDGET by ${nwpSpent - budget.nwpTotal}`;
     nwpBoxEl.title = t;
