@@ -141,7 +141,7 @@
     "Ability Check": "Int / 0",
     "Modifier": "0",
     "Source": "PHB",
-    "Notes": "Learn to speak and read a modern language fluently"
+    "Notes": "Learn to SPEAK one modern language. Does not include reading or writing -- literacy requires the separate Reading/Writing proficiency."
   },
   {
     "Proficiency Name": "Leatherworking",
@@ -312,7 +312,7 @@
     "Ability Check": "Int / 0",
     "Modifier": "0",
     "Source": "PHB",
-    "Notes": "Read and write a dead or ancient language"
+    "Notes": "One slot buys EITHER the ability to read and write the language OR to speak it -- the character's choice, not both."
   },
   {
     "Proficiency Name": "Navigation",
