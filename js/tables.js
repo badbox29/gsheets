@@ -561,6 +561,100 @@ function getCharacterProficiencySlots(root) {
     }
   }
 
+// === Nonweapon Proficiency Group Crossovers (PHB Table 38) ===
+// A proficiency taken from a group NOT listed for the character's class costs
+// ONE ADDITIONAL slot beyond the number listed in Table 37.
+const NWP_GROUP_CROSSOVERS = {
+  "fighter":     ["warrior", "general"],
+  "warrior":     ["warrior", "general"],
+  "barbarian":   ["warrior", "general"],
+  "paladin":     ["warrior", "priest", "general"],
+  "demipaladin": ["warrior", "priest", "general"],
+  "hb_dpaladin": ["warrior", "priest", "general"],
+  "ranger":      ["warrior", "wizard", "general"],
+  "cleric":      ["priest", "general"],
+  "priest":      ["priest", "general"],
+  "druid":       ["priest", "warrior", "general"],
+  "mage":        ["wizard", "general"],
+  "wizard":      ["wizard", "general"],
+  "illusionist": ["wizard", "general"],
+  "specialist":  ["wizard", "general"],
+  "thief":       ["rogue", "general"],
+  "rogue":       ["rogue", "general"],
+  "bard":        ["rogue", "warrior", "wizard", "general"]
+};
+
+// Returns the set of NWP groups this character may take at no surcharge.
+// Multi/dual-class characters get the UNION of their classes' groups.
+function getAllowedNWPGroups(root) {
+  const charType = (val(root, "char_type") || "single").toLowerCase();
+  const classes = [];
+
+  if (charType === "multi") {
+    ["mc_class1", "mc_class2", "mc_class3"].forEach(f => {
+      const c = val(root, f);
+      if (c) classes.push(c);
+    });
+  } else if (charType === "dual") {
+    const orig = val(root, "dc_original_class");
+    const nu   = val(root, "dc_new_class");
+    const origLevel = parseInt(val(root, "dc_original_level") || 0, 10);
+    const newLevel  = parseInt(val(root, "dc_new_level") || 0, 10);
+    if (nu) classes.push(nu);
+    // Original class groups only available once the dual-class is active.
+    if (orig && newLevel > origLevel) classes.push(orig);
+  } else {
+    const c = val(root, "clazz");
+    if (c) classes.push(c);
+  }
+
+  const allowed = new Set();
+  classes.forEach(c => {
+    const groups = NWP_GROUP_CROSSOVERS[(c || "").trim().toLowerCase()];
+    if (groups) groups.forEach(g => allowed.add(g));
+  });
+
+  return allowed;
+}
+
+// Slot cost of a single nonweapon proficiency, including the Table 38 crossover
+// surcharge. `nwp` is an entry from root._nwps.
+function getNWPSlotCost(nwp, allowedGroups) {
+  const base = parseInt(nwp.slots, 10) || 1;
+  const category = (nwp.category || "").trim().toLowerCase();
+
+  // Unknown/blank category -- assume in-group, no surcharge.
+  if (!category) return base;
+
+  // No recognized class -- don't penalize.
+  if (!allowedGroups || allowedGroups.size === 0) return base;
+
+  return allowedGroups.has(category) ? base : base + 1;
+}
+
+// === Weapon Specialization (PHB, Chapter 5) ===
+// "Weapon specialization is an optional rule that enables a fighter (only) to
+//  choose a single weapon and specialize in its use... Multi-class characters
+//  cannot use weapon specialization; it is available only to single-class
+//  fighters."
+// So: NOT rangers, NOT paladins, NOT multi-class, NOT dual-class.
+function canSpecialize(root) {
+  const charType = (val(root, "char_type") || "single").toLowerCase();
+  if (charType !== "single") return false;
+  const clazz = (val(root, "clazz") || "").trim().toLowerCase();
+  return clazz === "fighter";
+}
+
+// ADDITIONAL slots (beyond the base proficiency) required to specialize.
+// PHB: melee weapons and crossbows cost 2 slots total (1 prof + 1 spec).
+//      Any bow other than a crossbow costs 3 slots total (1 prof + 2 spec).
+// `group` is the weapon's Group field from core_wp.json.
+function getSpecializationCost(group) {
+  const g = (group || "").trim().toLowerCase();
+  if (g === "bow") return 2;   // longbow, shortbow, composite -- NOT crossbow
+  return 1;                    // melee weapons and crossbows
+}
+
   // Intelligence bonus NWP slots -- general purpose, spendable on any
   // nonweapon proficiency (including languages).
   const int = parseInt(val(root, "int") || 0, 10);
