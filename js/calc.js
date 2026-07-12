@@ -2337,18 +2337,22 @@ function addLanguageProficiency(root, lang) {
     return;
   }
   
-  // Calculate language limit based on Intelligence using INT_TABLE
+  // Intelligence language cap (PHB Table 4). The native tongue is NOT counted --
+  // Table 4 lists languages the character can learn IN ADDITION to it.
   const int = parseInt(val(root, 'int') || 0, 10);
   const intData = INT_TABLE[int];
-  const languageLimit = intData ? intData[0] : 0; // First value in array is # of languages
-  
-  // Check if at language limit
-  if (root._languages.length >= languageLimit) {
-    alert(`You cannot learn more languages! Your Intelligence (${int}) allows a maximum of ${languageLimit} language${languageLimit !== 1 ? 's' : ''}. You currently know ${root._languages.length}.`);
+  const languageLimit = intData ? intData[0] : 0;
+
+  const counted = (root._languages || []).filter(countsAgainstLanguageCap).length;
+
+  if (counted >= languageLimit) {
+    alert(`You cannot learn more languages! Your Intelligence (${int}) allows a maximum of ${languageLimit} language${languageLimit !== 1 ? 's' : ''} beyond your native tongue. You currently know ${counted}.`);
     return;
   }
-  
-  // Add the language with read/write flags
+
+  // Add the language. PHB: "This knowledge extends only to speaking the
+  // language; it does not include reading or writing." So new languages arrive
+  // SPEAK-ONLY -- literacy costs a further proficiency slot and must be ticked.
   root._languages.push({
     name: lang.Language,
     rarity: lang.Rarity || 'Unknown',
@@ -2356,8 +2360,11 @@ function addLanguageProficiency(root, lang) {
     nativeRace: lang['Native Race'] || '',
     rootLanguage: lang['Root Language'] || 'None',
     description: lang.Description || '',
-    canRead: true,
-    canWrite: true
+    canSpeak: true,
+    canRead: false,
+    canWrite: false,
+    isNative: false,
+    isGranted: false
   });
   
   renderLanguageProficiencies(root);
