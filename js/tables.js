@@ -779,6 +779,93 @@ function getStrengthData(str, exceptionalStr, clazz) {
   return STR_TABLE[18];
 }
 
+// === Encumbrance (AD&D 2E, PHB Table 47) ===
+// Format: [unencumbered ceiling, light, moderate, heavy, severe]
+// Each value is the MAXIMUM pounds for that category. The "severe" ceiling is
+// also the character's Max Carried Weight -- beyond it, he cannot move at all.
+// NOTE: Table 47's unencumbered ceiling is identical to Table 1's Weight
+// Allowance for every row, so the two tables agree by construction.
+const ENCUMBRANCE_TABLE = {
+  2:  [1,   2,   3,   4,   6],
+  3:  [5,   6,   7,   9,   10],
+  4:  [10,  13,  16,  19,  25],
+  5:  [10,  13,  16,  19,  25],
+  6:  [20,  29,  38,  46,  55],
+  7:  [20,  29,  38,  46,  55],
+  8:  [35,  50,  65,  80,  90],
+  9:  [35,  50,  65,  80,  90],
+  10: [40,  58,  76,  96,  110],
+  11: [40,  58,  76,  96,  110],
+  12: [45,  69,  93,  117, 140],
+  13: [45,  69,  93,  117, 140],
+  14: [55,  85,  115, 145, 170],
+  15: [55,  85,  115, 145, 170],
+  16: [70,  100, 130, 160, 195],
+  17: [85,  121, 157, 193, 220],
+  18: [110, 149, 188, 227, 255],
+
+  // STR 19-25 are NOT in PHB Table 47 (it stops at 18/00). The unencumbered
+  // ceiling below is RAW -- it is Table 1's Weight Allowance. The four bands
+  // above it are EXTRAPOLATED: from STR 18 onward, Table 47's spread between
+  // the allowance and max carried weight is a constant 145 lbs, divided
+  // 39/39/39/28. Flagged as non-RAW; adjust if your DM rules otherwise.
+  19: [485,  524,  563,  602,  630],
+  20: [535,  574,  613,  652,  680],
+  21: [635,  674,  713,  752,  780],
+  22: [785,  824,  863,  902,  930],
+  23: [935,  974,  1013, 1052, 1080],
+  24: [1235, 1274, 1313, 1352, 1380],
+  25: [1535, 1574, 1613, 1652, 1680]
+};
+
+// Exceptional strength encumbrance for 18/xx (warriors only), PHB Table 47
+const ENCUMBRANCE_18_EXCEPTIONAL = {
+  1:   [135, 174, 213, 252, 280],  // 18/01-18/50
+  51:  [160, 199, 238, 277, 305],  // 18/51-18/75
+  76:  [185, 224, 263, 302, 330],  // 18/76-18/90
+  91:  [235, 274, 313, 352, 380],  // 18/91-18/99
+  100: [335, 374, 413, 452, 480]   // 18/00
+};
+
+// === Shared encumbrance lookup ===
+// Mirrors getStrengthData() exactly, including the exceptional 18/xx buckets.
+// Returns [unencumbered, light, moderate, heavy, severe] ceilings, or null.
+// PHB Table 47 has no STR 1 row -- STR 1 clamps to the STR 2 row (both have a
+// weight allowance of 1 lb in Table 1, so they agree).
+function getEncumbranceData(str, exceptionalStr, clazz) {
+  str = parseInt(str, 10);
+  if (isNaN(str)) return null;
+  if (str < 2) str = 2;
+  if (str > 25) str = 25;
+
+  if (str !== 18 || !exceptionalStr || !isWarriorClass(clazz)) {
+    return ENCUMBRANCE_TABLE[str] || null;
+  }
+
+  const exc = parseInt(exceptionalStr, 10);
+  if (isNaN(exc)) return ENCUMBRANCE_TABLE[18];
+
+  if (exc >= 1  && exc <= 50)   return ENCUMBRANCE_18_EXCEPTIONAL[1];
+  if (exc >= 51 && exc <= 75)   return ENCUMBRANCE_18_EXCEPTIONAL[51];
+  if (exc >= 76 && exc <= 90)   return ENCUMBRANCE_18_EXCEPTIONAL[76];
+  if (exc >= 91 && exc <= 99)   return ENCUMBRANCE_18_EXCEPTIONAL[91];
+  if (exc === 0 || exc === 100) return ENCUMBRANCE_18_EXCEPTIONAL[100];
+
+  return ENCUMBRANCE_TABLE[18];
+}
+
+// === Effects of Encumbrance (PHB) ===
+// Basic/Tournament rule: movement multipliers as fractions.
+// AC penalties are POSITIVE = worse armor class.
+const ENCUMBRANCE_EFFECTS = {
+  "Unencumbered": { moveMult: 1,     attack: 0,  ac: 0, desc: "No penalties." },
+  "Light":        { moveMult: 2/3,   attack: 0,  ac: 0, desc: "Movement reduced by 1/3. No combat penalty." },
+  "Moderate":     { moveMult: 1/2,   attack: -1, ac: 0, desc: "Movement halved. -1 attack." },
+  "Heavy":        { moveMult: 1/3,   attack: -2, ac: 1, desc: "Movement reduced to 1/3. -2 attack, +1 AC (worse)." },
+  "Severe":       { moveMult: null,  attack: -4, ac: 3, desc: "Movement reduced to 1. -4 attack, +3 AC (worse)." },
+  "Overloaded":   { moveMult: 0,     attack: -4, ac: 3, desc: "Over max carried weight -- cannot move." }
+};
+
 // === Dexterity Table (AD&D 2E) ===
 // Format: [reaction adjustment, missile attack adjustment, defensive adjustment (AC)]
 const DEX_TABLE = {
