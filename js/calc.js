@@ -2744,21 +2744,32 @@ function renderProficiencySlots(root) {
   }
 
   // --- Weapon slots spent ---
-  // Each proficiency costs its own `slots` (default 1). Specialization costs
-  // 1 ADDITIONAL slot on top of the base proficiency (PHB, fighters only).
+  // Base proficiency + specialization. PHB "Cost of Specialization": melee
+  // weapons and crossbows cost 2 slots total (1 prof + 1 spec); any bow other
+  // than a crossbow costs 3 total (1 prof + 2 spec).
   const weaponProfs = root._weaponProfs || [];
   let wpSpent = 0;
+  let specCount = 0;
   weaponProfs.forEach(w => {
     wpSpent += (parseInt(w.slots, 10) || 1);
-    if (w.specialized) wpSpent += 1;
+    if (w.specialized) {
+      wpSpent += getSpecializationCost(w.group);
+      specCount++;
+    }
   });
 
   // --- Nonweapon slots spent ---
-  // NWP costs come from core_nwp.json -- some proficiencies cost 2 slots.
+  // Base cost from core_nwp.json (some cost 2), PLUS the PHB Table 38 crossover
+  // surcharge: a proficiency from a group outside the character's class costs
+  // one additional slot.
   const nwps = root._nwps || [];
+  const allowedGroups = getAllowedNWPGroups(root);
   let nwpSpent = 0;
+  let crossoverCount = 0;
   nwps.forEach(n => {
-    nwpSpent += (parseInt(n.slots, 10) || 1);
+    const cost = getNWPSlotCost(n, allowedGroups);
+    nwpSpent += cost;
+    if (cost > (parseInt(n.slots, 10) || 1)) crossoverCount++;
   });
 
   // --- Render ---
