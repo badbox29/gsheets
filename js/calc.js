@@ -2724,6 +2724,80 @@ function addWeaponProficiency(root, weapon) {
   if (tab) markUnsaved(tab, true, root);
 }
 
+// Render the weapon + nonweapon proficiency slot counters (PHB Table 34).
+function renderProficiencySlots(root) {
+  const wpTextEl  = root.querySelector('.wp-slot-text');
+  const nwpTextEl = root.querySelector('.nwp-slot-text');
+  const wpBoxEl   = root.querySelector('.wp-slot-counter');
+  const nwpBoxEl  = root.querySelector('.nwp-slot-counter');
+
+  if (!wpTextEl || !nwpTextEl) return;
+
+  const budget = getCharacterProficiencySlots(root);
+
+  if (!budget.valid) {
+    wpTextEl.textContent  = "—";
+    nwpTextEl.textContent = "—";
+    if (wpBoxEl)  wpBoxEl.title  = "Enter a recognized class and level to calculate slots.";
+    if (nwpBoxEl) nwpBoxEl.title = "Enter a recognized class and level to calculate slots.";
+    return;
+  }
+
+  // --- Weapon slots spent ---
+  // Each proficiency costs its own `slots` (default 1). Specialization costs
+  // 1 ADDITIONAL slot on top of the base proficiency (PHB, fighters only).
+  const weaponProfs = root._weaponProfs || [];
+  let wpSpent = 0;
+  weaponProfs.forEach(w => {
+    wpSpent += (parseInt(w.slots, 10) || 1);
+    if (w.specialized) wpSpent += 1;
+  });
+
+  // --- Nonweapon slots spent ---
+  // NWP costs come from core_nwp.json -- some proficiencies cost 2 slots.
+  const nwps = root._nwps || [];
+  let nwpSpent = 0;
+  nwps.forEach(n => {
+    nwpSpent += (parseInt(n.slots, 10) || 1);
+  });
+
+  // --- Render ---
+  const wpOver  = wpSpent  > budget.wpTotal;
+  const nwpOver = nwpSpent > budget.nwpTotal;
+
+  const overColor = 'var(--error, #ff6b6b)';
+  const okColor   = 'var(--accent-light)';
+
+  wpTextEl.textContent = `${wpSpent} / ${budget.wpTotal} used`;
+  wpTextEl.style.color = wpOver ? overColor : okColor;
+
+  let nwpLabel = `${nwpSpent} / ${budget.nwpTotal} used`;
+  if (budget.intBonus > 0) {
+    nwpLabel += ` (${budget.nwpBase} class + ${budget.intBonus} INT`;
+    nwpLabel += budget.nwpAdj ? `, ${budget.nwpAdj > 0 ? '+' : ''}${budget.nwpAdj} manual)` : ')';
+  }
+  nwpTextEl.textContent = nwpLabel;
+  nwpTextEl.style.color = nwpOver ? overColor : okColor;
+
+  // --- Tooltips ---
+  const breakdown = budget.sources.join('\n');
+
+  if (wpBoxEl) {
+    let t = `Weapon Proficiency Slots (PHB Table 34)\n${breakdown}\n\nAvailable: ${budget.wpTotal}\nSpent: ${wpSpent}`;
+    const specialized = weaponProfs.filter(w => w.specialized).length;
+    if (specialized > 0) t += `\n  (includes ${specialized} specialization${specialized > 1 ? 's' : ''} at +1 slot each)`;
+    if (wpOver) t += `\n\nOVER BUDGET by ${wpSpent - budget.wpTotal}`;
+    wpBoxEl.title = t;
+  }
+
+  if (nwpBoxEl) {
+    let t = `Nonweapon Proficiency Slots (PHB Table 34)\n${breakdown}\n\nAvailable: ${budget.nwpTotal}\nSpent: ${nwpSpent}`;
+    t += `\n\nIntelligence bonus slots are general purpose --\nthey may be spent on any nonweapon proficiency,\nincluding languages.`;
+    if (nwpOver) t += `\n\nOVER BUDGET by ${nwpSpent - budget.nwpTotal}`;
+    nwpBoxEl.title = t;
+  }
+}
+
 // Render weapon proficiencies list
 function renderWeaponProficiencies(root) {
   renderProficiencySlots(root);
