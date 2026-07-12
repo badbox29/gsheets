@@ -2560,9 +2560,14 @@ function deleteLanguageProficiency(root, index) {
 // Update language read/write flags
 function updateLanguageFlag(root, index, flagName, value) {
   if (!root._languages || !root._languages[index]) return;
-  
+
   root._languages[index][flagName] = value;
-  
+
+  // These flags drive slot cost, the Intelligence cap, and the badges, so the
+  // cards and the proficiency counter both have to repaint.
+  renderLanguageProficiencies(root);
+  if (typeof renderProficiencySlots === 'function') renderProficiencySlots(root);
+
   // Mark as unsaved
   const tab = document.querySelector('.tab.active');
   if (tab) markUnsaved(tab, true, root);
