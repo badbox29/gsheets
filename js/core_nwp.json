@@ -172,12 +172,12 @@
   },
   {
     "Proficiency Name": "Reading/Writing",
-    "Category": "General",
+    "Category": "Wizard",
     "Slots": "1",
     "Ability Check": "Int / +1",
     "Modifier": "+1",
     "Source": "PHB",
-    "Notes": "Literate in a language you can speak"
+    "Notes": "Literate in ONE language you can speak. Reading and writing are a single purchase -- one slot covers both. PHB Table 37: Priest and Wizard groups only."
   },
   {
     "Proficiency Name": "Religion",
@@ -459,13 +459,13 @@
     "Notes": "Make and repair weapons. Must specialize by weapon type. Requires forge."
   },
   {
-    "Proficiency Name": "Ancient Languages",
+    "Proficiency Name": "Languages, Ancient",
     "Category": "Priest",
     "Slots": "1",
     "Ability Check": "Int / 0",
     "Modifier": "0",
     "Source": "PHB",
-    "Notes": "Read and write ancient or dead languages"
+    "Notes": "One slot buys EITHER the ability to read and write the language OR to speak it -- the character's choice, not both."
   },
   {
     "Proficiency Name": "Healing",
@@ -501,7 +501,7 @@
     "Ability Check": "Int / +1",
     "Modifier": "+1",
     "Source": "PHB",
-    "Notes": "Literate in a language you can speak. Priests start with this."
+    "Notes": "Literate in ONE language you can speak. Reading and writing are a single purchase -- one slot covers both."
   },
   {
     "Proficiency Name": "Disguise",
