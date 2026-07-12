@@ -6590,6 +6590,8 @@ function bindDiceRollers(root) {
       const str = parseInt(val(root, 'str') || 0, 10);
       const dex = parseInt(val(root, 'dex') || 0, 10);
       const cha = parseInt(val(root, 'cha') || 0, 10);
+      const strExceptional = val(root, 'str_exceptional') || '';
+      const rollClazz = val(root, 'clazz') || '';
       
       switch(rollType) {
         case 'initiative':
@@ -6613,7 +6615,7 @@ function bindDiceRollers(root) {
           result = rollDiceFormula('1d20');
           result.formula = 'Attack Roll (d20)';
           // Show both melee (STR) and missile (DEX) modifiers
-          const strData = (typeof STR_TABLE !== 'undefined' && STR_TABLE[str]) ? STR_TABLE[str] : null;
+          const strData = getStrengthData(str, strExceptional, rollClazz);
           const dexDataAttack = (typeof DEX_TABLE !== 'undefined' && DEX_TABLE[dex]) ? DEX_TABLE[dex] : null;
           let modLines = [];
           if (strData) {
@@ -6632,7 +6634,7 @@ function bindDiceRollers(root) {
           result.formula = 'Saving Throw (d20)';
           // Show WIS modifier for mental saves
           const wis = parseInt(val(root, 'wis') || 0, 10);
-          const wisAdj = (typeof WIS_SAVE_ADJ !== 'undefined' && WIS_SAVE_ADJ[wis]) ? WIS_SAVE_ADJ[wis] : 0;
+          const wisAdj = (typeof WIS_MDA !== 'undefined' && WIS_MDA[wis]) ? WIS_MDA[wis] : 0;
           modifiers = `Mental effects (WIS): ${wisAdj >= 0 ? '+' : ''}${wisAdj} → ${result.total + wisAdj}\n(Other saves: check character sheet)`;
           break;
           
@@ -6657,7 +6659,7 @@ function bindDiceRollers(root) {
           result = rollDiceFormula('1d20');
           result.formula = 'Open Doors (d20)';
           // STR open doors
-          const strDataDoors = (typeof STR_TABLE !== 'undefined' && STR_TABLE[str]) ? STR_TABLE[str] : null;
+          const strDataDoors = getStrengthData(str, strExceptional, rollClazz);
           if (strDataDoors) {
             const openDoors = strDataDoors[3]; // Open doors is index 3
             modifiers = `STR open doors: ${openDoors}\n(Roll ${openDoors} or less to open)`;
@@ -6668,7 +6670,7 @@ function bindDiceRollers(root) {
           result = rollDiceFormula('1d100');
           result.formula = 'Bend Bars (d100)';
           // STR bend bars
-          const strDataBend = (typeof STR_TABLE !== 'undefined' && STR_TABLE[str]) ? STR_TABLE[str] : null;
+          const strDataBend = getStrengthData(str, strExceptional, rollClazz);
           if (strDataBend) {
             const bendBars = strDataBend[4]; // Bend bars is index 4
             modifiers = `STR bend bars: ${bendBars}%\n(Roll ${bendBars} or less to succeed)`;
