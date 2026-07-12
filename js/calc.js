@@ -2867,6 +2867,12 @@ function renderProficiencySlots(root) {
     if (cost > (parseInt(n.slots, 10) || 1)) crossoverCount++;
   });
 
+  // Languages are bought with nonweapon proficiency slots (PHB: "Languages,
+  // Modern" to speak, "Reading/Writing" for literacy). Native and DM-granted
+  // languages are free. They draw on the same pool, so they count here.
+  const langSpent = getLanguageSlotsSpent(root);
+  nwpSpent += langSpent;
+
   // --- Render ---
   const wpOver  = wpSpent  > budget.wpTotal;
   const nwpOver = nwpSpent > budget.nwpTotal;
@@ -2903,6 +2909,9 @@ function renderProficiencySlots(root) {
 
   if (nwpBoxEl) {
     let t = `Nonweapon Proficiency Slots (PHB Table 34)\n${breakdown}\n\nAvailable: ${budget.nwpTotal}\nSpent: ${nwpSpent}`;
+    if (langSpent > 0) {
+      t += `\n  (includes ${langSpent} slot${langSpent === 1 ? '' : 's'} spent on languages)`;
+    }
     if (crossoverCount > 0) {
       t += `\n  (includes ${crossoverCount} out-of-group proficienc${crossoverCount > 1 ? 'ies' : 'y'}`;
       t += `\n   at +1 slot each -- PHB Table 38)`;
