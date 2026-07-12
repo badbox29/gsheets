@@ -2706,6 +2706,7 @@ function loadSheet(root, data){
   
   // Load languages
   root._languages = data.languages || [];
+  if (typeof ensureNativeLanguage === 'function') ensureNativeLanguage(root);
   
   // Load weapon proficiencies
   const profAdj = data.profSlotAdj || {};
@@ -3657,10 +3658,13 @@ function bindSheet(root, tab){
       } else if (charType === 'dual') {
         updateDualClassCalculations(root);
       }
-      renderRacialAbilities(root);
+      renderRacialAbilities(root);renderRacialAbilities(root);
       populateKitDropdown(root);
       renderKitAbilities(root);
       renderMovementRate(root);
+      if (typeof ensureNativeLanguage === 'function') ensureNativeLanguage(root);
+      renderLanguageProficiencies(root);
+      renderProficiencySlots(root);
       renderThiefSkills(root);
 	  updateThiefSkillsAccessibility(root);
 	  renderThiefSkillsSection(root);
@@ -3706,6 +3710,7 @@ function bindSheet(root, tab){
   renderSpellAccess(root);
   toggleSpellBrowser(root);
   toggleLanguageBrowser(root);
+  if (typeof ensureNativeLanguage === 'function') ensureNativeLanguage(root);
   renderLanguageProficiencies(root);
   renderWeaponProficiencies(root);
   renderNWProficiencies(root);
