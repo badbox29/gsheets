@@ -151,10 +151,8 @@ function renderCombatQuickReference(root) {
   const currentHP = Math.max(0, maxHP - damageTaken);
   const hpDisplay = currentHP + '/' + maxHP;
   
-  // Calculate initiative (DEX reaction adjustment)
-  const dexData = (typeof DEX_TABLE !== 'undefined' && DEX_TABLE[dex]) ? DEX_TABLE[dex] : null;
-  const initiative = dexData ? dexData[0] : 0; // Reaction adjustment is index 0
-  const initiativeStr = (initiative >= 0 ? '+' : '') + initiative;
+  // PHB Ch.9: Dexterity does NOT modify initiative in 2e. Low roll wins.
+  const initiativeStr = 'd10 (low wins)';
   
   // Calculate STR bonuses — shared helper handles exceptional 18/xx (warriors only)
   let strToHit = 0;
