@@ -2844,28 +2844,61 @@ function renderWeaponProficiencies(root) {
     return;
   }
   
+  // PHB: weapon specialization is available to SINGLE-CLASS FIGHTERS ONLY.
+  const specAllowed = canSpecialize(root);
+
   weaponProfs.forEach((prof, index) => {
     const profDiv = document.createElement('div');
     profDiv.className = 'weapon-prof-item';
     profDiv.style.cssText = 'padding:8px;margin-bottom:8px;border:1px solid var(--border);border-radius:4px;background:var(--glass);display:flex;justify-content:space-between;align-items:center;';
-    
+
+    const specCost = getSpecializationCost(prof.group);
+    const totalSlots = (parseInt(prof.slots, 10) || 1) + (prof.specialized ? specCost : 0);
+
+    let specHTML = '';
+    if (specAllowed) {
+      specHTML = `
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);margin:0 8px 0 0;white-space:nowrap;cursor:pointer;"
+               title="Specialization costs ${specCost} additional slot${specCost > 1 ? 's' : ''} for this weapon.&#10;PHB: melee/crossbow = +1, any other bow = +2.">
+          <input type="checkbox" class="weapon-prof-specialized" data-index="${index}" ${prof.specialized ? 'checked' : ''} style="width:auto;margin:0;">
+          Specialized
+        </label>`;
+    } else if (prof.specialized) {
+      // Flag a stale flag -- e.g. a fighter who later multi-classed.
+      specHTML = `<span style="font-size:11px;color:var(--error, #ff6b6b);margin-right:8px;white-space:nowrap;"
+                        title="Specialization is available to single-class fighters only (PHB). This flag is not being counted.">Specialized (N/A)</span>`;
+    }
+
     profDiv.innerHTML = `
       <div style="flex:1;">
         <strong>${prof.name}</strong>
         <span style="margin-left:8px;font-size:11px;color:var(--muted);">${prof.group}</span>
-        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Slots: ${prof.slots}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Slots: ${totalSlots}${prof.specialized && specAllowed ? ` (${prof.slots} + ${specCost} specialization)` : ''}</div>
       </div>
+      ${specHTML}
       <button class="delete-weapon-prof" data-index="${index}" style="padding:4px 8px;font-size:11px;margin-left:8px;">Delete</button>
     `;
-    
+
     listDiv.appendChild(profDiv);
   });
-  
+
   // Attach delete event listeners
   listDiv.querySelectorAll('.delete-weapon-prof').forEach(btn => {
     btn.onclick = () => {
       const index = parseInt(btn.getAttribute('data-index'), 10);
       deleteWeaponProficiency(root, index);
+    };
+  });
+
+  // Attach specialization toggles
+  listDiv.querySelectorAll('.weapon-prof-specialized').forEach(cb => {
+    cb.onchange = () => {
+      const index = parseInt(cb.getAttribute('data-index'), 10);
+      if (!root._weaponProfs || !root._weaponProfs[index]) return;
+      root._weaponProfs[index].specialized = cb.checked;
+      renderWeaponProficiencies(root);
+      const tab = document.querySelector('.tab.active');
+      if (tab) markUnsaved(tab, true, root);
     };
   });
 }
