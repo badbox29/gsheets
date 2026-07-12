@@ -611,6 +611,101 @@ const NWP_GROUP_CROSSOVERS = {
   "bard":        ["rogue", "warrior", "wizard", "general"]
 };
 
+// === Nonweapon Proficiency Groups (PHB Table 37) ===
+// Table 37 lists most proficiencies under SEVERAL groups. core_nwp.json only
+// carries one `Category` each, which mispriced ~16 proficiencies against the
+// Table 38 crossover rule (a cleric was being surcharged for Herbalism, a mage
+// for Riding). This table is the authority; the JSON's Category is now only a
+// fallback for custom/homebrew proficiencies not listed here.
+// Keys are lowercased proficiency names.
+const NWP_TABLE37_GROUPS = {
+  // --- General ---
+  "agriculture":        ["general"],
+  "animal handling":    ["general"],
+  "animal training":    ["general"],
+  "artistic ability":   ["general"],
+  "blacksmithing":      ["general"],
+  "brewing":            ["general"],
+  "carpentry":          ["general"],
+  "cobbling":           ["general"],
+  "cooking":            ["general"],
+  "dancing":            ["general"],
+  "direction sense":    ["general"],
+  "etiquette":          ["general"],
+  "fire-building":      ["general"],
+  "fishing":            ["general"],
+  "heraldry":           ["general"],
+  "languages, modern":  ["general"],
+  "leatherworking":     ["general"],
+  "mining":             ["general"],
+  "pottery":            ["general"],
+  "riding, airborne":   ["general"],
+  "riding, land-based": ["general"],
+  "rope use":           ["general"],
+  "seamanship":         ["general"],
+  "seamstress/tailor":  ["general"],
+  "singing":            ["general"],
+  "stonemasonry":       ["general"],
+  "swimming":           ["general"],
+  "weather sense":      ["general"],
+  "weaving":            ["general"],
+
+  // --- Multi-group ---
+  "ancient history":    ["priest", "wizard", "rogue"],
+  "astrology":          ["priest", "wizard"],
+  "engineering":        ["priest", "wizard"],
+  "herbalism":          ["priest", "wizard"],
+  "languages, ancient": ["priest", "wizard"],
+  "reading/writing":    ["priest", "wizard"],
+  "religion":           ["priest", "wizard"],
+  "spellcraft":         ["priest", "wizard"],
+  "navigation":         ["priest", "wizard", "warrior"],
+  "local history":      ["priest", "rogue"],
+  "musical instrument": ["priest", "rogue"],
+  "gem cutting":        ["wizard", "rogue"],
+  "blind-fighting":     ["warrior", "rogue"],
+  "gaming":             ["warrior", "rogue"],
+  "set snares":         ["warrior", "rogue"],
+
+  // --- Priest only ---
+  "healing":            ["priest"],
+
+  // --- Rogue only ---
+  "appraising":         ["rogue"],
+  "disguise":           ["rogue"],
+  "forgery":            ["rogue"],
+  "juggling":           ["rogue"],
+  "jumping":            ["rogue"],
+  "reading lips":       ["rogue"],
+  "tightrope walking":  ["rogue"],
+  "tumbling":           ["rogue"],
+  "ventriloquism":      ["rogue"],
+
+  // --- Warrior only ---
+  "animal lore":        ["warrior"],
+  "armorer":            ["warrior"],
+  "bowyer/fletcher":    ["warrior"],
+  "charioteering":      ["warrior"],
+  "endurance":          ["warrior"],
+  "hunting":            ["warrior"],
+  "mountaineering":     ["warrior"],
+  "running":            ["warrior"],
+  "survival":           ["warrior"],
+  "tracking":           ["warrior"],
+  "weaponsmithing":     ["warrior"]
+};
+
+// Every Table 37 group a proficiency belongs to. Falls back to the entry's own
+// Category for custom proficiencies the table doesn't know about.
+function getNWPGroups(nwp) {
+  const name = (nwp.name || nwp['Proficiency Name'] || "").trim().toLowerCase();
+  const known = NWP_TABLE37_GROUPS[name];
+  if (known) return known;
+
+  const cat = (nwp.category || nwp.Category || "").trim().toLowerCase();
+  return cat ? [cat] : [];
+}
+
 // Returns the set of NWP groups this character may take at no surcharge.
 // Multi/dual-class characters get the UNION of their classes' groups.
 function getAllowedNWPGroups(root) {
@@ -647,16 +742,20 @@ function getAllowedNWPGroups(root) {
 // Slot cost of a single nonweapon proficiency, including the Table 38 crossover
 // surcharge. `nwp` is an entry from root._nwps.
 function getNWPSlotCost(nwp, allowedGroups) {
-  const base = parseInt(nwp.slots, 10) || 1;
-  const category = (nwp.category || "").trim().toLowerCase();
+  const base = parseInt(nwp.slots || nwp.Slots, 10) || 1;
 
-  // Unknown/blank category -- assume in-group, no surcharge.
-  if (!category) return base;
+  const groups = getNWPGroups(nwp);
+
+  // Unknown proficiency -- assume in-group, don't penalize.
+  if (!groups.length) return base;
 
   // No recognized class -- don't penalize.
   if (!allowedGroups || allowedGroups.size === 0) return base;
 
-  return allowedGroups.has(category) ? base : base + 1;
+  // PHB Table 38: a proficiency from ANY group the character has access to
+  // costs its listed price. Only if it is outside ALL of them does it cost +1.
+  const inGroup = groups.some(g => allowedGroups.has(g));
+  return inGroup ? base : base + 1;
 }
 
 // === Weapon Specialization (PHB, Chapter 5) ===
