@@ -3546,29 +3546,36 @@ function renderMovementRate(root) {
   // Get encumbrance category
   const category = val(root, "encumbrance_category") || "";
   
-  // Calculate movement modifier based on encumbrance
-  let movementMultiplier = 1.0;
+  // Encumbrance movement penalties -- OPTIONAL RULE, off by default.
+  // When ENCUMBRANCE_RULES_ENABLED is false, encumbrance is purely
+  // informational: the category still displays, but movement is never reduced.
+  let currentMovement = baseMovement;
   let encumbranceNote = "";
-  
-  if (category === "Unencumbered" || category === "Light") {
-    movementMultiplier = 1.0;
-    encumbranceNote = "";
-  } else if (category === "Moderate") {
-    movementMultiplier = 2/3;
-    encumbranceNote = " (Moderate Load)";
-  } else if (category === "Heavy") {
-    movementMultiplier = 0.5;
-    encumbranceNote = " (Heavy Load)";
-  } else if (category === "Severe") {
-    movementMultiplier = 1/3;
-    encumbranceNote = " (Severe Load)";
-  } else if (category === "Overloaded!") {
-    movementMultiplier = 0;
-    encumbranceNote = " (Overloaded!)";
+
+  if (typeof ENCUMBRANCE_RULES_ENABLED !== "undefined" && ENCUMBRANCE_RULES_ENABLED) {
+    // PHB "Effects of Encumbrance" (Basic/Tournament rule):
+    // Light reduces movement by 1/3, Moderate by 1/2, Heavy by 2/3,
+    // and Severe lowers the movement rate to 1. Round fractions down.
+    if (category === "Light") {
+      currentMovement = Math.floor(baseMovement * 2 / 3);
+      encumbranceNote = " (Light Load)";
+    } else if (category === "Moderate") {
+      currentMovement = Math.floor(baseMovement * 1 / 2);
+      encumbranceNote = " (Moderate Load)";
+    } else if (category === "Heavy") {
+      currentMovement = Math.floor(baseMovement * 1 / 3);
+      encumbranceNote = " (Heavy Load)";
+    } else if (category === "Severe") {
+      currentMovement = 1;
+      encumbranceNote = " (Severe Load)";
+    } else if (category === "Overloaded!") {
+      currentMovement = 0;
+      encumbranceNote = " (Overloaded!)";
+    }
+  } else if (category && category !== "Unencumbered" && category !== "—") {
+    // Informational only -- flag the load without touching the numbers.
+    encumbranceNote = " (" + category.replace("!", "") + " load -- no penalty applied)";
   }
-  
-  // Calculate current movement
-  const currentMovement = Math.round(baseMovement * movementMultiplier * 10) / 10;
   
   // Calculate derived movements
   const running = Math.round(currentMovement * 3 * 10) / 10;
