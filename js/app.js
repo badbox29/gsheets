@@ -2616,6 +2616,10 @@ function collectSheet(root){
       current: val(root,'encumbrance_current'),
       max: val(root,'encumbrance_max')
     },
+    profSlotAdj: {
+      wp: val(root,'prof_wp_adj'),
+      nwp: val(root,'prof_nwp_adj')
+    },
     selectedSpheres: selectedSpheres,
     selectedSchools: selectedSchools,
 	languages: languages,
@@ -2704,6 +2708,10 @@ function loadSheet(root, data){
   root._languages = data.languages || [];
   
   // Load weapon proficiencies
+  const profAdj = data.profSlotAdj || {};
+  val(root, 'prof_wp_adj',  profAdj.wp  || 0);
+  val(root, 'prof_nwp_adj', profAdj.nwp || 0);
+
   root._weaponProfs = data.weaponProfs || [];
   
   // Load non-weapon proficiencies
@@ -8096,6 +8104,7 @@ function recalculateAll(root) {
   if (typeof renderTurnUndeadTable === 'function') renderTurnUndeadTable(root);
   if (typeof renderCurrentHP === 'function') renderCurrentHP(root);
   if (typeof renderEncumbrance === 'function') renderEncumbrance(root);
+  if (typeof renderProficiencySlots === 'function') renderProficiencySlots(root);
   if (typeof renderMovementRate === 'function') renderMovementRate(root);
   if (typeof renderArmorClass === 'function') renderArmorClass(root);
   if (typeof renderClassAbilities === 'function') renderClassAbilities(root);
