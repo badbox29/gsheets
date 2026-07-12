@@ -3138,6 +3138,9 @@ function loadSheet(root, data){
   renderThiefSkillsSection(root);
   renderThiefPointsSection(root);
   updateThiefPointsDisplay(root);
+  renderCharacterBonuses(root);
+  renderWeaponProficiencies(root);  // re-renders spec checkboxes if class changed
+  renderProficiencySlots(root);
   // Check dwarven abilities on load
   checkDwarvenAbilities(root);
   renderCharacterBonuses(root);
@@ -3416,12 +3419,24 @@ function bindSheet(root, tab){
     });
   }
 
+  // Manual proficiency slot adjustments (kits, DM rulings) -- live update
+  ['prof_wp_adj', 'prof_nwp_adj'].forEach(field => {
+    const inp = qs(root, '[data-field="' + field + '"]');
+    if (inp) {
+      inp.addEventListener("input", () => {
+        renderProficiencySlots(root);
+        markUnsaved(tab, true, root);
+      });
+    }
+  });
+
   // INT triggers intelligence effects AND prime req XP bonus
   const intInput = qs(root, '[data-field="int"]');
   if (intInput) {
     intInput.addEventListener("input", () => {
       renderIntelligenceEffects(root);
       renderPrimeRequisiteBonus(root);
+      renderProficiencySlots(root);  // INT grants bonus NWP slots (PHB Table 4)
       const charType = (val(root, "char_type") || "single").toLowerCase();
       if (charType === 'dual') updateDualClassCalculations(root);
       markUnsaved(tab, true, root);
