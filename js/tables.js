@@ -682,6 +682,87 @@ function getSpecializationCost(group) {
   return 1;                    // melee weapons and crossbows
 }
 
+// === Racial Languages (AD&D 2E, PHB Chapter 2 racial descriptions) ===
+// `native`  : the character's native tongue. FREE -- costs no proficiency slot
+//             and does NOT count against the Intelligence language cap.
+//             PHB: "The character never needs to spend any proficiency slots
+//             to speak his native language."
+// `choices` : the initial languages that race may choose from. Every racial
+//             entry hedges with "and any others your DM allows", so treat this
+//             as a SOFT hint (sort-to-top / filter), never a hard restriction.
+//
+// Names must match languages.json EXACTLY -- note Dwarvish / Elvish / Orcish.
+const RACE_LANGUAGES = {
+  "dwarf": {
+    native: "Dwarvish",
+    choices: ["Common", "Dwarvish", "Gnome", "Goblin", "Kobold", "Orcish"]
+  },
+  "elf": {
+    native: "Elvish",
+    choices: ["Common", "Elvish", "Gnome", "Halfling", "Goblin", "Hobgoblin", "Orcish", "Gnoll"]
+  },
+  "gnome": {
+    native: "Gnome",
+    choices: ["Common", "Dwarvish", "Gnome", "Halfling", "Goblin", "Kobold", "Burrowing Mammal Speech"]
+  },
+  "halfling": {
+    native: "Halfling",
+    choices: ["Common", "Halfling", "Dwarvish", "Elvish", "Gnome", "Goblin", "Orcish"]
+  },
+  // PHB: "Half-elves do not have a language of their own." The only race with
+  // no native tongue. Default them to Common so they aren't left mute, but the
+  // player can re-tag whichever language is really theirs.
+  "half-elf": {
+    native: "Common",
+    choices: ["Common", "Elvish", "Gnome", "Halfling", "Goblin", "Hobgoblin", "Orcish", "Gnoll"]
+  },
+  // PHB: human PCs "start the game knowing only their regional language."
+  // That is campaign-specific, so default to Common and let the player use
+  // "Set as Native" to nominate their actual regional tongue.
+  "human": {
+    native: "Common",
+    choices: []
+  }
+};
+
+// Look up a race's language entry. Tolerates "Half-Elf", "half elf", etc.
+function getRacialLanguages(race) {
+  let r = (race || "").trim().toLowerCase().replace(/\s+/g, "-");
+  if (r === "halfelf") r = "half-elf";
+  return RACE_LANGUAGES[r] || null;
+}
+
+// === Language slot cost (PHB) ===
+// Speaking a language = 1 slot ("Languages, Modern", a General 1-slot NWP).
+// Literacy = 1 further slot ("Reading/Writing"). Reading and writing are a
+// SINGLE purchase -- one slot covers both, so ticking both costs no more.
+// Native languages are free. "Granted" languages were given by the DM at
+// character creation (RAW-permitted) -- they cost nothing but DO still count
+// against the Intelligence cap.
+function getLanguageSlotCost(lang) {
+  if (!lang) return 0;
+  if (lang.isNative)  return 0;
+  if (lang.isGranted) return 0;
+
+  let cost = 0;
+  if (lang.canSpeak !== false) cost += 1;          // default: speaks it
+  if (lang.canRead || lang.canWrite) cost += 1;    // one slot buys both
+  return cost;
+}
+
+// Does this language count against the Intelligence language cap (Table 4)?
+// Native does not -- Table 4 counts languages IN ADDITION to the native tongue.
+// Everything else does, including DM-granted languages.
+function countsAgainstLanguageCap(lang) {
+  return !!lang && !lang.isNative;
+}
+
+// Total proficiency slots spent on languages across a character.
+function getLanguageSlotsSpent(root) {
+  const languages = root._languages || [];
+  return languages.reduce((sum, l) => sum + getLanguageSlotCost(l), 0);
+}
+
 // HP bonus per level: [non-warrior, warrior]
 const CON_HP_BONUS = {
   1:[-3,-3], 2:[-2,-2], 3:[-2,-2], 4:[-1,-1], 5:[-1,-1],
