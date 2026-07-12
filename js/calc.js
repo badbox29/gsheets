@@ -3144,18 +3144,27 @@ function renderNWProficiencies(root) {
     return;
   }
   
+  // Effective costs include the PHB Table 38 out-of-group surcharge.
+  const nwpAllowedGroups = getAllowedNWPGroups(root);
+
   nwps.forEach((nwp, index) => {
     const nwpDiv = document.createElement('div');
     nwpDiv.className = 'nwp-item';
     nwpDiv.style.cssText = 'padding:8px;margin-bottom:8px;border:1px solid var(--border);border-radius:4px;background:var(--glass);';
-    
+
+    const baseSlots = parseInt(nwp.slots, 10) || 1;
+    const effCost   = getNWPSlotCost(nwp, nwpAllowedGroups);
+    const slotText  = effCost > baseSlots
+      ? `<span style="color:var(--error, #ff6b6b);" title="Out-of-group proficiency: +1 slot (PHB Table 38)">Slots: ${effCost} (${baseSlots} +1 out-of-group)</span>`
+      : `Slots: ${effCost}`;
+
     nwpDiv.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px;">
         <div style="flex:1;">
           <strong>${nwp.name}</strong>
           <span style="margin-left:8px;font-size:11px;color:var(--muted);">${nwp.category}</span>
           <div style="font-size:11px;color:var(--muted);margin-top:2px;">
-            Slots: ${nwp.slots} | Check: ${nwp.abilityCheck}
+            ${slotText} | Check: ${nwp.abilityCheck}
           </div>
           ${nwp.notes ? `<div style="font-size:11px;color:var(--muted);margin-top:4px;font-style:italic;">${nwp.notes}</div>` : ''}
         </div>
