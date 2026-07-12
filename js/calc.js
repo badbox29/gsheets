@@ -3156,12 +3156,16 @@ async function renderNWPBrowser(root) {
       ? `<span style="color:var(--error, #ff6b6b);" title="Out-of-group proficiency: +1 slot (PHB Table 38)">Slots: ${effCost} (${baseSlots} +1 out-of-group)</span>`
       : `Slots: ${effCost}`;
 
+    const browseGroupLabel = getNWPGroups(nwp)
+      .map(g => g.charAt(0).toUpperCase() + g.slice(1))
+      .join(', ');
+
     const infoDiv = document.createElement('div');
     infoDiv.style.flex = '1';
     infoDiv.innerHTML = `
       <div>
         <strong>${nwp['Proficiency Name']}</strong>
-        <span style="margin-left:8px;font-size:11px;color:var(--muted);">${nwp.Category || ''}</span>
+        <span style="margin-left:8px;font-size:11px;color:var(--muted);">${browseGroupLabel}</span>
       </div>
       <div style="font-size:11px;color:var(--muted);margin-top:2px;">
         ${slotText} | Check: ${nwp['Ability Check'] || 'N/A'}
@@ -3262,11 +3266,17 @@ function renderNWProficiencies(root) {
       ? `<span style="color:var(--error, #ff6b6b);" title="Out-of-group proficiency: +1 slot (PHB Table 38)">Slots: ${effCost} (${baseSlots} +1 out-of-group)</span>`
       : `Slots: ${effCost}`;
 
+    // Show every Table 37 group this proficiency belongs to, not just the one
+    // label stored in core_nwp.json -- otherwise the tag contradicts the cost.
+    const groupLabel = getNWPGroups(nwp)
+      .map(g => g.charAt(0).toUpperCase() + g.slice(1))
+      .join(', ');
+
     nwpDiv.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px;">
         <div style="flex:1;">
           <strong>${nwp.name}</strong>
-          <span style="margin-left:8px;font-size:11px;color:var(--muted);">${nwp.category}</span>
+          <span style="margin-left:8px;font-size:11px;color:var(--muted);">${groupLabel}</span>
           <div style="font-size:11px;color:var(--muted);margin-top:2px;">
             ${slotText} | Check: ${nwp.abilityCheck}
           </div>
