@@ -442,6 +442,40 @@ const CLASS_CATEGORIES = {
   "specialist": "wizard",
 };
 
+// === Proficiency Slots (AD&D 2E, PHB Table 34) ===
+// wpInitial / nwpInitial : slots at 1st level
+// wpLevels  / nwpLevels  : gain 1 additional slot every N levels.
+//   Gains use floor(level / N) with NO offset -- a warrior gains weapon slots
+//   at levels 3, 6, 9, ... (not 4, 7, 10).
+// nonProfPenalty : attack roll penalty for using a weapon you are NOT
+//   proficient with (PHB Table 34 "Penalty" column).
+const PROFICIENCY_SLOTS = {
+  warrior: { wpInitial: 4, wpLevels: 3, nwpInitial: 3, nwpLevels: 3, nonProfPenalty: -2 },
+  wizard:  { wpInitial: 1, wpLevels: 6, nwpInitial: 4, nwpLevels: 3, nonProfPenalty: -5 },
+  priest:  { wpInitial: 2, wpLevels: 4, nwpInitial: 4, nwpLevels: 3, nonProfPenalty: -3 },
+  rogue:   { wpInitial: 2, wpLevels: 4, nwpInitial: 3, nwpLevels: 4, nonProfPenalty: -3 }
+};
+
+// Returns { wp, nwp, category, nonProfPenalty } for a single class at a level,
+// or null if the class is unrecognized.
+function getProficiencySlots(clazz, level) {
+  const category = CLASS_CATEGORIES[(clazz || "").trim().toLowerCase()];
+  if (!category) return null;
+
+  const t = PROFICIENCY_SLOTS[category];
+  if (!t) return null;
+
+  level = parseInt(level, 10);
+  if (isNaN(level) || level < 1) level = 1;
+
+  return {
+    category:       category,
+    wp:             t.wpInitial  + Math.floor(level / t.wpLevels),
+    nwp:            t.nwpInitial + Math.floor(level / t.nwpLevels),
+    nonProfPenalty: t.nonProfPenalty
+  };
+}
+
 // HP bonus per level: [non-warrior, warrior]
 const CON_HP_BONUS = {
   1:[-3,-3], 2:[-2,-2], 3:[-2,-2], 4:[-1,-1], 5:[-1,-1],
