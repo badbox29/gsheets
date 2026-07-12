@@ -755,6 +755,50 @@ const STR_18_EXCEPTIONAL = {
   100: [3, 6, 335, 16, 40]   // 18/00
 };
 
+// === Shared class-group predicates ===
+// Note: these are substring matches against the character's class string, so
+// "hb_dpaladin" matches "paladin", "fighter/thief" matches "fighter", etc.
+const WARRIOR_CLASSES = ["fighter", "paladin", "ranger", "warrior", "barbarian"];
+const PRIEST_CLASSES  = ["cleric", "druid"];
+
+function isWarriorClass(clazz) {
+  clazz = (clazz || "").toLowerCase();
+  return WARRIOR_CLASSES.some(c => clazz.includes(c));
+}
+
+// Priest CLASSES only (clerics + druids). Paladins and rangers cast priest
+// spells but are warriors -- per PHB they get no WIS bonus spells and are not
+// subject to WIS spell failure. Spell immunity and MDA are NOT gated by class.
+function isPriestClass(clazz) {
+  clazz = (clazz || "").toLowerCase();
+  return PRIEST_CLASSES.some(c => clazz.includes(c));
+}
+
+// === Shared Strength lookup ===
+// Single source of truth for Strength data, including exceptional 18/xx.
+// Returns [to-hit, damage, weight allowance, open doors, bend bars] or null.
+// Exceptional strength applies to warriors only (PHB).
+function getStrengthData(str, exceptionalStr, clazz) {
+  str = parseInt(str, 10);
+  if (isNaN(str) || !STR_TABLE[str]) return null;
+
+  // Not an exceptional-strength case -- return the plain row.
+  if (str !== 18 || !exceptionalStr || !isWarriorClass(clazz)) {
+    return STR_TABLE[str];
+  }
+
+  const exc = parseInt(exceptionalStr, 10);
+  if (isNaN(exc)) return STR_TABLE[18];
+
+  if (exc >= 1  && exc <= 50)   return STR_18_EXCEPTIONAL[1];
+  if (exc >= 51 && exc <= 75)   return STR_18_EXCEPTIONAL[51];
+  if (exc >= 76 && exc <= 90)   return STR_18_EXCEPTIONAL[76];
+  if (exc >= 91 && exc <= 99)   return STR_18_EXCEPTIONAL[91];
+  if (exc === 0 || exc === 100) return STR_18_EXCEPTIONAL[100];  // "00" or "100"
+
+  return STR_TABLE[18];
+}
+
 // === Dexterity Table (AD&D 2E) ===
 // Format: [reaction adjustment, missile attack adjustment, defensive adjustment (AC)]
 const DEX_TABLE = {
