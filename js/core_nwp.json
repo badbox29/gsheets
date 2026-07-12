@@ -155,7 +155,7 @@
   {
     "Proficiency Name": "Mining",
     "Category": "General",
-    "Slots": "1",
+    "Slots": "2",
     "Ability Check": "Wis / -3",
     "Modifier": "-3",
     "Source": "PHB",
