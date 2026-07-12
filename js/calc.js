@@ -3577,6 +3577,10 @@ function renderMovementRate(root) {
     encumbranceNote = " (" + category.replace("!", "") + " load -- no penalty applied)";
   }
   
+  // Derived multiplier -- retained for the tooltip and color coding below.
+  // With encumbrance rules off this is always 1.0, so movement renders normally.
+  const movementMultiplier = baseMovement > 0 ? currentMovement / baseMovement : 1;
+
   // Calculate derived movements
   const running = Math.round(currentMovement * 3 * 10) / 10;
   const climbing = Math.round(currentMovement / 2 * 10) / 10;
