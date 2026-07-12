@@ -783,11 +783,11 @@ function getStrengthData(str, exceptionalStr, clazz) {
 // Format: [reaction adjustment, missile attack adjustment, defensive adjustment (AC)]
 const DEX_TABLE = {
   1: [-6, -6, 5],
-  2: [-4, -4, 4],
-  3: [-3, -3, 3],
-  4: [-2, -2, 2],
-  5: [-1, -1, 1],
-  6: [0, 0, 0],
+  2: [-4, -4, 5],
+  3: [-3, -3, 4],
+  4: [-2, -2, 3],
+  5: [-1, -1, 2],
+  6: [0, 0, 1],
   7: [0, 0, 0],
   8: [0, 0, 0],
   9: [0, 0, 0],
