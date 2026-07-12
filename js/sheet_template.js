@@ -594,6 +594,13 @@ const SHEET_HTML = `
             <h3 style="margin:0;">Weapon Proficiencies</h3>
             <button class="add-custom-weapon-prof">+ Add Custom Weapon Proficiency</button>
           </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px;margin-bottom:8px;background:var(--glass);border-radius:4px;font-size:13px;">
+            <div class="wp-slot-counter">Weapon Slots: <span class="wp-slot-text">—</span></div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <label style="font-size:12px;color:var(--muted);margin:0;">Manual adj.</label>
+              <input data-field="prof_wp_adj" type="number" value="0" style="width:60px;text-align:center;">
+            </div>
+          </div>
           <div class="list weapon-profs-list"></div>
         </section>
 		
@@ -638,6 +645,13 @@ const SHEET_HTML = `
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
             <h3 style="margin:0;">Non-Weapon Proficiencies</h3>
             <button class="add-custom-nwp">+ Add Custom Non-Weapon Proficiency</button>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px;margin-bottom:8px;background:var(--glass);border-radius:4px;font-size:13px;">
+            <div class="nwp-slot-counter">Nonweapon Slots: <span class="nwp-slot-text">—</span></div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <label style="font-size:12px;color:var(--muted);margin:0;">Manual adj.</label>
+              <input data-field="prof_nwp_adj" type="number" value="0" style="width:60px;text-align:center;">
+            </div>
           </div>
           <div class="list nwp-list"></div>
         </section>
