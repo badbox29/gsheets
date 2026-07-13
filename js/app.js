@@ -2018,6 +2018,23 @@ function weaponTypeOptions(selected) {
   ).join('');
 }
 
+function weaponProficiencyOptions(selected) {
+  // "auto" derives status from _weaponProfs using the PHB related-weapons list.
+  // The other three are DM/kit overrides -- the PHB explicitly leaves related
+  // weapon decisions to the DM, and kits or magic items can grant proficiency
+  // the tool cannot see.
+  const opts = {
+    auto:       'Auto',
+    proficient: 'Proficient',
+    related:    'Related',
+    none:       'Not Proficient'
+  };
+  const sel = (selected || 'auto').trim().toLowerCase();
+  return Object.keys(opts).map(k =>
+    '<option value="'+k+'"'+(k === sel ? ' selected' : '')+'>'+opts[k]+'</option>'
+  ).join('');
+}
+
 function weaponStrBonusOptions(selected, category, wtype) {
   // Fall back to the PHB default for this category/type when the weapon has no
   // explicit setting (legacy rows, or freshly added weapons).
@@ -2075,6 +2092,7 @@ function makeWeaponNode(data={}, onChange){
       '<div style="width:130px;text-align:center;">Category</div>' +
       '<div style="width:110px;text-align:center;">Type</div>' +
       '<div style="width:130px;text-align:center;">STR Bonus</div>' +
+      '<div style="width:130px;text-align:center;">Proficiency</div>' +
       '<div style="flex:1;"></div>' +
     '</div>' +
     '<div style="display:flex;align-items:stretch;gap:8px;">' +
@@ -2093,7 +2111,17 @@ function makeWeaponNode(data={}, onChange){
         'Defaults are set from Category and Type; override as your DM allows.">' +
         weaponStrBonusOptions(data.strBonus, data.category, data.wtype) +
       '</select>' +
-      '<div style="flex:1;"></div>' +
+      '<select class="weapon-prof-status" style="width:130px;" title="' +
+        'Proficiency with this weapon (PHB Table 34 penalty column).&#10;' +
+        'Auto: derived from your Weapon Proficiencies, using the PHB&#10;' +
+        '  related-weapons list. Related weapons cost HALF the penalty.&#10;' +
+        'Proficient: no penalty (use if a kit or item grants it).&#10;' +
+        'Related: half penalty -- for DMs who count similar weapons the&#10;' +
+        '  PHB list omits (e.g. short sword vs long sword).&#10;' +
+        'Not Proficient: force the full penalty.">' +
+        weaponProficiencyOptions(data.profStatus) +
+      '</select>' +
+      '<div class="weapon-prof-badge" style="flex:1;display:flex;align-items:center;font-size:11px;padding-left:6px;"></div>' +
     '</div>';
   // Remove button
   el.querySelector('.rm').onclick = ()=>{ el.remove(); onChange && onChange(); };
@@ -2514,7 +2542,8 @@ function collectSheet(root){
       // default; strBonus is the explicit, DM-overridable setting.
       category: (n.querySelector('.weapon-category') && n.querySelector('.weapon-category').value) || '',
       wtype: (n.querySelector('.weapon-wtype') && n.querySelector('.weapon-wtype').value) || '',
-      strBonus: (n.querySelector('.weapon-str-bonus') && n.querySelector('.weapon-str-bonus').value) || ''
+      strBonus: (n.querySelector('.weapon-str-bonus') && n.querySelector('.weapon-str-bonus').value) || '',
+      profStatus: (n.querySelector('.weapon-prof-status') && n.querySelector('.weapon-prof-status').value) || 'auto'
     }));
 	
   const ammunition = qsa(root,'.ammunition-list .item')
