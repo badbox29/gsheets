@@ -893,6 +893,7 @@ const SHEET_HTML = `
             </div>
             
             <!-- Spell Results -->
+            <div class="spell-int-cap-notice" style="display:none;font-size:11px;color:var(--error, #ff6b6b);padding:6px 8px;margin-bottom:8px;background:var(--glass);border-radius:4px;"></div>
             <div class="spell-results" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:4px;padding:8px;">
               <p style="color:var(--muted);text-align:center;padding:20px;">No spells found. Select your class and spheres/schools, then click Refresh List.</p>
             </div>
