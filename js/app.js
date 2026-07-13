@@ -3204,7 +3204,9 @@ function saveAsDialog(root, tab){
 
 function openPicker(){
   const map = JSON.parse(localStorage.getItem(CHAR_MAP_KEY)||'{}');
-  const names = Object.keys(map);
+  // Deleted characters are kept as tombstones so the deletion can sync to other
+  // devices. They must never appear in the picker.
+  const names = Object.keys(map).filter(n => !map[n] || !map[n]._deletedAt);
   if(!names.length){
     alert('No saved characters. Use Save As… first.');
     return null;
@@ -4339,12 +4341,22 @@ function bindSheet(root, tab){
       return;
     }
 
-    // Remove from localStorage
+    // Write a TOMBSTONE rather than removing the key outright. KV sync merges
+    // per-character by timestamp, so a plain delete would simply be re-added
+    // from the remote copy on the next sync. The tombstone carries a newer
+    // timestamp than the record it replaces, so the deletion propagates.
+    // Note: the character DATA is discarded -- this is not an undelete feature.
     const map = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
     if(map[name]){
-      delete map[name];
+      map[name] = {
+        _deletedAt: Date.now(),
+        meta: { name: name }
+      };
       localStorage.setItem(CHAR_MAP_KEY, JSON.stringify(map));
     }
+
+    // Deleting never pushed to KV before, so deletions silently failed to sync.
+    if (typeof kvPushDebounced === 'function') kvPushDebounced();
 
     // Close the current tab
     closeTab(tab, root.closest('.tab-content'));
@@ -4660,7 +4672,25 @@ function kvPushDebounced() {
 //
 // NOTE: this relies on device clocks being roughly in sync. A phone whose clock
 // is badly wrong can win a comparison it should lose.
+// How long tombstones are retained before being purged. Matches the worker's
+// 90-day KV expiry, so a device offline longer than this may resurrect a
+// deleted character -- an acceptable trade to stop tombstones growing forever.
+const KV_TOMBSTONE_TTL_MS = 90 * 24 * 60 * 60 * 1000;
+
+// Merge two character maps, keeping whichever copy of each character is newer.
+//
+// A record is either a live character (_updatedAt) or a tombstone marking a
+// deletion (_deletedAt). Both are just timestamps, so the comparison is the
+// same either way -- the later stamp wins. That means a character edited on one
+// device AFTER being deleted on another correctly survives, and vice versa.
+//
+// Records saved before per-character timestamps existed have neither field and
+// are treated as oldest (0), so any stamped record beats them.
+//
+// NOTE: relies on device clocks being roughly in sync.
 function kvMergeChars(localMap, remoteMap) {
+  const stamp = rec => (rec && (rec._updatedAt || rec._deletedAt)) || 0;
+
   const merged = { ...localMap };
   let updated = 0;
 
@@ -4673,12 +4703,18 @@ function kvMergeChars(localMap, remoteMap) {
       return;
     }
 
-    const localTime  = localChar._updatedAt  || 0;
-    const remoteTime = remoteChar._updatedAt || 0;
-
-    if (remoteTime > localTime) {
+    if (stamp(remoteChar) > stamp(localChar)) {
       merged[name] = remoteChar;
       updated++;
+    }
+  });
+
+  // Purge tombstones older than the TTL so they don't accumulate indefinitely.
+  const cutoff = Date.now() - KV_TOMBSTONE_TTL_MS;
+  Object.keys(merged).forEach(name => {
+    const rec = merged[name];
+    if (rec && rec._deletedAt && rec._deletedAt < cutoff) {
+      delete merged[name];
     }
   });
 
@@ -4691,6 +4727,10 @@ async function kvPush() {
   const rawMap   = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
   const charMap  = {};
   Object.entries(rawMap).forEach(([name, data]) => {
+    // Tombstones must sync -- that is the whole point of them -- so they are
+    // included even though they carry no real character data.
+    if (data && data._deletedAt) { charMap[name] = data; return; }
+
     const charName = (data?.meta?.name || '').trim();
     if (charName && charName.toLowerCase() !== 'unnamed') charMap[name] = data;
   });
