@@ -677,8 +677,8 @@ function renderSpellSlots(root) {
            clazz.includes("abjurer") || clazz.includes("conjurer") || 
            clazz.includes("enchanter") || clazz.includes("invoker") || 
            clazz.includes("necromancer") || clazz.includes("transmuter") || 
-           clazz.includes("diviner") || clazz.includes("evoker")) table = SPELL_SLOTS_TABLES.mage;
-  else if (clazz.includes("illusionist")) table = SPELL_SLOTS_TABLES.illusionist;
+           clazz.includes("diviner") || clazz.includes("evoker") ||
+           clazz.includes("illusionist")) table = SPELL_SLOTS_TABLES.mage;
   else if (clazz.includes("bard")) table = SPELL_SLOTS_TABLES.bard;
   
   // Skip non-casters entirely
@@ -8224,8 +8224,8 @@ function getSpellTableForClass(className) {
       clazz.includes("abjurer") || clazz.includes("conjurer") || 
       clazz.includes("enchanter") || clazz.includes("invoker") || 
       clazz.includes("necromancer") || clazz.includes("transmuter") || 
-      clazz.includes("diviner") || clazz.includes("evoker")) return SPELL_SLOTS_TABLES.mage;
-  if (clazz.includes("illusionist")) return SPELL_SLOTS_TABLES.illusionist;
+      clazz.includes("diviner") || clazz.includes("evoker") ||
+      clazz.includes("illusionist")) return SPELL_SLOTS_TABLES.mage;
   if (clazz.includes("bard")) return SPELL_SLOTS_TABLES.bard;
   
   return null;
