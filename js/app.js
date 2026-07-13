@@ -3184,7 +3184,15 @@ function saveAsDialog(root, tab){
   const map = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
   const oldKey = getTabSaveKey(tab);
   map[name] = data;
-  if(oldKey && oldKey !== name){ delete map[oldKey]; }
+  if(oldKey && oldKey !== name){
+    // Tombstone the old key rather than deleting it outright. A bare delete is
+    // invisible to KV sync -- the merge would simply pull the old name back
+    // from the remote copy and you would end up with the character twice.
+    map[oldKey] = {
+      _deletedAt: Date.now(),
+      meta: { name: oldKey }
+    };
+  }
   localStorage.setItem(CHAR_MAP_KEY, JSON.stringify(map));
   setTabSaveKey(tab, name);
 
@@ -4721,7 +4729,9 @@ function kvMergeChars(localMap, remoteMap) {
   return { merged, updated };
 }
 
-async function kvPush() {
+// force = true skips the merge and replaces KV outright. Only reachable from
+// the manual push button; autosave always merges.
+async function kvPush(force = false) {
   const cfg = getKvConfig();
   if (!cfg.workerUrl || !cfg.kvToken) return;
   const rawMap   = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
@@ -4741,6 +4751,7 @@ async function kvPush() {
   // from another device the moment it autosaves.
   let toPush = charMap;
   try {
+    if (force) throw new Error('force push -- skipping merge');
     const getRes = await fetch(cfg.workerUrl.replace(/\/+$/, '') + '/kv', {
       method:  'GET',
       headers: { 'X-Sync-Token': cfg.kvToken },
@@ -4825,20 +4836,35 @@ async function kvPull(overwrite = false) {
 async function kvPushManual(root) {
   const status  = qs(root, '.kv-token-status');
   const warning =
-    'This will overwrite the KV data for this sync token with your current local characters.\n\n' +
-    '⚠ If you are setting up a new browser, click Cancel and use "Pull from KV" first.\n\n' +
-    'Type PUSH below to confirm:';
-  const answer = (prompt(warning) || '').trim();
-  if (answer !== 'PUSH') {
+    'Push to KV:\n\n' +
+    '  MERGE — combine local and KV, keeping the newer copy of each character (safe)\n' +
+    '  FORCE — replace KV entirely with your local characters\n\n' +
+    '⚠ FORCE discards anything in KV that is not on this device.\n' +
+    'Only use it to repair bad KV data.\n\n' +
+    'Type MERGE or FORCE:';
+
+  const answer = prompt(warning, 'MERGE');
+  if (answer === null) {
     status.style.color = 'var(--muted)';
     status.textContent = 'Push cancelled.';
     setTimeout(() => { status.textContent = ''; }, 2000);
     return;
   }
+
+  const mode = (answer || '').trim().toUpperCase();
+  if (mode !== 'MERGE' && mode !== 'FORCE') {
+    status.style.color = 'var(--muted)';
+    status.textContent = 'Push cancelled — type MERGE or FORCE.';
+    setTimeout(() => { status.textContent = ''; }, 3000);
+    return;
+  }
+
   status.style.color = 'var(--accent-light)';
-  status.textContent = '⬆ Pushing to KV…';
-  await kvPush();
-  status.textContent = '✓ Pushed successfully.';
+  status.textContent = mode === 'FORCE' ? '⬆ Pushing (force)…' : '⬆ Pushing (merge)…';
+
+  await kvPush(mode === 'FORCE');
+
+  status.textContent = mode === 'FORCE' ? '✓ KV replaced with local data.' : '✓ Pushed and merged.';
   updateKvSyncStatus(root, getKvConfig());
   setTimeout(() => { status.textContent = ''; }, 3000);
 }
