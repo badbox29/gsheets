@@ -261,7 +261,11 @@ function renderCombatQuickReference(root) {
         wtype: wtype,
         strMode: (strEl && strEl.value) || getDefaultWeaponStrMode(category, wtype),
         profStatus: prof.status,
-        profPenalty: prof.penalty
+        profPenalty: prof.penalty,
+        effSpeed: getEffectiveWeaponSpeed(
+          (el.querySelector('.speed') || {}).value,
+          (el.querySelector('.magic-bonus') || {}).value
+        )
       });
     }
   });
@@ -302,6 +306,9 @@ function renderCombatQuickReference(root) {
         html += ' <span style="font-size:10px;color:var(--muted);font-weight:400;">· Related ' + profPen + '</span>';
       } else if (weapon.profStatus === 'none' && profPen) {
         html += ' <span style="font-size:10px;color:var(--error, #ff6b6b);font-weight:400;">· Not Proficient ' + profPen + '</span>';
+      }
+      if (weapon.effSpeed !== null && weapon.effSpeed !== undefined) {
+        html += ' <span style="font-size:10px;color:var(--muted);font-weight:400;" title="Weapon speed factor -- ADD this to your initiative roll (PHB Table 56).&#10;Magical bonuses reduce speed factor by 1 per plus (min 0).">· Spd ' + weapon.effSpeed + '</span>';
       }
       html += '</div>';
       html += '<div style="margin-left:10px;color:var(--text);">';
