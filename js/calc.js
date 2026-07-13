@@ -200,42 +200,83 @@ function renderCombatQuickReference(root) {
   qsa(root, '.weapons-list .item').forEach(el => {
     const equipped = el.querySelector('.equipped');
     if (equipped && equipped.checked) {
+      const catEl  = el.querySelector('.weapon-category');
+      const typeEl = el.querySelector('.weapon-wtype');
+      const strEl  = el.querySelector('.weapon-str-bonus');
+
+      const category = catEl  ? catEl.value  : '';
+      const wtype    = typeEl ? typeEl.value : '';
+
       equippedWeapons.push({
         name: el.querySelector('.title').value || 'Unnamed Weapon',
         damageSM: el.querySelector('.damage-sm').value || '1d6',
         damageL: el.querySelector('.damage-l').value || '1d6',
-        magicBonus: parseInt(el.querySelector('.magic-bonus').value || 0, 10)
+        magicBonus: parseInt(el.querySelector('.magic-bonus').value || 0, 10),
+        category: category,
+        wtype: wtype,
+        strMode: (strEl && strEl.value) || getDefaultWeaponStrMode(category, wtype)
       });
     }
   });
-  
+
   // Render equipped weapons
   if (equippedWeapons.length === 0) {
     weaponsList.innerHTML = '<div style="color:var(--muted);font-style:italic;">No weapons equipped</div>';
   } else {
+    const sign = n => (n >= 0 ? '+' : '') + n;
+    const dmgSign = n => (n > 0 ? '+' + n : n < 0 ? String(n) : '');
+
     let html = '';
     equippedWeapons.forEach(weapon => {
       const magicBonus = weapon.magicBonus || 0;
-      
-      // Calculate melee to-hit (STR + magic)
-      const meleeToHit = strToHit + magicBonus;
-      const meleeToHitStr = (meleeToHit >= 0 ? '+' : '') + meleeToHit;
-      
-      // Calculate missile to-hit (DEX + magic)
-      const missileToHit = dexMissile + magicBonus;
-      const missileToHitStr = (missileToHit >= 0 ? '+' : '') + missileToHit;
-      
-      // Calculate damage (STR + magic for melee, just magic for missile)
-      const meleeDamage = strDamage + magicBonus;
-      const meleeDamageStr = (meleeDamage >= 0 ? '+' : '') + meleeDamage;
-      const missileDamage = magicBonus;
-      const missileDamageStr = (missileDamage > 0 ? '+' + missileDamage : missileDamage < 0 ? missileDamage : '');
-      
+      const cat = (weapon.category || '').toLowerCase();
+
+      // How Strength applies to THIS weapon (PHB). Hurled weapons get the full
+      // Strength row; ordinary bows are capped at plain 18; crossbows, slings
+      // and other mechanical devices get nothing.
+      const adj = getWeaponStrAdjustments(
+        strData, weapon.strMode, str, strExceptional, clazz
+      );
+
+      // Which lines are meaningful for this weapon.
+      const showMelee   = !cat || cat === 'melee' || cat === 'melee/thrown';
+      const showThrown  = cat === 'thrown' || cat === 'melee/thrown';
+      const showMissile = !cat || cat === 'ranged';
+
       html += '<div style="margin-bottom:6px;padding:4px;background:rgba(255,255,255,0.03);border-radius:4px;">';
-      html += '<div style="font-weight:600;color:var(--accent-light);">• ' + weapon.name + '</div>';
+      html += '<div style="font-weight:600;color:var(--accent-light);">• ' + weapon.name;
+      if (weapon.category) {
+        html += '<span style="font-size:10px;color:var(--muted);font-weight:400;margin-left:6px;">' + weapon.category + '</span>';
+      }
+      html += '</div>';
       html += '<div style="margin-left:10px;color:var(--text);">';
-      html += 'Melee: d20' + meleeToHitStr + ' → ' + weapon.damageSM + meleeDamageStr + ' / ' + weapon.damageL + meleeDamageStr + '<br>';
-      html += 'Missile: d20' + missileToHitStr + ' → ' + weapon.damageSM + (missileDamageStr || '') + ' / ' + weapon.damageL + (missileDamageStr || '');
+
+      if (showMelee) {
+        const toHit = adj.toHit + magicBonus;
+        const dmg   = adj.damage + magicBonus;
+        html += 'Melee: d20' + sign(toHit) + ' → ' + weapon.damageSM + dmgSign(dmg) +
+                ' / ' + weapon.damageL + dmgSign(dmg) + '<br>';
+      }
+
+      if (showThrown) {
+        // PHB: "Attack roll and damage modifiers for Strength are always used
+        // when an attack is made with a hurled weapon." DEX missile adjustment
+        // applies too -- they stack.
+        const toHit = dexMissile + adj.toHit + magicBonus;
+        const dmg   = adj.damage + magicBonus;
+        html += 'Thrown: d20' + sign(toHit) + ' → ' + weapon.damageSM + dmgSign(dmg) +
+                ' / ' + weapon.damageL + dmgSign(dmg) + '<br>';
+      }
+
+      if (showMissile) {
+        // adj is {0,0} for crossbows/slings, and the plain-18 row for an
+        // ordinary bow, so this one expression covers every ranged case.
+        const toHit = dexMissile + adj.toHit + magicBonus;
+        const dmg   = adj.damage + magicBonus;
+        html += 'Missile: d20' + sign(toHit) + ' → ' + weapon.damageSM + dmgSign(dmg) +
+                ' / ' + weapon.damageL + dmgSign(dmg) + '<br>';
+      }
+
       html += '</div>';
       html += '</div>';
     });
