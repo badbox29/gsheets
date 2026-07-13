@@ -4732,24 +4732,61 @@ async function kvPushManual(root) {
   updateKvSyncStatus(root, getKvConfig());
   setTimeout(() => { status.textContent = ''; }, 3000);
 }
-
 async function kvPullManual(root) {
   const status = qs(root, '.kv-token-status');
+
+  // kvPull(false) is ADD-ONLY -- it skips any character whose name already
+  // exists locally, so it can never bring down an updated version. That is why
+  // a second device stays frozen at an old level. Offer the overwrite path.
+  const choice = prompt(
+    'Pull from KV:\n\n' +
+    '  ADD   — only bring down characters you do not already have (safe)\n' +
+    '  REPLACE — overwrite your local copies with the KV versions\n\n' +
+    'Use REPLACE if a character is out of date on this device.\n' +
+    '⚠ REPLACE discards any local changes not yet pushed to KV.\n\n' +
+    'Type ADD or REPLACE:',
+    'ADD'
+  );
+
+  if (choice === null) {
+    status.style.color = 'var(--muted)';
+    status.textContent = 'Pull cancelled.';
+    setTimeout(() => { status.textContent = ''; }, 2000);
+    return;
+  }
+
+  const mode = (choice || '').trim().toUpperCase();
+  if (mode !== 'ADD' && mode !== 'REPLACE') {
+    status.style.color = 'var(--muted)';
+    status.textContent = 'Pull cancelled — type ADD or REPLACE.';
+    setTimeout(() => { status.textContent = ''; }, 3000);
+    return;
+  }
+
+  const overwrite = (mode === 'REPLACE');
+
   status.style.color = 'var(--accent-light)';
-  status.textContent = '⬇ Pulling from KV…';
-  const added = await kvPull(false);
+  status.textContent = overwrite ? '⬇ Pulling (replace)…' : '⬇ Pulling (add only)…';
+
+  const added = await kvPull(overwrite);
+
   if (added === 0) {
     status.style.color = 'var(--muted)';
-    status.textContent = '✓ No new characters found in KV.';
+    status.textContent = overwrite
+      ? '✓ Nothing found in KV for this token.'
+      : '✓ No new characters found. Use REPLACE to update existing ones.';
   } else if (added > 0) {
     status.style.color = 'var(--accent-light)';
-    status.textContent = `✓ ${added} character(s) pulled. Use Open… to load them.`;
+    status.textContent = overwrite
+      ? `✓ ${added} character(s) replaced from KV. Reload the tab to see changes.`
+      : `✓ ${added} character(s) pulled. Use Open… to load them.`;
   } else {
     status.style.color = '#d9534f';
     status.textContent = '✗ Pull failed — check your Worker URL and token.';
   }
+
   updateKvSyncStatus(root, getKvConfig());
-  setTimeout(() => { status.textContent = ''; }, 4000);
+  setTimeout(() => { status.textContent = ''; }, 5000);
 }
 
 // Filter memorized spells by level
