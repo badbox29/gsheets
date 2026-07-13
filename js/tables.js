@@ -1457,15 +1457,28 @@ function parseMultiClass(clazz) {
 function getXPTable(clazz) {
   if (!clazz) return null;
   const lower = clazz.toLowerCase();
-  
+
   // Check for direct match first
   if (XP_TABLES[lower]) return XP_TABLES[lower];
-  
+
+  // PHB Ch.3: specialist wizards use the MAGE experience table. XP_TABLES has
+  // no abjurer/necromancer/etc. keys, so route them all to mage.
+  if (typeof SPECIALIST_WIZARDS !== "undefined" &&
+      Object.keys(SPECIALIST_WIZARDS).some(k => lower.includes(k))) {
+    return XP_TABLES.mage;
+  }
+
+  // Generic class-group names and other aliases.
+  if (lower.includes("wizard") || lower.includes("specialist")) return XP_TABLES.mage;
+  if (lower.includes("barbarian") || lower.includes("warrior")) return XP_TABLES.fighter;
+  if (lower.includes("priest")) return XP_TABLES.cleric;
+  if (lower.includes("rogue")) return XP_TABLES.thief;
+
   // Check for partial matches (e.g., "fighter/mage" contains "fighter")
   for (let key in XP_TABLES) {
     if (lower.includes(key)) return XP_TABLES[key];
   }
-  
+
   return null;
 }
 
