@@ -424,6 +424,7 @@ const CLASS_CATEGORIES = {
   "demipaladin": "warrior",
   "hb_dpaladin": "warrior",
   "warrior": "warrior",
+  "barbarian": "warrior",
 
   // Priests
   "cleric": "priest",
@@ -435,11 +436,20 @@ const CLASS_CATEGORIES = {
   "bard": "rogue",
   "rogue": "rogue",
 
-  // Wizards
+  // Wizards -- including every specialist school (PHB Table 22). Specialists
+  // use the mage progression, so they are all "wizard" for saves, proficiency
+  // slots, and the non-proficiency attack penalty.
   "mage": "wizard",
   "wizard": "wizard",
-  "illusionist": "wizard",
   "specialist": "wizard",
+  "abjurer": "wizard",
+  "conjurer": "wizard",
+  "diviner": "wizard",
+  "enchanter": "wizard",
+  "illusionist": "wizard",
+  "invoker": "wizard",
+  "necromancer": "wizard",
+  "transmuter": "wizard",
 };
 
 // === Proficiency Slots (AD&D 2E, PHB Table 34) ===
@@ -604,8 +614,15 @@ const NWP_GROUP_CROSSOVERS = {
   "druid":       ["priest", "warrior", "general"],
   "mage":        ["wizard", "general"],
   "wizard":      ["wizard", "general"],
-  "illusionist": ["wizard", "general"],
   "specialist":  ["wizard", "general"],
+  "abjurer":     ["wizard", "general"],
+  "conjurer":    ["wizard", "general"],
+  "diviner":     ["wizard", "general"],
+  "enchanter":   ["wizard", "general"],
+  "illusionist": ["wizard", "general"],
+  "invoker":     ["wizard", "general"],
+  "necromancer": ["wizard", "general"],
+  "transmuter":  ["wizard", "general"],
   "thief":       ["rogue", "general"],
   "rogue":       ["rogue", "general"],
   "bard":        ["rogue", "warrior", "wizard", "general"]
@@ -2014,16 +2031,104 @@ function setOptionalRule(key, enabled) {
 //   and the other limited to spells of the illusion school."
 //
 // The bonus applies only at spell levels the wizard can already cast.
+// races:      which races may take this specialty (PHB Table 22)
+// minAbility: the additional ability requirement beyond the wizard's INT 9
+// opposition: schools the specialist may NEVER learn from
+//
+// NOTE: opposition schools are not yet ENFORCED -- spells.json's School field
+// is inconsistent and mostly unparseable, so the browser cannot reliably tell
+// what school a spell belongs to. Data captured here for when it is cleaned up.
+//
+// "Greater Divination" = divination spells of 5th level or HIGHER. Lesser
+// divination (4th and below) is available to ALL wizards, so the Conjurer and
+// Diviner oppositions are level-dependent, not flat school bans.
 const SPECIALIST_WIZARDS = {
-  "abjurer":     { school: "Abjuration" },
-  "conjurer":    { school: "Conjuration/Summoning" },
-  "diviner":     { school: "Greater Divination" },
-  "enchanter":   { school: "Enchantment/Charm" },
-  "illusionist": { school: "Illusion" },
-  "invoker":     { school: "Invocation/Evocation" },
-  "necromancer": { school: "Necromancy" },
-  "transmuter":  { school: "Alteration" }
+  "abjurer": {
+    school: "Abjuration",
+    races: ["human"],
+    minAbility: { stat: "wis", score: 15 },
+    opposition: ["Alteration", "Illusion"]
+  },
+  "conjurer": {
+    school: "Conjuration/Summoning",
+    races: ["human", "half-elf"],
+    minAbility: { stat: "con", score: 15 },
+    opposition: ["Greater Divination", "Invocation/Evocation"]
+  },
+  "diviner": {
+    school: "Greater Divination",
+    races: ["human", "half-elf", "elf"],
+    minAbility: { stat: "wis", score: 16 },
+    opposition: ["Conjuration/Summoning"]
+  },
+  "enchanter": {
+    school: "Enchantment/Charm",
+    races: ["human", "half-elf", "elf"],
+    minAbility: { stat: "cha", score: 16 },
+    opposition: ["Invocation/Evocation", "Necromancy"]
+  },
+  "illusionist": {
+    school: "Illusion",
+    races: ["human", "gnome"],
+    minAbility: { stat: "dex", score: 16 },
+    opposition: ["Necromancy", "Invocation/Evocation", "Abjuration"]
+  },
+  "invoker": {
+    school: "Invocation/Evocation",
+    races: ["human"],
+    minAbility: { stat: "con", score: 16 },
+    opposition: ["Enchantment/Charm", "Conjuration/Summoning"]
+  },
+  "necromancer": {
+    school: "Necromancy",
+    races: ["human"],
+    minAbility: { stat: "wis", score: 16 },
+    opposition: ["Illusion", "Enchantment/Charm"]
+  },
+  "transmuter": {
+    school: "Alteration",
+    races: ["human", "half-elf"],
+    minAbility: { stat: "dex", score: 15 },
+    opposition: ["Abjuration", "Necromancy"]
+  }
 };
+
+// Check a character against Table 22. Returns an array of problem strings
+// (empty if valid). Advisory only -- never blocks the player.
+function validateSpecialist(root) {
+  const clazz = (val(root, "clazz") || "").trim().toLowerCase();
+  const key = Object.keys(SPECIALIST_WIZARDS).find(k => clazz.includes(k));
+  if (!key) return [];
+
+  const spec = SPECIALIST_WIZARDS[key];
+  const problems = [];
+
+  const int = parseInt(val(root, "int") || 0, 10);
+  if (int < 9) problems.push(`Intelligence ${int} — all wizards require 9+.`);
+
+  const score = parseInt(val(root, spec.minAbility.stat) || 0, 10);
+  if (score < spec.minAbility.score) {
+    problems.push(
+      `${spec.minAbility.stat.toUpperCase()} ${score} — a ${key} requires ${spec.minAbility.score}+.`
+    );
+  }
+
+  const race = (val(root, "race") || "").trim().toLowerCase().replace(/\s+/g, "-");
+  if (race && !spec.races.includes(race)) {
+    problems.push(
+      `${race.charAt(0).toUpperCase() + race.slice(1)} — a ${key} must be ${spec.races.join(" or ")}.`
+    );
+  }
+
+  // PHB: "multi-classed characters cannot become specialists, except for
+  // gnomes, who ... [may become] illusionists."
+  const charType = (val(root, "char_type") || "single").toLowerCase();
+  if (charType === "multi" && !(key === "illusionist" && race === "gnome")) {
+    problems.push("Multi-class characters cannot be specialists (except gnome illusionists).");
+  }
+
+  return problems;
+}
 
 // Is this class a specialist wizard? Returns the school name, or null.
 function getSpecialistSchool(clazz) {
