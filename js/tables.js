@@ -1292,7 +1292,11 @@ const ENCUMBRANCE_EFFECTS = {
 // breakdown, and max carried weight still display, but nothing is deducted from
 // movement, AC, or attack rolls. Flip to true (or wire to a Settings checkbox)
 // to apply the PHB penalties.
-const ENCUMBRANCE_RULES_ENABLED = false;
+// Superseded by the OPTIONAL_RULES registry -- kept as a thin alias so existing
+// call sites keep working. New code should call isOptionalRule('encumbrancePenalties').
+// NOTE: this is evaluated once at load, so toggling the setting requires a reload.
+// The Settings tab should call recalculateAll() after a change instead.
+const ENCUMBRANCE_RULES_ENABLED = false; ENCUMBRANCE_RULES_ENABLED = false;
 
 // === Dexterity Table (AD&D 2E) ===
 // Format: [reaction adjustment, missile attack adjustment, defensive adjustment (AC)]
@@ -1941,4 +1945,62 @@ function getEffectiveWeaponSpeed(speed, magicBonus) {
   const reduction = magic > 0 ? magic : 0;
 
   return Math.max(0, base - reduction);
+}
+
+// === Optional Rules Registry ===
+//
+// AD&D 2e flags a great many rules as optional, and different tables use
+// different subsets. Rather than scattering one-off constants through the code,
+// every optional rule is registered here with its metadata and default.
+//
+// The forthcoming Settings > Optional Rules tab renders this registry directly:
+// one checkbox per entry, writing to localStorage. Adding a new optional rule
+// means adding an entry here and one `isOptionalRule(...)` guard at the call
+// site -- no UI work.
+//
+// These are CAMPAIGN/table settings, not per-character, so they live in
+// localStorage rather than the character record.
+const OPTIONAL_RULES = {
+  weaponSpeedInitiative: {
+    label:   'Weapon speed factor modifies initiative',
+    detail:  'PHB Table 56. Weapon speed is added to the initiative roll (low roll wins). ' +
+             'Magical bonuses reduce speed factor by 1 per plus, minimum 0.',
+    default: true      // Chris's table uses this
+  },
+  encumbrancePenalties: {
+    label:   'Encumbrance affects movement and combat',
+    detail:  'PHB "Effects of Encumbrance". Light x2/3 movement, Moderate x1/2 and -1 attack, ' +
+             'Heavy x1/3 and -2 attack / +1 AC, Severe movement 1 and -4 attack / +3 AC. ' +
+             'Encumbrance is itself an Optional Rule in the PHB, so ignoring it is RAW.',
+    default: false     // Chris's table does not use encumbrance
+  }
+};
+
+const OPTIONAL_RULES_STORAGE_KEY = 'gsheets_optional_rules';
+
+// Is an optional rule enabled? Reads the player's saved setting, falling back to
+// the registry default. Safe to call before any settings UI exists.
+function isOptionalRule(key) {
+  const rule = OPTIONAL_RULES[key];
+  if (!rule) return false;
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(OPTIONAL_RULES_STORAGE_KEY) || '{}');
+    if (Object.prototype.hasOwnProperty.call(saved, key)) return !!saved[key];
+  } catch (e) {
+    // Corrupt storage -- fall through to the default.
+  }
+
+  return !!rule.default;
+}
+
+// Enable/disable an optional rule. The Settings tab will call this.
+function setOptionalRule(key, enabled) {
+  if (!OPTIONAL_RULES[key]) return;
+  let saved = {};
+  try {
+    saved = JSON.parse(localStorage.getItem(OPTIONAL_RULES_STORAGE_KEY) || '{}');
+  } catch (e) { saved = {}; }
+  saved[key] = !!enabled;
+  localStorage.setItem(OPTIONAL_RULES_STORAGE_KEY, JSON.stringify(saved));
 }
