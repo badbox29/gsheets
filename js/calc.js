@@ -4051,7 +4051,7 @@ function renderMovementRate(root) {
   let currentMovement = baseMovement;
   let encumbranceNote = "";
 
-  if (typeof ENCUMBRANCE_RULES_ENABLED !== "undefined" && ENCUMBRANCE_RULES_ENABLED) {
+  if (typeof isOptionalRule === "function" && isOptionalRule("encumbrancePenalties")) {
     // PHB "Effects of Encumbrance" (Basic/Tournament rule):
     // Light reduces movement by 1/3, Moderate by 1/2, Heavy by 2/3,
     // and Severe lowers the movement rate to 1. Round fractions down.
