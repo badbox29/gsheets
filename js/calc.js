@@ -246,7 +246,7 @@ function renderCombatQuickReference(root) {
       html += '<div style="margin-bottom:6px;padding:4px;background:rgba(255,255,255,0.03);border-radius:4px;">';
       html += '<div style="font-weight:600;color:var(--accent-light);">• ' + weapon.name;
       if (weapon.category) {
-        html += '<span style="font-size:10px;color:var(--muted);font-weight:400;margin-left:6px;">' + weapon.category + '</span>';
+        html += ' <span style="font-size:10px;color:var(--muted);font-weight:400;">' + weapon.category + '</span>';
       }
       html += '</div>';
       html += '<div style="margin-left:10px;color:var(--text);">';
