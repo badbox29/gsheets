@@ -131,6 +131,49 @@ function renderCurrentHP(root) {
   }
 }
 
+// Resolve a weapon row's proficiency status and paint its badge.
+// Returns { status, penalty } so the caller can apply the penalty to to-hit.
+function resolveWeaponProficiency(root, rowEl) {
+  const nameEl   = rowEl.querySelector('.title');
+  const typeEl   = rowEl.querySelector('.weapon-wtype');
+  const statusEl = rowEl.querySelector('.weapon-prof-status');
+  const badgeEl  = rowEl.querySelector('.weapon-prof-badge');
+
+  const weaponName = nameEl ? nameEl.value : '';
+
+  // The weapon row stores Type, not Group. Recover the Group from core_wp.json
+  // where we can -- it is the fallback used for weapons the PHB's related list
+  // does not cover.
+  const match = (typeof lookupWeaponData === 'function') ? lookupWeaponData(weaponName) : null;
+  const weaponGroup = match ? (match.Group || '') : (typeEl ? typeEl.value : '');
+
+  const override = statusEl ? (statusEl.value || 'auto') : 'auto';
+
+  const status = (override === 'auto')
+    ? getWeaponProficiencyStatus(weaponName, weaponGroup, root._weaponProfs)
+    : override;
+
+  const fullPenalty = getNonProfPenalty(root);
+  const penalty     = getWeaponAttackPenalty(status, fullPenalty);
+
+  if (badgeEl) {
+    if (status === 'proficient') {
+      badgeEl.innerHTML = '<span style="color:var(--accent-light);">Proficient</span>';
+      badgeEl.title = 'No attack penalty.';
+    } else if (status === 'related') {
+      badgeEl.innerHTML = '<span style="color:var(--muted);">Related (' + penalty + ')</span>';
+      badgeEl.title = 'A related weapon costs HALF the normal non-proficiency penalty,\n' +
+                      'rounded up (PHB "Related Weapons Bonus"). Full penalty would be ' + fullPenalty + '.';
+    } else {
+      badgeEl.innerHTML = '<span style="color:var(--error, #ff6b6b);">Not Proficient (' + penalty + ')</span>';
+      badgeEl.title = 'Non-proficiency attack penalty (PHB Table 34).\n' +
+                      'Warrior -2, Wizard -5, Priest -3, Rogue -3.';
+    }
+  }
+
+  return { status, penalty };
+}
+
 // ===== Combat Quick Reference =====
 function renderCombatQuickReference(root) {
   // Get ability scores
@@ -207,6 +250,8 @@ function renderCombatQuickReference(root) {
       const category = catEl  ? catEl.value  : '';
       const wtype    = typeEl ? typeEl.value : '';
 
+      const prof = resolveWeaponProficiency(root, el);
+
       equippedWeapons.push({
         name: el.querySelector('.title').value || 'Unnamed Weapon',
         damageSM: el.querySelector('.damage-sm').value || '1d6',
@@ -214,7 +259,9 @@ function renderCombatQuickReference(root) {
         magicBonus: parseInt(el.querySelector('.magic-bonus').value || 0, 10),
         category: category,
         wtype: wtype,
-        strMode: (strEl && strEl.value) || getDefaultWeaponStrMode(category, wtype)
+        strMode: (strEl && strEl.value) || getDefaultWeaponStrMode(category, wtype),
+        profStatus: prof.status,
+        profPenalty: prof.penalty
       });
     }
   });
@@ -230,6 +277,9 @@ function renderCombatQuickReference(root) {
     equippedWeapons.forEach(weapon => {
       const magicBonus = weapon.magicBonus || 0;
       const cat = (weapon.category || '').toLowerCase();
+      // PHB Table 34: attack penalty for wielding a weapon you are not
+      // proficient with. Related weapons cost half, rounded up.
+      const profPen = weapon.profPenalty || 0;
 
       // How Strength applies to THIS weapon (PHB). Hurled weapons get the full
       // Strength row; ordinary bows are capped at plain 18; crossbows, slings
@@ -248,11 +298,16 @@ function renderCombatQuickReference(root) {
       if (weapon.category) {
         html += ' <span style="font-size:10px;color:var(--muted);font-weight:400;">' + weapon.category + '</span>';
       }
+      if (weapon.profStatus === 'related') {
+        html += ' <span style="font-size:10px;color:var(--muted);font-weight:400;">· Related ' + profPen + '</span>';
+      } else if (weapon.profStatus === 'none' && profPen) {
+        html += ' <span style="font-size:10px;color:var(--error, #ff6b6b);font-weight:400;">· Not Proficient ' + profPen + '</span>';
+      }
       html += '</div>';
       html += '<div style="margin-left:10px;color:var(--text);">';
 
       if (showMelee) {
-        const toHit = adj.toHit + magicBonus;
+        const toHit = adj.toHit + magicBonus + profPen;
         const dmg   = adj.damage + magicBonus;
         html += 'Melee: d20' + sign(toHit) + ' → ' + weapon.damageSM + dmgSign(dmg) +
                 ' / ' + weapon.damageL + dmgSign(dmg) + '<br>';
@@ -262,7 +317,7 @@ function renderCombatQuickReference(root) {
         // PHB: "Attack roll and damage modifiers for Strength are always used
         // when an attack is made with a hurled weapon." DEX missile adjustment
         // applies too -- they stack.
-        const toHit = dexMissile + adj.toHit + magicBonus;
+        const toHit = dexMissile + adj.toHit + magicBonus + profPen;
         const dmg   = adj.damage + magicBonus;
         html += 'Thrown: d20' + sign(toHit) + ' → ' + weapon.damageSM + dmgSign(dmg) +
                 ' / ' + weapon.damageL + dmgSign(dmg) + '<br>';
@@ -271,7 +326,7 @@ function renderCombatQuickReference(root) {
       if (showMissile) {
         // adj is {0,0} for crossbows/slings, and the plain-18 row for an
         // ordinary bow, so this one expression covers every ranged case.
-        const toHit = dexMissile + adj.toHit + magicBonus;
+        const toHit = dexMissile + adj.toHit + magicBonus + profPen;
         const dmg   = adj.damage + magicBonus;
         html += 'Missile: d20' + sign(toHit) + ' → ' + weapon.damageSM + dmgSign(dmg) +
                 ' / ' + weapon.damageL + dmgSign(dmg) + '<br>';
