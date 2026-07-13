@@ -2733,7 +2733,7 @@ function renderLanguageProficiencies(root) {
     // Badges
     let badges = '';
     if (lang.isNative) {
-      badges += `<span style="margin-left:8px;font-size:10px;padding:1px 6px;border-radius:8px;background:var(--accent-light);color:#000;font-weight:600;"
+      badges += `<span style="margin-left:8px;font-size:10px;padding:1px 6px;border-radius:8px;background:var(--accent-light);color:var(--badge-fg,#000);font-weight:600;"
                        title="Native tongue -- free, and not counted against your Intelligence language cap.">NATIVE</span>`;
     }
     if (lang.isGranted && !lang.isNative) {
