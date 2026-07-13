@@ -1524,6 +1524,41 @@ async function renderWeaponInventoryBrowser(root) {
   resultsDiv.appendChild(countDiv);
 }
 
+// Weapons saved before the category field existed have no Category/Type, so
+// Strength is applied to them as if they were melee. Backfill from core_wp.json
+// by name where we can. Non-destructive: never overwrites a value the player has
+// already set, and leaves custom weapons (no match) alone with their defaults.
+function backfillWeaponCategories(root) {
+  if (typeof WEAPONS_DATA === 'undefined' || !WEAPONS_DATA.length) return 0;
+
+  const rows = root.querySelectorAll('.weapons-list .item');
+  let filled = 0;
+
+  rows.forEach(row => {
+    const nameEl = row.querySelector('.title');
+    const catEl  = row.querySelector('.weapon-category');
+    const typeEl = row.querySelector('.weapon-wtype');
+    const strEl  = row.querySelector('.weapon-str-bonus');
+    if (!nameEl || !catEl || !typeEl) return;
+
+    // Already categorized -- leave it alone.
+    if (catEl.value || typeEl.value) return;
+
+    const match = lookupWeaponData(nameEl.value);
+    if (!match) return;
+
+    catEl.value  = match.Category || '';
+    typeEl.value = match.Type     || '';
+
+    if (strEl && !strEl.dataset.userSet) {
+      strEl.value = getDefaultWeaponStrMode(catEl.value, typeEl.value);
+    }
+    filled++;
+  });
+
+  return filled;
+}
+
 // Add weapon from browser to weapons list
 function addWeaponFromInventoryBrowser(root, weapon) {
   // Parse weight - extract just the number
@@ -1539,6 +1574,9 @@ function addWeaponFromInventoryBrowser(root, weapon) {
   const weaponsList = root.querySelector('.weapons-list');
   if (!weaponsList) return;
   
+  const wCategory = weapon.Category || '';
+  const wType     = weapon.Type     || '';
+
   const newWeaponNode = makeWeaponNode({
     name: weapon['Weapon Name'],
     damageSM: weapon['Damage (S-M)'] || '',
@@ -1548,7 +1586,14 @@ function addWeaponFromInventoryBrowser(root, weapon) {
     speed: weapon['Speed Factor'] || '',
     damageType: '',
     equipped: false,
-    notes: `${weapon.Type || ''} | ${weapon.Group || ''}`
+    notes: `${weapon.Type || ''} | ${weapon.Group || ''}`,
+    // Carry the real Category/Type through instead of discarding them into the
+    // notes string. These drive how Strength applies to the weapon (PHB).
+    category: wCategory,
+    wtype:    wType,
+    strBonus: (typeof getDefaultWeaponStrMode === 'function')
+                ? getDefaultWeaponStrMode(wCategory, wType)
+                : ''
   }, () => {
     const activeTab = document.querySelector('.tab.active');
     if (activeTab) markUnsaved(activeTab, true, root);
