@@ -1987,9 +1987,23 @@ function weaponCategoryOptions(selected) {
 }
 
 function weaponTypeOptions(selected) {
-  // Only the types that change how Strength applies. Anything else is cosmetic.
-  const types = ['', 'Bow', 'Crossbow', 'Sling', 'Blowgun', 'Firearm', 'Other'];
-  const sel   = (selected || '').trim();
+  // The full set of Type values used in core_wp.json, so a weapon backfilled
+  // from the browser (Type: "Sword", "Polearm", ...) displays honestly rather
+  // than falling back to blank. Only Bow / Crossbow / Sling / Blowgun / Firearm
+  // actually change how Strength applies -- the rest are descriptive.
+  const types = [
+    '', 'Axe', 'Blowgun', 'Bola', 'Bow', 'Club', 'Crossbow', 'Dagger', 'Dart',
+    'Firearm', 'Flail', 'Hammer', 'Lance', 'Mace', 'Net', 'Pick', 'Polearm',
+    'Sling', 'Spear', 'Staff', 'Sword', 'Whip', 'Other'
+  ];
+  const sel = (selected || '').trim();
+
+  // Keep an unrecognized value (a custom weapon typed by hand) rather than
+  // silently dropping it to blank.
+  if (sel && !types.some(t => t.toLowerCase() === sel.toLowerCase())) {
+    types.push(sel);
+  }
+
   return types.map(t =>
     '<option value="'+t+'"'+(t.toLowerCase() === sel.toLowerCase() ? ' selected' : '')+'>'+(t || '--')+'</option>'
   ).join('');
