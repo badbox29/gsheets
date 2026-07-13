@@ -2003,3 +2003,43 @@ function setOptionalRule(key, enabled) {
   saved[key] = !!enabled;
   localStorage.setItem(OPTIONAL_RULES_STORAGE_KEY, JSON.stringify(saved));
 }
+
+// === Specialist Wizards (AD&D 2E, PHB Ch.3, Table 22) ===
+// Specialists use the MAGE spell progression and XP table -- there is no
+// separate illusionist/necromancer slot table.
+//
+// PHB: "A specialist gains one additional spell per spell level, provided the
+//   additional spell is taken in the specialist's school. Thus, a 1st-level
+//   illusionist could have two spells -- one being an illusion spell he knows
+//   and the other limited to spells of the illusion school."
+//
+// The bonus applies only at spell levels the wizard can already cast.
+const SPECIALIST_WIZARDS = {
+  "abjurer":     { school: "Abjuration" },
+  "conjurer":    { school: "Conjuration/Summoning" },
+  "diviner":     { school: "Greater Divination" },
+  "enchanter":   { school: "Enchantment/Charm" },
+  "illusionist": { school: "Illusion" },
+  "invoker":     { school: "Invocation/Evocation" },
+  "necromancer": { school: "Necromancy" },
+  "transmuter":  { school: "Alteration" }
+};
+
+// Is this class a specialist wizard? Returns the school name, or null.
+function getSpecialistSchool(clazz) {
+  const c = (clazz || "").trim().toLowerCase();
+  if (!c) return null;
+  const key = Object.keys(SPECIALIST_WIZARDS).find(k => c.includes(k));
+  return key ? SPECIALIST_WIZARDS[key].school : null;
+}
+
+// Apply the specialist's bonus spell slot: +1 at every spell level he can
+// already cast. Mutates nothing -- returns a new array.
+// Returns { slots, school } so callers can build a tooltip.
+function applySpecialistBonus(baseSlots, clazz) {
+  const school = getSpecialistSchool(clazz);
+  if (!school) return { slots: baseSlots.slice(), school: null };
+
+  const slots = baseSlots.map(n => (n > 0 ? n + 1 : 0));
+  return { slots, school };
+}
