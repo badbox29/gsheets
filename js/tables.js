@@ -1411,10 +1411,10 @@ const XP_TABLES = {
     0, 2500, 5000, 10000, 22500, 40000, 60000, 90000, 135000, 250000,
     375000, 750000, 1125000, 1500000, 1875000, 2250000, 2625000, 3000000, 3375000, 3750000
   ],
-  illusionist: [
-    0, 2250, 4500, 9000, 18000, 35000, 60000, 95000, 145000, 220000,
-    440000, 660000, 880000, 1100000, 1320000, 1540000, 1760000, 1980000, 2200000, 2420000
-  ],
+  // NOTE: the illusionist XP table has been REMOVED. It held the 1st Edition
+  // progression (2250/4500/9000...), which is wrong for 2e -- specialist
+  // wizards use the MAGE table for both XP and spell progression (PHB Ch.3).
+  // getXPTable() routes all specialists to mage.
   thief: [
     0, 1250, 2500, 5000, 10000, 20000, 40000, 70000, 110000, 160000,
     220000, 440000, 660000, 880000, 1100000, 1320000, 1540000, 1760000, 1980000, 2200000
