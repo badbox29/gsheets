@@ -1292,11 +1292,10 @@ const ENCUMBRANCE_EFFECTS = {
 // breakdown, and max carried weight still display, but nothing is deducted from
 // movement, AC, or attack rolls. Flip to true (or wire to a Settings checkbox)
 // to apply the PHB penalties.
-// Superseded by the OPTIONAL_RULES registry -- kept as a thin alias so existing
-// call sites keep working. New code should call isOptionalRule('encumbrancePenalties').
-// NOTE: this is evaluated once at load, so toggling the setting requires a reload.
-// The Settings tab should call recalculateAll() after a change instead.
-const ENCUMBRANCE_RULES_ENABLED = false;
+// Encumbrance penalties are now registered in OPTIONAL_RULES (see bottom of this
+// file) and read live via isOptionalRule('encumbrancePenalties'), so a Settings
+// change takes effect without a reload. The old ENCUMBRANCE_RULES_ENABLED const
+// has been removed.
 
 // === Dexterity Table (AD&D 2E) ===
 // Format: [reaction adjustment, missile attack adjustment, defensive adjustment (AC)]
