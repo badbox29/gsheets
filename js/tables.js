@@ -1296,7 +1296,7 @@ const ENCUMBRANCE_EFFECTS = {
 // call sites keep working. New code should call isOptionalRule('encumbrancePenalties').
 // NOTE: this is evaluated once at load, so toggling the setting requires a reload.
 // The Settings tab should call recalculateAll() after a change instead.
-const ENCUMBRANCE_RULES_ENABLED = false; ENCUMBRANCE_RULES_ENABLED = false;
+const ENCUMBRANCE_RULES_ENABLED = false;
 
 // === Dexterity Table (AD&D 2E) ===
 // Format: [reaction adjustment, missile attack adjustment, defensive adjustment (AC)]
