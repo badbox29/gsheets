@@ -1918,3 +1918,27 @@ function getWeaponAttackPenalty(status, fullPenalty) {
   }
   return fullPenalty;
 }
+
+
+// === Weapon Speed Factor & Initiative (AD&D 2E, PHB Table 56) ===
+//
+// Table 56 lists weapon speed factor as an initiative modifier. Initiative is
+// LOW-ROLL-WINS, so speed factor is ADDED to the die roll -- a slower weapon
+// makes you act later.
+//
+// PHB Ch.9 "Magical Weapon Speeds": "each bonus point conferred by a magical
+//   weapon reduces the speed factor of that weapon by 1. (A sword +3 reduces
+//   the weapon speed factor by 3.) When a weapon has two bonuses, the lesser
+//   one is used. No weapon can have a speed factor of less than 0."
+function getEffectiveWeaponSpeed(speed, magicBonus) {
+  const base  = parseInt(speed, 10);
+  if (isNaN(base)) return null;
+
+  const magic = parseInt(magicBonus, 10) || 0;
+
+  // Only a positive enchantment speeds a weapon up. A cursed -1 weapon is not
+  // made slower by this rule; the PHB only speaks of bonuses.
+  const reduction = magic > 0 ? magic : 0;
+
+  return Math.max(0, base - reduction);
+}
