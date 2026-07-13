@@ -2629,7 +2629,12 @@ function collectSheet(root){
 	details,
 	notesTab,
 	conditions: conditions,
-	combatRound: combatRound
+	combatRound: combatRound,
+	// Per-character sync timestamp. Every save path routes through collectSheet(),
+	// so stamping here covers autosave, Save, and Save As. KV sync compares this
+	// to decide which copy of a character is newer. Records saved before this
+	// existed have no _updatedAt and are treated as oldest (see kvMergeChars).
+	_updatedAt: Date.now()
   };
 }
 
@@ -4648,6 +4653,38 @@ function kvPushDebounced() {
   _kvPushTimer = setTimeout(kvPush, 5000);
 }
 
+// Merge two character maps, keeping whichever copy of each character is newer.
+// Characters saved before per-character timestamps existed have no _updatedAt;
+// they are treated as oldest (0), so any stamped record wins over them. Once
+// each device has saved once, comparisons become reliable.
+//
+// NOTE: this relies on device clocks being roughly in sync. A phone whose clock
+// is badly wrong can win a comparison it should lose.
+function kvMergeChars(localMap, remoteMap) {
+  const merged = { ...localMap };
+  let updated = 0;
+
+  Object.entries(remoteMap || {}).forEach(([name, remoteChar]) => {
+    const localChar = merged[name];
+
+    if (!localChar) {
+      merged[name] = remoteChar;
+      updated++;
+      return;
+    }
+
+    const localTime  = localChar._updatedAt  || 0;
+    const remoteTime = remoteChar._updatedAt || 0;
+
+    if (remoteTime > localTime) {
+      merged[name] = remoteChar;
+      updated++;
+    }
+  });
+
+  return { merged, updated };
+}
+
 async function kvPush() {
   const cfg = getKvConfig();
   if (!cfg.workerUrl || !cfg.kvToken) return;
@@ -4658,13 +4695,36 @@ async function kvPush() {
     if (charName && charName.toLowerCase() !== 'unnamed') charMap[name] = data;
   });
   if (Object.keys(charMap).length === 0) return;
+
+  // Fetch what is already in KV and merge, rather than blindly overwriting.
+  // Without this, a device holding a stale copy will clobber newer data pushed
+  // from another device the moment it autosaves.
+  let toPush = charMap;
+  try {
+    const getRes = await fetch(cfg.workerUrl.replace(/\/+$/, '') + '/kv', {
+      method:  'GET',
+      headers: { 'X-Sync-Token': cfg.kvToken },
+    });
+    if (getRes.ok) {
+      const { found, data } = await getRes.json();
+      if (found && data && data.payload && data.payload.characters) {
+        const { merged } = kvMergeChars(charMap, data.payload.characters);
+        toPush = merged;
+      }
+    }
+  } catch (e) {
+    // If the read fails, fall back to pushing local as-is rather than losing
+    // the save entirely. Worst case is the old clobber behavior.
+    console.warn('[KV] pre-push read failed, pushing local only:', e);
+  }
+
   const now      = Date.now();
   const envelope = {
-    version:   1,
+    version:   2,
     updatedAt: now,
     clientId:  cfg.clientId || 'unknown',
     payload: {
-      characters: charMap,
+      characters: toPush,
       kvToken:    cfg.kvToken,
     }
   };
@@ -4695,13 +4755,23 @@ async function kvPull(overwrite = false) {
     const remoteChars = data.payload.characters || {};
     const localMap    = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
     let added = 0;
-    Object.entries(remoteChars).forEach(([name, charData]) => {
-      if (overwrite || !(name in localMap)) {
-        localMap[name] = charData;
+    let finalMap;
+
+    if (overwrite) {
+      // Explicit REPLACE -- remote wins outright, no timestamp check.
+      finalMap = { ...localMap };
+      Object.entries(remoteChars).forEach(([name, charData]) => {
+        finalMap[name] = charData;
         added++;
-      }
-    });
-    if (added > 0) localStorage.setItem(CHAR_MAP_KEY, JSON.stringify(localMap));
+      });
+    } else {
+      // Normal pull -- take a remote character only if it is genuinely newer.
+      const res2 = kvMergeChars(localMap, remoteChars);
+      finalMap = res2.merged;
+      added    = res2.updated;
+    }
+
+    if (added > 0) localStorage.setItem(CHAR_MAP_KEY, JSON.stringify(finalMap));
     const now      = Date.now();
     cfg.kvLastPull = now;
     saveKvConfig(cfg);
