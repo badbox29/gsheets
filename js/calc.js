@@ -2156,9 +2156,71 @@ async function renderSpellBrowser(root) {
   const searchTerm = (root.querySelector('.spell-search')?.value || '').toLowerCase();
   const levelFilter = root.querySelector('.spell-level-filter')?.value;
   
-  // Determine max spell level character can cast
-  let maxSpellLevel = Math.min(Math.ceil(level / 2), isPriest ? 7 : 9);
+  // Determine max spell level the character can actually cast.
+  //
+  // Previously this used Math.ceil(level / 2), a homebrew approximation. The
+  // real answer is in SPELL_SLOTS_TABLES: the highest spell level for which the
+  // character has a slot. And for wizards, PHB Table 4 caps the highest spell
+  // level by INTELLIGENCE -- an INT 9 wizard can never cast above 4th level, no
+  // matter how high he goes.
+  let maxSpellLevel;
+
+  const slotsTable = (typeof SPELL_SLOTS_TABLES !== 'undefined') ? SPELL_SLOTS_TABLES[clazz] : null;
+  const slotsAtLevel = slotsTable ? slotsTable[level] : null;
+
+  if (slotsAtLevel) {
+    maxSpellLevel = 0;
+    for (let i = slotsAtLevel.length - 1; i >= 0; i--) {
+      if (slotsAtLevel[i] > 0) { maxSpellLevel = i + 1; break; }
+    }
+  } else {
+    // Class not in the progression table (homebrew, specialist school names, etc.)
+    maxSpellLevel = Math.min(Math.ceil(level / 2), isPriest ? 7 : 9);
+  }
+
+  // PHB Table 4: Intelligence caps a wizard's highest castable spell level.
+  let intCapped = false;
+  if (isWizard && typeof INT_TABLE !== 'undefined') {
+    const intScore = parseInt(val(root, 'int') || 0, 10);
+    const intRow   = INT_TABLE[intScore];
+    const intMax   = intRow ? intRow[4] : 0;   // index 4 = max spell level
+
+    if (intMax > 0 && intMax < maxSpellLevel) {
+      maxSpellLevel = intMax;
+      intCapped = true;
+    } else if (intMax === 0) {
+      // INT below 9 -- cannot cast wizard spells at all.
+      maxSpellLevel = 0;
+      intCapped = true;
+    }
+  }
+
+  if (maxSpellLevel === 0) {
+    const intScore = parseInt(val(root, 'int') || 0, 10);
+    resultsDiv.innerHTML =
+      '<p style="color:var(--error, #ff6b6b);text-align:center;padding:20px;">' +
+      (isWizard && intScore < 9
+        ? 'Intelligence ' + intScore + ' is too low to cast wizard spells (PHB Table 4 requires 9+).'
+        : 'No spell slots at this level.') +
+      '</p>';
+    return;
+  }
   
+  // Surface the Intelligence cap so a player isn't left wondering why high-level
+  // spells are missing from the browser.
+  const capNoticeEl = root.querySelector('.spell-int-cap-notice');
+  if (capNoticeEl) {
+    if (intCapped) {
+      const intScore = parseInt(val(root, 'int') || 0, 10);
+      capNoticeEl.style.display = 'block';
+      capNoticeEl.textContent =
+        'Intelligence ' + intScore + ' caps you at level ' + maxSpellLevel +
+        ' spells (PHB Table 4).';
+    } else {
+      capNoticeEl.style.display = 'none';
+    }
+  }
+
   // Filter spells
   let filteredSpells = filterSpells({
     spellClass: isPriest ? 'priest' : 'wizard',
