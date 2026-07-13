@@ -2104,6 +2104,14 @@ const SHEET_HTML = `
 	    </div>
 
 	    <hr style="border:none;border-top:1px solid var(--border);margin:0 0 16px;">
+
+	    <!-- Optional Rules -->
+	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px;">📖 Optional Rules</label>
+	    <p style="font-size:11px;color:var(--muted);margin:0 0 10px;">AD&amp;D 2e flags many rules as optional, and tables differ on which they use. These settings apply to every character in this browser.</p>
+	    <div class="optional-rules-list"></div>
+	    <p style="font-size:10px;color:var(--muted);margin:8px 0 16px;">Changes take effect immediately. Some may require reopening a character tab.</p>
+
+	    <hr style="border:none;border-top:1px solid var(--border);margin:0 0 16px;">
 	    <div style="display:flex;justify-content:flex-end;">
 	      <button class="kv-modal-close" style="padding:8px 20px;">Close</button>
 	    </div>
