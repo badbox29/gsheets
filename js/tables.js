@@ -1719,3 +1719,75 @@ const TURN_UNDEAD_TYPES = [
   { key: 'lich', name: 'Lich', hd: 11 },
   { key: 'special', name: 'Special', hd: 12 }
 ];
+
+// === Weapon Strength Bonus (AD&D 2E, PHB Ch.6 "Bows" + Ch.9 "Ability Modifiers
+//     in Missile Combat") ===
+//
+// PHB Ch.9: "Attack roll and damage modifiers for Strength are always used when
+//   an attack is made with a hurled weapon."
+// PHB Ch.9: "When using a bow, the attack roll and damage Strength modifiers
+//   apply only if the character has a properly prepared bow."
+// PHB Ch.9: "Characters never receive Strength bonuses when using crossbows or
+//   similar mechanical devices."
+// PHB Ch.6: an ordinary bow is ASSUMED matched to the character's pull, so the
+//   normal Strength bonus applies. But bonuses for EXCEPTIONAL Strength (18/01+)
+//   require a custom-crafted bow costing three to five times normal price.
+//   Low-Strength PENALTIES always apply to bows regardless.
+//
+// Modes:
+//   "exceptional" -- full Strength row, including 18/xx  (melee, hurled)
+//   "standard"    -- Strength row capped at plain 18      (ordinary bows)
+//   "none"        -- no Strength adjustment at all        (crossbows, slings)
+//
+// Slings: the PHB is SILENT. Defaulted to "none" per Chris's ruling; a DM can
+// override per weapon via the row's dropdown.
+const WEAPON_STR_BONUS_MODES = ["none", "standard", "exceptional"];
+
+// Default mode for a weapon, from its core_wp.json Category and Type.
+function getDefaultWeaponStrMode(category, wtype) {
+  const cat = (category || "").trim().toLowerCase();
+  const typ = (wtype    || "").trim().toLowerCase();
+
+  // Anything hurled by arm gets the full Strength bonus, exceptional included.
+  if (cat.includes("thrown")) return "exceptional";
+  if (cat === "melee")        return "exceptional";
+
+  if (cat === "ranged") {
+    if (typ === "bow")      return "standard";   // needs a custom bow for 18/xx
+    if (typ === "crossbow") return "none";       // mechanical
+    if (typ === "firearm")  return "none";       // mechanical
+    if (typ === "sling")    return "none";       // PHB silent -- house default
+    if (typ === "blowgun")  return "none";
+    return "none";                                // unknown ranged -- be safe
+  }
+
+  // Unknown/blank category (custom weapons, legacy rows) -- treat as melee,
+  // which preserves the tool's previous behaviour.
+  return "exceptional";
+}
+
+// Apply a weapon's Strength mode to a Strength data row from getStrengthData().
+// Returns { toHit, damage }.
+//
+// NOTE on "standard": PHB Ch.6 says low-Strength PENALTIES always apply to bows,
+// so we cap the BONUS at the plain-18 row but never clamp a penalty away.
+function getWeaponStrAdjustments(strData, mode, str, exceptionalStr, clazz) {
+  if (!strData || mode === "none") return { toHit: 0, damage: 0 };
+
+  if (mode === "standard") {
+    const plain = (typeof STR_TABLE !== "undefined" && STR_TABLE[parseInt(str, 10)]) || null;
+    if (!plain) return { toHit: 0, damage: 0 };
+    return { toHit: plain[0] || 0, damage: plain[1] || 0 };
+  }
+
+  // "exceptional" -- the full row, including any 18/xx bonus.
+  return { toHit: strData[0] || 0, damage: strData[1] || 0 };
+}
+
+// Look up a weapon in core_wp.json by name, so legacy rows saved before the
+// category field existed can be backfilled on load. Falls back to null.
+function lookupWeaponData(name) {
+  if (!name || typeof WEAPONS_DATA === "undefined" || !WEAPONS_DATA.length) return null;
+  const n = name.trim().toLowerCase();
+  return WEAPONS_DATA.find(w => (w["Weapon Name"] || "").trim().toLowerCase() === n) || null;
+}
