@@ -1,13 +1,35 @@
     :root {
-      /* Existing AD&D theme variables (dark defaults) */
-      --bg: #1c1f2b;
-      --panel: #232739;
-      --accent: #4fd1c5;
-      --accent-light: #81e6d9;
-      --text: #f1f5f9;
-      --muted: #94a3b8;
-      --border: rgba(255,255,255,0.08);
-      --glass: rgba(255,255,255,0.04);
+      /* === SLATE & BRASS — dark === */
+      --bg: #16181c;
+      --panel: #1f2228;
+      --accent: #c8a165;
+      --accent-light: #e3c48f;
+      --text: #e9ecf1;
+      --muted: #8a9099;
+      --border: rgba(255,255,255,0.09);
+      --glass: rgba(255,255,255,0.035);
+
+      /* Semantic colours. These carry RULES INFORMATION, not decoration:
+         --error = over-budget slots / out-of-group surcharge / not proficient.
+         Previously these did not exist and the JS faked --error with a
+         hardcoded #ff6b6b fallback. */
+      --error: #e2645f;
+      --warning: #d9a441;
+      --success: #67bd84;
+      --info: #6fa8d0;
+
+      /* Foreground for text sitting ON an accent-filled surface (badges,
+         primary buttons). This is the variable whose absence made the NATIVE
+         badge unreadable in light mode. */
+      --badge-fg: #16181c;
+      --btn-fg: #16181c;
+
+      /* Structural tokens. NOT YET CONSUMED -- ~89 hardcoded border-radius
+         values still live in JS inline styles. Defined now so Step A has a
+         target. */
+      --radius: 4px;
+      --radius-sm: 2px;
+      --radius-lg: 6px;
 
       /* Added to support the Passphrase file’s toggle UI sizing/colors */
       --toggleHeight: 16em;
@@ -269,14 +291,29 @@
 
     /* === Light mode (mirrors the second file’s theme intent) === */
 	body.light{
-	  --bg: #faf8f3;              /* Warm cream */
+	  /* === SLATE & BRASS — light === */
+	  --bg: #f4f5f7;
 	  --panel: #ffffff;
-	  --accent: #d9764a;          /* Lighter burnt orange */
-	  --accent-light: #c85a3f;    /* Terracotta for hover */
-	  --text: #2d2520;            /* Warm black */
-	  --muted: #8b7355;           /* Tan/brown muted */
-	  --border: rgba(139,69,19,0.15);
-	  --glass: rgba(139,69,19,0.05);
+	  --accent: #8a6524;
+	  /* NOTE --accent-light is DARKER than --accent here, and that is correct:
+	     on a light background the "highlight" must darken to stay readable.
+	     --badge-fg flips to white to compensate. */
+	  --accent-light: #6d4f1a;
+	  --text: #1b1e22;
+	  --muted: #5f666e;
+	  --border: rgba(30,35,45,0.14);
+	  --glass: rgba(30,35,45,0.035);
+
+	  /* Semantic colours must DARKEN in light mode -- a single hardcoded
+	     #ff6b6b could never do this, which is why the old light mode washed
+	     out every warning. */
+	  --error: #b02c24;
+	  --warning: #8a6116;
+	  --success: #256b3c;
+	  --info: #1d5f87;
+
+	  --badge-fg: #ffffff;
+	  --btn-fg: #ffffff;
 	}
 
     body.light .card{
