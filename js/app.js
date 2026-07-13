@@ -696,17 +696,26 @@ function renderSpellSlots(root) {
     appliedBonus = bonus;
   }
 
-  // Write to fields with tooltip if wisdom bonus was actually applied
+  // Specialist wizards gain one additional spell per spell level, which must be
+  // taken in their own school (PHB Ch.3).
+  const spec = applySpecialistBonus(slots, clazz);
+  slots = spec.slots;
+  const specSchool = spec.school;
+
+  // Write to fields with tooltip if a bonus was actually applied
   slots.forEach((n,i) => {
     const el = root.querySelector(`[data-field="slots${i+1}"]`);
     if (el) {
-      const base = table[level][i] || 0;
       el.value = n || "";
+
+      const notes = [];
       if (appliedBonus && appliedBonus[i] > 0) {
-        el.title = `Includes Wis bonus (+${appliedBonus[i]})`;
-      } else {
-        el.title = "";
+        notes.push(`Includes Wis bonus (+${appliedBonus[i]})`);
       }
+      if (specSchool && n > 0) {
+        notes.push(`Includes +1 specialist slot -- must be a ${specSchool} spell`);
+      }
+      el.title = notes.join('\n');
     }
   });
 }
