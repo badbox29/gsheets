@@ -1975,6 +1975,45 @@ function makeCompanionNode(c, onChange){
   
   return el;
 }
+
+// --- Weapon row dropdown builders -------------------------------------------
+
+function weaponCategoryOptions(selected) {
+  const cats = ['', 'Melee', 'Melee/Thrown', 'Thrown', 'Ranged'];
+  const sel  = (selected || '').trim();
+  return cats.map(c =>
+    '<option value="'+c+'"'+(c.toLowerCase() === sel.toLowerCase() ? ' selected' : '')+'>'+(c || '--')+'</option>'
+  ).join('');
+}
+
+function weaponTypeOptions(selected) {
+  // Only the types that change how Strength applies. Anything else is cosmetic.
+  const types = ['', 'Bow', 'Crossbow', 'Sling', 'Blowgun', 'Firearm', 'Other'];
+  const sel   = (selected || '').trim();
+  return types.map(t =>
+    '<option value="'+t+'"'+(t.toLowerCase() === sel.toLowerCase() ? ' selected' : '')+'>'+(t || '--')+'</option>'
+  ).join('');
+}
+
+function weaponStrBonusOptions(selected, category, wtype) {
+  // Fall back to the PHB default for this category/type when the weapon has no
+  // explicit setting (legacy rows, or freshly added weapons).
+  const fallback = (typeof getDefaultWeaponStrMode === 'function')
+    ? getDefaultWeaponStrMode(category, wtype)
+    : 'exceptional';
+  const sel = (selected || fallback).trim().toLowerCase();
+
+  const labels = {
+    none:        'None',
+    standard:    'Standard',
+    exceptional: 'Exceptional'
+  };
+
+  return ['none', 'standard', 'exceptional'].map(m =>
+    '<option value="'+m+'"'+(m === sel ? ' selected' : '')+'>'+labels[m]+'</option>'
+  ).join('');
+}
+
 function makeWeaponNode(data={}, onChange){
   const el = document.createElement('div');
   el.className = 'item';
@@ -2001,13 +2040,37 @@ function makeWeaponNode(data={}, onChange){
       '<div style="width:80px;text-align:center;">Weight (lbs)</div>' +
       '<div style="flex:1;text-align:center;">Damage Type</div>' +
     '</div>' +
-    '<div style="display:flex;align-items:stretch;gap:8px;">' +
+    '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
       '<input class="speed" type="number" placeholder="" value="'+(data.speed||'')+'" style="width:60px;text-align:center;">' +
       '<input class="damage-sm" placeholder="" value="'+(data.damageSM||'')+'" style="width:90px;text-align:center;">' +
       '<input class="damage-l" placeholder="" value="'+(data.damageL||'')+'" style="width:90px;text-align:center;">' +
       '<input class="magic-bonus" type="number" placeholder="0" value="'+(data.magicBonus||'')+'" style="width:60px;text-align:center;">' +
       '<input class="weight" type="number" step="0.1" placeholder="" value="'+(data.weight||'')+'" style="width:80px;text-align:center;">' +
       '<input class="damage-type" placeholder="e.g., Slashing" value="'+(data.damageType||'')+'" style="flex:1">' +
+    '</div>' +
+    '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
+      '<div style="width:130px;text-align:center;">Category</div>' +
+      '<div style="width:110px;text-align:center;">Type</div>' +
+      '<div style="width:130px;text-align:center;">STR Bonus</div>' +
+      '<div style="flex:1;"></div>' +
+    '</div>' +
+    '<div style="display:flex;align-items:stretch;gap:8px;">' +
+      '<select class="weapon-category" style="width:130px;">' +
+        weaponCategoryOptions(data.category) +
+      '</select>' +
+      '<select class="weapon-wtype" style="width:110px;">' +
+        weaponTypeOptions(data.wtype) +
+      '</select>' +
+      '<select class="weapon-str-bonus" style="width:130px;" title="' +
+        'How Strength applies to this weapon (PHB).&#10;' +
+        'Exceptional: full STR row incl. 18/xx -- melee and hurled weapons.&#10;' +
+        'Standard: STR bonus capped at plain 18 -- an ordinary bow. A bow that&#10;' +
+        '  grants exceptional-STR bonuses must be custom crafted (3-5x cost).&#10;' +
+        'None: no STR adjustment -- crossbows and other mechanical devices.&#10;' +
+        'Defaults are set from Category and Type; override as your DM allows.">' +
+        weaponStrBonusOptions(data.strBonus, data.category, data.wtype) +
+      '</select>' +
+      '<div style="flex:1;"></div>' +
     '</div>';
   // Remove button
   el.querySelector('.rm').onclick = ()=>{ el.remove(); onChange && onChange(); };
