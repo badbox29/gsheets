@@ -3127,6 +3127,7 @@ function renderProficiencySlots(root) {
 // Render weapon proficiencies list
 function renderWeaponProficiencies(root) {
   renderProficiencySlots(root);
+  if (typeof renderCombatQuickReference === 'function') renderCombatQuickReference(root);
 
   const listDiv = root.querySelector('.weapon-profs-list');
   
