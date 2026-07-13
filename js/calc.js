@@ -358,8 +358,15 @@ function cleanupOldWisTooltips(root) {
   let table = null;
   if (clazz.includes("cleric")) table = SPELL_SLOTS_TABLES.cleric;
   else if (clazz.includes("druid")) table = SPELL_SLOTS_TABLES.druid;
-  else if (clazz.includes("mage")) table = SPELL_SLOTS_TABLES.mage;
-  else if (clazz.includes("illusionist")) table = SPELL_SLOTS_TABLES.illusionist;
+  // PHB Ch.3: specialist wizards use the MAGE spell progression and XP table.
+  // SPELL_SLOTS_TABLES has no illusionist/necromancer/etc. keys -- they all
+  // resolve to mage.
+  else if (clazz.includes("mage") || clazz.includes("wizard") ||
+           clazz.includes("illusionist") || clazz.includes("abjurer") ||
+           clazz.includes("conjurer") || clazz.includes("enchanter") ||
+           clazz.includes("invoker") || clazz.includes("necromancer") ||
+           clazz.includes("transmuter") || clazz.includes("diviner") ||
+           clazz.includes("evoker")) table = SPELL_SLOTS_TABLES.mage;
   else if (clazz.includes("hb_dpaladin")) table = SPELL_SLOTS_TABLES.hb_dpaladin;
   else if (clazz.includes("demipaladin")) table = SPELL_SLOTS_TABLES.demipaladin;
   else if (clazz.includes("paladin")) table = SPELL_SLOTS_TABLES.paladin;
