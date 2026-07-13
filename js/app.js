@@ -6958,11 +6958,46 @@ function bindDiceRollers(root) {
         case 'initiative':
           result = rollDiceFormula('1d10');
           result.formula = 'Initiative (d10)';
-          // PHB Ch.9: LOW ROLL WINS initiative. Dexterity is NOT an initiative
-          // modifier in 2e -- Table 2 has no initiative column, and Tables 55/56
-          // (which list every initiative modifier) never mention Dexterity.
-          // The DEX Reaction Adjustment modifies the two-weapon fighting penalty.
-          modifiers = 'Low roll wins initiative.\nModifiers (PHB Tables 55/56): hasted -2, slowed +2,\nhigher ground -1, set vs charge -2, waiting +1,\nweapon speed / casting time (optional rules).';
+          // PHB Ch.9: LOW ROLL WINS. Dexterity is NOT an initiative modifier in
+          // 2e (Table 2 has no initiative column; Tables 55/56 never mention it).
+          // Weapon speed factor IS a modifier (Table 56) and is ADDED to the roll.
+          {
+            const initLines = [];
+            const equipped = [];
+
+            root.querySelectorAll('.weapons-list .item').forEach(w => {
+              const eq = w.querySelector('.equipped');
+              if (!eq || !eq.checked) return;
+              const nm    = (w.querySelector('.title') || {}).value || 'Unnamed';
+              const spd   = (w.querySelector('.speed') || {}).value || '';
+              const magic = (w.querySelector('.magic-bonus') || {}).value || '';
+              const eff   = getEffectiveWeaponSpeed(spd, magic);
+              if (eff !== null) equipped.push({ name: nm, base: parseInt(spd, 10), eff: eff, magic: parseInt(magic, 10) || 0 });
+            });
+
+            if (equipped.length) {
+              initLines.push('Rolled: ' + result.total + '  (low wins)');
+              initLines.push('');
+              equipped.forEach(w => {
+                const note = (w.magic > 0)
+                  ? ' [speed ' + w.base + ' - ' + w.magic + ' magic = ' + w.eff + ']'
+                  : ' [speed ' + w.eff + ']';
+                initLines.push(w.name + ':  ' + (result.total + w.eff) + note);
+              });
+              initLines.push('');
+            } else {
+              initLines.push('Rolled: ' + result.total + '  (low wins)');
+              initLines.push('No equipped weapon -- no speed factor applied.');
+              initLines.push('');
+            }
+
+            initLines.push('Other modifiers (PHB Table 55):');
+            initLines.push('hasted -2, slowed +2, higher ground -1,');
+            initLines.push('set vs charge -2, waiting +1,');
+            initLines.push('wading +2 / deep water +4, hindered +3.');
+
+            modifiers = initLines.join('\n');
+          }
           break;
           
         case 'surprise':
