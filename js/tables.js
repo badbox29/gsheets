@@ -1791,3 +1791,130 @@ function lookupWeaponData(name) {
   const n = name.trim().toLowerCase();
   return WEAPONS_DATA.find(w => (w["Weapon Name"] || "").trim().toLowerCase() === n) || null;
 }
+
+// === Related Weapons (AD&D 2E, PHB Ch.5 "Related Weapons Bonus") ===
+//
+// PHB: "When a character uses a weapon that is similar to a weapon he is
+//   proficient with, his attack penalty is only one-half the normal amount
+//   (rounded up). A warrior, for example, would have a -1 penalty with a
+//   related weapon instead of -2. A wizard would have a -3 penalty instead
+//   of -5."
+//
+// The list below is the PHB's own, transcribed verbatim, mapped to the
+// canonical weapon names used in core_wp.json. Note it is NARROWER than the
+// Group field: the PHB's sword set is only scimitar / bastard / long / broad --
+// short sword, two-handed, katana and the rest are NOT related to them.
+//
+// The PHB hedges ("Some likely categories are..." / "Specific decisions about
+// which weapons are related are left to the DM"), so each weapon row also
+// carries a Proficiency override dropdown.
+const PHB_RELATED_WEAPONS = [
+  ["Hand Axe", "Battle Axe"],
+  ["Short Bow", "Long Bow", "Composite Short Bow", "Composite Long Bow"],
+  ["Heavy Crossbow", "Light Crossbow"],
+  ["Dagger", "Knife"],
+  ["Glaive", "Halberd", "Bardiche", "Voulge", "Guisarme", "Glaive-Guisarme", "Guisarme-Voulge"],
+  ["Spear", "Trident", "Javelin"],
+  // PHB lumps all of these into ONE related set, where core_wp.json splits them
+  // across the Mace / Flail / Hammer / Club groups. The book wins.
+  ["Mace, Footman's", "Mace, Horseman's", "Morning Star",
+   "Flail, Footman's", "Flail, Horseman's", "Hammer", "War Hammer", "Club"],
+  ["Fork, Military", "Ranseur", "Spetum", "Partisan"],
+  ["Scimitar", "Sword, Bastard", "Sword, Long", "Sword, Broad"],
+  ["Sling", "Staff Sling"]
+];
+
+// The PHB related set a weapon belongs to, or null if the book doesn't list it.
+function getPHBRelatedSet(weaponName) {
+  const n = (weaponName || "").trim().toLowerCase();
+  if (!n) return null;
+  return PHB_RELATED_WEAPONS.find(set =>
+    set.some(w => w.toLowerCase() === n)
+  ) || null;
+}
+
+// Are two weapons "related" for the half-penalty rule?
+//   1. Both in the same PHB related set  -> yes (the book is authoritative)
+//   2. NEITHER appears in any PHB set, but they share a core_wp.json Group
+//      -> yes (sensible fallback for the ~39 exotic weapons the PHB omits:
+//         katana/wakizashi, nunchaku/scourge, the exotic polearms, etc.)
+//   3. Otherwise -> no
+function areWeaponsRelated(nameA, groupA, nameB, groupB) {
+  const setA = getPHBRelatedSet(nameA);
+  const setB = getPHBRelatedSet(nameB);
+
+  if (setA && setB) return setA === setB;
+  if (setA || setB) return false;   // one is listed, the other isn't
+
+  const gA = (groupA || "").trim().toLowerCase();
+  const gB = (groupB || "").trim().toLowerCase();
+  return !!gA && gA === gB;
+}
+
+// A character's proficiency status with a given weapon.
+// Returns "proficient" | "related" | "none".
+function getWeaponProficiencyStatus(weaponName, weaponGroup, weaponProfs) {
+  const profs = weaponProfs || [];
+  const n = (weaponName || "").trim().toLowerCase();
+  if (!n) return "none";
+
+  // Exact match -- fully proficient.
+  if (profs.some(p => (p.name || "").trim().toLowerCase() === n)) return "proficient";
+
+  // Related weapon -- half penalty.
+  if (profs.some(p => areWeaponsRelated(weaponName, weaponGroup, p.name, p.group))) {
+    return "related";
+  }
+
+  return "none";
+}
+
+// === Non-Proficiency Penalty (PHB Table 34, "Penalty" column) ===
+// Warrior -2, Wizard -5, Priest -3, Rogue -3.
+// Multi/dual-class characters use the BEST (least severe) penalty available --
+// a fighter/mage swings a sword at -2, not -5.
+function getNonProfPenalty(root) {
+  const charType = (val(root, "char_type") || "single").toLowerCase();
+  const classes = [];
+
+  if (charType === "multi") {
+    ["mc_class1", "mc_class2", "mc_class3"].forEach(f => {
+      const c = val(root, f);
+      if (c) classes.push(c);
+    });
+  } else if (charType === "dual") {
+    const orig      = val(root, "dc_original_class");
+    const nu        = val(root, "dc_new_class");
+    const origLevel = parseInt(val(root, "dc_original_level") || 0, 10);
+    const newLevel  = parseInt(val(root, "dc_new_level") || 0, 10);
+    if (nu) classes.push(nu);
+    if (orig && newLevel > origLevel) classes.push(orig);  // dormant class doesn't count
+  } else {
+    const c = val(root, "clazz");
+    if (c) classes.push(c);
+  }
+
+  let best = null;
+  classes.forEach(c => {
+    const cat = CLASS_CATEGORIES[(c || "").trim().toLowerCase()];
+    if (!cat || !PROFICIENCY_SLOTS[cat]) return;
+    const p = PROFICIENCY_SLOTS[cat].nonProfPenalty;   // negative
+    if (best === null || p > best) best = p;           // -2 is better than -5
+  });
+
+  return best === null ? 0 : best;
+}
+
+// The attack penalty this character suffers with a given weapon.
+// status: "proficient" | "related" | "none"
+// PHB: a related weapon costs HALF the normal penalty, ROUNDED UP
+//   (warrior -1 instead of -2; wizard -3 instead of -5 -- both confirmed in text).
+function getWeaponAttackPenalty(status, fullPenalty) {
+  if (status === "proficient") return 0;
+  if (!fullPenalty) return 0;
+
+  if (status === "related") {
+    return -Math.ceil(Math.abs(fullPenalty) / 2);
+  }
+  return fullPenalty;
+}
