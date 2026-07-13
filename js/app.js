@@ -811,31 +811,40 @@ function renderAttackMatrix(root) {
   const container = root.querySelector(".attack-matrix");
   if (!container) return;
 
+  // Three rows: AC / Melee / Missile. The rows now show what the player actually
+  // needs to ROLL, with the unmodified base THAC0 moved into the hover tooltip.
+  const strSign = (strToHit >= 0 ? "+" : "") + strToHit;
+  const dexSign = (dexToHit >= 0 ? "+" : "") + dexToHit;
+
+  // Header row
   let html = "<table class='attack-matrix-table'><tr><th>AC</th>";
   for (let ac = AC_MIN; ac <= AC_MAX; ac++) {
-    html += `<th>${ac}</th>`;                   // FIX: append to html (headerHtml was undefined)
+    html += `<th>${ac}</th>`;
   }
-  html += "</tr><tr><th>Needed</th>";
+  html += "</tr>";
 
-  for (let ac = AC_MIN; ac <= AC_MAX; ac++) {
-    const rawBase    = thac0Base    - ac;
-    const rawMelee   = thac0Melee   - ac;
-    const rawMissile = thac0Missile - ac;
+  // Build a data row for one attack mode.
+  const buildRow = (label, thac0Mode, adjLabel, adjSign) => {
+    let row = `<tr><th title="THAC0 ${thac0Mode} (base ${thac0Base}, ${adjLabel} ${adjSign})">${label}</th>`;
+    for (let ac = AC_MIN; ac <= AC_MAX; ac++) {
+      const rawBase = thac0Base  - ac;
+      const rawMode = thac0Mode  - ac;
+      const needed  = clampD20(rawMode);
 
-    const neededBase    = clampD20(rawBase);
-    // We only *display* Base; Melee/Missile are preserved in tooltip for clarity.
-    const neededMelee   = clampD20(rawMelee);
-    const neededMissile = clampD20(rawMissile);
+      const tooltip = `AC ${ac} — ${label}
+Need to roll: ${needed}
+THAC0 ${thac0Mode} (base ${thac0Base}, ${adjLabel} ${adjSign})
+Unmodified: ${clampD20(rawBase)} (raw ${rawBase})`;
 
-    const tooltip = `AC ${ac}
-Base THAC0: ${thac0Base} → Needed: ${neededBase} (raw ${rawBase})
-Melee (STR ${strToHit >= 0 ? "+" : ""}${strToHit}): ${neededMelee} (raw ${rawMelee})
-Missile (DEX ${dexToHit >= 0 ? "+" : ""}${dexToHit}): ${neededMissile} (raw ${rawMissile})`;
+      row += `<td title="${tooltip}">${needed}</td>`;
+    }
+    return row + "</tr>";
+  };
 
-    html += `<td title="${tooltip}">${neededBase}</td>`;
-  }
+  html += buildRow("Melee",   thac0Melee,   "STR to-hit", strSign);
+  html += buildRow("Missile", thac0Missile, "DEX missile", dexSign);
 
-  html += "</tr></table>";
+  html += "</table>";
   container.innerHTML = html;
 }
 
