@@ -6964,8 +6964,11 @@ function bindDiceRollers(root) {
           {
             const initLines = [];
             const equipped = [];
+            const useSpeed = (typeof isOptionalRule === 'function')
+                               ? isOptionalRule('weaponSpeedInitiative')
+                               : true;
 
-            root.querySelectorAll('.weapons-list .item').forEach(w => {
+            if (useSpeed) root.querySelectorAll('.weapons-list .item').forEach(w => {
               const eq = w.querySelector('.equipped');
               if (!eq || !eq.checked) return;
               const nm    = (w.querySelector('.title') || {}).value || 'Unnamed';
@@ -6987,7 +6990,9 @@ function bindDiceRollers(root) {
               initLines.push('');
             } else {
               initLines.push('Rolled: ' + result.total + '  (low wins)');
-              initLines.push('No equipped weapon -- no speed factor applied.');
+              initLines.push(useSpeed
+                ? 'No equipped weapon -- no speed factor applied.'
+                : 'Weapon speed initiative is off (Settings > Optional Rules).');
               initLines.push('');
             }
 
