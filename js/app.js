@@ -4708,7 +4708,54 @@ function openKvSettingsModal(root) {
   qs(root, '.kv-worker-url-status').textContent = '';
   qs(root, '.kv-token-status').textContent      = '';
   updateKvSyncStatus(root, cfg);
+  renderOptionalRules(root);
   qs(root, '.kv-modal-overlay').style.display = 'flex';
+}
+
+// Render one checkbox per entry in the OPTIONAL_RULES registry (tables.js).
+// Adding a new optional rule means adding a registry entry and one
+// isOptionalRule() guard at the call site -- no UI work required here.
+function renderOptionalRules(root) {
+  const listEl = qs(root, '.optional-rules-list');
+  if (!listEl || typeof OPTIONAL_RULES === 'undefined') return;
+
+  listEl.innerHTML = '';
+
+  Object.keys(OPTIONAL_RULES).forEach(key => {
+    const rule = OPTIONAL_RULES[key];
+
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'padding:8px;background:var(--glass);border-radius:4px;margin-bottom:6px;';
+
+    const row = document.createElement('label');
+    row.style.cssText = 'display:flex;align-items:flex-start;gap:8px;cursor:pointer;margin:0;';
+
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.className = 'optional-rule-chk';
+    cb.dataset.rule = key;
+    cb.checked = isOptionalRule(key);
+    cb.style.cssText = 'width:16px;height:16px;cursor:pointer;flex-shrink:0;margin-top:1px;';
+
+    const text = document.createElement('div');
+    text.style.flex = '1';
+    text.innerHTML =
+      '<div style="font-size:12px;">' + rule.label + '</div>' +
+      '<div style="font-size:10px;color:var(--muted);margin-top:2px;">' + (rule.detail || '') + '</div>';
+
+    row.appendChild(cb);
+    row.appendChild(text);
+    wrap.appendChild(row);
+    listEl.appendChild(wrap);
+
+    cb.addEventListener('change', () => {
+      setOptionalRule(key, cb.checked);
+      // Recalculate every open tab -- these rules affect movement, combat, etc.
+      document.querySelectorAll('.sheet-container').forEach(sheet => {
+        if (typeof recalculateAll === 'function') recalculateAll(sheet);
+      });
+    });
+  });
 }
 
 function closeKvSettingsModal(root) {
