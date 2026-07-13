@@ -2077,6 +2077,32 @@ function makeWeaponNode(data={}, onChange){
   el.querySelectorAll('input').forEach(inp =>
     inp.addEventListener('input', ()=>onChange && onChange())
   );
+
+  // The Category / Type / STR Bonus dropdowns are <select>, not <input>, so the
+  // listener above misses them entirely.
+  el.querySelectorAll('select').forEach(sel =>
+    sel.addEventListener('change', ()=>onChange && onChange())
+  );
+
+  // Changing Category or Type re-derives the STR Bonus default -- but only if
+  // the player hasn't deliberately overridden it. Once they pick a value by
+  // hand we leave it alone.
+  const catSel  = el.querySelector('.weapon-category');
+  const typeSel = el.querySelector('.weapon-wtype');
+  const strSel  = el.querySelector('.weapon-str-bonus');
+
+  if (strSel) strSel.addEventListener('change', () => { strSel.dataset.userSet = '1'; });
+
+  [catSel, typeSel].forEach(s => {
+    if (!s || !strSel) return;
+    s.addEventListener('change', () => {
+      if (strSel.dataset.userSet === '1') return;
+      if (typeof getDefaultWeaponStrMode === 'function') {
+        strSel.value = getDefaultWeaponStrMode(catSel.value, typeSel.value);
+      }
+      onChange && onChange();
+    });
+  });
   el.querySelector('.equipped').addEventListener('change', ()=>onChange && onChange());
   return el;
 }
@@ -2460,7 +2486,12 @@ function collectSheet(root){
       speed: (n.querySelector('.speed') && n.querySelector('.speed').value) || '',
       damageType: (n.querySelector('.damage-type') && n.querySelector('.damage-type').value) || '',
       equipped: (n.querySelector('.equipped') && n.querySelector('.equipped').checked) || false,
-      notes: (n.querySelector('.notes') && n.querySelector('.notes').value) || ''
+      notes: (n.querySelector('.notes') && n.querySelector('.notes').value) || '',
+      // How Strength applies to this weapon (PHB). Category/Type drive the
+      // default; strBonus is the explicit, DM-overridable setting.
+      category: (n.querySelector('.weapon-category') && n.querySelector('.weapon-category').value) || '',
+      wtype: (n.querySelector('.weapon-wtype') && n.querySelector('.weapon-wtype').value) || '',
+      strBonus: (n.querySelector('.weapon-str-bonus') && n.querySelector('.weapon-str-bonus').value) || ''
     }));
 	
   const ammunition = qsa(root,'.ammunition-list .item')
