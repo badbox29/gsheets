@@ -135,6 +135,27 @@ Follow these steps **in order** to avoid overwriting your data:
 * KV data expires after 90 days of inactivity (reset on every successful push)
 * Maximum payload size is 4 MB per user (sufficient for many characters)
 * Microsoft Edge users may need to add the site as a tracking prevention exception if localStorage or fetch calls are being blocked
+* I am not a developer.
+
+### Recent Updates
+
+* Corrected exceptional Strength handling so it applies across attack rolls, damage, and ability checks rather than only in the ability display.
+* Resolved conflicting Wisdom tables and cleaned up spell bonus, spell failure, and magical defense adjustments.
+* Rebuilt encumbrance on the real Player's Handbook weight tables and made its penalties an opt-in rule.
+* Removed a Dexterity modifier from initiative that doesn't exist in second edition.
+* Corrected Intelligence table data and enforced Intelligence-based caps on wizard spell selection.
+* Added weapon and nonweapon proficiency slot counters with automatic class-based calculation and manual override.
+* Implemented nonweapon proficiency group crossover surcharges and corrected widespread category errors in the proficiency data.
+* Reworked language handling to properly separate native, granted, and purchased languages and to charge slots correctly.
+* Added weapon categories and Strength-bonus rules so thrown, bow, and mechanical weapons behave correctly.
+* Implemented the non-proficiency attack penalty, including reduced penalties for related weapons.
+* Reworked the attack matrix to show actual to-hit numbers for melee and missile at a glance.
+* Added weapon speed factor as an initiative modifier, including magical weapon adjustments.
+* Optimizations around specialist mage classes, including spell progression, experience tables, and bonus school slots.
+* Extended class recognition to cover previously unsupported classes across saves, proficiencies, and penalties.
+* Rebuilt cloud sync to merge by timestamp, propagate deletions, and stop stale devices from overwriting newer data.
+* Introduced an optional-rules framework with live toggles in settings.
+* Replaced the color scheme with a new theme and laid the groundwork for user-selectable themes.
 
 ---
 
