@@ -583,6 +583,22 @@ function renderIntelligenceEffects(root) {
     const [languages, learnSpell, maxSpells, immunity] = intData;
     
     languagesEl.value = languages;
+
+    // PHB Table 4 footnote: "* While unable to speak a language, the character
+    // can communicate with grunts and gestures."
+    if (int === 1) {
+      languagesEl.title =
+        "Intelligence 1: no languages.\n\n" +
+        "While unable to speak a language, the character can communicate " +
+        "with grunts and gestures. (PHB Table 4)";
+      languagesEl.style.color = 'var(--muted)';
+    } else {
+      languagesEl.title = "Languages the character may learn IN ADDITION to " +
+                          "his native tongue (PHB Table 4). The native language " +
+                          "is always free and never counts against this.";
+      languagesEl.style.color = '';
+    }
+
     bonusProfsEl.value = bonusProfs || 0;
     immunityEl.value = immunity || "—";
     
