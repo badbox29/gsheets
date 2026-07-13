@@ -375,15 +375,24 @@ function cleanupOldWisTooltips(root) {
 
   if (!table) return;
 
-  const baseSlots = table[level] ? [...table[level]] : Array(9).fill(0);
+  let baseSlots = table[level] ? [...table[level]] : Array(9).fill(0);
+
+  // Specialist wizards get +1 slot per castable spell level (PHB Ch.3). This
+  // path RESETS the slot fields for non-priests, so it must apply the same
+  // bonus app.js does -- otherwise it silently wipes it.
+  const spec = applySpecialistBonus(baseSlots, clazz);
+  baseSlots = spec.slots;
 
   // Scan all spell slot fields
   root.querySelectorAll('[data-field^="slots"]').forEach((el, i) => {
     if (!isPriest) {
       // Reset value to base table (no Wis bonuses for non-priests)
       el.value = baseSlots[i] || "";
-      // Strip tooltip
-      el.removeAttribute("title");
+      if (spec.school && baseSlots[i] > 0) {
+        el.title = `Includes +1 specialist slot -- must be a ${spec.school} spell`;
+      } else {
+        el.removeAttribute("title");
+      }
     }
   });
 }
