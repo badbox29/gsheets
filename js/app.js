@@ -2877,6 +2877,18 @@ function loadSheet(root, data){
 
   const weapons = qs(root,'.weapons-list'); weapons.innerHTML='';
   (data.weapons||[]).forEach(w=>weapons.appendChild(makeWeaponNode(w, ()=>markUnsaved(tab,true,root))));
+
+  // WEAPONS_DATA loads async, so it may not be ready at load time. Retry briefly.
+  if (typeof backfillWeaponCategories === 'function') {
+    const tryBackfill = (attempts) => {
+      if (typeof WEAPONS_DATA !== 'undefined' && WEAPONS_DATA.length) {
+        backfillWeaponCategories(root);
+      } else if (attempts > 0) {
+        setTimeout(() => tryBackfill(attempts - 1), 300);
+      }
+    };
+    tryBackfill(10);
+  }
   
   // Render combat reference after weapons are loaded
   renderCombatQuickReference(root);
