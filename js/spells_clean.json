@@ -73718,7 +73718,12 @@
   "notes": null,
   "po": null,
   "description": "The caster, using this orison, can reduce the temperature of nonliving liquid or solid material by about 40 °F, subject to a minimum temperature of freezing (32 °F). The chill lasts for but an instant, after which the object warms slowly back to normal temperature",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Combat"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Clean",
@@ -73844,7 +73849,12 @@
   "notes": null,
   "po": null,
   "description": "This orison fills the palm of the priest’s hand with a momentary bright flash of flame. The flame can ignite ready flammables, such as powders, incenses, and volatile oils. The flash can scorch or blister exposed flesh and might inflict as much as 1 point of damage to a creature that fails a saving throw vs. spell",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Combat"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Incense",
@@ -74601,7 +74611,12 @@
   "notes": null,
   "po": null,
   "description": "The druid can enchant a leaf of holly to become a magical dart +1 for one round, if not used by the round after the casting, the leaf reverts to its normal state\nThe caster presses his lips to the leaf.",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Plant"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Humidity",
@@ -74793,7 +74808,12 @@
   "notes": null,
   "po": null,
   "description": "This orison makes the caster’s body repel normal insects (including normal insects magically summoned or controlled). It has no effect on giant insects. The effect lasts for one hour. While the insects may still swarm around the caster, they will not bite or even light on his or her person\nThe caster twirls his index finger around his head in a circle.",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Animal"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Ripen",
@@ -74819,7 +74839,12 @@
   "notes": null,
   "po": null,
   "description": "By casting this orison, the user causes unripe fruit to ripen within one round. The ripened fruit is otherwise normal in every way, and is subject to normal spoilage and decay\nThe caster makes a clockwise circular motion with his palm over the fruit to be affected.",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Plant"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Smokeball",
@@ -75460,7 +75485,12 @@
   "notes": null,
   "po": null,
   "description": "﻿This spell is identical to the normal augury spell except that it is 1st level, and the material component is a set of straight willow sticks or carved bones.\nThe priest casting an augury spell seeks to divine whether an action in the immediate future (within one-half hour) will benefit or harm the party. For ex­ample, if a party is considering the destruction of a weird seal that closes a portal, an augury spell can be used to find if weal or woe will be the immediate result. If the spell is successful, the DM yields some indication of the probable outcome: “weal,” “woe,” or possibly a cryptic puzzle or rhyme. The base chance for receiving a meaningful reply is 70%, plus 1%for each level of the priest casting the spell, e.g., 71% at 1st level, 72% at 2nd, etc. The DM determines any ad­justments for the particular conditions of each augury.\nFor example, if the question is “Will we do well if we venture to the third/level?” and a terrible troll guarding 10,000 sp and a shield +1 lurks near the entrance to the level (which the DM estimates the party could beat after a hard fight) the augury might be: “Great risk brings great reward.” If the troll is too strong for the party, the augury might be: “Woe and destruction await!” Likewise, a party casting several auguries about the same action in quick succession might receive identical answers, regardless of the dice rolls.\nThe material component for an augury spell is a set of gem-inlaid sticks, dragon bones, or similar tokens of at least 1,000 gp value (which are not ex­pended in casting).\nNotes: Common for clerics ( PHB).",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Divination"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Banish Flame",
@@ -77889,11 +77919,10 @@
   "description": "A creature or object receiving this spell becomes exceptionally buoyant and floats up through the water like a cork.\nIf the recipient is a creature, it floats upward at a rate of 50 feet per round, along with up to 10 pounds of equipment per level of the spellcaster. Once a floating creature arrives at the surface, it remains there until the spell wears off. It can be pulled underwater, but will not sink while the spell lasts. The creature's fairly rapid ascent causes it no harm, no matter what its starting depth.\nA float spell does not interfere with swimming, even if the recipient dives or swims downward. The moment the creature stops swimming, however, it floats upward again. The spell can also affect an object, provided that it weighs no more than 10 pounds per caster level. An object so affected floats toward the surface at the rate of 50 feet per round, unless some creature grabs it and holds it down, or it encounters some barrier that stops its rise. The material component for the spell is the priest's holy symbol.\n(This spell originally appeared in AQ.)\nA creature or object receiving this spell becomes exceptionally buoyant and floats to the surface of the water like a cork. If the recipient is a creature, it floats upward 50 feet per round, along with up to ten pounds of equipment per level of the caster. A floating creature remains at the water's surface until the spell ends or a means of leaving the water entirely exists. The creature's fairly rapid ascent causes no harm; thus, this spell is useless in harming a foe.\nThe spell does not interfere with swimming or even diving if the recipient chooses to do so. As soon as the creature stops swimming however, the spell takes over.\nAn object (that can weight no more than ten pounds per level of the caster) also floats to the surface, at the above rate, unless a creature or obstacle prevents the object from reaching the surface (the item is grabbed by a foe, is trapped within the hull of a sunken ship, etc.). The priest's holy symbol is the spell's material component.",
   "schoolSource": null,
   "spheres": [
-   "Elemental Water",
-   "Travelers"
+   "Divination"
   ],
   "spheresSetting": [],
-  "sphereSource": "spells.json-misfiled"
+  "sphereSource": "spells.json"
  },
  {
   "name": "Foresight",
@@ -78022,11 +78051,13 @@
   "po": null,
   "description": "A templar who casts this spell is immediately protected from magical spells. The shimmering field diffuses magical energy, giving the templar a +2 bonus against all spells cast against him or her, be the caster defiler or preserver. Only templars can use this spell.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Cosmos"
+  ],
   "spheresSetting": [
    "Cosmos"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet",
   "sourceRef": "PSC"
@@ -78640,12 +78671,12 @@
   "schoolSource": "spells.json",
   "spheres": [
    "Animal",
-   "Plant"
+   "Divination"
   ],
   "spheresSetting": [
    "Cosmos"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet"
  },
@@ -78878,11 +78909,13 @@
   "po": null,
   "description": "The reverse of this spell, blistering rays, inten­sifies the light and heat of the sun on the subject. The individual must have twice the water per day for duration of the spell or suffer the effects of dehydration. Also, in each round of combat in the open sun, the individual must make a constitution check to keep from passing out. The saving throw, applicable only to the reverse of the spell, negates its effects. This spell (and its reverse) has no effect on an individual who is in the shade.\nThe material components of this spell are a piece of a palm leaf (or black fabric for the reverse).\nNotes: Common for priests from the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Cosmos"
+  ],
   "spheresSetting": [
    "Cosmos"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet"
  },
@@ -79529,11 +79562,13 @@
   "po": null,
   "description": "The material components for this spell can vary; either metal coins must be placed on the recipient's eyes, the petals of flowers must be sprinkled beneath him, or dust from his homeland must be sprinkled on him.\nNotes: Uncommon for priests from a DS setting; otherwise, very rare.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Cosmos"
+  ],
   "spheresSetting": [
    "Cosmos"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet"
  },
@@ -80409,7 +80444,13 @@
   "notes": null,
   "po": null,
   "description": "This spell was created by the priests of Helm to aid in guard duty while most members of a group of travelers in the wild are sleeping. Like the lst-level wizard spell unseen servant, this spell creates an invisible, mindless, and shapeless force. This force cannot fight and, unlike an unseen servant, it cannot affect its physical surrounding except as indicated below.\nThe priest casts this spell by walking the perimeter of the area of effect sprinkling pinches of sand every few feet and then returning to the center of the area of effect. Once the spellcasting is completed, the shadowy sentry stands guard in the center of the area of effect and the caster immediately falls asleep.\nIf any visible object over 1 foot in length, width, or height which was not present during the casting of the spell enters the area of effect while the spell is in operation or if the spell is about to end, the shadowy force silently shakes the caster awake. When the caster awakes, the priest is wide awake and aware that something has triggered the sentry or that the spell has ended. The spell then immediately expires.\nA visible object must be an object that a guard could have perceived with normal vision if she or he had been awake and on guard duty. Visible objects cannot be invisible, hiding in shadows, or hidden behind walls, trees, or earth.\nIf this spell is cast by a priest of 5th level or higher, the sentry of Helm also has 60-foot infravision in addition to normal sight, and what is visible to it includes beings seen with that faculty.\nThe material component of this spell is the priest's holy symbol and a small bag of fine sand.",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Guardian",
+   "Travelers"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Sentry of Helm",
@@ -80606,11 +80647,13 @@
   "po": null,
   "description": "Notes: Uncommon for priests from the DS setting; otherwise, very rare.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Elemental Sun"
+  ],
   "spheresSetting": [
    "Elemental Sun"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet"
  },
@@ -81393,7 +81436,12 @@
   "notes": null,
   "po": null,
   "description": "A necromancer-cleric specialty spell nearly identi­cal to the drow spell, undead battlemight except for a duration of 1 turn +2 rounds/level and a +1 bonus to the undead creatures' AC.",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Necromantic"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Undead Battlemight",
@@ -81968,11 +82016,13 @@
   "po": null,
   "description": "With this spell, a priest can transfer as many of his hit points as desired to heal a willing, living being of any alignment not directly opposed to his own (good vs. evil or lawful vs. chaotic). Each hit point transferred restores one hit point lost by the subject creature. These hit points cannot be taken back once the spell has been cast. The priest's current hit points are reduced by the amount actually transferred, and these can be restored by normal or magical healing. The creature cannot re­ceive more hit points than its normal maximum.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Cosmos"
+  ],
   "spheresSetting": [
    "Cosmos"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet",
   "sourceRef": "PSC"
@@ -82754,11 +82804,13 @@
   "po": null,
   "description": "Notes: Uncommon for templars and druids in the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Cosmos"
+  ],
   "spheresSetting": [
    "Cosmos"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet"
  },
@@ -83743,7 +83795,12 @@
   "po": null,
   "description": "When the words of this spell are uttered, a holy symbol appropriate to the priest's deity appears out of thin air. The item appears in the priest's hands. It may be used as a component for spells or for any other purpose for which the priest would normally use his holy symbol (such as turning undead). He may also opt to give it to a lower level priest of the same deity. The holy symbol is a permanent object.\nSee holy symbol.",
   "schoolSource": "spells.json",
-  "sourceRef": "ToM page 57 PSC"
+  "sourceRef": "ToM page 57 PSC",
+  "spheres": [
+   "Creation"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Create Mirage",
@@ -83770,11 +83827,13 @@
   "po": null,
   "description": "The reverse, reveal mirage, reveals things as they really are, negating natural or magical mirages.\nNotes: Uncommon for priests of the DS setting; otherwise, very rare.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Elemental Sun"
+  ],
   "spheresSetting": [
    "Elemental Sun"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet"
  },
@@ -84045,7 +84104,12 @@
   "notes": null,
   "po": null,
   "description": "Darkfire flames give no light at all, although creatures with infravision see a signature brighter than normal flame. Contact with a brazier or hand lamp of darkfire typically inflicts 2d4 points of damage; flammable items or garments require item saving throws vs. magical fire.\nIn battle, darkfire can be cast to emanate from one of the caster's hands. It does not harm the caster at all, except to burn away clothing it touches. A blow from a flaming hand inflicts 1d8 points of fire-based damage.\nDarkfire from the hand can be willed into handfuls and thrown. One ball of flame can be hurled up to 10 feet, as if the caster was attacking directly. Thrown darkfire inflicts 1d3 points of damage plus 1 additional point per caster level, to a maximum of 1d3+10 points of damage at 10th level. The DM should use the grenadelike missile table to deter­mine where misses land – such misses have the usual incendiary effect and the darkfire itself rages for 1d2 rounds before burning out.\nThis magic was developed for use in rituals of worship to Lolth, but has since been adapted into an offensive battle spell. This spell transforms a normal fire or ignites unlit fuel with darkfire.\nNotes: Granted by the drow goddess Lolth.",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Elemental Fire"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Dark Fire",
@@ -84072,7 +84136,12 @@
   "po": null,
   "description": "The dark fire spell provides a small, lightless campfire when cast on a bronze brazier. This fire puts out heat and burns, but emits no light in the normal visible spectrum, nor does it create smoke. Objects set ablaze by the dark fire burn normally, emitting both smoke and light. The area of effect is equal to the size of the brazier, to a maximum di­ameter of one foot per level of the caster.\nThe material component is a small piece of charcoal. A bronze brazier is also required.\nNotes: Very rare spell (Updated from POLY.) Not to be confused with darkfire.",
   "schoolSource": "spells.json",
-  "sourceRef": "PSC"
+  "sourceRef": "PSC",
+  "spheres": [
+   "Travelers"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Darkfire of Beshaba",
@@ -84437,7 +84506,13 @@
   "po": null,
   "description": "This spell is an improved version of the command spell. It can affect up to six creatures at once, and its effects can last more than one round. Dictate allows the caster to speak a short, precise phrase or order of no more than a dozen words that must be obeyed by all targets who fail their saving throw. Examples include, \"Throw down your weapons,\" \"Stay here until I return,\" or \"Seize that elf.\" The command must be stated in a language understood by the targets, or the spell fails.\nDictate must be phrased to create an immediate course of physical action for the target. Commands to \"die\" or \"sleep\" usually don't work, but commands to \"lie down and put your hands behind your head\" prove effective. If the caster phrases the dictate spell poorly, the DM can assign a saving throw modifier of +1 to +4 for the targets. If the caster directs the intended victim to take an obviously self-destructive action (\"Throw yourself off that cliff or \"Kill yourself) the victim who fails his save stands still for one round, fighting the compulsion to obey. Such commands never work, however. Once an order takes effect, the creature continues following it until it fulfills the condition or the spell's duration ends. Therefore, when a creature ordered to \"climb the ladder\" reaches to top of the ladder, the spell ends. A creature ordered to \"wait here\" does so for the entire duration.\nThis spell was developed by and for the Harmonium. Since Harmonium security is very tight and very effective, non-Harmonium priests have little chance to gain access to this spell.\nNotes: Common for Harmonium priests. A more general 3rd level spell is uncommon for others.",
   "schoolSource": "spells.json",
-  "sourceRef": "The Planewalker's Handbook PSC"
+  "sourceRef": "The Planewalker's Handbook PSC",
+  "spheres": [
+   "Charm",
+   "Law"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Disentangle",
@@ -86780,7 +86855,12 @@
   "notes": null,
   "po": null,
   "description": "This spell allows the caster to sense the basic needs, drives, and/or emotions of any unshielded mind (hunger, thirst, fear, fatigue, pain, uncer­tainty, rage, hatred, curiosity, hostility, friendli­ness, love, and so on). The spell gives no result for creatures protected against detection, psionic crea­tures, or emotionless creatures (such as slimes, oozes, jellies, golems, skeletons, zombies, etc.).\nThe reverse of the spell, mask emotion, conceals the emotions of the protected creature for one turn.\nThe material component is the priest's holy symbol.\nNotes: Very rare spell. (Updated from POLY.)",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Divination"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Lighten Load",
@@ -87214,11 +87294,13 @@
   "po": null,
   "description": "This spell, developed by the sorcerer-kings, empowers a minion with unnatural aggressiveness. A templar under its influence fights with a +2 attack bonus and a +2 damage bonus. The templar loses 1 hit point as the spell ends. Hit points lost in this way can be regained normally.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Cosmos"
+  ],
   "spheresSetting": [
    "Cosmos"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet",
   "sourceRef": "PSC"
@@ -88686,7 +88768,12 @@
   "po": null,
   "description": "This spell also provides immunity to sight-based threats such as gaze attacks, eyebite, eyes of petrification, and so on. Vision-enhancing affects, such as eyes of the eagle, do not function for the recipient while the spell is in effect.",
   "schoolSource": "spells.json",
-  "sourceRef": "The Inner Planes This spell allows the recipient to \"see\" -that is, to perceivethe world around him as with normal vision without actually using his eyes. Sight without vision allows a being to operate as though he could see in environments hazardous to his eyesight, such as in blinding light (as in the planes of Radiance or Positive Energy). This capability functions to a range of 60 feet, as though he were actually using his eyes. Even reading is possible through use of this spell. Objects that would normally block sight, such as walls or other barriers, still cannot be overcome by the use of this spell."
+  "sourceRef": "The Inner Planes This spell allows the recipient to \"see\" -that is, to perceivethe world around him as with normal vision without actually using his eyes. Sight without vision allows a being to operate as though he could see in environments hazardous to his eyesight, such as in blinding light (as in the planes of Radiance or Positive Energy). This capability functions to a range of 60 feet, as though he were actually using his eyes. Even reading is possible through use of this spell. Objects that would normally block sight, such as walls or other barriers, still cannot be overcome by the use of this spell.",
+  "spheres": [
+   "Protection"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Silence, 15' Radius",
@@ -88817,7 +88904,12 @@
   "notes": null,
   "po": null,
   "description": "The material components of the slow poison spell are the priest's holy symbol and a bud of garlic that must be crushed and smeared on the wound (or eaten if poison was ingested).\nNotes: Common for clerics and druids ( PHB).",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Healing"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Slow Poison - Shukenja",
@@ -90131,11 +90223,13 @@
   "po": null,
   "description": "This useful spell is representative of the sor­cerer-king's raw power, and the fact that he can channel spell energies directly to his followers.\nNotes: Restricted to templars in the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Cosmos"
+  ],
   "spheresSetting": [
    "Cosmos"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet",
   "sourceRef": "PSC"
@@ -95273,7 +95367,12 @@
   "notes": null,
   "po": null,
   "description": "This spell enchants the caster's vestment, provid­ing protection at least the equivalent of chain mail (AC 5). The vestment gains a +1 enchantment for each three levels of the priest beyond 5th level, to a maximum of AC 1 at 17th level. The magic lasts for five rounds per level of the caster, or until the caster loses consciousness. If the vestment is worn with other armors, only the best Armor Class (either the armor or the vestment) is used; this protection is not cumulative with any other Armor Class protection.\nThe material components are the vestment to be enchanted and the priest's holy symbol, which are not expended.\nNotes: Common for clerics and druids ( PHB).",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Protection"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Magma Jet",
@@ -95301,11 +95400,13 @@
   "po": null,
   "description": "A creature can drop and roll, extinguishing the magical flame in 1d4 rounds. If the creature rolls in loose sand or wet earth, the magma is expunged in 1d2 rounds.\nNotes: Uncommon for priests from the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Elemental Magma"
+  ],
   "spheresSetting": [
    "Elemental Magma"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet",
   "sourceRef": "PSC"
@@ -96667,7 +96768,13 @@
   "po": null,
   "description": "This is the same as the standard version, except that it is reversible. The reverse, cause paralysis, is cast if the shukenja touches a single creature with a holy symbol. This paralyzes for 1d6 rounds plus one additional round per level of the caster.",
   "schoolSource": "spells.json",
-  "sourceRef": "PSC"
+  "sourceRef": "PSC",
+  "spheres": [
+   "Necromantic",
+   "Protection"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Renewed Youth",
@@ -97349,7 +97456,12 @@
   "notes": null,
   "po": null,
   "description": "A dead creature of different alignment or of higher level or Hit Dice than the caster's level receives a saving throw vs. spell. A dead creature that successfully saves can refuse to answer questions, ending the spell. At the DM's option, the casting of this spell on a given creature might be restricted to once per week.\nThe priest needs a holy symbol and burning incense in order to cast this spell upon the body, remains, or a portion thereof. The remains are not expended. This spell does not function under water.\nNotes: Common for clerics ( PHB).",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Divination"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Speak with Dead - Shukenja",
@@ -97478,7 +97590,12 @@
   "po": null,
   "description": "This spell protects a single being against all magic in the following ways: The recipient receives a +3 bonus to all saving throws vs. spell; the recipient is rendered immune to all Illu­sion/Phantasm and Enchantment/Charm spells for the duration of the spell shield (previously existing magics of this sort are permanently broken by the shield), and the shield absorbs 1d2 points from each die of damage inflicted by any spell that does affect the shielded being.",
   "schoolSource": "spells.json",
-  "sourceRef": "PSC"
+  "sourceRef": "PSC",
+  "spheres": [
+   "Protection"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Spellweb",
@@ -97737,7 +97854,12 @@
   "notes": null,
   "po": null,
   "description": "The squeaks can be heard in a 100-foot radius, regardless of interposing barriers such as walls and doors. The squeaks occur regardless of the surface, whether wood, stone, dirt, or any other solid material. Listeners automatically know the direction of the sounds.\nCharacters who successfully move silently reduce the radius of the noise to 50 feet. Those able to fly or otherwise avoid direct contact with the affected surface will not activate the squeaking floor.\nThe material component is a rusty iron hinge that squeaks when moved.\nNotes: Uncommon for priests with access to the sphere of Wards ( ToM).",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Wards"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Starflight",
@@ -99480,7 +99602,16 @@
   "po": null,
   "description": "The material component is the caster's holy symbol.\nThe reverse of this spell, prevent wood rot, immediately negates a rot wood spell, or slows the effects of natural decay for one month. It does not reverse rotting effects that have already occurred (see cure rot). If a ship has been protected by pre­vent wood rot, then a wood rot spell negates this protection without other effect.\nNotes: Uncommon for Sea Priests; otherwise, very rare.\nDM Notes: If in common use, this spell can cause severe problems for ships in play. The more commonly it Is used, the raster countermeasures to defeat the effect will develop. Ship enchant­ments that proof a ship against this spell will become fairly common as the use of the spell spreads. In short, the introduction of this spell should be treated as a dynamic, evolving event, rather than a static one.\nIf a ship is holed at the waterline or below by wood rot, the crew can often make sufficient temporary repairs to prevent the ship from sink­ing outright. Assume that a ship's seaworthiness decreases by 1% each round the spell is in effect, with seaworthiness checks being made every 5th round the rot continues. Allow a work crew of 5 sailors to restore 5% of lost seaworthiness with 5 rounds of work, up to half the inflicted damage.",
   "schoolSource": "spells.json",
-  "levelSource": "sheet"
+  "levelSource": "sheet",
+  "spheres": [
+   "Elemental Air",
+   "Elemental Earth",
+   "Elemental Fire",
+   "Elemental Water",
+   "Plant"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Zone of Sweet Air",
@@ -99578,7 +99709,13 @@
   "notes": null,
   "po": null,
   "description": "The oriental (shukenja) version of this spell is the same, except that it is reversible. The spell's reverse, implore, can summon a specific creature, of the same alignment as the shukenja, from another plane. Success is the same as for abjure, and the exact and proper names of the creature must be known. The implore does not restrain a summoned creature, and neither version affects en­tities of deity or demigod power.\nThe material components include the holy symbol of the shukenja, holy water, and any sub­stance the creature craves or respects.",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Guardian",
+   "Summoning"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Acid Rain",
@@ -99987,7 +100124,12 @@
   "notes": null,
   "po": null,
   "description": "While in undead form, the caster cannot use spells or employ any other granted powers, spell-like abilities, or other special abilities. Hit points, Intelligence, and Wisdom are unchanged, but otherwise the spellcaster acquires the strengths and weaknesses of the assumed form including immunities to certain spells, if any. Any hit points lost while in undead form are not regained upon reversion to the original form.\nThis spell does not work for undead spellcasters.\nThe material component for this spell is a small piece of bone or flesh from the body of being who is now undead.\nSee undead form.",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Necromantic"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Attunement",
@@ -100829,7 +100971,13 @@
   "po": null,
   "description": "The reverse of this spell immediately cures insanity due to most causes (no saving throw). The spell must be administered while the patient is exhibiting insane symptoms. Cure insanity can heal a conscious victim of the effects of hallucinatory spores and repair psychic trauma (resulting from a mindwipe or other psionic assault). The spell also diminishes psychic exhaustion (restoring 5–40 PSPs). It cures madness resulting from spells (such as confusion, chaos, contact other plane, feeblemind, symbol of insanity, and prismatic spray, wall, or sphere) and also heals the insanity caused by certain magical items (such as an elixir of madness or a scarab of insanity). However, the spell will not control aberrant behaviors caused by lycanthropy, undeath, or powerful curses (such as a geas or quest). Finally, at the DM's discretion, cure insanity may temporarily calm the demented behavior of certain extraplanar creatures (such as slaad).",
   "schoolSource": "spells.json",
-  "sourceRef": "The Complete Book of Necromancers This spell drives a victim insane. The DM may consult the madness table in Chapter Three or choose a form of insanity to suit the wicked caster. A death priest, for instance, might inflict a victim with an exaggerated fear of dying (requiring the character to make a saving throw vs. paralyzation to avoid the effects of a fear spell whenever he or she encounters a cadaver, human bones, a graveyard, or even an open coffin). Alternatively, the victim might become convinced that all corpses were undead, waiting to rip him or her to shreds. In a combat situation, a death priest will probably choose to quickly neutralize an opponent with an incapacitating form of insanity, such as confusion or Feeblemindedness. The insanity is permanent and cannot be dispelled except by casting cure insanity (the reverse), heal, restoration, or wish."
+  "sourceRef": "The Complete Book of Necromancers This spell drives a victim insane. The DM may consult the madness table in Chapter Three or choose a form of insanity to suit the wicked caster. A death priest, for instance, might inflict a victim with an exaggerated fear of dying (requiring the character to make a saving throw vs. paralyzation to avoid the effects of a fear spell whenever he or she encounters a cadaver, human bones, a graveyard, or even an open coffin). Alternatively, the victim might become convinced that all corpses were undead, waiting to rip him or her to shreds. In a combat situation, a death priest will probably choose to quickly neutralize an opponent with an incapacitating form of insanity, such as confusion or Feeblemindedness. The insanity is permanent and cannot be dispelled except by casting cure insanity (the reverse), heal, restoration, or wish.",
+  "spheres": [
+   "Necromantic",
+   "Thought"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Censure",
@@ -101333,7 +101481,12 @@
   "notes": null,
   "po": null,
   "description": "This spell was developed by the priests of Dawnspire to enable them to control local giant \"killer beetles,\" or arathas, to serve as temple guardians. It works on all magical insects who fail a saving throw vs. spells. Only one insect can be controlled per spell; the caster must possess a scale, piece of chitin, or body part of the same type of insect for the spell to work. This material, which is consumed in the casting, can be a dried husk or remnant, and may be from any size of related insect (a giant wasp could be controlled by a spell using the wing of a normal wasp as its material component).\nThe insect cannot be used as a steed by the caster, because of the particular nature of the magic, which enables the caster to precisely control the insect from afar. This magical telefactoring involves the caster making movements that are imitated as precisely as possible (given differing body types) by the insect. Thus, a priest could force a beetle to follow a complex route, pull a lever, push chess pieces about on a board, and perform other complex tasks, to the limits its body allows.\nSee control giant insect.",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Animal"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Control Death Tyrant",
@@ -104121,11 +104274,13 @@
   "po": null,
   "description": "The sigil is also empowered with the ability to cause fear by touch for the duration of the spell.\nNotes: Restricted to templars from the DS setting, for whom it is common.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Cosmos"
+  ],
   "spheresSetting": [
    "Cosmos"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet",
   "sourceRef": "PSC"
@@ -104804,11 +104959,13 @@
   "po": null,
   "description": "To create such a weapon, a priest must first find or craft an obsidian blade. The blade must be taken to a source of magma and, to a chant in an ancient language, plunged into the lava. When it emerges, the weapon is a magma Made. Since the creation of such a weapon is governed by pacts with elemental forces, a priest who has prepared a magma Made cannot make another until the first has been used.\nNotes: Uncommon for priests from the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Elemental Magma"
+  ],
   "spheresSetting": [
    "Elemental Magma"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet",
   "sourceRef": "PSC"
@@ -104839,11 +104996,13 @@
   "po": null,
   "description": "Anyone in melee with the priest takes 1d4 points of heat damage if a successful saving throw vs. spell is not made each round. Any attack that misses the caster by exactly 1 point on the attack roll has hit the shield; a weapon that hits the shield must make a suc­cessful item saving throw vs. acid or be destroyed.\nThe caster is protected from the intense heat the shield generates, but not from any other heat source.\nNotes: Uncommon for priests from the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Elemental Magma"
+  ],
   "spheresSetting": [
    "Elemental Magma"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet"
  },
@@ -105107,11 +105266,17 @@
   "po": null,
   "description": "Companions who notice strange behavior from a friend can try to talk him or her out of the mirage (one chance), and this gives the subject one additional saving throw vs. spell to end the effect. A successful dispel magic spell or the reverse form can end the spell earlier.\nThe reverse of the spell, mirage of deception, makes everything seem beautiful, warm, and friendly. Athasian sloths are harmless woodland creatures, and an ancient enemy is suddenly friendly and trustworthy. As the subject becomes more trusting and gullible, he or she will agree to any reasonable requests for the duration of the\nspell. Requests of a dangerous or suicidal nature grant a second saving throw to break the spell immediately, and even if this is failed the creature's actions may be unpredictable.\nThe material component is the priest's holy symbol.\nNotes: Uncommon for priests from the DS setting: otherwise, very rare.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Elemental Air",
+   "Elemental Earth",
+   "Elemental Fire",
+   "Elemental Water",
+   "Sun"
+  ],
   "spheresSetting": [
    "Elemental Sun"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet"
  },
@@ -107969,7 +108134,12 @@
   "notes": null,
   "po": null,
   "description": "The shukenja version is identical, except for the material components, which are a pot of ink, a brush, and a white silk vest.",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Protection"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Spelltouch",
@@ -109844,7 +110014,12 @@
   "notes": null,
   "po": null,
   "description": "This spell allows the recipient to ignore gases affecting respiration, to breathe underwater, or even to exist in airless space for the duration of the spell (much like the magical item, necklace of adaptation). The priest can divide the base dura­tion between multiple beings, to a minimum of one half hour each.\nThe material component is holy water.\nNotes: Very rare spell for clerics. (Updated from POLY.)",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Protection"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Advice",
@@ -111472,13 +111647,16 @@
   "description": "The presence of powerful unnatural creatures also can be detected, as can the general state of the natural setting. The spell is most effective in outdoor settings, operating in a radius of one-half mile for each level of the caster. In natural underground settings—caves, cavern, etc.—the range is limited to 10 yards per caster level. In constructed settings (dungeons and towns), the spell will not function. The DM may limit the casting of this spell to once per month.\nNotes: Common for druids ( PHB).",
   "schoolSource": "spells.json",
   "spheres": [
-   "Animal",
-   "Plant"
+   "Divination",
+   "Elemental Air",
+   "Elemental Earth",
+   "Elemental Fire",
+   "Elemental Water"
   ],
   "spheresSetting": [
    "Cosmos"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet",
   "sourceRef": "PHB"
@@ -113889,10 +114067,10 @@
   "description": "Heavy smoke drives off insects within its bounds. Fire also drives insects away. For example, a wall of fire in a ring shape keeps a subsequently cast insect plague outside its confines, but a fireball spell simply clears insects from its blast area for one round. A single torch is ineffective against this vast horde of insects. Lightning, cold, or ice are likewise ineffective, while a strong wind that covers the entire plague area disperses the insects and ends the spell. The plague lasts two rounds for each level of the caster, and thereafter the insects disperse.\nThe insects swarm in an area that centers around a summoning point determined by the spellcaster. The point can be up to 120 yards away from the priest. The insect plague does not move thereafter for as long as it lasts. Note that the spell can be countered by a dispel magic spell.\nThe material components of this spell are a few granules of sugar, some kernels of grain, and a smear of fat.\nNotes: Common for clerics ( PHB).",
   "schoolSource": "spells.json",
   "spheres": [
-   "Animal"
+   "Combat"
   ],
   "spheresSetting": [],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet"
  },
@@ -113920,7 +114098,12 @@
   "notes": null,
   "po": null,
   "description": "Note: This spell first appeared in the Hellbound: The Blood War boxed set, and were designed for fiendish spellcasters. DMs must give specific permission for PCs to have access to these lower-planar dweomers.\nThis powerful offensive spell only affects creatures that have some level of natural magic resistance. Inverted magic turns that protection against them.\nWhen the caster touches the intended target, he unleashes - and inverts - the inherent magical power within the creature. The target can attempt a saving throw and a magic resistance roll to avoid the effects. If it fails the save, the creature is racked with painful energy and suffers a percentage of its current hit points in damage equal to its magic resistance. What's more, the sod is stunned for a number of rounds equal to the number of hit points lost divided by 10 (round down). When stunned, a creature can make no attacks, use no spells or magical abilities, and moves at half speed. The stunned creature's opponents receive a +4 bonus to attack rolls.\nFor example, a babau (with 5O% magic resistance) fights with a mortal priest until it has only 40 hit points left. The priest then casts inverted magic on the fiend. The babau fails its saving throw and loses 5O% of its remaining hit points, bringing it to 20. In addition, the babau is stunned for two (20 divided by 10) rounds.\nAnother example: A black abishai (3O% magic resistance) has 20 hit points left in a scrap with a priest. The priest casts inverted magic on the abishai, which fails its save and loses 30% of its remaining hit points, bringing it to 14. The abishai lost only 6 hit points, so it's not stunned at all (6 divided by 10, rounded down, is less than one).\nThe material component for the inverted magic spell is a silver holy (or unholy) symbol worth at least 100 gp. The symbol is consumed by the magic unleashed.",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Combat"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Ironskin",
@@ -114668,7 +114851,13 @@
   "po": null,
   "description": "Beings walking on a moon path are protected as follows: They cannot be drained of abilities or experience levels (life force), they cannot be harmed by normal missiles, they are immune to all enchantment/charm spells (although they can sense enough of a spell effect to identify it for what it does), and they cannot fall over or off the moon path, no matter what force strikes it or them.\nA moon path needs no supports, cannot be shattered or moved by any known force, and is stable enough to cast spells from. It vanishes if struck by a successful dispel magic, if the caster wills it to, or if it has been completely traversed by as many beings as the caster has experience levels. Otherwise, it persists for 1 turn/level of the caster. Beings on a moon path that expires or vanishes are subject to normal falling damage when they strike whatever hard surface is below. A magical barrier of the 6th or greater spell level stops a forming moon path or truncates an existing one where the two meet, but the caster cannot choose to banish only a part of his or her moon path in a similar manner. Loss of one part of a moon path has no effect on remaining parts, even if the loss cuts the path in two.\nThe material component of this spell is a handful of powdered moonstone.\nNotes: Granted by Selune the Moonmaiden of the FR setting.",
   "schoolSource": "spells.json",
-  "levelSource": "sheet"
+  "levelSource": "sheet",
+  "spheres": [
+   "Sun",
+   "Travelers"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Moonbeam",
@@ -115205,7 +115394,12 @@
   "notes": null,
   "po": null,
   "description": "When the plane shift spell is cast, the priest moves himself or some other creature to another plane of existence. The recipient of the spell remains in the new plane until sent forth by some like means. If several persons link hands in a circle, up to eight can be affected by the plane shift at the same time.\nThe material component of this spell is a small, forked metal rod. The size and metal type dictates to which plane of existence, including sub-planes and alternate dimensions, the spell sends the affected creatures. The DM will determine specifics regarding how and what planes are reached.\nAn unwilling victim must be touched (successful attack roll) to be sent. In addition, the creature is also allowed a saving throw. If the saving throw is successful, the effect of the spell is negated. Note that pinpoint accuracy is rarely achieved; arriving at a random distance from an intended destination is common.\nThe metal rod is not expended when the spell is cast. Forked rods keyed to certain planes may be difficult to come by, as decided by the DM.",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Astral"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Pool of Deeds",
@@ -117194,7 +117388,12 @@
   "notes": null,
   "po": null,
   "description": "Other than the shorter duration and casting time, this is the same as the sixth-level wizard spell summon spider. Also, no material components are needed for this version.\nSee spider summoning; a drow spell.",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Animal"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Sympathetic Magic II",
@@ -117325,12 +117524,12 @@
   "description": "The caster can designate as many as ten persons to receive this message, provided they can all be specifically named or grouped in a general category. Thus, the caster could designate a group of characters by name or could target \"fellow priests,\" \"superiors,\" \"adventuring companions,\" \"knights of Lord Harcourt,\" or \"villagers of Dopp.\" If more than ten individuals are in the group, those closest to the source will receive the impulse.\nThere is no range limitation to the spell, although it cannot be projected outside the plane occupied by the caster.\nCreatures receiving the impulse automatically know who sent it (even if they have never met the priest before) and gain a clear indication of the mood and situation of the caster. Recipients also intuitively know the general source of the spell, although they are unable to pinpoint rooms, dungeon levels, or landmarks. For example, a fighter could suddenly be struck by an image of Father Rastibon, who is injured and in great pain somewhere along the forest road. A priest might suddenly sense that his patriarch is being tortured in the dungeons of Castle Varrack.\nThe spell can also be cast by more than one priest, allowing them to either contact greater numbers of individuals or increase the intensity of the message. If greater numbers are desired, ten characters are contacted per priest involved in the casting.\nIncreasing the intensity of the message makes it more compelling. Doubling the intensity (requiring at least three priests) causes the message to act as a suggestion. In this case, the effect is limited to a single target. Tripling the intensity (requiring at least five priests) gives the spell the force of a quest. This effect is also limited to a single target. In both cases, the target is allowed a saving throw to avoid the effect of the suggestion or quest.\nNotes: Common for priests with major access to the sphere of Thought ( ToM).",
   "schoolSource": "spells.json",
   "spheres": [
-   "Thought"
+   "Divination"
   ],
   "spheresSetting": [
    "Cosmos"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet",
   "sourceRef": "ToM page 96 PSC"
@@ -117570,7 +117769,12 @@
   "notes": null,
   "po": null,
   "description": "The spell requires an ointment for the eyes that is made from very rare mushroom powder, saffron, and fat and costs no less than 300 gp per use.\nThe reverse, false seeing, causes the person to see things as they are not: rich is poor, rough is smooth, beautiful is ugly. The ointment for the reverse spell is concocted of oil, poppy dust, and pink orchid essence.\nFor both spells, the ointment must be aged for 1d6 months.\nNotes: Common for clerics ( PHB).",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "All"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "True Seeing - Shukenja",
@@ -117731,7 +117935,12 @@
   "notes": null,
   "po": null,
   "description": "However, unless other spells (such as spectral senses, reflecting pool, or magic font) are employed to \"see\" the undead's current surroundings (or it is in a known location), companion spells will be hurled blindly. A priest can cast multiple spells, one per round, through the undead, until it is destroyed or a maximum of one spell per level of the priest has been cast or the spell expires (it lasts up to 10 turns per level).\nWith this spell, a hidden priest can avoid direct combat, employing an undead as a spell-casting fighting-focus. This spell can be cast on an undead affected by spectral senses, undead alacrity, or resist turning, and the spells will function simultaneously. Finally, the undead may be controlled by clerical ability, spell, or magical item, without hampering the imbuement.\nA necromancer-cleric spell, identical to the drow spell undead focus.",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Necromantic"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Undead Ward",
@@ -119160,10 +119369,10 @@
   "description": "Notes: Very rare for druids. (Updated from DRG.)",
   "schoolSource": "spells.json",
   "spheres": [
-   "Animal"
+   "Charm"
   ],
   "spheresSetting": [],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet"
  },
@@ -119392,11 +119601,13 @@
   "po": null,
   "description": "The material component is a piece of copper wire formed in the shape of a tree.\nNotes: Usable only on Athas (the DS setting), where it is common. The basic DS setting has full details of the tree of life in the mag­ical item section.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Cosmos"
+  ],
   "spheresSetting": [
    "Cosmos"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet"
  },
@@ -120516,11 +120727,10 @@
   "description": "Alignment identical: No effect. If password locked, cannot enter area unless password is known (no saving throw).\nAlignment different with respect to law and chaos: Save vs. spell to enter the area; if failed, suffer 2d6 points of damage. If password locked, cannot enter unless password is known.\nAlignment different with respect to good and evil: Save vs. spell to enter this area; if failed, suffer 4d6 points of damage. If word locked, cannot enter unless password is known. The attempt does cause damage if the save is failed.\nOnce a saving throw is failed, an intruder cannot enter the forbidden area until the spell ceases. The ward cannot be dispelled by a caster of lesser level than the one who established it. Intruders who enter by rolling successful saving throws feel uneasy and tense, despite their success.\nIn addition to the priest's holy symbol, components include holy water and rare incenses worth at least 1,000 gp per 60-foot cube. If a password lock is desired, this also requires the burning of rare incenses worth at least 5,000 gp per 60-foot cube.\nNotes: Common for clerics and druids ( PHB).",
   "schoolSource": "spells.json",
   "spheres": [
-   "Guardian",
-   "Wards"
+   "Protection"
   ],
   "spheresSetting": [],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet"
  },
@@ -120683,7 +120893,12 @@
   "po": null,
   "description": "The great circle is a powerful cooperative spell that can be used only by four or more priests, each casting the spell simultaneously. Because of the nature of this spell and its casting time, it is often used to cleanse grounds in preparation for the construction of a temple or sanctuary.\nWhen casting the great circle, the priests stand in a circle of no more than 20-foot diameter. Each faces inward; when the spell is completed, each priest faces outward, directing the energy of the spell.\nWhen the casting is complete, the spell takes the form of a radiant halo of golden light 20 feet above the ground. This halo quickly expands in a shimmering wave. It can pass through objects, with small arcs of the halo disappearing momentarily and reappearing on the far side. As the halo moves, it generates a high-pitched hum that varies in pitch, almost like a chorus. The halo moves slowly at first, but builds speed, reaching its maximum range at the end of one round.\nThe radius of the golden halo is dependent on the number of priests casting the spell. Each priest adds 60 feet to the radius. Thus, four priests could generate a halo that extends 240 feet in all directions from the circle of priests. Theoretically, there is no limit to the number of priests who may contribute to this spell, but the need for the priests to be within a 20-foot diameter circle sets a practical limit of 20 casters.\nThe halo is pure energy tapped from the Positive Material plane. It causes harm to undead and evil beings within the area of effect. Undead creatures of 8 or fewer hit dice are instantly destroyed and are not allowed a saving throw to avoid the effect. More powerful undead suffer 1d8 points of damage per caster. A successful saving throw vs. death magic reduces this damage to half. Creatures of evil alignment suffer 1d6 points of damage per caster (a saving throw is allowed for half-damage).\nThe reverse of this spell, the black circle, creates a ring of shimmering black energy. Paladins and priests of good alignment suffer 1d10 points of damage per priest in the circle. All other good creatures suffer 1d4 points of damage per caster. Affected creatures are allowed a saving throw vs. death magic to reduce the damage to one-half.\nNotes: Uncommon spell for clerics ( ToM).",
   "schoolSource": "spells.json",
-  "sourceRef": "ToM page 100 PSC"
+  "sourceRef": "ToM page 100 PSC",
+  "spheres": [
+   "Creation"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Greater Creature of Darkness",
@@ -120777,7 +120992,12 @@
   "po": null,
   "description": "mantle-wearer. (The free choice cannot be restricted to two of the three options, nor can the predetermined spell be left unselected.) If an incoming spell is used for healing, only lost hit points can be replaced. The mantle heals 2 hit points per level of spell absorbed. Furthermore, the hit points gained cannot be split between the\nmantle-wearer and another touched recipient – one or the other gains the full benefit.\nA given being can enjoy the protection of only one greater mantle of Mystra at a time, and cannot be protected by both a mantle and a greater mantle at once. Neither sort of mantle will survive contact with a dispel magic effect.\nThe spell sent forth behaves as if it was launched by a caster of the same level, alignment, and abilities as the caster of the first magic. Its launching, how­ever, depends on the vision and abilities of the mantle-wearer, not the source of the original attack­ing magic (for instance, if an incoming chain light­ning attack is converted to a flame strike and hurled at a third party, the mantle-wearer must be able to see the chosen target for the flame strike).\nBoth the specific spell to be defended against and the spell it is to be converted to must be chosen by the caster of the greater mantle of Mystra during its casting and cannot be altered thereafter. The magic defended against must be one the mantle-caster has cast, felt the effects of, or observed, and the specific name known. The mantle-caster must have at some prior time per­sonally cast the magic sent forth. The spell level of the magic sent forth cannot exceed the spell level of magic defended against (for instance, poly­morph other cannot be converted to flame strike).\nA greater mantle of Mystra defends against multiple attacks of the same sort of spell; it is not exhausted by one incoming spell.\nA variant of this spell, Azuth's alteration mantle (see that spell), can be selected by varying the wording of the casting. It protects against two specific spells, converting them into healing energy or both into one specific outbound spell. The restrictions on caster knowledge of the magics involved (noted above) remain unchanged, but the duration of the spell is only four rounds per level of the caster.\nNotes: Restricted to priests of Mystra, from the FR setting. This spell is found only in a few exceptionally rare tomes.",
   "schoolSource": "spells.json",
-  "sourceRef": "PSC"
+  "sourceRef": "PSC",
+  "spheres": [
+   "Protection"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Group Mind",
@@ -123730,7 +123950,12 @@
   "notes": null,
   "po": null,
   "description": "A being under the influence of a tenfold ironguard can pass through metal bars, gates, and the like as if a phantasm – but is brought up short by the presence of nonmetallic items (such as a wooden handle on a metal tool) or by enchanted metal. Heat, cold, and poisons still affect the guarded being, even if delivered by “harmless” metal weapons. Magical metal weapons deal damage equal to their bonuses, (those with no bonus inflict 1 point of damage per strike.) Spells whose effects involve metal (such as blade barrier) deal their normal effects to ironguarded beings. An ironguarded being pierced by or moving through metal when this spell expires is instantly slain.\nA tenfold ironguard has one important differ­ence from the 5th level wizard ironguard spell: Each protected being can designate one metal item (one that they are holding and that the caster can touch during casting) to be unaffected by the spell. Thus, a protected being can retain a single weapon, tool, key, or other item. The item can contain other items (a metal chest full of coins, for instance) and still be considered “one item” (though if the coins spill, the guarded being will not be able to pick them up), but cannot extend its exemption from the spell to attached items. (For example, a breastplate made exempt would not extend its status to an adjacent gorget or any other part of the same suit of armor.) Metal pieces “fall through” the body of an individ­ual, but leather straps typically work by hanging tightly from the body, and buckles still hold them together even though the metal in the buckles them­selves can now pass through the wearer.\nThe caster cannot end the ironguard early by any known means – dispel magic and similar spells cannot remove its protection – but the death of the caster ends the magic instantly.\nThe material components are a handful of iron filings and a drop of aqua regia.\nNotes: Granted by Helm the Vigilant of the FR setting. This spell is found only in a few exceptionally rare tomes.",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "All"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Tentacle of Withering",
@@ -123792,11 +124017,13 @@
   "po": null,
   "description": "The reverse transmute magma to rock is only of temporary duration. It transforms magma to stone cool enough to walk on for one hour.\nNotes: Uncommon for priests of the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Elemental Magma"
+  ],
   "spheresSetting": [
    "Elemental Magma"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet",
   "sourceRef": "PSC"
@@ -124032,11 +124259,13 @@
   "po": null,
   "description": "In instances where the history of a particular undead is known, the DM can apply what he knows to the new free-willed skeleton or zombie. How­ever, in cases where the undead's history is unknown, select its former class, alignment, and/level according to what best suits the adventure, or decide randomly.\nImportant: The undead does not retain any of its class or level bonuses; it is still simply a skeleton or zombie. None of this information will be readily apparent for a skeleton, though others guess at class from tattered clothing still worn by a zombie.\nThe reverse of this spell, unliving mindlessness, permanently returns any free-willed skeleton or zombie to its former mindless state, or temporarily makes other undead mindless. The undead creature retains its combat and life-draining abilities, but has no sense of who it is, was, or what its previous plans were. For the duration of the spell the undead wanders aimlessly, slaying and draining life until destroyed. This spell does not work on liches, and it affects a vampire only until the vampire feeds again.\nThe material component is any article signifi­cant to the undead creature's former life, such as a piece of clothing or equipment, a favorite weapon, a personally written letter, etc.\nNotes: Common for priests of the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Cosmos"
+  ],
   "spheresSetting": [
    "Cosmos"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet"
  },
@@ -124678,7 +124907,12 @@
   "po": null,
   "description": "The caster decides what form the curse takes, subject to the approval of the DM. The effects are long-term, developing over months and years and extending for centuries. These affect not only the original recipient, but descendants as well. Typical ancient curses include poverty, ill luck, a haunting, the onset of a degenerative disease, the periodic devastation of a household or property, and so on.\nThe spell is not necessarily permanent. It can be countered by an atonement spell or divine inter­vention in conjunction with a quest involving deeds of a magnitude equal to those for which the ancient curse was invoked. A curse brought on by greed that destroyed a village could be lifted by devoting one's life to poverty and charily.\nThe material component for this spell is a tiny silver gong and the priest's holy symbol.\nNotes: Common for priests from an oriental setting; otherwise, uncommon.\n'A 7th level variation of divine curse that affects the descendants of the subject as well.",
   "schoolSource": "spells.json",
-  "sourceRef": "PSC"
+  "sourceRef": "PSC",
+  "spheres": [
+   "Guardian"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Animate Rock",
@@ -124908,11 +125142,13 @@
   "po": null,
   "description": "Notes: Uncommon for priests from the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Cosmos"
+  ],
   "spheresSetting": [
    "Cosmos"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet"
  },
@@ -125010,10 +125246,10 @@
   "description": "The material components for this spell are the weapon in question, the caster's holy symbol, and a drop of holy or unholy water, depending on the caster's alignment.\nNotes: Granted by Tempus, war god of the FR setting.",
   "schoolSource": "spells.json",
   "spheres": [
-   "Healing"
+   "Combat"
   ],
   "spheresSetting": [],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet"
  },
@@ -125141,7 +125377,12 @@
   "po": null,
   "description": "A rare variation of the gate spell that specifically summons an avatar. The only difference is a 1-hour casting time and the required presence of a relic of the deity, which the avatar takes when it departs.",
   "schoolSource": "spells.json",
-  "sourceRef": "PSC"
+  "sourceRef": "PSC",
+  "spheres": [
+   "All"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Call Hunt",
@@ -125475,7 +125716,13 @@
   },
   "description": "See conjure air elemental (7th) and conjure water elemental (6th) (PO:SM).",
   "schoolSource": "spells.json",
-  "sourceRef": "Spells and Magic page 178 PSC"
+  "sourceRef": "Spells and Magic page 178 PSC",
+  "spheres": [
+   "Elemental Air",
+   "Elemental Water"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Conjure Air Elemental",
@@ -125603,7 +125850,16 @@
   "po": null,
   "description": "This spell is otherwise identical to the 5th level priest spell conjure elemental.\nNotes: Common for priests and druids from the DS setting, barred to templars: otherwise, very rare.",
   "schoolSource": "spells.json",
-  "sourceRef": "PSC"
+  "sourceRef": "PSC",
+  "spheres": [
+   "Elemental Air",
+   "Elemental Earth",
+   "Elemental Fire",
+   "Elemental Water",
+   "Summoning"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Conjure Nature Elemental",
@@ -125797,7 +126053,12 @@
   "po": null,
   "description": "This spell enables the caster to cause a single dead body to animate and assume the status of a crypt thing. This spell can be cast only in the tomb or grave area the crypt thing is to protect; the spell requires that the caster touch the skull of the subject body. Once animated, the crypt thing remains until destroyed. Only one crypt thing may guard a given tomb.\nA successful dispel magic spell returns the crypt thing to its original unanimated state. Attempts to restore the crypt thing before this is done fail for any magic short of a wish.\nThe reverse of this spell, destroy crypt thing, utterly annihilates any one such being as soon as it is touched by the caster. The target is allowed a saving throw vs. death magic to avoid destruction.\nNotes: Very rare spell, used only by evil priests.\nCrypt Thing: AC 3; MV 12; HD 6; THAC0 15; #AT 1; Dmg 1d6; SA teleport; SD +1 or better weapons to hit, immune to charm, hold, and sleep, cannot be turned; AL N; Int Very (11-12); SZ M (6' tall); ML Fanatic (17-18); XP 975. The first attack of the crypt thing is to simultaneously teleport each individual member of the intruding group to a random location: 20% each chance of 1d10 x 10' north, south, east, or west; 10% each chance of 1 level up or down. Creatures displace to the nearest open area out of the crypt thing's lair if blocked.",
   "schoolSource": "spells.json",
-  "sourceRef": "Monstrous Manual"
+  "sourceRef": "Monstrous Manual",
+  "spheres": [
+   "Necromantic"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Create Death Tyrant",
@@ -126343,7 +126604,12 @@
   "po": null,
   "description": "In the first round of a dweomer divination, all dweomers present on the item or linked to it are re­vealed; on the second round, any alignment or class restrictions or special benefits associated with the item are identified; in the third round, the primary function or most powerful dweomer on the item is fully revealed – in other words, how it works – to the dweomer divination caster; during the fourth round any word of activation or com­mand process associated with that primary power is revealed; and on the fifth round, anything wrong with, or missing from, the functioning of that power is clearly and fully identified. These succes­sive rounds of inquiry occur even if there are no words or magical problems associated with the power, and at the end of each round, the caster is made positively aware of such absences.\nOn subsequent rounds, this process is repeated for any additional item powers or properties after the primary or most powerful one in descending order of intensity of their dweomer or importance of their effect until all item powers have been ex­plored. (In other words, the cycle of rounds three through five repeats as necessary.) The spell then turns to revealing any additional control words or operating restrictions on the item for a round (such as special purposes or personal linkages), recharg­ing methods or the confirmed absence of same on the next round, and some images of how the item was made on subsequent rounds.\nInformation gained after the first round occurs only for items that have been enchanted, not normal tools, furniture, or garments. Upon normal items, dweomer divination essentially performs as a very sophisticated, but ultimately little more in­formative, detect magic.\nNote that a powerful spell that touches an item – a fireball blast that flings a weapon down a hall, for example – leaves a trace dweomer on the item for 1 day per level of the spell, so that non-enchanted items can still bear trace dweomers. Magics meant to be permanent or long-lasting and spells that wait quiescent indefinitely for specific trigger conditions to occur leave dweomers of much longer duration – months or years per spell level – on items in contact with them. The spell re­veals the approximate nature of such associate dweomers, but not what their precise damage, extent, or trigger conditions were or are.\nA dweomer divination provides no protection against curses or magical traps placed on items other than to identify them in its unfolding process. It does not delay or prevent such traps' or curses' normal functioning in anyway. Dweomer divination might not reveal side effects that the item's enchanter did not intend or foresee.\nNotes: Very rare spell from the FR setting.",
   "schoolSource": "spells.json",
-  "sourceRef": "PSC"
+  "sourceRef": "PSC",
+  "spheres": [
+   "Divination"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Earthquake",
@@ -127378,11 +127644,13 @@
   "po": null,
   "description": "The material component is a burning torch, which lasts for the duration of the spell.\nNotes: Uncommon for priests from the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Elemental Magma"
+  ],
   "spheresSetting": [
    "Elemental Magma"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet",
   "sourceRef": "PSC"
@@ -127479,7 +127747,12 @@
   "notes": null,
   "po": null,
   "description": "The mind tracker is a magically-created creature which exists only on the Ethereal plane. It is called into existence when the first portion of this spell is cast.\nWhen seen (which is seldom), the mind tracker has an indistinct body. It seems to be a near-solid coalescence of the vaporous atmosphere of the Ethereal plane itself. It is a roughly elliptical body with three or more limbs protruding at seemingly random locations. The number and size of these appendages shifts slowly, however, as new ones appear from the mist and old ones disappear. The body of the creature averages 2 feet across and 3 feet long, though this, too, tends to vary from minute to minute. The mind tracker has no discernible eyes, ears, nose, or other organs. It cannot be engaged in combat; if attacked, it simply disappears, to reappear after the danger has passed, or somewhere else entirely if its quarry has moved on.\nThe ceremony which creates the mind tracker takes one turn to perform. Its material components are a whiff of the Ethereal plane's atmosphere and the brain of a lizard.\nOnce the tracker is manifested, it must be assigned a quarry within one hour. If no quarry is designated, the tracker dissipates and the spell is wasted.\nTo assign a quarry to the tracker, the priest must have the quarry within his sight. This includes magical sight such as true seeing, but not remote sighting devices such as crystal balls. With the quarry in sight, the priest mouths the final phrases of the spell. From that point on, the mind tracker is mentally tethered to the victim. It follows its quarry (staying always in the Ethereal plane) wherever it goes. It constantly relays information about the subject to the priest: what it is doing, where it is. The priest does not actually see an image of the quarry, he receives `reports' from the mind tracker. These reports contain only such information as the tracker can gather by looking. It cannot identify people the quarry is talking to, but can describe them in great detail. Nor can it hear anything the quarry or anyone else says, or read writing, but it recognizes and can report the fact that speaking or reading is happening.\nWhile the tracker is dogging its quarry, its presence can be felt as an eery, creepy sensation of being watched. If the victim makes an initial save vs. paralyzation, each of the following stages lasts three hours instead of two. For the first two hours, the quarry has a general feeling of ill ease. In the third and fourth hours, the victim is distracted and nervous, and suffers a -1 penalty on all saving throws. In the fifth and sixth hours, the victim is convinced someone or something is following him and suffers a -3 penalty on saving throws and a -2 (or -10%) penalty on all other dice rolls. After six hours the victim is near his breaking point. He is unable to concentrate to cast spells or use any of his class's special abilities. All die rolls have a -5 (or -25%) penalty. After eight hours, he must make a saving throw vs. paralyzation. If he fails, he collapses, fevered and delirious.\nThis state persists until the tracker ceases to exist.\nThe mind tracker continues to exist for as long as the priest remains conscious of its input. If the priest is knocked out or falls asleep, or simply dismisses his creation, the tracker dissipates.",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Divination"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Mindkiller",
@@ -127782,12 +128055,12 @@
   "description": "The reverse, wither, causes the member or organ touched to cease functioning in one round, dropping off into dust in 2d4 turns. Creatures must be touched for the harmful effect to occur.\nThe material components of this spell are a prayer device and holy water (or unholy water for the reverse).\nNotes: Common for clerics ( PHB).",
   "schoolSource": "spells.json",
   "spheres": [
-   "Healing"
+   "Necromantic"
   ],
   "spheresSetting": [
    "Cosmos"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet"
  },
@@ -127850,7 +128123,12 @@
   "po": null,
   "description": "If an unusual creature form is indicated, the DM can (at his option only) use the guidelines for new player character races to allow the character to earn experience and advance in levels, although this may not be in the same class as before. If the reincarnated character returns as a creature eligible to be the same class as he was previously (i.e., a human fighter returns as an elf), the reincarnated character has half his previous levels and hit points. If the character returns as a new character class, his hit points are half his previous total, but he must begin again at 1st level. If the character returns as a creature unable to have a class, he has half the hit points and saving throws of his previous incarnation.\nNotes: Common for druids ( PHB).",
   "schoolSource": "spells.json",
-  "sourceRef": "PHB"
+  "sourceRef": "PHB",
+  "spheres": [
+   "Animal"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Reincarnate - Shukenja",
@@ -128116,7 +128394,12 @@
   "notes": null,
   "po": null,
   "description": null,
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Necromantic"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Ritual of Transference",
@@ -128178,7 +128461,12 @@
   "description": "It causes a rune of power (see that spell) to form anywhere in range, in midair, without the caster inscribing it. The rune of power takes imme­diate effect on a target or area selected by the caster. A successful saving throw vs. spell by a target creature causes the rune of power to affect an area adjacent to the one intended (perhaps endangering another friendly or hostile creature that does not receive a saving throw).\nNotes: A very rare manifestation of dwarven deities in the FR setting.",
   "schoolSource": "spells.json",
   "levelSource": "sheet",
-  "sourceRef": "PSC"
+  "sourceRef": "PSC",
+  "spheres": [
+   "Special"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  },
  {
   "name": "Rune of Impregnable Defense",
@@ -128688,10 +128976,10 @@
   "description": "The material component is holy water.\nNotes: Very rare spell. (Updated from Polyhe­dron Newszine).",
   "schoolSource": "spells.json",
   "spheres": [
-   "Divination"
+   "Protection"
   ],
   "spheresSetting": [],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet"
  },
@@ -129809,11 +130097,13 @@
   "po": null,
   "description": "The priest focuses the spell on an inanimate object, a rock or a statue, and it becomes the focal point of the spell. Violent creatures will slowly gravitate to the spot – usually a new creature appears every two weeks. Roll on the random encounter table for the appropriate terrain type. If a passive creature is generated, roll again. Neutral creatures are possible, but they should be wild and dangerous. Intelligent creatures such as humans, gith, or thri-kreen will be savage and warlike. They are not necessarily evil, just fiercely protective, proud, and belligerent.\nThe only way to dispel the wild lands is to destroy the item that serves as its focus. This item is not protected by the spell, but casters often pro­tect the object with other spells.\nNotes: Uncommon for priests of the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [],
+  "spheres": [
+   "Cosmos"
+  ],
   "spheresSetting": [
    "Cosmos"
   ],
-  "sphereSource": "sheet",
+  "sphereSource": "spells.json",
   "sheetRef": "PSC p.",
   "levelSource": "sheet"
  },
@@ -129938,6 +130228,12 @@
   "notes": null,
   "po": null,
   "description": "This spell allows the caster to scribe any one of the potent runes described below. A symbol can be quickly scribed in the air or on some surface, or carefully inscribed on a surface.\nA quickly scribed symbol has a casting time of 3. The resulting rune becomes active immediately. It lasts one turn per caster level and glows faintly while it lasts. Symbols of fear, hopelessness, pain, or persuasion can be used in this manner. Symbols of death, discord, insanity, sleep, stunning, and spell loss cannot.\nThe only material components required are a small amount of mercury and phosphorus.\nA carefully inscribed symbol has a casting time of one turn. The symbol is inactive when finished and remains so indefinitely until triggered. Once triggered, it becomes active and glowing, usually lasting one turn per caster level. Some symbols can burn out more quickly. For example, a symbol of death ends when it has slain 80 hit points worth of creatures, or after one turn per level of the caster, whichever comes first.\nThe material components for a carefully engraved symbol are mercury and phosphorus, plus powdered diamond and opal worth at least 5,000 gp each.\nTo be effective, a symbol must always be placed in plain sight and in a prominent location; cover­ing or hiding the rune renders the symbol ineffec­tive. As a default, a symbol is triggered whenever a creature does one or more of the following, as selected by the spell caster: reads, touches, or passes over the rune; looks at the rune; or passes through a portal bearing the rune. In this case, “reading” the rune means any attempt to study, identify, or fathom its meaning. Throwing a cover over a symbol to render it inoperative triggers it if it reacts to touch. To trigger a symbol, a creature must be within 60 feet of the rune.\nThe caster can set special triggering conditions of his own. These can be as simple or elaborate as the caster desires. Special conditions for triggering a symbol can be based on a creature's name, iden­tity, or alignment, but otherwise must be based on observable actions or qualities. Intangibles such as level, class, Hit Dice, or hit points don't qualify. For example, a symbol can be set to activate when a lawful good creature approaches, but not when a paladin approaches.\nA symbol's triggering conditions are defensive. A touch-triggered symbol remains untriggered if an item bearing the symbol is used to touch a crea­ture. Likewise, a symbol cannot be placed on a weapon and set to activate when the weapon strikes a foe. Once cast, a symbol's triggering conditions cannot be changed.\nThe caster ignores the effects of his own sym­bols, and cannot inadvertently trigger them. When scribing a symbol quickly, the caster can instantly attune any number creatures to the symbol, rend­ing them immune to its effects, provided the crea­tures are within 60 feet of the rune when it is created and that the caster is aware of their pres­ence.\nWhen creating a carefully inscribed rune, the caster can specify a password of phrase that pre­vents a creature using it from triggering the symbol. The caster also can attune any number or creatures to the symbol, but this can extend the casting time. Attuning one or two creatures takes negligible time; attuning small group (up to 10 creatures) takes an hour. Attuning an entire household (up to 25 crea­tures) takes a day. Attuning larger groups takes pro­portionately longer, as the DM sees fit.\nWhen triggered, a symbol affects all creatures within a 60-foot radius, except for the caster and any individuals attuned it. If a symbol has a pass-phrase, anyone using it remains immune to that par­ticular rune's effects so long as the individual remains within 60 feet of the rune. An individual who leaves the radius and returns must use the pass phrase again.\nOnce triggered, a symbol remains active until its duration expires; creatures that subsequently meet an active symbol's triggering conditions suffer its effects. The symbols described below are the most commonly known.\nFear: This symbol can be scribed quickly or carefully engraved on a surface. Creatures within the radius are afflicted by a powerful version of the 4th level wizard spell, fear. If scribed in the air, this symbol imposes a -4 penalty to saving throws against the fear effect. If the rune is carefully engraved on a surface, the saving throw penalty increases to -8.\nHopelessness: All creatures within the radius must attempt saving throws vs. spell, at a -4 penalty if the rune is carefully engraved on a sur­face. If the saving throw fails, the creature suffers from hopelessness for 3d4 turns. It submits to simple demands from foes, such as to surrender or get out; the effect is similar to the 3rd level wizard spell, suggestion. If no foes are present to make demands, there is a 25% chance that the creature takes no other action than to hold its ground. If the creature remains free to act there is a 25% chance it will retreat from the nine at its normal movement speed. In either case, the creature can defend nor­mally if attacked.\nPain: Creatures within the radius suffer wrack­ing pains that reduce Dexterity scores by two points and impose a -4 attack penalty. Both effects last 2d10 turns. This symbol can be scribed quickly or carefully engraved on a surface.\nPersuasion: This symbol can be quickly scribed or carefully engraved on a surface. Each creature within the radius must attempt a saving throw vs. spell, at a -4 penalty if the rune is carefully inscribed on a surface. If the saving throw fails, the creature becomes the same alignment as the caster for 1d20 turns. During this time, an affected crea­ture becomes friendly to the caster as though sub­jected to the 1st level wizard spell, charm person.\nDeath: One or more creatures within the radius, whose total hit points do not exceed 80, are irrevo­cably slain as though struck by the 6th level wizard spell, death spell. This symbol must be carefully engraved on a surface.\nDiscord: All creatures within 60 feet immedi­ately fall into loud bickering and arguing. Mean­ingful communication is impossible. If the affected creatures have different alignments, they are 50% likely to attack each other. Bickering lasts 5d4 rounds, fighting lasts 2d4 rounds. This symbol must be carefully engraved on a surface.\nInsanity: One or more creatures within the radius, whose hit points do not exceed 120, become insane and act as though affected by the 4th level wizard spell, confusion. Insanity lasts until a heal, restoration, or wish spell is used to remove the affliction. This symbol must be carefully engraved on a surface.\nSleep: Creatures within the radius fall into a catatonic slumber if they have 8+1 Hit Dice or less (characters are affected if 8th level or less). Sleep­ing creatures cannot be awakened for 1 d 12+4 turns. This symbol must be carefully engraved on a sur­face.\nSpell Loss: Any creature within the radius immediately loses 1d4 spells from memory. The DM should determine which spells are lost ran­domly. Creatures with no memorized spells are unaffected. Creatures that have some memorized spells, but not enough to satisfy the loss, suffer no effect beyond the loss of all memorized spells. This symbol must be carefully inscribed.\nStunning: One or more creatures within the radius, whose total hit points do not exceed 160, are stunned for 3d4 rounds. Stunned creatures drop what they are holding and cannot take any mean­ingful actions. They cannot communicate, employ spells, use magical items, initiate psionic abilities, use spell-like powers, fight, or move freely, Move­ment is limited to one-third the creature's current movement rate, or a rate of 3, whichever is less. Attacks against stunned creatures gain a +4 bonus. This symbol must be carefully engraved on a surface.\nA successful dispel magic removes the effects of a symbol from a creature, unless the symbol's effect is instantaneous (death, spell loss) or the description specifies another remedy (insanity).\nA symbol can be ren­dered permanent with the 8th level wizard spell permanency, provided the rune is carefully engraved upon a permanent, non-portable surface such a wall or door. A permanency spell indefi­nitely extends a symbol's basic duration of one turn per caster level. When triggered, a permanent symbol usually glows for about a turn each time it is activated, but there is no limit to the number of times it can be triggered. If the symbol can affect\nFor the curious, here is the original text of the priest's symbol spell.",
-  "schoolSource": "spells.json"
+  "schoolSource": "spells.json",
+  "spheres": [
+   "Guardian",
+   "Wards"
+  ],
+  "spheresSetting": [],
+  "sphereSource": "spells.json"
  }
 ]
