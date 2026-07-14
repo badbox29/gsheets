@@ -37051,9 +37051,11 @@
   "notes": null,
   "po": null,
   "description": "Lost spell. A complex and arcane spell of 4th level, used in magical cross-breeding of dissimilar natural species; creating, for example, a rabbit-lion, an owl-bear, or some similar creature.\nA recommended substitute is to treat this ritual as a prerequisite to breeding a specific combination. The processes required to produce the combination are discovered through the spell research system (the ritual of twaining rabbit and lion being the equivalent of a 4th- level spell in terms of time and monetary cost).\nThe DM has the final say over what combinations are possible or viable once created; the wizard in this case is merely studying a promising lead.\nFor example, a rabbit-lion might be white, furry, and herbivorous, with 4 limbs, a mane, a quivery nose, long ears, big canine teeth, and a manic depressive disposition. Such a \"successful\" crossbreed might well die off in the wild.\nThe original text appeared in Imagine magazine, along with age animal, animal magnetism, clone animal, distort life, hasten growth, and several other spells of this type.",
-  "schoolSource": "none",
+  "schoolSource": "lost-spell",
   "levelSource": "chris",
-  "classSource": "chris"
+  "classSource": "chris",
+  "castable": false,
+  "lostSpell": true
  },
  {
   "name": "Sammaster's Lash",
@@ -53805,9 +53807,11 @@
   "notes": null,
   "po": null,
   "description": "Lost spell. This 4th-level spell was reputed to cause a huge and temporary crack in the earth. Those falling in and unable to escape before it closed perished. Its effects on structures remains unrecorded.",
-  "schoolSource": "none",
+  "schoolSource": "lost-spell",
   "levelSource": "chris",
-  "classSource": "chris"
+  "classSource": "chris",
+  "castable": false,
+  "lostSpell": true
  },
  {
   "name": "Sand Shroud",
@@ -70159,8 +70163,9 @@
   "notes": null,
   "po": null,
   "description": "This spell was used in the FR setting to create the great mythal cities such as Myth Drannor. This spell required 9 wizards of reputed 41st level or greater! It is rumored to have perma­nently drained 1d6 hit points from each caster. The gods later took such power away from mortals.",
-  "schoolSource": "not-a-spell",
-  "castable": false
+  "schoolSource": "lost-spell",
+  "castable": false,
+  "lostSpell": true
  },
  {
   "name": "Karsus's Avatar",
