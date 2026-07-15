@@ -1,25 +1,30 @@
 // === Spell Database (AD&D 2E) ===
 // Parsed from spells.json
 
-// Official AD&D 2E spell schools
+// AD&D 2E wizard schools, in the canonical compound form the cleaned data uses.
+// (These are only a fallback for building filter menus; getAllSchools() reads
+// the actual values present in the loaded data.)
 const OFFICIAL_SCHOOLS = [
-  'Abjuration', 'Alteration', 'Conjuration', 'Divination', 
-  'Enchantment', 'Illusion', 'Invocation', 'Necromancy',
-  'Evocation', 'Summoning', 'Charm', 'Transmutation',
-  // Specialist schools and variations
-  'Wild Magic', 'Elemental', 'Geometry', 'Song', 'Alchemy',
-  'Artifice', 'Mentalism', 'Shadow', 'Dimension', 'Force',
-  'Chronomancy', 'Metamagic', 'Province'
+  'Abjuration', 'Alteration', 'Conjuration/Summoning', 'Divination',
+  'Enchantment/Charm', 'Illusion/Phantasm', 'Invocation/Evocation', 'Necromancy'
 ];
 
-// Official AD&D 2E priest spheres
+// AD&D 2E priest spheres (core). Setting-specific spheres (Cosmos, the Dark Sun
+// paraelementals) live in a separate field and are intentionally excluded here.
 const OFFICIAL_SPHERES = [
-  'All', 'Animal', 'Astral', 'Charm', 'Combat', 'Creation',
-  'Divination', 'Elemental', 'Guardian', 'Healing', 'Necromantic',
-  'Plant', 'Protection', 'Summoning', 'Sun', 'Weather',
-  'Chaos', 'Law', 'Numbers', 'Thought', 'Time', 'Travelers',
-  'War', 'Wards'
+  'All', 'Animal', 'Astral', 'Chaos', 'Charm', 'Combat', 'Creation',
+  'Divination', 'Elemental Air', 'Elemental Earth', 'Elemental Fire',
+  'Elemental Water', 'Guardian', 'Healing', 'Law', 'Necromantic', 'Numbers',
+  'Plant', 'Protection', 'Summoning', 'Sun', 'Thought', 'Time', 'Travelers',
+  'War', 'Wards', 'Weather'
 ];
+
+// Split a comma-joined school/sphere string into its individual tokens.
+// The cleaned data stores multi-value classifications as "A, B" and compound
+// names as single tokens ("Invocation/Evocation"), so we split ONLY on commas.
+function splitClassification(str) {
+  return (str || '').split(',').map(s => s.trim()).filter(Boolean);
+}
 
 let SPELLS_DB = [];
 let SPELLS_LOADED = false;
@@ -97,22 +102,27 @@ function filterSpells(options = {}) {
       return false;
     }
     
-    // Filter by spheres (for priests)
+    // Filter by spheres (for priests). Exact token match, not substring:
+    // 'Water' must not match 'Elemental Water', and 'Air' must not match
+    // arbitrary text. A spell qualifies if ANY of its spheres is selected.
     if (spellClass.includes('priest') && spheres.length > 0) {
-      const spellSpheres = spell.sphere.toLowerCase();
-      const hasMatchingSphere = spheres.some(s => 
-        spellSpheres.includes(s.toLowerCase())
+      const spellSpheres = splitClassification(spell.sphere);
+      const wanted = spheres.map(s => s.toLowerCase());
+      const hasMatchingSphere = spellSpheres.some(sp =>
+        wanted.includes(sp.toLowerCase())
       );
       if (!hasMatchingSphere) {
         return false;
       }
     }
-    
-    // Filter by schools (for wizards)
+
+    // Filter by schools (for wizards). Same exact-token rule; a multi-school
+    // spell qualifies if any of its schools is selected.
     if (spellClass.includes('wizard') && schools.length > 0) {
-      const spellSchools = spell.school.toLowerCase();
-      const hasMatchingSchool = schools.some(s => 
-        spellSchools.includes(s.toLowerCase())
+      const spellSchools = splitClassification(spell.school);
+      const wanted = schools.map(s => s.toLowerCase());
+      const hasMatchingSchool = spellSchools.some(sc =>
+        wanted.includes(sc.toLowerCase())
       );
       if (!hasMatchingSchool) {
         return false;
@@ -123,45 +133,24 @@ function filterSpells(options = {}) {
   });
 }
 
-// Get unique list of all spheres (cleaned and deduplicated)
+// Unique list of all spheres actually present in the loaded data. The cleaned
+// data already holds canonical tokens, so we just split and collect -- no
+// regex scanning of free text.
 function getAllSpheres() {
   const spheres = new Set();
-  
   SPELLS_DB.forEach(spell => {
-    if (spell.sphere) {
-      const sphereText = spell.sphere;
-      
-      // Try to extract official sphere names from the text
-      OFFICIAL_SPHERES.forEach(officialSphere => {
-        // Use word boundary to avoid partial matches
-        const regex = new RegExp('\\b' + officialSphere + '\\b', 'i');
-        if (regex.test(sphereText)) {
-          spheres.add(officialSphere);
-        }
-      });
-    }
+    splitClassification(spell.sphere).forEach(s => spheres.add(s));
   });
-  
   return Array.from(spheres).sort();
 }
 
-// Get unique list of all schools (cleaned and deduplicated)
+// Unique list of all schools actually present in the loaded data. Split-and-
+// collect on the canonical tokens; no free-text scanning.
 function getAllSchools() {
   const schools = new Set();
-  
   SPELLS_DB.forEach(spell => {
-    if (spell.school) {
-      const schoolText = spell.school;
-      
-      // Try to extract official school names from the text
-      OFFICIAL_SCHOOLS.forEach(officialSchool => {
-        if (schoolText.includes(officialSchool)) {
-          schools.add(officialSchool);
-        }
-      });
-    }
+    splitClassification(spell.school).forEach(s => schools.add(s));
   });
-  
   return Array.from(schools).sort();
 }
 
