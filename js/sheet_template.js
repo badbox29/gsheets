@@ -61,6 +61,16 @@ const SHEET_HTML = `
             <div class="col single-class-field"><label>Level</label><input data-field="level" type="number" min="1" value="1"></div>
           </div>
           <div class="row" style="margin-top:8px">
+            <div class="col">
+              <label>Campaign Setting</label>
+              <select data-field="campaign_setting"></select>
+              <div style="font-size:10px;color:var(--muted);margin-top:2px;">
+                Currently affects only which priest spheres are available. Greyed
+                options are recognized but have no mechanical effect yet.
+              </div>
+            </div>
+          </div>
+          <div class="row" style="margin-top:8px">
             <div class="col single-dual-field"><label>XP for Next Level</label><input data-field="xp_next" type="text" readonly></div>
             <div class="col single-dual-field"><label>Prime Req. XP Bonus</label><input data-field="xp_bonus" type="text" readonly></div>
           </div>
