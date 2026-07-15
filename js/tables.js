@@ -2022,7 +2022,7 @@ const CAMPAIGN_SETTINGS = {
                                          'Elemental Silt', 'Elemental Sun'] },
   'spelljammer':      { label: 'Spelljammer',       enabled: true,
                         settingSpheres: ['Cosmos'] },
-  'forgotten-realms': { label: 'Forgotten Realms',  enabled: false, settingSpheres: [] },
+  'forgotten-realms': { label: 'Forgotten Realms',  enabled: true,  settingSpheres: [] },
   'greyhawk':         { label: 'Greyhawk',          enabled: false, settingSpheres: [] },
   'planescape':       { label: 'Planescape',        enabled: false, settingSpheres: [] },
   'ravenloft':        { label: 'Ravenloft',         enabled: false, settingSpheres: [] },
