@@ -2358,6 +2358,7 @@ function collectSheet(root){
 	level: val(root,'level'),
 	kit: val(root,'kit'),
     alignment: val(root,'alignment'),
+    campaign_setting: val(root,'campaign_setting') || 'core',
     xp: val(root,'xp'),
 	xp: val(root,'xp'),
     char_type: val(root,'char_type'),
@@ -2890,9 +2891,26 @@ function showSpellMigrationBanner(root, changes) {
   banner.querySelector('.dismiss-spell-migration').onclick = () => { banner.style.display = 'none'; };
 }
 
+// Populate the Campaign Setting dropdown from CAMPAIGN_SETTINGS. Greyed
+// (disabled:false) settings appear but are non-selectable. Idempotent.
+function populateCampaignSettings(root) {
+  const sel = root.querySelector('[data-field="campaign_setting"]');
+  if (!sel || sel.options.length > 0) return;
+  if (typeof CAMPAIGN_SETTINGS === 'undefined') return;
+  Object.keys(CAMPAIGN_SETTINGS).forEach(key => {
+    const s = CAMPAIGN_SETTINGS[key];
+    const opt = document.createElement('option');
+    opt.value = key;
+    opt.textContent = s.enabled ? s.label : s.label + ' \u2014 (no effect yet)';
+    opt.disabled = !s.enabled;
+    sel.appendChild(opt);
+  });
+}
+
 function loadSheet(root, data){
   if(!data) return;
   const m = data.meta || {};
+  populateCampaignSettings(root);   // options must exist before we set the value
   val(root,'name',m.name||'');
   val(root,'player',m.player||'');
   val(root,'race',m.race||'');
@@ -2901,6 +2919,7 @@ function loadSheet(root, data){
   val(root,'level',m.level||'');
   val(root,'kit',m.kit||'');
   val(root,'alignment',m.alignment||'');
+  val(root,'campaign_setting', m.campaign_setting || 'core');
   val(root,'xp',m.xp||'');
   // Load multi-class/dual-class data (backward compatible - defaults to 'single')
   val(root,'char_type',m.char_type||'single');
