@@ -61,7 +61,7 @@ const SHEET_HTML = `
             <div class="col single-class-field"><label>Level</label><input data-field="level" type="number" min="1" value="1"></div>
           </div>
           <div class="row" style="margin-top:8px">
-            <div class="col">
+            <div class="col" style="flex:0 0 33%;max-width:33%;">
               <label>Campaign Setting</label>
               <select data-field="campaign_setting"></select>
               <div style="font-size:10px;color:var(--muted);margin-top:2px;">
