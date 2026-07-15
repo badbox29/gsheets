@@ -1425,27 +1425,38 @@ async function renderSpellAccess(root) {
   if (isPriest) {
     priestSpheresDiv.style.display = 'block';
     const sphereCheckboxes = priestSpheresDiv.querySelector('.sphere-checkboxes');
-    
-    // Only populate if empty
-    if (sphereCheckboxes.children.length === 0) {
-      const allSpheres = getAllSpheres();
-      allSpheres.forEach(sphere => {
-        const label = document.createElement('label');
-        label.style.cssText = 'display:flex;align-items:center;font-size:12px;cursor:pointer;';
-        label.innerHTML = 
-          `<input type="checkbox" data-sphere="${sphere}" style="margin-right:6px;width:auto;">` +
-          `<span>${sphere}</span>`;
-        
-        // Wire up change event
-        const checkbox = label.querySelector('input');
-        checkbox.addEventListener('change', () => {
-          renderSpellBrowser(root);
-          markUnsaved(document.querySelector('.tab.active'), true, root);
-        });
-        
-        sphereCheckboxes.appendChild(label);
+
+    // The core spheres plus any this character's campaign setting unlocks
+    // (Dark Sun paraelementals, Spelljammer's Cosmos). Setting spheres are kept
+    // out of getAllSpheres() by design, so we append them per character here.
+    const settingKey = (root.querySelector('[data-field="campaign_setting"]')?.value) || 'core';
+    const extraSpheres = (typeof getSettingSpheres === 'function') ? getSettingSpheres(settingKey) : [];
+    const sphereList = getAllSpheres().concat(extraSpheres);
+
+    // Rebuild every render so a setting change adds/removes the setting spheres.
+    // Preserve which boxes were checked across the rebuild.
+    const previouslyChecked = new Set(
+      Array.from(sphereCheckboxes.querySelectorAll('input[type="checkbox"]:checked'))
+        .map(cb => cb.getAttribute('data-sphere'))
+    );
+    sphereCheckboxes.innerHTML = '';
+    sphereList.forEach(sphere => {
+      const isSetting = extraSpheres.includes(sphere);
+      const label = document.createElement('label');
+      label.style.cssText = 'display:flex;align-items:center;font-size:12px;cursor:pointer;';
+      label.innerHTML =
+        `<input type="checkbox" data-sphere="${sphere}" style="margin-right:6px;width:auto;">` +
+        `<span>${sphere}${isSetting ? ' <em style="color:var(--muted);font-style:italic;">(setting)</em>' : ''}</span>`;
+
+      const checkbox = label.querySelector('input');
+      if (previouslyChecked.has(sphere)) checkbox.checked = true;
+      checkbox.addEventListener('change', () => {
+        renderSpellBrowser(root);
+        markUnsaved(document.querySelector('.tab.active'), true, root);
       });
-    }
+
+      sphereCheckboxes.appendChild(label);
+    });
   } else {
     priestSpheresDiv.style.display = 'none';
   }
