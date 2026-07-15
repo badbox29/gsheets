@@ -78151,9 +78151,7 @@
   "po": null,
   "description": "A templar who casts this spell is immediately protected from magical spells. The shimmering field diffuses magical energy, giving the templar a +2 bonus against all spells cast against him or her, be the caster defiler or preserver. Only templars can use this spell.",
   "schoolSource": "spells.json",
-  "spheres": [
-   "Cosmos"
-  ],
+  "spheres": [],
   "spheresSetting": [
    "Cosmos"
   ],
@@ -79009,9 +79007,7 @@
   "po": null,
   "description": "The reverse of this spell, blistering rays, inten­sifies the light and heat of the sun on the subject. The individual must have twice the water per day for duration of the spell or suffer the effects of dehydration. Also, in each round of combat in the open sun, the individual must make a constitution check to keep from passing out. The saving throw, applicable only to the reverse of the spell, negates its effects. This spell (and its reverse) has no effect on an individual who is in the shade.\nThe material components of this spell are a piece of a palm leaf (or black fabric for the reverse).\nNotes: Common for priests from the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [
-   "Cosmos"
-  ],
+  "spheres": [],
   "spheresSetting": [
    "Cosmos"
   ],
@@ -79662,9 +79658,7 @@
   "po": null,
   "description": "The material components for this spell can vary; either metal coins must be placed on the recipient's eyes, the petals of flowers must be sprinkled beneath him, or dust from his homeland must be sprinkled on him.\nNotes: Uncommon for priests from a DS setting; otherwise, very rare.",
   "schoolSource": "spells.json",
-  "spheres": [
-   "Cosmos"
-  ],
+  "spheres": [],
   "spheresSetting": [
    "Cosmos"
   ],
@@ -80752,9 +80746,7 @@
   "po": null,
   "description": "Notes: Uncommon for priests from the DS setting; otherwise, very rare.",
   "schoolSource": "spells.json",
-  "spheres": [
-   "Elemental Sun"
-  ],
+  "spheres": [],
   "spheresSetting": [
    "Elemental Sun"
   ],
@@ -82126,9 +82118,7 @@
   "po": null,
   "description": "With this spell, a priest can transfer as many of his hit points as desired to heal a willing, living being of any alignment not directly opposed to his own (good vs. evil or lawful vs. chaotic). Each hit point transferred restores one hit point lost by the subject creature. These hit points cannot be taken back once the spell has been cast. The priest's current hit points are reduced by the amount actually transferred, and these can be restored by normal or magical healing. The creature cannot re­ceive more hit points than its normal maximum.",
   "schoolSource": "spells.json",
-  "spheres": [
-   "Cosmos"
-  ],
+  "spheres": [],
   "spheresSetting": [
    "Cosmos"
   ],
@@ -82914,9 +82904,7 @@
   "po": null,
   "description": "Notes: Uncommon for templars and druids in the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [
-   "Cosmos"
-  ],
+  "spheres": [],
   "spheresSetting": [
    "Cosmos"
   ],
@@ -83942,9 +83930,7 @@
   "po": null,
   "description": "The reverse, reveal mirage, reveals things as they really are, negating natural or magical mirages.\nNotes: Uncommon for priests of the DS setting; otherwise, very rare.",
   "schoolSource": "spells.json",
-  "spheres": [
-   "Elemental Sun"
-  ],
+  "spheres": [],
   "spheresSetting": [
    "Elemental Sun"
   ],
@@ -87409,9 +87395,7 @@
   "po": null,
   "description": "This spell, developed by the sorcerer-kings, empowers a minion with unnatural aggressiveness. A templar under its influence fights with a +2 attack bonus and a +2 damage bonus. The templar loses 1 hit point as the spell ends. Hit points lost in this way can be regained normally.",
   "schoolSource": "spells.json",
-  "spheres": [
-   "Cosmos"
-  ],
+  "spheres": [],
   "spheresSetting": [
    "Cosmos"
   ],
@@ -90348,9 +90332,7 @@
   "po": null,
   "description": "This useful spell is representative of the sor­cerer-king's raw power, and the fact that he can channel spell energies directly to his followers.\nNotes: Restricted to templars in the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [
-   "Cosmos"
-  ],
+  "spheres": [],
   "spheresSetting": [
    "Cosmos"
   ],
@@ -95530,9 +95512,7 @@
   "po": null,
   "description": "A creature can drop and roll, extinguishing the magical flame in 1d4 rounds. If the creature rolls in loose sand or wet earth, the magma is expunged in 1d2 rounds.\nNotes: Uncommon for priests from the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [
-   "Elemental Magma"
-  ],
+  "spheres": [],
   "spheresSetting": [
    "Elemental Magma"
   ],
@@ -104414,9 +104394,7 @@
   "po": null,
   "description": "The sigil is also empowered with the ability to cause fear by touch for the duration of the spell.\nNotes: Restricted to templars from the DS setting, for whom it is common.",
   "schoolSource": "spells.json",
-  "spheres": [
-   "Cosmos"
-  ],
+  "spheres": [],
   "spheresSetting": [
    "Cosmos"
   ],
@@ -105099,9 +105077,7 @@
   "po": null,
   "description": "To create such a weapon, a priest must first find or craft an obsidian blade. The blade must be taken to a source of magma and, to a chant in an ancient language, plunged into the lava. When it emerges, the weapon is a magma Made. Since the creation of such a weapon is governed by pacts with elemental forces, a priest who has prepared a magma Made cannot make another until the first has been used.\nNotes: Uncommon for priests from the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [
-   "Elemental Magma"
-  ],
+  "spheres": [],
   "spheresSetting": [
    "Elemental Magma"
   ],
@@ -105136,9 +105112,7 @@
   "po": null,
   "description": "Anyone in melee with the priest takes 1d4 points of heat damage if a successful saving throw vs. spell is not made each round. Any attack that misses the caster by exactly 1 point on the attack roll has hit the shield; a weapon that hits the shield must make a suc­cessful item saving throw vs. acid or be destroyed.\nThe caster is protected from the intense heat the shield generates, but not from any other heat source.\nNotes: Uncommon for priests from the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [
-   "Elemental Magma"
-  ],
+  "spheres": [],
   "spheresSetting": [
    "Elemental Magma"
   ],
@@ -119761,9 +119735,7 @@
   "po": null,
   "description": "The material component is a piece of copper wire formed in the shape of a tree.\nNotes: Usable only on Athas (the DS setting), where it is common. The basic DS setting has full details of the tree of life in the mag­ical item section.",
   "schoolSource": "spells.json",
-  "spheres": [
-   "Cosmos"
-  ],
+  "spheres": [],
   "spheresSetting": [
    "Cosmos"
   ],
@@ -124177,9 +124149,7 @@
   "po": null,
   "description": "The reverse transmute magma to rock is only of temporary duration. It transforms magma to stone cool enough to walk on for one hour.\nNotes: Uncommon for priests of the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [
-   "Elemental Magma"
-  ],
+  "spheres": [],
   "spheresSetting": [
    "Elemental Magma"
   ],
@@ -124419,9 +124389,7 @@
   "po": null,
   "description": "In instances where the history of a particular undead is known, the DM can apply what he knows to the new free-willed skeleton or zombie. How­ever, in cases where the undead's history is unknown, select its former class, alignment, and/level according to what best suits the adventure, or decide randomly.\nImportant: The undead does not retain any of its class or level bonuses; it is still simply a skeleton or zombie. None of this information will be readily apparent for a skeleton, though others guess at class from tattered clothing still worn by a zombie.\nThe reverse of this spell, unliving mindlessness, permanently returns any free-willed skeleton or zombie to its former mindless state, or temporarily makes other undead mindless. The undead creature retains its combat and life-draining abilities, but has no sense of who it is, was, or what its previous plans were. For the duration of the spell the undead wanders aimlessly, slaying and draining life until destroyed. This spell does not work on liches, and it affects a vampire only until the vampire feeds again.\nThe material component is any article signifi­cant to the undead creature's former life, such as a piece of clothing or equipment, a favorite weapon, a personally written letter, etc.\nNotes: Common for priests of the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [
-   "Cosmos"
-  ],
+  "spheres": [],
   "spheresSetting": [
    "Cosmos"
   ],
@@ -125312,9 +125280,7 @@
   "po": null,
   "description": "Notes: Uncommon for priests from the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [
-   "Cosmos"
-  ],
+  "spheres": [],
   "spheresSetting": [
    "Cosmos"
   ],
@@ -127814,9 +127780,7 @@
   "po": null,
   "description": "The material component is a burning torch, which lasts for the duration of the spell.\nNotes: Uncommon for priests from the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [
-   "Elemental Magma"
-  ],
+  "spheres": [],
   "spheresSetting": [
    "Elemental Magma"
   ],
@@ -128632,9 +128596,7 @@
   "schoolSource": "spells.json",
   "levelSource": "sheet",
   "sourceRef": "PSC",
-  "spheres": [
-   "Special"
-  ],
+  "spheres": [],
   "spheresSetting": [],
   "sphereSource": "spells.json"
  },
@@ -130267,9 +130229,7 @@
   "po": null,
   "description": "The priest focuses the spell on an inanimate object, a rock or a statue, and it becomes the focal point of the spell. Violent creatures will slowly gravitate to the spot – usually a new creature appears every two weeks. Roll on the random encounter table for the appropriate terrain type. If a passive creature is generated, roll again. Neutral creatures are possible, but they should be wild and dangerous. Intelligent creatures such as humans, gith, or thri-kreen will be savage and warlike. They are not necessarily evil, just fiercely protective, proud, and belligerent.\nThe only way to dispel the wild lands is to destroy the item that serves as its focus. This item is not protected by the spell, but casters often pro­tect the object with other spells.\nNotes: Uncommon for priests of the DS setting.",
   "schoolSource": "spells.json",
-  "spheres": [
-   "Cosmos"
-  ],
+  "spheres": [],
   "spheresSetting": [
    "Cosmos"
   ],
