@@ -2793,6 +2793,87 @@ function collectSheet(root){
   };
 }
 
+// Runs the spell-data migration after a character loads. Async so it can wait
+// for SPELLS_DB; called fire-and-forget from loadSheet so loadSheet stays sync.
+// Migrates the DATA in place, re-renders the affected UI, and surfaces only
+// level changes (which affect slot accounting) in a dismissible banner.
+async function migrateSheetSpells(root) {
+  if (typeof migrateSavedSpells !== 'function') return;
+  await loadSpells();
+
+  const levelChanges = [];
+
+  // Spellbooks (data lives on root._spellbooksData; UI rebuilt after).
+  const sbData = (typeof getSpellbooksData === 'function') ? getSpellbooksData(root) : null;
+  let spellbooksTouched = false;
+  if (sbData && Array.isArray(sbData.spellbooks)) {
+    sbData.spellbooks.forEach(sb => {
+      if (Array.isArray(sb.spells) && sb.spells.length) {
+        const changes = migrateSavedSpells(sb.spells);
+        if (changes.length) { levelChanges.push(...changes); }
+        spellbooksTouched = true;
+      }
+    });
+    if (spellbooksTouched && typeof setupSpellbookTabs === 'function') {
+      setupSpellbookTabs(root);   // rebuild UI from migrated data
+    }
+  }
+
+  // Memorized spells (rebuild the list nodes from migrated data).
+  const memList = root.querySelector('.memspells-list');
+  if (memList) {
+    const memNodes = Array.from(memList.querySelectorAll('.item'));
+    const memData = memNodes.map(n => (n._spellData ? n._spellData : null)).filter(Boolean);
+    if (memData.length) {
+      const changes = migrateSavedSpells(memData);
+      if (changes.length) { levelChanges.push(...changes); }
+      // push migrated fields back into each node's stored data + visible level
+      memNodes.forEach(n => {
+        if (!n._spellData) return;
+        const lv = n.querySelector('.level');
+        if (lv && n._spellData.level != null) lv.value = n._spellData.level;
+        const ss = n.querySelector('.school-sphere');
+        if (ss && n._spellData.schoolSphere) ss.value = n._spellData.schoolSphere;
+      });
+    }
+  }
+
+  if (levelChanges.length) {
+    showSpellMigrationBanner(root, levelChanges);
+  }
+}
+
+// Dismissible banner listing level corrections. Separate from .sidebar-message
+// (which the autosave loop overwrites every second).
+function showSpellMigrationBanner(root, changes) {
+  let banner = root.querySelector('.spell-migration-banner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.className = 'spell-migration-banner';
+    banner.style.cssText =
+      'margin:8px 0;padding:10px 12px;border:1px solid var(--accent);' +
+      'border-radius:6px;background:var(--glass);font-size:12px;';
+    const anchor = root.querySelector('.spell-access-container') ||
+                   root.querySelector('.spellbook-list');
+    if (anchor && anchor.parentNode) {
+      anchor.parentNode.insertBefore(banner, anchor);
+    } else {
+      root.appendChild(banner);
+    }
+  }
+  const rows = changes.map(c =>
+    `<li><strong>${c.name}</strong>: level ${c.from} &rarr; ${c.to}` +
+    (c.ref ? ` <span style="color:var(--muted)">(${c.ref})</span>` : '') + `</li>`
+  ).join('');
+  banner.innerHTML =
+    `<div style="display:flex;justify-content:space-between;align-items:start;gap:8px;">` +
+    `<div><strong>Spell levels updated from the compendium:</strong>` +
+    `<ul style="margin:6px 0 0 16px;padding:0;">${rows}</ul></div>` +
+    `<button class="dismiss-spell-migration" style="padding:2px 8px;flex:none;">&times;</button></div>`;
+  banner.style.display = 'block';
+  banner.querySelector('.dismiss-spell-migration').onclick = () => { banner.style.display = 'none'; };
+}
+
 function loadSheet(root, data){
   if(!data) return;
   const m = data.meta || {};
@@ -3320,6 +3401,11 @@ function loadSheet(root, data){
   setTimeout(() => {
     root.querySelectorAll('textarea').forEach(ta => autoExpand(ta));
   }, 100);
+
+  // Migrate saved spells against the current compendium (async, fire-and-forget
+  // so loadSheet stays synchronous). Fixes messy old school/sphere strings and
+  // surfaces any level corrections in a dismissible banner.
+  migrateSheetSpells(root);
 }
 
 function setAvatar(root, dataUrl){
