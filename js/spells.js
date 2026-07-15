@@ -225,6 +225,20 @@ function migrateSavedSpells(spellArray) {
       if (!String(saved[f] == null ? '' : saved[f]).trim() && fill[f]) saved[f] = fill[f];
     });
 
+    // Self-heal descriptions mangled by the old parser. Only replace when the
+    // SAVED text carries a known corruption signature -- a leading PO block, a
+    // bare PO attribute, or a "page NNN" citation prefix -- AND the DB has a
+    // real description to put in its place. These signatures never appear in a
+    // correct description, so hand-typed content is never touched.
+    const savedDesc = String(saved.description || '');
+    const looksMangled =
+      /^\s*PO:\s*S&M\b/.test(savedDesc) ||
+      /^\s*(Subtlety|Knockdown|Sensory|Critical)\s*\n/.test(savedDesc) ||
+      /^\s*page\s+\d+\s/i.test(savedDesc);
+    if (looksMangled && match.description && match.description.length > 40) {
+      saved.description = match.description;
+    }
+
     if (saved.components && /\bSource:/i.test(saved.components)) {
       const fixed = saved.components.split(/\s*Source:/i)[0].trim();
       if (fixed) saved.components = fixed;
