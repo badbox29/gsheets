@@ -2005,6 +2005,38 @@ const OPTIONAL_RULES = {
   }
 };
 
+// ===== Campaign Settings =====
+// A character's campaign setting. Currently this only affects which priest
+// spheres are available (some settings add setting-specific spheres that are
+// hidden by default), but it's a core character property and future rules
+// (ability score ranges, allowed kits, equipment restrictions, psionics, etc.)
+// may branch on it too.
+//
+//   enabled: false  -> recognized but greyed out; no mechanical effect yet.
+//   settingSpheres  -> extra priest spheres this setting unlocks, matching the
+//                      tokens stored in each spell's `spheresSetting` field.
+const CAMPAIGN_SETTINGS = {
+  'core':             { label: 'Core (default)',    enabled: true,  settingSpheres: [] },
+  'dark-sun':         { label: 'Dark Sun',          enabled: true,
+                        settingSpheres: ['Elemental Magma', 'Elemental Rain',
+                                         'Elemental Silt', 'Elemental Sun'] },
+  'spelljammer':      { label: 'Spelljammer',       enabled: true,
+                        settingSpheres: ['Cosmos'] },
+  'forgotten-realms': { label: 'Forgotten Realms',  enabled: false, settingSpheres: [] },
+  'greyhawk':         { label: 'Greyhawk',          enabled: false, settingSpheres: [] },
+  'planescape':       { label: 'Planescape',        enabled: false, settingSpheres: [] },
+  'ravenloft':        { label: 'Ravenloft',         enabled: false, settingSpheres: [] },
+  'al-qadim':         { label: 'Al-Qadim',          enabled: false, settingSpheres: [] },
+  'birthright':       { label: 'Birthright',        enabled: false, settingSpheres: [] }
+};
+
+// The extra spheres unlocked by a given campaign setting (empty for core and
+// all greyed settings). Safe for any input, including undefined/unknown.
+function getSettingSpheres(settingKey) {
+  const s = CAMPAIGN_SETTINGS[settingKey];
+  return (s && s.enabled && Array.isArray(s.settingSpheres)) ? s.settingSpheres : [];
+}
+
 const OPTIONAL_RULES_STORAGE_KEY = 'gsheets_optional_rules';
 
 // Is an optional rule enabled? Reads the player's saved setting, falling back to
