@@ -191,3 +191,87 @@ function cleanSpellDescription(fullDescription) {
   // Join back together and trim
   return descriptionLines.join('\n').trim();
 }
+
+// ===== Spell data migration =====
+// Re-resolve saved spells (spellbook or memorized) against the current
+// SPELLS_DB. Conservative by design: fills blanks, fixes the known components
+// leak, and corrects level/school-sphere -- but never overwrites a field the
+// user may have hand-edited without recording it. Returns a changelog array;
+// callers decide how to surface it.
+function migrateSavedSpells(spellArray) {
+  if (!Array.isArray(spellArray) || SPELLS_DB.length === 0) return [];
+
+  // name (lowercased) -> canonical spell
+  const byName = {};
+  SPELLS_DB.forEach(s => { byName[s.name.toLowerCase()] = s; });
+
+  const changes = [];
+
+  spellArray.forEach(saved => {
+    const match = byName[(saved.name || '').toLowerCase()];
+    if (!match) return; // unknown / homebrew spell: leave it untouched
+
+    const canonSchoolSphere = spellClassification(match);
+    const record = [];
+
+    // 1. Fill blank fields silently (nothing to lose).
+    const fillMap = {
+      schoolSphere: canonSchoolSphere,
+      castTime:     match.castTime,
+      range:        match.range,
+      duration:     match.duration,
+      components:   match.components,
+      save:         match.save,
+      description:  match.description
+    };
+    Object.keys(fillMap).forEach(f => {
+      const cur = (saved[f] == null ? '' : String(saved[f])).trim();
+      if (!cur && fillMap[f]) {
+        saved[f] = fillMap[f];
+        record.push(`filled ${f}`);
+      }
+    });
+
+    // 2. Strip the known "V S Source: ..." components leak. Deterministic bug;
+    //    no user would type that, so fixing it is safe even when non-empty.
+    if (saved.components && /\bSource:/i.test(saved.components)) {
+      const fixed = saved.components.split(/\s*Source:/i)[0].trim();
+      if (fixed && fixed !== saved.components) {
+        saved.components = fixed;
+        record.push('cleaned components');
+      }
+    }
+
+    // 3. Correct classification (school/sphere) if it disagrees. This is where
+    //    Fireball's recovered school lands on old saves.
+    const curCS = (saved.schoolSphere || '').trim();
+    if (canonSchoolSphere && curCS && curCS !== canonSchoolSphere) {
+      changes.push({
+        name: saved.name, field: 'school/sphere',
+        from: curCS, to: canonSchoolSphere,
+        ref: match.wscRef || ''
+      });
+      saved.schoolSphere = canonSchoolSphere;
+    }
+
+    // 4. Correct level if it disagrees. Levels drive slot accounting, so this
+    //    is the change most worth reporting.
+    const curLevel = String(saved.level == null ? '' : saved.level).trim();
+    const newLevel = String(match.level);
+    if (curLevel !== '' && curLevel !== newLevel) {
+      changes.push({
+        name: saved.name, field: 'level',
+        from: curLevel, to: newLevel,
+        ref: match.wscRef || ''
+      });
+      saved.level = match.level;
+    }
+
+    // (record[] holds the silent fills; not surfaced, but handy for console.)
+    if (record.length) {
+      console.log(`[spell migrate] ${saved.name}: ${record.join(', ')}`);
+    }
+  });
+
+  return changes;
+}
