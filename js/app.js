@@ -2905,6 +2905,12 @@ function populateCampaignSettings(root) {
     opt.disabled = !s.enabled;
     sel.appendChild(opt);
   });
+  // Changing the setting re-renders the priest sphere menu so setting-specific
+  // spheres appear/disappear, and marks the sheet unsaved.
+  sel.addEventListener('change', () => {
+    if (typeof renderSpellAccess === 'function') renderSpellAccess(root);
+    markUnsaved(document.querySelector('.tab.active'), true, root);
+  });
 }
 
 function loadSheet(root, data){
