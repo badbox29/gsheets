@@ -225,18 +225,28 @@ function migrateSavedSpells(spellArray) {
       if (!String(saved[f] == null ? '' : saved[f]).trim() && fill[f]) saved[f] = fill[f];
     });
 
-    // Self-heal descriptions mangled by the old parser. Only replace when the
-    // SAVED text carries a known corruption signature -- a leading PO block, a
-    // bare PO attribute, or a "page NNN" citation prefix -- AND the DB has a
-    // real description to put in its place. These signatures never appear in a
-    // correct description, so hand-typed content is never touched.
+    // Self-heal descriptions mangled by the old parser, without ever touching
+    // hand-edited text. Replace the saved description only when it is provably
+    // corrupt-or-superseded AND the DB has a real description to swap in:
+    //   (1) it carries a known corruption signature the correct text never has
+    //       (a leading PO block, a bare PO attribute line, or a "page NNN"
+    //       citation prefix); or
+    //   (2) it is a strict, meaningfully-shorter substring of the canonical
+    //       description -- i.e. the DB version is the same text with a truncated
+    //       beginning restored, so replacing loses nothing.
     const savedDesc = String(saved.description || '');
-    const looksMangled =
-      /^\s*PO:\s*S&M\b/.test(savedDesc) ||
-      /^\s*(Subtlety|Knockdown|Sensory|Critical)\s*\n/.test(savedDesc) ||
-      /^\s*page\s+\d+\s/i.test(savedDesc);
-    if (looksMangled && match.description && match.description.length > 40) {
-      saved.description = match.description;
+    const canonDesc = String(match.description || '');
+    if (canonDesc.length > 40 && savedDesc) {
+      const hasCorruptionSignature =
+        /^\s*PO:\s*S&M\b/.test(savedDesc) ||
+        /^\s*(Subtlety|Knockdown|Sensory|Critical)\s*\n/.test(savedDesc) ||
+        /^\s*page\s+\d+\s/i.test(savedDesc);
+      const isTruncatedSubstring =
+        canonDesc.indexOf(savedDesc.trim()) !== -1 &&
+        savedDesc.trim().length < canonDesc.length - 20;
+      if (hasCorruptionSignature || isTruncatedSubstring) {
+        saved.description = canonDesc;
+      }
     }
 
     if (saved.components && /\bSource:/i.test(saved.components)) {
