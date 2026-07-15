@@ -3605,6 +3605,11 @@ function bindSheet(root, tab){
   bindVerticalTabs(root);
   initMobileDrawer(root);
 
+  // Populate the Campaign Setting dropdown for EVERY sheet (new or loaded).
+  // loadSheet also calls this, but new characters never go through loadSheet,
+  // so without this a brand-new sheet's dropdown would be empty until saved.
+  populateCampaignSettings(root);
+
   // Tab title auto-update from Name
   const nameInput = qs(root,'[data-field="name"]');
   const tabLabel = tab.querySelector('.label');
