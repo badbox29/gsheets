@@ -2819,23 +2819,39 @@ async function migrateSheetSpells(root) {
     }
   }
 
-  // Memorized spells (rebuild the list nodes from migrated data).
+  // Memorized spells store their fields as live DOM inputs (no _spellData
+  // object), so build a plain record from each node, migrate it, then write the
+  // cleaned values back into the inputs.
   const memList = root.querySelector('.memspells-list');
   if (memList) {
-    const memNodes = Array.from(memList.querySelectorAll('.item'));
-    const memData = memNodes.map(n => (n._spellData ? n._spellData : null)).filter(Boolean);
-    if (memData.length) {
-      const changes = migrateSavedSpells(memData);
+    Array.from(memList.querySelectorAll('.item')).forEach(node => {
+      const get = sel => node.querySelector(sel);
+      const rec = {
+        name:         get('.title')?.value || '',
+        level:        get('.level')?.value || '',
+        schoolSphere: get('.school-sphere')?.value || '',
+        castTime:     get('.cast-time')?.value || '',
+        range:        get('.range')?.value || '',
+        duration:     get('.duration')?.value || '',
+        components:   get('.components')?.value || '',
+        save:         get('.save')?.value || '',
+        description:  get('.description')?.value || ''
+      };
+      const changes = migrateSavedSpells([rec]);
       if (changes.length) { levelChanges.push(...changes); }
-      // push migrated fields back into each node's stored data + visible level
-      memNodes.forEach(n => {
-        if (!n._spellData) return;
-        const lv = n.querySelector('.level');
-        if (lv && n._spellData.level != null) lv.value = n._spellData.level;
-        const ss = n.querySelector('.school-sphere');
-        if (ss && n._spellData.schoolSphere) ss.value = n._spellData.schoolSphere;
-      });
-    }
+
+      // Write cleaned values back into the DOM inputs.
+      const setVal = (sel, v) => { const el = get(sel); if (el != null && v != null && v !== '') el.value = v; };
+      setVal('.level', rec.level);
+      setVal('.school-sphere', rec.schoolSphere);
+      setVal('.cast-time', rec.castTime);
+      setVal('.range', rec.range);
+      setVal('.duration', rec.duration);
+      setVal('.components', rec.components);
+      setVal('.save', rec.save);
+      setVal('.description', rec.description);
+    });
+    if (typeof renderMemorizedSpellStatus === 'function') renderMemorizedSpellStatus(root);
   }
 
   if (levelChanges.length) {
