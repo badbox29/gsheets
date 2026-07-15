@@ -3650,7 +3650,15 @@ function addCustomNWProficiency(root) {
   if (tab) markUnsaved(tab, true, root);
 }
 
-
+// A spell's classification label. Priest spells are gated by SPHERE and wizard
+// spells by SCHOOL, but priest spells now legitimately carry both, so show what
+// applies: sphere for priests, school for wizards, and both if a spell has them.
+function spellClassification(spell) {
+  const parts = [];
+  if (spell.sphere) parts.push(spell.sphere);
+  if (spell.school && spell.school !== spell.sphere) parts.push(spell.school);
+  return parts.join(' | ') || spell.school || spell.sphere || '';
+}
 
 // Placeholder for spell details modal (we'll implement this next)
 // Show spell details in modal
@@ -3661,7 +3669,7 @@ function showSpellDetails(root, spell) {
   // Populate modal content
   modal.querySelector('.spell-modal-name').textContent = spell.name;
   modal.querySelector('.spell-modal-level').textContent = 
-    `Level ${spell.level} | ${spell.school || spell.sphere}`;
+    `Level ${spell.level} | ${spellClassification(spell)}`;
   
   // Stats grid
   const statsDiv = modal.querySelector('.spell-modal-stats');
@@ -3731,7 +3739,7 @@ function addSpellToMemorized(root, spell) {
   const spellData = {
     name: spell.name,
     level: spell.level,
-    schoolSphere: spell.school || spell.sphere,
+    schoolSphere: spellClassification(spell),
     castTime: spell.castTime,
     range: spell.range,
     duration: spell.duration,
@@ -3785,11 +3793,11 @@ function addSpellToSpellbook(root, spell) {
     return;
   }
   
-  // Create spell data
+ // Create spell data
   const spellData = {
     name: spell.name,
     level: spell.level,
-    schoolSphere: spell.school || spell.sphere,
+    schoolSphere: spellClassification(spell),
     castTime: spell.castTime,
     range: spell.range,
     duration: spell.duration,
