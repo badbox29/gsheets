@@ -24,69 +24,50 @@ const OFFICIAL_SPHERES = [
 let SPELLS_DB = [];
 let SPELLS_LOADED = false;
 
-// Load and parse spells.json
+// Load spells from the pre-parsed spells-clean.json.
+// The new file already has structured fields (schools[], spheres[], level, etc.)
+// so no description parsing is needed. We flatten to the exact SPELLS_DB shape
+// every consumer already expects, so nothing downstream has to change.
 async function loadSpells() {
   if (SPELLS_LOADED) return SPELLS_DB;
-  
+
   try {
-    const response = await fetch('js/spells.json');
+    const response = await fetch('js/spells-clean.json');
     const rawSpells = await response.json();
-    
-    // Parse each spell to extract class, level, school/sphere from description
-    SPELLS_DB = rawSpells.map(spell => {
-      const desc = spell.description || '';
-      
-      // Extract spell level
-      const levelMatch = desc.match(/Spell Level:\s*(\d+)/i);
-      const level = levelMatch ? parseInt(levelMatch[1], 10) : 0;
-      
-      // Extract class
-      const classMatch = desc.match(/Class:\s*([\w\s,\/]+)/i);
-      const spellClass = classMatch ? classMatch[1].trim() : '';
-      
-      // Extract school (for wizards)
-      const schoolMatch = desc.match(/School:\s*([\w\s,\/]+)/i);
-      const school = schoolMatch ? schoolMatch[1].trim() : '';
-      
-      // Extract sphere (for priests)
-      const sphereMatch = desc.match(/Sphere:\s*([\w\s,\/\(\)-]+)/i);
-      const sphere = sphereMatch ? sphereMatch[1].trim() : '';
-      
-      // Extract other useful fields
-      const rangeMatch = desc.match(/Range:\s*([^\n]+)/i);
-      const range = rangeMatch ? rangeMatch[1].trim() : '';
-      
-      const durationMatch = desc.match(/Duration:\s*([^\n]+)/i);
-      const duration = durationMatch ? durationMatch[1].trim() : '';
-      
-      const aoeMatch = desc.match(/AOE:\s*([^\n]+)/i);
-      const aoe = aoeMatch ? aoeMatch[1].trim() : '';
-      
-      const castTimeMatch = desc.match(/Casting Time:\s*([^\n]+)/i);
-      const castTime = castTimeMatch ? castTimeMatch[1].trim() : '';
-      
-      const saveMatch = desc.match(/Save:\s*([^\n]+)/i);
-      const save = saveMatch ? saveMatch[1].trim() : '';
-      
-      const componentsMatch = desc.match(/Req:\s*([^\n]+)/i);
-      const components = componentsMatch ? componentsMatch[1].trim() : '';
-      
-      return {
-        name: spell.name,
-        level: level,
-        class: spellClass.toLowerCase(),
-        school: school,
-        sphere: sphere,
-        range: range,
-        duration: duration,
-        aoe: aoe,
-        castTime: castTime,
-        save: save,
-        components: components,
-        description: cleanSpellDescription(desc)
-      };
-    });
-    
+
+    SPELLS_DB = rawSpells
+      // Drop non-castable entries: the 3 WSC "Lost spell" lore footnotes and
+      // the 1 empty scrape artifact. They aren't real, pickable spells.
+      .filter(spell => spell.castable !== false)
+      .map(spell => {
+        // level may be a number or the string "Cantrip"; anything non-numeric
+        // becomes 0 so level comparisons and sorting never yield NaN.
+        let level = spell.level;
+        if (typeof level !== 'number') {
+          const n = parseInt(level, 10);
+          level = Number.isFinite(n) ? n : 0;
+        }
+
+        // schools[] / spheres[] -> the single string the old code emitted.
+        const school = Array.isArray(spell.schools) ? spell.schools.join(', ') : (spell.schools || '');
+        const sphere = Array.isArray(spell.spheres) ? spell.spheres.join(', ') : (spell.spheres || '');
+
+        return {
+          name: spell.name,
+          level: level,
+          class: (spell.class || '').toLowerCase(),
+          school: school,
+          sphere: sphere,
+          range: spell.range || '',
+          duration: spell.duration || '',
+          aoe: spell.aoe || '',
+          castTime: spell.castingTime || '',   // field renamed in the new data
+          save: spell.save || '',
+          components: spell.components || '',
+          description: spell.description || ''  // already clean; no stripping needed
+        };
+      });
+
     SPELLS_LOADED = true;
     console.log(`Loaded ${SPELLS_DB.length} spells from database`);
     return SPELLS_DB;
