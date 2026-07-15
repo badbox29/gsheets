@@ -53,9 +53,12 @@ async function loadSpells() {
           level = Number.isFinite(n) ? n : 0;
         }
 
-        // schools[] / spheres[] -> the single string the old code emitted.
+       // schools[] / spheres[] -> the single string the old code emitted.
         const school = Array.isArray(spell.schools) ? spell.schools.join(', ') : (spell.schools || '');
         const sphere = Array.isArray(spell.spheres) ? spell.spheres.join(', ') : (spell.spheres || '');
+        // Setting-specific spheres (Dark Sun paraelementals, Spelljammer Cosmos)
+        // are kept separate so they only match when a campaign setting unlocks them.
+        const sphereSetting = Array.isArray(spell.spheresSetting) ? spell.spheresSetting.join(', ') : (spell.spheresSetting || '');
 
         return {
           name: spell.name,
@@ -63,6 +66,7 @@ async function loadSpells() {
           class: (spell.class || '').toLowerCase(),
           school: school,
           sphere: sphere,
+          sphereSetting: sphereSetting,
           range: spell.range || '',
           duration: spell.duration || '',
           aoe: spell.aoe || '',
@@ -105,8 +109,11 @@ function filterSpells(options = {}) {
     // Filter by spheres (for priests). Exact token match, not substring:
     // 'Water' must not match 'Elemental Water', and 'Air' must not match
     // arbitrary text. A spell qualifies if ANY of its spheres is selected.
+    // Setting spheres (from the character's campaign setting) count too, so a
+    // Dark Sun cleric who ticks Elemental Magma sees the paraelemental spells.
     if (spellClass.includes('priest') && spheres.length > 0) {
-      const spellSpheres = splitClassification(spell.sphere);
+      const spellSpheres = splitClassification(spell.sphere)
+        .concat(splitClassification(spell.sphereSetting));
       const wanted = spheres.map(s => s.toLowerCase());
       const hasMatchingSphere = spellSpheres.some(sp =>
         wanted.includes(sp.toLowerCase())
