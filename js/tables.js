@@ -1183,13 +1183,11 @@ function isWarriorClass(clazz) {
   return WARRIOR_CLASSES.some(c => clazz.includes(c));
 }
 
-// Priest CLASSES only (clerics + druids). Paladins and rangers cast priest
-// spells but are warriors -- per PHB they get no WIS bonus spells and are not
-// subject to WIS spell failure. Spell immunity and MDA are NOT gated by class.
-function isPriestClass(clazz) {
-  clazz = (clazz || "").toLowerCase();
-  return PRIEST_CLASSES.some(c => clazz.includes(c));
-}
+// isPriestClass is defined once, below (next to isWizardClass). It matches every
+// class that CASTS priest spells -- cleric, druid, priest, shaman, paladin,
+// dpaladin, ranger -- so it is deliberately broad. Narrow "cleric/druid only"
+// checks (WIS bonus spells, spell failure) are inlined at their call sites,
+// because paladins and rangers cast priest spells but get no WIS bonuses.
 
 // === Shared Strength lookup ===
 // Single source of truth for Strength data, including exceptional 18/xx.
