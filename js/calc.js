@@ -3986,6 +3986,73 @@ function renderMemorizedSpellStatus(root) {
   } else {
     statusText.innerHTML = statusParts.join(' <span style="color:var(--muted);">-</span> ');
   }
+
+  // Specialist reminders piggyback on this render so they refresh on every
+  // class/level/load/spell change without wiring separate call sites.
+  renderSpecialistSpellNotes(root);
+}
+
+// Specialist spell reminders (PHB Ch.3). Populates two notes for specialist
+// wizards and clears them for everyone else:
+//   .specialist-slot-note      -- under Spell Slots: the bonus slot + free spell
+//                                 rules, kept distinct so the +1 slot (already in
+//                                 the counts, own-school) isn't confused with the
+//                                 free spell (a separate spellbook entry).
+//   .specialist-freespell-note -- above the Spellbook: how many free own-school
+//                                 spells have been earned (one per spell level reached).
+function renderSpecialistSpellNotes(root) {
+  const slotNote = root.querySelector('.specialist-slot-note');
+  const freeNote = root.querySelector('.specialist-freespell-note');
+  if (!slotNote && !freeNote) return;
+
+  const clazz = val(root, 'clazz');
+  const school = (typeof getSpecialistSchool === 'function') ? getSpecialistSchool(clazz) : null;
+
+  // Not a specialist -> clear and hide both notes.
+  if (!school) {
+    if (slotNote) { slotNote.innerHTML = ''; slotNote.style.display = 'none'; }
+    if (freeNote) { freeNote.innerHTML = ''; freeNote.style.display = 'none'; }
+    return;
+  }
+
+  if (slotNote) {
+    slotNote.innerHTML =
+      '<strong style="color:var(--accent-light);">' + school + ' specialist:</strong>' +
+      '<div style="margin-top:3px;">\u2022 <strong>Bonus slot:</strong> +1 spell slot at each level you can cast ' +
+        '(already included in the counts above) \u2014 it must hold a ' + school + ' spell.</div>' +
+      '<div style="margin-top:3px;">\u2022 <strong>Free spell:</strong> one ' + school + ' spell is added to your ' +
+        'spellbook each time you reach a new spell level \u2014 no learn roll needed.</div>';
+    slotNote.style.display = '';
+  }
+
+  // One free own-school spell per spell level reached. Derived from the base mage
+  // progression (count of castable spell levels) -- exact for single-class; for
+  // multi/dual the character level isn't the wizard level, so we show the rule
+  // without a number rather than a wrong one.
+  if (freeNote) {
+    const charType = (val(root, 'char_type') || 'single').toLowerCase();
+    let earned = null;
+    if (charType === 'single' && typeof SPELL_SLOTS_TABLES !== 'undefined' && SPELL_SLOTS_TABLES.mage) {
+      const lvl = parseInt(val(root, 'level') || 0, 10);
+      const rows = SPELL_SLOTS_TABLES.mage;
+      let row = rows[lvl];
+      if (!row && lvl > 0) {
+        const maxLvl = Math.max.apply(null, Object.keys(rows).map(k => parseInt(k, 10)));
+        row = rows[Math.min(lvl, maxLvl)];
+      }
+      if (Array.isArray(row)) earned = row.filter(n => n > 0).length;
+    }
+    if (earned !== null) {
+      freeNote.innerHTML =
+        '<strong style="color:var(--accent-light);">Free ' + school + ' spells earned:</strong> ' + earned +
+        ' <span style="color:var(--muted);">(one per spell level reached \u2014 add them from the browser, no learn roll)</span>';
+    } else {
+      freeNote.innerHTML =
+        '<strong style="color:var(--accent-light);">Free ' + school + ' spells:</strong> ' +
+        'one per wizard spell level reached <span style="color:var(--muted);">(no learn roll)</span>';
+    }
+    freeNote.style.display = '';
+  }
 }
 
 // Sort memorized spells by level, then alphabetically
