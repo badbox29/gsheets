@@ -1521,13 +1521,16 @@ function toggleSpellBrowser(root) {
   
   if (!browserSection) return;
   
-  const isSpellcaster = clazz.includes('cleric') || clazz.includes('druid') || 
+  // Specialist wizards (necromancer, conjurer, etc.) count as spellcasters too;
+  // use the SPECIALIST_WIZARDS table rather than a hardcoded name list.
+  const isSpecialist = (typeof getSpecialistSchool === 'function') && !!getSpecialistSchool(clazz);
+  const isSpellcaster = clazz.includes('cleric') || clazz.includes('druid') ||
                         clazz.includes('priest') || clazz.includes('shaman') ||
                         clazz.includes('paladin') || clazz.includes('dpaladin') ||
                         clazz.includes('ranger') ||
-                        clazz.includes('mage') || clazz.includes('wizard') || 
+                        clazz.includes('mage') || clazz.includes('wizard') ||
                         clazz.includes('illusionist') || clazz.includes('specialist') ||
-                        clazz.includes('bard');
+                        clazz.includes('bard') || isSpecialist;
   
   browserSection.style.display = isSpellcaster ? 'block' : 'none';
 }
