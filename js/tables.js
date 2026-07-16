@@ -2096,7 +2096,7 @@ const SPECIALIST_WIZARDS = {
     school: "Abjuration",
     races: ["human"],
     minAbility: { stat: "wis", score: 15 },
-    opposition: ["Alteration", "Illusion"]
+    opposition: ["Alteration", "Illusion/Phantasm"]
   },
   "conjurer": {
     school: "Conjuration/Summoning",
@@ -2117,7 +2117,7 @@ const SPECIALIST_WIZARDS = {
     opposition: ["Invocation/Evocation", "Necromancy"]
   },
   "illusionist": {
-    school: "Illusion",
+    school: "Illusion/Phantasm",
     races: ["human", "gnome"],
     minAbility: { stat: "dex", score: 16 },
     opposition: ["Necromancy", "Invocation/Evocation", "Abjuration"]
@@ -2132,7 +2132,7 @@ const SPECIALIST_WIZARDS = {
     school: "Necromancy",
     races: ["human"],
     minAbility: { stat: "wis", score: 16 },
-    opposition: ["Illusion", "Enchantment/Charm"]
+    opposition: ["Illusion/Phantasm", "Enchantment/Charm"]
   },
   "transmuter": {
     school: "Alteration",
