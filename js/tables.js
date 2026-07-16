@@ -2224,6 +2224,27 @@ function getSpecialistSchool(clazz) {
   return key ? SPECIALIST_WIZARDS[key].school : null;
 }
 
+// ===== Shared caster-type detection =====
+// Single source of truth so specialist wizard names (necromancer, conjurer, ...)
+// can never be silently omitted from one check but not another -- the bug that
+// has bitten spell access, the browser, and slot calcs separately.
+function isWizardClass(clazz) {
+  const c = (clazz || "").trim().toLowerCase();
+  if (!c) return false;
+  return c.includes('mage') || c.includes('wizard') ||
+         c.includes('illusionist') || c.includes('specialist') ||
+         c.includes('bard') ||
+         !!getSpecialistSchool(c);   // any of the 8 specialists
+}
+
+function isPriestClass(clazz) {
+  const c = (clazz || "").trim().toLowerCase();
+  if (!c) return false;
+  return c.includes('cleric') || c.includes('druid') || c.includes('priest') ||
+         c.includes('shaman') || c.includes('paladin') || c.includes('dpaladin') ||
+         c.includes('ranger');
+}
+
 // Apply the specialist's bonus spell slot: +1 at every spell level he can
 // already cast. Mutates nothing -- returns a new array.
 // Returns { slots, school } so callers can build a tooltip.
