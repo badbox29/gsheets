@@ -2044,7 +2044,9 @@ const SHEET_HTML = `
             <div class="spell-modal-stats" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px;font-size:13px;">
               <!-- Stats populated dynamically -->
             </div>
-            
+
+            <div class="spell-modal-source" style="font-size:11px;color:var(--muted);margin-bottom:12px;"></div>
+
             <div class="spell-modal-description" style="line-height:1.6;white-space:pre-wrap;"></div>
             
             <div style="display:flex;gap:8px;margin-top:24px;justify-content:flex-end;">
