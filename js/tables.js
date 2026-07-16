@@ -2214,6 +2214,28 @@ function isOppositionSpell(spell, clazz) {
   });
 }
 
+// True if `spell` belongs to the specialist's OWN school -- used for the +15%
+// learn bonus. Mirrors isOppositionSpell's token matching, including the
+// Greater Divination = Divination-of-5th-level-or-higher wrinkle, so a diviner's
+// specialty correctly excludes the lesser divinations any wizard can learn.
+function isSpecialtySpell(spell, clazz) {
+  const school = getSpecialistSchool(clazz);
+  if (!school) return false;
+
+  const schools = Array.isArray(spell.schools)
+    ? spell.schools
+    : String(spell.school || "").split(",").map(s => s.trim()).filter(Boolean);
+
+  const level = (typeof spell.level === "number")
+    ? spell.level
+    : parseInt(spell.level, 10) || 0;
+
+  if (school === "Greater Divination") {
+    return schools.includes("Divination") && level >= 5;
+  }
+  return schools.includes(school);
+}
+
 // Is this class a specialist wizard? Returns the school name, or null.
 function getSpecialistSchool(clazz) {
   const c = (clazz || "").trim().toLowerCase();
