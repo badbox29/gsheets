@@ -827,6 +827,8 @@ const SHEET_HTML = `
 			  <div class="col"><label>8th</label><input data-field="slots8" type="text" readonly><div class="slot-breakdown" data-field="slot_breakdown_8"></div></div>
 			  <div class="col"><label>9th</label><input data-field="slots9" type="text" readonly><div class="slot-breakdown" data-field="slot_breakdown_9"></div></div>
 			</div>
+			<!-- Specialist spell reminder (populated for specialist wizards only) -->
+			<div class="specialist-slot-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
         </section>
 
 		<!-- Wisdom-based Modifiers -->
@@ -1004,6 +1006,8 @@ const SHEET_HTML = `
 			  <button class="add-spellbook-spell" style="padding:4px 12px;font-size:12px;margin-left:auto;">+ Add Spell</button>
 			</div>
 			
+			<!-- Specialist free-spell entitlement (populated for specialist wizards only) -->
+			<div class="specialist-freespell-note" style="display:none;margin-bottom:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
 			<div class="list spellbook-list"></div>
 		  </div>
 		</section>
