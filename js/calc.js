@@ -3692,7 +3692,14 @@ function showSpellDetails(root, spell) {
     <div><strong>Components:</strong> ${spell.components}</div>
     <div><strong>Saving Throw:</strong> ${spell.save}</div>
   `;
-  
+
+  // Source citation, e.g. "WSC Vol.1 p.22" (falls back to just the source book).
+  const citation = [spell.source, spell.wscRef].filter(Boolean).join(' ');
+  const srcEl = modal.querySelector('.spell-modal-source');
+  if (srcEl) {
+    srcEl.textContent = citation ? `Source: ${citation}` : '';
+  }
+
   // Description
   modal.querySelector('.spell-modal-description').textContent = spell.description;
   
