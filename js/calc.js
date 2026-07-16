@@ -590,9 +590,12 @@ function renderIntelligenceEffects(root) {
   const intData = INT_TABLE[int];
   const bonusProfs = INT_BONUS_PROFS[int];
   
-  // Check if wizard class
-  const isWizard = ["mage", "wizard", "illusionist", "specialist", "abjurer", "conjurer", 
-                     "diviner", "enchanter", "invoker", "necromancer", "transmuter"].some(c => clazz.includes(c));
+  // Arcane casters use INT for spells: wizards, all 8 specialists, and bards.
+  // Per PHB (Bard, Ch.3), a bard's Intelligence determines both how many wizard
+  // spells he can know and his chance to learn any given one -- an INT check is
+  // required to learn each spell -- so bards get the Chance to Learn Spell % and
+  // the Max Spells per Level cap, same as a wizard.
+  const isWizard = isWizardClass(clazz);
   
   if (intData) {
     // [# languages, learn spell %, max spells/level, spell immunity]
