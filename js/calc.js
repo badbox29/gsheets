@@ -1400,18 +1400,10 @@ async function renderSpellAccess(root) {
   await loadSpells();
   console.log('[Spell Access] Spells loaded, count:', SPELLS_DB.length);
   
-  // Determine if character is a spellcaster
-  const isPriest = clazz.includes('cleric') || clazz.includes('druid') || 
-                   clazz.includes('priest') || clazz.includes('shaman') ||
-                   clazz.includes('paladin') || clazz.includes('dpaladin') ||
-                   clazz.includes('ranger');
-  // Specialist wizards (necromancer, conjurer, diviner, etc.) are wizards too.
-  // Use the SPECIALIST_WIZARDS table as the source of truth rather than a
-  // hardcoded name list, so adding a specialist never silently breaks this.
-  const isSpecialist = (typeof getSpecialistSchool === 'function') && !!getSpecialistSchool(clazz);
-  const isWizard = clazz.includes('mage') || clazz.includes('wizard') ||
-                   clazz.includes('illusionist') || clazz.includes('specialist') ||
-                   clazz.includes('bard') || isSpecialist;
+  // Determine if character is a spellcaster (shared helpers recognise all 8
+  // specialist wizard classes, so specialists never get silently excluded).
+  const isPriest = isPriestClass(clazz);
+  const isWizard = isWizardClass(clazz);
   
   // Hide everything if not a spellcaster
   if (!isPriest && !isWizard) {
@@ -1521,16 +1513,7 @@ function toggleSpellBrowser(root) {
   
   if (!browserSection) return;
   
-  // Specialist wizards (necromancer, conjurer, etc.) count as spellcasters too;
-  // use the SPECIALIST_WIZARDS table rather than a hardcoded name list.
-  const isSpecialist = (typeof getSpecialistSchool === 'function') && !!getSpecialistSchool(clazz);
-  const isSpellcaster = clazz.includes('cleric') || clazz.includes('druid') ||
-                        clazz.includes('priest') || clazz.includes('shaman') ||
-                        clazz.includes('paladin') || clazz.includes('dpaladin') ||
-                        clazz.includes('ranger') ||
-                        clazz.includes('mage') || clazz.includes('wizard') ||
-                        clazz.includes('illusionist') || clazz.includes('specialist') ||
-                        clazz.includes('bard') || isSpecialist;
+ const isSpellcaster = isPriestClass(clazz) || isWizardClass(clazz);
   
   browserSection.style.display = isSpellcaster ? 'block' : 'none';
 }
@@ -2182,14 +2165,10 @@ async function renderSpellBrowser(root) {
   // Ensure spells are loaded
   await loadSpells();
   
-  // Determine caster type and max spell level
-  const isPriest = clazz.includes('cleric') || clazz.includes('druid') || 
-                   clazz.includes('priest') || clazz.includes('shaman') ||
-                   clazz.includes('paladin') || clazz.includes('dpaladin') ||
-                   clazz.includes('ranger');
-  const isWizard = clazz.includes('mage') || clazz.includes('wizard') || 
-                   clazz.includes('illusionist') || clazz.includes('specialist') ||
-                   clazz.includes('bard');
+  // Determine caster type and max spell level (shared helpers recognise all 8
+  // specialist wizard classes).
+  const isPriest = isPriestClass(clazz);
+  const isWizard = isWizardClass(clazz);
   
   if (!isPriest && !isWizard) {
     resultsDiv.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px;">Not a spellcaster class.</p>';
