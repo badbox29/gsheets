@@ -3731,8 +3731,21 @@ function showSpellDetails(root, spell) {
   const disabledStyle = overCap
     ? 'opacity:0.4;cursor:not-allowed;'
     : '';
+
+  // The "reference only" note sits ABOVE the button row as its own block, not
+  // as a flex child of the right-aligned button container (where it would be
+  // squeezed and clipped). Remove any prior note first so it doesn't stack.
+  const priorNote = modal.querySelector('.spell-cap-note');
+  if (priorNote) priorNote.remove();
+  if (overCap) {
+    const note = document.createElement('div');
+    note.className = 'spell-cap-note';
+    note.style.cssText = 'font-size:11px;color:var(--muted);text-align:right;margin-top:16px;';
+    note.textContent = 'Above your maximum castable spell level (' + levelCap + ') \u2014 shown for reference only.';
+    buttonContainer.parentNode.insertBefore(note, buttonContainer);
+  }
+
   buttonContainer.innerHTML = `
-    ${overCap ? '<div style="flex:1 0 100%;font-size:11px;color:var(--muted);margin-bottom:8px;">Above your maximum castable spell level (' + levelCap + ') \u2014 shown for reference only.</div>' : ''}
     <button class="add-to-spellbook" style="padding:8px 16px;${disabledStyle}"${overCap ? ' disabled' : ''}>Add to Spellbook</button>
     <button class="add-to-memorized" style="padding:8px 16px;${disabledStyle}"${overCap ? ' disabled' : ''}>Add to Memorized</button>
     <button class="close-spell-modal-btn" style="padding:8px 16px;">Close</button>
