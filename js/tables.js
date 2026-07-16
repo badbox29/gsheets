@@ -2179,6 +2179,43 @@ function validateSpecialist(root) {
   return problems;
 }
 
+/// Does a spell fall in this class's opposition schools? Specialists may browse
+// opposition spells for reference but never learn them (PHB Table 22).
+//
+// "Greater Divination" in an opposition list is a LEVEL-DEPENDENT ban, not a
+// flat one: only Divination spells of 5th level or higher are Greater
+// Divination. Lesser divination (<=4th) is available to every wizard, so it is
+// never opposed.
+function getOppositionSchools(clazz) {
+  const c = (clazz || "").trim().toLowerCase();
+  if (!c) return [];
+  const key = Object.keys(SPECIALIST_WIZARDS).find(k => c.includes(k));
+  return key ? SPECIALIST_WIZARDS[key].opposition : [];
+}
+
+function isOppositionSpell(spell, clazz) {
+  const opposition = getOppositionSchools(clazz);
+  if (opposition.length === 0) return false;
+
+  // The spell's school tokens. spell.school is the comma-joined string the
+  // loader emits; fall back to a schools[] array if present.
+  const schools = Array.isArray(spell.schools)
+    ? spell.schools
+    : String(spell.school || "").split(",").map(s => s.trim()).filter(Boolean);
+
+  const level = (typeof spell.level === "number")
+    ? spell.level
+    : parseInt(spell.level, 10) || 0;
+
+  return opposition.some(opp => {
+    if (opp === "Greater Divination") {
+      // only Divination spells of 5th level or higher
+      return schools.includes("Divination") && level >= 5;
+    }
+    return schools.includes(opp);
+  });
+}
+
 // Is this class a specialist wizard? Returns the school name, or null.
 function getSpecialistSchool(clazz) {
   const c = (clazz || "").trim().toLowerCase();
