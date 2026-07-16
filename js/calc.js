@@ -1405,9 +1405,13 @@ async function renderSpellAccess(root) {
                    clazz.includes('priest') || clazz.includes('shaman') ||
                    clazz.includes('paladin') || clazz.includes('dpaladin') ||
                    clazz.includes('ranger');
-  const isWizard = clazz.includes('mage') || clazz.includes('wizard') || 
+  // Specialist wizards (necromancer, conjurer, diviner, etc.) are wizards too.
+  // Use the SPECIALIST_WIZARDS table as the source of truth rather than a
+  // hardcoded name list, so adding a specialist never silently breaks this.
+  const isSpecialist = (typeof getSpecialistSchool === 'function') && !!getSpecialistSchool(clazz);
+  const isWizard = clazz.includes('mage') || clazz.includes('wizard') ||
                    clazz.includes('illusionist') || clazz.includes('specialist') ||
-                   clazz.includes('bard');
+                   clazz.includes('bard') || isSpecialist;
   
   // Hide everything if not a spellcaster
   if (!isPriest && !isWizard) {
