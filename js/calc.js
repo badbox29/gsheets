@@ -3748,6 +3748,31 @@ function showSpellDetails(root, spell) {
     buttonContainer.parentNode.insertBefore(note, buttonContainer);
   }
 
+  // Specialist learn-spell modifier (PHB Ch.3): +15% for own-school spells,
+  // -15% for other schools. Only shown for specialists, on spells they could
+  // actually attempt to learn -- i.e. not blocked (opposition schools can't be
+  // learned at all, and spells above the castable level can't be learned yet).
+  const priorLearnNote = modal.querySelector('.spell-learn-note');
+  if (priorLearnNote) priorLearnNote.remove();
+  const specSchool = (typeof getSpecialistSchool === 'function') ? getSpecialistSchool(clazz) : null;
+  if (specSchool && !blocked) {
+    const intScore = parseInt(val(root, 'int') || 0, 10);
+    const baseLearn = (typeof INT_TABLE !== 'undefined' && INT_TABLE[intScore]) ? INT_TABLE[intScore][1] : 0;
+    if (intScore >= 9 && baseLearn > 0) {
+      const own = (typeof isSpecialtySpell === 'function') && isSpecialtySpell(spell, clazz);
+      const mod = own ? 15 : -15;
+      const eff = Math.max(1, Math.min(100, baseLearn + mod));
+      const learnNote = document.createElement('div');
+      learnNote.className = 'spell-learn-note';
+      learnNote.style.cssText = 'font-size:11px;color:var(--muted);text-align:right;margin-top:8px;';
+      learnNote.textContent =
+        'Chance to learn: ' + eff + '% (' + baseLearn + '% ' +
+        (mod > 0 ? '+' : '\u2212') + '15% ' +
+        (own ? 'specialty school' : 'non-specialty school') + ')';
+      buttonContainer.parentNode.insertBefore(learnNote, buttonContainer);
+    }
+  }
+
   buttonContainer.innerHTML = `
     <button class="add-to-spellbook" style="padding:8px 16px;${disabledStyle}"${blocked ? ' disabled' : ''}>Add to Spellbook</button>
     <button class="add-to-memorized" style="padding:8px 16px;${disabledStyle}"${blocked ? ' disabled' : ''}>Add to Memorized</button>
