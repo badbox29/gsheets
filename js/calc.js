@@ -3719,35 +3719,49 @@ function showSpellDetails(root, spell) {
     btn.onclick = () => modal.style.display = 'none';
   });
   
-  // The character's max castable spell level (min of class progression and the
-  // INT cap), stashed by renderSpellAccess. Spells above it can be BROWSED for
-  // reference but not added -- so we disable the action buttons and explain why.
+  // Two independent reasons a spell can be browsed but not added:
+  //   1. Above the character's max castable level (class progression / INT cap)
+  //   2. In a specialist wizard's OPPOSITION schools (PHB Table 22) -- they may
+  //      study opposition spells for reference but never learn them.
   const levelCap = (typeof root._spellLevelCap === 'number') ? root._spellLevelCap : 99;
   const spellLevelNum = (typeof spell.level === 'number') ? spell.level : parseInt(spell.level, 10) || 0;
   const overCap = spellLevelNum > levelCap;
 
+  const clazz = (val(root, 'clazz') || '');
+  const opposed = (typeof isOppositionSpell === 'function') && isOppositionSpell(spell, clazz);
+
+  const blocked = overCap || opposed;
+
+  // Build the reason text (may cite both).
+  let blockReason = '';
+  if (overCap && opposed) {
+    blockReason = 'Above your max castable level (' + levelCap + ') and in an opposition school \u2014 reference only.';
+  } else if (overCap) {
+    blockReason = 'Above your maximum castable spell level (' + levelCap + ') \u2014 shown for reference only.';
+  } else if (opposed) {
+    const oppList = (typeof getOppositionSchools === 'function') ? getOppositionSchools(clazz).join(', ') : '';
+    blockReason = 'Opposition school for your specialty' + (oppList ? ' (' + oppList + ')' : '') + ' \u2014 cannot be learned (PHB Table 22).';
+  }
+
   // Update button container to have both options
   const buttonContainer = modal.querySelector('.spell-modal-content > div:last-child');
-  const disabledStyle = overCap
-    ? 'opacity:0.4;cursor:not-allowed;'
-    : '';
+  const disabledStyle = blocked ? 'opacity:0.4;cursor:not-allowed;' : '';
 
-  // The "reference only" note sits ABOVE the button row as its own block, not
-  // as a flex child of the right-aligned button container (where it would be
-  // squeezed and clipped). Remove any prior note first so it doesn't stack.
+  // The reason note sits ABOVE the button row as its own block, not as a flex
+  // child of the right-aligned button container. Remove any prior note first.
   const priorNote = modal.querySelector('.spell-cap-note');
   if (priorNote) priorNote.remove();
-  if (overCap) {
+  if (blocked) {
     const note = document.createElement('div');
     note.className = 'spell-cap-note';
     note.style.cssText = 'font-size:11px;color:var(--muted);text-align:right;margin-top:16px;';
-    note.textContent = 'Above your maximum castable spell level (' + levelCap + ') \u2014 shown for reference only.';
+    note.textContent = blockReason;
     buttonContainer.parentNode.insertBefore(note, buttonContainer);
   }
 
   buttonContainer.innerHTML = `
-    <button class="add-to-spellbook" style="padding:8px 16px;${disabledStyle}"${overCap ? ' disabled' : ''}>Add to Spellbook</button>
-    <button class="add-to-memorized" style="padding:8px 16px;${disabledStyle}"${overCap ? ' disabled' : ''}>Add to Memorized</button>
+    <button class="add-to-spellbook" style="padding:8px 16px;${disabledStyle}"${blocked ? ' disabled' : ''}>Add to Spellbook</button>
+    <button class="add-to-memorized" style="padding:8px 16px;${disabledStyle}"${blocked ? ' disabled' : ''}>Add to Memorized</button>
     <button class="close-spell-modal-btn" style="padding:8px 16px;">Close</button>
   `;
 
@@ -3756,7 +3770,7 @@ function showSpellDetails(root, spell) {
     modal.style.display = 'none';
   };
 
-  if (!overCap) {
+  if (!blocked) {
     buttonContainer.querySelector('.add-to-spellbook').onclick = () => {
       addSpellToSpellbook(root, spell);
       modal.style.display = 'none';
