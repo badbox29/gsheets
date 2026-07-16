@@ -235,6 +235,28 @@ function renderCombatQuickReference(root) {
     }
   }
   
+  // Specialist save modifier (PHB Ch.3 / Table 22). Specialist wizards save at
+  // +1 vs. spells of their own school cast by other wizards, and their targets
+  // save at -1 vs. the specialist's own-school spells. Shown for specialists only.
+  const specSavesEl = root.querySelector('.combat-specialist-saves');
+  if (specSavesEl) {
+    const specSchool = (typeof getSpecialistSchool === 'function') ? getSpecialistSchool(clazz) : null;
+    if (specSchool) {
+      const specKey = (typeof SPECIALIST_WIZARDS !== 'undefined')
+        ? Object.keys(SPECIALIST_WIZARDS).find(k => (clazz || '').toLowerCase().includes(k))
+        : null;
+      const specName = specKey ? specKey.charAt(0).toUpperCase() + specKey.slice(1) : 'Specialist';
+      specSavesEl.innerHTML =
+        '<strong style="color:var(--accent-light);">' + specName + ':</strong> ' +
+        '+1 to your saves vs. ' + specSchool + ' spells cast by other wizards; ' +
+        'targets save at \u22121 vs. your ' + specSchool + ' spells.';
+      specSavesEl.style.display = '';
+    } else {
+      specSavesEl.innerHTML = '';
+      specSavesEl.style.display = 'none';
+    }
+  }
+
   // Get equipped weapons
   const weaponsList = root.querySelector('.combat-weapons-list');
   if (!weaponsList) return;
