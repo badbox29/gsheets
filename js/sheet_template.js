@@ -1984,6 +1984,9 @@ const SHEET_HTML = `
 		</div>
 	  </div>
 	  
+	  <!-- Specialist save modifier (populated for specialist wizards only) -->
+	  <div class="combat-specialist-saves" style="border-top:1px solid rgba(255,255,255,0.1);padding-top:8px;margin-bottom:8px;font-size:11px;line-height:1.4;color:var(--muted);display:none;"></div>
+
 	  <!-- Equipped Weapons -->
 	  <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:8px;">
 		<div style="font-size:11px;font-weight:600;margin-bottom:4px;color:var(--accent-light);">Equipped Weapons:</div>
