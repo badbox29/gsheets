@@ -1348,16 +1348,20 @@ const DEX_TABLE = {
 // Format: [# languages, chance to learn spell %, max spells per level, spell immunity, max spell level]
 // NOTE: index 4 (max spell level) is appended at the END so existing
 // destructuring of indices 0-3 keeps working. 0 = cannot cast wizard spells.
+// Columns: [ additionalLanguages, chanceToLearnSpell%, maxSpellsPerLevel,
+//            illusionNote, maxSpellLevel ]
+// maxSpellLevel (index 4) is from PHB Table 4; 0 means "cannot cast wizard
+// spells" (INT 1-8). Indices 0-3 are unchanged and used elsewhere.
 const INT_TABLE = {
-  1: [0, 0, 0, "", 0],
-  2: [1, 0, 0, "", 0],
-  3: [1, 0, 0, "", 0],
-  4: [1, 0, 0, "", 0],
-  5: [1, 0, 0, "", 0],
-  6: [1, 0, 0, "", 0],
-  7: [1, 0, 0, "", 0],
-  8: [1, 0, 0, "", 0],
-  9: [2, 35, 6, "", 4],
+  1:  [0, 0, 0, "", 0],
+  2:  [1, 0, 0, "", 0],
+  3:  [1, 0, 0, "", 0],
+  4:  [1, 0, 0, "", 0],
+  5:  [1, 0, 0, "", 0],
+  6:  [1, 0, 0, "", 0],
+  7:  [1, 0, 0, "", 0],
+  8:  [1, 0, 0, "", 0],
+  9:  [2, 35, 6, "", 4],
   10: [2, 40, 7, "", 5],
   11: [2, 45, 7, "", 5],
   12: [3, 50, 7, "", 6],
@@ -1367,13 +1371,13 @@ const INT_TABLE = {
   16: [5, 70, 11, "", 8],
   17: [6, 75, 14, "", 8],
   18: [7, 85, 18, "", 9],
-  19: [8, 95, "All", "Illusion/Phantasm (≤1st level)", 9],
-  20: [9, 96, "All", "Illusion/Phantasm (≤2nd level)", 9],
-  21: [10, 97, "All", "Illusion/Phantasm (≤3rd level)", 9],
-  22: [11, 98, "All", "Illusion/Phantasm (≤4th level)", 9],
-  23: [12, 99, "All", "Illusion/Phantasm (≤5th level)", 9],
-  24: [15, 100, "All", "Illusion/Phantasm (≤6th level)", 9],
-  25: [20, 100, "All", "Illusion/Phantasm (≤7th level)", 9]
+  19: [8, 95, 22, "Illusion/Phantasm (≤1st level)", 9],
+  20: [9, 96, 25, "Illusion/Phantasm (≤2nd level)", 9],
+  21: [10, 97, 28, "Illusion/Phantasm (≤3rd level)", 9],
+  22: [11, 98, 31, "Illusion/Phantasm (≤4th level)", 9],
+  23: [12, 99, 34, "Illusion/Phantasm (≤5th level)", 9],
+  24: [15, 100, 37, "Illusion/Phantasm (≤6th level)", 9],
+  25: [20, 100, 40, "Illusion/Phantasm (≤7th level)", 9]
 };
 
 // Bonus non-weapon proficiency slots by INT (if such is allowed by DM - uses # of languages a character can learn by score)
