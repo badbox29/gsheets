@@ -4018,8 +4018,8 @@ function renderSpecialistSpellNotes(root) {
   if (slotNote) {
     slotNote.innerHTML =
       '<strong style="color:var(--accent-light);">' + school + ' specialist:</strong>' +
-      '<div style="margin-top:3px;">\u2022 <strong>Bonus slot:</strong> +1 spell slot at each level you can cast ' +
-        '(already included in the counts above) \u2014 it must hold a ' + school + ' spell.</div>' +
+      '<div style="margin-top:3px;">\u2022 <strong>Bonus slot:</strong> +1 slot at each castable level ' +
+        '(already in the counts above) \u2014 to use it at a given level you must memorize at least one ' + school + ' spell at that level.</div>' +
       '<div style="margin-top:3px;">\u2022 <strong>Free spell:</strong> one ' + school + ' spell is added to your ' +
         'spellbook each time you reach a new spell level \u2014 no learn roll needed.</div>';
     slotNote.style.display = '';
