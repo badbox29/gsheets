@@ -73,7 +73,9 @@ async function loadSpells() {
           castTime: spell.castingTime || '',   // field renamed in the new data
           save: spell.save || '',
           components: spell.components || '',
-          description: spell.description || ''  // already clean; no stripping needed
+          description: spell.description || '',  // already clean; no stripping needed
+          source: spell.source || '',
+          wscRef: spell.wscRef || ''
         };
       });
 
