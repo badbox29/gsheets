@@ -2238,36 +2238,43 @@ async function renderSpellBrowser(root) {
     }
   }
 
+  // Note (but don't blank the browser) when the character can't cast anything
+  // yet -- spells still show for reference; the modal will gate the buttons.
   if (maxSpellLevel === 0) {
     const intScore = parseInt(val(root, 'int') || 0, 10);
-    resultsDiv.innerHTML =
-      '<p style="color:var(--error, #ff6b6b);text-align:center;padding:20px;">' +
-      (isWizard && intScore < 9
-        ? 'Intelligence ' + intScore + ' is too low to cast wizard spells (PHB Table 4 requires 9+).'
-        : 'No spell slots at this level.') +
-      '</p>';
-    return;
+    const capNoticeEl0 = root.querySelector('.spell-int-cap-notice');
+    if (capNoticeEl0) {
+      capNoticeEl0.style.display = 'block';
+      capNoticeEl0.textContent =
+        (isWizard && intScore < 9
+          ? 'Intelligence ' + intScore + ' is too low to cast wizard spells (PHB Table 4 requires 9+). Browse for reference; spells can\u2019t be added.'
+          : 'No castable spell levels yet. Browse for reference; spells can\u2019t be added.');
+    }
   }
   
-  // Surface the Intelligence cap so a player isn't left wondering why high-level
-  // spells are missing from the browser.
+  // Surface the max castable level so a player understands why some spells can
+  // be browsed but not added.
   const capNoticeEl = root.querySelector('.spell-int-cap-notice');
-  if (capNoticeEl) {
+  if (capNoticeEl && maxSpellLevel > 0) {
     if (intCapped) {
       const intScore = parseInt(val(root, 'int') || 0, 10);
       capNoticeEl.style.display = 'block';
       capNoticeEl.textContent =
         'Intelligence ' + intScore + ' caps you at level ' + maxSpellLevel +
-        ' spells (PHB Table 4).';
+        ' spells (PHB Table 4). Higher-level spells show for reference but can\u2019t be added.';
     } else {
       capNoticeEl.style.display = 'none';
     }
   }
 
-  // Filter spells
+ // Show ALL spell levels in the browser for reference (like having the WSC/PSC
+  // open at the table). The max castable level only gates the ACTION BUTTONS in
+  // the detail modal, not visibility -- so we filter with no level ceiling here
+  // and stash the real cap for showSpellDetails to read.
+  root._spellLevelCap = maxSpellLevel;
   let filteredSpells = filterSpells({
     spellClass: isPriest ? 'priest' : 'wizard',
-    maxLevel: maxSpellLevel,
+    maxLevel: 99,
     spheres: selectedSpheres,
     schools: selectedSchools
   });
@@ -3712,28 +3719,41 @@ function showSpellDetails(root, spell) {
     btn.onclick = () => modal.style.display = 'none';
   });
   
+  // The character's max castable spell level (min of class progression and the
+  // INT cap), stashed by renderSpellAccess. Spells above it can be BROWSED for
+  // reference but not added -- so we disable the action buttons and explain why.
+  const levelCap = (typeof root._spellLevelCap === 'number') ? root._spellLevelCap : 99;
+  const spellLevelNum = (typeof spell.level === 'number') ? spell.level : parseInt(spell.level, 10) || 0;
+  const overCap = spellLevelNum > levelCap;
+
   // Update button container to have both options
   const buttonContainer = modal.querySelector('.spell-modal-content > div:last-child');
+  const disabledStyle = overCap
+    ? 'opacity:0.4;cursor:not-allowed;'
+    : '';
   buttonContainer.innerHTML = `
-    <button class="add-to-spellbook" style="padding:8px 16px;">Add to Spellbook</button>
-    <button class="add-to-memorized" style="padding:8px 16px;">Add to Memorized</button>
+    ${overCap ? '<div style="flex:1 0 100%;font-size:11px;color:var(--muted);margin-bottom:8px;">Above your maximum castable spell level (' + levelCap + ') \u2014 shown for reference only.</div>' : ''}
+    <button class="add-to-spellbook" style="padding:8px 16px;${disabledStyle}"${overCap ? ' disabled' : ''}>Add to Spellbook</button>
+    <button class="add-to-memorized" style="padding:8px 16px;${disabledStyle}"${overCap ? ' disabled' : ''}>Add to Memorized</button>
     <button class="close-spell-modal-btn" style="padding:8px 16px;">Close</button>
   `;
-  
+
   // Wire up new buttons
   buttonContainer.querySelector('.close-spell-modal-btn').onclick = () => {
     modal.style.display = 'none';
   };
-  
-  buttonContainer.querySelector('.add-to-spellbook').onclick = () => {
-    addSpellToSpellbook(root, spell);
-    modal.style.display = 'none';
-  };
-  
-  buttonContainer.querySelector('.add-to-memorized').onclick = () => {
-    addSpellToMemorized(root, spell);
-    modal.style.display = 'none';
-  };
+
+  if (!overCap) {
+    buttonContainer.querySelector('.add-to-spellbook').onclick = () => {
+      addSpellToSpellbook(root, spell);
+      modal.style.display = 'none';
+    };
+
+    buttonContainer.querySelector('.add-to-memorized').onclick = () => {
+      addSpellToMemorized(root, spell);
+      modal.style.display = 'none';
+    };
+  }
   
   // Close on background click
   modal.onclick = (e) => {
