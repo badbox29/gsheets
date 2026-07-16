@@ -451,11 +451,11 @@ const SHEET_HTML = `
           </div>
           <div class="row" style="margin-top:8px">
             <div class="col">
-              <label>Learn Spell % (Wizards)</label>
+              <label>Learn Spell % (Arcane)</label>
               <input data-field="int_learn_spell" type="text" readonly>
             </div>
             <div class="col">
-              <label>Max Spells/Level (Wizards)</label>
+              <label>Max Spells/Level (Arcane)</label>
               <input data-field="int_max_spells" type="text" readonly>
             </div>
             <div class="col"><!-- empty for layout --></div>
