@@ -4000,6 +4000,39 @@ function renderMemorizedSpellStatus(root) {
 //                                 free spell (a separate spellbook entry).
 //   .specialist-freespell-note -- above the Spellbook: how many free own-school
 //                                 spells have been earned (one per spell level reached).
+// Resolve the WIZARD component of a character (single, multi, or dual class):
+// returns { clazz, level } for the sub-class that casts wizard spells, or null.
+// Lets the specialist features key off the wizard sub-class/sub-level instead of
+// the top-level class -- e.g. a gnome fighter/illusionist, or a human dual-classed
+// into a specialist. Multi-class: mc_class1..3 / mc_level1..3 (only demihuman
+// multi-class specialist is the gnome illusionist). Dual: dc_new_* / dc_original_*.
+function getWizardComponent(root) {
+  const charType = (val(root, 'char_type') || 'single').toLowerCase();
+  const isWiz = (c) => !!c && (typeof isWizardClass === 'function') && isWizardClass(c);
+
+  if (charType === 'multi') {
+    const parts = [
+      { clazz: val(root, 'mc_class1') || '', level: parseInt(val(root, 'mc_level1') || 0, 10) },
+      { clazz: val(root, 'mc_class2') || '', level: parseInt(val(root, 'mc_level2') || 0, 10) },
+      { clazz: val(root, 'mc_class3') || '', level: parseInt(val(root, 'mc_level3') || 0, 10) }
+    ];
+    return parts.find(p => isWiz(p.clazz)) || null;
+  }
+
+  if (charType === 'dual') {
+    const nw   = { clazz: val(root, 'dc_new_class') || '', level: parseInt(val(root, 'dc_new_level') || 0, 10) };
+    const orig = { clazz: val(root, 'dc_original_class') || '', level: parseInt(val(root, 'dc_original_level') || 0, 10) };
+    if (isWiz(nw.clazz)) return nw;
+    if (isWiz(orig.clazz)) return orig;
+    return null;
+  }
+
+  // single-class
+  const clazz = val(root, 'clazz') || '';
+  if (isWiz(clazz)) return { clazz: clazz, level: parseInt(val(root, 'level') || 0, 10) };
+  return null;
+}
+
 function renderSpecialistSpellNotes(root) {
   const slotNote = root.querySelector('.specialist-slot-note');
   const freeNote = root.querySelector('.specialist-freespell-note');
