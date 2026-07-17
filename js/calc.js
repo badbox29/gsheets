@@ -2283,34 +2283,81 @@ async function renderSpellBrowser(root) {
   // the detail modal, not visibility -- so we filter with no level ceiling here
   // and stash the real cap for showSpellDetails to read.
   root._spellLevelCap = maxSpellLevel;
-  let filteredSpells = filterSpells({
+  // Accessible pool (class + Spell Access schools/spheres). Every browser filter
+  // below narrows WITHIN this pool, so the faceted dropdowns are accessible-only.
+  const pool = filterSpells({
     spellClass: isPriest ? 'priest' : 'wizard',
     maxLevel: 99,
     spheres: selectedSpheres,
     schools: selectedSchools
   });
-  
-  // Apply search filter
-  if (searchTerm) {
-    filteredSpells = filteredSpells.filter(spell => 
-      spell.name.toLowerCase().includes(searchTerm) ||
-      spell.description.toLowerCase().includes(searchTerm)
-    );
-  }
-  
-  // Apply level filter. "special" mirrors the memorized/spellbook filters:
-  // anything that isn't a normal 1-9 level (level-0 orisons/cantrips, or any
-  // non-numeric level) counts as special.
-  if (levelFilter === 'special') {
-    filteredSpells = filteredSpells.filter(spell => {
-      const lvl = parseInt(spell.level, 10);
-      return isNaN(lvl) || lvl < 1 || lvl > 9;
-    });
-  } else if (levelFilter) {
-    filteredSpells = filteredSpells.filter(spell =>
-      spell.level === parseInt(levelFilter, 10)
-    );
-  }
+
+  // Read the browser filter controls.
+  const catFilter    = root.querySelector('.spell-cat-filter')?.value || '';
+  const sourceFilter = root.querySelector('.spell-source-filter')?.value || '';
+  const saveFilter   = root.querySelector('.spell-save-filter')?.value || '';
+  const catField     = isPriest ? 'sphere' : 'school';
+
+  // Independent predicates (AND when combined). Kept separate so each dropdown's
+  // options can be computed by applying every predicate EXCEPT its own (faceting).
+  const matchSearch = spell => !searchTerm ||
+    spell.name.toLowerCase().includes(searchTerm) ||
+    spell.description.toLowerCase().includes(searchTerm);
+  const matchLevel = spell => {
+    if (!levelFilter) return true;
+    const lvl = parseInt(spell.level, 10);
+    if (levelFilter === 'special') return isNaN(lvl) || lvl < 1 || lvl > 9;
+    return spell.level === parseInt(levelFilter, 10);
+  };
+  const matchCat = spell => !catFilter ||
+    splitClassification(spell[catField]).some(t => t.toLowerCase() === catFilter.toLowerCase());
+  const matchSource = spell => !sourceFilter || (spell.source || '') === sourceFilter;
+  const matchSave   = spell => !saveFilter || (spell.save || '') === saveFilter;
+
+  // Faceted population: fill a <select> with the distinct values still reachable
+  // given the OTHER active filters. Always keep the current selection as an
+  // option so an explicit choice is never silently dropped.
+  const populateFacet = (selectEl, allLabel, valueSet) => {
+    if (!selectEl) return;
+    const current = selectEl.value;
+    const values = Array.from(valueSet).filter(Boolean);
+    if (current && !values.includes(current)) values.push(current);
+    values.sort((a, b) => a.localeCompare(b));
+    const esc = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    let html = '<option value="">' + allLabel + '</option>';
+    values.forEach(v => { html += '<option value="' + esc(v) + '">' + esc(v) + '</option>'; });
+    selectEl.innerHTML = html;
+    selectEl.value = current;
+  };
+
+  const catValues = new Set();
+  pool.forEach(spell => {
+    if (matchSearch(spell) && matchLevel(spell) && matchSource(spell) && matchSave(spell)) {
+      splitClassification(spell[catField]).forEach(t => catValues.add(t));
+    }
+  });
+  populateFacet(root.querySelector('.spell-cat-filter'),
+    isPriest ? 'All Spheres' : 'All Schools', catValues);
+
+  const sourceValues = new Set();
+  pool.forEach(spell => {
+    if (matchSearch(spell) && matchLevel(spell) && matchCat(spell) && matchSave(spell)) {
+      if (spell.source) sourceValues.add(spell.source);
+    }
+  });
+  populateFacet(root.querySelector('.spell-source-filter'), 'All Sources', sourceValues);
+
+  const saveValues = new Set();
+  pool.forEach(spell => {
+    if (matchSearch(spell) && matchLevel(spell) && matchCat(spell) && matchSource(spell)) {
+      if (spell.save) saveValues.add(spell.save);
+    }
+  });
+  populateFacet(root.querySelector('.spell-save-filter'), 'All Saves', saveValues);
+
+  // Final filtered list for display (all predicates ANDed).
+  let filteredSpells = pool.filter(spell =>
+    matchSearch(spell) && matchLevel(spell) && matchCat(spell) && matchSource(spell) && matchSave(spell));
   
   // Sort by level, then name
   filteredSpells.sort((a, b) => {
