@@ -924,6 +924,10 @@ const SHEET_HTML = `
 		  <div class="spell-slot-status" style="margin-bottom:12px;padding:8px;background:var(--glass);border-radius:4px;font-size:13px;">
 			<strong>Spells Memorized:</strong> <span class="spell-status-text" style="margin-left:8px;">—</span>
 		  </div>
+		  <!-- Specialist bonus-slot utilization (populated for specialist wizards only) -->
+		  <div class="specialist-mem-status" style="display:none;margin-bottom:12px;padding:8px;background:var(--glass);border-radius:4px;font-size:13px;">
+			<strong>Specialist Spells Memorized:</strong> <span class="specialist-mem-status-text" style="margin-left:8px;">—</span>
+		  </div>
 		  
 		  <!-- Level filter -->
 		  <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">
