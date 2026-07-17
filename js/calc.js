@@ -4117,13 +4117,14 @@ function renderSpecialistSpellNotes(root) {
   const freeNote = root.querySelector('.specialist-freespell-note');
   if (!slotNote && !freeNote) return;
 
-  const clazz = val(root, 'clazz');
-  const school = (typeof getSpecialistSchool === 'function') ? getSpecialistSchool(clazz) : null;
+  const component = (typeof getWizardComponent === 'function') ? getWizardComponent(root) : null;
+  const school = (component && typeof getSpecialistSchool === 'function') ? getSpecialistSchool(component.clazz) : null;
 
-  // Not a specialist -> clear and hide both notes.
+  // Not a specialist -> clear/hide both notes and hide every free-spell checkbox.
   if (!school) {
     if (slotNote) { slotNote.innerHTML = ''; slotNote.style.display = 'none'; }
     if (freeNote) { freeNote.innerHTML = ''; freeNote.style.display = 'none'; }
+    root.querySelectorAll('.spellbook-list .item .free-spell-row').forEach(r => { r.style.display = 'none'; });
     return;
   }
 
@@ -4133,36 +4134,60 @@ function renderSpecialistSpellNotes(root) {
       '<div style="margin-top:3px;">\u2022 <strong>Bonus slot:</strong> +1 slot at each castable level ' +
         '(already in the counts above) \u2014 to use it at a given level you must memorize at least one ' + school + ' spell at that level.</div>' +
       '<div style="margin-top:3px;">\u2022 <strong>Free spell:</strong> one ' + school + ' spell is added to your ' +
-        'spellbook each time you reach a new spell level \u2014 no learn roll needed.</div>';
+        'spellbook each time you reach a new spell level \u2014 no learn roll needed.</div>' +
+      '<div style="margin-top:3px;">\u2022 <strong>Two separate perks:</strong> the bonus slot is a memorization slot (tracked under Spells Memorized); the free spell is a spell added to your spellbook (tracked below). Claiming one has nothing to do with the other.</div>';
     slotNote.style.display = '';
   }
 
-  // One free own-school spell per spell level reached. Derived from the base mage
-  // progression (count of castable spell levels) -- exact for single-class; for
-  // multi/dual the character level isn't the wizard level, so we show the rule
-  // without a number rather than a wrong one.
-  if (freeNote) {
-    const charType = (val(root, 'char_type') || 'single').toLowerCase();
-    let earned = null;
-    if (charType === 'single' && typeof SPELL_SLOTS_TABLES !== 'undefined' && SPELL_SLOTS_TABLES.mage) {
-      const lvl = parseInt(val(root, 'level') || 0, 10);
-      const rows = SPELL_SLOTS_TABLES.mage;
-      let row = rows[lvl];
-      if (!row && lvl > 0) {
-        const maxLvl = Math.max.apply(null, Object.keys(rows).map(k => parseInt(k, 10)));
-        row = rows[Math.min(lvl, maxLvl)];
-      }
-      if (Array.isArray(row)) earned = row.filter(n => n > 0).length;
+  // Earned = number of wizard spell levels reached (one free spell each), from the
+  // wizard SUB-level via getWizardComponent so single/multi/dual all work.
+  let earned = 0;
+  if (typeof SPELL_SLOTS_TABLES !== 'undefined' && SPELL_SLOTS_TABLES.mage) {
+    const rows = SPELL_SLOTS_TABLES.mage;
+    let row = rows[component.level];
+    if (!row && component.level > 0) {
+      const maxLvl = Math.max.apply(null, Object.keys(rows).map(k => parseInt(k, 10)));
+      row = rows[Math.min(component.level, maxLvl)];
     }
-    if (earned !== null) {
-      freeNote.innerHTML =
-        '<strong style="color:var(--accent-light);">Free ' + school + ' spells earned:</strong> ' + earned +
-        ' <span style="color:var(--muted);">(one per spell level reached \u2014 add them from the browser, no learn roll)</span>';
+    if (Array.isArray(row)) earned = row.filter(n => n > 0).length;
+  }
+
+  // Show a "Free [school] spell" checkbox on OWN-SCHOOL spellbook entries only.
+  root.querySelectorAll('.spellbook-list .item').forEach(item => {
+    const rowEl = item.querySelector('.free-spell-row');
+    if (!rowEl) return;
+    const sd = item._spellData || {};
+    const own = (typeof isSpecialtySpell === 'function') &&
+      isSpecialtySpell({ school: sd.schoolSphere || '', level: sd.level }, component.clazz);
+    if (own) {
+      const labelEl = rowEl.querySelector('.free-spell-label');
+      if (labelEl) labelEl.textContent = 'Free ' + school + ' spell';
+      rowEl.style.display = '';
     } else {
-      freeNote.innerHTML =
-        '<strong style="color:var(--accent-light);">Free ' + school + ' spells:</strong> ' +
-        'one per wizard spell level reached <span style="color:var(--muted);">(no learn roll)</span>';
+      rowEl.style.display = 'none';
     }
+  });
+
+  // Used = raw count of claimed free spells across ALL of the character's spellbooks.
+  let used = 0;
+  if (typeof getSpellbooksData === 'function') {
+    const sbData = getSpellbooksData(root);
+    if (sbData && Array.isArray(sbData.spellbooks)) {
+      used = sbData.spellbooks.reduce((n, sb) => n + ((sb.spells || []).filter(s => s.freeSpell).length), 0);
+    }
+  }
+
+  if (freeNote) {
+    let usedColor = 'var(--text)';                     // partial (used < earned)
+    if (used > earned) usedColor = '#f44336';          // over-claim -> red
+    else if (used === earned && earned > 0) usedColor = '#4caf50'; // fully claimed -> green
+
+    freeNote.innerHTML =
+      '<div><strong style="color:var(--accent-light);">Free ' + school + ' spells earned:</strong> ' + earned +
+        ' <span style="color:var(--muted);">(one per spell level reached \u2014 add from the browser, no learn roll)</span></div>' +
+      '<div style="margin-top:3px;"><strong style="color:var(--accent-light);">Free ' + school + ' spells used:</strong> ' +
+        '<span style="color:' + usedColor + ';">' + used + '</span>' +
+        ' <span style="color:var(--muted);">(tick \u201cFree ' + school + ' spell\u201d on the ' + school + ' spells in your book)</span></div>';
     freeNote.style.display = '';
   }
 }
