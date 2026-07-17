@@ -1141,6 +1141,12 @@ el.innerHTML =
 	  '<button class="move-to-spellbook" style="padding:8px 12px;font-size:11px;">Move to...</button>' +
 	  '<button class="rm">Remove</button>' +
 	'</div>' +
+	'<div class="free-spell-row" style="display:none;margin-top:6px;font-size:12px;">' +
+	  '<label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;">' +
+	    '<input type="checkbox" class="free-spell-check">' +
+	    '<span class="free-spell-label" style="color:var(--muted);"></span>' +
+	  '</label>' +
+	'</div>' +
 	'<div class="spellbook-details" style="display:none;margin-top:8px;">' +
       '<div style="font-size:11px;color:var(--muted);margin-bottom:4px;">' +
         (data.schoolSphere ? data.schoolSphere + ' | ' : '') +
@@ -1155,6 +1161,19 @@ el.innerHTML =
   
   // Store full spell data on the element
   el._spellData = data;
+
+  // Free-spell claim checkbox (shown only for own-school spells by
+  // renderSpecialistSpellNotes). State persists via el._spellData.freeSpell.
+  const freeCheck = el.querySelector('.free-spell-check');
+  if (freeCheck) {
+    freeCheck.checked = !!data.freeSpell;
+    freeCheck.addEventListener('change', () => {
+      if (el._spellData) el._spellData.freeSpell = freeCheck.checked;
+      const r = el.closest('.sheet-container');
+      onChange && onChange();
+      if (r && typeof syncSpellbookToData === 'function') syncSpellbookToData(r);
+    });
+  }
   
   // Toggle details button
   const toggleDetailsBtn = el.querySelector('.toggle-spellbook-details');
@@ -6491,10 +6510,14 @@ function syncSpellbookToData(root) {
     components: (node._spellData && node._spellData.components) || '',
     save: (node._spellData && node._spellData.save) || '',
     description: (node._spellData && node._spellData.description) || '',
-    notes: (node._spellData && node._spellData.notes) || ''
+    notes: (node._spellData && node._spellData.notes) || '',
+    freeSpell: !!(node._spellData && node._spellData.freeSpell)
   }));
   
   activeSpellbook.spells = spells;
+
+  // Refresh specialist free-spell checkboxes + earned/used counts on every sync.
+  if (typeof renderSpecialistSpellNotes === 'function') renderSpecialistSpellNotes(root);
 }
 
 // Load spells for a specific spellbook into UI
@@ -6525,6 +6548,9 @@ function loadSpellbookSpells(root, spellbookId) {
   if (filter) {
     filterSpellbook(root, filter.value);
   }
+
+  // Refresh specialist free-spell checkboxes + used count for the loaded book.
+  if (typeof renderSpecialistSpellNotes === 'function') renderSpecialistSpellNotes(root);
 }
 
 // Create a single spellbook tab element
