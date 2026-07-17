@@ -4001,7 +4001,7 @@ function renderSpecialistMemorizedStatus(root) {
     parts.push(`<span style="color:${color};">${check}Level ${level}</span>`);
   }
 
-  textEl.innerHTML = parts.join(' <span style="color:var(--muted);">-</span> ');
+  textEl.innerHTML = parts.join('&nbsp;&nbsp;&nbsp;');
   rowEl.style.display = '';
 }
 
