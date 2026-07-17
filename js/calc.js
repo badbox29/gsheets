@@ -2298,9 +2298,16 @@ async function renderSpellBrowser(root) {
     );
   }
   
-  // Apply level filter
-  if (levelFilter) {
-    filteredSpells = filteredSpells.filter(spell => 
+  // Apply level filter. "special" mirrors the memorized/spellbook filters:
+  // anything that isn't a normal 1-9 level (level-0 orisons/cantrips, or any
+  // non-numeric level) counts as special.
+  if (levelFilter === 'special') {
+    filteredSpells = filteredSpells.filter(spell => {
+      const lvl = parseInt(spell.level, 10);
+      return isNaN(lvl) || lvl < 1 || lvl > 9;
+    });
+  } else if (levelFilter) {
+    filteredSpells = filteredSpells.filter(spell =>
       spell.level === parseInt(levelFilter, 10)
     );
   }
