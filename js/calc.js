@@ -3936,6 +3936,74 @@ function addSpellToSpellbook(root, spell) {
 }
 
 // Render memorized spell slot status with warnings
+// Specialist bonus-slot utilization (PHB Ch.3 illusionist text: "memorize an extra
+// spell at each spell level... at least one of these must be an illusion spell").
+// Parallel row under "Spells Memorized:" showing, per castable level, whether at
+// least one specialty-school spell is memorized there -- which is what activates
+// the +1 bonus slot at that level. used/1: GREEN at 1/1 (bonus active), NORMAL at
+// 0/1 (available, unused), NEVER red (it's optional). Works for single/multi/dual
+// via getWizardComponent -> the wizard sub-class + sub-level.
+function renderSpecialistMemorizedStatus(root) {
+  const rowEl = root.querySelector('.specialist-mem-status');
+  const textEl = root.querySelector('.specialist-mem-status-text');
+  if (!rowEl || !textEl) return;
+
+  const component = (typeof getWizardComponent === 'function') ? getWizardComponent(root) : null;
+  const school = (component && typeof getSpecialistSchool === 'function') ? getSpecialistSchool(component.clazz) : null;
+
+  // Not a specialist -> hide the row entirely.
+  if (!component || !school) {
+    rowEl.style.display = 'none';
+    textEl.innerHTML = '';
+    return;
+  }
+
+  // Castable spell levels come from the wizard SUB-level via the base mage table.
+  let castableMax = 0;
+  if (typeof SPELL_SLOTS_TABLES !== 'undefined' && SPELL_SLOTS_TABLES.mage) {
+    const rows = SPELL_SLOTS_TABLES.mage;
+    let row = rows[component.level];
+    if (!row && component.level > 0) {
+      const maxLvl = Math.max.apply(null, Object.keys(rows).map(k => parseInt(k, 10)));
+      row = rows[Math.min(component.level, maxLvl)];
+    }
+    if (Array.isArray(row)) {
+      for (let i = 0; i < row.length && i < 9; i++) {
+        if (row[i] > 0) castableMax = i + 1;
+      }
+    }
+  }
+
+  if (castableMax === 0) {
+    rowEl.style.display = 'none';
+    textEl.innerHTML = '';
+    return;
+  }
+
+  // Which castable levels have at least one specialty-school spell memorized.
+  const hasSpecialty = {};
+  const memItems = Array.from(root.querySelectorAll('.memspells-list .item'));
+  memItems.forEach(item => {
+    const lvl = parseInt(item.querySelector('.level')?.value, 10);
+    if (!(lvl >= 1 && lvl <= 9)) return;
+    const schoolSphere = item.querySelector('.school-sphere')?.value || '';
+    if (typeof isSpecialtySpell === 'function' &&
+        isSpecialtySpell({ school: schoolSphere, level: lvl }, component.clazz)) {
+      hasSpecialty[lvl] = true;
+    }
+  });
+
+  const parts = [];
+  for (let level = 1; level <= castableMax; level++) {
+    const used = hasSpecialty[level] ? 1 : 0;
+    const color = used === 1 ? '#4caf50' : 'var(--text)'; // green when bonus active, else normal; never red
+    parts.push(`<span style="color:${color};">Level ${level}: ${used}/1</span>`);
+  }
+
+  textEl.innerHTML = parts.join(' <span style="color:var(--muted);">-</span> ');
+  rowEl.style.display = '';
+}
+
 function renderMemorizedSpellStatus(root) {
   const statusText = root.querySelector('.spell-status-text');
   if (!statusText) return;
@@ -3990,6 +4058,7 @@ function renderMemorizedSpellStatus(root) {
   // Specialist reminders piggyback on this render so they refresh on every
   // class/level/load/spell change without wiring separate call sites.
   renderSpecialistSpellNotes(root);
+  renderSpecialistMemorizedStatus(root);
 }
 
 // Specialist spell reminders (PHB Ch.3). Populates two notes for specialist
