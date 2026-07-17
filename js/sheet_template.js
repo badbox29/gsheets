@@ -893,6 +893,7 @@ const SHEET_HTML = `
               <input class="spell-search" type="text" placeholder="Search spells..." style="flex:1;min-width:200px;">
               <select class="spell-level-filter" style="width:120px;">
                 <option value="">All Levels</option>
+                <option value="special">Special</option>
                 <option value="1">Level 1</option>
                 <option value="2">Level 2</option>
                 <option value="3">Level 3</option>
