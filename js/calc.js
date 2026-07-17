@@ -3777,7 +3777,9 @@ function showSpellDetails(root, spell) {
   const priorLearnNote = modal.querySelector('.spell-learn-note');
   if (priorLearnNote) priorLearnNote.remove();
   const specSchool = (typeof getSpecialistSchool === 'function') ? getSpecialistSchool(clazz) : null;
-  if (specSchool && !blocked) {
+  // Cantrips (level 0) follow Tome of Magic acquisition rules, not the standard
+  // Table 4 chance-to-learn roll, so skip the +/-15% note for them.
+  if (specSchool && !blocked && spellLevelNum > 0) {
     const intScore = parseInt(val(root, 'int') || 0, 10);
     const baseLearn = (typeof INT_TABLE !== 'undefined' && INT_TABLE[intScore]) ? INT_TABLE[intScore][1] : 0;
     if (intScore >= 9 && baseLearn > 0) {
