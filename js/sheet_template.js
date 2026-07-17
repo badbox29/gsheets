@@ -904,6 +904,10 @@ const SHEET_HTML = `
                 <option value="8">Level 8</option>
                 <option value="9">Level 9</option>
               </select>
+              <select class="spell-cat-filter" style="min-width:150px;"><option value="">All Schools</option></select>
+              <select class="spell-source-filter" style="min-width:130px;"><option value="">All Sources</option></select>
+              <select class="spell-save-filter" style="min-width:130px;"><option value="">All Saves</option></select>
+              <button class="spell-reset-filters" style="padding:8px 16px;">Reset</button>
               <button class="refresh-spells" style="padding:8px 16px;">Refresh List</button>
             </div>
             
