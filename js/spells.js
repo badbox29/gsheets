@@ -33,6 +33,27 @@ let SPELLS_LOADED = false;
 // The new file already has structured fields (schools[], spheres[], level, etc.)
 // so no description parsing is needed. We flatten to the exact SPELLS_DB shape
 // every consumer already expects, so nothing downstream has to change.
+// Canonicalize equivalent saving-throw spellings so the browser's Save filter and
+// the detail modal show one consistent value. Conservative on purpose: only merges
+// that are unambiguously the SAME save (the "negates" family, case-only dupes) plus
+// whitespace trimming. Genuinely different or garbled values (e.g. glued source
+// tags like "(Special - PSC)") are left untouched for a source-data pass verified
+// against the WSC/PSC.
+const SAVE_ALIASES = {
+  'neg': 'Neg.',
+  'neg.': 'Neg.',
+  'nega.': 'Neg.',
+  'negate': 'Neg.',
+  'negates': 'Neg.',
+  'none or neg': 'None or Neg.',
+  'none or neg.': 'None or Neg.'
+};
+function normalizeSave(raw) {
+  const s = (raw || '').replace(/\s+/g, ' ').trim();
+  if (!s) return '';
+  return SAVE_ALIASES[s.toLowerCase()] || s;
+}
+
 async function loadSpells() {
   if (SPELLS_LOADED) return SPELLS_DB;
 
@@ -71,7 +92,7 @@ async function loadSpells() {
           duration: spell.duration || '',
           aoe: spell.aoe || '',
           castTime: spell.castingTime || '',   // field renamed in the new data
-          save: spell.save || '',
+          save: normalizeSave(spell.save),
           components: spell.components || '',
           description: spell.description || '',  // already clean; no stripping needed
           source: spell.source || '',
