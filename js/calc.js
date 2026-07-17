@@ -3995,9 +3995,10 @@ function renderSpecialistMemorizedStatus(root) {
 
   const parts = [];
   for (let level = 1; level <= castableMax; level++) {
-    const used = hasSpecialty[level] ? 1 : 0;
-    const color = used === 1 ? '#4caf50' : 'var(--text)'; // green when bonus active, else normal; never red
-    parts.push(`<span style="color:${color};">Level ${level}: ${used}/1</span>`);
+    const active = !!hasSpecialty[level];
+    const color = active ? '#4caf50' : 'var(--muted)'; // green when bonus active, muted when unused
+    const check = active ? '\u2713 ' : ''; // checkmark on active (claimed) levels
+    parts.push(`<span style="color:${color};">${check}Level ${level}</span>`);
   }
 
   textEl.innerHTML = parts.join(' <span style="color:var(--muted);">-</span> ');
