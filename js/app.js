@@ -4316,6 +4316,27 @@ function bindSheet(root, tab){
   if (spellLevelFilter) {
     spellLevelFilter.addEventListener('change', () => renderSpellBrowser(root));
   }
+
+  // New faceted filter dropdowns: re-render on change so they filter and re-facet.
+  ['.spell-cat-filter', '.spell-source-filter', '.spell-save-filter'].forEach(sel => {
+    const el = qs(root, sel);
+    if (el) el.addEventListener('change', () => renderSpellBrowser(root));
+  });
+
+  // Reset clears the browser controls only (search, level, school/sphere, source,
+  // save) -- it must NOT touch the Spell Access checkboxes, which are a character
+  // setting rather than a browse filter.
+  const spellResetFilters = qs(root, '.spell-reset-filters');
+  if (spellResetFilters) {
+    spellResetFilters.addEventListener('click', () => {
+      ['.spell-search', '.spell-level-filter', '.spell-cat-filter',
+       '.spell-source-filter', '.spell-save-filter'].forEach(sel => {
+        const el = qs(root, sel);
+        if (el) el.value = '';
+      });
+      renderSpellBrowser(root);
+    });
+  }
   
   // Language browser controls
   const refreshLanguages = qs(root, '.refresh-languages');
