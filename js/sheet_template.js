@@ -889,8 +889,10 @@ const SHEET_HTML = `
           
           <div class="spell-browser-content" style="display:none;">
             <!-- Search and Filters -->
-            <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
-              <input class="spell-search" type="text" placeholder="Search spells..." style="flex:1;min-width:200px;">
+            <div style="margin-bottom:8px;">
+              <input class="spell-search" type="text" placeholder="Search spells...">
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;">
               <select class="spell-level-filter" style="width:120px;">
                 <option value="">All Levels</option>
                 <option value="special">Special</option>
@@ -904,9 +906,9 @@ const SHEET_HTML = `
                 <option value="8">Level 8</option>
                 <option value="9">Level 9</option>
               </select>
-              <select class="spell-cat-filter" style="min-width:150px;"><option value="">All Schools</option></select>
-              <select class="spell-source-filter" style="min-width:130px;"><option value="">All Sources</option></select>
-              <select class="spell-save-filter" style="min-width:130px;"><option value="">All Saves</option></select>
+              <select class="spell-cat-filter" style="width:170px;"><option value="">All Schools</option></select>
+              <select class="spell-source-filter" style="width:140px;"><option value="">All Sources</option></select>
+              <select class="spell-save-filter" style="width:140px;"><option value="">All Saves</option></select>
               <button class="spell-reset-filters" style="padding:8px 16px;">Reset</button>
               <button class="refresh-spells" style="padding:8px 16px;">Refresh List</button>
             </div>
