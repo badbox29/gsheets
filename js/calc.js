@@ -2782,14 +2782,27 @@ function renderLanguageProficiencies(root) {
   const atLimit = countedLangs >= languageLimit;
   const color = atLimit ? 'var(--error, #ff6b6b)' : 'var(--accent-light)';
 
+  // Report the same information two ways, because they answer different questions:
+  // the TOTAL is "how many languages do I speak", the counted figure is "how many
+  // more can I learn". The old header showed only the counted figure but labelled
+  // it "Languages Known", which under-reported the total by the native tongue.
+  const totalKnown     = languages.length;
+  const purchasedCount = totalKnown - nativeCount - grantedCount;
+
   let extras = [];
-  if (nativeCount)  extras.push(`+${nativeCount} native`);
-  if (grantedCount) extras.push(`${grantedCount} granted`);
+  if (nativeCount)    extras.push(`${nativeCount} native`);
+  if (grantedCount)   extras.push(`${grantedCount} granted`);
+  if (purchasedCount) extras.push(`${purchasedCount} purchased`);
   const extraText = extras.length ? ` <span style="color:var(--muted);">(${extras.join(', ')})</span>` : '';
 
   headerDiv.innerHTML =
-    `<strong>Languages Known:</strong> <span style="color:${color}">${countedLangs} / ${languageLimit}</span>` +
-    `${extraText} <span style="color:var(--muted);">&middot; ${slotsSpent} NWP slot${slotsSpent === 1 ? '' : 's'} spent</span>`;
+    `<strong>Languages Known:</strong> ${totalKnown}${extraText}` +
+    `<div style="margin-top:3px;">` +
+      `<span style="color:${color}">${countedLangs} / ${languageLimit}</span>` +
+      ` <span style="color:var(--muted);">count against your Intelligence limit ` +
+      `(the native tongue does not)</span>` +
+      ` <span style="color:var(--muted);">&middot; ${slotsSpent} NWP slot${slotsSpent === 1 ? '' : 's'} spent</span>` +
+    `</div>`;
   headerDiv.title =
     `Intelligence ${int} allows ${languageLimit} language${languageLimit === 1 ? '' : 's'} beyond your native tongue (PHB Table 4).\n\n` +
     `NATIVE: free -- costs no slot, not counted against the cap.\n` +
