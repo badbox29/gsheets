@@ -2796,6 +2796,30 @@ function renderLanguageProficiencies(root) {
     `GRANTED: given by the DM at character creation -- costs no slots, but DOES count against the cap.\n` +
     `Otherwise: 1 slot to speak, +1 slot for literacy (Read and Write are a single purchase).`;
   listDiv.appendChild(headerDiv);
+
+  // The native tongue gets its own spot rather than sitting as just another card.
+  // It is categorically different from every other language -- free, one per
+  // character, and NOT counted against the Intelligence cap (PHB Table 4 counts
+  // languages learned IN ADDITION to it). Showing it only as a list item is what
+  // made the "Additional Languages" figure look like a contradiction at low INT.
+  const nativeLang = languages.find(l => l.isNative);
+  const nativeDiv = document.createElement('div');
+  nativeDiv.style.cssText =
+    'padding:8px;margin-bottom:8px;background:var(--glass);border-radius:4px;' +
+    'font-size:13px;border-left:3px solid var(--accent);';
+  if (nativeLang) {
+    const escName = String(nativeLang.name || '')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    nativeDiv.innerHTML =
+      '<strong style="color:var(--accent-light);">Native Tongue:</strong> ' + escName +
+      ' <span style="color:var(--muted);">&middot; free \u2014 costs no slot and is not counted ' +
+      'against your Intelligence limit</span>';
+  } else {
+    nativeDiv.innerHTML =
+      '<strong style="color:var(--accent-light);">Native Tongue:</strong> ' +
+      '<span style="color:var(--muted);">none set \u2014 use \u201cSet as Native\u201d on a language below</span>';
+  }
+  listDiv.appendChild(nativeDiv);
   
   if (languages.length === 0) {
     const emptyDiv = document.createElement('p');
