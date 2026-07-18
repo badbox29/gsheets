@@ -2155,4 +2155,82 @@ const SHEET_HTML = `
 	    </div>
 	  </div>
 	</div>
+
+	<!-- Print Options Modal -->
+	<div class="print-modal-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:10000;justify-content:center;align-items:center;">
+	  <div style="background:var(--panel);border-radius:8px;max-width:560px;width:92%;max-height:85vh;overflow-y:auto;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+	    <h2 style="margin:0 0 4px 0;font-size:16px;">🖨 Print Character Sheet</h2>
+	    <p style="font-size:12px;color:var(--muted);margin:0 0 12px;">Core pages (ability scores, saving throws, combat, weapons and proficiencies) always print. Choose which optional sections to include below. Empty sections are skipped automatically.</p>
+
+	    <div style="display:flex;gap:8px;margin-bottom:14px;">
+	      <button class="print-select-all" style="font-size:11px;padding:5px 10px;">Select All</button>
+	      <button class="print-select-none" style="font-size:11px;padding:5px 10px;">Select None</button>
+	      <button class="print-select-core" style="font-size:11px;padding:5px 10px;">Core Only</button>
+	    </div>
+
+	    <!-- Character -->
+	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Character</label>
+	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:4px;margin-bottom:12px;">
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="abilities"><span>Class / Racial / Kit Abilities</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="powersHindrances"><span>Powers &amp; Hindrances</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="thiefSkills"><span>Thief Skills</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="languages"><span>Languages</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="conditions"><span>Active Conditions</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="portrait"><span>Character Portrait on page 1</span></label>
+	    </div>
+
+	    <!-- Magic -->
+	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Magic</label>
+	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:4px;margin-bottom:12px;">
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="spellAccess"><span>Spell Slots &amp; Sphere / School Access</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="memorized"><span>Memorized Spells</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="spellbooks"><span>Spellbook(s)</span></label>
+	      <div style="display:flex;align-items:center;gap:8px;margin:6px 0 0 24px;">
+	        <span style="font-size:11px;color:var(--muted);">Spellbook detail:</span>
+	        <select class="print-spellbook-detail" style="width:auto;font-size:11px;padding:3px 6px;">
+	          <option value="summary">Summary lines</option>
+	          <option value="full">Full descriptions</option>
+	        </select>
+	      </div>
+	      <p style="font-size:10px;color:var(--muted);margin:6px 0 0 24px;">Full descriptions can add many pages for a large spellbook.</p>
+	    </div>
+
+	    <!-- Gear -->
+	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Gear</label>
+	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:4px;margin-bottom:12px;">
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="equipment"><span>Equipment, Valuables &amp; Coins</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="magicItems"><span>Magic Items</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="armorAmmo"><span>Armor &amp; Ammunition detail</span></label>
+	    </div>
+
+	    <!-- Background -->
+	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Background &amp; Followers</label>
+	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:4px;margin-bottom:12px;">
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="details"><span>Character Details (deity, family, appearance)</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="background"><span>Background / History</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="henchmen"><span>Henchmen</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="hirelings"><span>Hirelings</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="companions"><span>Companions</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="mounts"><span>Mounts</span></label>
+	    </div>
+
+	    <!-- Journal -->
+	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Journal</label>
+	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:4px;margin-bottom:16px;">
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="sessionLog"><span>Session Log</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="questJournal"><span>Quest Journal</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="npcs"><span>NPCs</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="locations"><span>Locations</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="characterJournal"><span>Character Journal</span></label>
+	    </div>
+
+	    <p style="font-size:10px;color:var(--muted);margin:0 0 14px;">Your selections are remembered in this browser and are not stored with the character.</p>
+
+	    <hr style="border:none;border-top:1px solid var(--border);margin:0 0 16px;">
+	    <div style="display:flex;justify-content:flex-end;gap:8px;">
+	      <button class="print-modal-close" style="padding:8px 20px;">Cancel</button>
+	      <button class="print-modal-generate" style="padding:8px 20px;">Generate PDF</button>
+	    </div>
+	  </div>
+	</div>
 `;
