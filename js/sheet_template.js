@@ -442,7 +442,7 @@ const SHEET_HTML = `
           <h3>Intelligence Effects</h3>
           <div class="row">
             <div class="col">
-              <label># Languages</label>
+              <label>Additional Languages</label>
               <input data-field="int_languages" type="text" readonly>
             </div>
             <div class="col">
