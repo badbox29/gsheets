@@ -2,6 +2,8 @@
 
 A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and zero dependencies.
 
+**Version 8.0**
+
 ## Live Demo
 
 👉 https://badbox29.github.io/gsheets/
@@ -138,6 +140,15 @@ Follow these steps **in order** to avoid overwriting your data:
 * I am not a developer.
 
 ### Recent Updates
+
+#### v8.0
+
+* Completed specialist wizard spell handling: opposition-school spells are flagged as unlearnable in the spell browser, the ±15% chance-to-learn adjustment is shown per spell, and the specialist's saving-throw modifiers are noted in the combat reference.
+* Added specialist bonus-slot and free-spell tracking: a per-level indicator shows where the specialist's extra memorization slot is being used, and a counter tracks the free school spell gained at each new spell level.
+* Added filtering to the spell browser — narrow the list by school or sphere, with options that update as you refine your selection and a one-click reset.
+* Improved handling of level-0 (cantrip and orison) spells and cleaned up inconsistent saving-throw labels in the spell data.
+
+#### Earlier releases
 
 * Corrected exceptional Strength handling so it applies across attack rolls, damage, and ability checks rather than only in the ability display.
 * Resolved conflicting Wisdom tables and cleaned up spell bonus, spell failure, and magical defense adjustments.
