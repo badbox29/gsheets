@@ -3419,6 +3419,7 @@ function loadSheet(root, data){
   }
 
   // === Force recalculation of dependent fields ===
+  if (typeof renderSpecialistValidation === 'function') renderSpecialistValidation(root);
   renderSavingThrows(root);
   renderAttackMatrix(root);
   renderSpellSlots(root);
@@ -4021,8 +4022,23 @@ function bindSheet(root, tab){
   }
   
   // Note: Class abilities are triggered by class/level listener below (already exists)
-  
+
+  // Specialist requirement warning -- one delegated listener rather than patching
+  // the class, race, char_type and five separate ability listeners individually.
+  ['input', 'change'].forEach(evt => {
+    root.addEventListener(evt, (e) => {
+      const f = e.target && e.target.getAttribute && e.target.getAttribute('data-field');
+      if (!f) return;
+      if (['clazz', 'race', 'char_type', 'int', 'wis', 'con', 'cha', 'dex',
+           'mc_class1', 'mc_class2', 'mc_class3',
+           'dc_new_class', 'dc_original_class'].indexOf(f) !== -1) {
+        if (typeof renderSpecialistValidation === 'function') renderSpecialistValidation(root);
+      }
+    });
+  });
+
   // Initial render
+  if (typeof renderSpecialistValidation === 'function') renderSpecialistValidation(root);
   renderAttackMatrix(root);
   renderSavingThrows(root);
   renderSpellSlots(root);
