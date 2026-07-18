@@ -4132,6 +4132,34 @@ function renderMemorizedSpellStatus(root) {
 // the top-level class -- e.g. a gnome fighter/illusionist, or a human dual-classed
 // into a specialist. Multi-class: mc_class1..3 / mc_level1..3 (only demihuman
 // multi-class specialist is the gnome illusionist). Dual: dc_new_* / dc_original_*.
+// Specialist requirement warning banner. ADVISORY ONLY -- it never blocks or
+// changes any calculation, matching the no-blocking philosophy of the rest of the
+// specialist suite. validateSpecialist() (tables.js) returns an array of problem
+// strings from PHB Table 22: ability minimums, race restrictions, and the
+// multi-class rule. Empty array -> banner hidden.
+function renderSpecialistValidation(root) {
+  const el = root.querySelector('.specialist-validation-message');
+  if (!el) return;
+
+  const problems = (typeof validateSpecialist === 'function') ? validateSpecialist(root) : [];
+  if (!problems || problems.length === 0) {
+    el.style.display = 'none';
+    el.innerHTML = '';
+    return;
+  }
+
+  // Race is free text, so escape before injecting into the banner.
+  const esc = s => String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  el.innerHTML =
+    '<strong style="color:var(--warning, #e0a34a);">\u26A0 Specialist requirements (PHB Table 22)</strong>' +
+    problems.map(p => '<div style="margin-top:4px;">\u2022 ' + esc(p) + '</div>').join('') +
+    '<div style="margin-top:6px;color:var(--muted);font-size:11px;">' +
+      'Advisory only \u2014 nothing is blocked, and your DM may allow exceptions.</div>';
+  el.style.display = '';
+}
+
 function getWizardComponent(root) {
   const charType = (val(root, 'char_type') || 'single').toLowerCase();
   const isWiz = (c) => !!c && (typeof isWizardClass === 'function') && isWizardClass(c);
