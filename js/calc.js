@@ -2825,8 +2825,7 @@ function renderLanguageProficiencies(root) {
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     nativeDiv.innerHTML =
       '<strong style="color:var(--accent-light);">Native Tongue:</strong> ' + escName +
-      ' <span style="color:var(--muted);">&middot; free \u2014 costs no slot and is not counted ' +
-      'against your Intelligence limit</span>';
+      ' <span style="color:var(--muted);">&middot; free \u2014 costs no proficiency slot</span>';
   } else {
     nativeDiv.innerHTML =
       '<strong style="color:var(--accent-light);">Native Tongue:</strong> ' +
