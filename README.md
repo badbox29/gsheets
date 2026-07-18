@@ -24,12 +24,12 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 * Clean, printable layout
 * Import / export character data
 * JSON-based storage for portability
-* Fast load times (single HTML file app)
+* Fast load times (no framework, no build step)
 * Optional cloud sync via Cloudflare KV storage
 
 ## How to Use
 
-1. Open the demo link or host the files locally.
+1. Open the demo link, or serve the files locally (see [Hosting Locally](#hosting-locally)).
 2. Create or edit a character directly in the interface.
 3. Changes are saved automatically in your browser.
 4. Use export to back up or transfer characters.
@@ -37,12 +37,24 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 
 ## Hosting Locally
 
-You can run this tool locally with no setup:
+The tool must be served over `http://` — it will not work correctly if you simply double-click `index.html` and open it from your file system.
 
-* Download or clone the repository
-* Open `index.html` in your browser
+The reason: several data files (spells, weapons, armor, ammunition, equipment, languages, and nonweapon proficiencies) are stored as JSON and loaded at runtime. Browsers block those requests when a page is opened directly from disk, so the sheet will load and calculate but every reference list will come up empty.
 
-Alternatively, host it on any static web server (GitHub Pages, IIS, Apache, etc.).
+Any static web server works. The simplest option, if you have Python installed:
+
+```
+cd gsheets
+python -m http.server 8000
+```
+
+Then open `http://localhost:8000` in your browser. If you use Node instead:
+
+```
+npx serve
+```
+
+You can also host the files on any static web server — GitHub Pages, IIS, Apache, nginx, or similar.
 
 ## Data Storage
 
