@@ -188,8 +188,9 @@ const SHEET_HTML = `
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Specialist wizard requirements warning (advisory only, never blocks) -->
+        <!-- Specialist wizard requirements warning (advisory only, never blocks) -->
           <div class="specialist-validation-message" style="display:none;margin-top:8px;padding:8px;border-radius:4px;font-size:12px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
         </section>
 
