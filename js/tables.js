@@ -2143,7 +2143,12 @@ const SPECIALIST_WIZARDS = {
 // Check a character against Table 22. Returns an array of problem strings
 // (empty if valid). Advisory only -- never blocks the player.
 function validateSpecialist(root) {
-  const clazz = (val(root, "clazz") || "").trim().toLowerCase();
+  // Resolve the WIZARD component first so multi-class (gnome illusionist) and
+  // dual-class specialists get validated too. Reading the top-level clazz field
+  // alone meant those characters failed the key lookup and silently skipped every
+  // check below -- including the multi-class check itself, which could never fire.
+  const component = (typeof getWizardComponent === 'function') ? getWizardComponent(root) : null;
+  const clazz = ((component && component.clazz) || val(root, "clazz") || "").trim().toLowerCase();
   const key = Object.keys(SPECIALIST_WIZARDS).find(k => clazz.includes(k));
   if (!key) return [];
 
@@ -2160,17 +2165,22 @@ function validateSpecialist(root) {
     );
   }
 
-  const race = (val(root, "race") || "").trim().toLowerCase().replace(/\s+/g, "-");
-  if (race && !spec.races.includes(race)) {
+  // Race is a FREE-TEXT field, so compare on letters only and by substring:
+  // "Half-Elf"/"halfelf" both match half-elf, and subrace spellings like
+  // "Deep Gnome" or "Grey Elf" match gnome/elf instead of being flagged as
+  // violations. Exact matching here produced false warnings.
+  const rawRace = (val(root, "race") || "").trim();
+  const race = rawRace.toLowerCase().replace(/[^a-z]/g, "");
+  if (race && !spec.races.some(r => race.includes(r.replace(/[^a-z]/g, "")))) {
     problems.push(
-      `${race.charAt(0).toUpperCase() + race.slice(1)} — a ${key} must be ${spec.races.join(" or ")}.`
+      `${rawRace} — a ${key} must be ${spec.races.join(" or ")}.`
     );
   }
 
   // PHB: "multi-classed characters cannot become specialists, except for
   // gnomes, who ... [may become] illusionists."
   const charType = (val(root, "char_type") || "single").toLowerCase();
-  if (charType === "multi" && !(key === "illusionist" && race === "gnome")) {
+  if (charType === "multi" && !(key === "illusionist" && race.includes("gnome"))) {
     problems.push("Multi-class characters cannot be specialists (except gnome illusionists).");
   }
 
