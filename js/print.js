@@ -442,10 +442,64 @@ function generateCharacterPDF(root, opts) {
     });
   }
 
+  // === THIEF SKILLS (optional) ===
+  // Stored as a flat object of eight skills plus the discretionary points
+  // allocated to each. Non-rogues have the object but leave it empty, which
+  // is what collapses the section for them.
+  const thief = (sheet && sheet.thief) || {};
+
+  const THIEF_SKILLS = [
+    ['Pick Pockets',       'pickPockets',    'pointsPickPockets'],
+    ['Open Locks',         'openLocks',      'pointsOpenLocks'],
+    ['Find/Remove Traps',  'traps',          'pointsTraps'],
+    ['Move Silently',      'moveSilently',   'pointsMoveSilently'],
+    ['Hide in Shadows',    'hideInShadows',  'pointsHide'],
+    ['Detect Noise',       'detectNoise',    'pointsDetectNoise'],
+    ['Climb Walls',        'climbWalls',     'pointsClimb'],
+    ['Read Languages',     'readLanguages',  'pointsReadLang']
+  ];
+
+  // A thief sheet with every score blank and no points spent is not a thief.
+  const hasThiefData = THIEF_SKILLS.some(([, scoreKey, pointsKey]) =>
+    String(thief[scoreKey] || '').trim() !== '' ||
+    (parseInt(thief[pointsKey], 10) || 0) > 0
+  );
+  const showThief = !!opts.thiefSkills && hasThiefData;
+
+  const thiefBlocks = [];
+
+  if (showThief) {
+    thiefBlocks.push({
+      table: {
+        headerRows: 1,
+        widths: ['40%', '20%', '20%', '20%'],
+        body: [
+          [
+            cell('Thief Skill', 6, { bold: true }),
+            cell('Score', 6, { bold: true, alignment: 'center' }),
+            cell('Pts Spent', 6, { bold: true, alignment: 'center' }),
+            cell('Roll', 6, { bold: true, alignment: 'center' })
+          ],
+          ...THIEF_SKILLS.map(([label, scoreKey, pointsKey]) => {
+            const score = String(thief[scoreKey] || '').trim();
+            return [
+              cell(label),
+              cell(score ? `${score}%` : '\u2014', 6, { alignment: 'center' }),
+              cell(thief[pointsKey] || '0', 6, { alignment: 'center' }),
+              cell('d100', 6, { alignment: 'center' })
+            ];
+          })
+        ]
+      },
+      layout: gridLayout,
+      margin: [0, 0, 0, 5]
+    });
+  }
+
   // Page 3 collects the character-detail sections. It opens only if at least
   // one of them is actually printing -- switching them all off produces no
   // blank page. Further sections OR into this flag as they are added.
-  const showPage3 = showLanguages;
+  const showPage3 = showLanguages || showThief;
 
   // Create PDF document definition
   const docDefinition = {
@@ -1271,6 +1325,11 @@ function generateCharacterPDF(root, opts) {
       // === LANGUAGES (optional) ===
       ...optional(showLanguages,
         printSection('LANGUAGES', ...languageBlocks)
+      ),
+
+      // === THIEF SKILLS (optional) ===
+      ...optional(showThief,
+        printSection('THIEF SKILLS', ...thiefBlocks)
       )
     ]
   };
