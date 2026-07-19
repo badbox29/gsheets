@@ -838,9 +838,7 @@ function generateCharacterPDF(root, opts) {
   const showSpellbooks = !!opts.spellbooks && booksWithSpells.length > 0;
   const spellbookFull = opts.spellbookDetail === 'full';
 
-  // Rows kept with the heading. Enough to prove the section started, few
-  // enough that the block still fits in most page remainders.
-  const SPELLBOOK_LEAD_ROWS = 6;
+  // (Row-splitting is handled by printSection via keepWithHeaderRows.)
 
   const sortSpells = rows => rows.slice().sort((a, b) => {
     const la = parseInt(a.level, 10);
@@ -910,28 +908,18 @@ function generateCharacterPDF(root, opts) {
         margin: [0, 2, 0, 2]
       };
 
-      const lead = rows.slice(0, SPELLBOOK_LEAD_ROWS);
-      const tail = rows.slice(SPELLBOOK_LEAD_ROWS);
-
-      // The section title rides with the first book only.
-      const leadStack = [];
-      if (bookIndex === 0) {
-        leadStack.push({
-          text: 'SPELLBOOKS',
-          fontSize: 8,
-          bold: true,
-          alignment: 'center',
-          margin: [0, 0, 0, 2]
-        });
-      }
-      leadStack.push(label);
-      leadStack.push(spellTable(lead, hasFree));
-
-      spellbookBlocks.push({ unbreakable: true, stack: leadStack });
-
-      if (tail.length) {
-        spellbookBlocks.push(spellTable(tail, hasFree));
-      }
+      // No manual lead/tail split any more. printSection folds the title and
+      // the book label into the table's header rows, so pdfMake breaks the
+      // list itself -- reprinting the title and column headers on each
+      // continuation page, with nothing doubled at the join.
+      //
+      // The section title rides with the first book only; later books get
+      // their label as the heading so each one is still announced.
+      spellbookBlocks.push(
+        bookIndex === 0
+          ? printSection('SPELLBOOKS', label, spellTable(rows, hasFree))
+          : printSection(label.text, spellTable(rows, hasFree))
+      );
 
       if (spellbookFull) {
         spellbookBlocks.push({
