@@ -21,6 +21,33 @@ function generateCharacterPDF(root, opts) {
   // reachable through val() at all.
   const sheet = (typeof collectSheet === 'function') ? collectSheet(root) : null;
 
+  // Wraps a section heading together with its content so pdfMake treats the
+  // pair as one indivisible block. If the whole thing will not fit in the
+  // space left on the current page, all of it moves to the next page -- the
+  // heading can never be orphaned at the foot of a page with its table on the
+  // following one.
+  //
+  // The trade is whitespace at the bottom of some pages. That is the correct
+  // trade for a character sheet: a player scanning for "PROFICIENCIES" should
+  // find the list directly underneath it, every time.
+  //
+  // Sections that are inherently taller than a page (a large spellbook, a long
+  // session log) must NOT use this -- they get the heading plus their first few
+  // rows wrapped, with the remainder allowed to flow.
+  const printSection = (title, ...blocks) => ({
+    unbreakable: true,
+    stack: [
+      {
+        text: title,
+        fontSize: 8,
+        bold: true,
+        alignment: 'center',
+        margin: [0, 0, 0, 2]
+      },
+      ...blocks
+    ]
+  });
+
   // === BASIC INFO ===
   const characterName = val(root, 'name') || '';
   const playerName = val(root, 'player') || '';
@@ -998,13 +1025,7 @@ function generateCharacterPDF(root, opts) {
       },
       
       // === PROFICIENCIES ===
-      {
-        text: 'PROFICIENCIES',
-        fontSize: 8,
-        bold: true,
-        alignment: 'center',
-        margin: [0, 0, 0, 2]
-      },
+      printSection('PROFICIENCIES',
       {
         columns: [
           {
@@ -1086,6 +1107,7 @@ function generateCharacterPDF(root, opts) {
           }
         ]
       }
+      )
     ]
   };
 
