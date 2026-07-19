@@ -2165,7 +2165,7 @@ const SHEET_HTML = `
 	    <div style="display:flex;gap:8px;margin-bottom:14px;">
 	      <button class="print-select-all" style="font-size:11px;padding:5px 10px;">Select All</button>
 	      <button class="print-select-none" style="font-size:11px;padding:5px 10px;">Select None</button>
-	      <button class="print-select-core" style="font-size:11px;padding:5px 10px;">Core Only</button>
+	      <button class="print-select-core" style="font-size:11px;padding:5px 10px;">Defaults</button>
 	    </div>
 
 	    <!-- Character -->
