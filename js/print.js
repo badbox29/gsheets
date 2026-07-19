@@ -97,10 +97,24 @@ function generateCharacterPDF(root, opts) {
   
   // === COMBAT STATS ===
   const hp = val(root, 'hp') || '';
-  const ac = val(root, 'ac') || '';
-  const acRear = val(root, 'ac_rear') || '';
-  const acSurprised = val(root, 'ac_surprised') || '';
-  const acNoShield = val(root, 'ac_no_shield') || '';
+  const ac = orDash(val(root, 'ac'));
+  const acRear = orDash(val(root, 'ac_rear'));
+  const acSurprised = orDash(val(root, 'ac_surprised'));
+  const acNoShield = orDash(val(root, 'ac_no_shield'));
+  const acVsMissiles = orDash(val(root, 'ac_vs_missiles'));
+
+  // "Type Worn" on the traditional sheet -- what the character is actually
+  // wearing. Restricted to Armor and Shield entries: helmets, boots and belts
+  // live in the same list but contribute no AC and would crowd a narrow
+  // column. Read from the character record because the armor list is an
+  // array, which val() cannot reach.
+  const armorWorn = (sheet && Array.isArray(sheet.armor))
+    ? sheet.armor
+        .filter(a => a && a.equipped && (a.armorType === 'Armor' || a.armorType === 'Shield'))
+        .map(a => String(a.name || '').trim())
+        .filter(Boolean)
+        .join(', ')
+    : '';
   const thac0 = root.querySelector('.combat-thac0')?.textContent.trim() || '';
   
   // === MOVEMENT ===
@@ -568,38 +582,39 @@ function generateCharacterPDF(root, opts) {
             stack: [
               {
                 table: {
-                  widths: ['45%', '55%'],
+                  widths: ['50%', '50%'],
                   body: [
                     [
-                      { 
-                        stack: [
-                          { text: 'ARMOR', fontSize: 7, bold: true, alignment: 'center' },
-                          { text: '\n\n', fontSize: 20 },
-                          { text: 'CLASS', fontSize: 7, bold: true, alignment: 'center', margin: [0, 15, 0, 0] }
-                        ],
-                        rowSpan: 4
-                      },
-                      { text: 'Surprised AC', fontSize: 6 }
+                      { text: 'ARMOR CLASS', fontSize: 7, bold: true, alignment: 'center', colSpan: 2 },
+                      {}
                     ],
                     [
-                      {},
-                      { text: acSurprised, fontSize: 8 }
+                      { text: ac, fontSize: 18, bold: true, alignment: 'center', colSpan: 2, margin: [0, 2, 0, 2] },
+                      {}
                     ],
                     [
-                      {},
-                      { text: 'Shieldless AC', fontSize: 6 }
+                      { text: 'Rear', fontSize: 6, alignment: 'center' },
+                      { text: 'Surprised', fontSize: 6, alignment: 'center' }
                     ],
                     [
-                      {},
-                      { text: acNoShield, fontSize: 8 }
+                      { text: acRear, fontSize: 8, alignment: 'center' },
+                      { text: acSurprised, fontSize: 8, alignment: 'center' }
                     ],
                     [
-                      { text: '', fontSize: 6 },
-                      { text: 'Rear AC', fontSize: 6 }
+                      { text: 'Shieldless', fontSize: 6, alignment: 'center' },
+                      { text: 'vs Missiles', fontSize: 6, alignment: 'center' }
                     ],
                     [
-                      { text: 'Type Worn', fontSize: 6 },
-                      { text: acRear, fontSize: 8 }
+                      { text: acNoShield, fontSize: 8, alignment: 'center' },
+                      { text: acVsMissiles, fontSize: 8, alignment: 'center' }
+                    ],
+                    [
+                      { text: 'Armor Worn', fontSize: 6, colSpan: 2 },
+                      {}
+                    ],
+                    [
+                      { text: armorWorn || '\u2014', fontSize: 6, colSpan: 2, margin: [0, 1, 0, 1] },
+                      {}
                     ]
                   ]
                 },
