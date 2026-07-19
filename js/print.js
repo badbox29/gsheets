@@ -30,6 +30,14 @@ function generateCharacterPDF(root, opts) {
   const kit = val(root, 'kit') || '';
   const alignment = val(root, 'alignment') || '';
   const xp = val(root, 'xp') || '';
+
+  // The class field is free text, so it can hold an internal flag such as
+  // "hb_dpaladin". getClassDisplayName (tables.js) maps the known ones and
+  // prettifies the rest. Kit is a separate field entirely and prints blank
+  // when the character has no kit.
+  const clazzDisplay = (typeof getClassDisplayName === 'function')
+    ? getClassDisplayName(clazz)
+    : clazz;
   
   // === ABILITY SCORES ===
  const str = val(root, 'str') || '';
@@ -226,7 +234,7 @@ function generateCharacterPDF(root, opts) {
             ],
             [
               { text: characterName, fontSize: 8, border: [true, false, false, true] },
-              { text: kit ? `${clazz}/${kit}` : clazz, fontSize: 8, border: [true, false, false, true] },
+              { text: kit ? `${clazzDisplay}/${kit}` : clazzDisplay, fontSize: 8, border: [true, false, false, true] },
               { text: level, fontSize: 8, border: [true, false, false, true] },
               { text: race, fontSize: 8, border: [true, false, false, true] },
               { text: alignment, fontSize: 8, border: [true, false, false, true] },
@@ -342,7 +350,7 @@ function generateCharacterPDF(root, opts) {
                     // INT Header Row
                     [
                       { text: 'INT', fontSize: 7, bold: true, rowSpan: 2, alignment: 'center', margin: [0, 6, 0, 0] },
-                      { text: '# Lang', fontSize: 5, alignment: 'center' },
+                      { text: "Add'l\nLang", fontSize: 5, alignment: 'center' },
                       { text: 'Bonus\nNWPs', fontSize: 5, alignment: 'center' },
                       { text: 'Learn\nSpell%', fontSize: 5, alignment: 'center' },
                       { text: 'Max #\nSpells', fontSize: 5, alignment: 'center' },
