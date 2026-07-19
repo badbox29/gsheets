@@ -1950,6 +1950,7 @@ function makeCompanionNode(c, onChange){
             '<option value="Animal Companion"'+((c.bond||'')==='Animal Companion'?' selected':'')+'>Animal Companion</option>' +
             '<option value="Follower"'+((c.bond||'')==='Follower'?' selected':'')+'>Follower</option>' +
             '<option value="Mount"'+((c.bond||'')==='Mount'?' selected':'')+'>Mount</option>' +
+            '<option value="Vehicle"'+((c.bond||'')==='Vehicle'?' selected':'')+'>Vehicle</option>' +
           '</select></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Status</label>' +
           '<select class="companion-status" style="width:100%;">' +
@@ -1958,6 +1959,23 @@ function makeCompanionNode(c, onChange){
             '<option value="Deceased"'+((c.status||'')==='Deceased'?' selected':'')+'>Deceased</option>' +
             '<option value="Missing"'+((c.status||'')==='Missing'?' selected':'')+'>Missing</option>' +
           '</select></div>' +
+      '</div>' +
+      // Is Mount is deliberately INDEPENDENT of Bond Type. Bond records what the
+      // creature IS -- familiar, animal companion, follower. Is Mount records
+      // what it DOES. A familiar can be ridden; an animal companion can be
+      // ridden. Forcing that choice through a single-select dropdown is what
+      // made a ridden animal companion unrecordable.
+      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">' +
+        '<label style="font-size:12px;color:var(--text);display:flex;align-items:center;gap:6px;cursor:pointer;margin:0;">' +
+          '<input type="checkbox" class="companion-is-mount" '+(c.isMount?'checked':'')+' style="width:auto;margin:0;">' +
+          'Is Mount &mdash; can be ridden or driven' +
+        '</label>' +
+      '</div>' +
+      '<div class="companion-mount-fields" style="display:'+(c.isMount?'grid':'none')+';grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:8px;">' +
+        '<div><label style="font-size:11px;color:var(--muted);">Movement</label>' +
+          '<input class="companion-movement" placeholder="e.g., 18" value="'+(c.movement||'')+'" style="width:100%;"></div>' +
+        '<div><label style="font-size:11px;color:var(--muted);">Capacity</label>' +
+          '<input class="companion-capacity" placeholder="e.g., 220 lbs" value="'+(c.capacity||'')+'" style="width:100%;"></div>' +
       '</div>' +
       '</div>' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Special Abilities</label>' +
@@ -1996,6 +2014,17 @@ function makeCompanionNode(c, onChange){
     statusSelect.addEventListener('change', ()=>{
       const root = el.closest('.sheet-container');
       if(root) applyArchiveFilter(root, '.companions-list', '.show-archived-companions', '.companion-status');
+    });
+  }
+
+  // Movement and Capacity only apply to something that can be ridden, so they
+  // stay hidden until Is Mount is ticked. Hiding rather than removing means a
+  // creature that stops being a mount keeps its recorded values.
+  const isMountChk = el.querySelector('.companion-is-mount');
+  const mountFields = el.querySelector('.companion-mount-fields');
+  if(isMountChk && mountFields){
+    isMountChk.addEventListener('change', ()=>{
+      mountFields.style.display = isMountChk.checked ? 'grid' : 'none';
     });
   }
   
@@ -2698,6 +2727,12 @@ function collectSheet(root){
       loyalty: el.querySelector('.companion-loyalty').value,
       bond: el.querySelector('.companion-bond').value,
       status: el.querySelector('.companion-status').value,
+      // Mount-ness is independent of bond type -- see makeCompanionNode.
+      // Movement and capacity are collected whether or not isMount is ticked,
+      // so unticking it never destroys recorded values.
+      isMount: !!(el.querySelector('.companion-is-mount') || {}).checked,
+      movement: (el.querySelector('.companion-movement') || {}).value || '',
+      capacity: (el.querySelector('.companion-capacity') || {}).value || '',
       abilities: el.querySelector('.companion-abilities').value,
       notes: el.querySelector('.companion-notes').value
     });
