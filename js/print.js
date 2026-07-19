@@ -1513,12 +1513,37 @@ function generateCharacterPDF(root, opts) {
   // Create PDF document definition
   const docDefinition = {
     pageSize: 'LETTER',
-    pageMargins: [20, 20, 20, 20],
+    // Bottom margin widened from 20 to 32 to make room for the footer.
+    pageMargins: [20, 20, 20, 32],
     info: {
       title: `${characterName} - Character Sheet`,
       author: playerName,
       subject: 'AD&D 2nd Edition Character Sheet'
     },
+
+    // A character sheet that runs to seven pages will get separated, dropped,
+    // and mixed with other players' sheets. Every page identifies itself.
+    footer: (currentPage, pageCount) => ({
+      margin: [20, 4, 20, 0],
+      columns: [
+        {
+          text: [
+            { text: characterName || 'Unnamed', bold: true },
+            { text: `  \u2014  ${clazzDisplay || 'Adventurer'}${level ? ' ' + level : ''}` +
+                    `${race ? ', ' + race : ''}` },
+            playerName ? { text: `  \u2014  ${playerName}`, italics: true } : { text: '' }
+          ],
+          fontSize: 6,
+          color: '#555555'
+        },
+        {
+          text: `Page ${currentPage} of ${pageCount}`,
+          fontSize: 6,
+          color: '#555555',
+          alignment: 'right'
+        }
+      ]
+    }),
     content: [
       // === TOP INFO BAR ===
       {
