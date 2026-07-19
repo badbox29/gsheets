@@ -501,7 +501,7 @@ function generateCharacterPDF(root, opts) {
 
   // === LANGUAGES (optional) ===
   const languageRows = named(sheet && sheet.languages);
-  const showLanguages = !!opts.languages && languageRows.length > 0;
+  const showLanguages = !!opts.languages && hasContent(languageRows, 'languages');
 
   // Mirrors the on-screen header: the three buckets sum to the total. The
   // native tongue carries isGranted in some records, so it is excluded from
@@ -545,7 +545,8 @@ function generateCharacterPDF(root, opts) {
             cell(l.canWrite ? 'X' : '', 6, { alignment: 'center' }),
             cell(l.isNative ? 'Native' : (l.isGranted ? 'Granted' : 'Learned'), 6, { alignment: 'center' }),
             cell(l.languageClass)
-          ])
+          ]),
+          ...blankRows('languages', 6)
         ]
       },
       layout: gridLayout,
@@ -678,7 +679,7 @@ function generateCharacterPDF(root, opts) {
   const conditionRows = (sheet && Array.isArray(sheet.conditions))
     ? sheet.conditions.filter(c => c && String(c.condition || '').trim())
     : [];
-  const showConditions = !!opts.conditions && conditionRows.length > 0;
+  const showConditions = !!opts.conditions && hasContent(conditionRows, 'conditions');
 
   // The stored value is the condition's display name, which is also its key
   // into the effects database.
@@ -708,7 +709,8 @@ function generateCharacterPDF(root, opts) {
             cell(c.duration || '\u2014', 6, { alignment: 'center' }),
             cell(c.hpLoss || '\u2014', 6, { alignment: 'center' }),
             cell(conditionEffect(c.condition))
-          ])
+          ]),
+          ...blankRows('conditions', 4)
         ]
       },
       layout: gridLayout,
@@ -804,7 +806,7 @@ function generateCharacterPDF(root, opts) {
   // only -- a memorization list is a play aid, and thirteen full descriptions
   // would bury it.
   const memorizedRows = named(magic.memorized);
-  const showMemorized = !!opts.memorized && memorizedRows.length > 0;
+  const showMemorized = !!opts.memorized && hasContent(memorizedRows, 'memorized');
 
   // Sorted by spell level, then alphabetically inside each level, which is how
   // a caster reads their own list. Levels that will not parse sort last.
@@ -846,7 +848,8 @@ function generateCharacterPDF(root, opts) {
             cell(s.save),
             cell(s.components, 6, { alignment: 'center' }),
             cell(s.cast ? 'X' : '', 6, { alignment: 'center' })
-          ])
+          ]),
+          ...blankRows('memorized', 9)
         ]
       },
       layout: gridLayout,
@@ -910,13 +913,17 @@ function generateCharacterPDF(root, opts) {
     return row;
   };
 
-  const spellTable = (rows, hasFree) => ({
+  const spellTable = (rows, hasFree, withBlanks) => ({
     table: {
       headerRows: 1,
       widths: hasFree
         ? ['5%', '21%', '16%', '6%', '12%', '17%', '9%', '6%', '8%']
         : ['6%', '23%', '17%', '7%', '13%', '18%', '10%', '6%'],
-      body: [spellHeaderRow(hasFree), ...rows.map(s => spellDataRow(s, hasFree))]
+      body: [
+        spellHeaderRow(hasFree),
+        ...rows.map(s => spellDataRow(s, hasFree)),
+        ...(withBlanks ? blankRows('spellbook', hasFree ? 9 : 8) : [])
+      ]
     },
     layout: gridLayout,
     margin: [0, 0, 0, 5]
@@ -946,8 +953,8 @@ function generateCharacterPDF(root, opts) {
       // their label as the heading so each one is still announced.
       spellbookBlocks.push(
         bookIndex === 0
-          ? printSection('SPELLBOOKS', label, spellTable(rows, hasFree))
-          : printSection(label.text, spellTable(rows, hasFree))
+          ? printSection('SPELLBOOKS', label, spellTable(rows, hasFree, true))
+          : printSection(label.text, spellTable(rows, hasFree, true))
       );
 
       if (spellbookFull) {
