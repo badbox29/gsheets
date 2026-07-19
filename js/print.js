@@ -610,6 +610,88 @@ function generateCharacterPDF(root, opts) {
   // blank page. Further sections OR into this flag as they are added.
   const showPage3 = showLanguages || showThief || showAbilities || showPowers || showConditions;
 
+  // === SPELL SLOTS & ACCESS (optional) ===
+  const magic = (sheet && sheet.magic) || {};
+  const slotArr = Array.isArray(magic.slots) ? magic.slots : [];
+  const usedArr = Array.isArray(magic.used) ? magic.used : [];
+  const spheresList = (sheet && Array.isArray(sheet.selectedSpheres)) ? sheet.selectedSpheres : [];
+  const schoolsList = (sheet && Array.isArray(sheet.selectedSchools)) ? sheet.selectedSchools : [];
+  const accessNotes = String(magic.schools || '').trim();
+  const magicNotes = String(magic.notes || '').trim();
+
+  const hasAnySlots = slotArr.some(s => String(s || '').trim() !== '');
+  const showSpellAccess = !!opts.spellAccess && (
+    hasAnySlots ||
+    spheresList.length > 0 ||
+    schoolsList.length > 0 ||
+    accessNotes !== '' ||
+    magicNotes !== ''
+  );
+
+  const spellAccessBlocks = [];
+
+  if (showSpellAccess) {
+    // All nine levels always print. A caster who cannot reach 7th level yet
+    // still benefits from seeing the ladder they are climbing, and a fixed
+    // grid is what a traditional sheet looks like.
+    const levelIdx = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+    spellAccessBlocks.push({
+      table: {
+        widths: ['16%', ...Array(9).fill('*')],
+        body: [
+          [
+            cell('Spell Level', 6, { bold: true }),
+            ...levelIdx.map(i => cell(String(i + 1), 6, { bold: true, alignment: 'center' }))
+          ],
+          [
+            cell('Slots', 6, { bold: true }),
+            ...levelIdx.map(i => cell(slotArr[i] || '\u2014', 7, { alignment: 'center' }))
+          ],
+          [
+            cell('Cast', 6, { bold: true }),
+            ...levelIdx.map(i => cell(usedArr[i] || '', 7, { alignment: 'center' }))
+          ],
+          [
+            cell('Remaining', 6, { bold: true }),
+            ...levelIdx.map(i => {
+              const s = parseInt(slotArr[i], 10);
+              if (isNaN(s)) return cell('\u2014', 7, { alignment: 'center' });
+              const u = parseInt(usedArr[i], 10) || 0;
+              return cell(String(s - u), 7, { alignment: 'center' });
+            })
+          ]
+        ]
+      },
+      layout: gridLayout,
+      margin: [0, 0, 0, 5]
+    });
+
+    if (spheresList.length) {
+      spellAccessBlocks.push({ text: 'Spheres of Access', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+      spellAccessBlocks.push({ text: spheresList.join(', '), fontSize: 6, margin: [0, 0, 0, 4] });
+    }
+
+    if (schoolsList.length) {
+      spellAccessBlocks.push({ text: 'Schools of Magic', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+      spellAccessBlocks.push({ text: schoolsList.join(', '), fontSize: 6, margin: [0, 0, 0, 4] });
+    }
+
+    if (accessNotes) {
+      spellAccessBlocks.push({ text: 'Access Notes', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+      spellAccessBlocks.push({ text: accessNotes, fontSize: 6, margin: [0, 0, 0, 4] });
+    }
+
+    if (magicNotes) {
+      spellAccessBlocks.push({ text: 'Magic Notes', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+      spellAccessBlocks.push({ text: magicNotes, fontSize: 6, margin: [0, 0, 0, 4] });
+    }
+  }
+
+  // Page 4 carries the magic sections. Same rule as page 3 -- the break is
+  // only emitted if something on the page is actually going to print.
+  const showPage4 = showSpellAccess;
+
   // Create PDF document definition
   const docDefinition = {
     pageSize: 'LETTER',
@@ -1454,10 +1536,19 @@ function generateCharacterPDF(root, opts) {
       // === ACTIVE CONDITIONS (optional) ===
       ...optional(showConditions,
         printSection('ACTIVE CONDITIONS', ...conditionBlocks)
+      ),
+
+      // === PAGE 4: Magic ===
+      ...optional(showPage4,
+        { text: '', fontSize: 1, pageBreak: 'before' }
+      ),
+
+      // === SPELL SLOTS & ACCESS (optional) ===
+      ...optional(showSpellAccess,
+        printSection('SPELL SLOTS & ACCESS', ...spellAccessBlocks)
       )
     ]
   };
-
   // Generate and download PDF
   pdfMake.createPdf(docDefinition).download(`${characterName.replace(/[^a-z0-9]/gi, '_')}_CharSheet.pdf`);
 }
