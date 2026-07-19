@@ -719,6 +719,84 @@
 	  white-space: nowrap;
 	}
 
+	/* Blank lines & extra pages -- collapsed disclosure */
+	.print-extras {
+	  border-top: 1px solid var(--border);
+	  padding-top: 12px;
+	  margin-bottom: 12px;
+	}
+
+	.print-extras-summary {
+	  font-size: 12px;
+	  font-weight: 600;
+	  color: var(--accent-light);
+	  cursor: pointer;
+	  list-style: none;
+	  margin-bottom: 8px;
+	  user-select: none;
+	}
+
+	/* Replace the default disclosure triangle with a chevron that rotates. */
+	.print-extras-summary::-webkit-details-marker { display: none; }
+
+	.print-extras-summary::before {
+	  content: "\25B8";
+	  display: inline-block;
+	  margin-right: 6px;
+	  transition: transform 0.15s ease;
+	}
+
+	.print-extras[open] > .print-extras-summary::before {
+	  transform: rotate(90deg);
+	}
+
+	.print-extras-hint {
+	  font-weight: 400;
+	  color: var(--muted);
+	  margin-left: 6px;
+	}
+
+	.print-extras-note {
+	  grid-column: 1 / -1;
+	  font-size: 10px;
+	  color: var(--muted);
+	  margin: 0 0 4px;
+	}
+
+	/* Three across inside the extras panel, rather than the two used by the
+	   checkbox groups -- these rows are much narrower. */
+	.print-extras .print-group {
+	  grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+	  gap: 5px 14px;
+	}
+
+	.print-blank-row {
+	  display: flex;
+	  align-items: center;
+	  justify-content: space-between;
+	  gap: 6px;
+	  font-size: 12px;
+	  color: var(--text);
+	  margin-bottom: 0;
+	  min-width: 0;
+	}
+
+	.print-blank-row span {
+	  overflow: hidden;
+	  text-overflow: ellipsis;
+	  white-space: nowrap;
+	}
+
+	/* The global input rule sets width:100%, which would stretch these across
+	   the whole cell -- explicit width is the only thing that overrides it. */
+	.print-blank-row input[type=number] {
+	  width: 48px;
+	  flex-shrink: 0;
+	  padding: 3px 6px;
+	  font-size: 12px;
+	  text-align: center;
+	}
+
 	.print-opt-row input[type=checkbox] {
 	  width: auto;
 	  margin: 0;
