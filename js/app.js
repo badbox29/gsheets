@@ -1980,7 +1980,7 @@ function makeCompanionNode(c, onChange){
       '<div style="width:70px;"></div>' + // Space for Remove button
     '</div>' +
     '<div style="display:flex;gap:8px;align-items:stretch;">' +
-      '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
+      '<input class="companion-name" placeholder="e.g., Whiskers" value="'+(c.name||'')+'" style="flex:1;font-weight:bold;">' +
       '<button class="move-to-unbonded" style="padding:8px 10px;font-size:11px;" title="Move to Unbonded Mounts &amp; Vehicles. Nothing is lost -- fields that list does not show are kept.">&rarr; Unbonded</button>' +
       '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
       '<button class="rm">Remove</button>' +
