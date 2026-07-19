@@ -1409,6 +1409,107 @@ function generateCharacterPDF(root, opts) {
   const showPage6 = showDetails || showBackground || showHenchmen ||
     showHirelings || showCompanions || showMounts;
 
+  // === JOURNAL (optional) ===
+  //
+  // All five journal categories are arrays of structured records, not free
+  // text. They are rendered as labelled prose rather than tables because the
+  // content is long-form -- a session log entry can run several paragraphs,
+  // which no column width survives.
+  const notesTab = (sheet && sheet.notesTab) || {};
+  const journalList = key => (Array.isArray(notesTab[key]) ? notesTab[key] : []);
+
+  // One entry: a bold heading line, then each non-empty field labelled beneath.
+  // Blank fields are skipped rather than printing a bare label.
+  const journalEntry = (heading, fields) => {
+    const parts = [{ text: heading || '(untitled)', fontSize: 7, bold: true, margin: [0, 3, 0, 1] }];
+    fields.forEach(([label, value]) => {
+      const v = String(value || '').trim();
+      if (!v) return;
+      parts.push({
+        text: [
+          { text: label ? label + ': ' : '', bold: true },
+          { text: v }
+        ],
+        fontSize: 6,
+        margin: [0, 0, 0, 2]
+      });
+    });
+    return parts;
+  };
+
+  // The section title travels with the first entry. Each subsequent entry is
+  // its own unbreakable block, so the list may break between entries but never
+  // in the middle of one, and the title is never orphaned.
+  const journalSection = (title, entries) => {
+    if (!entries.length) return [];
+    const blocks = [{
+      unbreakable: true,
+      stack: [
+        { text: title, fontSize: 8, bold: true, alignment: 'center', margin: [0, 0, 0, 2] },
+        ...entries[0]
+      ]
+    }];
+    entries.slice(1).forEach(e => blocks.push({ unbreakable: true, stack: e }));
+    return blocks;
+  };
+
+  const sessionLogRows = journalList('sessionLog');
+  const questRows = named(journalList('questJournal'));
+  const npcRows = named(journalList('npcs'));
+  const locationRows = named(journalList('locations'));
+  const charJournalRows = journalList('characterJournal');
+
+  const showSessionLog = !!opts.sessionLog && sessionLogRows.length > 0;
+  const showQuests = !!opts.questJournal && questRows.length > 0;
+  const showNpcs = !!opts.npcs && npcRows.length > 0;
+  const showLocations = !!opts.locations && locationRows.length > 0;
+  const showCharJournal = !!opts.characterJournal && charJournalRows.length > 0;
+
+  const sessionLogBlocks = !showSessionLog ? [] : journalSection('SESSION LOG',
+    sessionLogRows.map(e => journalEntry(
+      e.date || 'Undated session',
+      [['XP', e.xp], ['Events', e.events], ['Loot', e.loot]]
+    ))
+  );
+
+  const questBlocks = !showQuests ? [] : journalSection('QUEST JOURNAL',
+    questRows.map(e => journalEntry(
+      e.status ? `${e.name} \u2014 ${e.status}` : e.name,
+      [['Objective', e.objective], ['Reward', e.reward], ['Notes', e.notes]]
+    ))
+  );
+
+  const npcBlocks = !showNpcs ? [] : journalSection('NPCs',
+    npcRows.map(e => journalEntry(
+      e.type ? `${e.name} \u2014 ${e.type}` : e.name,
+      [['Relationship', e.relationship], ['Notes', e.notes]]
+    ))
+  );
+
+  const locationBlocks = !showLocations ? [] : journalSection('LOCATIONS',
+    locationRows.map(e => journalEntry(
+      e.name,
+      [['Description', e.description], ['Details', e.details]]
+    ))
+  );
+
+  const charJournalBlocks = !showCharJournal ? [] : journalSection('CHARACTER JOURNAL',
+    charJournalRows.map(e => journalEntry(e.title, [['', e.content]]))
+  );
+
+  // === CHARACTER PORTRAIT (optional) ===
+  // pdfMake takes a base64 data URL directly, but supports JPEG and PNG only.
+  // Any other format throws and takes the entire PDF down with it, so the
+  // format is verified rather than trusted -- an unsupported portrait simply
+  // does not print instead of breaking the sheet.
+  const avatarData = String((sheet && sheet.avatar) || '').trim();
+  const portraitUsable = /^data:image\/(png|jpe?g);base64,/i.test(avatarData);
+  const showPortrait = !!opts.portrait && portraitUsable;
+
+  // Page 7 onward carries the journal.
+  const showPage7 = showSessionLog || showQuests || showNpcs ||
+    showLocations || showCharJournal;
+
   // Create PDF document definition
   const docDefinition = {
     pageSize: 'LETTER',
@@ -1463,12 +1564,16 @@ function generateCharacterPDF(root, opts) {
               { text: 'PLAYER CHARACTER RECORD', fontSize: 7, bold: true, alignment: 'center', border: [true, false, true, true] }
             ],
             [
-              { text: '', fontSize: 8, border: [true, false, false, true], colSpan: 3 },
+              // These two cells were labelled but never populated -- the values
+              // live on the details record, not in a top-level field.
+              { text: details.patronDeity || '', fontSize: 8, border: [true, false, false, true], colSpan: 3 },
               {},
               {},
-              { text: '', fontSize: 8, border: [true, false, false, true], colSpan: 2 },
+              { text: details.birthplace || details.homeland || '', fontSize: 8, border: [true, false, false, true], colSpan: 2 },
               {},
-              { text: '', border: [true, false, true, false] }
+              showPortrait
+                ? { image: avatarData, fit: [64, 64], alignment: 'center', border: [true, false, true, false] }
+                : { text: '', border: [true, false, true, false] }
             ]
           ]
         },
@@ -2323,7 +2428,19 @@ function generateCharacterPDF(root, opts) {
       // === MOUNTS (optional) ===
       ...optional(showMounts,
         printSection('MOUNTS', ...mountBlocks)
-      )
+      ),
+
+      // === PAGE 7+: Journal ===
+      ...optional(showPage7,
+        { text: '', fontSize: 1, pageBreak: 'before' }
+      ),
+
+      // These build their own headings so the lists may break between entries.
+      ...optional(showSessionLog, ...sessionLogBlocks),
+      ...optional(showQuests, ...questBlocks),
+      ...optional(showNpcs, ...npcBlocks),
+      ...optional(showLocations, ...locationBlocks),
+      ...optional(showCharJournal, ...charJournalBlocks)
     ]
   };
   // Generate and download PDF
