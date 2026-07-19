@@ -1273,7 +1273,7 @@ function generateCharacterPDF(root, opts) {
 
   const henchmenBlocks = [];
 
-  if (showHenchmen && henchmenRows.length) {
+  if (showHenchmen && hasContent(henchmenRows, 'henchmen')) {
     const body = [[
       cell('Henchman', 6, { bold: true }),
       cell('Race', 6, { bold: true }),
@@ -1312,6 +1312,8 @@ function generateCharacterPDF(root, opts) {
       }
     });
 
+    body.push(...blankRows('henchmen', 11));
+
     henchmenBlocks.push({
       table: {
         headerRows: 1,
@@ -1334,7 +1336,7 @@ function generateCharacterPDF(root, opts) {
   // the loyalty and morale a henchman carries. Ability scores are recorded but
   // rarely filled in, so they drop into the detail row.
   const hirelingRows = named(sheet && sheet.hirelings);
-  const showHirelings = !!opts.hirelings && hirelingRows.length > 0;
+  const showHirelings = !!opts.hirelings && hasContent(hirelingRows, 'hirelings');
 
   const HIRE_ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha', 'per', 'com'];
   const HIRE_EXTRAS = [
@@ -1376,6 +1378,8 @@ function generateCharacterPDF(root, opts) {
       }
     });
 
+    body.push(...blankRows('hirelings', 7));
+
     hirelingBlocks.push({
       table: {
         headerRows: 1,
@@ -1392,7 +1396,7 @@ function generateCharacterPDF(root, opts) {
   // rather than characters, so the columns are hit dice and attacks rather
   // than class and level.
   const companionRows = named(sheet && sheet.companions);
-  const showCompanions = !!opts.companions && companionRows.length > 0;
+  const showCompanions = !!opts.companions && hasContent(companionRows, 'companions');
 
   const COMP_ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha', 'per', 'com'];
   const COMP_EXTRAS = [
@@ -1440,6 +1444,8 @@ function generateCharacterPDF(root, opts) {
       }
     });
 
+    body.push(...blankRows('companions', 10));
+
     companionBlocks.push({
       table: {
         headerRows: 1,
@@ -1456,7 +1462,7 @@ function generateCharacterPDF(root, opts) {
   // capacity, purchase cost -- so the columns lean toward what matters when
   // you are deciding whether to ride out or how much the beast can haul.
   const mountRows = named(sheet && sheet.mounts);
-  const showMounts = !!opts.mounts && mountRows.length > 0;
+  const showMounts = !!opts.mounts && hasContent(mountRows, 'mounts');
 
   const MOUNT_ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha', 'per', 'com'];
   const MOUNT_EXTRAS = [
@@ -1507,10 +1513,12 @@ function generateCharacterPDF(root, opts) {
       }
     });
 
+    body.push(...blankRows('mounts', 11));
+
     mountBlocks.push({
       table: {
         headerRows: 1,
-        widths: ['14%', '12%', '6%', '5%', '4%', '7%', '13%', '7%', '9%', '5%', '18%'],
+        widths: ['14%', '12%', '6%', '5%', '4%', '7%', '13%', '9%', '5%', '18%'],
         body: body
       },
       layout: gridLayout,
