@@ -540,10 +540,75 @@ function generateCharacterPDF(root, opts) {
     }
   }
 
+  // === POWERS & HINDRANCES (optional) ===
+  // Free-text fields. Kit and homebrew-class benefits go in powers; the
+  // matching restrictions go in hindrances. Printed as prose because that is
+  // how they are entered -- there is no structure to tabulate.
+  const powersText = String((sheet && sheet.notesEx && sheet.notesEx.powers) || '').trim();
+  const hindrancesText = String((sheet && sheet.notesEx && sheet.notesEx.hindrances) || '').trim();
+  const showPowers = !!opts.powersHindrances && (powersText !== '' || hindrancesText !== '');
+
+  const powersBlocks = [];
+
+  if (showPowers) {
+    if (powersText) {
+      powersBlocks.push({ text: 'Powers', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+      powersBlocks.push({ text: powersText, fontSize: 6, margin: [0, 0, 0, 4] });
+    }
+    if (hindrancesText) {
+      powersBlocks.push({ text: 'Hindrances', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+      powersBlocks.push({ text: hindrancesText, fontSize: 6, margin: [0, 0, 0, 4] });
+    }
+  }
+
+  // === ACTIVE CONDITIONS (optional) ===
+  // Note the shape: conditions carry a `condition` key, not `name`, so the
+  // named() helper does not apply here.
+  const conditionRows = (sheet && Array.isArray(sheet.conditions))
+    ? sheet.conditions.filter(c => c && String(c.condition || '').trim())
+    : [];
+  const showConditions = !!opts.conditions && conditionRows.length > 0;
+
+  // The stored value is the condition's display name, which is also its key
+  // into the effects database.
+  const conditionEffect = name => {
+    if (typeof CONDITIONS_DB === 'undefined' || !Array.isArray(CONDITIONS_DB)) return '';
+    const hit = CONDITIONS_DB.find(c =>
+      String(c.name || '').trim().toLowerCase() === String(name || '').trim().toLowerCase());
+    return hit ? String(hit.description || '') : '';
+  };
+
+  const conditionBlocks = [];
+
+  if (showConditions) {
+    conditionBlocks.push({
+      table: {
+        headerRows: 1,
+        widths: ['20%', '12%', '10%', '58%'],
+        body: [
+          [
+            cell('Condition', 6, { bold: true }),
+            cell('Duration', 6, { bold: true, alignment: 'center' }),
+            cell('HP Loss', 6, { bold: true, alignment: 'center' }),
+            cell('Effect', 6, { bold: true })
+          ],
+          ...conditionRows.map(c => [
+            cell(c.condition, 6, { bold: true }),
+            cell(c.duration || '\u2014', 6, { alignment: 'center' }),
+            cell(c.hpLoss || '\u2014', 6, { alignment: 'center' }),
+            cell(conditionEffect(c.condition))
+          ])
+        ]
+      },
+      layout: gridLayout,
+      margin: [0, 0, 0, 5]
+    });
+  }
+
   // Page 3 collects the character-detail sections. It opens only if at least
   // one of them is actually printing -- switching them all off produces no
   // blank page. Further sections OR into this flag as they are added.
-  const showPage3 = showLanguages || showThief || showAbilities;
+  const showPage3 = showLanguages || showThief || showAbilities || showPowers || showConditions;
 
   // Create PDF document definition
   const docDefinition = {
@@ -1379,6 +1444,16 @@ function generateCharacterPDF(root, opts) {
       // === CLASS / RACIAL / KIT ABILITIES (optional) ===
       ...optional(showAbilities,
         printSection('SPECIAL ABILITIES', ...abilityBlocks)
+      ),
+
+      // === POWERS & HINDRANCES (optional) ===
+      ...optional(showPowers,
+        printSection('POWERS & HINDRANCES', ...powersBlocks)
+      ),
+
+      // === ACTIVE CONDITIONS (optional) ===
+      ...optional(showConditions,
+        printSection('ACTIVE CONDITIONS', ...conditionBlocks)
       )
     ]
   };
