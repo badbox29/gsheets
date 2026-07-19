@@ -1827,6 +1827,46 @@ function lookupWeaponData(name) {
   return WEAPONS_DATA.find(w => (w["Weapon Name"] || "").trim().toLowerCase() === n) || null;
 }
 
+// === Class Display Names ===
+//
+// The class field is FREE TEXT, so it holds whatever the player typed --
+// including internal flags like "hb_dpaladin" for homebrew classes. That is
+// fine on screen (the player knows what they typed) but it looks wrong on a
+// printed character sheet.
+//
+// Anything not in this map falls through to a generic prettifier, so a class
+// that was never mapped still prints cleanly rather than raw.
+const CLASS_DISPLAY_NAMES = {
+  hb_dpaladin: "Demi-Paladin"
+};
+
+function getClassDisplayName(clazz) {
+  if (!clazz) return "";
+  const raw = String(clazz).trim();
+  if (!raw) return "";
+
+  // Exact match on the map first (case-insensitive).
+  const key = Object.keys(CLASS_DISPLAY_NAMES)
+    .find(k => k.toLowerCase() === raw.toLowerCase());
+  if (key) return CLASS_DISPLAY_NAMES[key];
+
+  // Generic fallback: strip an "hb_" homebrew prefix, turn underscores and
+  // hyphens into spaces, and title-case each word. Slashes are preserved so
+  // multi-class strings survive: "fighter/thief" -> "Fighter/Thief".
+  return raw
+    .replace(/^hb[_-]/i, "")
+    .replace(/[_]+/g, " ")
+    .split("/")
+    .map(part =>
+      part
+        .trim()
+        .split(/\s+/)
+        .map(w => w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : w)
+        .join(" ")
+    )
+    .join("/");
+}
+
 // === Related Weapons (AD&D 2E, PHB Ch.5 "Related Weapons Bonus") ===
 //
 // PHB: "When a character uses a weapon that is similar to a weapon he is
