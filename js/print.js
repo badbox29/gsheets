@@ -149,6 +149,30 @@ function generateCharacterPDF(root, opts) {
   const cell = (t, size, opt) =>
     Object.assign({ text: (t === null || t === undefined) ? '' : String(t), fontSize: size || 6 }, opt || {});
 
+  // === BLANK ROWS ===
+  // A printed sheet is used away from the app, so every list needs room to
+  // write in what gets picked up during a session. Counts come from the print
+  // modal; zero disables. The rows are taller than data rows to leave room
+  // for handwriting.
+  const blanks = (opts && opts.blanks) || {};
+  const blankCount = key => Math.max(0, parseInt(blanks[key], 10) || 0);
+
+  const blankRows = (key, cols) => {
+    const n = blankCount(key);
+    const out = [];
+    for (let i = 0; i < n; i++) {
+      const row = [];
+      for (let c = 0; c < cols; c++) row.push({ text: '', fontSize: 6, margin: [0, 4, 0, 4] });
+      out.push(row);
+    }
+    return out;
+  };
+
+  // A section prints if it has data OR if blank rows were asked for -- a
+  // player who wants somewhere to record the magic items they find should get
+  // the section even though they own none yet.
+  const hasContent = (rows, key) => rows.length > 0 || blankCount(key) > 0;
+
   // === BASIC INFO ===
   const characterName = val(root, 'name') || '';
   const playerName = val(root, 'player') || '';
@@ -407,11 +431,12 @@ function generateCharacterPDF(root, opts) {
   // val(), so they read from `sheet`.
   const armorRows = named(sheet && sheet.armor);
   const ammoRows = named(sheet && sheet.ammunition);
-  const showArmorAmmo = !!opts.armorAmmo && (armorRows.length > 0 || ammoRows.length > 0);
+  const showArmorAmmo = !!opts.armorAmmo &&
+    (hasContent(armorRows, 'armor') || hasContent(ammoRows, 'ammo'));
 
   const armorAmmoBlocks = [];
 
-  if (showArmorAmmo && armorRows.length) {
+  if (showArmorAmmo && hasContent(armorRows, 'armor')) {
     armorAmmoBlocks.push({
       table: {
         headerRows: 1,
@@ -434,7 +459,8 @@ function generateCharacterPDF(root, opts) {
             cell(a.equipped ? 'Yes' : '', 6, { alignment: 'center' }),
             cell(a.weight, 6, { alignment: 'center' }),
             cell(a.notes)
-          ])
+          ]),
+          ...blankRows('armor', 7)
         ]
       },
       layout: gridLayout,
@@ -442,7 +468,7 @@ function generateCharacterPDF(root, opts) {
     });
   }
 
-  if (showArmorAmmo && ammoRows.length) {
+  if (showArmorAmmo && hasContent(ammoRows, 'ammo')) {
     armorAmmoBlocks.push({
       table: {
         headerRows: 1,
@@ -464,7 +490,8 @@ function generateCharacterPDF(root, opts) {
               cell(a.weightPerUnit, 6, { alignment: 'center' }),
               cell(total ? total.toFixed(1) : '', 6, { alignment: 'center' })
             ];
-          })
+          }),
+          ...blankRows('ammo', 4)
         ]
       },
       layout: gridLayout,
@@ -958,7 +985,7 @@ function generateCharacterPDF(root, opts) {
   const hasCoins = ['cp', 'sp', 'ep', 'gp', 'pp'].some(k => (parseFloat(coins[k]) || 0) > 0);
 
   const showEquipment = !!opts.equipment &&
-    (itemRows.length > 0 || valuableRows.length > 0 || hasCoins);
+    (hasContent(itemRows, 'equipment') || hasContent(valuableRows, 'valuables') || hasCoins);
 
   // Qty x unit weight, so the sheet shows what the stack actually weighs.
   const stackWeight = r => {
@@ -971,7 +998,7 @@ function generateCharacterPDF(root, opts) {
   const equipmentBlocks = [];
 
   if (showEquipment) {
-    if (itemRows.length) {
+    if (hasContent(itemRows, 'equipment')) {
       equipmentBlocks.push({ text: 'Equipment', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
       equipmentBlocks.push({
         table: {
@@ -991,7 +1018,8 @@ function generateCharacterPDF(root, opts) {
               cell(r.weight, 6, { alignment: 'center' }),
               cell(stackWeight(r), 6, { alignment: 'center' }),
               cell(r.notes)
-            ])
+            ]),
+            ...blankRows('equipment', 5)
           ]
         },
         layout: gridLayout,
@@ -999,7 +1027,7 @@ function generateCharacterPDF(root, opts) {
       });
     }
 
-    if (valuableRows.length) {
+    if (hasContent(valuableRows, 'valuables')) {
       equipmentBlocks.push({ text: 'Valuables', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
       equipmentBlocks.push({
         table: {
@@ -1021,7 +1049,8 @@ function generateCharacterPDF(root, opts) {
               cell(r.weight, 6, { alignment: 'center' }),
               cell(stackWeight(r), 6, { alignment: 'center' }),
               cell(r.notes)
-            ])
+            ]),
+            ...blankRows('valuables', 6)
           ]
         },
         layout: gridLayout,
@@ -1083,7 +1112,7 @@ function generateCharacterPDF(root, opts) {
   // A separate checkbox from equipment on purpose: a player may well want the
   // gear list on a printout while keeping the magic inventory off it.
   const magicItemRows = named(sheet && sheet.magicItems);
-  const showMagicItems = !!opts.magicItems && magicItemRows.length > 0;
+  const showMagicItems = !!opts.magicItems && hasContent(magicItemRows, 'magicItems');
 
   const magicItemBlocks = [];
 
@@ -1100,7 +1129,8 @@ function generateCharacterPDF(root, opts) {
           ...magicItemRows.map(m => [
             cell(m.name, 6, { bold: true }),
             cell(String(m.notes || '').trim())
-          ])
+          ]),
+          ...blankRows('magicItems', 2)
         ]
       },
       layout: gridLayout,
