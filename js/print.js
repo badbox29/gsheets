@@ -48,6 +48,13 @@ function generateCharacterPDF(root, opts) {
     ]
   });
 
+  // Forces a section to begin a new page. Used to pin the fixed page layout in
+  // place rather than letting sections land wherever they happen to fall --
+  // page 1 is always the core stats page, page 2 is always weapons and
+  // proficiencies, and so on. Wrapping rather than mutating keeps printSection
+  // free of page-layout concerns.
+  const pageBreakBefore = node => Object.assign({}, node, { pageBreak: 'before' });
+
   // === BASIC INFO ===
   const characterName = val(root, 'name') || '';
   const playerName = val(root, 'player') || '';
@@ -963,8 +970,8 @@ function generateCharacterPDF(root, opts) {
       
       ),
 
-      // === WEAPON COMBAT ===
-      printSection('WEAPON COMBAT',
+      // === PAGE 2: Weapons & Proficiencies ===
+      pageBreakBefore(printSection('WEAPON COMBAT',
       {
         table: {
           widths: ['25%', '6%', '6%', '8%', '8%', '12%', '17%', '18%'],
@@ -1012,7 +1019,7 @@ function generateCharacterPDF(root, opts) {
         margin: [0, 0, 0, 5]
       },
       
-      ),
+      )),
 
       // === PROFICIENCIES ===
       printSection('PROFICIENCIES',
