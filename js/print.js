@@ -156,22 +156,74 @@ function generateCharacterPDF(root, opts) {
   const save5Data = parseSave(5);
   
   // === COLLECT WEAPONS ===
+  // Weapon rows.
+  //
+  // The previous version queried .attacks, .size, .to-hit and .range, none of
+  // which makeWeaponNode ever renders -- so four of the seven columns were
+  // reading nothing at all. The real classes are .title, .speed, .damage-sm,
+  // .damage-l, .magic-bonus, .damage-type and .weapon-str-bonus.
+  //
+  // Where the character record has no value, core_wp.json is consulted through
+  // lookupWeaponData() so a weapon the player typed by name still prints its
+  // book Size, Speed Factor and damage dice.
   const weapons = [];
   const weaponNodes = root.querySelectorAll('.weapons-list .item');
+
+  // Strength row for this character, resolved once. Exceptional STR is handled
+  // inside getStrengthData, which only grants the 18/xx row to warriors.
+  const strDataForWeapons = (typeof getStrengthData === 'function')
+    ? getStrengthData(str, strEx, clazz)
+    : null;
+
+  // Attacks per round is a character-level field on this sheet, not per weapon.
+  const attacksPerRound =
+    (root.querySelector('.combat-attacks-per-round')?.value || '').trim();
+
+  const signed = n => (n > 0 ? '+' + n : String(n));
+
   weaponNodes.forEach(node => {
-    const name = node.querySelector('.title')?.value || '';
-    if (name.trim()) {
-      weapons.push({
-        name: name,
-        attacks: node.querySelector('.attacks')?.value || '',
-        size: node.querySelector('.size')?.value || '',
-        type: node.querySelector('.type')?.value || '',
-        speed: node.querySelector('.speed')?.value || '',
-        hitDmg: (node.querySelector('.to-hit')?.value || '') + '/' + (node.querySelector('.damage')?.value || ''),
-        damage: node.querySelector('.damage')?.value || '',
-        range: node.querySelector('.range')?.value || ''
-      });
-    }
+    const name = (node.querySelector('.title')?.value || '').trim();
+    if (!name) return;
+
+    const ref = (typeof lookupWeaponData === 'function') ? lookupWeaponData(name) : null;
+    const magic = parseInt(node.querySelector('.magic-bonus')?.value, 10) || 0;
+
+    // Speed: the row's own value wins, then the book. A magical bonus reduces
+    // the speed factor by 1 per plus (PHB Table 56), floored at 0.
+    const rawSpeed = (node.querySelector('.speed')?.value || '').trim()
+      || (ref ? ref['Speed Factor'] : '') || '';
+    const effSpeed = (typeof getEffectiveWeaponSpeed === 'function')
+      ? getEffectiveWeaponSpeed(rawSpeed, magic)
+      : null;
+
+    // Damage dice, S-M and L.
+    const dmgSM = (node.querySelector('.damage-sm')?.value || '').trim()
+      || (ref ? ref['Damage (S-M)'] : '') || '';
+    const dmgL = (node.querySelector('.damage-l')?.value || '').trim()
+      || (ref ? ref['Damage (L)'] : '') || '';
+    const damage = (dmgSM && dmgL && dmgSM !== dmgL)
+      ? `${dmgSM} / ${dmgL}`
+      : (dmgSM || dmgL || '');
+
+    // Hit and damage adjustment: Strength (per this weapon's STR mode) plus
+    // the magical bonus.
+    const strMode = node.querySelector('.weapon-str-bonus')?.value || 'none';
+    const adj = (typeof getWeaponStrAdjustments === 'function')
+      ? getWeaponStrAdjustments(strDataForWeapons, strMode, str, strEx, clazz)
+      : { toHit: 0, damage: 0 };
+    const hitAdj = (adj.toHit || 0) + magic;
+    const dmgAdj = (adj.damage || 0) + magic;
+
+    weapons.push({
+      name: name,
+      attacks: attacksPerRound || '\u2014',
+      size: (ref && ref['Size']) ? ref['Size'] : '\u2014',
+      type: (node.querySelector('.damage-type')?.value || '').trim() || '\u2014',
+      speed: (effSpeed === null) ? '\u2014' : String(effSpeed),
+      hitDmg: `${signed(hitAdj)} / ${signed(dmgAdj)}`,
+      damage: damage || '\u2014',
+      range: (node.querySelector('.notes')?.value || '').trim()
+    });
   });
   
   // === COLLECT PROFICIENCIES (weapon + non-weapon) ===
