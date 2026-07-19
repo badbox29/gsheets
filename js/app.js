@@ -1,5 +1,5 @@
 // Adding temp variable for sync testing
-const APP_JS_BUILD = 'test-1';
+const APP_JS_BUILD = 'prod-1';
 
 // Shortcuts & constants
 const $ = id => document.getElementById(id);
