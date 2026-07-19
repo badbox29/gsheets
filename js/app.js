@@ -4959,6 +4959,100 @@ function closeKvSettingsModal(root) {
   qs(root, '.kv-modal-overlay').style.display = 'none';
 }
 
+// ===== Print options modal =====
+// These are BROWSER settings, not character data -- they live in localStorage
+// and are deliberately kept out of the character record and the KV payload,
+// consistent with how optional rules and KV config are handled.
+
+const PRINT_OPTS_KEY = 'gsheets_print_options';
+
+// Sections a traditional AD&D 2e record sheet surfaces are ON by default.
+// Empty sections collapse at print time, so defaulting something ON costs
+// nothing for a character who has no data for it.
+const PRINT_OPTION_DEFAULTS = {
+  // Character
+  abilities:        true,
+  powersHindrances: true,
+  thiefSkills:      true,
+  languages:        true,
+  conditions:       false,
+  portrait:         false,
+  // Magic
+  spellAccess:      true,
+  memorized:        true,
+  spellbooks:       true,
+  // Gear
+  equipment:        true,
+  magicItems:       true,
+  armorAmmo:        true,
+  // Background & followers
+  details:          true,
+  background:       false,
+  henchmen:         true,
+  hirelings:        true,
+  companions:       true,
+  mounts:           true,
+  // Journal
+  sessionLog:       false,
+  questJournal:     false,
+  npcs:             false,
+  locations:        false,
+  characterJournal: false,
+  // Sub-option (not a checkbox)
+  spellbookDetail:  'summary'
+};
+
+// Saved prefs are layered OVER the defaults, so a new option added to the
+// registry later still gets its default for users with an existing saved set.
+function getPrintOptions() {
+  let saved = {};
+  try {
+    saved = JSON.parse(localStorage.getItem(PRINT_OPTS_KEY)) || {};
+  } catch (e) {
+    saved = {};
+  }
+  return Object.assign({}, PRINT_OPTION_DEFAULTS, saved);
+}
+
+function savePrintOptions(opts) {
+  try {
+    localStorage.setItem(PRINT_OPTS_KEY, JSON.stringify(opts));
+  } catch (e) {
+    console.warn('Could not save print options:', e);
+  }
+}
+
+function applyPrintOptionsToModal(root, opts) {
+  qsa(root, '.print-opt').forEach(cb => {
+    cb.checked = !!opts[cb.dataset.opt];
+  });
+  const sel = qs(root, '.print-spellbook-detail');
+  if (sel) sel.value = opts.spellbookDetail || 'summary';
+}
+
+function readPrintOptionsFromModal(root) {
+  const opts = {};
+  qsa(root, '.print-opt').forEach(cb => {
+    opts[cb.dataset.opt] = cb.checked;
+  });
+  const sel = qs(root, '.print-spellbook-detail');
+  opts.spellbookDetail = sel ? sel.value : 'summary';
+  return opts;
+}
+
+function setAllPrintOptions(root, checked) {
+  qsa(root, '.print-opt').forEach(cb => { cb.checked = checked; });
+}
+
+function openPrintModal(root) {
+  applyPrintOptionsToModal(root, getPrintOptions());
+  qs(root, '.print-modal-overlay').style.display = 'flex';
+}
+
+function closePrintModal(root) {
+  qs(root, '.print-modal-overlay').style.display = 'none';
+}
+
 function updateKvSyncStatus(root, cfg) {
   if (!cfg) cfg = getKvConfig();
   const statusEl    = qs(root, '.kv-sync-status');
