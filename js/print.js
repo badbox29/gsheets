@@ -1039,6 +1039,90 @@ function generateCharacterPDF(root, opts) {
   // Page 5 carries gear.
   const showPage5 = showEquipment || showMagicItems;
 
+  // === CHARACTER DETAILS (optional) ===
+  const details = (sheet && sheet.details) || {};
+
+  // Printed in this order, and only when filled in. Most characters leave the
+  // majority of these blank, so a fixed grid of empty labels would waste most
+  // of a page. Note "birthorder" is lower-case r in the record.
+  const DETAIL_FIELDS = [
+    ['Patron Deity', 'patronDeity'],
+    ['Birthplace', 'birthplace'],
+    ['Homeland', 'homeland'],
+    ['Homeworld', 'homeworld'],
+    ['Birth Order', 'birthorder'],
+    ['Height', 'height'],
+    ['Weight', 'weight'],
+    ['Hair', 'hair'],
+    ['Eyes', 'eyes'],
+    ['Father', 'father'],
+    ['Mother', 'mother'],
+    ['Siblings', 'siblings'],
+    ['Family Standing', 'familyStanding'],
+    ['Family Occupation', 'familyOccupation'],
+    ['Family Wealth', 'familyWealth'],
+    ['Inheritance', 'inheritance'],
+    ['Family Property', 'familyProperty'],
+    ['Extended Family', 'extendedFamily'],
+    ['Family History', 'familyHistory'],
+    ['Appearance', 'appearanceNotes'],
+    ['Alliances', 'alliances']
+  ];
+
+  const detailPairs = DETAIL_FIELDS
+    .map(([label, key]) => [label, String(details[key] || '').trim()])
+    .filter(([, value]) => value !== '');
+
+  const showDetails = !!opts.details && detailPairs.length > 0;
+
+  const detailBlocks = [];
+
+  if (showDetails) {
+    // Two label/value pairs per row, so short values do not each consume a
+    // full-width line. An odd count leaves the last row half empty.
+    const detailRows = [];
+    for (let i = 0; i < detailPairs.length; i += 2) {
+      const left = detailPairs[i];
+      const right = detailPairs[i + 1];
+      detailRows.push([
+        cell(left[0], 6, { bold: true }),
+        cell(left[1]),
+        cell(right ? right[0] : '', 6, { bold: true }),
+        cell(right ? right[1] : '')
+      ]);
+    }
+
+    detailBlocks.push({
+      table: {
+        widths: ['18%', '32%', '18%', '32%'],
+        body: detailRows
+      },
+      layout: gridLayout,
+      margin: [0, 0, 0, 5]
+    });
+  }
+
+  // === BACKGROUND / HISTORY (optional) ===
+  // Off by default in the modal: it is prose the player wrote for themselves,
+  // not something anyone reads mid-session. Ticked on, it prints verbatim
+  // including line breaks, since the field is a textarea.
+  const backgroundText = String(details.backgroundHistory || '').trim();
+  const showBackground = !!opts.background && backgroundText !== '';
+
+  const backgroundBlocks = [];
+
+  if (showBackground) {
+    backgroundBlocks.push({
+      text: backgroundText,
+      fontSize: 7,
+      lineHeight: 1.15,
+      margin: [0, 0, 0, 5]
+    });
+  }
+
+  // Page 6 carries background and followers.
+  const showPage6 = showDetails || showBackground;
+
   // Create PDF document definition
   const docDefinition = {
     pageSize: 'LETTER',
@@ -1918,6 +2002,21 @@ function generateCharacterPDF(root, opts) {
       // === MAGIC ITEMS (optional) ===
       ...optional(showMagicItems,
         printSection('MAGIC ITEMS', ...magicItemBlocks)
+      ),
+
+      // === PAGE 6: Background & Followers ===
+      ...optional(showPage6,
+        { text: '', fontSize: 1, pageBreak: 'before' }
+      ),
+
+      // === CHARACTER DETAILS (optional) ===
+      ...optional(showDetails,
+        printSection('CHARACTER DETAILS', ...detailBlocks)
+      ),
+
+      // === BACKGROUND / HISTORY (optional) ===
+      ...optional(showBackground,
+        printSection('BACKGROUND & HISTORY', ...backgroundBlocks)
       )
     ]
   };
