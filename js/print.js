@@ -1652,8 +1652,12 @@ function generateCharacterPDF(root, opts) {
   const extraMemorizationPages = blankCount('extraMemorizationPages');
   const extraBlankPages = blankCount('extraBlankPages');
 
-  // Usable height of a Letter page after the top and bottom page margins.
-  const PAGE_CONTENT_HEIGHT = 792 - 20 - 32;
+  // Usable height of a Letter page. The 32pt bottom margin is where the footer
+  // is DRAWN, not space reserved above it, so a further allowance is subtracted
+  // to keep the last row clear of it. The remaining slack is deliberate: a
+  // little white space at the foot of a blank page is much better than one row
+  // spilling onto a page of its own.
+  const PAGE_CONTENT_HEIGHT = 792 - 20 - 32 - 24;
 
   // Height of one blank row: its text line box, plus gridLayout's 1pt cell
   // padding top and bottom, plus the vertical margin set on the cell.
@@ -1661,7 +1665,7 @@ function generateCharacterPDF(root, opts) {
   // Blank cells carry a single space rather than an empty string on purpose --
   // pdfMake collapses the line box of an empty string, so a row built from ''
   // is shorter than its font size implies and the page underfills.
-  const blankRowHeight = (vMargin, fontSize) => (fontSize * 1.25) + 2 + (vMargin * 2);
+  const blankRowHeight = (vMargin, fontSize) => (fontSize * 1.6) + 2 + (vMargin * 2);
 
   const rowsToFillPage = (usedByHeadings, vMargin, fontSize) =>
     Math.max(1, Math.floor((PAGE_CONTENT_HEIGHT - usedByHeadings) / blankRowHeight(vMargin, fontSize)));
