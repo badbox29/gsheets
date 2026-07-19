@@ -388,6 +388,65 @@ function generateCharacterPDF(root, opts) {
     });
   }
 
+  // === LANGUAGES (optional) ===
+  const languageRows = named(sheet && sheet.languages);
+  const showLanguages = !!opts.languages && languageRows.length > 0;
+
+  // Mirrors the on-screen header: the three buckets sum to the total. The
+  // native tongue carries isGranted in some records, so it is excluded from
+  // the granted count to avoid being reported twice.
+  const langNative = languageRows.filter(l => l.isNative).length;
+  const langGranted = languageRows.filter(l => l.isGranted && !l.isNative).length;
+  const langPurchased = languageRows.length - langNative - langGranted;
+
+  const languageBlocks = [];
+
+  if (showLanguages) {
+    languageBlocks.push({
+      text: `Languages Known: ${languageRows.length} ` +
+            `(${langNative} native, ${langGranted} granted, ${langPurchased} purchased). ` +
+            `The native tongue is free and does not count against the Intelligence limit.`,
+      fontSize: 6,
+      italics: true,
+      margin: [0, 0, 0, 3]
+    });
+
+    languageBlocks.push({
+      table: {
+        headerRows: 1,
+        widths: ['26%', '10%', '10%', '10%', '14%', '30%'],
+        body: [
+          [
+            cell('Language', 6, { bold: true }),
+            cell('Speak', 6, { bold: true, alignment: 'center' }),
+            cell('Read', 6, { bold: true, alignment: 'center' }),
+            cell('Write', 6, { bold: true, alignment: 'center' }),
+            cell('Source', 6, { bold: true, alignment: 'center' }),
+            cell('Language Group', 6, { bold: true })
+          ],
+          ...languageRows.map(l => [
+            cell(l.name),
+            // canSpeak was added after some records were saved. A missing
+            // value means the language predates the flag, and every language
+            // on the list could be spoken back then -- so absent reads as yes.
+            cell(l.canSpeak !== false ? 'X' : '', 6, { alignment: 'center' }),
+            cell(l.canRead ? 'X' : '', 6, { alignment: 'center' }),
+            cell(l.canWrite ? 'X' : '', 6, { alignment: 'center' }),
+            cell(l.isNative ? 'Native' : (l.isGranted ? 'Granted' : 'Learned'), 6, { alignment: 'center' }),
+            cell(l.languageClass)
+          ])
+        ]
+      },
+      layout: gridLayout,
+      margin: [0, 0, 0, 5]
+    });
+  }
+
+  // Page 3 collects the character-detail sections. It opens only if at least
+  // one of them is actually printing -- switching them all off produces no
+  // blank page. Further sections OR into this flag as they are added.
+  const showPage3 = showLanguages;
+
   // Create PDF document definition
   const docDefinition = {
     pageSize: 'LETTER',
@@ -1202,6 +1261,16 @@ function generateCharacterPDF(root, opts) {
       // === ARMOR & AMMUNITION (optional) ===
       ...optional(showArmorAmmo,
         printSection('ARMOR & AMMUNITION', ...armorAmmoBlocks)
+      ),
+
+      // === PAGE 3: Character Detail ===
+      ...optional(showPage3,
+        { text: '', fontSize: 1, pageBreak: 'before' }
+      ),
+
+      // === LANGUAGES (optional) ===
+      ...optional(showLanguages,
+        printSection('LANGUAGES', ...languageBlocks)
       )
     ]
   };
