@@ -2224,12 +2224,51 @@ const SHEET_HTML = `
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="characterJournal"><span>Character Journal</span></label>
 	    </div>
 
+	    <!-- Blank lines & extra pages -- collapsed by default so the modal still
+	         fits without scrolling. Native <details> handles the toggle. -->
+	    <details class="print-extras">
+	      <summary class="print-extras-summary">Blank Lines &amp; Extra Pages<span class="print-extras-hint">&mdash; for playing from paper</span></summary>
+
+	      <div class="print-group" style="margin-bottom:10px;">
+	        <p class="print-extras-note">Blank rows added to the end of each list. Set any to 0 to disable.</p>
+	        <label class="print-blank-row"><span>Weapons</span><input type="number" class="print-blank" data-blank="weapons" min="0" max="50"></label>
+	        <label class="print-blank-row"><span>Equipment</span><input type="number" class="print-blank" data-blank="equipment" min="0" max="50"></label>
+	        <label class="print-blank-row"><span>Valuables</span><input type="number" class="print-blank" data-blank="valuables" min="0" max="50"></label>
+	        <label class="print-blank-row"><span>Magic Items</span><input type="number" class="print-blank" data-blank="magicItems" min="0" max="50"></label>
+	        <label class="print-blank-row"><span>Armor</span><input type="number" class="print-blank" data-blank="armor" min="0" max="50"></label>
+	        <label class="print-blank-row"><span>Ammunition</span><input type="number" class="print-blank" data-blank="ammo" min="0" max="50"></label>
+	        <label class="print-blank-row"><span>Weapon Profs</span><input type="number" class="print-blank" data-blank="weaponProfs" min="0" max="50"></label>
+	        <label class="print-blank-row"><span>Nonweapon Profs</span><input type="number" class="print-blank" data-blank="nwps" min="0" max="50"></label>
+	        <label class="print-blank-row"><span>Languages</span><input type="number" class="print-blank" data-blank="languages" min="0" max="50"></label>
+	        <label class="print-blank-row"><span>Memorized Spells</span><input type="number" class="print-blank" data-blank="memorized" min="0" max="50"></label>
+	        <label class="print-blank-row"><span>Spellbook</span><input type="number" class="print-blank" data-blank="spellbook" min="0" max="50"></label>
+	        <label class="print-blank-row"><span>Conditions</span><input type="number" class="print-blank" data-blank="conditions" min="0" max="50"></label>
+	        <label class="print-blank-row"><span>Henchmen</span><input type="number" class="print-blank" data-blank="henchmen" min="0" max="50"></label>
+	        <label class="print-blank-row"><span>Hirelings</span><input type="number" class="print-blank" data-blank="hirelings" min="0" max="50"></label>
+	        <label class="print-blank-row"><span>Companions</span><input type="number" class="print-blank" data-blank="companions" min="0" max="50"></label>
+	        <label class="print-blank-row"><span>Mounts</span><input type="number" class="print-blank" data-blank="mounts" min="0" max="50"></label>
+	      </div>
+
+	      <div class="print-group" style="margin-bottom:10px;">
+	        <p class="print-extras-note">Extra pages appended to the end of the sheet.</p>
+	        <label class="print-blank-row"><span>Extra Spellbook Pages</span><input type="number" class="print-blank" data-blank="extraSpellbookPages" min="0" max="20"></label>
+	        <label class="print-blank-row"><span>Memorization Worksheets</span><input type="number" class="print-blank" data-blank="extraMemorizationPages" min="0" max="20"></label>
+	        <label class="print-blank-row"><span>Blank Ruled Pages</span><input type="number" class="print-blank" data-blank="extraBlankPages" min="0" max="20"></label>
+	        <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="changesPage"><span>&quot;Changes to Enter&quot; Page</span></label>
+	        <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="printDate"><span>Printed-On Date in Footer</span></label>
+	        <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="tallyBoxes"><span>Tally Boxes for Consumables</span></label>
+	      </div>
+	    </details>
+
 	    <p style="font-size:10px;color:var(--muted);margin:0 0 14px;">Your selections are remembered in this browser and are not stored with the character.</p>
 
 	    <hr style="border:none;border-top:1px solid var(--border);margin:0 0 16px;">
-	    <div style="display:flex;justify-content:flex-end;gap:8px;">
-	      <button class="print-modal-close" style="padding:8px 20px;">Cancel</button>
-	      <button class="print-modal-generate" style="padding:8px 20px;">Generate PDF</button>
+	    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+	      <span class="print-page-estimate" style="font-size:11px;color:var(--muted);"></span>
+	      <div style="display:flex;gap:8px;">
+	        <button class="print-modal-close" style="padding:8px 20px;">Cancel</button>
+	        <button class="print-modal-generate" style="padding:8px 20px;">Generate PDF</button>
+	      </div>
 	    </div>
 	  </div>
 	</div>
