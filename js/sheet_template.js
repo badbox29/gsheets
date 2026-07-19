@@ -2158,7 +2158,7 @@ const SHEET_HTML = `
 
 	<!-- Print Options Modal -->
 	<div class="print-modal-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:10000;justify-content:center;align-items:center;">
-	  <div style="background:var(--panel);border-radius:8px;max-width:560px;width:92%;max-height:85vh;overflow-y:auto;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+	  <div style="background:var(--panel);border-radius:8px;max-width:660px;width:94%;max-height:85vh;overflow-y:auto;padding:20px 24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
 	    <h2 style="margin:0 0 4px 0;font-size:16px;">🖨 Print Character Sheet</h2>
 	    <p style="font-size:12px;color:var(--muted);margin:0 0 12px;">Core pages (ability scores, saving throws, combat, weapons and proficiencies) always print. Choose which optional sections to include below. Empty sections are skipped automatically.</p>
 
@@ -2176,13 +2176,13 @@ const SHEET_HTML = `
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="thiefSkills"><span>Thief Skills</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="languages"><span>Languages</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="conditions"><span>Active Conditions</span></label>
-	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="portrait"><span>Character Portrait on page 1</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="portrait"> <span>Character Portrait</span></label>
 	    </div>
 
 	    <!-- Magic -->
 	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Magic</label>
 	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:4px;margin-bottom:12px;">
-	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="spellAccess"><span>Spell Slots &amp; Sphere / School Access</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="spellAccess"><span>Spell Slots &amp; Access</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="memorized"><span>Memorized Spells</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="spellbooks"><span>Spellbook(s)</span></label>
 	      <div style="display:flex;align-items:center;gap:8px;margin:6px 0 0 24px;">
@@ -2198,15 +2198,15 @@ const SHEET_HTML = `
 	    <!-- Gear -->
 	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Gear</label>
 	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:4px;margin-bottom:12px;">
-	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="equipment"><span>Equipment, Valuables &amp; Coins</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="equipment"><span>Equipment &amp; Valuables</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="magicItems"><span>Magic Items</span></label>
-	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="armorAmmo"><span>Armor &amp; Ammunition detail</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="armorAmmo"><span>Armor &amp; Ammunition</span></label>
 	    </div>
 
 	    <!-- Background -->
 	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Background &amp; Followers</label>
 	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:4px;margin-bottom:12px;">
-	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="details"><span>Character Details (deity, family, appearance)</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="details"><span>Character Details</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="background"><span>Background / History</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="henchmen"><span>Henchmen</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="hirelings"><span>Hirelings</span></label>
