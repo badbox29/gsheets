@@ -687,12 +687,36 @@
 	  gap: 8px;
 	  font-size: 12px;
 	  color: var(--text);
-	  margin-bottom: 4px;
+	  margin-bottom: 0;
 	  cursor: pointer;
+	  min-width: 0;
 	}
 
-	.print-opt-row:last-child {
-	  margin-bottom: 0;
+	/* Two columns per group, so a six-item group is three rows tall instead of
+	   six. Below 520px the grid collapses back to a single column on its own,
+	   which is what we want on a phone. */
+	.print-group {
+	  display: grid;
+	  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	  gap: 4px 16px;
+	  align-items: start;
+	}
+
+	/* The spellbook detail control and its helper text sit inside the Magic
+	   group but are not options -- they span the full width beneath both
+	   columns rather than being treated as grid items. */
+	.print-group > div,
+	.print-group > p {
+	  grid-column: 1 / -1;
+	}
+
+	/* Long labels truncate rather than wrapping, which would make one row
+	   taller than its neighbour and break the grid's alignment. The full text
+	   is still available on hover. */
+	.print-opt-row span {
+	  overflow: hidden;
+	  text-overflow: ellipsis;
+	  white-space: nowrap;
 	}
 
 	.print-opt-row input[type=checkbox] {
