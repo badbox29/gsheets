@@ -1724,6 +1724,11 @@ function generateCharacterPDF(root, opts) {
       for (let r = 0; r < rows; r++) {
         body.push(Array(6).fill(null).map(() => blankCell(6, 5)));
       }
+      wsBlocks.push({
+        table: { widths: ['6%', '26%', '22%', '16%', '20%', '10%'], body: body },
+        layout: gridLayout
+      });
+    }
 
     extraPageBlocks.push({
       pageBreak: 'before',
