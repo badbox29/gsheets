@@ -1518,7 +1518,7 @@ function generateCharacterPDF(root, opts) {
     mountBlocks.push({
       table: {
         headerRows: 1,
-        widths: ['14%', '12%', '6%', '5%', '4%', '7%', '13%', '9%', '5%', '18%'],
+        widths: ['14%', '12%', '6%', '5%', '4%', '7%', '13%', '7%', '9%', '5%', '18%'],
         body: body
       },
       layout: gridLayout,
