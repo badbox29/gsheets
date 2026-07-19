@@ -1422,13 +1422,15 @@ function generateCharacterPDF(root, opts) {
 
   if (showCompanions) {
     const body = [[
-      cell('Companion', 6, { bold: true }),
+      cell('Bonded', 6, { bold: true }),
       cell('Species', 6, { bold: true }),
       cell('HD', 6, { bold: true, alignment: 'center' }),
       cell('HP', 6, { bold: true, alignment: 'center' }),
       cell('AC', 6, { bold: true, alignment: 'center' }),
       cell('THAC0', 6, { bold: true, alignment: 'center' }),
       cell('Attacks', 6, { bold: true }),
+      cell('Move', 6, { bold: true, alignment: 'center' }),
+      cell('Capacity', 6, { bold: true, alignment: 'center' }),
       cell('Loy', 6, { bold: true, alignment: 'center' }),
       cell('Bond', 6, { bold: true }),
       cell('Status', 6, { bold: true })
@@ -1436,13 +1438,17 @@ function generateCharacterPDF(root, opts) {
 
     companionRows.forEach(c => {
       body.push([
-        cell(c.name, 6, { bold: true }),
+        // A ridden companion gets a marker so the Move and Capacity columns
+        // read as belonging to it rather than looking like stray data.
+        cell((c.isMount ? '\u2022 ' : '') + String(c.name || ''), 6, { bold: true }),
         cell(c.species),
         cell(c.hd, 6, { alignment: 'center' }),
         cell(c.hp, 6, { alignment: 'center' }),
         cell(c.ac, 6, { alignment: 'center' }),
         cell(c.thac0, 6, { alignment: 'center' }),
         cell(c.attacks),
+        cell(c.movement, 6, { alignment: 'center' }),
+        cell(c.capacity, 6, { alignment: 'center' }),
         cell(c.loyalty, 6, { alignment: 'center' }),
         cell(c.bond),
         cell(c.status)
@@ -1489,7 +1495,7 @@ function generateCharacterPDF(root, opts) {
 
   if (showMounts) {
     const body = [[
-      cell('Bonded', 6, { bold: true }),
+      cell('Mount / Vehicle', 6, { bold: true }),
       cell('Species', 6, { bold: true }),
       cell('HD', 6, { bold: true, alignment: 'center' }),
       cell('HP', 6, { bold: true, alignment: 'center' }),
@@ -1498,27 +1504,23 @@ function generateCharacterPDF(root, opts) {
       cell('Attacks', 6, { bold: true }),
       cell('Move', 6, { bold: true, alignment: 'center' }),
       cell('Capacity', 6, { bold: true, alignment: 'center' }),
-      cell('Loy', 6, { bold: true, alignment: 'center' }),
-      cell('Bond', 6, { bold: true }),
+      cell('Mor', 6, { bold: true, alignment: 'center' }),
       cell('Status', 6, { bold: true })
     ]];
 
-    companionRows.forEach(c => {
+    mountRows.forEach(m => {
       body.push([
-        // A ridden companion gets a marker so the Move and Capacity columns
-        // read as belonging to it rather than looking like stray data.
-        cell((c.isMount ? '\u2022 ' : '') + String(c.name || ''), 6, { bold: true }),
-        cell(c.species),
-        cell(c.hd, 6, { alignment: 'center' }),
-        cell(c.hp, 6, { alignment: 'center' }),
-        cell(c.ac, 6, { alignment: 'center' }),
-        cell(c.thac0, 6, { alignment: 'center' }),
-        cell(c.attacks),
-        cell(c.movement, 6, { alignment: 'center' }),
-        cell(c.capacity, 6, { alignment: 'center' }),
-        cell(c.loyalty, 6, { alignment: 'center' }),
-        cell(c.bond),
-        cell(c.status)
+        cell(m.name, 6, { bold: true }),
+        cell(m.species),
+        cell(m.hd, 6, { alignment: 'center' }),
+        cell(m.hp, 6, { alignment: 'center' }),
+        cell(m.ac, 6, { alignment: 'center' }),
+        cell(m.thac0, 6, { alignment: 'center' }),
+        cell(m.attacks),
+        cell(m.movement, 6, { alignment: 'center' }),
+        cell(m.capacity, 6, { alignment: 'center' }),
+        cell(m.morale, 6, { alignment: 'center' }),
+        cell(m.status)
       ]);
 
       const detail = followerDetail(m, MOUNT_ABILITIES, MOUNT_EXTRAS);
