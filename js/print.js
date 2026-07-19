@@ -1,10 +1,25 @@
 // print.js - PDF Character Sheet Generation
 
-function generateCharacterPDF(root) {
+function generateCharacterPDF(root, opts) {
   if (!root) {
     alert('No active character sheet found.');
     return;
   }
+
+  // Print options come from the modal. A direct call -- or any older code
+  // path that still calls generateCharacterPDF(root) with one argument --
+  // falls back to the saved set, so this function is never left guessing.
+  if (!opts) {
+    opts = (typeof getPrintOptions === 'function') ? getPrintOptions() : {};
+  }
+
+  // Full character record, identical in shape to the JSON export.
+  //
+  // Page 1 deliberately keeps using val(root, ...) DOM scraping: it works and
+  // it is tested. Every NEW section reads from `sheet` instead, because the
+  // arrays -- spellbooks, henchmen, equipment, journal entries -- are not
+  // reachable through val() at all.
+  const sheet = (typeof collectSheet === 'function') ? collectSheet(root) : null;
 
   // === BASIC INFO ===
   const characterName = val(root, 'name') || '';
@@ -17,50 +32,60 @@ function generateCharacterPDF(root) {
   const xp = val(root, 'xp') || '';
   
   // === ABILITY SCORES ===
-  const str = val(root, 'str') || '';
+ const str = val(root, 'str') || '';
   const strEx = val(root, 'str_exceptional') || '';
   const dex = val(root, 'dex') || '';
   const con = val(root, 'con') || '';
   const int = val(root, 'int') || '';
   const wis = val(root, 'wis') || '';
   const cha = val(root, 'cha') || '';
+
+  // A blank cell on a printed sheet reads as a rendering failure. An em dash
+  // reads as "this modifier does not apply to this character" -- which is the
+  // truth for, say, a paladin's Wisdom bonus spells.
+  const orDash = v =>
+    (v === null || v === undefined || String(v).trim() === '') ? '\u2014' : String(v);
+
+  // Exceptional Strength prints in the PHB's 18/xx form. Only warriors with
+  // STR 18 ever have a value here.
+  const strDisplay = (str && strEx) ? `${str}/${strEx}` : str;
   
   // === STR MODIFIERS ===
-  const strHitAdj = val(root, 'str_tohit') || '';
-  const strDmgAdj = val(root, 'str_damage') || '';
-  const strWeight = val(root, 'str_weight') || '';
-  const strOpenDoors = val(root, 'str_opendoors') || '';
-  const strBendBars = val(root, 'str_bendbars') || '';
+  const strHitAdj = orDash(val(root, 'str_tohit'));
+  const strDmgAdj = orDash(val(root, 'str_damage'));
+  const strWeight = orDash(val(root, 'str_weight'));
+  const strOpenDoors = orDash(val(root, 'str_opendoors'));
+  const strBendBars = orDash(val(root, 'str_bendbars'));
   
   // === DEX MODIFIERS ===
-  const dexReaction = val(root, 'dex_reaction') || '';
-  const dexMissile = val(root, 'dex_missile') || '';
-  const dexAC = val(root, 'dex_ac') || '';
+  const dexReaction = orDash(val(root, 'dex_reaction'));
+  const dexMissile = orDash(val(root, 'dex_missile'));
+  const dexAC = orDash(val(root, 'dex_ac'));
   
   // === CON MODIFIERS ===
-  const conHP = val(root, 'con_hpbonus') || '';
-  const conShock = val(root, 'con_shock') || '';
-  const conResurrect = val(root, 'con_res') || '';
-  const conPoison = val(root, 'con_poison') || '';
-  const conRegen = val(root, 'con_regen') || '';
+  const conHP = orDash(val(root, 'con_hpbonus'));
+  const conShock = orDash(val(root, 'con_shock'));
+  const conResurrect = orDash(val(root, 'con_res'));
+  const conPoison = orDash(val(root, 'con_poison'));
+  const conRegen = orDash(val(root, 'con_regen'));
   
   // === INT MODIFIERS ===
-  const intLanguages = val(root, 'int_languages') || '';
-  const intBonusProfs = val(root, 'int_bonus_profs') || '';
-  const intImmunity = val(root, 'int_immunity') || '';
-  const intLearnSpell = val(root, 'int_learn_spell') || '';
-  const intMaxSpells = val(root, 'int_max_spells') || '';
+  const intLanguages = orDash(val(root, 'int_languages'));
+  const intBonusProfs = orDash(val(root, 'int_bonus_profs'));
+  const intImmunity = orDash(val(root, 'int_immunity'));
+  const intLearnSpell = orDash(val(root, 'int_learn_spell'));
+  const intMaxSpells = orDash(val(root, 'int_max_spells'));
   
   // === WIS MODIFIERS ===
-  const wisMagicDef = val(root, 'wis_mda') || '';
-  const wisSpellBonus = val(root, 'wis_bonus_spells') || '';
-  const wisSpellFailure = val(root, 'wis_spell_failure') || '';
-  const wisImmunity = val(root, 'wis_immunities') || '';
+  const wisMagicDef = orDash(val(root, 'wis_mda'));
+  const wisSpellBonus = orDash(val(root, 'wis_bonus_spells'));
+  const wisSpellFailure = orDash(val(root, 'wis_spell_failure'));
+  const wisImmunity = orDash(val(root, 'wis_immunities'));
   
   // === CHA MODIFIERS ===
-  const chaMaxHench = val(root, 'cha_max_henchmen_core') || '';
-  const chaLoyalty = val(root, 'cha_loyalty_core') || '';
-  const chaReaction = val(root, 'cha_reaction_core') || '';
+  const chaMaxHench = orDash(val(root, 'cha_max_henchmen_core'));
+  const chaLoyalty = orDash(val(root, 'cha_loyalty_core'));
+  const chaReaction = orDash(val(root, 'cha_reaction_core'));
   
   // === COMBAT STATS ===
   const hp = val(root, 'hp') || '';
