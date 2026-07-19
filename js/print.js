@@ -225,6 +225,8 @@ function generateCharacterPDF(root, opts) {
   
   // === COMBAT STATS ===
   const hp = val(root, 'hp') || '';
+  const damageTaken = val(root, 'damage_taken') || '0';
+  const currentHP = val(root, 'current_hp') || hp;
   const ac = orDash(val(root, 'ac'));
   const acRear = orDash(val(root, 'ac_rear'));
   const acSurprised = orDash(val(root, 'ac_surprised'));
@@ -2105,36 +2107,40 @@ function generateCharacterPDF(root, opts) {
                       {}
                     ],
                     [
-                      { text: 'Numbed #', fontSize: 6 },
-                      { text: 'Wounds', fontSize: 6 }
+                      { text: 'Max HP', fontSize: 6, alignment: 'center' },
+                      { text: 'Damage Taken', fontSize: 6, alignment: 'center' }
+                    ],
+                    [
+                      { text: hp, fontSize: 10, bold: true, alignment: 'center' },
+                      { text: damageTaken, fontSize: 10, bold: true, alignment: 'center' }
+                    ],
+                    [
+                      { text: 'Current HP', fontSize: 6, alignment: 'center', colSpan: 2 },
+                      {}
+                    ],
+                    [
+                      { text: currentHP, fontSize: 16, bold: true, alignment: 'center', colSpan: 2, margin: [0, 1, 0, 1] },
+                      {}
+                    ],
+                    // Hit Dice and the death stats are not yet fields in the app.
+                    // They print as blank boxes for hand entry until they are --
+                    // see the follow-up to-do. Deliberately NOT derived here:
+                    // Max Deaths depends on rules that need PHB verification.
+                    [
+                      { text: 'Hit Dice', fontSize: 6, alignment: 'center' },
+                      { text: 'Max Deaths', fontSize: 6, alignment: 'center' }
                     ],
                     [
                       { text: '', fontSize: 8, margin: [0, 5, 0, 5] },
                       { text: '', fontSize: 8, margin: [0, 5, 0, 5] }
                     ],
                     [
-                      { text: 'Useless #', fontSize: 6 },
-                      { text: '', fontSize: 6 }
+                      { text: 'Deaths to Date', fontSize: 6, alignment: 'center', colSpan: 2 },
+                      {}
                     ],
                     [
-                      { text: '', fontSize: 8, margin: [0, 5, 0, 5] },
-                      { text: '', fontSize: 8, margin: [0, 5, 0, 5] }
-                    ],
-                    [
-                      { text: 'Max Deaths', fontSize: 6 },
-                      { text: '', fontSize: 6 }
-                    ],
-                    [
-                      { text: '', fontSize: 8, margin: [0, 5, 0, 5] },
-                      { text: '', fontSize: 8, margin: [0, 5, 0, 5] }
-                    ],
-                    [
-                      { text: 'Hit Dice: d', fontSize: 6 },
-                      { text: 'Deaths to Date', fontSize: 6 }
-                    ],
-                    [
-                      { text: hp, fontSize: 8, alignment: 'center' },
-                      { text: '', fontSize: 8, margin: [0, 5, 0, 5] }
+                      { text: '', fontSize: 8, colSpan: 2, margin: [0, 5, 0, 5] },
+                      {}
                     ]
                   ]
                 },
