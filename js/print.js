@@ -1497,6 +1497,24 @@ function generateCharacterPDF(root, opts) {
     charJournalRows.map(e => journalEntry(e.title, [['', e.content]]))
   );
 
+  // === EXPERIENCE ===
+  // getXPTable (tables.js) resolves specialists, class-group aliases and
+  // multi-class strings to the right progression. The table is indexed from
+  // zero for level 1, so table[level] is the threshold for the NEXT level.
+  const xpTable = (typeof getXPTable === 'function') ? getXPTable(clazz) : null;
+  const levelNum = parseInt(level, 10);
+  const nextLevelXP = (Array.isArray(xpTable) && !isNaN(levelNum) && typeof xpTable[levelNum] === 'number')
+    ? xpTable[levelNum]
+    : null;
+
+  const commafy = v => {
+    const n = parseInt(String(v).replace(/[^0-9-]/g, ''), 10);
+    return isNaN(n) ? String(v || '') : n.toLocaleString('en-US');
+  };
+
+  const xpDisplay = xp ? commafy(xp) : '\u2014';
+  const nextLevelDisplay = (nextLevelXP === null) ? '\u2014' : commafy(nextLevelXP);
+
   // === CHARACTER PORTRAIT (optional) ===
   // pdfMake takes a base64 data URL directly, but supports JPEG and PNG only.
   // Any other format throws and takes the entire PDF down with it, so the
@@ -1597,8 +1615,25 @@ function generateCharacterPDF(root, opts) {
               { text: details.birthplace || details.homeland || '', fontSize: 8, border: [true, false, false, true], colSpan: 2 },
               {},
               showPortrait
+                showPortrait
                 ? { image: avatarData, fit: [64, 64], alignment: 'center', border: [true, false, true, false] }
                 : { text: '', border: [true, false, true, false] }
+            ],
+            [
+              { text: 'Player', fontSize: 6, bold: true, border: [true, true, false, false], colSpan: 2 },
+              {},
+              { text: 'Experience', fontSize: 6, bold: true, border: [true, true, false, false], colSpan: 2 },
+              {},
+              { text: 'Next Level', fontSize: 6, bold: true, border: [true, true, false, false] },
+              { text: '', border: [true, false, true, false] }
+            ],
+            [
+              { text: playerName, fontSize: 8, border: [true, false, false, true], colSpan: 2 },
+              {},
+              { text: xpDisplay, fontSize: 8, border: [true, false, false, true], colSpan: 2 },
+              {},
+              { text: nextLevelDisplay, fontSize: 8, border: [true, false, false, true] },
+              { text: '', border: [true, false, true, true] }
             ]
           ]
         },
