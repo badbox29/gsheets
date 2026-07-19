@@ -496,10 +496,54 @@ function generateCharacterPDF(root, opts) {
     });
   }
 
+  // === CLASS / RACIAL / KIT ABILITIES (optional) ===
+  const classAbilityRows = named(sheet && sheet.classAbilities);
+  const racialAbilityRows = named(sheet && sheet.racialAbilities);
+  const kitAbilityRows = named(sheet && sheet.kitAbilities);
+  const classKitNotes = String((sheet && sheet.notesEx && sheet.notesEx.classkit) || '').trim();
+
+  const showAbilities = !!opts.abilities && (
+    classAbilityRows.length > 0 ||
+    racialAbilityRows.length > 0 ||
+    kitAbilityRows.length > 0 ||
+    classKitNotes !== ''
+  );
+
+  // A labelled two-column table: ability name on the left, its effect on the
+  // right. Returns an array so it can be spread straight into the block list,
+  // and an empty group contributes nothing at all.
+  const abilityGroup = (label, rows) => rows.length === 0 ? [] : [
+    { text: label, fontSize: 7, bold: true, margin: [0, 2, 0, 2] },
+    {
+      table: {
+        widths: ['30%', '70%'],
+        body: rows.map(a => [
+          cell(a.name, 6, { bold: true }),
+          cell(a.notes)
+        ])
+      },
+      layout: gridLayout,
+      margin: [0, 0, 0, 4]
+    }
+  ];
+
+  const abilityBlocks = [];
+
+  if (showAbilities) {
+    abilityBlocks.push(...abilityGroup('Class Abilities', classAbilityRows));
+    abilityBlocks.push(...abilityGroup('Racial Abilities', racialAbilityRows));
+    abilityBlocks.push(...abilityGroup('Kit Abilities', kitAbilityRows));
+
+    if (classKitNotes) {
+      abilityBlocks.push({ text: 'Class / Kit Notes', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+      abilityBlocks.push({ text: classKitNotes, fontSize: 6, margin: [0, 0, 0, 4] });
+    }
+  }
+
   // Page 3 collects the character-detail sections. It opens only if at least
   // one of them is actually printing -- switching them all off produces no
   // blank page. Further sections OR into this flag as they are added.
-  const showPage3 = showLanguages || showThief;
+  const showPage3 = showLanguages || showThief || showAbilities;
 
   // Create PDF document definition
   const docDefinition = {
@@ -1330,6 +1374,11 @@ function generateCharacterPDF(root, opts) {
       // === THIEF SKILLS (optional) ===
       ...optional(showThief,
         printSection('THIEF SKILLS', ...thiefBlocks)
+      ),
+
+      // === CLASS / RACIAL / KIT ABILITIES (optional) ===
+      ...optional(showAbilities,
+        printSection('SPECIAL ABILITIES', ...abilityBlocks)
       )
     ]
   };
