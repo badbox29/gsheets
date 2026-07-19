@@ -40,14 +40,20 @@ function generateCharacterPDF(root, opts) {
   const SECTION_LEAD_ROWS = 5;
 
   // Binds a section heading to the start of its content so the heading can
-  // never be orphaned at the foot of a page -- while still allowing a long
-  // table to break across pages rather than being shoved whole onto the next.
+  // never be orphaned at the foot of a page, while still allowing a long table
+  // to break across pages.
   //
-  // The heading, any preamble blocks, the table's header row and the first
-  // SECTION_LEAD_ROWS data rows travel together as one unbreakable unit.
-  // Everything after that is an ordinary table that pdfMake breaks normally,
-  // repeating its header row on each new page. Sections short enough to fit
-  // are kept whole, exactly as before.
+  // The first attempt split the table into a glued lead and a free-flowing
+  // tail. That worked, but the tail had to re-declare its header row so the
+  // columns would reprint on continuation pages -- which meant the header
+  // appeared TWICE whenever both halves landed on the same page.
+  //
+  // This version instead folds the title (and any preamble blocks) INTO the
+  // table as borderless full-width rows, and declares them part of headerRows.
+  // pdfMake then does the work natively: the title and column headers reprint
+  // at the top of every page the table spills onto, nothing is ever doubled,
+  // and keepWithHeaderRows stops the header being stranded alone at the foot
+  // of a page. One table, no manual splitting.
   const printSection = (title, ...blocks) => {
     const titleNode = {
       text: title,
@@ -57,45 +63,44 @@ function generateCharacterPDF(root, opts) {
       margin: [0, 0, 0, 2]
     };
 
-    // The first real table in the section. Anything before it -- a summary
-    // line, a bold sub-label -- belongs to the glued lead.
+    // The first real table in the section. A section built from columns or
+    // pure prose has none, and keeps the original glued-block behavior.
     const tableIdx = blocks.findIndex(b => b && b.table && Array.isArray(b.table.body));
-
-    if (tableIdx >= 0) {
-      const tableBlock = blocks[tableIdx];
-      const headerCount = tableBlock.table.headerRows || 0;
-      const body = tableBlock.table.body;
-      const leadEnd = headerCount + SECTION_LEAD_ROWS;
-
-      if (body.length > leadEnd) {
-        const leadBlock = Object.assign({}, tableBlock, {
-          table: Object.assign({}, tableBlock.table, { body: body.slice(0, leadEnd) }),
-          layout: gridLayoutOpenBottom,
-          margin: [0, 0, 0, 0]
-        });
-
-        // The remainder re-declares the header rows so they reprint on every
-        // page the table spills onto.
-        const tailBlock = Object.assign({}, tableBlock, {
-          table: Object.assign({}, tableBlock.table, {
-            body: headerCount
-              ? body.slice(0, headerCount).concat(body.slice(leadEnd))
-              : body.slice(leadEnd)
-          })
-        });
-
-        return {
-          stack: [
-            { unbreakable: true, stack: [titleNode, ...blocks.slice(0, tableIdx), leadBlock] },
-            tailBlock,
-            ...blocks.slice(tableIdx + 1)
-          ]
-        };
-      }
+    if (tableIdx < 0) {
+      return { unbreakable: true, stack: [titleNode, ...blocks] };
     }
 
-    // No table, or a table short enough to keep whole.
-    return { unbreakable: true, stack: [titleNode, ...blocks] };
+    const tableBlock = blocks[tableIdx];
+    const colCount = (tableBlock.table.widths && tableBlock.table.widths.length)
+      || (tableBlock.table.body[0] || []).length
+      || 1;
+
+    // A full-width borderless row, so a heading or summary line sits inside
+    // the table structurally while still looking like floating text.
+    const fullWidthRow = node => {
+      const row = [Object.assign({}, node, {
+        colSpan: colCount,
+        border: [false, false, false, false]
+      })];
+      for (let i = 1; i < colCount; i++) row.push({});
+      return row;
+    };
+
+    const preambleBlocks = blocks.slice(0, tableIdx);
+    const preambleRows = preambleBlocks.map(fullWidthRow);
+    const existingHeaderRows = tableBlock.table.headerRows || 0;
+
+    const merged = Object.assign({}, tableBlock, {
+      table: Object.assign({}, tableBlock.table, {
+        body: [fullWidthRow(titleNode), ...preambleRows, ...tableBlock.table.body],
+        headerRows: 1 + preambleRows.length + existingHeaderRows,
+        // Keep this many data rows with the header rather than letting a
+        // header sit alone at the bottom of a page.
+        keepWithHeaderRows: SECTION_LEAD_ROWS
+      })
+    });
+
+    return { stack: [merged, ...blocks.slice(tableIdx + 1)] };
   };
 
   // Forces a section to begin a new page. Used to pin the fixed page layout in
