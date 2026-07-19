@@ -247,29 +247,31 @@ function generateCharacterPDF(root, opts) {
   const encumbranceMax = val(root, 'encumbrance_max') || '';
   
   // === SAVING THROWS ===
-  // Parse saves from the tooltip which contains base and modifier info
+  //
+  // This used to regex-scrape el.title looking for "Base: X". That worked, but
+  // it silently degraded to "no modifiers at all" the moment the tooltip's
+  // wording changed -- a wrong number printed confidently, with no error.
+  //
+  // The record carries the modifiers directly in sheet.savingThrows (save1
+  // through save5, plus save5_mental), and the field's own value is the final
+  // total. Base is then simply total minus modifier, with no parsing involved.
+  const saveMods = (sheet && sheet.savingThrows) || {};
+
   const parseSave = (saveNum) => {
     const el = root.querySelector(`[data-field="save${saveNum}"]`);
     const total = el?.value || '';
-    const tooltip = el?.title || '';
-    
     if (!total) return { base: '', mod: '', total: '' };
-    
-    // Try to extract base from tooltip (format: "Base: X")
-    const baseMatch = tooltip.match(/Base:\s*(\d+)/);
-    if (baseMatch) {
-      const base = parseInt(baseMatch[1]);
-      const totalNum = parseInt(total);
-      const mod = totalNum - base;
-      return {
-        base: base.toString(),
-        mod: mod !== 0 ? (mod >= 0 ? `+${mod}` : mod.toString()) : '',
-        total: total
-      };
-    } else {
-      // No base found in tooltip, assume no modifiers
-      return { base: total, mod: '', total: total };
-    }
+
+    const totalNum = parseInt(total, 10);
+    const modNum = parseInt(saveMods[`save${saveNum}`], 10) || 0;
+
+    if (isNaN(totalNum)) return { base: total, mod: '', total: total };
+
+    return {
+      base: String(totalNum - modNum),
+      mod: modNum !== 0 ? (modNum > 0 ? `+${modNum}` : String(modNum)) : '',
+      total: total
+    };
   };
   
   const save1Data = parseSave(1);
@@ -277,6 +279,18 @@ function generateCharacterPDF(root, opts) {
   const save3Data = parseSave(3);
   const save4Data = parseSave(4);
   const save5Data = parseSave(5);
+
+  // save5_mental is a second modifier against mental-effect spells (charm,
+  // domination and the like) where Wisdom's Magical Defense Adjustment applies
+  // on top of the ordinary spell save. It is recorded but has never printed.
+  const save5MentalMod = parseInt(saveMods.save5_mental, 10) || 0;
+  const save5MentalTotal = (save5Data.total && !isNaN(parseInt(save5Data.total, 10)))
+    ? parseInt(save5Data.total, 10) - save5MentalMod
+    : null;
+  const save5MentalNote = (save5MentalMod !== 0 && save5MentalTotal !== null)
+    ? `vs. mental-effect spells: ${save5MentalTotal} ` +
+      `(${save5MentalMod > 0 ? '+' : ''}${save5MentalMod} Wisdom magical defense)`
+    : '';
   
   // === COLLECT WEAPONS ===
   // Weapon rows.
