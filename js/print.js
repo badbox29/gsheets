@@ -173,37 +173,12 @@ function generateCharacterPDF(root, opts) {
   // the section even though they own none yet.
   const hasContent = (rows, key) => rows.length > 0 || blankCount(key) > 0;
 
-  // === TALLY BOXES ===
-  // Consumables count DOWN during play. On paper, crossing out a printed
-  // number repeatedly gets illegible fast, so a row of small empty boxes is
-  // more usable -- tick one off per arrow loosed or charge spent.
-  //
-  // Rendered as a nested borderless table of empty cells, which gives evenly
-  // sized boxes that a text string of glyphs cannot.
-  //
-  // Declared HERE, alongside the other row helpers, rather than beside the
-  // extra-page code: the ammunition table consumes it around line 495, and a
-  // const is in the temporal dead zone until execution reaches its
-  // declaration.
-  const TALLY_MAX = 20;
-
-  const tallyBoxes = qty => {
-    const n = Math.min(TALLY_MAX, Math.max(0, parseInt(qty, 10) || 0));
-    if (!opts.tallyBoxes || n < 1) return { text: '' };
-    const row = [];
-    for (let i = 0; i < n; i++) row.push({ text: ' ', fontSize: 5 });
-    return {
-      table: { widths: Array(n).fill(7), body: [row] },
-      layout: {
-        hLineWidth: () => 0.5,
-        vLineWidth: () => 0.5,
-        paddingLeft: () => 1,
-        paddingRight: () => 1,
-        paddingTop: () => 0,
-        paddingBottom: () => 0
-      }
-    };
-  };
+  // === USED TALLY ===
+  // Consumables count DOWN during play, and the quantity itself changes -- pick
+  // up two arrows and any pre-drawn set of boxes is already wrong. So this is
+  // just open space, sized for hash marks. Players tally the usual way.
+  const tallyBoxes = () =>
+    ({ text: ' ', fontSize: 9, margin: [0, 3, 0, 3] });
 
   // === BASIC INFO ===
   const characterName = val(root, 'name') || '';
@@ -1170,18 +1145,11 @@ function generateCharacterPDF(root, opts) {
             cell('Notes / Charges', 6, { bold: true }),
             ...(opts.tallyBoxes ? [cell('Charges Used', 6, { bold: true })] : [])
           ],
-          ...magicItemRows.map(m => {
-            const notes = String(m.notes || '').trim();
-            // Charge counts are recorded in prose, so the number is pulled from
-            // the notes text -- "39 charges" yields 39 boxes. No match means no
-            // boxes rather than a wrong guess.
-            const match = notes.match(/(\d+)\s*charges?/i);
-            return [
-              cell(m.name, 6, { bold: true }),
-              cell(notes),
-              ...(opts.tallyBoxes ? [tallyBoxes(match ? match[1] : 0)] : [])
-            ];
-          }),
+          ...magicItemRows.map(m => [
+            cell(m.name, 6, { bold: true }),
+            cell(String(m.notes || '').trim()),
+            ...(opts.tallyBoxes ? [tallyBoxes()] : [])
+          ]),
           ...blankRows('magicItems', opts.tallyBoxes ? 3 : 2)
         ]
       },
