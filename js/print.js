@@ -1641,6 +1641,13 @@ function generateCharacterPDF(root, opts) {
   // Whole blank pages added to the end of the sheet, for a player working from
   // paper between sessions. Each is a full-page table so the ruling matches
   // the rest of the sheet rather than being loose lines.
+  // Printed-on date. A player working from paper needs to know which printout
+  // is current and what the app looked like when it was made -- without it,
+  // two printouts a month apart are indistinguishable.
+  const printedOn = opts.printDate
+    ? new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+    : '';
+
   const extraSpellbookPages = blankCount('extraSpellbookPages');
   const extraMemorizationPages = blankCount('extraMemorizationPages');
   const extraBlankPages = blankCount('extraBlankPages');
@@ -1715,6 +1722,88 @@ function generateCharacterPDF(root, opts) {
     });
   }
 
+  // "Changes to Enter" -- the sync-back page. A player working from paper
+  // accumulates changes across a session; without somewhere structured to
+  // record them, re-entering afterwards is an act of memory. Headed sections
+  // turn that into transcription.
+  if (opts.changesPage) {
+    const ruled = (rows, height) => {
+      const body = [];
+      for (let r = 0; r < rows; r++) {
+        body.push([{ text: '', fontSize: 8, margin: [0, height, 0, height] }]);
+      }
+      return {
+        table: { widths: ['100%'], body: body },
+        layout: {
+          hLineWidth: () => 1,
+          vLineWidth: (i, node) => (i === 0 || i === node.table.widths.length) ? 1 : 0,
+          paddingLeft: () => 2,
+          paddingRight: () => 2,
+          paddingTop: () => 1,
+          paddingBottom: () => 1
+        },
+        margin: [0, 0, 0, 6]
+      };
+    };
+
+    const changeHeading = t => ({ text: t, fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+
+    extraPageBlocks.push({
+      pageBreak: 'before',
+      stack: [
+        { text: 'CHANGES TO ENTER', fontSize: 8, bold: true, alignment: 'center', margin: [0, 0, 0, 2] },
+        {
+          text: 'Record what changed during play, then enter it in the app. Tick each line once it has been entered.',
+          fontSize: 6,
+          italics: true,
+          margin: [0, 0, 0, 4]
+        },
+        {
+          columns: [
+            {
+              width: '48%',
+              stack: [
+                {
+                  table: {
+                    widths: ['40%', '30%', '30%'],
+                    body: [
+                      [cell('', 6), cell('Before', 6, { bold: true, alignment: 'center' }), cell('After', 6, { bold: true, alignment: 'center' })],
+                      [cell('Experience', 6, { bold: true }), cell(xpDisplay, 6, { alignment: 'center' }), cell('', 8, { margin: [0, 3, 0, 3] })],
+                      [cell('Level', 6, { bold: true }), cell(level, 6, { alignment: 'center' }), cell('', 8, { margin: [0, 3, 0, 3] })],
+                      [cell('Current HP', 6, { bold: true }), cell(currentHP, 6, { alignment: 'center' }), cell('', 8, { margin: [0, 3, 0, 3] })],
+                      [cell('Damage taken', 6, { bold: true }), cell(damageTaken, 6, { alignment: 'center' }), cell('', 8, { margin: [0, 3, 0, 3] })],
+                      [cell('Armor class', 6, { bold: true }), cell(ac, 6, { alignment: 'center' }), cell('', 8, { margin: [0, 3, 0, 3] })]
+                    ]
+                  },
+                  layout: gridLayout,
+                  margin: [0, 0, 0, 6]
+                },
+                changeHeading('Coins & valuables'),
+                ruled(6, 5)
+              ]
+            },
+            {
+              width: '52%',
+              stack: [
+                changeHeading('Equipment gained / lost'),
+                ruled(9, 5)
+              ],
+              margin: [6, 0, 0, 0]
+            }
+          ]
+        },
+        changeHeading('Spells learned, scribed or expended'),
+        ruled(5, 5),
+        changeHeading('Proficiencies, languages & abilities gained'),
+        ruled(4, 5),
+        changeHeading('Followers, mounts & henchmen'),
+        ruled(4, 5),
+        changeHeading('Other notes for the DM'),
+        ruled(5, 5)
+      ]
+    });
+  }
+
   // Plain ruled pages.
   for (let i = 0; i < extraBlankPages; i++) {
     const body = [];
@@ -1780,7 +1869,9 @@ function generateCharacterPDF(root, opts) {
           color: '#555555'
         },
         {
-          text: `Page ${currentPage} of ${pageCount}`,
+          text: printedOn
+            ? `Printed ${printedOn}  \u2014  Page ${currentPage} of ${pageCount}`
+            : `Page ${currentPage} of ${pageCount}`,
           fontSize: 6,
           color: '#555555',
           alignment: 'right'
