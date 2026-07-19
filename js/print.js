@@ -1451,18 +1451,18 @@ function generateCharacterPDF(root, opts) {
       const detail = followerDetail(c, COMP_ABILITIES, COMP_EXTRAS);
       if (detail.length) {
         body.push([
-          { text: detail, fontSize: 6, colSpan: 10, margin: [0, 1, 0, 1] },
-          {}, {}, {}, {}, {}, {}, {}, {}, {}
+          { text: detail, fontSize: 6, colSpan: 12, margin: [0, 1, 0, 1] },
+          {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
         ]);
       }
     });
 
-    body.push(...blankRows('companions', 10));
+    body.push(...blankRows('companions', 12));
 
     companionBlocks.push({
       table: {
         headerRows: 1,
-        widths: ['15%', '13%', '7%', '5%', '4%', '7%', '15%', '5%', '13%', '16%'],
+        widths: ['13%', '11%', '6%', '4%', '4%', '6%', '12%', '6%', '8%', '4%', '11%', '15%'],
         body: body
       },
       layout: gridLayout,
@@ -1489,7 +1489,7 @@ function generateCharacterPDF(root, opts) {
 
   if (showMounts) {
     const body = [[
-      cell('Mount', 6, { bold: true }),
+      cell('Bonded', 6, { bold: true }),
       cell('Species', 6, { bold: true }),
       cell('HD', 6, { bold: true, alignment: 'center' }),
       cell('HP', 6, { bold: true, alignment: 'center' }),
@@ -1498,23 +1498,27 @@ function generateCharacterPDF(root, opts) {
       cell('Attacks', 6, { bold: true }),
       cell('Move', 6, { bold: true, alignment: 'center' }),
       cell('Capacity', 6, { bold: true, alignment: 'center' }),
-      cell('Mor', 6, { bold: true, alignment: 'center' }),
+      cell('Loy', 6, { bold: true, alignment: 'center' }),
+      cell('Bond', 6, { bold: true }),
       cell('Status', 6, { bold: true })
     ]];
 
-    mountRows.forEach(m => {
+    companionRows.forEach(c => {
       body.push([
-        cell(m.name, 6, { bold: true }),
-        cell(m.species),
-        cell(m.hd, 6, { alignment: 'center' }),
-        cell(m.hp, 6, { alignment: 'center' }),
-        cell(m.ac, 6, { alignment: 'center' }),
-        cell(m.thac0, 6, { alignment: 'center' }),
-        cell(m.attacks),
-        cell(m.movement, 6, { alignment: 'center' }),
-        cell(m.capacity, 6, { alignment: 'center' }),
-        cell(m.morale, 6, { alignment: 'center' }),
-        cell(m.status)
+        // A ridden companion gets a marker so the Move and Capacity columns
+        // read as belonging to it rather than looking like stray data.
+        cell((c.isMount ? '\u2022 ' : '') + String(c.name || ''), 6, { bold: true }),
+        cell(c.species),
+        cell(c.hd, 6, { alignment: 'center' }),
+        cell(c.hp, 6, { alignment: 'center' }),
+        cell(c.ac, 6, { alignment: 'center' }),
+        cell(c.thac0, 6, { alignment: 'center' }),
+        cell(c.attacks),
+        cell(c.movement, 6, { alignment: 'center' }),
+        cell(c.capacity, 6, { alignment: 'center' }),
+        cell(c.loyalty, 6, { alignment: 'center' }),
+        cell(c.bond),
+        cell(c.status)
       ]);
 
       const detail = followerDetail(m, MOUNT_ABILITIES, MOUNT_EXTRAS);
@@ -2825,12 +2829,12 @@ function generateCharacterPDF(root, opts) {
 
       // === COMPANIONS (optional) ===
       ...optional(showCompanions,
-        printSection('COMPANIONS', ...companionBlocks)
+        printSection('BONDED MOUNTS & ANIMAL COMPANIONS', ...companionBlocks)
       ),
 
       // === MOUNTS (optional) ===
       ...optional(showMounts,
-        printSection('MOUNTS', ...mountBlocks)
+        printSection('UNBONDED MOUNTS & VEHICLES', ...mountBlocks)
       ),
 
       // === PAGE 7+: Journal ===
