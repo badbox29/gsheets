@@ -173,6 +173,38 @@ function generateCharacterPDF(root, opts) {
   // the section even though they own none yet.
   const hasContent = (rows, key) => rows.length > 0 || blankCount(key) > 0;
 
+  // === TALLY BOXES ===
+  // Consumables count DOWN during play. On paper, crossing out a printed
+  // number repeatedly gets illegible fast, so a row of small empty boxes is
+  // more usable -- tick one off per arrow loosed or charge spent.
+  //
+  // Rendered as a nested borderless table of empty cells, which gives evenly
+  // sized boxes that a text string of glyphs cannot.
+  //
+  // Declared HERE, alongside the other row helpers, rather than beside the
+  // extra-page code: the ammunition table consumes it around line 495, and a
+  // const is in the temporal dead zone until execution reaches its
+  // declaration.
+  const TALLY_MAX = 20;
+
+  const tallyBoxes = qty => {
+    const n = Math.min(TALLY_MAX, Math.max(0, parseInt(qty, 10) || 0));
+    if (!opts.tallyBoxes || n < 1) return { text: '' };
+    const row = [];
+    for (let i = 0; i < n; i++) row.push({ text: ' ', fontSize: 5 });
+    return {
+      table: { widths: Array(n).fill(7), body: [row] },
+      layout: {
+        hLineWidth: () => 0.5,
+        vLineWidth: () => 0.5,
+        paddingLeft: () => 1,
+        paddingRight: () => 1,
+        paddingTop: () => 0,
+        paddingBottom: () => 0
+      }
+    };
+  };
+
   // === BASIC INFO ===
   const characterName = val(root, 'name') || '';
   const playerName = val(root, 'player') || '';
@@ -1685,33 +1717,6 @@ function generateCharacterPDF(root, opts) {
 
   const blankCell = (fontSize, vMargin) =>
     ({ text: ' ', fontSize: fontSize, margin: [0, vMargin, 0, vMargin] });
-
-  // === TALLY BOXES ===
-  // Consumables count DOWN during play. On paper, crossing out a printed
-  // number repeatedly gets illegible fast, so a row of small empty boxes is
-  // more usable -- tick one off per arrow loosed or charge spent.
-  //
-  // Rendered as a nested borderless table of empty cells, which gives evenly
-  // sized boxes that a text string of glyphs cannot.
-  const TALLY_MAX = 20;
-
-  const tallyBoxes = qty => {
-    const n = Math.min(TALLY_MAX, Math.max(0, parseInt(qty, 10) || 0));
-    if (!opts.tallyBoxes || n < 1) return { text: '' };
-    const row = [];
-    for (let i = 0; i < n; i++) row.push({ text: ' ', fontSize: 5 });
-    return {
-      table: { widths: Array(n).fill(7), body: [row] },
-      layout: {
-        hLineWidth: () => 0.5,
-        vLineWidth: () => 0.5,
-        paddingLeft: () => 1,
-        paddingRight: () => 1,
-        paddingTop: () => 0,
-        paddingBottom: () => 0
-      }
-    };
-  };
 
   const extraPageBlocks = [];
 
