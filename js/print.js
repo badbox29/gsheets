@@ -34,19 +34,69 @@ function generateCharacterPDF(root, opts) {
   // Sections that are inherently taller than a page (a large spellbook, a long
   // session log) must NOT use this -- they get the heading plus their first few
   // rows wrapped, with the remainder allowed to flow.
-  const printSection = (title, ...blocks) => ({
-    unbreakable: true,
-    stack: [
-      {
-        text: title,
-        fontSize: 8,
-        bold: true,
-        alignment: 'center',
-        margin: [0, 0, 0, 2]
-      },
-      ...blocks
-    ]
-  });
+  // How many data rows stay glued to the section heading before the table is
+  // allowed to break. Enough to prove the section started; few enough that the
+  // glued block still fits in most page remainders.
+  const SECTION_LEAD_ROWS = 5;
+
+  // Binds a section heading to the start of its content so the heading can
+  // never be orphaned at the foot of a page -- while still allowing a long
+  // table to break across pages rather than being shoved whole onto the next.
+  //
+  // The heading, any preamble blocks, the table's header row and the first
+  // SECTION_LEAD_ROWS data rows travel together as one unbreakable unit.
+  // Everything after that is an ordinary table that pdfMake breaks normally,
+  // repeating its header row on each new page. Sections short enough to fit
+  // are kept whole, exactly as before.
+  const printSection = (title, ...blocks) => {
+    const titleNode = {
+      text: title,
+      fontSize: 8,
+      bold: true,
+      alignment: 'center',
+      margin: [0, 0, 0, 2]
+    };
+
+    // The first real table in the section. Anything before it -- a summary
+    // line, a bold sub-label -- belongs to the glued lead.
+    const tableIdx = blocks.findIndex(b => b && b.table && Array.isArray(b.table.body));
+
+    if (tableIdx >= 0) {
+      const tableBlock = blocks[tableIdx];
+      const headerCount = tableBlock.table.headerRows || 0;
+      const body = tableBlock.table.body;
+      const leadEnd = headerCount + SECTION_LEAD_ROWS;
+
+      if (body.length > leadEnd) {
+        const leadBlock = Object.assign({}, tableBlock, {
+          table: Object.assign({}, tableBlock.table, { body: body.slice(0, leadEnd) }),
+          layout: gridLayoutOpenBottom,
+          margin: [0, 0, 0, 0]
+        });
+
+        // The remainder re-declares the header rows so they reprint on every
+        // page the table spills onto.
+        const tailBlock = Object.assign({}, tableBlock, {
+          table: Object.assign({}, tableBlock.table, {
+            body: headerCount
+              ? body.slice(0, headerCount).concat(body.slice(leadEnd))
+              : body.slice(leadEnd)
+          })
+        });
+
+        return {
+          stack: [
+            { unbreakable: true, stack: [titleNode, ...blocks.slice(0, tableIdx), leadBlock] },
+            tailBlock,
+            ...blocks.slice(tableIdx + 1)
+          ]
+        };
+      }
+    }
+
+    // No table, or a table short enough to keep whole.
+    return { unbreakable: true, stack: [titleNode, ...blocks] };
+  };
 
   // Forces a section to begin a new page. Used to pin the fixed page layout in
   // place rather than letting sections land wherever they happen to fall --
@@ -59,6 +109,22 @@ function generateCharacterPDF(root, opts) {
   // rather than repeated inline at each table, as the page 1 code does.
   const gridLayout = {
     hLineWidth: () => 1,
+    vLineWidth: () => 1,
+    paddingLeft: () => 2,
+    paddingRight: () => 2,
+    paddingTop: () => 1,
+    paddingBottom: () => 1
+  };
+
+  // Used for the LEAD half of a split table. When a section is split, the lead
+  // and the remainder are two separate tables; if they land on the same page,
+  // drawing both the lead's bottom rule and the remainder's top rule would
+  // produce a doubled line where they meet. Omitting the lead's closing rule
+  // makes the join invisible in the common case, at the cost of leaving the
+  // lead slightly open at the foot of a page on the rarer case where the
+  // split actually falls there.
+  const gridLayoutOpenBottom = {
+    hLineWidth: (i, node) => (i === node.table.body.length ? 0 : 1),
     vLineWidth: () => 1,
     paddingLeft: () => 2,
     paddingRight: () => 2,
