@@ -1392,10 +1392,10 @@ const SHEET_HTML = `
 
         <hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
 
-        <!-- Mounts & Vehicles -->
+        <!-- Unbonded Mounts & Vehicles -->
 		<section class="section">
 		  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-			<h3 style="margin:0;">Mounts & Vehicles</h3>
+			<h3 style="margin:0;">Unbonded Mounts &amp; Vehicles</h3>
 			<div style="display:flex;gap:12px;align-items:center;">
 			  <button class="add-mount">+ Add</button>
 			  <label style="font-size:12px;color:var(--muted);cursor:pointer;user-select:none;">
@@ -1405,7 +1405,7 @@ const SHEET_HTML = `
 			</div>
 		  </div>
 		  <p style="font-size:12px;color:var(--muted);margin-bottom:8px;">
-			Horses, ponies, wagons, ships, and transportation
+			Horses, ponies, wagons, ships and other transport the character owns or hires but has no bond with. Use <em>Move to Bonded</em> if one of them later becomes a companion or bonded mount.
 		  </p>
 		  <div class="list mounts-list"></div>
 		</section>
@@ -1452,10 +1452,10 @@ const SHEET_HTML = `
 
         <hr style="margin:24px 0;border:none;border-top:1px solid #555;opacity:0.4;">
 
-        <!-- Animal Companions -->
+        <!-- Bonded Mounts & Animal Companions -->
 		<section class="section">
 		  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-			<h3 style="margin:0;">Animal Companions</h3>
+			<h3 style="margin:0;">Bonded Mounts &amp; Animal Companions</h3>
 			<div style="display:flex;gap:12px;align-items:center;">
 			  <button class="add-companion">+ Add</button>
 			  <label style="font-size:12px;color:var(--muted);cursor:pointer;user-select:none;">
@@ -1465,7 +1465,7 @@ const SHEET_HTML = `
 			</div>
 		  </div>
 		  <p style="font-size:12px;color:var(--muted);margin-bottom:8px;">
-			Rangers' companions, familiars, and bonded beasts
+			Familiars, animal companions, bonded beasts and vehicles &mdash; anything with a lasting tie to the character. Tick <em>Is Mount</em> on any of them that can be ridden or driven.
 		  </p>
 		  <div class="list companions-list"></div>
 		</section>
