@@ -1615,7 +1615,6 @@ function generateCharacterPDF(root, opts) {
               { text: details.birthplace || details.homeland || '', fontSize: 8, border: [true, false, false, true], colSpan: 2 },
               {},
               showPortrait
-                showPortrait
                 ? { image: avatarData, fit: [64, 64], alignment: 'center', border: [true, false, true, false] }
                 : { text: '', border: [true, false, true, false] }
             ],
