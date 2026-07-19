@@ -55,6 +55,29 @@ function generateCharacterPDF(root, opts) {
   // free of page-layout concerns.
   const pageBreakBefore = node => Object.assign({}, node, { pageBreak: 'before' });
 
+  // Every table on this sheet uses the same hairline grid. Defined once here
+  // rather than repeated inline at each table, as the page 1 code does.
+  const gridLayout = {
+    hLineWidth: () => 1,
+    vLineWidth: () => 1,
+    paddingLeft: () => 2,
+    paddingRight: () => 2,
+    paddingTop: () => 1,
+    paddingBottom: () => 1
+  };
+
+  // Spreads a section into the content array only when its checkbox is ticked
+  // AND it actually has data. An optional section that is switched on but
+  // empty collapses to nothing rather than printing a heading over a blank
+  // table -- which is why defaulting options ON in the modal costs nothing.
+  const optional = (show, ...nodes) => (show ? nodes : []);
+
+  // Rows whose name is blank are placeholder rows in the UI, not real entries.
+  const named = arr => (Array.isArray(arr) ? arr.filter(r => r && String(r.name || '').trim()) : []);
+
+  const cell = (t, size, opt) =>
+    Object.assign({ text: (t === null || t === undefined) ? '' : String(t), fontSize: size || 6 }, opt || {});
+
   // === BASIC INFO ===
   const characterName = val(root, 'name') || '';
   const playerName = val(root, 'player') || '';
@@ -293,6 +316,76 @@ function generateCharacterPDF(root, opts) {
   for (let targetAC = 10; targetAC >= -10; targetAC--) {
     const rollNeeded = thac0Num - targetAC;
     thac0Matrix.push(rollNeeded > 20 ? '20+' : (rollNeeded < 1 ? '1' : rollNeeded.toString()));
+  }
+
+  // === ARMOR & AMMUNITION (optional) ===
+  // Both are arrays on the character record and therefore unreachable through
+  // val(), so they read from `sheet`.
+  const armorRows = named(sheet && sheet.armor);
+  const ammoRows = named(sheet && sheet.ammunition);
+  const showArmorAmmo = !!opts.armorAmmo && (armorRows.length > 0 || ammoRows.length > 0);
+
+  const armorAmmoBlocks = [];
+
+  if (showArmorAmmo && armorRows.length) {
+    armorAmmoBlocks.push({
+      table: {
+        headerRows: 1,
+        widths: ['26%', '12%', '10%', '10%', '8%', '8%', '26%'],
+        body: [
+          [
+            cell('Armor / Shield', 6, { bold: true }),
+            cell('Type', 6, { bold: true, alignment: 'center' }),
+            cell('Base AC', 6, { bold: true, alignment: 'center' }),
+            cell('Magic', 6, { bold: true, alignment: 'center' }),
+            cell('Worn', 6, { bold: true, alignment: 'center' }),
+            cell('Wt', 6, { bold: true, alignment: 'center' }),
+            cell('Notes', 6, { bold: true })
+          ],
+          ...armorRows.map(a => [
+            cell(a.name),
+            cell(a.armorType, 6, { alignment: 'center' }),
+            cell(a.baseAC, 6, { alignment: 'center' }),
+            cell(a.acBonus, 6, { alignment: 'center' }),
+            cell(a.equipped ? 'Yes' : '', 6, { alignment: 'center' }),
+            cell(a.weight, 6, { alignment: 'center' }),
+            cell(a.notes)
+          ])
+        ]
+      },
+      layout: gridLayout,
+      margin: [0, 0, 0, 5]
+    });
+  }
+
+  if (showArmorAmmo && ammoRows.length) {
+    armorAmmoBlocks.push({
+      table: {
+        headerRows: 1,
+        widths: ['40%', '15%', '20%', '25%'],
+        body: [
+          [
+            cell('Ammunition', 6, { bold: true }),
+            cell('Qty', 6, { bold: true, alignment: 'center' }),
+            cell('Wt each', 6, { bold: true, alignment: 'center' }),
+            cell('Total wt', 6, { bold: true, alignment: 'center' })
+          ],
+          ...ammoRows.map(a => {
+            const qty = parseFloat(a.quantity) || 0;
+            const per = parseFloat(a.weightPerUnit) || 0;
+            const total = qty * per;
+            return [
+              cell(a.name),
+              cell(a.quantity, 6, { alignment: 'center' }),
+              cell(a.weightPerUnit, 6, { alignment: 'center' }),
+              cell(total ? total.toFixed(1) : '', 6, { alignment: 'center' })
+            ];
+          })
+        ]
+      },
+      layout: gridLayout,
+      margin: [0, 0, 0, 5]
+    });
   }
 
   // Create PDF document definition
@@ -1104,6 +1197,11 @@ function generateCharacterPDF(root, opts) {
           }
         ]
       }
+      ),
+
+      // === ARMOR & AMMUNITION (optional) ===
+      ...optional(showArmorAmmo,
+        printSection('ARMOR & AMMUNITION', ...armorAmmoBlocks)
       )
     ]
   };
