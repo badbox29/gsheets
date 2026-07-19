@@ -1,3 +1,6 @@
+// Adding temp variable for sync testing
+const APP_JS_BUILD = 'test-1';
+
 // Shortcuts & constants
 const $ = id => document.getElementById(id);
 const CHAR_MAP_KEY = 'adnd2e_characters_map';
