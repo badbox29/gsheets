@@ -2384,16 +2384,7 @@ function generateCharacterPDF(root, opts) {
               { text: w.damage, fontSize: 7, alignment: 'center' },
               { text: w.range, fontSize: 6 }
             ]),
-            ...Array(Math.max(0, 8 - weapons.length)).fill(null).map(() => [
-              { text: '', margin: [0, 4, 0, 4] },
-              { text: '', margin: [0, 4, 0, 4] },
-              { text: '', margin: [0, 4, 0, 4] },
-              { text: '', margin: [0, 4, 0, 4] },
-              { text: '', margin: [0, 4, 0, 4] },
-              { text: '', margin: [0, 4, 0, 4] },
-              { text: '', margin: [0, 4, 0, 4] },
-              { text: '', margin: [0, 4, 0, 4] }
-            ])
+            ...blankRows('weapons', 8)
           ]
         },
         layout: {
@@ -2434,13 +2425,14 @@ function generateCharacterPDF(root, opts) {
                         cell('Group', 6, { bold: true }),
                         cell('Slots', 6, { bold: true, alignment: 'center' })
                       ],
-                      ...(weaponProfRows.length
+                      ...(hasContent(weaponProfRows, 'weaponProfs')
                         ? weaponProfRows.map(p => [
                             cell(p.name),
                             cell(p.group),
                             cell(p.slots, 6, { alignment: 'center' })
                           ])
-                        : [[cell('None', 6, { italics: true }), cell(''), cell('')]])
+                        : [[cell('None', 6, { italics: true }), cell(''), cell('')]]),
+                      ...blankRows('weaponProfs', 3)
                     ]
                   },
                   layout: gridLayout
@@ -2470,14 +2462,15 @@ function generateCharacterPDF(root, opts) {
                         cell('Slots', 6, { bold: true, alignment: 'center' }),
                         cell('Check', 6, { bold: true })
                       ],
-                      ...(nwpRows.length
+                      ...(hasContent(nwpRows, 'nwps')
                         ? nwpRows.map(p => [
                             cell(p.name),
                             cell(p.category),
                             cell(p.slots, 6, { alignment: 'center' }),
                             cell(p.abilityCheck)
                           ])
-                        : [[cell('None', 6, { italics: true }), cell(''), cell(''), cell('')]])
+                        : [[cell('None', 6, { italics: true }), cell(''), cell(''), cell('')]]),
+                      ...blankRows('nwps', 4)
                     ]
                   },
                   layout: gridLayout,
