@@ -1511,12 +1511,79 @@ function applyArchiveFilter(root, listSelector, toggleSelector, statusSelector) 
 }
 
 // ===== Mounts & Vehicles =====
+// === MOVING BETWEEN BONDED AND UNBONDED ===
+//
+// The two record shapes overlap but are not identical -- unbonded-only fields
+// are type, cost and morale; bonded-only are bond, loyalty and isMount. A move
+// that only copied the fields the destination UI displays would silently drop
+// the rest, so a round trip would lose data.
+//
+// Instead the WHOLE record travels. Each node stashes the object it was built
+// from on el._data, and a move merges the current DOM values over that. Fields
+// the destination cannot display ride along invisibly and come back if the
+// record is ever moved again.
+function readNodeFields(el, prefix, fields){
+  const out = {};
+  fields.forEach(f => {
+    const node = el.querySelector('.' + prefix + '-' + f.cls);
+    if(!node) return;
+    out[f.key] = (node.type === 'checkbox') ? !!node.checked : node.value;
+  });
+  return out;
+}
+
+const MOUNT_NODE_FIELDS = [
+  {key:'name',cls:'name'},{key:'type',cls:'type'},{key:'hp',cls:'hp'},{key:'ac',cls:'ac'},
+  {key:'movement',cls:'movement'},{key:'capacity',cls:'capacity'},{key:'cost',cls:'cost'},
+  {key:'status',cls:'status'},{key:'species',cls:'species'},{key:'hd',cls:'hd'},
+  {key:'thac0',cls:'thac0'},{key:'attacks',cls:'attacks'},{key:'morale',cls:'morale'},
+  {key:'str',cls:'str'},{key:'dex',cls:'dex'},{key:'con',cls:'con'},{key:'int',cls:'int'},
+  {key:'wis',cls:'wis'},{key:'cha',cls:'cha'},{key:'per',cls:'per'},{key:'com',cls:'com'},
+  {key:'abilities',cls:'abilities'},{key:'notes',cls:'notes'}
+];
+
+const COMPANION_NODE_FIELDS = [
+  {key:'name',cls:'name'},{key:'species',cls:'species'},{key:'hd',cls:'hd'},{key:'hp',cls:'hp'},
+  {key:'ac',cls:'ac'},{key:'thac0',cls:'thac0'},{key:'attacks',cls:'attacks'},
+  {key:'alignment',cls:'alignment'},{key:'str',cls:'str'},{key:'dex',cls:'dex'},
+  {key:'con',cls:'con'},{key:'int',cls:'int'},{key:'wis',cls:'wis'},{key:'cha',cls:'cha'},
+  {key:'per',cls:'per'},{key:'com',cls:'com'},{key:'loyalty',cls:'loyalty'},
+  {key:'bond',cls:'bond'},{key:'status',cls:'status'},{key:'isMount',cls:'is-mount'},
+  {key:'movement',cls:'movement'},{key:'capacity',cls:'capacity'},
+  {key:'abilities',cls:'abilities'},{key:'notes',cls:'notes'}
+];
+
+function moveMountToBonded(el, onChange){
+  const merged = Object.assign({}, el._data || {}, readNodeFields(el, 'mount', MOUNT_NODE_FIELDS));
+  // Anything in the unbonded list is by definition something you ride or drive.
+  merged.isMount = true;
+  const root = el.closest('.sheet-container');
+  const list = root && root.querySelector('.companions-list');
+  if(!list) return;
+  list.appendChild(makeCompanionNode(merged, onChange));
+  el.remove();
+  onChange && onChange();
+}
+
+function moveBondedToUnbonded(el, onChange){
+  const merged = Object.assign({}, el._data || {}, readNodeFields(el, 'companion', COMPANION_NODE_FIELDS));
+  const root = el.closest('.sheet-container');
+  const list = root && root.querySelector('.mounts-list');
+  if(!list) return;
+  list.appendChild(makeMountNode(merged, onChange));
+  el.remove();
+  onChange && onChange();
+}
+
 function makeMountNode(m, onChange){
   const el = document.createElement('div');
   el.className = 'item';
   el.style.flexDirection = 'column';
   el.style.alignItems = 'stretch';
   el.style.padding = '12px';
+  // Kept so fields this UI does not display survive a move -- see the
+  // comment above readNodeFields.
+  el._data = m || {};
   
   el.innerHTML =
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
@@ -1604,6 +1671,11 @@ function makeMountNode(m, onChange){
     textarea.style.height = Math.max(textarea.scrollHeight, 60) + 'px';
   };
   
+  const toBondedBtn = el.querySelector('.move-to-bonded');
+  if(toBondedBtn){
+    toBondedBtn.onclick = ()=> moveMountToBonded(el, onChange);
+  }
+
   toggleBtn.onclick = ()=>{
     const isOpen = detailsDiv.style.display !== 'none';
     detailsDiv.style.display = isOpen ? 'none' : 'block';
@@ -1897,6 +1969,9 @@ function makeCompanionNode(c, onChange){
   el.style.flexDirection = 'column';
   el.style.alignItems = 'stretch';
   el.style.padding = '12px';
+  // Kept so fields this UI does not display survive a move -- see the
+  // comment above readNodeFields.
+  el._data = c || {};
   
   el.innerHTML =
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
@@ -1905,7 +1980,8 @@ function makeCompanionNode(c, onChange){
       '<div style="width:70px;"></div>' + // Space for Remove button
     '</div>' +
     '<div style="display:flex;gap:8px;align-items:stretch;">' +
-      '<input class="companion-name" placeholder="e.g., Whiskers" value="'+(c.name||'')+'" style="flex:1;font-weight:bold;">' +
+      '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
+      '<button class="move-to-unbonded" style="padding:8px 10px;font-size:11px;" title="Move to Unbonded Mounts &amp; Vehicles. Nothing is lost -- fields that list does not show are kept.">&rarr; Unbonded</button>' +
       '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
       '<button class="rm">Remove</button>' +
     '</div>' +
@@ -2001,6 +2077,11 @@ function makeCompanionNode(c, onChange){
       onChange && onChange();
     }
   };
+
+  const toUnbondedBtn = el.querySelector('.move-to-unbonded');
+  if(toUnbondedBtn){
+    toUnbondedBtn.onclick = ()=> moveBondedToUnbonded(el, onChange);
+  }
   
   // All inputs trigger onChange
   el.querySelectorAll('input, textarea, select').forEach(inp => {
