@@ -472,13 +472,16 @@ function generateCharacterPDF(root, opts) {
     armorAmmoBlocks.push({
       table: {
         headerRows: 1,
-        widths: ['40%', '15%', '20%', '25%'],
+        widths: opts.tallyBoxes
+          ? ['26%', '8%', '11%', '11%', '44%']
+          : ['40%', '15%', '20%', '25%'],
         body: [
           [
             cell('Ammunition', 6, { bold: true }),
             cell('Qty', 6, { bold: true, alignment: 'center' }),
             cell('Wt each', 6, { bold: true, alignment: 'center' }),
-            cell('Total wt', 6, { bold: true, alignment: 'center' })
+            cell('Total wt', 6, { bold: true, alignment: 'center' }),
+            ...(opts.tallyBoxes ? [cell('Used', 6, { bold: true })] : [])
           ],
           ...ammoRows.map(a => {
             const qty = parseFloat(a.quantity) || 0;
@@ -488,10 +491,11 @@ function generateCharacterPDF(root, opts) {
               cell(a.name),
               cell(a.quantity, 6, { alignment: 'center' }),
               cell(a.weightPerUnit, 6, { alignment: 'center' }),
-              cell(total ? total.toFixed(1) : '', 6, { alignment: 'center' })
+              cell(total ? total.toFixed(1) : '', 6, { alignment: 'center' }),
+              ...(opts.tallyBoxes ? [tallyBoxes(a.quantity)] : [])
             ];
           }),
-          ...blankRows('ammo', 4)
+          ...blankRows('ammo', opts.tallyBoxes ? 5 : 4)
         ]
       },
       layout: gridLayout,
@@ -1127,17 +1131,26 @@ function generateCharacterPDF(root, opts) {
     magicItemBlocks.push({
       table: {
         headerRows: 1,
-        widths: ['32%', '68%'],
+        widths: opts.tallyBoxes ? ['26%', '46%', '28%'] : ['32%', '68%'],
         body: [
           [
             cell('Magic Item', 6, { bold: true }),
-            cell('Notes / Charges', 6, { bold: true })
+            cell('Notes / Charges', 6, { bold: true }),
+            ...(opts.tallyBoxes ? [cell('Charges Used', 6, { bold: true })] : [])
           ],
-          ...magicItemRows.map(m => [
-            cell(m.name, 6, { bold: true }),
-            cell(String(m.notes || '').trim())
-          ]),
-          ...blankRows('magicItems', 2)
+          ...magicItemRows.map(m => {
+            const notes = String(m.notes || '').trim();
+            // Charge counts are recorded in prose, so the number is pulled from
+            // the notes text -- "39 charges" yields 39 boxes. No match means no
+            // boxes rather than a wrong guess.
+            const match = notes.match(/(\d+)\s*charges?/i);
+            return [
+              cell(m.name, 6, { bold: true }),
+              cell(notes),
+              ...(opts.tallyBoxes ? [tallyBoxes(match ? match[1] : 0)] : [])
+            ];
+          }),
+          ...blankRows('magicItems', opts.tallyBoxes ? 3 : 2)
         ]
       },
       layout: gridLayout,
@@ -1672,6 +1685,33 @@ function generateCharacterPDF(root, opts) {
 
   const blankCell = (fontSize, vMargin) =>
     ({ text: ' ', fontSize: fontSize, margin: [0, vMargin, 0, vMargin] });
+
+  // === TALLY BOXES ===
+  // Consumables count DOWN during play. On paper, crossing out a printed
+  // number repeatedly gets illegible fast, so a row of small empty boxes is
+  // more usable -- tick one off per arrow loosed or charge spent.
+  //
+  // Rendered as a nested borderless table of empty cells, which gives evenly
+  // sized boxes that a text string of glyphs cannot.
+  const TALLY_MAX = 20;
+
+  const tallyBoxes = qty => {
+    const n = Math.min(TALLY_MAX, Math.max(0, parseInt(qty, 10) || 0));
+    if (!opts.tallyBoxes || n < 1) return { text: '' };
+    const row = [];
+    for (let i = 0; i < n; i++) row.push({ text: ' ', fontSize: 5 });
+    return {
+      table: { widths: Array(n).fill(7), body: [row] },
+      layout: {
+        hLineWidth: () => 0.5,
+        vLineWidth: () => 0.5,
+        paddingLeft: () => 1,
+        paddingRight: () => 1,
+        paddingTop: () => 0,
+        paddingBottom: () => 0
+      }
+    };
+  };
 
   const extraPageBlocks = [];
 
