@@ -1636,6 +1636,110 @@ function generateCharacterPDF(root, opts) {
   const xpDisplay = xp ? commafy(xp) : '\u2014';
   const nextLevelDisplay = (nextLevelXP === null) ? '\u2014' : commafy(nextLevelXP);
 
+  // === EXTRA APPENDED PAGES ===
+  //
+  // Whole blank pages added to the end of the sheet, for a player working from
+  // paper between sessions. Each is a full-page table so the ruling matches
+  // the rest of the sheet rather than being loose lines.
+  const extraSpellbookPages = blankCount('extraSpellbookPages');
+  const extraMemorizationPages = blankCount('extraMemorizationPages');
+  const extraBlankPages = blankCount('extraBlankPages');
+
+  // Rows that fill a page at these row heights. Approximate -- pdfMake decides
+  // the real break, and a row or two of slack is better than an overflow that
+  // pushes a nearly-empty page.
+  const ROWS_PER_PAGE = 34;
+
+  const extraPageBlocks = [];
+
+  // Continuation spellbook pages: the same columns as the spellbook section so
+  // a spell written here transcribes back into the app cleanly.
+  for (let i = 0; i < extraSpellbookPages; i++) {
+    const body = [spellHeaderRow(false)];
+    for (let r = 0; r < ROWS_PER_PAGE; r++) {
+      body.push(Array(8).fill(null).map(() => ({ text: '', fontSize: 6, margin: [0, 4, 0, 4] })));
+    }
+    extraPageBlocks.push({
+      pageBreak: 'before',
+      stack: [
+        { text: 'SPELLBOOK (CONTINUED)', fontSize: 8, bold: true, alignment: 'center', margin: [0, 0, 0, 2] },
+        { table: { headerRows: 1, widths: ['6%', '23%', '17%', '7%', '13%', '18%', '10%', '6%'], body: body }, layout: gridLayout }
+      ]
+    });
+  }
+
+  // Memorization worksheet: slot boxes grouped by spell level, sized to the
+  // character's own slot counts so a caster fills in exactly what they have.
+  // Falls back to a generic grid for a character with no slots recorded.
+  for (let i = 0; i < extraMemorizationPages; i++) {
+    const wsBlocks = [];
+    let anyLevel = false;
+
+    for (let lvl = 0; lvl < 9; lvl++) {
+      const n = parseInt(slotArr[lvl], 10);
+      if (isNaN(n) || n < 1) continue;
+      anyLevel = true;
+      const body = [[
+        cell('Cast', 6, { bold: true, alignment: 'center' }),
+        cell('Spell', 6, { bold: true }),
+        cell('School / Sphere', 6, { bold: true }),
+        cell('Range', 6, { bold: true }),
+        cell('Duration', 6, { bold: true }),
+        cell('Save', 6, { bold: true })
+      ]];
+      for (let s = 0; s < n; s++) {
+        body.push(Array(6).fill(null).map(() => ({ text: '', fontSize: 6, margin: [0, 5, 0, 5] })));
+      }
+      wsBlocks.push({ text: `Level ${lvl + 1} \u2014 ${n} slot${n === 1 ? '' : 's'}`, fontSize: 7, bold: true, margin: [0, 4, 0, 2] });
+      wsBlocks.push({
+        table: { headerRows: 1, widths: ['6%', '26%', '22%', '16%', '20%', '10%'], body: body },
+        layout: gridLayout
+      });
+    }
+
+    if (!anyLevel) {
+      const body = [];
+      for (let r = 0; r < ROWS_PER_PAGE; r++) {
+        body.push(Array(6).fill(null).map(() => ({ text: '', fontSize: 6, margin: [0, 5, 0, 5] })));
+      }
+      wsBlocks.push({ table: { widths: ['6%', '26%', '22%', '16%', '20%', '10%'], body: body }, layout: gridLayout });
+    }
+
+    extraPageBlocks.push({
+      pageBreak: 'before',
+      stack: [
+        { text: 'DAILY MEMORIZATION', fontSize: 8, bold: true, alignment: 'center', margin: [0, 0, 0, 2] },
+        { text: 'Date: ______________________', fontSize: 7, margin: [0, 0, 0, 4] },
+        ...wsBlocks
+      ]
+    });
+  }
+
+  // Plain ruled pages.
+  for (let i = 0; i < extraBlankPages; i++) {
+    const body = [];
+    for (let r = 0; r < ROWS_PER_PAGE; r++) {
+      body.push([{ text: '', fontSize: 8, margin: [0, 6, 0, 6] }]);
+    }
+    extraPageBlocks.push({
+      pageBreak: 'before',
+      stack: [
+        { text: 'NOTES', fontSize: 8, bold: true, alignment: 'center', margin: [0, 0, 0, 2] },
+        {
+          table: { widths: ['100%'], body: body },
+          layout: {
+            hLineWidth: () => 1,
+            vLineWidth: (i, node) => (i === 0 || i === node.table.widths.length) ? 1 : 0,
+            paddingLeft: () => 2,
+            paddingRight: () => 2,
+            paddingTop: () => 1,
+            paddingBottom: () => 1
+          }
+        }
+      ]
+    });
+  }
+
   // === CHARACTER PORTRAIT (optional) ===
   // pdfMake takes a base64 data URL directly, but supports JPEG and PNG only.
   // Any other format throws and takes the entire PDF down with it, so the
@@ -2612,7 +2716,11 @@ function generateCharacterPDF(root, opts) {
       ...optional(showQuests, ...questBlocks),
       ...optional(showNpcs, ...npcBlocks),
       ...optional(showLocations, ...locationBlocks),
-      ...optional(showCharJournal, ...charJournalBlocks)
+      ...optional(showCharJournal, ...charJournalBlocks),
+
+      // === EXTRA APPENDED PAGES ===
+      // Each carries its own pageBreak, so no page-group flag is needed.
+      ...extraPageBlocks
     ]
   };
   // Generate and download PDF
