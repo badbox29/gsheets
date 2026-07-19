@@ -284,31 +284,26 @@ function generateCharacterPDF(root, opts) {
   });
   
   // === COLLECT PROFICIENCIES (weapon + non-weapon) ===
-  const proficiencies = [];
-  
-  // Collect weapon proficiencies
-  const wpNodes = root.querySelectorAll('.weapon-profs-list .weapon-prof-item');
-  wpNodes.forEach(node => {
-    const nameElement = node.querySelector('strong');
-    const name = nameElement?.textContent.trim() || '';
-    if (name) {
-      proficiencies.push({
-        name: name
-      });
-    }
-  });
-  
-  // Collect non-weapon proficiencies
-  const nwpNodes = root.querySelectorAll('.nwp-list .nwp-item');
-  nwpNodes.forEach(node => {
-    const nameElement = node.querySelector('strong');
-    const name = nameElement?.textContent.trim() || '';
-    if (name) {
-      proficiencies.push({
-        name: name
-      });
-    }
-  });
+  //
+  // Previously this scraped the <strong> out of each DOM card and kept nothing
+  // but the name, merged weapon and nonweapon profs into one flat list, and
+  // hard-capped the output at 18 entries -- so a character with 19 silently
+  // lost the rest. The record carries both arrays fully structured, including
+  // the ability check that is the whole point of a nonweapon proficiency.
+  const weaponProfRows = named(sheet && sheet.weaponProfs);
+  const nwpRows = named(sheet && sheet.nwps);
+
+  // Slot budget, so the printed sheet shows the same accounting as the app.
+  const profSlots = (typeof getCharacterProficiencySlots === 'function')
+    ? getCharacterProficiencySlots(root)
+    : null;
+
+  const wpSpent = weaponProfRows.reduce((n, p) => n + (parseInt(p.slots, 10) || 0), 0);
+  const nwpProfSpent = nwpRows.reduce((n, p) => n + (parseInt(p.slots, 10) || 0), 0);
+  const langSpent = (typeof getLanguageSlotsSpent === 'function')
+    ? getLanguageSlotsSpent(root)
+    : 0;
+  const nwpSpent = nwpProfSpent + langSpent;
   
   // === CALCULATE THAC0 MATRIX ===
   const thac0Num = parseInt(thac0) || 20;
@@ -2301,87 +2296,82 @@ function generateCharacterPDF(root, opts) {
 
       // === PROFICIENCIES ===
       printSection('PROFICIENCIES',
-      {
-        columns: [
-          {
-            width: '33%',
-            table: {
-              widths: ['100%'],
-              body: [
-                [
-                  { text: 'Proficiency', fontSize: 6, bold: true }
-                ],
-                ...proficiencies.slice(0, 6).map(p => [
-                  { text: p.name, fontSize: 6 }
-                ]),
-                ...Array(Math.max(0, 6 - proficiencies.slice(0, 6).length)).fill(null).map(() => [
-                  { text: '', margin: [0, 3, 0, 3] }
-                ])
+        {
+          columns: [
+            {
+              width: '48%',
+              stack: [
+                {
+                  text: profSlots && profSlots.valid
+                    ? `Weapon Proficiencies \u2014 ${wpSpent} of ${profSlots.wpTotal} slots used`
+                    : 'Weapon Proficiencies',
+                  fontSize: 7,
+                  bold: true,
+                  margin: [0, 0, 0, 2]
+                },
+                {
+                  table: {
+                    headerRows: 1,
+                    widths: ['58%', '28%', '14%'],
+                    body: [
+                      [
+                        cell('Proficiency', 6, { bold: true }),
+                        cell('Group', 6, { bold: true }),
+                        cell('Slots', 6, { bold: true, alignment: 'center' })
+                      ],
+                      ...(weaponProfRows.length
+                        ? weaponProfRows.map(p => [
+                            cell(p.name),
+                            cell(p.group),
+                            cell(p.slots, 6, { alignment: 'center' })
+                          ])
+                        : [[cell('None', 6, { italics: true }), cell(''), cell('')]])
+                    ]
+                  },
+                  layout: gridLayout
+                }
               ]
             },
-            layout: {
-              hLineWidth: () => 1,
-              vLineWidth: () => 1,
-              paddingLeft: () => 2,
-              paddingRight: () => 2,
-              paddingTop: () => 1,
-              paddingBottom: () => 1
+            {
+              width: '52%',
+              stack: [
+                {
+                  text: profSlots && profSlots.valid
+                    ? `Nonweapon Proficiencies \u2014 ${nwpSpent} of ${profSlots.nwpTotal} slots used` +
+                      (langSpent ? ` (${langSpent} on languages)` : '')
+                    : 'Nonweapon Proficiencies',
+                  fontSize: 7,
+                  bold: true,
+                  margin: [0, 0, 0, 2]
+                },
+                {
+                  table: {
+                    headerRows: 1,
+                    widths: ['42%', '20%', '10%', '28%'],
+                    body: [
+                      [
+                        cell('Proficiency', 6, { bold: true }),
+                        cell('Group', 6, { bold: true }),
+                        cell('Slots', 6, { bold: true, alignment: 'center' }),
+                        cell('Check', 6, { bold: true })
+                      ],
+                      ...(nwpRows.length
+                        ? nwpRows.map(p => [
+                            cell(p.name),
+                            cell(p.category),
+                            cell(p.slots, 6, { alignment: 'center' }),
+                            cell(p.abilityCheck)
+                          ])
+                        : [[cell('None', 6, { italics: true }), cell(''), cell(''), cell('')]])
+                    ]
+                  },
+                  layout: gridLayout,
+                  margin: [5, 0, 0, 0]
+                }
+              ]
             }
-          },
-          {
-            width: '33%',
-            table: {
-              widths: ['100%'],
-              body: [
-                [
-                  { text: 'Proficiency', fontSize: 6, bold: true }
-                ],
-                ...proficiencies.slice(6, 12).map(p => [
-                  { text: p.name, fontSize: 6 }
-                ]),
-                ...Array(Math.max(0, 6 - proficiencies.slice(6, 12).length)).fill(null).map(() => [
-                  { text: '', margin: [0, 3, 0, 3] }
-                ])
-              ]
-            },
-            layout: {
-              hLineWidth: () => 1,
-              vLineWidth: () => 1,
-              paddingLeft: () => 2,
-              paddingRight: () => 2,
-              paddingTop: () => 1,
-              paddingBottom: () => 1
-            },
-            margin: [5, 0, 0, 0]
-          },
-          {
-            width: '34%',
-            table: {
-              widths: ['100%'],
-              body: [
-                [
-                  { text: 'Proficiency', fontSize: 6, bold: true }
-                ],
-                ...proficiencies.slice(12, 18).map(p => [
-                  { text: p.name, fontSize: 6 }
-                ]),
-                ...Array(Math.max(0, 6 - proficiencies.slice(12, 18).length)).fill(null).map(() => [
-                  { text: '', margin: [0, 3, 0, 3] }
-                ])
-              ]
-            },
-            layout: {
-              hLineWidth: () => 1,
-              vLineWidth: () => 1,
-              paddingLeft: () => 2,
-              paddingRight: () => 2,
-              paddingTop: () => 1,
-              paddingBottom: () => 1
-            },
-            margin: [5, 0, 0, 0]
-          }
-        ]
-      }
+          ]
+        }
       ),
 
       // === ARMOR & AMMUNITION (optional) ===
