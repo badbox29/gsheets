@@ -1,4 +1,4 @@
-// print.js - PDF Character Sheet Generation
+// print.js - PDF Character Sheet Generation.
 
 function generateCharacterPDF(root, opts) {
   if (!root) {
