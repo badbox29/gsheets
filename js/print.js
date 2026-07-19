@@ -316,7 +316,9 @@ function generateCharacterPDF(root, opts) {
   const attacksPerRound =
     (root.querySelector('.combat-attacks-per-round')?.value || '').trim();
 
-  const signed = n => (n > 0 ? '+' + n : String(n));
+  // Zero is signed too: "+0 / +0" reads as a computed adjustment of none,
+  // where "0 / 0" reads like a field nobody filled in.
+  const signed = n => (n >= 0 ? '+' + n : String(n));
 
   weaponNodes.forEach(node => {
     const name = (node.querySelector('.title')?.value || '').trim();
@@ -1220,7 +1222,11 @@ function generateCharacterPDF(root, opts) {
       .filter(Boolean)
       .join('  ');
 
-    push('Abilities', abilities);
+    // Labelled "Scores", not "Abilities" -- companions and mounts also carry a
+    // free-text `abilities` field for special attacks and defenses, and the two
+    // print side by side. Using the same word for both read as a duplicated
+    // label on Mr. Fluffles.
+    push('Scores', abilities);
     (extraFields || []).forEach(([label, key]) => push(label, rec[key]));
 
     return parts;
@@ -1359,7 +1365,7 @@ function generateCharacterPDF(root, opts) {
   const COMP_ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha', 'per', 'com'];
   const COMP_EXTRAS = [
     ['Alignment', 'alignment'],
-    ['Abilities', 'abilities'],
+    ['Special', 'abilities'],
     ['Notes', 'notes']
   ];
 
@@ -1424,7 +1430,7 @@ function generateCharacterPDF(root, opts) {
   const MOUNT_EXTRAS = [
     ['Type', 'type'],
     ['Cost', 'cost'],
-    ['Abilities', 'abilities'],
+    ['Special', 'abilities'],
     ['Notes', 'notes']
   ];
 
