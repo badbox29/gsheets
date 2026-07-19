@@ -364,6 +364,7 @@ function generateCharacterPDF(root, opts) {
       
       // === MAIN SECTION: Ability Scores + Saving Throws ===
       {
+        unbreakable: true,
         columns: [
           // LEFT: ABILITY SCORES
           {
@@ -646,13 +647,7 @@ function generateCharacterPDF(root, opts) {
       },
       
       // === COMBAT SECTION ===
-      {
-        text: 'COMBAT',
-        fontSize: 8,
-        bold: true,
-        alignment: 'center',
-        margin: [0, 0, 0, 2]
-      },
+      printSection('COMBAT',
       {
         columns: [
           // Armor/AC Section
@@ -829,8 +824,11 @@ function generateCharacterPDF(root, opts) {
         margin: [0, 0, 0, 5]
       },
       
+      ),
+
       // === THAC0 MATRIX ===
       {
+        unbreakable: true,
         table: {
           widths: ['11%', ...Array(21).fill('*')],
           body: [
@@ -858,13 +856,7 @@ function generateCharacterPDF(root, opts) {
       },
       
       // === COMBAT MODIFIERS ===
-      {
-        text: 'COMBAT MODIFIERS',
-        fontSize: 8,
-        bold: true,
-        alignment: 'center',
-        margin: [0, 0, 0, 2]
-      },
+      printSection('COMBAT MODIFIERS',
       {
         columns: [
           {
@@ -969,14 +961,10 @@ function generateCharacterPDF(root, opts) {
         margin: [0, 0, 0, 5]
       },
       
+      ),
+
       // === WEAPON COMBAT ===
-      {
-        text: 'WEAPON COMBAT',
-        fontSize: 8,
-        bold: true,
-        alignment: 'center',
-        margin: [0, 0, 0, 2]
-      },
+      printSection('WEAPON COMBAT',
       {
         table: {
           widths: ['25%', '6%', '6%', '8%', '8%', '12%', '17%', '18%'],
@@ -1024,6 +1012,8 @@ function generateCharacterPDF(root, opts) {
         margin: [0, 0, 0, 5]
       },
       
+      ),
+
       // === PROFICIENCIES ===
       printSection('PROFICIENCIES',
       {
