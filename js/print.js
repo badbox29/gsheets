@@ -688,9 +688,195 @@ function generateCharacterPDF(root, opts) {
     }
   }
 
+  // === MEMORIZED SPELLS (optional) ===
+  // Always summary lines. The spellbook detail toggle governs the spellbook
+  // only -- a memorization list is a play aid, and thirteen full descriptions
+  // would bury it.
+  const memorizedRows = named(magic.memorized);
+  const showMemorized = !!opts.memorized && memorizedRows.length > 0;
+
+  // Sorted by spell level, then alphabetically inside each level, which is how
+  // a caster reads their own list. Levels that will not parse sort last.
+  const memorizedSorted = memorizedRows.slice().sort((a, b) => {
+    const la = parseInt(a.level, 10);
+    const lb = parseInt(b.level, 10);
+    const na = isNaN(la) ? 99 : la;
+    const nb = isNaN(lb) ? 99 : lb;
+    if (na !== nb) return na - nb;
+    return String(a.name || '').localeCompare(String(b.name || ''));
+  });
+
+  const memorizedBlocks = [];
+
+  if (showMemorized) {
+    memorizedBlocks.push({
+      table: {
+        headerRows: 1,
+        widths: ['5%', '21%', '15%', '7%', '12%', '16%', '11%', '7%', '6%'],
+        body: [
+          [
+            cell('Lvl', 6, { bold: true, alignment: 'center' }),
+            cell('Spell', 6, { bold: true }),
+            cell('School / Sphere', 6, { bold: true }),
+            cell('Cast', 6, { bold: true, alignment: 'center' }),
+            cell('Range', 6, { bold: true }),
+            cell('Duration', 6, { bold: true }),
+            cell('Save', 6, { bold: true }),
+            cell('Comp', 6, { bold: true, alignment: 'center' }),
+            cell('Used', 6, { bold: true, alignment: 'center' })
+          ],
+          ...memorizedSorted.map(s => [
+            cell(s.level, 6, { alignment: 'center' }),
+            cell(s.name, 6, { bold: true }),
+            cell(s.schoolSphere),
+            cell(s.castTime, 6, { alignment: 'center' }),
+            cell(s.range),
+            cell(s.duration),
+            cell(s.save),
+            cell(s.components, 6, { alignment: 'center' }),
+            cell(s.cast ? 'X' : '', 6, { alignment: 'center' })
+          ])
+        ]
+      },
+      layout: gridLayout,
+      margin: [0, 0, 0, 5]
+    });
+  }
+
+  // === SPELLBOOKS (optional) ===
+  //
+  // This is the one section that can genuinely outgrow a page, so it does NOT
+  // use printSection. Instead the heading, the book label and the first few
+  // rows travel together as one unbreakable block, and the remainder is a
+  // separate table that is free to flow onto the next page, repeating its
+  // header row as it goes. A heading is never orphaned; a long list is still
+  // allowed to break.
+  const spellbooks = Array.isArray(magic.spellbooks) ? magic.spellbooks : [];
+  const booksWithSpells = spellbooks.filter(b => b && named(b.spells).length > 0);
+  const showSpellbooks = !!opts.spellbooks && booksWithSpells.length > 0;
+  const spellbookFull = opts.spellbookDetail === 'full';
+
+  // Rows kept with the heading. Enough to prove the section started, few
+  // enough that the block still fits in most page remainders.
+  const SPELLBOOK_LEAD_ROWS = 6;
+
+  const sortSpells = rows => rows.slice().sort((a, b) => {
+    const la = parseInt(a.level, 10);
+    const lb = parseInt(b.level, 10);
+    const na = isNaN(la) ? 99 : la;
+    const nb = isNaN(lb) ? 99 : lb;
+    if (na !== nb) return na - nb;
+    return String(a.name || '').localeCompare(String(b.name || ''));
+  });
+
+  // The Free column only earns its width for a specialist wizard who has
+  // actually flagged free school spells, so it is added per book.
+  const spellHeaderRow = hasFree => {
+    const row = [
+      cell('Lvl', 6, { bold: true, alignment: 'center' }),
+      cell('Spell', 6, { bold: true }),
+      cell('School / Sphere', 6, { bold: true }),
+      cell('Cast', 6, { bold: true, alignment: 'center' }),
+      cell('Range', 6, { bold: true }),
+      cell('Duration', 6, { bold: true }),
+      cell('Save', 6, { bold: true }),
+      cell('Comp', 6, { bold: true, alignment: 'center' })
+    ];
+    if (hasFree) row.push(cell('Free', 6, { bold: true, alignment: 'center' }));
+    return row;
+  };
+
+  const spellDataRow = (s, hasFree) => {
+    const row = [
+      cell(s.level, 6, { alignment: 'center' }),
+      cell(s.name, 6, { bold: true }),
+      cell(s.schoolSphere),
+      cell(s.castTime, 6, { alignment: 'center' }),
+      cell(s.range),
+      cell(s.duration),
+      cell(s.save),
+      cell(s.components, 6, { alignment: 'center' })
+    ];
+    if (hasFree) row.push(cell(s.freeSpell ? 'X' : '', 6, { alignment: 'center' }));
+    return row;
+  };
+
+  const spellTable = (rows, hasFree) => ({
+    table: {
+      headerRows: 1,
+      widths: hasFree
+        ? ['5%', '21%', '16%', '6%', '12%', '17%', '9%', '6%', '8%']
+        : ['6%', '23%', '17%', '7%', '13%', '18%', '10%', '6%'],
+      body: [spellHeaderRow(hasFree), ...rows.map(s => spellDataRow(s, hasFree))]
+    },
+    layout: gridLayout,
+    margin: [0, 0, 0, 5]
+  });
+
+  const spellbookBlocks = [];
+
+  if (showSpellbooks) {
+    booksWithSpells.forEach((book, bookIndex) => {
+      const rows = sortSpells(named(book.spells));
+      const hasFree = rows.some(s => s.freeSpell);
+      const isActive = book.id && book.id === magic.activeSpellbookId;
+      const label = {
+        text: `${book.name || 'Spellbook'} \u2014 ${rows.length} spell${rows.length === 1 ? '' : 's'}` +
+              (isActive ? ' (active)' : ''),
+        fontSize: 7,
+        bold: true,
+        margin: [0, 2, 0, 2]
+      };
+
+      const lead = rows.slice(0, SPELLBOOK_LEAD_ROWS);
+      const tail = rows.slice(SPELLBOOK_LEAD_ROWS);
+
+      // The section title rides with the first book only.
+      const leadStack = [];
+      if (bookIndex === 0) {
+        leadStack.push({
+          text: 'SPELLBOOKS',
+          fontSize: 8,
+          bold: true,
+          alignment: 'center',
+          margin: [0, 0, 0, 2]
+        });
+      }
+      leadStack.push(label);
+      leadStack.push(spellTable(lead, hasFree));
+
+      spellbookBlocks.push({ unbreakable: true, stack: leadStack });
+
+      if (tail.length) {
+        spellbookBlocks.push(spellTable(tail, hasFree));
+      }
+
+      if (spellbookFull) {
+        spellbookBlocks.push({
+          text: `${book.name || 'Spellbook'} \u2014 Spell Descriptions`,
+          fontSize: 7,
+          bold: true,
+          margin: [0, 4, 0, 2]
+        });
+        rows.forEach(s => {
+          const desc = String(s.description || '').trim();
+          spellbookBlocks.push({
+            text: [
+              { text: `${s.name} `, bold: true },
+              { text: `(Lvl ${s.level || '?'}, ${s.schoolSphere || 'unclassified'})  `, italics: true },
+              { text: desc || 'No description recorded.' }
+            ],
+            fontSize: 6,
+            margin: [0, 0, 0, 3]
+          });
+        });
+      }
+    });
+  }
+
   // Page 4 carries the magic sections. Same rule as page 3 -- the break is
   // only emitted if something on the page is actually going to print.
-  const showPage4 = showSpellAccess;
+  const showPage4 = showSpellAccess || showMemorized || showSpellbooks;
 
   // Create PDF document definition
   const docDefinition = {
@@ -1546,7 +1732,17 @@ function generateCharacterPDF(root, opts) {
       // === SPELL SLOTS & ACCESS (optional) ===
       ...optional(showSpellAccess,
         printSection('SPELL SLOTS & ACCESS', ...spellAccessBlocks)
-      )
+      ),
+
+      // === MEMORIZED SPELLS (optional) ===
+      ...optional(showMemorized,
+        printSection('MEMORIZED SPELLS', ...memorizedBlocks)
+      ),
+
+      // === SPELLBOOKS (optional) ===
+      // Spread directly rather than through printSection -- this section
+      // builds its own heading so the list is allowed to break across pages.
+      ...optional(showSpellbooks, ...spellbookBlocks)
     ]
   };
   // Generate and download PDF
