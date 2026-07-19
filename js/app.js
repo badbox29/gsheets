@@ -1601,6 +1601,7 @@ function makeMountNode(m, onChange){
         '<option value="Ship"'+((m.type||'')==='Ship'?' selected':'')+'>Ship</option>' +
         '<option value="Other Transport"'+((m.type||'')==='Other Transport'?' selected':'')+'>Other Transport</option>' +
       '</select>' +
+	  '<button class="move-to-bonded" style="padding:8px 10px;font-size:11px;" title="Move to Bonded Mounts &amp; Animal Companions. Nothing is lost -- fields that list does not show are kept.">&rarr; Bonded</button>' +
       '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
       '<button class="rm">Remove</button>' +
     '</div>' +
