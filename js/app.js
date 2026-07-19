@@ -4726,7 +4726,23 @@ function bindSheet(root, tab){
 
     alert(`Deleted: ${name}`);
   };
-  qs(root,'.print').onclick = ()=> generateCharacterPDF(root);
+  // Print button now opens the options modal instead of generating directly.
+  qs(root,'.print').onclick = () => openPrintModal(root);
+
+  // Print options modal
+  qs(root, '.print-modal-close').onclick = () => closePrintModal(root);
+  qs(root, '.print-modal-overlay').addEventListener('click', e => {
+    if (e.target === qs(root, '.print-modal-overlay')) closePrintModal(root);
+  });
+  qs(root, '.print-select-all').onclick  = () => setAllPrintOptions(root, true);
+  qs(root, '.print-select-none').onclick = () => setAllPrintOptions(root, false);
+  qs(root, '.print-select-core').onclick = () => applyPrintOptionsToModal(root, PRINT_OPTION_DEFAULTS);
+  qs(root, '.print-modal-generate').onclick = () => {
+    const opts = readPrintOptionsFromModal(root);
+    savePrintOptions(opts);
+    closePrintModal(root);
+    generateCharacterPDF(root, opts);
+  };
 
   // KV Settings modal
   qs(root, '.kv-settings').onclick = () => openKvSettingsModal(root);
