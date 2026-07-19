@@ -1652,10 +1652,22 @@ function generateCharacterPDF(root, opts) {
   const extraMemorizationPages = blankCount('extraMemorizationPages');
   const extraBlankPages = blankCount('extraBlankPages');
 
-  // Rows that fill a page at these row heights. Approximate -- pdfMake decides
-  // the real break, and a row or two of slack is better than an overflow that
-  // pushes a nearly-empty page.
-  const ROWS_PER_PAGE = 34;
+  // Usable height of a Letter page after the top and bottom page margins.
+  const PAGE_CONTENT_HEIGHT = 792 - 20 - 32;
+
+  // Height of one blank row: its text line box, plus gridLayout's 1pt cell
+  // padding top and bottom, plus the vertical margin set on the cell.
+  //
+  // Blank cells carry a single space rather than an empty string on purpose --
+  // pdfMake collapses the line box of an empty string, so a row built from ''
+  // is shorter than its font size implies and the page underfills.
+  const blankRowHeight = (vMargin, fontSize) => (fontSize * 1.25) + 2 + (vMargin * 2);
+
+  const rowsToFillPage = (usedByHeadings, vMargin, fontSize) =>
+    Math.max(1, Math.floor((PAGE_CONTENT_HEIGHT - usedByHeadings) / blankRowHeight(vMargin, fontSize)));
+
+  const blankCell = (fontSize, vMargin) =>
+    ({ text: ' ', fontSize: fontSize, margin: [0, vMargin, 0, vMargin] });
 
   const extraPageBlocks = [];
 
@@ -1663,8 +1675,10 @@ function generateCharacterPDF(root, opts) {
   // a spell written here transcribes back into the app cleanly.
   for (let i = 0; i < extraSpellbookPages; i++) {
     const body = [spellHeaderRow(false)];
-    for (let r = 0; r < ROWS_PER_PAGE; r++) {
-      body.push(Array(8).fill(null).map(() => ({ text: '', fontSize: 6, margin: [0, 4, 0, 4] })));
+    // Headings used: section title (~12pt) plus the table's header row (~10pt).
+    const rows = rowsToFillPage(22, 4, 6);
+    for (let r = 0; r < rows; r++) {
+      body.push(Array(8).fill(null).map(() => blankCell(6, 4)));
     }
     extraPageBlocks.push({
       pageBreak: 'before',
@@ -1706,11 +1720,10 @@ function generateCharacterPDF(root, opts) {
 
     if (!anyLevel) {
       const body = [];
-      for (let r = 0; r < ROWS_PER_PAGE; r++) {
-        body.push(Array(6).fill(null).map(() => ({ text: '', fontSize: 6, margin: [0, 5, 0, 5] })));
+      const rows = rowsToFillPage(24, 5, 6);
+      for (let r = 0; r < rows; r++) {
+        body.push(Array(6).fill(null).map(() => blankCell(6, 5)));
       }
-      wsBlocks.push({ table: { widths: ['6%', '26%', '22%', '16%', '20%', '10%'], body: body }, layout: gridLayout });
-    }
 
     extraPageBlocks.push({
       pageBreak: 'before',
@@ -1807,8 +1820,9 @@ function generateCharacterPDF(root, opts) {
   // Plain ruled pages.
   for (let i = 0; i < extraBlankPages; i++) {
     const body = [];
-    for (let r = 0; r < ROWS_PER_PAGE; r++) {
-      body.push([{ text: '', fontSize: 8, margin: [0, 6, 0, 6] }]);
+    const rows = rowsToFillPage(12, 7, 8);
+    for (let r = 0; r < rows; r++) {
+      body.push([blankCell(8, 7)]);
     }
     extraPageBlocks.push({
       pageBreak: 'before',
