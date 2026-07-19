@@ -878,6 +878,167 @@ function generateCharacterPDF(root, opts) {
   // only emitted if something on the page is actually going to print.
   const showPage4 = showSpellAccess || showMemorized || showSpellbooks;
 
+  // === EQUIPMENT, VALUABLES & COINS (optional) ===
+  const itemRows = named(sheet && sheet.items);
+  const valuableRows = named(sheet && sheet.valuables);
+  const coins = (sheet && sheet.coins) || {};
+  const enc = (sheet && sheet.encumbrance) || {};
+  const hasCoins = ['cp', 'sp', 'ep', 'gp', 'pp'].some(k => (parseFloat(coins[k]) || 0) > 0);
+
+  const showEquipment = !!opts.equipment &&
+    (itemRows.length > 0 || valuableRows.length > 0 || hasCoins);
+
+  // Qty x unit weight, so the sheet shows what the stack actually weighs.
+  const stackWeight = r => {
+    const q = parseFloat(r.qty) || 0;
+    const w = parseFloat(r.weight) || 0;
+    const t = q * w;
+    return t ? t.toFixed(1) : '';
+  };
+
+  const equipmentBlocks = [];
+
+  if (showEquipment) {
+    if (itemRows.length) {
+      equipmentBlocks.push({ text: 'Equipment', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+      equipmentBlocks.push({
+        table: {
+          headerRows: 1,
+          widths: ['32%', '7%', '10%', '10%', '41%'],
+          body: [
+            [
+              cell('Item', 6, { bold: true }),
+              cell('Qty', 6, { bold: true, alignment: 'center' }),
+              cell('Wt ea', 6, { bold: true, alignment: 'center' }),
+              cell('Total', 6, { bold: true, alignment: 'center' }),
+              cell('Notes', 6, { bold: true })
+            ],
+            ...itemRows.map(r => [
+              cell(r.name),
+              cell(r.qty, 6, { alignment: 'center' }),
+              cell(r.weight, 6, { alignment: 'center' }),
+              cell(stackWeight(r), 6, { alignment: 'center' }),
+              cell(r.notes)
+            ])
+          ]
+        },
+        layout: gridLayout,
+        margin: [0, 0, 0, 5]
+      });
+    }
+
+    if (valuableRows.length) {
+      equipmentBlocks.push({ text: 'Valuables', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+      equipmentBlocks.push({
+        table: {
+          headerRows: 1,
+          widths: ['30%', '7%', '13%', '9%', '9%', '32%'],
+          body: [
+            [
+              cell('Valuable', 6, { bold: true }),
+              cell('Qty', 6, { bold: true, alignment: 'center' }),
+              cell('Value ea', 6, { bold: true, alignment: 'center' }),
+              cell('Wt ea', 6, { bold: true, alignment: 'center' }),
+              cell('Total wt', 6, { bold: true, alignment: 'center' }),
+              cell('Notes', 6, { bold: true })
+            ],
+            ...valuableRows.map(r => [
+              cell(r.name),
+              cell(r.qty, 6, { alignment: 'center' }),
+              cell(r.valueEach || '\u2014', 6, { alignment: 'center' }),
+              cell(r.weight, 6, { alignment: 'center' }),
+              cell(stackWeight(r), 6, { alignment: 'center' }),
+              cell(r.notes)
+            ])
+          ]
+        },
+        layout: gridLayout,
+        margin: [0, 0, 0, 5]
+      });
+    }
+
+    // Coins and the encumbrance totals share a row -- both are "what am I
+    // carrying" figures and neither justifies a section of its own.
+    equipmentBlocks.push({
+      columns: [
+        {
+          width: '55%',
+          table: {
+            widths: ['20%', '20%', '20%', '20%', '20%'],
+            body: [
+              [
+                cell('CP', 6, { bold: true, alignment: 'center' }),
+                cell('SP', 6, { bold: true, alignment: 'center' }),
+                cell('EP', 6, { bold: true, alignment: 'center' }),
+                cell('GP', 6, { bold: true, alignment: 'center' }),
+                cell('PP', 6, { bold: true, alignment: 'center' })
+              ],
+              [
+                cell(coins.cp || '0', 8, { alignment: 'center' }),
+                cell(coins.sp || '0', 8, { alignment: 'center' }),
+                cell(coins.ep || '0', 8, { alignment: 'center' }),
+                cell(coins.gp || '0', 8, { alignment: 'center' }),
+                cell(coins.pp || '0', 8, { alignment: 'center' })
+              ]
+            ]
+          },
+          layout: gridLayout
+        },
+        {
+          width: '45%',
+          table: {
+            widths: ['50%', '50%'],
+            body: [
+              [
+                cell('Weight Carried', 6, { bold: true, alignment: 'center' }),
+                cell('Maximum', 6, { bold: true, alignment: 'center' })
+              ],
+              [
+                cell(enc.current || '\u2014', 8, { alignment: 'center' }),
+                cell(enc.max || '\u2014', 8, { alignment: 'center' })
+              ]
+            ]
+          },
+          layout: gridLayout,
+          margin: [5, 0, 0, 0]
+        }
+      ],
+      margin: [0, 0, 0, 5]
+    });
+  }
+
+  // === MAGIC ITEMS (optional) ===
+  // A separate checkbox from equipment on purpose: a player may well want the
+  // gear list on a printout while keeping the magic inventory off it.
+  const magicItemRows = named(sheet && sheet.magicItems);
+  const showMagicItems = !!opts.magicItems && magicItemRows.length > 0;
+
+  const magicItemBlocks = [];
+
+  if (showMagicItems) {
+    magicItemBlocks.push({
+      table: {
+        headerRows: 1,
+        widths: ['32%', '68%'],
+        body: [
+          [
+            cell('Magic Item', 6, { bold: true }),
+            cell('Notes / Charges', 6, { bold: true })
+          ],
+          ...magicItemRows.map(m => [
+            cell(m.name, 6, { bold: true }),
+            cell(String(m.notes || '').trim())
+          ])
+        ]
+      },
+      layout: gridLayout,
+      margin: [0, 0, 0, 5]
+    });
+  }
+
+  // Page 5 carries gear.
+  const showPage5 = showEquipment || showMagicItems;
+
   // Create PDF document definition
   const docDefinition = {
     pageSize: 'LETTER',
@@ -1742,7 +1903,22 @@ function generateCharacterPDF(root, opts) {
       // === SPELLBOOKS (optional) ===
       // Spread directly rather than through printSection -- this section
       // builds its own heading so the list is allowed to break across pages.
-      ...optional(showSpellbooks, ...spellbookBlocks)
+      ...optional(showSpellbooks, ...spellbookBlocks),
+
+      // === PAGE 5: Gear ===
+      ...optional(showPage5,
+        { text: '', fontSize: 1, pageBreak: 'before' }
+      ),
+
+      // === EQUIPMENT, VALUABLES & COINS (optional) ===
+      ...optional(showEquipment,
+        printSection('EQUIPMENT & VALUABLES', ...equipmentBlocks)
+      ),
+
+      // === MAGIC ITEMS (optional) ===
+      ...optional(showMagicItems,
+        printSection('MAGIC ITEMS', ...magicItemBlocks)
+      )
     ]
   };
   // Generate and download PDF
