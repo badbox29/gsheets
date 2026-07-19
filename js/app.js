@@ -4734,9 +4734,19 @@ function bindSheet(root, tab){
   qs(root, '.print-modal-overlay').addEventListener('click', e => {
     if (e.target === qs(root, '.print-modal-overlay')) closePrintModal(root);
   });
-  qs(root, '.print-select-all').onclick  = () => setAllPrintOptions(root, true);
-  qs(root, '.print-select-none').onclick = () => setAllPrintOptions(root, false);
-  qs(root, '.print-select-core').onclick = () => applyPrintOptionsToModal(root, PRINT_OPTION_DEFAULTS);
+  qs(root, '.print-select-all').onclick  = () => { setAllPrintOptions(root, true); updatePrintPageEstimate(root); };
+  qs(root, '.print-select-none').onclick = () => { setAllPrintOptions(root, false); updatePrintPageEstimate(root); };
+  qs(root, '.print-select-core').onclick = () => {
+    applyPrintOptionsToModal(root, getPrintOptions.defaults || Object.assign({}, PRINT_OPTION_DEFAULTS, { blanks: PRINT_BLANK_DEFAULTS }));
+    updatePrintPageEstimate(root);
+  };
+
+  // One delegated listener rather than 40 individual ones.
+  qs(root, '.print-modal-overlay').addEventListener('change', e => {
+    if (e.target.matches('.print-opt, .print-blank, .print-spellbook-detail')) {
+      updatePrintPageEstimate(root);
+    }
+  });
   qs(root, '.print-modal-generate').onclick = () => {
     const opts = readPrintOptionsFromModal(root);
     savePrintOptions(opts);
@@ -5015,7 +5025,40 @@ const PRINT_OPTION_DEFAULTS = {
   locations:        false,
   characterJournal: false,
   // Sub-option (not a checkbox)
-  spellbookDetail:  'summary'
+  spellbookDetail:  'summary',
+
+  // Extras -- checkboxes in the "Blank Lines & Extra Pages" panel
+  changesPage:      false,
+  printDate:        false,
+  tallyBoxes:       false
+};
+
+// Blank rows appended to the end of each printed list, and extra whole pages
+// appended to the end of the sheet. Zero disables -- no separate checkbox.
+//
+// Defaults are roughly "one session's worth of acquisitions" for the lists
+// that change fast, and less for the ones that rarely do. All default to 0 for
+// the extra PAGES, which are opt-in: a player who wants them knows they do.
+const PRINT_BLANK_DEFAULTS = {
+  weapons:                3,
+  equipment:              8,
+  valuables:              4,
+  magicItems:             4,
+  armor:                  3,
+  ammo:                   3,
+  weaponProfs:            3,
+  nwps:                   4,
+  languages:              2,
+  memorized:              6,
+  spellbook:              8,
+  conditions:             4,
+  henchmen:               2,
+  hirelings:              2,
+  companions:             2,
+  mounts:                 2,
+  extraSpellbookPages:    0,
+  extraMemorizationPages: 0,
+  extraBlankPages:        0
 };
 
 // Saved prefs are layered OVER the defaults, so a new option added to the
@@ -5027,7 +5070,45 @@ function getPrintOptions() {
   } catch (e) {
     saved = {};
   }
-  return Object.assign({}, PRINT_OPTION_DEFAULTS, saved);
+  const opts = Object.assign({}, PRINT_OPTION_DEFAULTS, saved);
+  // Blank counts live on their own sub-object so they never collide with an
+  // option key, and so a new entry added later still picks up its default.
+  opts.blanks = Object.assign({}, PRINT_BLANK_DEFAULTS, saved.blanks || {});
+  return opts;
+}
+
+// Rough page estimate for the modal footer. Not exact -- pdfMake decides the
+// real breaks -- but close enough to warn before generating twenty pages.
+function estimatePrintPages(root, opts) {
+  let pages = 2;                       // core pages, always printed
+  if (opts.languages || opts.thiefSkills || opts.abilities ||
+      opts.powersHindrances || opts.conditions) pages += 1;
+  if (opts.spellAccess || opts.memorized || opts.spellbooks) pages += 1;
+  if (opts.equipment || opts.magicItems) pages += 1;
+  if (opts.details || opts.background || opts.henchmen ||
+      opts.hirelings || opts.companions || opts.mounts) pages += 1;
+  if (opts.sessionLog || opts.questJournal || opts.npcs ||
+      opts.locations || opts.characterJournal) pages += 1;
+
+  const b = opts.blanks || {};
+  const blankRows = Object.keys(PRINT_BLANK_DEFAULTS)
+    .filter(k => k.indexOf('extra') !== 0)
+    .reduce((n, k) => n + (parseInt(b[k], 10) || 0), 0);
+  pages += Math.ceil(blankRows / 45);  // ~45 rows to a page at 6pt
+
+  pages += (parseInt(b.extraSpellbookPages, 10) || 0);
+  pages += (parseInt(b.extraMemorizationPages, 10) || 0);
+  pages += (parseInt(b.extraBlankPages, 10) || 0);
+  if (opts.changesPage) pages += 1;
+
+  return pages;
+}
+
+function updatePrintPageEstimate(root) {
+  const el = qs(root, '.print-page-estimate');
+  if (!el) return;
+  const n = estimatePrintPages(root, readPrintOptionsFromModal(root));
+  el.textContent = `Estimated: ${n} page${n === 1 ? '' : 's'}`;
 }
 
 function savePrintOptions(opts) {
@@ -5044,6 +5125,12 @@ function applyPrintOptionsToModal(root, opts) {
   });
   const sel = qs(root, '.print-spellbook-detail');
   if (sel) sel.value = opts.spellbookDetail || 'summary';
+
+  const blanks = opts.blanks || PRINT_BLANK_DEFAULTS;
+  qsa(root, '.print-blank').forEach(inp => {
+    const v = blanks[inp.dataset.blank];
+    inp.value = (v === undefined || v === null) ? 0 : v;
+  });
 }
 
 function readPrintOptionsFromModal(root) {
@@ -5053,6 +5140,12 @@ function readPrintOptionsFromModal(root) {
   });
   const sel = qs(root, '.print-spellbook-detail');
   opts.spellbookDetail = sel ? sel.value : 'summary';
+
+  opts.blanks = {};
+  qsa(root, '.print-blank').forEach(inp => {
+    const n = parseInt(inp.value, 10);
+    opts.blanks[inp.dataset.blank] = (isNaN(n) || n < 0) ? 0 : n;
+  });
   return opts;
 }
 
@@ -5062,6 +5155,7 @@ function setAllPrintOptions(root, checked) {
 
 function openPrintModal(root) {
   applyPrintOptionsToModal(root, getPrintOptions());
+  updatePrintPageEstimate(root);
   qs(root, '.print-modal-overlay').style.display = 'flex';
 }
 
