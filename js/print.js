@@ -289,7 +289,14 @@ function generateCharacterPDF(root, opts) {
                   body: [
                     // STR Header Row
                     [
-                      { text: 'STR', fontSize: 7, bold: true, rowSpan: 2, alignment: 'center', margin: [0, 6, 0, 0] },
+                      {
+                        stack: [
+                          { text: 'STR', fontSize: 7, bold: true, alignment: 'center' },
+                          { text: strDisplay, fontSize: 10, bold: true, alignment: 'center', margin: [0, 1, 0, 0] }
+                        ],
+                        rowSpan: 2,
+                        margin: [0, 3, 0, 0]
+                      },
                       { text: 'Hit\nAdj', fontSize: 5, alignment: 'center' },
                       { text: 'Dmg\nAdj', fontSize: 5, alignment: 'center' },
                       { text: 'Weight\nAllow', fontSize: 5, alignment: 'center', colSpan: 2 },
@@ -309,7 +316,14 @@ function generateCharacterPDF(root, opts) {
                     ],
                     // DEX Header Row
                     [
-                      { text: 'DEX', fontSize: 7, bold: true, rowSpan: 2, alignment: 'center', margin: [0, 4, 0, 0] },
+                      {
+                        stack: [
+                          { text: 'DEX', fontSize: 7, bold: true, alignment: 'center' },
+                          { text: dex, fontSize: 10, bold: true, alignment: 'center', margin: [0, 1, 0, 0] }
+                        ],
+                        rowSpan: 2,
+                        margin: [0, 2, 0, 0]
+                      },
                       { text: 'Surprise\nAdj', fontSize: 5, alignment: 'center', colSpan: 2 },
                       {},
                       { text: 'Missile Att\nAdj', fontSize: 5, alignment: 'center', colSpan: 2 },
@@ -329,7 +343,14 @@ function generateCharacterPDF(root, opts) {
                     ],
                     // CON Header Row
                     [
-                      { text: 'CON', fontSize: 7, bold: true, rowSpan: 2, alignment: 'center', margin: [0, 6, 0, 0] },
+                      {
+                        stack: [
+                          { text: 'CON', fontSize: 7, bold: true, alignment: 'center' },
+                          { text: con, fontSize: 10, bold: true, alignment: 'center', margin: [0, 1, 0, 0] }
+                        ],
+                        rowSpan: 2,
+                        margin: [0, 3, 0, 0]
+                      },
                       { text: 'HP\nAdj', fontSize: 5, alignment: 'center' },
                       { text: 'System\nShock', fontSize: 5, alignment: 'center' },
                       { text: 'Resurrect\nSurvival', fontSize: 5, alignment: 'center' },
@@ -349,7 +370,14 @@ function generateCharacterPDF(root, opts) {
                     ],
                     // INT Header Row
                     [
-                      { text: 'INT', fontSize: 7, bold: true, rowSpan: 2, alignment: 'center', margin: [0, 6, 0, 0] },
+                      {
+                        stack: [
+                          { text: 'INT', fontSize: 7, bold: true, alignment: 'center' },
+                          { text: int, fontSize: 10, bold: true, alignment: 'center', margin: [0, 1, 0, 0] }
+                        ],
+                        rowSpan: 2,
+                        margin: [0, 3, 0, 0]
+                      },
                       { text: "Add'l\nLang", fontSize: 5, alignment: 'center' },
                       { text: 'Bonus\nNWPs', fontSize: 5, alignment: 'center' },
                       { text: 'Learn\nSpell%', fontSize: 5, alignment: 'center' },
@@ -369,7 +397,14 @@ function generateCharacterPDF(root, opts) {
                     ],
                     // WIS Header Row
                     [
-                      { text: 'WIS', fontSize: 7, bold: true, rowSpan: 2, alignment: 'center', margin: [0, 6, 0, 0] },
+                     {
+                        stack: [
+                          { text: 'WIS', fontSize: 7, bold: true, alignment: 'center' },
+                          { text: wis, fontSize: 10, bold: true, alignment: 'center', margin: [0, 1, 0, 0] }
+                        ],
+                        rowSpan: 2,
+                        margin: [0, 3, 0, 0]
+                      },
                       { text: 'Magical\nDef Adj', fontSize: 5, alignment: 'center', colSpan: 2 },
                       {},
                       { text: 'Bonus\nSpells', fontSize: 5, alignment: 'center', colSpan: 2 },
@@ -389,7 +424,14 @@ function generateCharacterPDF(root, opts) {
                     ],
                     // CHA Header Row
                     [
-                      { text: 'CHA', fontSize: 7, bold: true, rowSpan: 2, alignment: 'center', margin: [0, 4, 0, 0] },
+                      {
+                        stack: [
+                          { text: 'CHA', fontSize: 7, bold: true, alignment: 'center' },
+                          { text: cha, fontSize: 10, bold: true, alignment: 'center', margin: [0, 1, 0, 0] }
+                        ],
+                        rowSpan: 2,
+                        margin: [0, 2, 0, 0]
+                      },
                       { text: 'Max #\nHenchmen', fontSize: 5, alignment: 'center', colSpan: 2 },
                       {},
                       { text: 'Loyalty\nBase', fontSize: 5, alignment: 'center', colSpan: 2 },
