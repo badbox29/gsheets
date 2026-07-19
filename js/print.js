@@ -1120,8 +1120,294 @@ function generateCharacterPDF(root, opts) {
     });
   }
 
+  // === HENCHMEN (optional) ===
+  const henchmenRows = named(sheet && sheet.henchmen);
+  const henchmenNotes = String(details.henchmenNotes || '').trim();
+  const showHenchmen = !!opts.henchmen && (henchmenRows.length > 0 || henchmenNotes !== '');
+
+  // Twenty-plus fields per henchman is far too many for one table row, so the
+  // combat-relevant ones get columns and everything else is composed into a
+  // full-width detail row beneath. Empty pieces are omitted rather than
+  // printing "Alignment: " with nothing after it.
+  const followerDetail = (rec, abilityKeys, extraFields) => {
+    const parts = [];
+
+    const push = (label, value) => {
+      const v = String(value || '').trim();
+      if (!v) return;
+      if (parts.length) parts.push({ text: '   ' });
+      parts.push({ text: label + ': ', bold: true });
+      parts.push({ text: v });
+    };
+
+    const abilities = (abilityKeys || [])
+      .map(k => (String(rec[k] || '').trim() ? `${k.toUpperCase()} ${rec[k]}` : null))
+      .filter(Boolean)
+      .join('  ');
+
+    push('Abilities', abilities);
+    (extraFields || []).forEach(([label, key]) => push(label, rec[key]));
+
+    return parts;
+  };
+
+  const HENCH_ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha', 'per', 'com'];
+  const HENCH_EXTRAS = [
+    ['Alignment', 'alignment'],
+    ['Equipment', 'equipment'],
+    ['Notes', 'notes']
+  ];
+
+  const henchmenBlocks = [];
+
+  if (showHenchmen && henchmenRows.length) {
+    const body = [[
+      cell('Henchman', 6, { bold: true }),
+      cell('Race', 6, { bold: true }),
+      cell('Class', 6, { bold: true }),
+      cell('Lvl', 6, { bold: true, alignment: 'center' }),
+      cell('HP', 6, { bold: true, alignment: 'center' }),
+      cell('AC', 6, { bold: true, alignment: 'center' }),
+      cell('THAC0', 6, { bold: true, alignment: 'center' }),
+      cell('Loy', 6, { bold: true, alignment: 'center' }),
+      cell('Mor', 6, { bold: true, alignment: 'center' }),
+      cell('Share', 6, { bold: true }),
+      cell('Status', 6, { bold: true })
+    ]];
+
+    henchmenRows.forEach(h => {
+      body.push([
+        cell(h.name, 6, { bold: true }),
+        cell(h.race),
+        cell(h.class),
+        cell(h.level, 6, { alignment: 'center' }),
+        cell(h.hp, 6, { alignment: 'center' }),
+        cell(h.ac, 6, { alignment: 'center' }),
+        cell(h.thac0, 6, { alignment: 'center' }),
+        cell(h.loyalty, 6, { alignment: 'center' }),
+        cell(h.morale, 6, { alignment: 'center' }),
+        cell(h.share),
+        cell(h.status)
+      ]);
+
+      const detail = followerDetail(h, HENCH_ABILITIES, HENCH_EXTRAS);
+      if (detail.length) {
+        body.push([
+          { text: detail, fontSize: 6, colSpan: 11, margin: [0, 1, 0, 1] },
+          {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
+        ]);
+      }
+    });
+
+    henchmenBlocks.push({
+      table: {
+        headerRows: 1,
+        widths: ['15%', '9%', '10%', '4%', '5%', '4%', '6%', '4%', '4%', '13%', '26%'],
+        body: body
+      },
+      layout: gridLayout,
+      margin: [0, 0, 0, 5]
+    });
+  }
+
+  if (showHenchmen && henchmenNotes) {
+    henchmenBlocks.push({ text: 'Henchmen Notes', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+    henchmenBlocks.push({ text: henchmenNotes, fontSize: 6, margin: [0, 0, 0, 4] });
+  }
+
+  // === HIRELINGS (optional) ===
+  // Hirelings are hired for a job, not sworn to the character, so the columns
+  // are contractual -- type, quantity, wage, duration, purpose -- rather than
+  // the loyalty and morale a henchman carries. Ability scores are recorded but
+  // rarely filled in, so they drop into the detail row.
+  const hirelingRows = named(sheet && sheet.hirelings);
+  const showHirelings = !!opts.hirelings && hirelingRows.length > 0;
+
+  const HIRE_ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha', 'per', 'com'];
+  const HIRE_EXTRAS = [
+    ['Alignment', 'alignment'],
+    ['THAC0', 'thac0'],
+    ['Notes', 'notes']
+  ];
+
+  const hirelingBlocks = [];
+
+  if (showHirelings) {
+    const body = [[
+      cell('Hireling', 6, { bold: true }),
+      cell('Type', 6, { bold: true }),
+      cell('Qty', 6, { bold: true, alignment: 'center' }),
+      cell('Wage', 6, { bold: true, alignment: 'center' }),
+      cell('Duration', 6, { bold: true, alignment: 'center' }),
+      cell('Purpose', 6, { bold: true }),
+      cell('Status', 6, { bold: true })
+    ]];
+
+    hirelingRows.forEach(h => {
+      body.push([
+        cell(h.name, 6, { bold: true }),
+        cell(h.type),
+        cell(h.quantity, 6, { alignment: 'center' }),
+        cell(h.wage || '\u2014', 6, { alignment: 'center' }),
+        cell(h.duration || '\u2014', 6, { alignment: 'center' }),
+        cell(h.purpose),
+        cell(h.status)
+      ]);
+
+      const detail = followerDetail(h, HIRE_ABILITIES, HIRE_EXTRAS);
+      if (detail.length) {
+        body.push([
+          { text: detail, fontSize: 6, colSpan: 7, margin: [0, 1, 0, 1] },
+          {}, {}, {}, {}, {}, {}
+        ]);
+      }
+    });
+
+    hirelingBlocks.push({
+      table: {
+        headerRows: 1,
+        widths: ['17%', '20%', '5%', '9%', '10%', '25%', '14%'],
+        body: body
+      },
+      layout: gridLayout,
+      margin: [0, 0, 0, 5]
+    });
+  }
+
+  // === COMPANIONS (optional) ===
+  // Animal companions, familiars and bonded creatures. Statted as monsters
+  // rather than characters, so the columns are hit dice and attacks rather
+  // than class and level.
+  const companionRows = named(sheet && sheet.companions);
+  const showCompanions = !!opts.companions && companionRows.length > 0;
+
+  const COMP_ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha', 'per', 'com'];
+  const COMP_EXTRAS = [
+    ['Alignment', 'alignment'],
+    ['Abilities', 'abilities'],
+    ['Notes', 'notes']
+  ];
+
+  const companionBlocks = [];
+
+  if (showCompanions) {
+    const body = [[
+      cell('Companion', 6, { bold: true }),
+      cell('Species', 6, { bold: true }),
+      cell('HD', 6, { bold: true, alignment: 'center' }),
+      cell('HP', 6, { bold: true, alignment: 'center' }),
+      cell('AC', 6, { bold: true, alignment: 'center' }),
+      cell('THAC0', 6, { bold: true, alignment: 'center' }),
+      cell('Attacks', 6, { bold: true }),
+      cell('Loy', 6, { bold: true, alignment: 'center' }),
+      cell('Bond', 6, { bold: true }),
+      cell('Status', 6, { bold: true })
+    ]];
+
+    companionRows.forEach(c => {
+      body.push([
+        cell(c.name, 6, { bold: true }),
+        cell(c.species),
+        cell(c.hd, 6, { alignment: 'center' }),
+        cell(c.hp, 6, { alignment: 'center' }),
+        cell(c.ac, 6, { alignment: 'center' }),
+        cell(c.thac0, 6, { alignment: 'center' }),
+        cell(c.attacks),
+        cell(c.loyalty, 6, { alignment: 'center' }),
+        cell(c.bond),
+        cell(c.status)
+      ]);
+
+      const detail = followerDetail(c, COMP_ABILITIES, COMP_EXTRAS);
+      if (detail.length) {
+        body.push([
+          { text: detail, fontSize: 6, colSpan: 10, margin: [0, 1, 0, 1] },
+          {}, {}, {}, {}, {}, {}, {}, {}, {}
+        ]);
+      }
+    });
+
+    companionBlocks.push({
+      table: {
+        headerRows: 1,
+        widths: ['15%', '13%', '7%', '5%', '4%', '7%', '15%', '5%', '13%', '16%'],
+        body: body
+      },
+      layout: gridLayout,
+      margin: [0, 0, 0, 5]
+    });
+  }
+
+  // === MOUNTS (optional) ===
+  // Mounts carry both creature stats and logistics -- movement rate, carrying
+  // capacity, purchase cost -- so the columns lean toward what matters when
+  // you are deciding whether to ride out or how much the beast can haul.
+  const mountRows = named(sheet && sheet.mounts);
+  const showMounts = !!opts.mounts && mountRows.length > 0;
+
+  const MOUNT_ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha', 'per', 'com'];
+  const MOUNT_EXTRAS = [
+    ['Type', 'type'],
+    ['Cost', 'cost'],
+    ['Abilities', 'abilities'],
+    ['Notes', 'notes']
+  ];
+
+  const mountBlocks = [];
+
+  if (showMounts) {
+    const body = [[
+      cell('Mount', 6, { bold: true }),
+      cell('Species', 6, { bold: true }),
+      cell('HD', 6, { bold: true, alignment: 'center' }),
+      cell('HP', 6, { bold: true, alignment: 'center' }),
+      cell('AC', 6, { bold: true, alignment: 'center' }),
+      cell('THAC0', 6, { bold: true, alignment: 'center' }),
+      cell('Attacks', 6, { bold: true }),
+      cell('Move', 6, { bold: true, alignment: 'center' }),
+      cell('Capacity', 6, { bold: true, alignment: 'center' }),
+      cell('Mor', 6, { bold: true, alignment: 'center' }),
+      cell('Status', 6, { bold: true })
+    ]];
+
+    mountRows.forEach(m => {
+      body.push([
+        cell(m.name, 6, { bold: true }),
+        cell(m.species),
+        cell(m.hd, 6, { alignment: 'center' }),
+        cell(m.hp, 6, { alignment: 'center' }),
+        cell(m.ac, 6, { alignment: 'center' }),
+        cell(m.thac0, 6, { alignment: 'center' }),
+        cell(m.attacks),
+        cell(m.movement, 6, { alignment: 'center' }),
+        cell(m.capacity, 6, { alignment: 'center' }),
+        cell(m.morale, 6, { alignment: 'center' }),
+        cell(m.status)
+      ]);
+
+      const detail = followerDetail(m, MOUNT_ABILITIES, MOUNT_EXTRAS);
+      if (detail.length) {
+        body.push([
+          { text: detail, fontSize: 6, colSpan: 11, margin: [0, 1, 0, 1] },
+          {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
+        ]);
+      }
+    });
+
+    mountBlocks.push({
+      table: {
+        headerRows: 1,
+        widths: ['14%', '12%', '6%', '5%', '4%', '7%', '13%', '7%', '9%', '5%', '18%'],
+        body: body
+      },
+      layout: gridLayout,
+      margin: [0, 0, 0, 5]
+    });
+  }
+
   // Page 6 carries background and followers.
-  const showPage6 = showDetails || showBackground;
+  const showPage6 = showDetails || showBackground || showHenchmen ||
+    showHirelings || showCompanions || showMounts;
 
   // Create PDF document definition
   const docDefinition = {
@@ -2017,6 +2303,26 @@ function generateCharacterPDF(root, opts) {
       // === BACKGROUND / HISTORY (optional) ===
       ...optional(showBackground,
         printSection('BACKGROUND & HISTORY', ...backgroundBlocks)
+      ),
+
+      // === HENCHMEN (optional) ===
+      ...optional(showHenchmen,
+        printSection('HENCHMEN', ...henchmenBlocks)
+      ),
+
+      // === HIRELINGS (optional) ===
+      ...optional(showHirelings,
+        printSection('HIRELINGS', ...hirelingBlocks)
+      ),
+
+      // === COMPANIONS (optional) ===
+      ...optional(showCompanions,
+        printSection('COMPANIONS', ...companionBlocks)
+      ),
+
+      // === MOUNTS (optional) ===
+      ...optional(showMounts,
+        printSection('MOUNTS', ...mountBlocks)
       )
     ]
   };
