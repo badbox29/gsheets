@@ -2210,8 +2210,8 @@ const SHEET_HTML = `
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="background"><span>Background / History</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="henchmen"><span>Henchmen</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="hirelings"><span>Hirelings</span></label>
-	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="companions"><span>Companions</span></label>
-	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="mounts"><span>Mounts</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="companions"><span>Bonded Mounts &amp; Companions</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="mounts"><span>Unbonded Mounts &amp; Vehicles</span></label>
 	    </div>
 
 	    <!-- Journal -->
@@ -2245,8 +2245,8 @@ const SHEET_HTML = `
 	        <label class="print-blank-row"><span>Conditions</span><input type="number" class="print-blank" data-blank="conditions" min="0" max="50"></label>
 	        <label class="print-blank-row"><span>Henchmen</span><input type="number" class="print-blank" data-blank="henchmen" min="0" max="50"></label>
 	        <label class="print-blank-row"><span>Hirelings</span><input type="number" class="print-blank" data-blank="hirelings" min="0" max="50"></label>
-	        <label class="print-blank-row"><span>Companions</span><input type="number" class="print-blank" data-blank="companions" min="0" max="50"></label>
-	        <label class="print-blank-row"><span>Mounts</span><input type="number" class="print-blank" data-blank="mounts" min="0" max="50"></label>
+	        <label class="print-blank-row"><span>Bonded Mounts</span><input type="number" class="print-blank" data-blank="companions" min="0" max="50"></label>
+	        <label class="print-blank-row"><span>Unbonded Mounts</span><input type="number" class="print-blank" data-blank="mounts" min="0" max="50"></label>
 	      </div>
 
 	      <div class="print-group" style="margin-bottom:10px;">
