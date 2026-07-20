@@ -298,8 +298,7 @@ function generateCharacterPDF(root, opts) {
     'DEX Checks', 'Vision Checks', 'Hearing Checks',
     'Movement', 'Max Carry', 'Current',
     "Target's AC", 'To Hit #',
-    'To Hit Modifiers', 'Damage Modifiers', 'AC Modifiers',
-    'Non-proficiency penalty'
+    'To Hit Modifiers', 'Damage Modifiers', 'AC Modifiers'
   ]);
 
   const inkFormLabels = node => {
@@ -307,6 +306,13 @@ function generateCharacterPDF(root, opts) {
     if (!node || typeof node !== 'object') return;
     if (node.color === undefined && (node.fontSize === 5 || FORM_LABELS.has(node.text))) {
       node.color = palette.ink;
+    }
+    // Every fontSize-5 node is an ability-modifier label -- Hit Adj, Surprise
+    // Adj, HP Adj, Add'l Lang, Magical Def Adj, Max # Henchmen and the rest --
+    // so tinting on that size gives those rows the same header band as the
+    // tables elsewhere, without listing twenty-five cells by name.
+    if (node.fontSize === 5 && node.fillColor === undefined) {
+      node.fillColor = palette.tint;
     }
     if (node.table && node.table.body) inkFormLabels(node.table.body);
     if (node.columns) inkFormLabels(node.columns);
@@ -2367,12 +2373,12 @@ function generateCharacterPDF(root, opts) {
                   widths: ['40%', '12%', '12%', '12%', '12%', '12%'],
                   body: [
                     [
-                      { text: '', fontSize: 6 },
-                      { text: 'Start', fontSize: 6, alignment: 'center' },
-                      { text: 'Mod', fontSize: 6, alignment: 'center' },
-                      { text: 'Total', fontSize: 6, alignment: 'center' },
-                      { text: '+/-', fontSize: 6, alignment: 'center' },
-                      { text: 'Modifier', fontSize: 6, alignment: 'center' }
+                      hdrCell('', 6),
+                      hdrCell('Start', 6, { alignment: 'center' }),
+                      hdrCell('Mod', 6, { alignment: 'center' }),
+                      hdrCell('Total', 6, { alignment: 'center' }),
+                      hdrCell('+/-', 6, { alignment: 'center' }),
+                      hdrCell('Modifier', 6, { alignment: 'center' })
                     ],
                     [
                       { text: 'Paralyzation/\nPoison/Death', fontSize: 6 },
