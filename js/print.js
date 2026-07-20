@@ -2096,14 +2096,7 @@ function generateCharacterPDF(root, opts) {
             ]
           ]
         },
-        layout: {
-          hLineWidth: () => 1,
-          vLineWidth: () => 1,
-          paddingLeft: () => 2,
-          paddingRight: () => 2,
-          paddingTop: () => 1,
-          paddingBottom: () => 1
-        },
+        layout: formLayout(2, 1),
         margin: [0, 0, 0, 5]
       },
       
@@ -2290,14 +2283,7 @@ function generateCharacterPDF(root, opts) {
                     ]
                   ]
                 },
-                layout: {
-                  hLineWidth: () => 1,
-                  vLineWidth: () => 1,
-                  paddingLeft: () => 1,
-                  paddingRight: () => 1,
-                  paddingTop: () => 1,
-                  paddingBottom: () => 1
-                }
+                layout: formLayout(1, 1)
               }
             ]
           },
@@ -2375,14 +2361,7 @@ function generateCharacterPDF(root, opts) {
                     ]
                   ]
                 },
-                layout: {
-                  hLineWidth: () => 1,
-                  vLineWidth: () => 1,
-                  paddingLeft: () => 2,
-                  paddingRight: () => 2,
-                  paddingTop: () => 2,
-                  paddingBottom: () => 2
-                },
+                layout: formLayout(2, 2),
                 margin: [5, 0, 0, 0]
               }
             ]
@@ -2437,14 +2416,7 @@ function generateCharacterPDF(root, opts) {
                     ]
                   ]
                 },
-                layout: {
-                  hLineWidth: () => 1,
-                  vLineWidth: () => 1,
-                  paddingLeft: () => 2,
-                  paddingRight: () => 2,
-                  paddingTop: () => 1,
-                  paddingBottom: () => 1
-                }
+                layout: formLayout(2, 1)
               }
             ]
           },
@@ -2465,14 +2437,7 @@ function generateCharacterPDF(root, opts) {
                     [{ text: '', fontSize: 8, margin: [0, 4, 0, 4] }]
                   ]
                 },
-                layout: {
-                  hLineWidth: () => 1,
-                  vLineWidth: () => 1,
-                  paddingLeft: () => 2,
-                  paddingRight: () => 2,
-                  paddingTop: () => 1,
-                  paddingBottom: () => 1
-                },
+                layout: formLayout(2, 1),
                 margin: [5, 0, 0, 0]
               }
             ]
@@ -2528,14 +2493,7 @@ function generateCharacterPDF(root, opts) {
                     ]
                   ]
                 },
-                layout: {
-                  hLineWidth: () => 1,
-                  vLineWidth: () => 1,
-                  paddingLeft: () => 2,
-                  paddingRight: () => 2,
-                  paddingTop: () => 1,
-                  paddingBottom: () => 1
-                },
+                layout: formLayout(2, 1),
                 margin: [5, 0, 0, 0]
               }
             ]
@@ -2557,14 +2515,7 @@ function generateCharacterPDF(root, opts) {
                     [{ text: '', fontSize: 8, margin: [0, 13, 0, 13] }]
                   ]
                 },
-                layout: {
-                  hLineWidth: () => 1,
-                  vLineWidth: () => 1,
-                  paddingLeft: () => 2,
-                  paddingRight: () => 2,
-                  paddingTop: () => 1,
-                  paddingBottom: () => 1
-                },
+                layout: formLayout(2, 1),
                 margin: [5, 0, 0, 0]
               }
             ]
@@ -2593,14 +2544,7 @@ function generateCharacterPDF(root, opts) {
             ]
           ]
         },
-        layout: {
-          hLineWidth: () => 1,
-          vLineWidth: () => 1,
-          paddingLeft: () => 1,
-          paddingRight: () => 1,
-          paddingTop: () => 1,
-          paddingBottom: () => 1
-        },
+        layout: formLayout(1, 1),
         margin: [0, 0, 0, 5]
       },
       
@@ -2631,14 +2575,7 @@ function generateCharacterPDF(root, opts) {
                 ]
               ]
             },
-            layout: {
-              hLineWidth: () => 1,
-              vLineWidth: () => 1,
-              paddingLeft: () => 2,
-              paddingRight: () => 2,
-              paddingTop: () => 2,
-              paddingBottom: () => 2
-            }
+            layout: formLayout(2, 2)
           },
           {
             width: '33%',
@@ -2663,14 +2600,7 @@ function generateCharacterPDF(root, opts) {
                 ]
               ]
             },
-            layout: {
-              hLineWidth: () => 1,
-              vLineWidth: () => 1,
-              paddingLeft: () => 2,
-              paddingRight: () => 2,
-              paddingTop: () => 2,
-              paddingBottom: () => 2
-            },
+            layout: formLayout(2, 2),
             margin: [5, 0, 0, 0]
           },
           {
@@ -2696,14 +2626,7 @@ function generateCharacterPDF(root, opts) {
                 ]
               ]
             },
-            layout: {
-              hLineWidth: () => 1,
-              vLineWidth: () => 1,
-              paddingLeft: () => 2,
-              paddingRight: () => 2,
-              paddingTop: () => 2,
-              paddingBottom: () => 2
-            },
+            layout: formLayout(2, 2),
             margin: [5, 0, 0, 0]
           }
         ],
@@ -2741,14 +2664,7 @@ function generateCharacterPDF(root, opts) {
             ...blankRows('weapons', 8)
           ]
         },
-        layout: {
-          hLineWidth: () => 1,
-          vLineWidth: () => 1,
-          paddingLeft: () => 2,
-          paddingRight: () => 2,
-          paddingTop: () => 2,
-          paddingBottom: () => 2
-        },
+        layout: formLayout(2, 2),
         margin: [0, 0, 0, 5]
       },
       
