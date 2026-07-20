@@ -251,6 +251,34 @@ function generateCharacterPDF(root, opts) {
   const cell = (t, size, opt) =>
     Object.assign({ text: (t === null || t === undefined) ? '' : String(t), fontSize: size || 6 }, opt || {});
 
+  // Bold sub-heading above a table -- "Powers", "Spheres of Access",
+  // "Equipment". Defined once so the colour scheme reaches all fourteen.
+  const subLabel = t => ({
+    text: t,
+    fontSize: 7,
+    bold: true,
+    color: palette.ink,
+    margin: [0, 2, 0, 2]
+  });
+
+  // Page 1's modifier grids are hand-built forms, not tables with declared
+  // header rows, so nothing in the layout can find their labels to colour.
+  // Every fontSize-5 text node in this file is one of those labels -- 25 of
+  // them, no exceptions -- which makes a single recursive pass safe and far
+  // less error-prone than editing each cell.
+  //
+  // Runs once over the finished content tree. Anything that already carries
+  // an explicit colour is left alone.
+  const inkFormLabels = node => {
+    if (Array.isArray(node)) { node.forEach(inkFormLabels); return; }
+    if (!node || typeof node !== 'object') return;
+    if (node.fontSize === 5 && node.color === undefined) node.color = palette.ink;
+    if (node.table && node.table.body) inkFormLabels(node.table.body);
+    if (node.columns) inkFormLabels(node.columns);
+    if (node.stack) inkFormLabels(node.stack);
+    if (Array.isArray(node.text)) inkFormLabels(node.text);
+  };
+
   // === BLANK ROWS ===
   // A printed sheet is used away from the app, so every list needs room to
   // write in what gets picked up during a session. Counts come from the print
@@ -2875,6 +2903,8 @@ function generateCharacterPDF(root, opts) {
       ...extraPageBlocks
     ]
   };
+  inkFormLabels(docDefinition.content);
+
   // Generate and download PDF
   pdfMake.createPdf(docDefinition).download(`${characterName.replace(/[^a-z0-9]/gi, '_')}_CharSheet.pdf`);
 }
