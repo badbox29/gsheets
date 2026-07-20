@@ -1,5 +1,77 @@
 // print.js - PDF Character Sheet Generation
 
+// === EMBEDDED TITLE FONTS ===
+//
+// pdfMake ships Roboto only, and its browser build has no AFM metrics for the
+// standard-14 PDF fonts, so 'Times-Roman' throws "not found in virtual file
+// system". Embedding is therefore the only route to a real serif.
+//
+// Only SECTION HEADINGS use these. Table data stays in Roboto: a serif at 6pt
+// in a dense table gets muddy, which is the whole reason for the split.
+//
+// Files must be STATIC ttf/otf -- pdfkit cannot read variable fonts or
+// woff/woff2. Paths are case-sensitive on GitHub Pages.
+const PRINT_TITLE_FONTS = {
+  Cinzel:    'fonts/cinzel-regular.ttf',
+  Marcellus: 'fonts/MarcellusSC-Regular.ttf'
+};
+
+// Fonts already fetched and registered this session, keyed by font name.
+// Values are promises, so two prints in quick succession share one fetch.
+const _titleFontCache = {};
+
+function loadTitleFont(name) {
+  // 'Roboto' means no embedded font -- it is already in pdfMake's own vfs.
+  if (!name || name === 'Roboto' || !PRINT_TITLE_FONTS[name]) {
+    return Promise.resolve('Roboto');
+  }
+  if (_titleFontCache[name]) return _titleFontCache[name];
+
+  const file = name + '.ttf';
+
+  _titleFontCache[name] = fetch(PRINT_TITLE_FONTS[name])
+    .then(res => {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.arrayBuffer();
+    })
+    .then(buf => {
+      // Chunked conversion: String.fromCharCode.apply on a 100KB array blows
+      // the argument limit in some browsers.
+      const bytes = new Uint8Array(buf);
+      let binary = '';
+      for (let i = 0; i < bytes.length; i += 8192) {
+        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+      }
+
+      pdfMake.vfs = pdfMake.vfs || {};
+      pdfMake.vfs[file] = btoa(binary);
+
+      // All four slots point at the same file. These are display faces used
+      // for headings only, and pdfMake requires every slot to resolve -- a
+      // missing 'bold' entry throws the moment anything bold is requested.
+      pdfMake.fonts = pdfMake.fonts || {};
+      pdfMake.fonts.Roboto = pdfMake.fonts.Roboto || {
+        normal: 'Roboto-Regular.ttf',
+        bold: 'Roboto-Medium.ttf',
+        italics: 'Roboto-Italic.ttf',
+        bolditalics: 'Roboto-MediumItalic.ttf'
+      };
+      pdfMake.fonts[name] = {
+        normal: file, bold: file, italics: file, bolditalics: file
+      };
+
+      return name;
+    })
+    .catch(err => {
+      // A font that will not load must never block a print.
+      console.warn('Title font "' + name + '" failed to load, falling back to Roboto:', err);
+      delete _titleFontCache[name];
+      return 'Roboto';
+    });
+
+  return _titleFontCache[name];
+}
+
 function generateCharacterPDF(root, opts) {
   if (!root) {
     alert('No active character sheet found.');
