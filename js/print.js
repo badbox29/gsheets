@@ -172,12 +172,12 @@ function generateCharacterPDF(root, opts) {
   // All six print as grey on a mono printer, so the choice only shows on a
   // colour device. Graphite is the default and uses no colour at all.
   const PRINT_PALETTES = {
-    graphite: { ink: '#2c2c2a', rule: '#a8a8a5', tint: '#eeeeec', body: '#1f1f1e' },
-    slate:    { ink: '#2b4257', rule: '#9aabbd', tint: '#e7edf3', body: '#1e2730' },
-    oxblood:  { ink: '#6b2430', rule: '#bfa0a4', tint: '#f3e8e9', body: '#2a1f21' },
-    sepia:    { ink: '#5c4326', rule: '#b5a184', tint: '#f2ebdd', body: '#2b2318' },
-    forest:   { ink: '#2f4a35', rule: '#9db3a2', tint: '#e6ede7', body: '#1f2a21' },
-    plum:     { ink: '#4a2e56', rule: '#ab9ab8', tint: '#efe8f3', body: '#251d29' }
+    graphite: { ink: '#2c2c2a', rule: '#a8a8a5', tint: '#eeeeec', muted: '#6e6e6b' },
+    slate:    { ink: '#2b4257', rule: '#9aabbd', tint: '#e7edf3', muted: '#5d7186' },
+    oxblood:  { ink: '#6b2430', rule: '#bfa0a4', tint: '#f3e8e9', muted: '#8a6067' },
+    sepia:    { ink: '#5c4326', rule: '#b5a184', tint: '#f2ebdd', muted: '#87715a' },
+    forest:   { ink: '#2f4a35', rule: '#9db3a2', tint: '#e6ede7', muted: '#5f7a66' },
+    plum:     { ink: '#4a2e56', rule: '#ab9ab8', tint: '#efe8f3', muted: '#756281' },
   };
 
   const palette = PRINT_PALETTES[opts.palette] || PRINT_PALETTES.graphite;
@@ -2102,14 +2102,14 @@ function generateCharacterPDF(root, opts) {
             playerName ? { text: `  \u2014  ${playerName}`, italics: true } : { text: '' }
           ],
           fontSize: 6,
-          color: '#555555'
+          color: palette.muted
         },
         {
           text: printedOn
             ? `Printed ${printedOn}  \u2014  Page ${currentPage} of ${pageCount}`
             : `Page ${currentPage} of ${pageCount}`,
           fontSize: 6,
-          color: '#555555',
+          color: palette.muted,
           alignment: 'right'
         }
       ]
