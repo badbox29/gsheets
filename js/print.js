@@ -78,6 +78,20 @@ function generateCharacterPDF(root, opts) {
     return;
   }
 
+  // The chosen heading font has to be fetched and registered before pdfMake
+  // builds the document. Resolving to a font NAME rather than a boolean means
+  // a failed load simply hands back 'Roboto' and the sheet prints unstyled
+  // rather than not at all.
+  const _wanted = (opts && opts.titleFont) ||
+    (typeof getPrintOptions === 'function' ? getPrintOptions().titleFont : 'Roboto');
+
+  loadTitleFont(_wanted).then(resolvedFont => {
+    _buildCharacterPDF(root, opts, resolvedFont);
+  });
+}
+
+function _buildCharacterPDF(root, opts, titleFont) {
+
   // Print options come from the modal. A direct call -- or any older code
   // path that still calls generateCharacterPDF(root) with one argument --
   // falls back to the saved set, so this function is never left guessing.
@@ -142,8 +156,9 @@ function generateCharacterPDF(root, opts) {
           { text: ' ', fontSize: 8, border: [false, false, false, true] },
           {
             text: title,
-            fontSize: 8,
-            bold: true,
+            font: titleFont,
+            fontSize: titleFont === 'Roboto' ? 8 : 9,
+            bold: titleFont === 'Roboto',
             color: palette.ink,
             characterSpacing: 1.2,
             alignment: 'center',
