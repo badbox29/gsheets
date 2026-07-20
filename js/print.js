@@ -1775,7 +1775,7 @@ function generateCharacterPDF(root, opts) {
     const blocks = [{
       unbreakable: true,
       stack: [
-        { text: title, fontSize: 8, bold: true, alignment: 'center', margin: [0, 0, 0, 2] },
+        sectionTitle(title),
         ...entries[0]
       ]
     }];
@@ -1896,7 +1896,7 @@ function generateCharacterPDF(root, opts) {
     extraPageBlocks.push({
       pageBreak: 'before',
       stack: [
-        { text: 'SPELLBOOK (CONTINUED)', fontSize: 8, bold: true, alignment: 'center', margin: [0, 0, 0, 2] },
+        sectionTitle('SPELLBOOK (CONTINUED)'),
         { table: { headerRows: 1, widths: ['6%', '23%', '17%', '7%', '13%', '18%', '10%', '6%'], body: body }, layout: gridLayout }
       ]
     });
@@ -1946,7 +1946,7 @@ function generateCharacterPDF(root, opts) {
     extraPageBlocks.push({
       pageBreak: 'before',
       stack: [
-        { text: 'DAILY MEMORIZATION', fontSize: 8, bold: true, alignment: 'center', margin: [0, 0, 0, 2] },
+        sectionTitle('DAILY MEMORIZATION'),
         { text: 'Date: ______________________', fontSize: 7, margin: [0, 0, 0, 4] },
         ...wsBlocks
       ]
@@ -1984,7 +1984,7 @@ function generateCharacterPDF(root, opts) {
     extraPageBlocks.push({
       pageBreak: 'before',
       stack: [
-        { text: 'CHANGES TO ENTER', fontSize: 8, bold: true, alignment: 'center', margin: [0, 0, 0, 2] },
+        sectionTitle('CHANGES TO ENTER'),
         {
           text: 'Record what changed during play, then enter it in the app. Tick each line once it has been entered.',
           fontSize: 6,
@@ -2047,7 +2047,7 @@ function generateCharacterPDF(root, opts) {
     extraPageBlocks.push({
       pageBreak: 'before',
       stack: [
-        { text: 'NOTES', fontSize: 8, bold: true, alignment: 'center', margin: [0, 0, 0, 2] },
+        sectionTitle('NOTES'),
         {
           table: { widths: ['100%'], body: body },
           layout: {
