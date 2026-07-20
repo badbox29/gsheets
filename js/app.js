@@ -5147,6 +5147,11 @@ const PRINT_OPTION_DEFAULTS = {
   // Sub-option (not a checkbox)
   spellbookDetail:  'summary',
 
+  // Colour scheme for section rules and table header tints. Keys map to
+  // PRINT_PALETTES in print.js. Defaults to graphite -- no colour -- so
+  // anyone who never opens this dropdown gets the ink-cheapest sheet.
+  palette:          'graphite',
+
   // Extras -- checkboxes in the "Blank Lines & Extra Pages" panel
   changesPage:      false,
   printDate:        false,
@@ -5245,6 +5250,8 @@ function applyPrintOptionsToModal(root, opts) {
   });
   const sel = qs(root, '.print-spellbook-detail');
   if (sel) sel.value = opts.spellbookDetail || 'summary';
+  const pal = qs(root, '.print-palette');
+  if (pal) pal.value = opts.palette || 'graphite';
 
   const blanks = opts.blanks || PRINT_BLANK_DEFAULTS;
   qsa(root, '.print-blank').forEach(inp => {
@@ -5260,6 +5267,8 @@ function readPrintOptionsFromModal(root) {
   });
   const sel = qs(root, '.print-spellbook-detail');
   opts.spellbookDetail = sel ? sel.value : 'summary';
+  const pal = qs(root, '.print-palette');
+  opts.palette = pal ? pal.value : 'graphite';
 
   opts.blanks = {};
   qsa(root, '.print-blank').forEach(inp => {
