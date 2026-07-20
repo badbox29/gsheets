@@ -1864,7 +1864,7 @@ function generateCharacterPDF(root, opts) {
       for (let s = 0; s < n; s++) {
         body.push(Array(6).fill(null).map(() => ({ text: '', fontSize: 6, margin: [0, 5, 0, 5] })));
       }
-      wsBlocks.push(Object.assign(subLabel(\Level {lvl + 1} \u2014 ${n} slot{n === 1 ? '' : 's'}\`), { margin: [0, 4, 0, 2] }));`
+      wsBlocks.push(Object.assign(subLabel(`Level ${lvl + 1} \u2014 ${n} slot${n === 1 ? '' : 's'}`), { margin: [0, 4, 0, 2] }));
       wsBlocks.push({
         table: { headerRows: 1, widths: ['6%', '26%', '22%', '16%', '20%', '10%'], body: body },
         layout: gridLayout
