@@ -251,6 +251,17 @@ function generateCharacterPDF(root, opts) {
   const cell = (t, size, opt) =>
     Object.assign({ text: (t === null || t === undefined) ? '' : String(t), fontSize: size || 6 }, opt || {});
 
+  // A label cell that should read as a header -- tinted fill plus ink text,
+  // matching the header rows of the reference tables on later pages.
+  //
+  // Page 1's blocks are forms, not tables: their labels sit wherever the form
+  // needs them, sometimes row 0, sometimes every other row. A layout-level
+  // rule could only find row 0, and would break the moment a row was inserted.
+  // pdfMake honours fillColor on an individual cell and it overrides the
+  // layout's, so doing it per cell works regardless of position.
+  const hdrCell = (t, size, opt) =>
+    cell(t, size, Object.assign({ fillColor: palette.tint, color: palette.ink, bold: true }, opt || {}));
+
   // Bold sub-heading above a table -- "Powers", "Spheres of Access",
   // "Equipment". Defined once so the colour scheme reaches all fourteen.
   const subLabel = t => ({
