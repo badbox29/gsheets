@@ -54,13 +54,16 @@ function generateCharacterPDF(root, opts) {
   // at the top of every page the table spills onto, nothing is ever doubled,
   // and keepWithHeaderRows stops the header being stranded alone at the foot
   // of a page. One table, no manual splitting.
-  const printSection = (title, ...blocks) => {
-    // Treatment I: centred small caps with a hairline rule running out to each
-    // margin. The rules are drawn as the BOTTOM border of two flexible side
-    // cells rather than as canvas lines, because a canvas needs an explicit
-    // width in points and these sections sit at several different widths.
-    // Borders size themselves to whatever column they land in.
-    const titleNode = {
+  // Treatment I: centred small caps with a hairline rule running out to each
+  // margin. The rules are drawn as the BOTTOM border of two flexible side
+  // cells rather than as canvas lines, because a canvas needs an explicit
+  // width in points and these sections sit at several different widths.
+  // Borders size themselves to whatever column they land in.
+  //
+  // Extracted from printSection so the appendix pages and the journal sections
+  // -- which build their own headings rather than going through it -- can use
+  // the identical treatment.
+  const sectionTitle = title => ({
       table: {
         widths: ['*', 'auto', '*'],
         body: [[
@@ -88,7 +91,10 @@ function generateCharacterPDF(root, opts) {
         paddingBottom: () => 0
       },
       margin: [0, 0, 0, 2]
-    };
+    });
+
+  const printSection = (title, ...blocks) => {
+    const titleNode = sectionTitle(title);
 
     // The first real table in the section. A section built from columns or
     // pure prose has none, and keeps the original glued-block behavior.
