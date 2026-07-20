@@ -2171,12 +2171,12 @@ const SHEET_HTML = `
 	    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:8px 10px;background:var(--glass);border-radius:4px;">
 	      <label style="font-size:12px;color:var(--text);margin:0;white-space:nowrap;">Colour scheme</label>
 	      <select class="print-palette" style="width:auto;font-size:11px;padding:3px 6px;">
-	        <option value="graphite">Graphite &mdash; no colour</option>
-	        <option value="slate">Slate Blue</option>
-	        <option value="oxblood">Oxblood</option>
-	        <option value="sepia">Sepia</option>
-	        <option value="forest">Forest Green</option>
-	        <option value="plum">Plum</option>
+	        <option value="graphite">Iron Gall &mdash; no colour</option>
+	        <option value="slate">Astral &mdash; slate blue</option>
+	        <option value="oxblood">Bloodstone &mdash; deep red</option>
+	        <option value="sepia">Aged Vellum &mdash; sepia</option>
+	        <option value="forest">Druid's Grove &mdash; green</option>
+	        <option value="plum">Shadow Weave &mdash; plum</option>
 	      </select>
 	      <span style="font-size:10px;color:var(--muted);">Tints section rules and table headers. All schemes print as grey on a mono printer.</span>
 	    </div>
