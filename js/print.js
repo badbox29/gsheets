@@ -55,11 +55,38 @@ function generateCharacterPDF(root, opts) {
   // and keepWithHeaderRows stops the header being stranded alone at the foot
   // of a page. One table, no manual splitting.
   const printSection = (title, ...blocks) => {
+    // Treatment I: centred small caps with a hairline rule running out to each
+    // margin. The rules are drawn as the BOTTOM border of two flexible side
+    // cells rather than as canvas lines, because a canvas needs an explicit
+    // width in points and these sections sit at several different widths.
+    // Borders size themselves to whatever column they land in.
     const titleNode = {
-      text: title,
-      fontSize: 8,
-      bold: true,
-      alignment: 'center',
+      table: {
+        widths: ['*', 'auto', '*'],
+        body: [[
+          { text: ' ', fontSize: 8, border: [false, false, false, true] },
+          {
+            text: title,
+            fontSize: 8,
+            bold: true,
+            color: palette.ink,
+            characterSpacing: 1.2,
+            alignment: 'center',
+            margin: [8, 0, 8, 0],
+            border: [false, false, false, false]
+          },
+          { text: ' ', fontSize: 8, border: [false, false, false, true] }
+        ]]
+      },
+      layout: {
+        hLineWidth: () => 0.75,
+        vLineWidth: () => 0,
+        hLineColor: () => palette.rule,
+        paddingLeft: () => 0,
+        paddingRight: () => 0,
+        paddingTop: () => 0,
+        paddingBottom: () => 0
+      },
       margin: [0, 0, 0, 2]
     };
 
@@ -90,9 +117,26 @@ function generateCharacterPDF(root, opts) {
     const preambleRows = preambleBlocks.map(fullWidthRow);
     const existingHeaderRows = tableBlock.table.headerRows || 0;
 
+    // The title and preamble sit inside headerRows so they reprint on every
+    // continuation page -- but they must not pick up the header tint, so the
+    // first cell of each carries a marker that gridLayout's fillColor checks.
+    const titleRow = fullWidthRow(titleNode);
+    titleRow[0]._sectionTitle = true;
+    preambleRows.forEach(r => { r[0]._sectionTitle = true; });
+
+    // Column-header text takes the scheme's ink. Done here rather than at
+    // twenty individual table definitions.
+    const originalBody = tableBlock.table.body.map((row, i) =>
+      i < existingHeaderRows
+        ? row.map(c => (c && typeof c === 'object' && 'text' in c)
+            ? Object.assign({}, c, { color: palette.ink })
+            : c)
+        : row
+    );
+
     const merged = Object.assign({}, tableBlock, {
       table: Object.assign({}, tableBlock.table, {
-        body: [fullWidthRow(titleNode), ...preambleRows, ...tableBlock.table.body],
+        body: [titleRow, ...preambleRows, ...originalBody],
         headerRows: 1 + preambleRows.length + existingHeaderRows,
         // Keep this many data rows with the header rather than letting a
         // header sit alone at the bottom of a page.
