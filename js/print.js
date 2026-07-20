@@ -2991,8 +2991,8 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
                   hdrCell('+/-', 7, { alignment: 'center' })
                 ],
                 [
-                  { text: 'Non-proficiency penalty', fontSize: 7 },
-                  { text: '', fontSize: 7, margin: [0, 5, 0, 5] }
+                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] },
+                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] }
                 ],
                 [
                   { text: '', fontSize: 7, margin: [0, 8, 0, 8] },
