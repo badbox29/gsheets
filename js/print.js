@@ -255,6 +255,7 @@ function generateCharacterPDF(root, opts) {
   ]).then(([resolvedFont, logoData, resolvedBody]) => {
     _buildCharacterPDF(root, opts, resolvedFont, logoData, resolvedBody);
   });
+}
 
 function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
 
