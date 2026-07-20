@@ -2181,6 +2181,16 @@ const SHEET_HTML = `
 	      <span style="font-size:10px;color:var(--muted);">Tints section rules and table headers. All schemes print as grey on a mono printer.</span>
 	    </div>
 
+	    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:8px 10px;background:var(--glass);border-radius:4px;">
+	      <label style="font-size:12px;color:var(--text);margin:0;white-space:nowrap;">Title font</label>
+	      <select class="print-title-font" style="width:auto;font-size:11px;padding:3px 6px;">
+	        <option value="Cinzel">Cinzel &mdash; Roman caps</option>
+	        <option value="Marcellus">Marcellus &mdash; softer Roman</option>
+	        <option value="Roboto">Plain &mdash; no embedded font</option>
+	      </select>
+	      <span style="font-size:10px;color:var(--muted);">Section headings only; tables stay in the standard face. Embedded fonts add a moment to the first print.</span>
+	    </div>
+
 	    <!-- Character -->
 	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Character</label>
 	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:4px;margin-bottom:12px;">
