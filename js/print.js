@@ -2446,7 +2446,7 @@ function generateCharacterPDF(root, opts) {
                   widths: ['50%', '50%'],
                   body: [
                     [
-                      { text: 'ARMOR CLASS', fontSize: 7, bold: true, alignment: 'center', colSpan: 2 },
+                      hdrCell('ARMOR CLASS', 7, { alignment: 'center', colSpan: 2 }),
                       {}
                     ],
                     [
@@ -2454,23 +2454,23 @@ function generateCharacterPDF(root, opts) {
                       {}
                     ],
                     [
-                      { text: 'Rear', fontSize: 6, alignment: 'center' },
-                      { text: 'Surprised', fontSize: 6, alignment: 'center' }
+                      hdrCell('Rear', 6, { alignment: 'center' }),
+                      hdrCell('Surprised', 6, { alignment: 'center' })
                     ],
                     [
                       { text: acRear, fontSize: 8, alignment: 'center' },
                       { text: acSurprised, fontSize: 8, alignment: 'center' }
                     ],
                     [
-                      { text: 'Shieldless', fontSize: 6, alignment: 'center' },
-                      { text: 'vs Missiles', fontSize: 6, alignment: 'center' }
+                      hdrCell('Shieldless', 6, { alignment: 'center' }),
+                      hdrCell('vs Missiles', 6, { alignment: 'center' })
                     ],
                     [
                       { text: acNoShield, fontSize: 8, alignment: 'center' },
                       { text: acVsMissiles, fontSize: 8, alignment: 'center' }
                     ],
                     [
-                      { text: 'Armor Worn', fontSize: 6, colSpan: 2 },
+                      hdrCell('Armor Worn', 6, { colSpan: 2 }),
                       {}
                     ],
                     [
@@ -2492,11 +2492,11 @@ function generateCharacterPDF(root, opts) {
                 table: {
                   widths: ['100%'],
                   body: [
-                    [{ text: 'DEX Checks', fontSize: 6 }],
+                    [hdrCell('DEX Checks', 6)],
                     [{ text: '', fontSize: 8, margin: [0, 4, 0, 4] }],
-                    [{ text: 'Vision Checks', fontSize: 6 }],
+                    [hdrCell('Vision Checks', 6)],
                     [{ text: '', fontSize: 8, margin: [0, 4, 0, 4] }],
-                    [{ text: 'Hearing Checks', fontSize: 6 }],
+                    [hdrCell('Hearing Checks', 6)],
                     [{ text: '', fontSize: 8, margin: [0, 4, 0, 4] }]
                   ]
                 },
@@ -2515,19 +2515,19 @@ function generateCharacterPDF(root, opts) {
                   widths: ['50%', '50%'],
                   body: [
                     [
-                      { text: 'HIT POINTS', fontSize: 7, bold: true, alignment: 'center', colSpan: 2 },
+                      hdrCell('HIT POINTS', 7, { alignment: 'center', colSpan: 2 }),
                       {}
                     ],
                     [
-                      { text: 'Max HP', fontSize: 6, alignment: 'center' },
-                      { text: 'Damage Taken', fontSize: 6, alignment: 'center' }
+                      hdrCell('Max HP', 6, { alignment: 'center' }),
+                      hdrCell('Damage Taken', 6, { alignment: 'center' })
                     ],
                     [
                       { text: hp, fontSize: 10, bold: true, alignment: 'center' },
                       { text: damageTaken, fontSize: 10, bold: true, alignment: 'center' }
                     ],
                     [
-                      { text: 'Current HP', fontSize: 6, alignment: 'center', colSpan: 2 },
+                      hdrCell('Current HP', 6, { alignment: 'center', colSpan: 2 }),
                       {}
                     ],
                     [
@@ -2539,15 +2539,15 @@ function generateCharacterPDF(root, opts) {
                     // see the follow-up to-do. Deliberately NOT derived here:
                     // Max Deaths depends on rules that need PHB verification.
                     [
-                      { text: 'Hit Dice', fontSize: 6, alignment: 'center' },
-                      { text: 'Max Deaths', fontSize: 6, alignment: 'center' }
+                      hdrCell('Hit Dice', 6, { alignment: 'center' }),
+                      hdrCell('Max Deaths', 6, { alignment: 'center' })
                     ],
                     [
                       { text: '', fontSize: 8, margin: [0, 5, 0, 5] },
                       { text: '', fontSize: 8, margin: [0, 5, 0, 5] }
                     ],
                     [
-                      { text: 'Deaths to Date', fontSize: 6, alignment: 'center', colSpan: 2 },
+                      hdrCell('Deaths to Date', 6, { alignment: 'center', colSpan: 2 }),
                       {}
                     ],
                     [
@@ -2570,11 +2570,11 @@ function generateCharacterPDF(root, opts) {
                 table: {
                   widths: ['100%'],
                   body: [
-                    [{ text: 'Movement', fontSize: 6 }],
+                    [hdrCell('Movement', 6)],
                     [{ text: baseMovement, fontSize: 8 }],
-                    [{ text: 'Max Carry', fontSize: 6 }],
+                    [hdrCell('Max Carry', 6)],
                     [{ text: encumbranceMax, fontSize: 8 }],
-                    [{ text: 'Current', fontSize: 6 }],
+                    [hdrCell('Current', 6)],
                     [{ text: '', fontSize: 8, margin: [0, 13, 0, 13] }]
                   ]
                 },
@@ -2596,13 +2596,13 @@ function generateCharacterPDF(root, opts) {
           widths: ['11%', ...Array(21).fill('*')],
           body: [
             [
-              { text: "Target's AC", fontSize: 6, bold: true },
-              ...['10', '9', '8', '7', '6', '5', '4', '3', '2', '1', '0', '-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9', '-10'].map(ac => 
-                ({ text: ac, fontSize: 6, bold: true, alignment: 'center' })
+              hdrCell("Target's AC", 6),
+              ...['10', '9', '8', '7', '6', '5', '4', '3', '2', '1', '0', '-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9', '-10'].map(ac =>
+                hdrCell(ac, 6, { alignment: 'center' })
               )
             ],
             [
-              { text: 'To Hit #', fontSize: 6, bold: true },
+              hdrCell('To Hit #', 6),
               ...thac0Matrix.map(roll => ({ text: roll, fontSize: 7, alignment: 'center' }))
             ]
           ]
@@ -2633,8 +2633,8 @@ function generateCharacterPDF(root, opts) {
                   { text: '', fontSize: 7, margin: [0, 8, 0, 8] }
                 ],
                 [
-                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] },
-                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] }
+                  hdrCell('To Hit Modifiers', 7),
+                  hdrCell('+/-', 7, { alignment: 'center' })
                 ]
               ]
             },
@@ -2658,8 +2658,8 @@ function generateCharacterPDF(root, opts) {
                   { text: '', fontSize: 7, margin: [0, 8, 0, 8] }
                 ],
                 [
-                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] },
-                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] }
+                  hdrCell('Damage Modifiers', 7),
+                  hdrCell('+/-', 7, { alignment: 'center' })
                 ]
               ]
             },
@@ -2684,8 +2684,8 @@ function generateCharacterPDF(root, opts) {
                   { text: '', fontSize: 7, margin: [0, 8, 0, 8] }
                 ],
                 [
-                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] },
-                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] }
+                  hdrCell('AC Modifiers', 7),
+                  hdrCell('+/-', 7, { alignment: 'center' })
                 ]
               ]
             },
