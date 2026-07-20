@@ -5152,11 +5152,16 @@ const PRINT_OPTION_DEFAULTS = {
   // anyone who never opens this dropdown gets the ink-cheapest sheet.
   palette:          'graphite',
 
-  // Typeface for section headings only; table data always uses Roboto, since
-  // a serif at 6pt in a dense table gets muddy. Keys map to PRINT_TITLE_FONTS
+  // Typeface for section headings only; table data always uses the body font
+  // below. Keys map to PRINT_TITLE_FONTS
   // in print.js. 'Roboto' means no embedded font at all, which is also the
   // fallback if a fetch fails.
   titleFont:        'Cinzel',
+
+  // Typeface for everything except section headings. Keys map to
+  // PRINT_BODY_FONTS in print.js; unlike the title font this needs all four
+  // styles, since table headers are bold and empty sections print in italics.
+  bodyFont:         'PlexSans',
 
   // Extras -- checkboxes in the "Blank Lines & Extra Pages" panel
   changesPage:      false,
@@ -5260,6 +5265,8 @@ function applyPrintOptionsToModal(root, opts) {
   if (pal) pal.value = opts.palette || 'graphite';
   const tf = qs(root, '.print-title-font');
   if (tf) tf.value = opts.titleFont || 'Cinzel';
+  const bf = qs(root, '.print-body-font');
+  if (bf) bf.value = opts.bodyFont || 'PlexSans';
 
   const blanks = opts.blanks || PRINT_BLANK_DEFAULTS;
   qsa(root, '.print-blank').forEach(inp => {
@@ -5279,6 +5286,8 @@ function readPrintOptionsFromModal(root) {
   opts.palette = pal ? pal.value : 'graphite';
   const tf = qs(root, '.print-title-font');
   opts.titleFont = tf ? tf.value : 'Cinzel';
+  const bf = qs(root, '.print-body-font');
+  opts.bodyFont = bf ? bf.value : 'PlexSans';
 
   opts.blanks = {};
   qsa(root, '.print-blank').forEach(inp => {
