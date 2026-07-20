@@ -2692,9 +2692,9 @@ function generateCharacterPDF(root, opts) {
                     widths: ['58%', '28%', '14%'],
                     body: [
                       [
-                        cell('Proficiency', 6, { bold: true }),
-                        cell('Group', 6, { bold: true }),
-                        cell('Slots', 6, { bold: true, alignment: 'center' })
+                        cell('Proficiency', 6, { bold: true, color: palette.ink }),
+                        cell('Group', 6, { bold: true, color: palette.ink }),
+                        cell('Slots', 6, { bold: true, alignment: 'center', color: palette.ink })
                       ],
                       ...(hasContent(weaponProfRows, 'weaponProfs')
                         ? weaponProfRows.map(p => [
@@ -2728,10 +2728,10 @@ function generateCharacterPDF(root, opts) {
                     widths: ['42%', '20%', '10%', '28%'],
                     body: [
                       [
-                        cell('Proficiency', 6, { bold: true }),
-                        cell('Group', 6, { bold: true }),
-                        cell('Slots', 6, { bold: true, alignment: 'center' }),
-                        cell('Check', 6, { bold: true })
+                        cell('Proficiency', 6, { bold: true, color: palette.ink }),
+                        cell('Group', 6, { bold: true, color: palette.ink }),
+                        cell('Slots', 6, { bold: true, alignment: 'center', color: palette.ink }),
+                        cell('Check', 6, { bold: true, color: palette.ink })
                       ],
                       ...(hasContent(nwpRows, 'nwps')
                         ? nwpRows.map(p => [
