@@ -766,7 +766,7 @@ function generateCharacterPDF(root, opts) {
   // right. Returns an array so it can be spread straight into the block list,
   // and an empty group contributes nothing at all.
   const abilityGroup = (label, rows) => rows.length === 0 ? [] : [
-    { text: label, fontSize: 7, bold: true, margin: [0, 2, 0, 2] },
+    subLabel(label),
     {
       table: {
         widths: ['30%', '70%'],
@@ -788,7 +788,7 @@ function generateCharacterPDF(root, opts) {
     abilityBlocks.push(...abilityGroup('Kit Abilities', kitAbilityRows));
 
     if (classKitNotes) {
-      abilityBlocks.push({ text: 'Class / Kit Notes', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+      abilityBlocks.push(subLabel('Class / Kit Notes'));
       abilityBlocks.push({ text: classKitNotes, fontSize: 6, margin: [0, 0, 0, 4] });
     }
   }
@@ -805,11 +805,11 @@ function generateCharacterPDF(root, opts) {
 
   if (showPowers) {
     if (powersText) {
-      powersBlocks.push({ text: 'Powers', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+      powersBlocks.push(subLabel('Powers'));
       powersBlocks.push({ text: powersText, fontSize: 6, margin: [0, 0, 0, 4] });
     }
     if (hindrancesText) {
-      powersBlocks.push({ text: 'Hindrances', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+      powersBlocks.push(subLabel('Hindrances'));
       powersBlocks.push({ text: hindrancesText, fontSize: 6, margin: [0, 0, 0, 4] });
     }
   }
@@ -922,22 +922,22 @@ function generateCharacterPDF(root, opts) {
     });
 
     if (spheresList.length) {
-      spellAccessBlocks.push({ text: 'Spheres of Access', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+      spellAccessBlocks.push(subLabel('Spheres of Access'));
       spellAccessBlocks.push({ text: spheresList.join(', '), fontSize: 6, margin: [0, 0, 0, 4] });
     }
 
     if (schoolsList.length) {
-      spellAccessBlocks.push({ text: 'Schools of Magic', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+      spellAccessBlocks.push(subLabel('Schools of Magic'));
       spellAccessBlocks.push({ text: schoolsList.join(', '), fontSize: 6, margin: [0, 0, 0, 4] });
     }
 
     if (accessNotes) {
-      spellAccessBlocks.push({ text: 'Access Notes', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+      spellAccessBlocks.push(subLabel('Access Notes'));
       spellAccessBlocks.push({ text: accessNotes, fontSize: 6, margin: [0, 0, 0, 4] });
     }
 
     if (magicNotes) {
-      spellAccessBlocks.push({ text: 'Magic Notes', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+      spellAccessBlocks.push(subLabel('Magic Notes'));
       spellAccessBlocks.push({ text: magicNotes, fontSize: 6, margin: [0, 0, 0, 4] });
     }
   }
@@ -1147,7 +1147,7 @@ function generateCharacterPDF(root, opts) {
 
   if (showEquipment) {
     if (hasContent(itemRows, 'equipment')) {
-      equipmentBlocks.push({ text: 'Equipment', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+      equipmentBlocks.push(subLabel('Equipment'));
       equipmentBlocks.push({
         table: {
           headerRows: 1,
@@ -1176,7 +1176,7 @@ function generateCharacterPDF(root, opts) {
     }
 
     if (hasContent(valuableRows, 'valuables')) {
-      equipmentBlocks.push({ text: 'Valuables', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+      equipmentBlocks.push(subLabel('Valuables'));
       equipmentBlocks.push({
         table: {
           headerRows: 1,
@@ -1469,7 +1469,7 @@ function generateCharacterPDF(root, opts) {
   }
 
   if (showHenchmen && henchmenNotes) {
-    henchmenBlocks.push({ text: 'Henchmen Notes', fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+    henchmenBlocks.push(subLabel('Henchmen Notes'));
     henchmenBlocks.push({ text: henchmenNotes, fontSize: 6, margin: [0, 0, 0, 4] });
   }
 
@@ -1691,7 +1691,7 @@ function generateCharacterPDF(root, opts) {
   // One entry: a bold heading line, then each non-empty field labelled beneath.
   // Blank fields are skipped rather than printing a bare label.
   const journalEntry = (heading, fields) => {
-    const parts = [{ text: heading || '(untitled)', fontSize: 7, bold: true, margin: [0, 3, 0, 1] }];
+    const parts = [Object.assign(subLabel(heading || '(untitled)'), { margin: [0, 3, 0, 1] })];
     fields.forEach(([label, value]) => {
       const v = String(value || '').trim();
       if (!v) return;
@@ -1864,7 +1864,7 @@ function generateCharacterPDF(root, opts) {
       for (let s = 0; s < n; s++) {
         body.push(Array(6).fill(null).map(() => ({ text: '', fontSize: 6, margin: [0, 5, 0, 5] })));
       }
-      wsBlocks.push({ text: `Level ${lvl + 1} \u2014 ${n} slot${n === 1 ? '' : 's'}`, fontSize: 7, bold: true, margin: [0, 4, 0, 2] });
+      wsBlocks.push(Object.assign(subLabel(\Level {lvl + 1} \u2014 ${n} slot{n === 1 ? '' : 's'}\`), { margin: [0, 4, 0, 2] }));`
       wsBlocks.push({
         table: { headerRows: 1, widths: ['6%', '26%', '22%', '16%', '20%', '10%'], body: body },
         layout: gridLayout
@@ -1917,7 +1917,7 @@ function generateCharacterPDF(root, opts) {
       };
     };
 
-    const changeHeading = t => ({ text: t, fontSize: 7, bold: true, margin: [0, 2, 0, 2] });
+    const changeHeading = t => subLabel(t);
 
     extraPageBlocks.push({
       pageBreak: 'before',
