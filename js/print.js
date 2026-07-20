@@ -269,10 +269,34 @@ function generateCharacterPDF(root, opts) {
   //
   // Runs once over the finished content tree. Anything that already carries
   // an explicit colour is left alone.
+  // Page 1's labels are string literals and its values are variables, but by
+  // the time pdfMake sees them both are just text at similar sizes -- nothing
+  // at runtime tells them apart. Hence an explicit list. Every fontSize-5 node
+  // is a label too, so that size is inked outright.
+  //
+  // If a label ever prints black, add its exact string here.
+  const FORM_LABELS = new Set([
+    'Character', 'Class/Kit', 'Level', 'Race', 'Alignment',
+    'Patron Deity/Religion', 'Place of Origin', 'PLAYER CHARACTER RECORD',
+    'Player', 'Experience', 'Next Level',
+    'ABILITY SCORES', 'STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA',
+    'SAVING THROWS', 'Start', 'Mod', 'Total', '+/-', 'Modifier',
+    'ARMOR CLASS', 'Rear', 'Surprised', 'Shieldless', 'vs Missiles', 'Armor Worn',
+    'HIT POINTS', 'Max HP', 'Damage Taken', 'Current HP',
+    'Hit Dice', 'Max Deaths', 'Deaths to Date',
+    'DEX Checks', 'Vision Checks', 'Hearing Checks',
+    'Movement', 'Max Carry', 'Current',
+    "Target's AC", 'To Hit #',
+    'To Hit Modifiers', 'Damage Modifiers', 'AC Modifiers',
+    'Non-proficiency penalty'
+  ]);
+
   const inkFormLabels = node => {
     if (Array.isArray(node)) { node.forEach(inkFormLabels); return; }
     if (!node || typeof node !== 'object') return;
-    if (node.fontSize === 5 && node.color === undefined) node.color = palette.ink;
+    if (node.color === undefined && (node.fontSize === 5 || FORM_LABELS.has(node.text))) {
+      node.color = palette.ink;
+    }
     if (node.table && node.table.body) inkFormLabels(node.table.body);
     if (node.columns) inkFormLabels(node.columns);
     if (node.stack) inkFormLabels(node.stack);
