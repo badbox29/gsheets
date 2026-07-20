@@ -72,6 +72,99 @@ function loadTitleFont(name) {
   return _titleFontCache[name];
 }
 
+// === EMBEDDED BODY FONT ===
+//
+// Unlike the heading faces, body text genuinely needs all four styles: every
+// table header is bold and empty sections print "None" in italics. So this is
+// four files per family, not one file in four slots.
+//
+// Registered under a family name that pdfMake then resolves per style, which
+// is why the vfs keys carry the slot in them -- two families must not collide.
+const PRINT_BODY_FONTS = {
+  PlexSans: {
+    normal:      'fonts/IBMPlexSans-Regular.ttf',
+    bold:        'fonts/IBMPlexSans-Bold.ttf',
+    italics:     'fonts/IBMPlexSans-Italic.ttf',
+    bolditalics: 'fonts/IBMPlexSans-BoldItalic.ttf'
+  },
+  PlexCondensed: {
+    normal:      'fonts/IBMPlexSansCondensed-Regular.ttf',
+    bold:        'fonts/IBMPlexSansCondensed-Bold.ttf',
+    italics:     'fonts/IBMPlexSansCondensed-Italic.ttf',
+    bolditalics: 'fonts/IBMPlexSansCondensed-BoldItalic.ttf'
+  },
+  // ParaType's numeric filenames: 55 regular, 56 italic, 75 bold, 76 bold
+  // italic. Nothing in the names says so, hence this note.
+  PTSans: {
+    normal:      'fonts/PTS55F.ttf',
+    bold:        'fonts/PTS75F.ttf',
+    italics:     'fonts/PTS56F.ttf',
+    bolditalics: 'fonts/PTS76F.ttf'
+  }
+};
+
+const _bodyFontCache = {};
+
+// Shared by the body loader for each of its four files.
+function _fetchFontAsBase64(path) {
+  return fetch(path)
+    .then(res => {
+      if (!res.ok) throw new Error('HTTP ' + res.status + ' for ' + path);
+      return res.arrayBuffer();
+    })
+    .then(buf => {
+      const bytes = new Uint8Array(buf);
+      let binary = '';
+      for (let i = 0; i < bytes.length; i += 8192) {
+        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+      }
+      return btoa(binary);
+    });
+}
+
+function loadBodyFont(name) {
+  const family = PRINT_BODY_FONTS[name];
+  if (!name || name === 'Roboto' || !family) return Promise.resolve('Roboto');
+  if (_bodyFontCache[name]) return _bodyFontCache[name];
+
+  const slots = ['normal', 'bold', 'italics', 'bolditalics'];
+
+  // All four fetched in parallel; the family is registered only once every
+  // slot has arrived, so a half-loaded family can never reach pdfMake.
+  _bodyFontCache[name] = Promise.all(slots.map(s => _fetchFontAsBase64(family[s])))
+    .then(encoded => {
+      pdfMake.vfs = pdfMake.vfs || {};
+      pdfMake.fonts = pdfMake.fonts || {};
+
+      // Assigning to pdfMake.fonts REPLACES the default map, so Roboto has to
+      // be re-declared or anything still asking for it loses its font.
+      pdfMake.fonts.Roboto = pdfMake.fonts.Roboto || {
+        normal: 'Roboto-Regular.ttf',
+        bold: 'Roboto-Medium.ttf',
+        italics: 'Roboto-Italic.ttf',
+        bolditalics: 'Roboto-MediumItalic.ttf'
+      };
+
+      const entry = {};
+      slots.forEach((slot, i) => {
+        const vfsName = name + '-' + slot + '.ttf';
+        pdfMake.vfs[vfsName] = encoded[i];
+        entry[slot] = vfsName;
+      });
+      pdfMake.fonts[name] = entry;
+
+      return name;
+    })
+    .catch(err => {
+      // A font that will not load must never block a print.
+      console.warn('Body font "' + name + '" failed to load, falling back to Roboto:', err);
+      delete _bodyFontCache[name];
+      return 'Roboto';
+    });
+
+  return _bodyFontCache[name];
+}
+
 // === EMBEDDED PAGE-1 LOGO ===
 //
 // One artwork per colourway, so the logotype sits inside the chosen scheme
@@ -152,13 +245,18 @@ function generateCharacterPDF(root, opts) {
   // Both assets resolve to a safe value on failure -- a font name for the
   // typeface, null for the logo -- so neither can stop the sheet printing.
   // Fetched in parallel; both are cached after the first print.
-  Promise.all([loadTitleFont(_wanted), loadPrintLogo(_palette)])
-    .then(([resolvedFont, logoData]) => {
-      _buildCharacterPDF(root, opts, resolvedFont, logoData);
-    });
-}
+  const _wantedBody = (opts && opts.bodyFont) ||
+    (typeof getPrintOptions === 'function' ? getPrintOptions().bodyFont : 'Roboto');
 
-function _buildCharacterPDF(root, opts, titleFont, logoData) {
+  Promise.all([
+    loadTitleFont(_wanted),
+    loadPrintLogo(_palette),
+    loadBodyFont(_wantedBody)
+  ]).then(([resolvedFont, logoData, resolvedBody]) => {
+    _buildCharacterPDF(root, opts, resolvedFont, logoData, resolvedBody);
+  });
+
+function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
 
   // Print options come from the modal. A direct call -- or any older code
   // path that still calls generateCharacterPDF(root) with one argument --
@@ -2391,6 +2489,9 @@ function _buildCharacterPDF(root, opts, titleFont, logoData) {
   // Create PDF document definition
   const docDefinition = {
     pageSize: 'LETTER',
+    // Every node inherits this unless it names its own font. Section titles
+    // set `font: titleFont` explicitly, so headings and body stay independent.
+    defaultStyle: { font: bodyFont },
     // Bottom margin widened from 20 to 32 to make room for the footer.
     pageMargins: [20, 20, 20, 32],
     info: {
