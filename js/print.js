@@ -297,7 +297,7 @@ function generateCharacterPDF(root, opts) {
     'Hit Dice', 'Max Deaths', 'Deaths to Date',
     'DEX Checks', 'Vision Checks', 'Hearing Checks',
     'Movement', 'Max Carry', 'Current',
-    "Target's AC", 'To Hit #',
+    "Target's AC",
     'To Hit Modifiers', 'Damage Modifiers', 'AC Modifiers'
   ]);
 
@@ -1962,6 +1962,8 @@ function generateCharacterPDF(root, opts) {
         layout: {
           hLineWidth: () => 1,
           vLineWidth: (i, node) => (i === 0 || i === node.table.widths.length) ? 1 : 0,
+          hLineColor: () => palette.rule,
+          vLineColor: () => palette.rule,
           paddingLeft: () => 2,
           paddingRight: () => 2,
           paddingTop: () => 1,
@@ -2045,6 +2047,8 @@ function generateCharacterPDF(root, opts) {
           layout: {
             hLineWidth: () => 1,
             vLineWidth: (i, node) => (i === 0 || i === node.table.widths.length) ? 1 : 0,
+            hLineColor: () => palette.rule,
+            vLineColor: () => palette.rule,
             paddingLeft: () => 2,
             paddingRight: () => 2,
             paddingTop: () => 1,
@@ -2621,7 +2625,7 @@ function generateCharacterPDF(root, opts) {
               )
             ],
             [
-              hdrCell('To Hit #', 6),
+              { text: 'To Hit #', fontSize: 6, bold: true },
               ...thac0Matrix.map(roll => ({ text: roll, fontSize: 7, alignment: 'center' }))
             ]
           ]
