@@ -2621,8 +2621,8 @@ function generateCharacterPDF(root, opts) {
               widths: ['70%', '30%'],
               body: [
                 [
-                  { text: 'To Hit Modifiers', fontSize: 7, bold: true },
-                  { text: '+/-', fontSize: 7, bold: true, alignment: 'center' }
+                  hdrCell('To Hit Modifiers', 7),
+                  hdrCell('+/-', 7, { alignment: 'center' })
                 ],
                 [
                   { text: 'Non-proficiency penalty', fontSize: 7 },
@@ -2633,8 +2633,8 @@ function generateCharacterPDF(root, opts) {
                   { text: '', fontSize: 7, margin: [0, 8, 0, 8] }
                 ],
                 [
-                  hdrCell('To Hit Modifiers', 7),
-                  hdrCell('+/-', 7, { alignment: 'center' })
+                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] },
+                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] }
                 ]
               ]
             },
@@ -2646,20 +2646,20 @@ function generateCharacterPDF(root, opts) {
               widths: ['70%', '30%'],
               body: [
                 [
-                  { text: 'Damage Modifiers', fontSize: 7, bold: true },
-                  { text: '+/-', fontSize: 7, bold: true, alignment: 'center' }
-                ],
-                [
-                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] },
-                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] }
-                ],
-                [
-                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] },
-                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] }
-                ],
-                [
                   hdrCell('Damage Modifiers', 7),
                   hdrCell('+/-', 7, { alignment: 'center' })
+                ],
+                [
+                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] },
+                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] }
+                ],
+                [
+                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] },
+                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] }
+                ],
+                [
+                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] },
+                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] }
                 ]
               ]
             },
@@ -2672,20 +2672,20 @@ function generateCharacterPDF(root, opts) {
               widths: ['70%', '30%'],
               body: [
                 [
-                  { text: 'AC Modifiers', fontSize: 7, bold: true },
-                  { text: '+/-', fontSize: 7, bold: true, alignment: 'center' }
-                ],
-                [
-                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] },
-                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] }
-                ],
-                [
-                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] },
-                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] }
-                ],
-                [
                   hdrCell('AC Modifiers', 7),
                   hdrCell('+/-', 7, { alignment: 'center' })
+                ],
+                [
+                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] },
+                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] }
+                ],
+                [
+                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] },
+                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] }
+                ],
+                [
+                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] },
+                  { text: '', fontSize: 7, margin: [0, 8, 0, 8] }
                 ]
               ]
             },
