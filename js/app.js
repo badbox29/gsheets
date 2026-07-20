@@ -5152,6 +5152,12 @@ const PRINT_OPTION_DEFAULTS = {
   // anyone who never opens this dropdown gets the ink-cheapest sheet.
   palette:          'graphite',
 
+  // Typeface for section headings only; table data always uses Roboto, since
+  // a serif at 6pt in a dense table gets muddy. Keys map to PRINT_TITLE_FONTS
+  // in print.js. 'Roboto' means no embedded font at all, which is also the
+  // fallback if a fetch fails.
+  titleFont:        'Cinzel',
+
   // Extras -- checkboxes in the "Blank Lines & Extra Pages" panel
   changesPage:      false,
   printDate:        false,
@@ -5252,6 +5258,8 @@ function applyPrintOptionsToModal(root, opts) {
   if (sel) sel.value = opts.spellbookDetail || 'summary';
   const pal = qs(root, '.print-palette');
   if (pal) pal.value = opts.palette || 'graphite';
+  const tf = qs(root, '.print-title-font');
+  if (tf) tf.value = opts.titleFont || 'Cinzel';
 
   const blanks = opts.blanks || PRINT_BLANK_DEFAULTS;
   qsa(root, '.print-blank').forEach(inp => {
@@ -5269,6 +5277,8 @@ function readPrintOptionsFromModal(root) {
   opts.spellbookDetail = sel ? sel.value : 'summary';
   const pal = qs(root, '.print-palette');
   opts.palette = pal ? pal.value : 'graphite';
+  const tf = qs(root, '.print-title-font');
+  opts.titleFont = tf ? tf.value : 'Cinzel';
 
   opts.blanks = {};
   qsa(root, '.print-blank').forEach(inp => {
