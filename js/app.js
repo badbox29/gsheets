@@ -5161,7 +5161,7 @@ const PRINT_OPTION_DEFAULTS = {
   // Typeface for everything except section headings. Keys map to
   // PRINT_BODY_FONTS in print.js; unlike the title font this needs all four
   // styles, since table headers are bold and empty sections print in italics.
-  bodyFont:         'PlexSans',
+  bodyFont:         'PTSans',
 
   // Extras -- checkboxes in the "Blank Lines & Extra Pages" panel
   changesPage:      false,
@@ -5266,7 +5266,7 @@ function applyPrintOptionsToModal(root, opts) {
   const tf = qs(root, '.print-title-font');
   if (tf) tf.value = opts.titleFont || 'Cinzel';
   const bf = qs(root, '.print-body-font');
-  if (bf) bf.value = opts.bodyFont || 'PlexSans';
+  if (bf) bf.value = opts.bodyFont || 'PTSans';
 
   const blanks = opts.blanks || PRINT_BLANK_DEFAULTS;
   qsa(root, '.print-blank').forEach(inp => {
@@ -5287,7 +5287,7 @@ function readPrintOptionsFromModal(root) {
   const tf = qs(root, '.print-title-font');
   opts.titleFont = tf ? tf.value : 'Cinzel';
   const bf = qs(root, '.print-body-font');
-  opts.bodyFont = bf ? bf.value : 'PlexSans';
+  opts.bodyFont = bf ? bf.value : 'PTSans';
 
   opts.blanks = {};
   qsa(root, '.print-blank').forEach(inp => {
