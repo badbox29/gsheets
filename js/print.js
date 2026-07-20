@@ -72,6 +72,49 @@ function loadTitleFont(name) {
   return _titleFontCache[name];
 }
 
+// === EMBEDDED PAGE-1 LOGO ===
+//
+// The header plate sets the game logotype as an image rather than as type.
+// Same loader shape as loadTitleFont: fetched once, cached as a promise so
+// two prints share one request, and resolving to null on any failure so a
+// missing or corrupt file prints a text fallback instead of killing the PDF.
+//
+// pdfMake accepts PNG and JPEG only. Path is case-sensitive on GitHub Pages.
+const PRINT_LOGO_PATH = 'images/adnd-logo.png';
+
+// Native proportions of the artwork (800 x 217). Used to derive the height of
+// the logo's fit box from its width, so the plate never guesses.
+const PRINT_LOGO_RATIO = 800 / 217;
+
+let _printLogoPromise = null;
+
+function loadPrintLogo() {
+  if (_printLogoPromise) return _printLogoPromise;
+
+  _printLogoPromise = fetch(PRINT_LOGO_PATH)
+    .then(res => {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.arrayBuffer();
+    })
+    .then(buf => {
+      // Chunked, for the same reason as the font loader: fromCharCode.apply
+      // on a large array blows the argument limit in some browsers.
+      const bytes = new Uint8Array(buf);
+      let binary = '';
+      for (let i = 0; i < bytes.length; i += 8192) {
+        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+      }
+      return 'data:image/png;base64,' + btoa(binary);
+    })
+    .catch(err => {
+      console.warn('Print logo failed to load, falling back to text:', err);
+      _printLogoPromise = null;
+      return null;
+    });
+
+  return _printLogoPromise;
+}
+
 function generateCharacterPDF(root, opts) {
   if (!root) {
     alert('No active character sheet found.');
