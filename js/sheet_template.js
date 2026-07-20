@@ -2168,6 +2168,19 @@ const SHEET_HTML = `
 	      <button class="print-select-core" style="font-size:11px;padding:5px 10px;">Defaults</button>
 	    </div>
 
+	    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:8px 10px;background:var(--glass);border-radius:4px;">
+	      <label style="font-size:12px;color:var(--text);margin:0;white-space:nowrap;">Colour scheme</label>
+	      <select class="print-palette" style="width:auto;font-size:11px;padding:3px 6px;">
+	        <option value="graphite">Graphite &mdash; no colour</option>
+	        <option value="slate">Slate Blue</option>
+	        <option value="oxblood">Oxblood</option>
+	        <option value="sepia">Sepia</option>
+	        <option value="forest">Forest Green</option>
+	        <option value="plum">Plum</option>
+	      </select>
+	      <span style="font-size:10px;color:var(--muted);">Tints section rules and table headers. All schemes print as grey on a mono printer.</span>
+	    </div>
+
 	    <!-- Character -->
 	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Character</label>
 	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:4px;margin-bottom:12px;">
