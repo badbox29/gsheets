@@ -810,11 +810,15 @@ function generateCharacterPDF(root, opts) {
     subLabel(label),
     {
       table: {
+        headerRows: 1,
         widths: ['30%', '70%'],
-        body: rows.map(a => [
-          cell(a.name, 6, { bold: true }),
-          cell(a.notes)
-        ])
+        body: [
+          [hdrCell('Ability', 6), hdrCell('Description', 6)],
+          ...rows.map(a => [
+            cell(a.name, 6, { bold: true }),
+            cell(a.notes)
+          ])
+        ]
       },
       layout: gridLayout,
       margin: [0, 0, 0, 4]
@@ -936,8 +940,8 @@ function generateCharacterPDF(root, opts) {
         widths: ['16%', ...Array(9).fill('*')],
         body: [
           [
-            cell('Spell Level', 6, { bold: true }),
-            ...levelIdx.map(i => cell(String(i + 1), 6, { bold: true, alignment: 'center' }))
+            hdrCell('Spell Level', 6),
+            ...levelIdx.map(i => hdrCell(String(i + 1), 6, { alignment: 'center' }))
           ],
           [
             cell('Slots', 6, { bold: true }),
@@ -1387,8 +1391,17 @@ function generateCharacterPDF(root, opts) {
 
     detailBlocks.push({
       table: {
+        headerRows: 1,
         widths: ['18%', '32%', '18%', '32%'],
-        body: detailRows
+        body: [
+          [
+            hdrCell('Detail', 6),
+            hdrCell('Value', 6),
+            hdrCell('Detail', 6),
+            hdrCell('Value', 6)
+          ],
+          ...detailRows
+        ]
       },
       layout: gridLayout,
       margin: [0, 0, 0, 5]
@@ -1979,12 +1992,12 @@ function generateCharacterPDF(root, opts) {
                   table: {
                     widths: ['40%', '30%', '30%'],
                     body: [
-                      [cell('', 6), cell('Before', 6, { bold: true, alignment: 'center' }), cell('After', 6, { bold: true, alignment: 'center' })],
-                      [cell('Experience', 6, { bold: true }), cell(xpDisplay, 6, { alignment: 'center' }), cell('', 8, { margin: [0, 3, 0, 3] })],
-                      [cell('Level', 6, { bold: true }), cell(level, 6, { alignment: 'center' }), cell('', 8, { margin: [0, 3, 0, 3] })],
-                      [cell('Current HP', 6, { bold: true }), cell(currentHP, 6, { alignment: 'center' }), cell('', 8, { margin: [0, 3, 0, 3] })],
-                      [cell('Damage taken', 6, { bold: true }), cell(damageTaken, 6, { alignment: 'center' }), cell('', 8, { margin: [0, 3, 0, 3] })],
-                      [cell('Armor class', 6, { bold: true }), cell(ac, 6, { alignment: 'center' }), cell('', 8, { margin: [0, 3, 0, 3] })]
+                      [hdrCell('', 6), hdrCell('Before', 6, { alignment: 'center' }), hdrCell('After', 6, { alignment: 'center' })],
+                      [cell('Experience', 6, { bold: true, color: palette.ink }), cell(xpDisplay, 6, { alignment: 'center' }), cell('', 8, { margin: [0, 3, 0, 3] })],
+                      [cell('Level', 6, { bold: true, color: palette.ink }), cell(level, 6, { alignment: 'center' }), cell('', 8, { margin: [0, 3, 0, 3] })],
+                      [cell('Current HP', 6, { bold: true, color: palette.ink }), cell(currentHP, 6, { alignment: 'center' }), cell('', 8, { margin: [0, 3, 0, 3] })],
+                      [cell('Damage taken', 6, { bold: true, color: palette.ink }), cell(damageTaken, 6, { alignment: 'center' }), cell('', 8, { margin: [0, 3, 0, 3] })],
+                      [cell('Armor class', 6, { bold: true, color: palette.ink }), cell(ac, 6, { alignment: 'center' }), cell('', 8, { margin: [0, 3, 0, 3] })]
                     ]
                   },
                   layout: gridLayout,
