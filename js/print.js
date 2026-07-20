@@ -112,9 +112,44 @@ function generateCharacterPDF(root, opts) {
 
   // Every table on this sheet uses the same hairline grid. Defined once here
   // rather than repeated inline at each table, as the page 1 code does.
+  // === COLOUR SCHEMES ===
+  //
+  // Four values each. `ink` is section titles and column-header text, `rule`
+  // is every table border, `tint` is the header-row fill, and `body` is the
+  // ordinary table text -- kept nearly black in every scheme, because tinting
+  // body text at 6pt costs legibility for no gain.
+  //
+  // All six print as grey on a mono printer, so the choice only shows on a
+  // colour device. Graphite is the default and uses no colour at all.
+  const PRINT_PALETTES = {
+    graphite: { ink: '#2c2c2a', rule: '#a8a8a5', tint: '#eeeeec', body: '#1f1f1e' },
+    slate:    { ink: '#2b4257', rule: '#9aabbd', tint: '#e7edf3', body: '#1e2730' },
+    oxblood:  { ink: '#6b2430', rule: '#bfa0a4', tint: '#f3e8e9', body: '#2a1f21' },
+    sepia:    { ink: '#5c4326', rule: '#b5a184', tint: '#f2ebdd', body: '#2b2318' },
+    forest:   { ink: '#2f4a35', rule: '#9db3a2', tint: '#e6ede7', body: '#1f2a21' },
+    plum:     { ink: '#4a2e56', rule: '#ab9ab8', tint: '#efe8f3', body: '#251d29' }
+  };
+
+  const palette = PRINT_PALETTES[opts.palette] || PRINT_PALETTES.graphite;
+
+  // Defined once and used by every table in the document, so these three
+  // callbacks recolour the entire sheet. fillColor tints only the rows
+  // declared as headerRows -- which, since printSection folds the section
+  // title into the header rows, would also tint the title. The title rows
+  // carry no border and sit above the real header, so they are excluded by
+  // checking for the borderless marker set in printSection.
   const gridLayout = {
     hLineWidth: () => 1,
     vLineWidth: () => 1,
+    hLineColor: () => palette.rule,
+    vLineColor: () => palette.rule,
+    fillColor: (rowIndex, node) => {
+      const hdr = node.table.headerRows || 0;
+      if (rowIndex >= hdr) return null;
+      const row = node.table.body[rowIndex] || [];
+      const first = row[0] || {};
+      return first._sectionTitle ? null : palette.tint;
+    },
     paddingLeft: () => 2,
     paddingRight: () => 2,
     paddingTop: () => 1,
@@ -131,6 +166,8 @@ function generateCharacterPDF(root, opts) {
   const gridLayoutOpenBottom = {
     hLineWidth: (i, node) => (i === node.table.body.length ? 0 : 1),
     vLineWidth: () => 1,
+    hLineColor: () => palette.rule,
+    vLineColor: () => palette.rule,
     paddingLeft: () => 2,
     paddingRight: () => 2,
     paddingTop: () => 1,
