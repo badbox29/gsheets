@@ -218,10 +218,10 @@ function generateCharacterPDF(root, opts) {
   // That is what gives page 1 structure without any fills. The original code
   // used a single 1pt black rule everywhere, which is why it reads flat.
   const formLayout = (padX, padY) => ({
-    hLineWidth: (i, node) => (i === 0 || i === node.table.body.length) ? 1.25 : 0.5,
-    vLineWidth: (i, node) => (i === 0 || i === node.table.widths.length) ? 1.25 : 0.5,
-    hLineColor: (i, node) => (i === 0 || i === node.table.body.length) ? palette.ink : palette.rule,
-    vLineColor: (i, node) => (i === 0 || i === node.table.widths.length) ? palette.ink : palette.rule,
+    hLineWidth: () => 1,
+    vLineWidth: () => 1,
+    hLineColor: () => palette.rule,
+    vLineColor: () => palette.rule,
     paddingLeft: () => padX,
     paddingRight: () => padX,
     paddingTop: () => padY,
@@ -2664,7 +2664,7 @@ function generateCharacterPDF(root, opts) {
             ...blankRows('weapons', 8)
           ]
         },
-        layout: formLayout(2, 2),
+        layout: gridLayout,
         margin: [0, 0, 0, 5]
       },
       
