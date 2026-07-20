@@ -2639,6 +2639,7 @@ function generateCharacterPDF(root, opts) {
       pageBreakBefore(printSection('WEAPON COMBAT',
       {
         table: {
+          headerRows: 1,
           widths: ['25%', '6%', '6%', '8%', '8%', '12%', '17%', '18%'],
           body: [
             [
