@@ -2188,7 +2188,18 @@ const SHEET_HTML = `
 	        <option value="Marcellus">Marcellus &mdash; softer Roman</option>
 	        <option value="Roboto">Plain &mdash; no embedded font</option>
 	      </select>
-	      <span style="font-size:10px;color:var(--muted);">Section headings only; tables stay in the standard face. Embedded fonts add a moment to the first print.</span>
+	      <span style="font-size:10px;color:var(--muted);">Section headings only. Embedded fonts add a moment to the first print.</span>
+	    </div>
+
+	    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:8px 10px;background:var(--glass);border-radius:4px;">
+	      <label style="font-size:12px;color:var(--text);margin:0;white-space:nowrap;">Body font</label>
+	      <select class="print-body-font" style="width:auto;font-size:11px;padding:3px 6px;">
+	        <option value="PlexSans">IBM Plex Sans</option>
+	        <option value="PlexCondensed">IBM Plex Sans Condensed &mdash; narrower tables</option>
+	        <option value="PTSans">PT Sans</option>
+	        <option value="Roboto">Roboto &mdash; original</option>
+	      </select>
+	      <span style="font-size:10px;color:var(--muted);">Everything except section headings. Condensed buys room in dense tables.</span>
 	    </div>
 
 	    <!-- Character -->
