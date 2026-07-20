@@ -2212,6 +2212,161 @@ function _buildCharacterPDF(root, opts, titleFont, logoData) {
   const showPage7 = showSessionLog || showQuests || showNpcs ||
     showLocations || showCharJournal;
 
+  // === PAGE 1 HEADER ===
+  //
+  // Two independent blocks side by side, where this used to be a single
+  // six-column table. That table forced the record plate to share row
+  // boundaries with the data fields: the branding column was 15% of the page
+  // and wrapped mid-word, and the portrait's 64pt row left the deity and
+  // origin cells beside it almost entirely empty.
+  //
+  // HDR_PLATE_H is the only knob. Both the plate's own rows and the left
+  // block's value rows are derived from it, which is what keeps the two
+  // bottom edges flush in the with- and without-portrait states alike.
+  const HDR_GAP     = 8;
+  const HDR_PLATE_W = 160;
+  const HDR_PAD_X   = 4;
+  const HDR_PAD_Y   = 2;
+  const HDR_LEFT_W  = 572 - HDR_GAP - HDR_PLATE_W;
+
+  // pdfMake adds paddingTop + paddingBottom on top of every declared row
+  // height, so the row budget has to account for it or the blocks drift.
+  const HDR_ROW_PAD = HDR_PAD_Y * 2;
+
+  const HDR_PLATE_H = showPortrait ? 164 : 92;
+
+  // Fit boxes. Width is the plate less its own padding and border. The logo's
+  // height follows from the artwork's native proportions; the portrait frame
+  // is deliberately FIXED, so a tall, wide or square image all letterbox
+  // inside the same box and none of them can move the layout.
+  const HDR_IMG_W   = HDR_PLATE_W - HDR_PAD_X * 2 - 2;
+  const HDR_LOGO_H  = Math.round(HDR_IMG_W / PRINT_LOGO_RATIO);
+  const HDR_STRIP_H = 10;
+
+  // Slack goes to whichever row can absorb it: the portrait frame when there
+  // is one, otherwise the logo row, with the logo centred in it by margin.
+  const HDR_PORTRAIT_H = showPortrait
+    ? HDR_PLATE_H - HDR_LOGO_H - HDR_STRIP_H - HDR_ROW_PAD * 3
+    : 0;
+  const HDR_LOGO_ROW_H = showPortrait
+    ? HDR_LOGO_H
+    : HDR_PLATE_H - HDR_STRIP_H - HDR_ROW_PAD * 2;
+  const HDR_LOGO_TOP = Math.max(0, Math.round((HDR_LOGO_ROW_H - HDR_LOGO_H) / 2));
+
+  // Six rows in the left block: three label bands, each over its value row.
+  const HDR_LBL_H = 7;
+  const HDR_VAL_H = Math.max(
+    12,
+    Math.round((HDR_PLATE_H - HDR_LBL_H * 3 - HDR_ROW_PAD * 6) / 3)
+  );
+
+  // Twelve equal columns divide cleanly into all three field rows -- 4/3/1/2/2,
+  // then 4/4/4, then 6/6. One widths array, three different arrangements.
+  const HDR_COLS = Array(12).fill((100 / 12).toFixed(4) + '%');
+  const hLbl = (t, span) => hdrCell(t, 6, span ? { colSpan: span } : undefined);
+  const hVal = (t, span, size) => cell(t, size || 8, span ? { colSpan: span } : undefined);
+  const hPad = n => Array(n).fill({});
+
+  // A rule between a label and the value directly beneath it would read as two
+  // separate fields. The odd horizontal lines are the ones inside a pair, so
+  // they are suppressed; the tinted label band separates one pair from the next.
+  const hdrLeftLayout = Object.assign(formLayout(HDR_PAD_X, HDR_PAD_Y), {
+    hLineWidth: i => (i % 2 === 1 ? 0 : 1)
+  });
+
+  // The logotype is an image, so the plate carries no display type at all.
+  // If the file failed to load, the wordmark is set in the chosen heading font
+  // instead -- the only place titleFont reaches page 1.
+  const plateMark = logoData
+    ? {
+        image: logoData,
+        fit: [HDR_IMG_W, HDR_LOGO_H],
+        alignment: 'center',
+        margin: [0, HDR_LOGO_TOP, 0, 0]
+      }
+    : {
+        stack: [
+          { text: 'Advanced', fontSize: 8, alignment: 'center', font: titleFont, color: palette.ink },
+          { text: 'Dungeons & Dragons', fontSize: 11, alignment: 'center', font: titleFont, color: palette.ink },
+          { text: '2nd Edition', fontSize: 7, italics: true, alignment: 'center', color: palette.ink }
+        ],
+        margin: [0, HDR_LOGO_TOP, 0, 0]
+      };
+
+  const plateRows = [
+    [plateMark],
+    [{
+      text: 'PLAYER CHARACTER RECORD',
+      fontSize: 6,
+      bold: true,
+      alignment: 'center',
+      characterSpacing: 0.4,
+      fillColor: palette.tint,
+      color: palette.ink
+    }]
+  ];
+  const plateHeights = [HDR_LOGO_ROW_H, HDR_STRIP_H];
+
+  if (showPortrait) {
+    plateRows.push([{ image: avatarData, fit: [HDR_IMG_W, HDR_PORTRAIT_H], alignment: 'center' }]);
+    plateHeights.push(HDR_PORTRAIT_H);
+  }
+
+  const headerBlock = {
+    unbreakable: true,
+    columnGap: HDR_GAP,
+    columns: [
+      {
+        width: HDR_LEFT_W,
+        table: {
+          widths: HDR_COLS,
+          heights: [HDR_LBL_H, HDR_VAL_H, HDR_LBL_H, HDR_VAL_H, HDR_LBL_H, HDR_VAL_H],
+          body: [
+            [
+              hLbl('Character', 4), ...hPad(3),
+              hLbl('Class/Kit', 3), ...hPad(2),
+              hLbl('Level'),
+              hLbl('Race', 2), ...hPad(1),
+              hLbl('Alignment', 2), ...hPad(1)
+            ],
+            [
+              hVal(characterName, 4, 13), ...hPad(3),
+              hVal(kit ? `${clazzDisplay}/${kit}` : clazzDisplay, 3), ...hPad(2),
+              hVal(level),
+              hVal(race, 2), ...hPad(1),
+              hVal(alignment, 2), ...hPad(1)
+            ],
+            [
+              hLbl('Player', 4), ...hPad(3),
+              hLbl('Experience', 4), ...hPad(3),
+              hLbl('Next Level', 4), ...hPad(3)
+            ],
+            [
+              hVal(playerName, 4), ...hPad(3),
+              hVal(xpDisplay, 4), ...hPad(3),
+              hVal(nextLevelDisplay, 4), ...hPad(3)
+            ],
+            [
+              hLbl('Patron Deity/Religion', 6), ...hPad(5),
+              hLbl('Place of Origin', 6), ...hPad(5)
+            ],
+            [
+              hVal(details.patronDeity || '', 6), ...hPad(5),
+              hVal(details.birthplace || details.homeland || '', 6), ...hPad(5)
+            ]
+          ]
+        },
+        layout: hdrLeftLayout
+      },
+      {
+        width: HDR_PLATE_W,
+        table: { widths: ['*'], heights: plateHeights, body: plateRows },
+        layout: formLayout(HDR_PAD_X, HDR_PAD_Y)
+      }
+    ],
+    margin: [0, 0, 0, 5]
+  };
+
   // Create PDF document definition
   const docDefinition = {
     pageSize: 'LETTER',
@@ -2249,83 +2404,8 @@ function _buildCharacterPDF(root, opts, titleFont, logoData) {
       ]
     }),
     content: [
-      // === TOP INFO BAR ===
-      {
-        table: {
-          widths: ['25%', '18%', '12%', '15%', '15%', '15%'],
-          body: [
-            [
-              { text: 'Character', fontSize: 6, bold: true, border: [true, true, false, false] },
-              { text: 'Class/Kit', fontSize: 6, bold: true, border: [true, true, false, false] },
-              { text: 'Level', fontSize: 6, bold: true, border: [true, true, false, false] },
-              { text: 'Race', fontSize: 6, bold: true, border: [true, true, false, false] },
-              { text: 'Alignment', fontSize: 6, bold: true, border: [true, true, false, false] },
-              { 
-                stack: [
-                  { text: 'Advanced', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, -2] },
-                  { 
-                    text: 'Dungeons&Dragons', 
-                    fontSize: 11, 
-                    bold: true, 
-                    alignment: 'right',
-                    margin: [0, 0, 0, -2]
-                  },
-                  { text: '2nd Edition', fontSize: 7, italics: true, alignment: 'right' }
-                ],
-                rowSpan: 2,
-                border: [true, true, true, false]
-              }
-            ],
-            [
-              { text: characterName, fontSize: 8, border: [true, false, false, true] },
-              { text: kit ? `${clazzDisplay}/${kit}` : clazzDisplay, fontSize: 8, border: [true, false, false, true] },
-              { text: level, fontSize: 8, border: [true, false, false, true] },
-              { text: race, fontSize: 8, border: [true, false, false, true] },
-              { text: alignment, fontSize: 8, border: [true, false, false, true] },
-              {}
-            ],
-            [
-              { text: 'Patron Deity/Religion', fontSize: 6, bold: true, border: [true, true, false, false], colSpan: 3 },
-              {},
-              {},
-              { text: 'Place of Origin', fontSize: 6, bold: true, border: [true, true, false, false], colSpan: 2 },
-              {},
-              { text: 'PLAYER CHARACTER RECORD', fontSize: 7, bold: true, alignment: 'center', border: [true, false, true, true] }
-            ],
-            [
-              // These two cells were labelled but never populated -- the values
-              // live on the details record, not in a top-level field.
-              { text: details.patronDeity || '', fontSize: 8, border: [true, false, false, true], colSpan: 3 },
-              {},
-              {},
-              { text: details.birthplace || details.homeland || '', fontSize: 8, border: [true, false, false, true], colSpan: 2 },
-              {},
-              showPortrait
-                ? { image: avatarData, fit: [64, 64], alignment: 'center', border: [true, false, true, false] }
-                : { text: '', border: [true, false, true, false] }
-            ],
-            [
-              { text: 'Player', fontSize: 6, bold: true, border: [true, true, false, false], colSpan: 2 },
-              {},
-              { text: 'Experience', fontSize: 6, bold: true, border: [true, true, false, false], colSpan: 2 },
-              {},
-              { text: 'Next Level', fontSize: 6, bold: true, border: [true, true, false, false] },
-              { text: '', border: [true, false, true, false] }
-            ],
-            [
-              { text: playerName, fontSize: 8, border: [true, false, false, true], colSpan: 2 },
-              {},
-              { text: xpDisplay, fontSize: 8, border: [true, false, false, true], colSpan: 2 },
-              {},
-              { text: nextLevelDisplay, fontSize: 8, border: [true, false, false, true] },
-              { text: '', border: [true, false, true, true] }
-            ]
-          ]
-        },
-        layout: formLayout(2, 1),
-        margin: [0, 0, 0, 5]
-      },
-      
+      headerBlock,
+
       // === MAIN SECTION: Ability Scores + Saving Throws ===
       {
         unbreakable: true,
