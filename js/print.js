@@ -128,12 +128,16 @@ function generateCharacterPDF(root, opts) {
   const _wanted = (opts && opts.titleFont) ||
     (typeof getPrintOptions === 'function' ? getPrintOptions().titleFont : 'Roboto');
 
-  loadTitleFont(_wanted).then(resolvedFont => {
-    _buildCharacterPDF(root, opts, resolvedFont);
-  });
+  // Both assets resolve to a safe value on failure -- a font name for the
+  // typeface, null for the logo -- so neither can stop the sheet printing.
+  // Fetched in parallel; both are cached after the first print.
+  Promise.all([loadTitleFont(_wanted), loadPrintLogo()])
+    .then(([resolvedFont, logoData]) => {
+      _buildCharacterPDF(root, opts, resolvedFont, logoData);
+    });
 }
 
-function _buildCharacterPDF(root, opts, titleFont) {
+function _buildCharacterPDF(root, opts, titleFont, logoData) {
 
   // Print options come from the modal. A direct call -- or any older code
   // path that still calls generateCharacterPDF(root) with one argument --
