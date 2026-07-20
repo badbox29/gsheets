@@ -207,6 +207,27 @@ function generateCharacterPDF(root, opts) {
   // makes the join invisible in the common case, at the cost of leaving the
   // lead slightly open at the foot of a page on the rarer case where the
   // split actually falls there.
+  // === PAGE 1 FORM LAYOUT ===
+  //
+  // Page 1 and the weapon table are FORMS -- boxed cells a player writes into
+  // -- where pages 3 onward are reference tables. So they get no header tint;
+  // white cells throughout, with the scheme showing in the rules instead.
+  //
+  // Two weights do the work: a 1.25pt boundary in the full ink around the
+  // outside of each block, and 0.5pt hairlines in the pale tone inside it.
+  // That is what gives page 1 structure without any fills. The original code
+  // used a single 1pt black rule everywhere, which is why it reads flat.
+  const formLayout = (padX, padY) => ({
+    hLineWidth: (i, node) => (i === 0 || i === node.table.body.length) ? 1.25 : 0.5,
+    vLineWidth: (i, node) => (i === 0 || i === node.table.widths.length) ? 1.25 : 0.5,
+    hLineColor: (i, node) => (i === 0 || i === node.table.body.length) ? palette.ink : palette.rule,
+    vLineColor: (i, node) => (i === 0 || i === node.table.widths.length) ? palette.ink : palette.rule,
+    paddingLeft: () => padX,
+    paddingRight: () => padX,
+    paddingTop: () => padY,
+    paddingBottom: () => padY
+  });
+
   const gridLayoutOpenBottom = {
     hLineWidth: (i, node) => (i === node.table.body.length ? 0 : 1),
     vLineWidth: () => 1,
