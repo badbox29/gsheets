@@ -74,24 +74,38 @@ function loadTitleFont(name) {
 
 // === EMBEDDED PAGE-1 LOGO ===
 //
-// The header plate sets the game logotype as an image rather than as type.
-// Same loader shape as loadTitleFont: fetched once, cached as a promise so
-// two prints share one request, and resolving to null on any failure so a
-// missing or corrupt file prints a text fallback instead of killing the PDF.
+// One artwork per colourway, so the logotype sits inside the chosen scheme
+// rather than being the only colour on an otherwise monochrome sheet.
 //
-// pdfMake accepts PNG and JPEG only. Path is case-sensitive on GitHub Pages.
-const PRINT_LOGO_PATH = 'images/adnd-logo.png';
+// The exported files are named for the dropdown LABELS, not the internal
+// palette keys, so this map is the join between the two. It reproduces the
+// misspelling in "shadow-weeve" deliberately -- that is what is on disk.
+const PRINT_LOGO_FILES = {
+  graphite: 'adnd-logo_iron-gall.png',
+  slate:    'adnd-logo_astral.png',
+  oxblood:  'adnd-logo_bloodstone.png',
+  sepia:    'adnd-logo_aged-vellum.png',
+  forest:   'adnd-logo_druids-grove.png',
+  plum:     'adnd-logo_shadow-weeve.png'
+};
+const PRINT_LOGO_DIR = 'images/';
+const PRINT_LOGO_FALLBACK = 'adnd-logo.png';
 
-// Native proportions of the artwork (800 x 217). Used to derive the height of
-// the logo's fit box from its width, so the plate never guesses.
-const PRINT_LOGO_RATIO = 800 / 217;
+// Native proportions of the recoloured artwork (roughly 2166 x 726). Used to
+// derive the height of the logo's fit box from its width, so the plate never
+// guesses. The six exports vary by a fraction of a percent; 3 is safe for all
+// of them because fit() letterboxes rather than overflowing.
+const PRINT_LOGO_RATIO = 3;
 
-let _printLogoPromise = null;
+// Cached per FILE rather than per palette, so switching schemes mid-session
+// fetches each artwork exactly once.
+const _printLogoPromises = {};
 
-function loadPrintLogo() {
-  if (_printLogoPromise) return _printLogoPromise;
+function loadPrintLogo(palette) {
+  const file = PRINT_LOGO_FILES[palette] || PRINT_LOGO_FALLBACK;
+  if (_printLogoPromises[file]) return _printLogoPromises[file];
 
-  _printLogoPromise = fetch(PRINT_LOGO_PATH)
+  _printLogoPromises[file] = fetch(PRINT_LOGO_DIR + file)
     .then(res => {
       if (!res.ok) throw new Error('HTTP ' + res.status);
       return res.arrayBuffer();
@@ -107,12 +121,14 @@ function loadPrintLogo() {
       return 'data:image/png;base64,' + btoa(binary);
     })
     .catch(err => {
-      console.warn('Print logo failed to load, falling back to text:', err);
-      _printLogoPromise = null;
-      return null;
+      console.warn('Print logo "' + file + '" failed to load:', err);
+      delete _printLogoPromises[file];
+      // A missing colourway drops back to the original artwork; a missing
+      // fallback resolves to null and the plate sets the wordmark as type.
+      return file === PRINT_LOGO_FALLBACK ? null : loadPrintLogo(null);
     });
 
-  return _printLogoPromise;
+  return _printLogoPromises[file];
 }
 
 function generateCharacterPDF(root, opts) {
@@ -128,10 +144,15 @@ function generateCharacterPDF(root, opts) {
   const _wanted = (opts && opts.titleFont) ||
     (typeof getPrintOptions === 'function' ? getPrintOptions().titleFont : 'Roboto');
 
+  // Resolved the same way as the title font -- explicit opts win, otherwise
+  // the saved modal preference, otherwise the default scheme.
+  const _palette = (opts && opts.palette) ||
+    (typeof getPrintOptions === 'function' ? getPrintOptions().palette : 'graphite');
+
   // Both assets resolve to a safe value on failure -- a font name for the
   // typeface, null for the logo -- so neither can stop the sheet printing.
   // Fetched in parallel; both are cached after the first print.
-  Promise.all([loadTitleFont(_wanted), loadPrintLogo()])
+  Promise.all([loadTitleFont(_wanted), loadPrintLogo(_palette)])
     .then(([resolvedFont, logoData]) => {
       _buildCharacterPDF(root, opts, resolvedFont, logoData);
     });
