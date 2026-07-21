@@ -2196,6 +2196,27 @@ function weaponStrBonusOptions(selected, category, wtype) {
   ).join('');
 }
 
+// Attacks per round: every value 2e actually produces. Kept as a dropdown
+// rather than free text because the notes field has historically collected
+// things like "num att 32", which is 3/2 written without the slash.
+function weaponAttacksOptions(sel) {
+  const vals = ['', '1', '3/2', '2', '5/2', '3'];
+  return vals.map(v =>
+    '<option value="' + v + '"' + (String(sel || '') === v ? ' selected' : '') + '>' +
+    (v === '' ? 'Auto' : v) + '</option>'
+  ).join('');
+}
+
+// Size override. Blank defers to core_wp.json, which only resolves when the
+// weapon's name matches the book exactly.
+function weaponSizeOptions(sel) {
+  const vals = ['', 'S', 'M', 'L'];
+  return vals.map(v =>
+    '<option value="' + v + '"' + (String(sel || '') === v ? ' selected' : '') + '>' +
+    (v === '' ? 'Auto' : v) + '</option>'
+  ).join('');
+}
+
 function makeWeaponNode(data={}, onChange){
   const el = document.createElement('div');
   el.className = 'item';
@@ -2264,6 +2285,41 @@ function makeWeaponNode(data={}, onChange){
         weaponProficiencyOptions(data.profStatus) +
       '</select>' +
       '<div class="weapon-prof-badge" style="flex:1;display:flex;align-items:center;font-size:11px;padding-left:6px;"></div>' +
+    '</div>' +
+    '<div style="display:flex;gap:8px;margin-top:6px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
+      '<div style="width:90px;text-align:center;">Hit Adj</div>' +
+      '<div style="width:90px;text-align:center;">Dmg Adj</div>' +
+      '<div style="width:100px;text-align:center;">Attacks/Rd</div>' +
+      '<div style="width:90px;text-align:center;">Size</div>' +
+      '<div style="flex:1;text-align:center;">Range (S/M/L)</div>' +
+    '</div>' +
+    '<div style="display:flex;align-items:stretch;gap:8px;">' +
+      '<input class="weapon-hit-adj" type="number" value="'+(data.hitAdj!==undefined&&data.hitAdj!==null?data.hitAdj:'')+'" style="width:90px;text-align:center;" title="' +
+        'To-hit bonus granted by this weapon.&#10;' +
+        'Leave blank to use the Magic value -- correct for an ordinary +N weapon.&#10;' +
+        'Set it when the enchantment is not uniform: a +5 weapon that only grants&#10;' +
+        '  +1 to hit takes Magic 5 and Hit Adj 1.&#10;' +
+        'Strength and any non-proficiency penalty are added on top of this.\">' +
+      '<input class="weapon-dmg-adj" type="number" value="'+(data.dmgAdj!==undefined&&data.dmgAdj!==null?data.dmgAdj:'')+'" style="width:90px;text-align:center;" title="' +
+        'Damage bonus granted by this weapon.&#10;' +
+        'Leave blank to use the Magic value.&#10;' +
+        'Set to 0 for a weapon that helps you hit but not hurt.&#10;' +
+        'Non-proficiency never reduces damage (PHB Table 34).\">' +
+      '<select class="weapon-attacks" style="width:100px;" title="' +
+        'Attacks per round with THIS weapon.&#10;' +
+        'Blank uses the character-level Attacks/Round on the Combat tab.&#10;' +
+        '3/2 means three attacks every two rounds.\">' +
+        weaponAttacksOptions(data.attacks) +
+      '</select>' +
+      '<select class="weapon-size" style="width:90px;" title="' +
+        'Weapon size (S/M/L).&#10;' +
+        'Blank looks it up from the weapon list by name.&#10;' +
+        'Set it for a custom weapon, or one whose name does not match the book.\">' +
+        weaponSizeOptions(data.size) +
+      '</select>' +
+      '<input class="weapon-range" value="'+(data.range||'')+'" placeholder="e.g. 50/100/150" style="flex:1;text-align:center;" title="' +
+        'Short / medium / long range in yards, for missile weapons.&#10;' +
+        'Manual only -- the weapon list carries no range data.\">' +
     '</div>';
   // Remove button
   el.querySelector('.rm').onclick = ()=>{ el.remove(); onChange && onChange(); };
