@@ -5,7 +5,23 @@ const APP_JS_BUILD = 'prod-1';
 const $ = id => document.getElementById(id);
 const CHAR_MAP_KEY = 'adnd2e_characters_map';
 const KV_CONFIG_KEY = 'adnd2e_kv_config';
-const AVATAR_MAX_SIZE = 1024 * 1024; // 1 MB
+// Upload gate. Only rejects the absurd -- anything under this is cropped and
+// downscaled to AVATAR_OUT_* regardless of what came in, so refusing a 3MB
+// photo would mean refusing work the cropper is about to do anyway. The old
+// 1MB cap rejected files the app could handle perfectly well.
+const AVATAR_MAX_SIZE = 12 * 1024 * 1024; // 12 MB
+
+// Stored portrait dimensions. 3:2, matching the .avatar box and the print
+// plate's portrait frame, so a saved portrait fills all three with no
+// letterboxing. 660px across a 150pt printed frame is roughly 317 dpi -- past
+// the point where more pixels show on paper.
+const AVATAR_OUT_W = 660;
+const AVATAR_OUT_H = 440;
+
+// JPEG rather than PNG: portraits are photographic, and a PNG of one is
+// typically ten times the size for no visible gain. Quality 0.85 is where the
+// curve flattens.
+const AVATAR_JPEG_QUALITY = 0.85;
 const AUTOSAVE_INTERVAL = 60; // seconds between autosaves
 
 // ===== KV Sync — token generation =====
@@ -3726,6 +3742,162 @@ function setAvatar(root, dataUrl){
   }
 }
 
+// === AVATAR CROPPER ===
+//
+// A FIXED 3:2 window with the image moving behind it, rather than a resizable
+// selection box. Two reasons: a wrong-shaped result is impossible, and there is
+// no handle-dragging geometry to get wrong. Same interaction as any
+// profile-picture cropper.
+//
+// The ratio is shared by three places -- this frame, the .avatar box in
+// style.css, and the print plate's portrait frame -- so a saved portrait fills
+// all three edge to edge.
+function openAvatarCropper(root, tab, dataUrl){
+  const overlay   = qs(root, '.avatar-modal-overlay');
+  const frame     = qs(root, '.avatar-crop-frame');
+  const img       = qs(root, '.avatar-crop-img');
+  const zoomInp   = qs(root, '.avatar-crop-zoom');
+  const info      = qs(root, '.avatar-crop-info');
+  const cancelBtn = qs(root, '.avatar-crop-cancel');
+  const applyBtn  = qs(root, '.avatar-crop-apply');
+  if(!overlay || !frame || !img || !zoomInp || !cancelBtn || !applyBtn) return;
+
+  // Natural size, current scale, and the image's top-left in frame coordinates.
+  let nW = 0, nH = 0, baseScale = 1, scale = 1, x = 0, y = 0;
+  let dragging = false, lastX = 0, lastY = 0;
+
+  // Shown before measuring: clientWidth is 0 on a display:none element, and
+  // every calculation below is in frame pixels.
+  overlay.style.display = 'flex';
+
+  const frameSize = () => ({ w: frame.clientWidth, h: frame.clientHeight });
+
+  // The image must always cover the frame -- no gaps at any offset or zoom.
+  const clamp = () => {
+    const f = frameSize();
+    const dw = nW * scale, dh = nH * scale;
+    if (dw <= f.w) { x = (f.w - dw) / 2; }
+    else { if (x > 0) x = 0; if (x < f.w - dw) x = f.w - dw; }
+    if (dh <= f.h) { y = (f.h - dh) / 2; }
+    else { if (y > 0) y = 0; if (y < f.h - dh) y = f.h - dh; }
+  };
+
+  const paint = () => {
+    clamp();
+    img.style.transform = 'translate(' + x + 'px,' + y + 'px) scale(' + scale + ')';
+  };
+
+  // Zoom about the centre of the frame, so the thing being looked at stays put
+  // instead of sliding away as the slider moves.
+  const onZoom = () => {
+    const f = frameSize();
+    const z = parseFloat(zoomInp.value) || 1;
+    const cx = (f.w / 2 - x) / scale;
+    const cy = (f.h / 2 - y) / scale;
+    scale = baseScale * z;
+    x = f.w / 2 - cx * scale;
+    y = f.h / 2 - cy * scale;
+    paint();
+  };
+
+  const onDown = e => {
+    dragging = true;
+    lastX = e.clientX; lastY = e.clientY;
+    frame.style.cursor = 'grabbing';
+    if (frame.setPointerCapture) { try { frame.setPointerCapture(e.pointerId); } catch(_) {} }
+  };
+  const onMove = e => {
+    if (!dragging) return;
+    x += e.clientX - lastX;
+    y += e.clientY - lastY;
+    lastX = e.clientX; lastY = e.clientY;
+    paint();
+  };
+  const onUp = () => { dragging = false; frame.style.cursor = 'grab'; };
+
+  // The modal markup is reused for every crop on this sheet, so listeners have
+  // to come off again or they stack and each drag moves the image N times.
+  function closeCropper(){
+    overlay.style.display = 'none';
+    frame.removeEventListener('pointerdown', onDown);
+    window.removeEventListener('pointermove', onMove);
+    window.removeEventListener('pointerup', onUp);
+    zoomInp.removeEventListener('input', onZoom);
+    cancelBtn.removeEventListener('click', closeCropper);
+    applyBtn.removeEventListener('click', applyCrop);
+    img.onload = null; img.onerror = null;
+    img.removeAttribute('src');
+  }
+
+  function applyCrop(){
+    const f = frameSize();
+    const canvas = document.createElement('canvas');
+    canvas.width  = AVATAR_OUT_W;
+    canvas.height = AVATAR_OUT_H;
+    const ctx = canvas.getContext('2d');
+
+    // What the frame is showing, expressed in the source image's own pixels.
+    let sx = -x / scale, sy = -y / scale;
+    let sw = f.w / scale, sh = f.h / scale;
+    // Float guard: clamp() keeps these in range, but a rounding error of a
+    // fraction of a pixel makes drawImage throw rather than clip.
+    sx = Math.max(0, Math.min(sx, nW));
+    sy = Math.max(0, Math.min(sy, nH));
+    sw = Math.min(sw, nW - sx);
+    sh = Math.min(sh, nH - sy);
+
+    // JPEG has no alpha, so a transparent PNG would composite onto black by
+    // default anyway -- doing it explicitly makes that a decision, not a
+    // surprise.
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    let out;
+    try {
+      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+      out = canvas.toDataURL('image/jpeg', AVATAR_JPEG_QUALITY);
+    } catch(err) {
+      console.warn('Avatar crop failed:', err);
+      alert('That image could not be processed. Try a different file.');
+      return;
+    }
+
+    setAvatar(root, out);
+    markUnsaved(tab, true, root);
+    closeCropper();
+  }
+
+  img.onload = () => {
+    nW = img.naturalWidth; nH = img.naturalHeight;
+    if (!nW || !nH) { alert('That image could not be read.'); closeCropper(); return; }
+
+    img.style.width  = nW + 'px';
+    img.style.height = nH + 'px';
+
+    const f = frameSize();
+    baseScale = Math.max(f.w / nW, f.h / nH);   // cover the frame at zoom 1
+    scale = baseScale;
+    zoomInp.value = 1;
+    x = (f.w - nW * scale) / 2;
+    y = (f.h - nH * scale) / 2;
+    paint();
+
+    if (info) {
+      info.textContent = 'Source ' + nW + ' \u00d7 ' + nH +
+        ' \u2014 saved as ' + AVATAR_OUT_W + ' \u00d7 ' + AVATAR_OUT_H + ' JPEG.';
+    }
+  };
+  img.onerror = () => { alert('That image could not be read.'); closeCropper(); };
+  img.src = dataUrl;
+
+  frame.addEventListener('pointerdown', onDown);
+  window.addEventListener('pointermove', onMove);
+  window.addEventListener('pointerup', onUp);
+  zoomInp.addEventListener('input', onZoom);
+  cancelBtn.addEventListener('click', closeCropper);
+  applyBtn.addEventListener('click', applyCrop);
+}
+
 // Return true if saved, false if cancelled
 function saveAsDialog(root, tab){
   const data = collectSheet(root);
@@ -4852,23 +5024,39 @@ function bindSheet(root, tab){
   qs(root,'.avatar-input').onchange = e=>{
     const f=e.target.files&&e.target.files[0];
     if(!f) return;
+    // The cap now only rejects the absurd. Everything under it gets cropped and
+    // downscaled to AVATAR_OUT_W x AVATAR_OUT_H regardless of what came in, so
+    // refusing a 2MB photo would be refusing work we are about to do anyway.
     if(f.size > AVATAR_MAX_SIZE){
-      alert("Avatar too large! Max size is " + (AVATAR_MAX_SIZE/1024/1024).toFixed(1) + "MB");
+      alert("That image is " + (f.size/1024/1024).toFixed(1) + "MB, over the " +
+            (AVATAR_MAX_SIZE/1024/1024).toFixed(0) + "MB limit.\n\n" +
+            "Try exporting it smaller, or take a screenshot of it.");
       e.target.value='';
       return;
     }
     const r=new FileReader();
     r.onload=ev=>{
-      setAvatar(root, ev.target.result);
-      markUnsaved(tab,true,root);
+      openAvatarCropper(root, tab, ev.target.result);
     };
     r.readAsDataURL(f);
+    // Cleared so re-picking the SAME file fires change again -- otherwise
+    // cancelling the cropper and retrying the same image does nothing.
+    e.target.value='';
+  };
+  // Re-crop what is already stored. This is how portraits saved before the
+  // cropper existed get migrated: there is no migration pass, the player just
+  // adjusts one when they happen to care.
+  qs(root,'.adjust-avatar').onclick = ()=>{
+    if(!root._avatarData){
+      alert('No portrait to adjust yet — upload one first.');
+      return;
+    }
+    openAvatarCropper(root, tab, root._avatarData);
   };
   qs(root,'.remove-avatar').onclick = ()=>{
     setAvatar(root,null);
     markUnsaved(tab,true,root);
   };
-
   // Save / Save As / Open (picker) / Export / Import / Print
   qs(root,'.save-local').onclick = ()=>{
     if(saveAsDialog(root, tab)) markUnsaved(tab,false,root);
