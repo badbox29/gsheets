@@ -826,19 +826,31 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     // as a side effect, which is harmless and idempotent.
     //
     // The penalty applies to the ATTACK ROLL ONLY, never to damage (PHB Table
-    // 34), so it lands on hitAdj and dmgAdj is left alone.
+    // 34), so it lands on the to-hit total and damage is left alone.
     const prof = (typeof resolveWeaponProficiency === 'function')
       ? resolveWeaponProficiency(root, node)
       : { status: 'proficient', penalty: 0 };
 
-    // Hit and damage adjustment: Strength (per this weapon's STR mode) plus
-    // the magical bonus, plus any non-proficiency penalty.
+    // `magic` above is the ENCHANTMENT LEVEL: it drives the speed reduction and
+    // what the weapon can strike, and it is the default for both adjustments,
+    // which is right for an ordinary +N weapon. Per-weapon Hit Adj / Dmg Adj
+    // override it when the enchantment is not uniform. Blank inherits; "0" is a
+    // real override, so these test for empty rather than for falsy.
+    const rawHit = node.querySelector('.weapon-hit-adj')?.value;
+    const rawDmg = node.querySelector('.weapon-dmg-adj')?.value;
+    const hitBase = (rawHit !== '' && rawHit !== undefined && rawHit !== null)
+      ? (parseInt(rawHit, 10) || 0) : magic;
+    const dmgBase = (rawDmg !== '' && rawDmg !== undefined && rawDmg !== null)
+      ? (parseInt(rawDmg, 10) || 0) : magic;
+
+    // Hit and damage totals: Strength (per this weapon's STR mode), the
+    // weapon's own adjustment, and any non-proficiency penalty on to-hit.
     const strMode = node.querySelector('.weapon-str-bonus')?.value || 'none';
     const adj = (typeof getWeaponStrAdjustments === 'function')
       ? getWeaponStrAdjustments(strDataForWeapons, strMode, str, strEx, clazz)
       : { toHit: 0, damage: 0 };
-    const hitAdj = (adj.toHit || 0) + magic + (prof.penalty || 0);
-    const dmgAdj = (adj.damage || 0) + magic;
+    const hitTotal = (adj.toHit || 0) + hitBase + (prof.penalty || 0);
+    const dmgTotal = (adj.damage || 0) + dmgBase;
 
     // A number with no visible cause is worse than no number. The tag is what
     // makes the reduced to-hit explicable at the table, and what tells a player
@@ -847,16 +859,24 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       : prof.status === 'related' ? ' (related)'
       : '';
 
+    // Per-weapon values win over the character-level fallback and the book.
+    const wAttacks = (node.querySelector('.weapon-attacks')?.value || '').trim();
+    const wSize    = (node.querySelector('.weapon-size')?.value || '').trim();
+    const wRange   = (node.querySelector('.weapon-range')?.value || '').trim();
+    const wNotes   = (node.querySelector('.notes')?.value || '').trim();
+
     weapons.push({
       name: name,
-      attacks: attacksPerRound || '\u2014',
-      size: (ref && ref['Size']) ? ref['Size'] : '\u2014',
+      attacks: wAttacks || attacksPerRound || '\u2014',
+      size: wSize || ((ref && ref['Size']) ? ref['Size'] : '\u2014'),
       type: (node.querySelector('.damage-type')?.value || '').trim() || '\u2014',
       speed: (effSpeed === null) ? '\u2014' : String(effSpeed),
-      hitDmg: `${signed(hitAdj)} / ${signed(dmgAdj)}${profTag}`,
+      hitDmg: `${signed(hitTotal)} / ${signed(dmgTotal)}${profTag}`,
       damage: damage || '\u2014',
       profStatus: prof.status,
-      range: (node.querySelector('.notes')?.value || '').trim()
+      // Range leads because it is the column's name and the thing you look for
+      // mid-combat; free-text notes follow it.
+      range: [wRange, wNotes].filter(Boolean).join(' \u2014 ')
     });
   });
   
