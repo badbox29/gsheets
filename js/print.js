@@ -2136,65 +2136,64 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   const blankCell = (fontSize, vMargin) =>
     ({ text: ' ', fontSize: fontSize, margin: [0, vMargin, 0, vMargin] });
 
+  // Every appended page gets the same number of ruled rows. Previously each one
+  // computed its own count to fill the page, which is why they came out at 35,
+  // 32 and 24 -- different fonts and margins, different answers. A fixed count
+  // is what the pages actually want: they sit next to each other in the same
+  // stack of paper and an uneven line count reads as a mistake.
+  //
+  // Vertical margins are tuned per page so 32 rows fits without overflowing:
+  // 4.5 on the two 6pt tables (20.6pt lines), 4 on the 7pt notes page (21.2pt).
+  const APPENDIX_ROWS = 32;
+
   const extraPageBlocks = [];
 
-  // Continuation spellbook pages: the same columns as the spellbook section so
-  // a spell written here transcribes back into the app cleanly.
+  // Spellbook pages: the same columns as the spellbook section so a spell
+  // written here transcribes back into the app cleanly. Titled "page" rather
+  // than "continued" because these are equally for starting a second book --
+  // hence the write-in line for a book name and page number.
   for (let i = 0; i < extraSpellbookPages; i++) {
     const body = [spellHeaderRow(false)];
-    // Headings used: section title (~12pt) plus the table's header row (~10pt).
-    const rows = rowsToFillPage(22, 4, 6);
-    for (let r = 0; r < rows; r++) {
-      body.push(Array(8).fill(null).map(() => blankCell(6, 4)));
+    for (let r = 0; r < APPENDIX_ROWS; r++) {
+      body.push(Array(8).fill(null).map(() => blankCell(6, 4.5)));
     }
     extraPageBlocks.push({
       pageBreak: 'before',
       stack: [
-        sectionTitle('SPELLBOOK (CONTINUED)'),
+        sectionTitle('SPELLBOOK PAGE'),
+        {
+          columns: [
+            { width: '*', text: 'Spellbook: _________________________________', fontSize: 7 },
+            { width: 'auto', text: 'Page: __________', fontSize: 7 }
+          ],
+          margin: [0, 0, 0, 4]
+        },
         { table: { headerRows: 1, widths: ['6%', '23%', '17%', '7%', '13%', '18%', '10%', '6%'], body: body }, layout: gridLayout }
       ]
     });
   }
 
-  // Memorization worksheet: slot boxes grouped by spell level, sized to the
-  // character's own slot counts so a caster fills in exactly what they have.
-  // Falls back to a generic grid for a character with no slots recorded.
+  // Memorization worksheet: deliberately character-agnostic. An earlier version
+  // built one block per castable spell level, sized to the character's own slot
+  // counts -- which meant the page expired the moment they levelled up. A player
+  // who has chosen paper wants a page that outlives the print and lets them
+  // decide what goes where, so this is a plain grid with a Lvl column.
+  //
+  // Columns are the spellbook's, less School/Sphere and Comp (reference detail
+  // you would look up), plus Used (what you tick when you cast it). "Cast" here
+  // means casting time, matching the spellbook table.
   for (let i = 0; i < extraMemorizationPages; i++) {
-    const wsBlocks = [];
-    let anyLevel = false;
-
-    for (let lvl = 0; lvl < 9; lvl++) {
-      const n = parseInt(slotArr[lvl], 10);
-      if (isNaN(n) || n < 1) continue;
-      anyLevel = true;
-      const body = [[
-        cell('Cast', 6, { bold: true, alignment: 'center' }),
-        cell('Spell', 6, { bold: true }),
-        cell('School / Sphere', 6, { bold: true }),
-        cell('Range', 6, { bold: true }),
-        cell('Duration', 6, { bold: true }),
-        cell('Save', 6, { bold: true })
-      ]];
-      for (let s = 0; s < n; s++) {
-        body.push(Array(6).fill(null).map(() => ({ text: '', fontSize: 6, margin: [0, 5, 0, 5] })));
-      }
-      wsBlocks.push(Object.assign(subLabel(`Level ${lvl + 1} \u2014 ${n} slot${n === 1 ? '' : 's'}`), { margin: [0, 4, 0, 2] }));
-      wsBlocks.push({
-        table: { headerRows: 1, widths: ['6%', '26%', '22%', '16%', '20%', '10%'], body: body },
-        layout: gridLayout
-      });
-    }
-
-    if (!anyLevel) {
-      const body = [];
-      const rows = rowsToFillPage(24, 5, 6);
-      for (let r = 0; r < rows; r++) {
-        body.push(Array(6).fill(null).map(() => blankCell(6, 5)));
-      }
-      wsBlocks.push({
-        table: { widths: ['6%', '26%', '22%', '16%', '20%', '10%'], body: body },
-        layout: gridLayout
-      });
+    const body = [[
+      cell('Lvl', 6, { bold: true, alignment: 'center' }),
+      cell('Spell', 6, { bold: true }),
+      cell('Cast', 6, { bold: true, alignment: 'center' }),
+      cell('Range', 6, { bold: true }),
+      cell('Duration', 6, { bold: true }),
+      cell('Save', 6, { bold: true }),
+      cell('Used', 6, { bold: true, alignment: 'center' })
+    ]];
+    for (let r = 0; r < APPENDIX_ROWS; r++) {
+      body.push(Array(7).fill(null).map(() => blankCell(6, 4.5)));
     }
 
     extraPageBlocks.push({
@@ -2202,7 +2201,14 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       stack: [
         sectionTitle('DAILY MEMORIZATION'),
         { text: 'Date: ______________________', fontSize: 7, margin: [0, 0, 0, 4] },
-        ...wsBlocks
+        {
+          table: {
+            headerRows: 1,
+            widths: ['6%', '26%', '12%', '16%', '22%', '12%', '6%'],
+            body: body
+          },
+          layout: gridLayout
+        }
       ]
     });
   }
@@ -2294,12 +2300,11 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // Plain ruled pages.
   for (let i = 0; i < extraBlankPages; i++) {
     const body = [];
-    // Matched to the memorization page (21.6pt) rather than sitting at 28.8pt.
-    // Both arguments have to move together: rowsToFillPage(headings, vMargin,
-    // fontSize) and blankCell(fontSize, vMargin) take them in opposite order.
-    const rows = rowsToFillPage(12, 5, 7);
-    for (let r = 0; r < rows; r++) {
-      body.push([blankCell(7, 5)]);
+    // Fixed count shared by all three appendix pages, rather than computed to
+    // fill -- see APPENDIX_ROWS. Slightly tighter margin than the tables
+    // because the larger font would otherwise overrun the page at 32 rows.
+    for (let r = 0; r < APPENDIX_ROWS; r++) {
+      body.push([blankCell(7, 4)]);
     }
     extraPageBlocks.push({
       pageBreak: 'before',
