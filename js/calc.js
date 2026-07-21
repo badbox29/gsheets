@@ -274,11 +274,21 @@ function renderCombatQuickReference(root) {
 
       const prof = resolveWeaponProficiency(root, el);
 
+      const hitAdjEl = el.querySelector('.weapon-hit-adj');
+      const dmgAdjEl = el.querySelector('.weapon-dmg-adj');
+      const atkEl    = el.querySelector('.weapon-attacks');
+
       equippedWeapons.push({
         name: el.querySelector('.title').value || 'Unnamed Weapon',
         damageSM: el.querySelector('.damage-sm').value || '1d6',
         damageL: el.querySelector('.damage-l').value || '1d6',
         magicBonus: parseInt(el.querySelector('.magic-bonus').value || 0, 10),
+        // Passed through as raw strings, not numbers -- "" means inherit from
+        // magicBonus and "0" means an explicit zero, and Number("") is 0, which
+        // would collapse the two.
+        hitAdj: hitAdjEl ? hitAdjEl.value : '',
+        dmgAdj: dmgAdjEl ? dmgAdjEl.value : '',
+        attacks: atkEl ? atkEl.value : '',
         category: category,
         wtype: wtype,
         strMode: (strEl && strEl.value) || getDefaultWeaponStrMode(category, wtype),
@@ -301,7 +311,21 @@ function renderCombatQuickReference(root) {
 
     let html = '';
     equippedWeapons.forEach(weapon => {
-      const magicBonus = weapon.magicBonus || 0;
+      // magicBonus is the ENCHANTMENT LEVEL -- it drives the speed-factor
+      // reduction and what the weapon can strike. It is also the default for
+      // both adjustments, which is correct for an ordinary +N weapon.
+      //
+      // hitAdj / dmgAdj override it when the enchantment is not uniform: a +5
+      // weapon granting only +1 to hit and nothing to damage takes magicBonus 5,
+      // hitAdj 1, dmgAdj 0. Blank means inherit; "0" is a real override, hence
+      // the explicit empty-string test rather than a falsy one.
+      const enchant = weapon.magicBonus || 0;
+      const hitBase = (weapon.hitAdj !== '' && weapon.hitAdj !== undefined && weapon.hitAdj !== null)
+        ? (parseInt(weapon.hitAdj, 10) || 0)
+        : enchant;
+      const dmgBase = (weapon.dmgAdj !== '' && weapon.dmgAdj !== undefined && weapon.dmgAdj !== null)
+        ? (parseInt(weapon.dmgAdj, 10) || 0)
+        : enchant;
       const cat = (weapon.category || '').toLowerCase();
       // PHB Table 34: attack penalty for wielding a weapon you are not
       // proficient with. Related weapons cost half, rounded up.
@@ -337,8 +361,8 @@ function renderCombatQuickReference(root) {
       html += '<div style="margin-left:10px;color:var(--text);">';
 
       if (showMelee) {
-        const toHit = adj.toHit + magicBonus + profPen;
-        const dmg   = adj.damage + magicBonus;
+        const toHit = adj.toHit + hitBase + profPen;
+        const dmg   = adj.damage + dmgBase;
         html += 'Melee: d20' + sign(toHit) + ' → ' + weapon.damageSM + dmgSign(dmg) +
                 ' / ' + weapon.damageL + dmgSign(dmg) + '<br>';
       }
@@ -347,8 +371,8 @@ function renderCombatQuickReference(root) {
         // PHB: "Attack roll and damage modifiers for Strength are always used
         // when an attack is made with a hurled weapon." DEX missile adjustment
         // applies too -- they stack.
-        const toHit = dexMissile + adj.toHit + magicBonus + profPen;
-        const dmg   = adj.damage + magicBonus;
+        const toHit = dexMissile + adj.toHit + hitBase + profPen;
+        const dmg   = adj.damage + dmgBase;
         html += 'Thrown: d20' + sign(toHit) + ' → ' + weapon.damageSM + dmgSign(dmg) +
                 ' / ' + weapon.damageL + dmgSign(dmg) + '<br>';
       }
@@ -356,8 +380,8 @@ function renderCombatQuickReference(root) {
       if (showMissile) {
         // adj is {0,0} for crossbows/slings, and the plain-18 row for an
         // ordinary bow, so this one expression covers every ranged case.
-        const toHit = dexMissile + adj.toHit + magicBonus + profPen;
-        const dmg   = adj.damage + magicBonus;
+        const toHit = dexMissile + adj.toHit + hitBase + profPen;
+        const dmg   = adj.damage + dmgBase;
         html += 'Missile: d20' + sign(toHit) + ' → ' + weapon.damageSM + dmgSign(dmg) +
                 ' / ' + weapon.damageL + dmgSign(dmg) + '<br>';
       }
