@@ -2359,6 +2359,24 @@ function makeWeaponNode(data={}, onChange){
   const typeSel = el.querySelector('.weapon-wtype');
   const strSel  = el.querySelector('.weapon-str-bonus');
 
+  // "Blank means inherit" is invisible in an empty number box -- it reads as
+  // zero. Showing the inherited value as a placeholder makes the distinction
+  // legible: a greyed 5 means "5 unless you override", an entered 0 means
+  // "explicitly nothing". Kept in sync with Magic, since that is the source.
+  const magicEl  = el.querySelector('.magic-bonus');
+  const hitAdjEl = el.querySelector('.weapon-hit-adj');
+  const dmgAdjEl = el.querySelector('.weapon-dmg-adj');
+
+  const syncAdjPlaceholders = () => {
+    const enchant = parseInt(magicEl && magicEl.value, 10) || 0;
+    const shown = String(enchant);
+    if (hitAdjEl) hitAdjEl.placeholder = shown;
+    if (dmgAdjEl) dmgAdjEl.placeholder = shown;
+  };
+
+  if (magicEl) magicEl.addEventListener('input', syncAdjPlaceholders);
+  syncAdjPlaceholders();
+
   if (strSel) strSel.addEventListener('change', () => { strSel.dataset.userSet = '1'; });
 
   [catSel, typeSel].forEach(s => {
