@@ -2163,8 +2163,8 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
         sectionTitle('SPELLBOOK PAGE'),
         {
           columns: [
-            { width: '*', text: 'Spellbook: _________________________________', fontSize: 7 },
-            { width: 'auto', text: 'Page: __________', fontSize: 7 }
+            { width: '*', text: 'Spellbook: _________________________________', fontSize: 7, color: palette.ink },
+            { width: 'auto', text: 'Page: __________', fontSize: 7, color: palette.ink }
           ],
           margin: [0, 0, 0, 4]
         },
@@ -2200,14 +2200,17 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       pageBreak: 'before',
       stack: [
         sectionTitle('DAILY MEMORIZATION'),
-        { text: 'Date: ______________________', fontSize: 7, margin: [0, 0, 0, 4] },
         {
           table: {
             headerRows: 1,
             widths: ['6%', '26%', '12%', '16%', '22%', '12%', '6%'],
             body: body
           },
-          layout: gridLayout
+          layout: gridLayout,
+          // sectionTitle only leaves 2pt beneath itself; the spellbook page
+          // gets its breathing room from the write-in row, so this page has to
+          // ask for it directly or the table crowds the heading.
+          margin: [0, 4, 0, 0]
         }
       ]
     });
