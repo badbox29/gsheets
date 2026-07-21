@@ -180,7 +180,11 @@
     .right-card{position:sticky;top:20px}
     .avatar{
       width:100%;
-      height:240px;
+      /* Matches the crop ratio and the print plate's portrait frame, so a
+         stored portrait fills all three edge to edge with no letterboxing.
+         Replaces a fixed 240px height, which at this sidebar width worked out
+         to roughly 1.42:1 and left bars down the sides of a 3:2 image. */
+      aspect-ratio: 3 / 2;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -189,7 +193,10 @@
       overflow:hidden;
       transition: background-color 0.5s ease, border-color 0.5s ease;
     }
-    .avatar img{max-width:100%;max-height:100%;object-fit:contain}
+    /* cover, not contain: everything stored from the cropper is already 3:2, so
+       there is nothing to crop -- but a legacy portrait of some other shape
+       fills the box rather than sitting in bars. Adjust re-crops it properly. */
+    .avatar img{width:100%;height:100%;object-fit:cover}
     .controls{display:flex;gap:8px;margin-top:8px}
     .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
     .stat{
