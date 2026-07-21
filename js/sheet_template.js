@@ -1912,6 +1912,7 @@ const SHEET_HTML = `
     <input class="file-input avatar-input" type="file" accept="image/*">
     <div class="controls">
       <button class="upload-avatar">Upload Avatar</button>
+      <button class="adjust-avatar">Adjust</button>
       <button class="remove-avatar">Remove</button>
     </div>
 	
@@ -2303,6 +2304,31 @@ const SHEET_HTML = `
 	        <button class="print-modal-close" style="padding:8px 20px;">Cancel</button>
 	        <button class="print-modal-generate" style="padding:8px 20px;">Generate PDF</button>
 	      </div>
+	    </div>
+	  </div>
+	</div>
+	<div class="avatar-modal-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:10000;justify-content:center;align-items:center;">
+	  <div style="background:var(--panel);border-radius:8px;max-width:520px;width:94%;max-height:90vh;overflow-y:auto;padding:20px 24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+	    <h2 style="margin:0 0 4px 0;font-size:16px;">Adjust Portrait</h2>
+	    <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Drag the image to reposition, and zoom to fill the frame. Whatever sits inside the box is what gets saved and printed.</p>
+
+	    <!-- The crop window is a FIXED 3:2 frame; the image moves behind it.
+	         Sizing the frame rather than a draggable selection makes a
+	         wrong-shaped result impossible. -->
+	    <div class="avatar-crop-frame" style="position:relative;width:100%;aspect-ratio:3 / 2;overflow:hidden;background:#000;border:1px solid var(--border);border-radius:4px;cursor:grab;touch-action:none;">
+	      <img class="avatar-crop-img" alt="" style="position:absolute;transform-origin:0 0;user-select:none;-webkit-user-drag:none;pointer-events:none;">
+	    </div>
+
+	    <div style="display:flex;align-items:center;gap:10px;margin-top:12px;">
+	      <label style="font-size:12px;color:var(--text);margin:0;white-space:nowrap;">Zoom</label>
+	      <input type="range" class="avatar-crop-zoom" min="1" max="4" step="0.01" value="1" style="flex:1;">
+	    </div>
+
+	    <p class="avatar-crop-info" style="font-size:11px;color:var(--muted);margin:10px 0 0;min-height:15px;"></p>
+
+	    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px;">
+	      <button class="avatar-crop-cancel" style="padding:8px 16px;font-size:12px;">Cancel</button>
+	      <button class="avatar-crop-apply" style="padding:8px 16px;font-size:12px;">Apply</button>
 	    </div>
 	  </div>
 	</div>
