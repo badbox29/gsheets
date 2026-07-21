@@ -3464,10 +3464,6 @@ function loadSheet(root, data){
       mems.appendChild(makeMemSpellNode(s, ()=>{
         if(tab) markUnsaved(tab,true,root);
       }));
-      const activeTab = document.querySelector('.tab.active');
-      mems.appendChild(makeMemSpellNode(s, ()=>{
-        if(activeTab) markUnsaved(activeTab,true,root);
-      }));
     });
     // Update spell status after loading memorized spells
     renderMemorizedSpellStatus(root);
