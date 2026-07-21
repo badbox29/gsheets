@@ -3347,8 +3347,7 @@ function loadSheet(root, data){
   if(ammunition){
     ammunition.innerHTML='';
     (data.ammunition||[]).forEach(a=>ammunition.appendChild(makeAmmunitionNode(a, ()=>{
-      const activeTab = document.querySelector('.tab.active');
-      if(activeTab) markUnsaved(activeTab,true,root);
+      if(tab) markUnsaved(tab,true,root);
       updateTotalAmmoWeight(root);
       renderEncumbrance(root);
       renderMovementRate(root);
@@ -3364,8 +3363,7 @@ function loadSheet(root, data){
   if(mounts){
     mounts.innerHTML='';
     (data.mounts||[]).forEach(m=>mounts.appendChild(makeMountNode(m, ()=>{
-      const activeTab = document.querySelector('.tab.active');
-      if(activeTab) markUnsaved(activeTab,true,root);
+      if(tab) markUnsaved(tab,true,root);
     })));
     applyArchiveFilter(root, '.mounts-list', '.show-archived-mounts', '.mount-status');
   }
@@ -3383,8 +3381,7 @@ function loadSheet(root, data){
   if(henchmen){
     henchmen.innerHTML='';
     (data.henchmen||[]).forEach(h=>henchmen.appendChild(makeHenchmanNode(h, ()=>{
-      const activeTab = document.querySelector('.tab.active');
-      if(activeTab) markUnsaved(activeTab,true,root);
+      if(tab) markUnsaved(tab,true,root);
     })));
     applyArchiveFilter(root, '.henchmen-list', '.show-archived-henchmen', '.henchman-status');
   }
@@ -3402,8 +3399,7 @@ function loadSheet(root, data){
   if(hirelings){
     hirelings.innerHTML='';
     (data.hirelings||[]).forEach(h=>hirelings.appendChild(makeHirelingNode(h, ()=>{
-      const activeTab = document.querySelector('.tab.active');
-      if(activeTab) markUnsaved(activeTab,true,root);
+      if(tab) markUnsaved(tab,true,root);
     })));
     applyArchiveFilter(root, '.hirelings-list', '.show-archived-hirelings', '.hireling-status');
   }
@@ -3421,8 +3417,7 @@ function loadSheet(root, data){
   if(companions){
     companions.innerHTML='';
     (data.companions||[]).forEach(c=>companions.appendChild(makeCompanionNode(c, ()=>{
-      const activeTab = document.querySelector('.tab.active');
-      if(activeTab) markUnsaved(activeTab,true,root);
+      if(tab) markUnsaved(tab,true,root);
     })));
     applyArchiveFilter(root, '.companions-list', '.show-archived-companions', '.companion-status');
   }
@@ -3466,6 +3461,9 @@ function loadSheet(root, data){
   if(mems){
     mems.innerHTML='';
     (mg.memorized||[]).forEach(s=>{
+      mems.appendChild(makeMemSpellNode(s, ()=>{
+        if(tab) markUnsaved(tab,true,root);
+      }));
       const activeTab = document.querySelector('.tab.active');
       mems.appendChild(makeMemSpellNode(s, ()=>{
         if(activeTab) markUnsaved(activeTab,true,root);
@@ -3624,9 +3622,8 @@ function loadSheet(root, data){
     conditionsList.innerHTML = '';
     (data.conditions || []).forEach(c => {
       const node = makeConditionNode(c, () => {
-        const activeTab = document.querySelector('.tab.active');
-        if (activeTab) {
-          markUnsaved(activeTab, true, root);
+        if (tab) {
+          markUnsaved(tab, true, root);
           renderCombatQuickReference(root);
         }
       });
