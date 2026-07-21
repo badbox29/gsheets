@@ -3159,19 +3159,6 @@ function populateCampaignSettings(root) {
 
 function loadSheet(root, data){
   if(!data) return;
-
-  // Every list builder below passes ()=>markUnsaved(tab,true,root) as its
-  // onChange, but loadSheet's signature is (root, data) -- there has never been
-  // a `tab` in scope. Each of those arrows threw ReferenceError on the first
-  // line, so editing anything in a list (weapons, armor, equipment, spells...)
-  // has never marked the sheet dirty. Saves were carried entirely by the
-  // top-level fields, which bind through bindSheet instead.
-  //
-  // Captured here rather than resolved at edit time on purpose: the tab belongs
-  // to THIS root, and reading .tab.active when the edit happens would mark
-  // whichever tab is frontmost, which is not necessarily the same sheet.
-  const tab = document.querySelector('.tab.active');
-
   const m = data.meta || {};
   populateCampaignSettings(root);   // options must exist before we set the value
   val(root,'name',m.name||'');
