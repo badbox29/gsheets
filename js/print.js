@@ -436,6 +436,13 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
 
   const palette = PRINT_PALETTES[opts.palette] || PRINT_PALETTES.graphite;
 
+  // Deliberately outside the palette. Every colourway is single-hue, so no tone
+  // in any of them can carry the meaning "this number is a penalty" -- the same
+  // reason the app uses red for over-budget slots and out-of-group proficiencies
+  // regardless of theme. On Bloodstone this is the second red on the page, which
+  // is the accepted cost of the signal working everywhere else.
+  const PRINT_ALERT = '#b3261e';
+
   // Defined once and used by every table in the document, so these three
   // callbacks recolour the entire sheet. fillColor tints only the rows
   // declared as headerRows -- which, since printSection folds the section
@@ -813,14 +820,32 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       ? `${dmgSM} / ${dmgL}`
       : (dmgSM || dmgL || '');
 
+    // Proficiency status for this weapon. calc.js already resolves this for the
+    // Combat Quick Reference card -- same function, same row element -- so the
+    // printout and the screen can never disagree. It repaints the row's badge
+    // as a side effect, which is harmless and idempotent.
+    //
+    // The penalty applies to the ATTACK ROLL ONLY, never to damage (PHB Table
+    // 34), so it lands on hitAdj and dmgAdj is left alone.
+    const prof = (typeof resolveWeaponProficiency === 'function')
+      ? resolveWeaponProficiency(root, node)
+      : { status: 'proficient', penalty: 0 };
+
     // Hit and damage adjustment: Strength (per this weapon's STR mode) plus
-    // the magical bonus.
+    // the magical bonus, plus any non-proficiency penalty.
     const strMode = node.querySelector('.weapon-str-bonus')?.value || 'none';
     const adj = (typeof getWeaponStrAdjustments === 'function')
       ? getWeaponStrAdjustments(strDataForWeapons, strMode, str, strEx, clazz)
       : { toHit: 0, damage: 0 };
-    const hitAdj = (adj.toHit || 0) + magic;
+    const hitAdj = (adj.toHit || 0) + magic + (prof.penalty || 0);
     const dmgAdj = (adj.damage || 0) + magic;
+
+    // A number with no visible cause is worse than no number. The tag is what
+    // makes the reduced to-hit explicable at the table, and what tells a player
+    // which line to scratch out when the DM grants proficiency mid-session.
+    const profTag = prof.status === 'none' ? ' (no prof)'
+      : prof.status === 'related' ? ' (related)'
+      : '';
 
     weapons.push({
       name: name,
@@ -828,8 +853,9 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       size: (ref && ref['Size']) ? ref['Size'] : '\u2014',
       type: (node.querySelector('.damage-type')?.value || '').trim() || '\u2014',
       speed: (effSpeed === null) ? '\u2014' : String(effSpeed),
-      hitDmg: `${signed(hitAdj)} / ${signed(dmgAdj)}`,
+      hitDmg: `${signed(hitAdj)} / ${signed(dmgAdj)}${profTag}`,
       damage: damage || '\u2014',
+      profStatus: prof.status,
       range: (node.querySelector('.notes')?.value || '').trim()
     });
   });
@@ -3098,7 +3124,16 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
               { text: w.size, fontSize: 7, alignment: 'center' },
               { text: w.type, fontSize: 7, alignment: 'center' },
               { text: w.speed, fontSize: 7, alignment: 'center' },
-              { text: w.hitDmg, fontSize: 7, alignment: 'center' },
+              // Deliberately off-palette: red reads as "wrong" the way no tone
+              // in a single-hue scheme can, and a penalty the player cannot see
+              // the reason for is worse than no penalty printed at all.
+              {
+                text: w.hitDmg,
+                fontSize: 7,
+                alignment: 'center',
+                bold: w.profStatus !== 'proficient',
+                color: w.profStatus !== 'proficient' ? PRINT_ALERT : undefined
+              },
               { text: w.damage, fontSize: 7, alignment: 'center' },
               { text: w.range, fontSize: 6 }
             ]),
