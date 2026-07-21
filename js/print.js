@@ -2294,9 +2294,12 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // Plain ruled pages.
   for (let i = 0; i < extraBlankPages; i++) {
     const body = [];
-    const rows = rowsToFillPage(12, 7, 8);
+    // Matched to the memorization page (21.6pt) rather than sitting at 28.8pt.
+    // Both arguments have to move together: rowsToFillPage(headings, vMargin,
+    // fontSize) and blankCell(fontSize, vMargin) take them in opposite order.
+    const rows = rowsToFillPage(12, 5, 7);
     for (let r = 0; r < rows; r++) {
-      body.push([blankCell(8, 7)]);
+      body.push([blankCell(7, 5)]);
     }
     extraPageBlocks.push({
       pageBreak: 'before',
