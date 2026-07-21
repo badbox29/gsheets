@@ -61,6 +61,15 @@ function bindVerticalTabs(root){
   });
 }
 
+// The tab that owns a given sheet. The inverse of the root lookup below, and
+// the reverse of the walk closeTab already does with root.closest('.tab-content').
+// Correct for a background sheet, where .tab.active would give the wrong answer.
+function getTabForRoot(root){
+  const content = (root && root.closest) ? root.closest('.tab-content') : null;
+  const id = content && content.dataset ? content.dataset.id : null;
+  return id ? document.querySelector('.tab[data-id="' + id + '"]') : null;
+}
+
 function getActiveRoot(){
   const active = document.querySelector('.tab-content.active');
   return active ? active.querySelector('.sheet-container') : null;
@@ -3159,6 +3168,20 @@ function populateCampaignSettings(root) {
 
 function loadSheet(root, data){
   if(!data) return;
+
+  // Twelve list builders below pass ()=>markUnsaved(tab,true,root) as their
+  // onChange, but this function's signature is (root, data) -- there has never
+  // been a `tab` in scope, so every one of those arrows threw ReferenceError on
+  // its first line and list edits never marked the sheet dirty. Saves were
+  // carried entirely by the top-level fields, which bind through bindSheet.
+  //
+  // Resolved from the ROOT, not from .tab.active. Those are not the same thing:
+  // loadSheet runs while the previous tab is still frontmost, so capturing the
+  // active tab here binds a second character's edits to the first one's tab.
+  // newTab links the two explicitly -- root is the .sheet-container inside a
+  // .tab-content carrying the tab's id -- so walk that instead.
+  const tab = getTabForRoot(root);
+
   const m = data.meta || {};
   populateCampaignSettings(root);   // options must exist before we set the value
   val(root,'name',m.name||'');
