@@ -2227,14 +2227,19 @@ function makeWeaponNode(data={}, onChange){
       '<div style="width:60px;text-align:center;">Equipped</div>' +
       '<div style="flex:1;">Weapon</div>' +
       '<div style="flex:2;">Notes</div>' +
-      '<div style="width:70px;"></div>' + // Space for Remove button
+      '<div style="width:148px;"></div>' + // Space for Details + Remove buttons
     '</div>' +
-    '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
+   '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
       '<input type="checkbox" class="equipped" '+(data.equipped?'checked':'')+' style="width:60px;margin:auto;">' +
       '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1">' +
       '<input class="notes" placeholder="" value="'+(data.notes||'')+'" style="flex:2">' +
+      '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
       '<button class="rm">Remove</button>' +
     '</div>' +
+    // Everything below the identity row is collapsed by default. The stats a
+    // player needs mid-combat are already surfaced on the Combat Quick
+    // Reference card, so the card here is for editing, not for reading.
+    '<div class="weapon-details" style="display:none;">' +
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
       '<div style="width:60px;text-align:center;">Speed</div>' +
       '<div style="width:90px;text-align:center;">Dmg (S-M)</div>' +
@@ -2250,6 +2255,41 @@ function makeWeaponNode(data={}, onChange){
       '<input class="magic-bonus" type="number" placeholder="0" value="'+(data.magicBonus||'')+'" style="width:60px;text-align:center;">' +
       '<input class="weight" type="number" step="0.1" placeholder="" value="'+(data.weight||'')+'" style="width:80px;text-align:center;">' +
       '<input class="damage-type" placeholder="e.g., Slashing" value="'+(data.damageType||'')+'" style="flex:1">' +
+    '</div>' +
+    '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
+      '<div style="width:90px;text-align:center;">Hit Adj</div>' +
+      '<div style="width:90px;text-align:center;">Dmg Adj</div>' +
+      '<div style="width:100px;text-align:center;">Attacks/Rd</div>' +
+      '<div style="width:90px;text-align:center;">Size</div>' +
+      '<div style="flex:1;text-align:center;">Range (S/M/L)</div>' +
+    '</div>' +
+    '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
+      '<input class="weapon-hit-adj" type="number" value="'+(data.hitAdj!==undefined&&data.hitAdj!==null?data.hitAdj:'')+'" style="width:90px;text-align:center;" title="' +
+        'To-hit bonus granted by this weapon.&#10;' +
+        'Leave blank to use the Magic value -- correct for an ordinary +N weapon.&#10;' +
+        'Set it when the enchantment is not uniform: a +5 weapon that only grants&#10;' +
+        '  +1 to hit takes Magic 5 and Hit Adj 1.&#10;' +
+        'Strength and any non-proficiency penalty are added on top of this.">' +
+      '<input class="weapon-dmg-adj" type="number" value="'+(data.dmgAdj!==undefined&&data.dmgAdj!==null?data.dmgAdj:'')+'" style="width:90px;text-align:center;" title="' +
+        'Damage bonus granted by this weapon.&#10;' +
+        'Leave blank to use the Magic value.&#10;' +
+        'Set to 0 for a weapon that helps you hit but not hurt.&#10;' +
+        'Non-proficiency never reduces damage (PHB Table 34).">' +
+      '<select class="weapon-attacks" style="width:100px;" title="' +
+        'Attacks per round with THIS weapon.&#10;' +
+        'Blank uses the character-level Attacks/Round on the Combat tab.&#10;' +
+        '3/2 means three attacks every two rounds.">' +
+        weaponAttacksOptions(data.attacks) +
+      '</select>' +
+      '<select class="weapon-size" style="width:90px;" title="' +
+        'Weapon size (S/M/L).&#10;' +
+        'Blank looks it up from the weapon list by name.&#10;' +
+        'Set it for a custom weapon, or one whose name does not match the book.">' +
+        weaponSizeOptions(data.size) +
+      '</select>' +
+      '<input class="weapon-range" value="'+(data.range||'')+'" placeholder="e.g. 50/100/150" style="flex:1;text-align:center;" title="' +
+        'Short / medium / long range in yards, for missile weapons.&#10;' +
+        'Manual only -- the weapon list carries no range data.">' +
     '</div>' +
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
       '<div style="width:130px;text-align:center;">Category</div>' +
@@ -2286,41 +2326,20 @@ function makeWeaponNode(data={}, onChange){
       '</select>' +
       '<div class="weapon-prof-badge" style="flex:1;display:flex;align-items:center;font-size:11px;padding-left:6px;"></div>' +
     '</div>' +
-    '<div style="display:flex;gap:8px;margin-top:6px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div style="width:90px;text-align:center;">Hit Adj</div>' +
-      '<div style="width:90px;text-align:center;">Dmg Adj</div>' +
-      '<div style="width:100px;text-align:center;">Attacks/Rd</div>' +
-      '<div style="width:90px;text-align:center;">Size</div>' +
-      '<div style="flex:1;text-align:center;">Range (S/M/L)</div>' +
-    '</div>' +
-    '<div style="display:flex;align-items:stretch;gap:8px;">' +
-      '<input class="weapon-hit-adj" type="number" value="'+(data.hitAdj!==undefined&&data.hitAdj!==null?data.hitAdj:'')+'" style="width:90px;text-align:center;" title="' +
-        'To-hit bonus granted by this weapon.&#10;' +
-        'Leave blank to use the Magic value -- correct for an ordinary +N weapon.&#10;' +
-        'Set it when the enchantment is not uniform: a +5 weapon that only grants&#10;' +
-        '  +1 to hit takes Magic 5 and Hit Adj 1.&#10;' +
-        'Strength and any non-proficiency penalty are added on top of this.\">' +
-      '<input class="weapon-dmg-adj" type="number" value="'+(data.dmgAdj!==undefined&&data.dmgAdj!==null?data.dmgAdj:'')+'" style="width:90px;text-align:center;" title="' +
-        'Damage bonus granted by this weapon.&#10;' +
-        'Leave blank to use the Magic value.&#10;' +
-        'Set to 0 for a weapon that helps you hit but not hurt.&#10;' +
-        'Non-proficiency never reduces damage (PHB Table 34).\">' +
-      '<select class="weapon-attacks" style="width:100px;" title="' +
-        'Attacks per round with THIS weapon.&#10;' +
-        'Blank uses the character-level Attacks/Round on the Combat tab.&#10;' +
-        '3/2 means three attacks every two rounds.\">' +
-        weaponAttacksOptions(data.attacks) +
-      '</select>' +
-      '<select class="weapon-size" style="width:90px;" title="' +
-        'Weapon size (S/M/L).&#10;' +
-        'Blank looks it up from the weapon list by name.&#10;' +
-        'Set it for a custom weapon, or one whose name does not match the book.\">' +
-        weaponSizeOptions(data.size) +
-      '</select>' +
-      '<input class="weapon-range" value="'+(data.range||'')+'" placeholder="e.g. 50/100/150" style="flex:1;text-align:center;" title="' +
-        'Short / medium / long range in yards, for missile weapons.&#10;' +
-        'Manual only -- the weapon list carries no range data.\">' +
-    '</div>';
+  '</div>';
+  // Details toggle. Weapons carry four rows of fields now -- eight weapons
+  // expanded is an unreadable wall -- so everything but the identity row is
+  // collapsed by default, matching the henchmen, mounts and companion cards.
+  const weaponToggleBtn = el.querySelector('.toggle-details');
+  const weaponDetails   = el.querySelector('.weapon-details');
+  if (weaponToggleBtn && weaponDetails) {
+    weaponToggleBtn.onclick = () => {
+      const open = weaponDetails.style.display !== 'none';
+      weaponDetails.style.display = open ? 'none' : 'block';
+      weaponToggleBtn.textContent = open ? 'Details' : 'Hide';
+    };
+  }
+
   // Remove button
   el.querySelector('.rm').onclick = ()=>{ el.remove(); onChange && onChange(); };
   el.querySelectorAll('input').forEach(inp =>
