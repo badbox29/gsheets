@@ -2761,7 +2761,19 @@ function collectSheet(root){
       category: (n.querySelector('.weapon-category') && n.querySelector('.weapon-category').value) || '',
       wtype: (n.querySelector('.weapon-wtype') && n.querySelector('.weapon-wtype').value) || '',
       strBonus: (n.querySelector('.weapon-str-bonus') && n.querySelector('.weapon-str-bonus').value) || '',
-      profStatus: (n.querySelector('.weapon-prof-status') && n.querySelector('.weapon-prof-status').value) || 'auto'
+      profStatus: (n.querySelector('.weapon-prof-status') && n.querySelector('.weapon-prof-status').value) || 'auto',
+      // Per-weapon adjustments. All five are optional and blank means inherit:
+      // hitAdj/dmgAdj fall back to magicBonus, attacks to the character-level
+      // Attacks/Round, size to core_wp.json, and range has no source at all.
+      //
+      // Stored as strings so an explicit 0 survives -- "0" is a real override
+      // (a weapon that helps you hit but not hurt), where a number would be
+      // indistinguishable from blank under any falsy test downstream.
+      hitAdj: (n.querySelector('.weapon-hit-adj') && n.querySelector('.weapon-hit-adj').value) || '',
+      dmgAdj: (n.querySelector('.weapon-dmg-adj') && n.querySelector('.weapon-dmg-adj').value) || '',
+      attacks: (n.querySelector('.weapon-attacks') && n.querySelector('.weapon-attacks').value) || '',
+      size: (n.querySelector('.weapon-size') && n.querySelector('.weapon-size').value) || '',
+      range: (n.querySelector('.weapon-range') && n.querySelector('.weapon-range').value) || ''
     }));
 	
   const ammunition = qsa(root,'.ammunition-list .item')
@@ -4161,11 +4173,17 @@ function bindSheet(root, tab){
       // Always update combat reference for any weapon changes
       renderCombatQuickReference(root);
     });
-    // Separate listener for checkbox changes (use 'change' not 'input')
+    // <select> and checkbox fire 'change', never 'input', so the listener above
+    // cannot see them. This previously only watched .equipped, which meant the
+    // Category, Type, STR Bonus and Proficiency dropdowns -- all of which move
+    // the to-hit number -- left the quick reference card showing stale values
+    // until some other edit forced a re-render. Attacks/Rd and Size join them.
     weaponsList.addEventListener('change', (e) => {
-      if (e.target.classList.contains('equipped')) {
-        renderCombatQuickReference(root);
+      if (e.target.classList.contains('weight')) {
+        renderEncumbrance(root);
+        renderMovementRate(root);
       }
+      renderCombatQuickReference(root);
     });
   }
   
