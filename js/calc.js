@@ -131,6 +131,74 @@ function renderCurrentHP(root) {
   }
 }
 
+// Hit Dice: derived from class and level, unless the player has typed an
+// override. The override wins whenever it is non-blank; clearing it returns
+// the field to the derived value.
+function renderHitDice(root) {
+  const el = root.querySelector('[data-field="hit_dice"]');
+  if (!el) return;
+
+  const override = (val(root, 'hit_dice_manual') || '').trim();
+  const derived  = (typeof getHitDice === 'function') ? getHitDice(root) : '';
+
+  if (override) {
+    el.value = override;
+    el.style.color = 'var(--warning, #e0a34a)';
+  } else {
+    el.value = derived;
+    el.style.color = '';
+  }
+}
+
+// Revivals remaining. PHB p.21: a character's STARTING Constitution is the
+// absolute limit on how many times he may be raised or resurrected. Magic that
+// restores lost Constitution does not restore revivals, which is why this
+// counts against con_initial and never against the current con field.
+function renderRevivals(root) {
+  const el     = root.querySelector('[data-field="revivals_remaining"]');
+  const noteEl = root.querySelector('.revival-status');
+  if (!el) return;
+
+  const startCon = parseInt(val(root, 'con_initial') || 0, 10);
+  let   deaths   = parseInt(val(root, 'deaths_to_date') || 0, 10);
+  if (isNaN(deaths) || deaths < 0) deaths = 0;
+
+  const hide = () => { if (noteEl) { noteEl.style.display = 'none'; noteEl.textContent = ''; } };
+  const show = (text, color) => {
+    if (!noteEl) return;
+    noteEl.textContent = text;
+    noteEl.style.color = color;
+    noteEl.style.display = '';
+  };
+
+  if (!startCon || startCon < 1) {
+    el.value = '';
+    el.style.color = '';
+    if (deaths > 0) {
+      show('Set Starting CON to track how many revivals remain.', 'var(--muted)');
+    } else {
+      hide();
+    }
+    return;
+  }
+
+  const left = startCon - deaths;
+  el.value = left + ' of ' + startCon;
+
+  if (left <= 0) {
+    el.style.color = 'var(--error, #ff6b6b)';
+    show('Revivals exhausted. Nothing short of divine intervention can bring this character back (PHB p.21).',
+         'var(--error, #ff6b6b)');
+  } else if (left === 1) {
+    el.style.color = 'var(--warning, #e0a34a)';
+    show('One revival left. A failed resurrection survival roll is permanent regardless.',
+         'var(--warning, #e0a34a)');
+  } else {
+    el.style.color = '';
+    hide();
+  }
+}
+
 // Resolve a weapon row's proficiency status and paint its badge.
 // Returns { status, penalty } so the caller can apply the penalty to to-hit.
 function resolveWeaponProficiency(root, rowEl) {
