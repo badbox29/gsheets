@@ -452,6 +452,110 @@ const CLASS_CATEGORIES = {
   "transmuter": "wizard",
 };
 
+// Resolve a class name to its group. Tries an exact match first, then falls
+// back to substring matching so homebrew and compound names ("gnome
+// illusionist", "Fighter ") still resolve instead of silently returning null.
+// Longest keys are tested first so "demipaladin" cannot be eaten by "paladin".
+function getClassCategory(clazz) {
+  const c = (clazz || "").trim().toLowerCase();
+  if (!c) return null;
+  if (CLASS_CATEGORIES[c]) return CLASS_CATEGORIES[c];
+  const key = Object.keys(CLASS_CATEGORIES)
+    .sort((a, b) => b.length - a.length)
+    .find(k => c.includes(k));
+  return key ? CLASS_CATEGORIES[key] : null;
+}
+
+// === Hit Dice (AD&D 2e, PHB Chapter 3) ===
+// die  : sides of the Hit Die rolled at each level
+// cap  : last level at which a full Hit Die is rolled
+// flat : hit points gained per level after the cap -- no Hit Die is rolled and
+//        the Constitution hit point bonus no longer applies.
+// Sources: Table 14 (warrior), Table 20 (wizard), Table 23 (priest),
+//          Table 25 (rogue).
+const HIT_DICE = {
+  warrior: { die: 10, cap: 9,  flat: 3 },
+  wizard:  { die: 4,  cap: 10, flat: 1 },
+  priest:  { die: 8,  cap: 9,  flat: 2 },
+  rogue:   { die: 6,  cap: 10, flat: 2 }
+};
+
+// Hit Dice earned for one class across an inclusive level range.
+// Returns { die, dice, flat } or null. fromLevel lets a dual-class character
+// count only the levels above his original class's maximum.
+function hitDiceParts(clazz, fromLevel, toLevel) {
+  const cat = getClassCategory(clazz);
+  if (!cat) return null;
+  const hd = HIT_DICE[cat];
+  if (!hd) return null;
+
+  fromLevel = parseInt(fromLevel, 10);
+  toLevel   = parseInt(toLevel, 10);
+  if (isNaN(fromLevel) || fromLevel < 1) fromLevel = 1;
+  if (isNaN(toLevel) || toLevel < fromLevel) return null;
+
+  return {
+    die:  hd.die,
+    dice: Math.max(0, Math.min(toLevel, hd.cap) - fromLevel + 1),
+    flat: Math.max(0, toLevel - Math.max(hd.cap, fromLevel - 1)) * hd.flat
+  };
+}
+
+function formatHitDiceParts(p) {
+  if (!p) return "";
+  let s = "";
+  if (p.dice > 0) s = p.dice + "d" + p.die;
+  if (p.flat > 0) s += (s ? "+" : "") + p.flat;
+  return s;
+}
+
+// "5d10" for a 5th-level fighter, "9d10+9" for a 12th-level fighter.
+function formatHitDice(clazz, level) {
+  return formatHitDiceParts(hitDiceParts(clazz, 1, level));
+}
+
+// Hit Dice for a whole character, handling all three character types.
+// Returns "" when the class cannot be resolved -- callers should fall back to
+// the manual override field.
+function getHitDice(root) {
+  const charType = (val(root, "char_type") || "single").toLowerCase();
+
+  if (charType === "multi") {
+    // PHB Ch.3: roll each class's Hit Die, total the results, then divide by
+    // the number of classes (round down, never below 1 hp per level).
+    const parts = [1, 2, 3]
+      .map(n => ({
+        clazz: val(root, "mc_class" + n) || "",
+        level: parseInt(val(root, "mc_level" + n) || 0, 10)
+      }))
+      .filter(p => p.clazz && p.level > 0)
+      .map(p => formatHitDice(p.clazz, p.level))
+      .filter(Boolean);
+    if (!parts.length) return "";
+    return parts.join(" / ") + (parts.length > 1 ? " (averaged)" : "");
+  }
+
+  if (charType === "dual") {
+    // The character keeps his original Hit Dice but earns no new ones until
+    // his new class exceeds his original class's level; from that point each
+    // further level rolls the new class's die.
+    const oc = val(root, "dc_original_class") || "";
+    const ol = parseInt(val(root, "dc_original_level") || 0, 10);
+    const nc = val(root, "dc_new_class") || "";
+    const nl = parseInt(val(root, "dc_new_level") || 0, 10);
+
+    const frozen = formatHitDice(oc, ol);
+    if (nl > ol) {
+      const gained = formatHitDiceParts(hitDiceParts(nc, ol + 1, nl));
+      if (frozen && gained) return frozen + " + " + gained;
+      if (gained) return gained;
+    }
+    return frozen;
+  }
+
+  return formatHitDice(val(root, "clazz") || "", parseInt(val(root, "level") || 0, 10));
+}
+
 // === Proficiency Slots (AD&D 2E, PHB Table 34) ===
 // wpInitial / nwpInitial : slots at 1st level
 // wpLevels  / nwpLevels  : gain 1 additional slot every N levels.
