@@ -212,6 +212,10 @@ const SHEET_HTML = `
 		<!-- Combat -->
 		<section class="section">
 		  <h3>Combat</h3>
+		  <div class="col" style="flex:1 1 100%">
+		    <div class="base-thac0 small"></div>
+		    <div class="attack-matrix"></div>
+		  </div>
 		  <div class="row">
 			<div class="col single-multi-hp">
 			  <label>HP (Max)</label>
@@ -239,6 +243,21 @@ const SHEET_HTML = `
 			<div class="col"><label>Current HP</label><input data-field="current_hp" type="text" readonly style="font-weight:bold;"></div>
 		  </div>
 		  <div class="row" style="margin-top:8px">
+			<div class="col"><label>Manual AC Adj.</label><input data-field="ac_manual" type="number" placeholder="0"></div>
+			<div class="col"><label>Reaction Adj.</label><input data-field="reaction_adj_combat" type="text" readonly></div>
+			<div class="col"></div>
+		  </div>
+		  <div class="row" style="margin-top:12px">
+			<div class="col"><label>Normal AC</label><input data-field="ac" type="text" readonly></div>
+			<div class="col"><label>Rear AC</label><input data-field="ac_rear" type="text" readonly></div>
+			<div class="col"><label>Surprised AC</label><input data-field="ac_surprised" type="text" readonly></div>
+		  </div>
+		  <div class="row" style="margin-top:8px">
+			<div class="col"><label>No Shield AC</label><input data-field="ac_no_shield" type="text" readonly></div>
+			<div class="col"><label>Unarmored AC</label><input data-field="ac_unarmored" type="text" readonly></div>
+			<div class="col"><label>vs Missiles AC</label><input data-field="ac_vs_missiles" type="text" readonly></div>
+		  </div>
+		  <div class="row" style="margin-top:8px">
 			<div class="col">
 			  <label>Hit Dice</label>
 			  <input data-field="hit_dice" type="text" readonly style="font-weight:bold;" title="Derived from class and level (PHB Ch.3). Warriors roll d10 through 9th level then gain a flat +3 hp per level; wizards d4 through 10th then +1; priests d8 through 9th then +2; rogues d6 through 10th then +2. The Constitution hit point bonus stops at the same point.">
@@ -264,31 +283,8 @@ const SHEET_HTML = `
 			</div>
 		  </div>
 		  <div class="revival-status" style="display:none;margin-top:6px;font-size:11px;"></div>
-		  <div class="row" style="margin-top:8px">
-			<div class="col"><label>Manual AC Adj.</label><input data-field="ac_manual" type="number" placeholder="0"></div>
-			<div class="col"><label>Reaction Adj.</label><input data-field="reaction_adj_combat" type="text" readonly></div>
-			<div class="col"></div>
-		  </div>
-		  <div class="row" style="margin-top:12px">
-			<div class="col"><label>Normal AC</label><input data-field="ac" type="text" readonly></div>
-			<div class="col"><label>Rear AC</label><input data-field="ac_rear" type="text" readonly></div>
-			<div class="col"><label>Surprised AC</label><input data-field="ac_surprised" type="text" readonly></div>
-		  </div>
-		  <div class="row" style="margin-top:8px">
-			<div class="col"><label>No Shield AC</label><input data-field="ac_no_shield" type="text" readonly></div>
-			<div class="col"><label>Unarmored AC</label><input data-field="ac_unarmored" type="text" readonly></div>
-			<div class="col"><label>vs Missiles AC</label><input data-field="ac_vs_missiles" type="text" readonly></div>
-		  </div>
 		</section>
 
-		<section class="section">		
-		  <div class="col" style="flex:1 1 100%">
-		    <!-- <label>Attack Matrix (auto-calculated)</label> -->
-		    <div class="base-thac0 small"></div>
-		    <div class="attack-matrix"></div>
-		  </div>
-        </section>
-		
 		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
 
         <!-- Saving Throws -->
