@@ -1317,7 +1317,14 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     memorizedBlocks.push({
       table: {
         headerRows: 1,
-        widths: ['5%', '21%', '15%', '7%', '12%', '16%', '11%', '7%', '6%'],
+        // Lvl / Spell / School-Sphere / Cast / Range / Duration / Save / Comp / Used
+        //
+        // Rebalanced, not widened -- the total was always 100%. Spell held ~39
+        // characters against a longest real name of about 34, and Save held ~20
+        // against a longest value of "Special". School/Sphere was 12 characters
+        // short of its worst case and did all the wrapping. The slack was next
+        // door the whole time.
+        widths: ['4%', '18%', '22%', '7%', '11%', '18%', '8%', '6%', '6%'],
         body: [
           [
             cell('Lvl', 6, { bold: true, alignment: 'center' }),
@@ -1408,9 +1415,11 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   const spellTable = (rows, hasFree, withBlanks) => ({
     table: {
       headerRows: 1,
+      // Same rebalance as the memorized table. The hasFree variant carries an
+      // extra checkbox column, so every other column gives up a little.
       widths: hasFree
-        ? ['5%', '21%', '16%', '6%', '12%', '17%', '9%', '6%', '8%']
-        : ['6%', '23%', '17%', '7%', '13%', '18%', '10%', '6%'],
+        ? ['4%', '17%', '21%', '7%', '10%', '17%', '8%', '6%', '10%']
+        : ['5%', '18%', '23%', '8%', '11%', '19%', '8%', '8%'],
       body: [
         spellHeaderRow(hasFree),
         ...rows.map(s => spellDataRow(s, hasFree)),
@@ -2214,7 +2223,9 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
           ],
           margin: [0, 0, 0, 4]
         },
-        { table: { headerRows: 1, widths: ['6%', '23%', '17%', '7%', '13%', '18%', '10%', '6%'], body: body }, layout: gridLayout }
+        // Matches the spellbook section so a spell written here transcribes
+        // back into the same column positions.
+        { table: { headerRows: 1, widths: ['5%', '18%', '23%', '8%', '11%', '19%', '8%', '8%'], body: body }, layout: gridLayout }
       ]
     });
   }
