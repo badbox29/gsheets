@@ -239,6 +239,32 @@ const SHEET_HTML = `
 			<div class="col"><label>Current HP</label><input data-field="current_hp" type="text" readonly style="font-weight:bold;"></div>
 		  </div>
 		  <div class="row" style="margin-top:8px">
+			<div class="col">
+			  <label>Hit Dice</label>
+			  <input data-field="hit_dice" type="text" readonly style="font-weight:bold;" title="Derived from class and level (PHB Ch.3). Warriors roll d10 through 9th level then gain a flat +3 hp per level; wizards d4 through 10th then +1; priests d8 through 9th then +2; rogues d6 through 10th then +2. The Constitution hit point bonus stops at the same point.">
+			</div>
+			<div class="col">
+			  <label>Hit Dice Override</label>
+			  <input data-field="hit_dice_manual" type="text" placeholder="auto" title="Leave blank to use the derived value. Set this for homebrew classes or anything the class tables do not cover.">
+			</div>
+			<div class="col"></div>
+		  </div>
+		  <div class="row" style="margin-top:8px">
+			<div class="col">
+			  <label>Starting CON</label>
+			  <input data-field="con_initial" type="number" min="1" max="25" placeholder="—" title="Your Constitution score at the START of your career. PHB p.21: this is the absolute limit on the number of times you can be raised or resurrected. Magic that restores lost Constitution does NOT restore revivals, so this number should never change once set.">
+			</div>
+			<div class="col">
+			  <label>Deaths to Date</label>
+			  <input data-field="deaths_to_date" type="number" min="0" placeholder="0" title="Times you have been successfully raised or resurrected. Each one permanently costs 1 point of Constitution.">
+			</div>
+			<div class="col">
+			  <label>Revivals Left</label>
+			  <input data-field="revivals_remaining" type="text" readonly style="font-weight:bold;" title="Starting CON minus Deaths to Date. A FAILED resurrection survival roll is permanent regardless of how many revivals remain.">
+			</div>
+		  </div>
+		  <div class="revival-status" style="display:none;margin-top:6px;font-size:11px;"></div>
+		  <div class="row" style="margin-top:8px">
 			<div class="col"><label>Manual AC Adj.</label><input data-field="ac_manual" type="number" placeholder="0"></div>
 			<div class="col"><label>Reaction Adj.</label><input data-field="reaction_adj_combat" type="text" readonly></div>
 			<div class="col"></div>
