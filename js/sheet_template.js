@@ -212,9 +212,9 @@ const SHEET_HTML = `
 		<!-- Combat -->
 		<section class="section">
 		  <h3>Combat</h3>
-		  <div class="col" style="flex:1 1 100%">
+		  <div class="col" style="flex:1 1 100%;margin:10px 0 18px;">
 		    <div class="base-thac0 small"></div>
-		    <div class="attack-matrix"></div>
+		    <div class="attack-matrix" style="margin-top:10px;"></div>
 		  </div>
 		  <div class="row">
 			<div class="col single-multi-hp">
