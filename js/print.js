@@ -561,7 +561,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     'SAVING THROWS', 'Start', 'Mod', 'Total', '+/-', 'Modifier',
     'ARMOR CLASS', 'Rear', 'Surprised', 'Shieldless', 'vs Missiles', 'Armor Worn',
     'HIT POINTS', 'Max HP', 'Damage Taken', 'Current HP',
-    'Hit Dice', 'Max Deaths', 'Deaths to Date',
+    'Hit Dice', 'Deaths to Date', 'Revivals Left',
     'DEX Checks', 'Vision Checks', 'Hearing Checks',
     'Movement', 'Max Carry', 'Current',
     "Target's AC",
@@ -696,6 +696,13 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   const hp = val(root, 'hp') || '';
   const damageTaken = val(root, 'damage_taken') || '0';
   const currentHP = val(root, 'current_hp') || hp;
+  // These three are DOM scrapes like the rest of page 1. hit_dice and
+  // revivals_remaining are the derived readonly fields, so they already hold
+  // the effective values -- Hit Dice reflects any manual override, and
+  // Revivals Left arrives pre-formatted as "N of M".
+  const hitDice = val(root, 'hit_dice') || '';
+  const deathsToDate = val(root, 'deaths_to_date') || '';
+  const revivalsLeft = val(root, 'revivals_remaining') || '';
   const ac = orDash(val(root, 'ac'));
   const acRear = orDash(val(root, 'ac_rear'));
   const acSurprised = orDash(val(root, 'ac_surprised'));
@@ -2968,25 +2975,27 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
                       { text: currentHP, fontSize: 16, bold: true, alignment: 'center', colSpan: 2, margin: [0, 1, 0, 1] },
                       {}
                     ],
-                    // Hit Dice and the death stats are not yet fields in the app.
-                    // They print as blank boxes for hand entry until they are --
-                    // see the follow-up to-do. Deliberately NOT derived here:
-                    // Max Deaths depends on rules that need PHB verification.
+                    // Hit Dice and revival tracking are real fields now.
+                    // PHB p.21: a character's STARTING Constitution is the
+                    // absolute limit on how many times he may be raised or
+                    // resurrected, so Revivals Left counts against that and
+                    // never against current CON. The app formats it "N of M",
+                    // which carries the starting score without a second cell.
                     [
-                      hdrCell('Hit Dice', 6, { alignment: 'center' }),
-                      hdrCell('Max Deaths', 6, { alignment: 'center' })
-                    ],
-                    [
-                      { text: '', fontSize: 8, margin: [0, 5, 0, 5] },
-                      { text: '', fontSize: 8, margin: [0, 5, 0, 5] }
-                    ],
-                    [
-                      hdrCell('Deaths to Date', 6, { alignment: 'center', colSpan: 2 }),
+                      hdrCell('Hit Dice', 6, { alignment: 'center', colSpan: 2 }),
                       {}
                     ],
                     [
-                      { text: '', fontSize: 8, colSpan: 2, margin: [0, 5, 0, 5] },
+                      { text: orDash(hitDice), fontSize: 9, bold: true, alignment: 'center', colSpan: 2, margin: [0, 3, 0, 3] },
                       {}
+                    ],
+                    [
+                      hdrCell('Deaths to Date', 6, { alignment: 'center' }),
+                      hdrCell('Revivals Left', 6, { alignment: 'center' })
+                    ],
+                    [
+                      { text: orDash(deathsToDate), fontSize: 9, alignment: 'center', margin: [0, 3, 0, 3] },
+                      { text: orDash(revivalsLeft), fontSize: 9, bold: true, alignment: 'center', margin: [0, 3, 0, 3] }
                     ]
                   ]
                 },
