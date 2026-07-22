@@ -2670,6 +2670,9 @@ function collectSheet(root){
     dc_new_hp: val(root,'dc_new_hp'),
     hp: val(root,'hp'),
 	damage_taken: val(root,'damage_taken'),
+    hit_dice_manual: val(root,'hit_dice_manual'),
+    con_initial: val(root,'con_initial'),
+    deaths_to_date: val(root,'deaths_to_date'),
     ac: val(root,'ac'),
 	ac_manual: val(root,'ac_manual'),
     str: val(root,'str'),
@@ -3275,6 +3278,9 @@ function loadSheet(root, data){
   }, 0);
   val(root,'hp',m.hp||'');
   val(root,'damage_taken',m.damage_taken||'');
+  val(root,'hit_dice_manual',m.hit_dice_manual||'');
+  val(root,'con_initial',m.con_initial||'');
+  val(root,'deaths_to_date',m.deaths_to_date||'');
   val(root,'ac',m.ac||'');
   val(root,'ac_manual',m.ac_manual||'');
   val(root,'str',m.str||'');
@@ -3297,6 +3303,8 @@ function loadSheet(root, data){
   
   // Calculate current HP after loading
   renderCurrentHP(root);
+  renderHitDice(root);
+  renderRevivals(root);
   
   // Combat attacks per round
   const attacksPerRoundEl = qs(root, '.combat-attacks-per-round');
@@ -4541,7 +4549,24 @@ function bindSheet(root, tab){
   setupDwarvenDetection(root);
   renderCombatQuickReference(root);
   renderCurrentHP(root);
+  renderHitDice(root);
+  renderRevivals(root);
   renderThiefSkills(root);
+
+  // Hit Dice and revival tracking. One delegated listener rather than binding
+  // each field separately -- Hit Dice depends on class and level, which live in
+  // eleven different fields across the three character types. Bound for both
+  // input and change so the <select> controls (char_type, mc_class*) are caught.
+  const hitDiceFields =
+    /^(hit_dice_manual|clazz|level|char_type|mc_(class|level)[123]|dc_(original|new)_(class|level))$/;
+  const onHpTrackingChange = (e) => {
+    const f = (e.target && e.target.getAttribute) ? e.target.getAttribute('data-field') : null;
+    if (!f) return;
+    if (f === 'con_initial' || f === 'deaths_to_date') renderRevivals(root);
+    else if (hitDiceFields.test(f)) renderHitDice(root);
+  };
+  root.addEventListener('input', onHpTrackingChange);
+  root.addEventListener('change', onHpTrackingChange);
 
   // Mark unsaved on any input/textarea change
   qsa(root, 'input,textarea').forEach(inp=>{
@@ -9463,6 +9488,8 @@ function recalculateAll(root) {
   if (typeof renderThiefSkillsSection === 'function') renderThiefSkillsSection(root);
   if (typeof renderTurnUndeadTable === 'function') renderTurnUndeadTable(root);
   if (typeof renderCurrentHP === 'function') renderCurrentHP(root);
+  if (typeof renderHitDice === 'function') renderHitDice(root);
+  if (typeof renderRevivals === 'function') renderRevivals(root);
   if (typeof renderEncumbrance === 'function') renderEncumbrance(root);
   if (typeof renderProficiencySlots === 'function') renderProficiencySlots(root);
   if (typeof renderMovementRate === 'function') renderMovementRate(root);
