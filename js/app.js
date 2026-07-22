@@ -184,6 +184,49 @@ function startAutosaveForTab(tab, root){
     }
   }, 1000);
 }
+// Every write to the character map goes through here. localStorage throws
+// QuotaExceededError when the origin's ~5MB budget is full, and an uncaught
+// throw skips whatever follows -- which in saveAsDialog meant no "Saved" alert
+// AND no error, a failed save indistinguishable from a successful one.
+//
+// The quota is per ORIGIN, not per app. Everything on badbox29.github.io shares
+// it, so gsheets can be well under 5MB and still fail because another tool has
+// grown. That is worth saying out loud; it is not guessable from the failure.
+//
+// Returns true on success, false on failure. Callers that show their own
+// confirmation should check it before claiming anything was saved.
+function writeCharacterMap(map, context){
+  try {
+    localStorage.setItem(CHAR_MAP_KEY, JSON.stringify(map));
+    return true;
+  } catch(err) {
+    console.error('Character map write failed' + (context ? ' (' + context + ')' : ''), err);
+
+    const quota = err && (err.name === 'QuotaExceededError' ||
+                          err.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+                          err.code === 22);
+
+    let used = 0;
+    try {
+      Object.keys(localStorage).forEach(k => { used += localStorage.getItem(k).length; });
+    } catch(_) {}
+
+    alert(
+      (quota ? 'SAVE FAILED — browser storage is full.' : 'SAVE FAILED.') +
+      (context ? '\n\n(' + context + ')' : '') +
+      '\n\nYour work is still on screen and nothing has been lost, but it is NOT ' +
+      'stored. Do not close this tab yet.' +
+      (quota
+        ? '\n\nStorage is shared by every site on this domain, not just this app, ' +
+          'so freeing space elsewhere helps too. Currently using about ' +
+          (used / 1024 / 1024).toFixed(1) + 'MB of roughly 5MB.' +
+          '\n\nQuickest fixes: delete characters you no longer need, or use ' +
+          'Adjust on large portraits to shrink them.'
+        : '\n\nSee the browser console for details.')
+    );
+    return false;
+  }
+}
 function performAutosave(tab, root){
   const data = collectSheet(root);
   const currentTypedName = (data.meta.name && data.meta.name.trim()) || 'Unnamed';
@@ -192,7 +235,7 @@ function performAutosave(tab, root){
   const key = getTabSaveKey(tab) || currentTypedName;
   const map = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
   map[key] = data;
-  localStorage.setItem(CHAR_MAP_KEY, JSON.stringify(map));
+  if(!writeCharacterMap(map, 'autosave')) return;
 
   // Reflect current typed name in the tab label (visual), without changing save key
   setTabLabel(tab, currentTypedName);
@@ -3920,7 +3963,10 @@ function saveAsDialog(root, tab){
       meta: { name: oldKey }
     };
   }
-  localStorage.setItem(CHAR_MAP_KEY, JSON.stringify(map));
+  // The original bug: this threw, and everything below -- setTabSaveKey, the
+  // label update, clearing the unsaved flag, the "Saved" alert -- never ran.
+  // No confirmation and no error, which reads exactly like a no-op.
+  if(!writeCharacterMap(map, 'Save As')) return false;
   setTabSaveKey(tab, name);
 
   // Update the tab label from the saved name
@@ -5150,7 +5196,7 @@ function bindSheet(root, tab){
         _deletedAt: Date.now(),
         meta: { name: name }
       };
-      localStorage.setItem(CHAR_MAP_KEY, JSON.stringify(map));
+      writeCharacterMap(map, 'delete character');
     }
 
     // Deleting never pushed to KV before, so deletions silently failed to sync.
@@ -5891,7 +5937,10 @@ async function kvPull(overwrite = false) {
       added    = res2.updated;
     }
 
-    if (added > 0) localStorage.setItem(CHAR_MAP_KEY, JSON.stringify(finalMap));
+    // The worst of the five to lose silently: the merge has already resolved
+    // remote against local, so a dropped write means the pull looks like it
+    // succeeded while the characters it brought down were never stored.
+    if (added > 0 && !writeCharacterMap(finalMap, 'KV pull merge')) return;
     const now      = Date.now();
     cfg.kvLastPull = now;
     saveKvConfig(cfg);
@@ -6589,7 +6638,7 @@ function performRest(root, tab, restType) {
   const key = getTabSaveKey(tab) || currentTypedName;
   const map = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
   map[key] = data;
-  localStorage.setItem(CHAR_MAP_KEY, JSON.stringify(map));
+  if(!writeCharacterMap(map, 'auto-save after resting')) return;
   
   // Clear unsaved status
   markUnsaved(tab, false, root);
