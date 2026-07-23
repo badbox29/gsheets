@@ -1615,7 +1615,17 @@ function makeArmorNode(data={}, onChange){
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Notes</label>' +
       '<input class="notes" placeholder="" value="'+(data.notes||'')+'" style="width:100%">' +
     '</div>';
-  el.querySelector('.rm').onclick = ()=>{ el.remove(); onChange && onChange(); };
+  el.querySelector('.rm').onclick = ()=>{
+    // Capture the parent BEFORE removing -- afterwards el is detached and
+    // closest() cannot find the sheet root.
+    const sheetRoot = el.closest('.sheet-container');
+    el.remove();
+    onChange && onChange();
+    // .remove() fires no input/change event, so the delegated armor listener
+    // never sees it. Deleting an equipped armor changes thief skills (PHB
+    // Table 29) and must recompute them explicitly.
+    if (sheetRoot && typeof renderThiefSkills === 'function') renderThiefSkills(sheetRoot);
+  };
   el.querySelectorAll('input, select').forEach(inp =>
     inp.addEventListener('input', ()=>onChange && onChange())
   );
