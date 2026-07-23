@@ -1907,6 +1907,71 @@ for (let d = 20; d <= 25; d++) {
   THIEF_DEX_ADJUSTMENTS[d] = [15, 20, 10, 15, 15];
 }
 
+// === Armor adjustments to thief skills (PHB Table 29) ===
+// Format: [Pick Pockets, Open Locks, Find/Remove Traps, Move Silently,
+//          Hide in Shadows, Detect Noise, Climb Walls, Read Languages]
+// Table 29 has only THREE columns. Plain leather armor is not one of them --
+// it is the baseline the Table 26 base scores already assume, hence all zeros.
+// "No Armor" also covers bracers of defense or a cloak worn without large or
+// heavy protective clothing (PHB Ch.3, Thief).
+const THIEF_ARMOR_ADJUSTMENTS = {
+  none:    [  5,   0,   0,  10,   5,   0,  10, 0],
+  leather: [  0,   0,   0,   0,   0,   0,   0, 0],
+  elven:   [-20,  -5,  -5, -10, -10,  -5, -20, 0],
+  padded:  [-30, -10, -10, -20, -20, -10, -30, 0]
+};
+
+// Table 29 footnote: "Bards (only) in non-elven chain mail suffer an additional
+// -5% penalty." The asterisk sits on the ELVEN CHAIN column header, so ordinary
+// chain mail is read as that column plus a further -5%. The extra penalty is
+// applied only to skills the column already adjusts -- Read Languages is "--"
+// in every column, so armor never touches it.
+THIEF_ARMOR_ADJUSTMENTS.chain =
+  THIEF_ARMOR_ADJUSTMENTS.elven.map(v => (v === 0 ? 0 : v - 5));
+
+// PHB Ch.3, Thief: "no skill can be raised above 95 percent, including all
+// adjustments for Dexterity, race, and armor."
+const THIEF_SKILL_MAX = 95;
+
+// Resolve equipped armor to a Table 29 column.
+// Returns { key, name, illegal } -- illegal flags armor the class may not wear
+// (thieves are limited to leather, studded, padded or elven chain; bards to
+// chain mail). Illegal armor falls back to the worst column and is reported,
+// never blocked.
+function getThiefArmorCategory(root) {
+  const items = Array.from(root.querySelectorAll('.armor-list .item'));
+  let worn = '';
+  items.forEach(item => {
+    const cb = item.querySelector('.equipped');
+    if (!cb || !cb.checked) return;
+    const type = (item.querySelector('.armor-type') || {}).value || 'Armor';
+    if (type !== 'Armor') return;               // shields/rings/cloaks are not body armor
+    const name = ((item.querySelector('.title') || {}).value || '').trim();
+    if (name) worn = name;
+  });
+
+  const n = worn.toLowerCase();
+  if (!worn || n === 'none')          return { key: 'none',    name: worn || 'No armor', illegal: false };
+  if (n.includes('elven chain'))      return { key: 'elven',   name: worn, illegal: false };
+  if (n.includes('studded') || n.includes('padded'))
+                                      return { key: 'padded',  name: worn, illegal: false };
+  if (n.includes('leather'))          return { key: 'leather', name: worn, illegal: false };
+  if (n.includes('chain'))            return { key: 'chain',   name: worn, illegal: false };
+  // Anything heavier is outside the table and outside what the class may wear.
+  return { key: 'padded', name: worn, illegal: true };
+}
+
+// The adjustment row for a character. Bards take the extra -5% in ordinary
+// chain mail; a thief in chain mail is already illegal, so he lands on the
+// worst column instead of the bard-specific row.
+function getThiefArmorAdjustments(root, isBard) {
+  const cat = getThiefArmorCategory(root);
+  let key = cat.key;
+  if (key === 'chain' && !isBard) { key = 'padded'; cat.illegal = true; }
+  return { adj: THIEF_ARMOR_ADJUSTMENTS[key] || THIEF_ARMOR_ADJUSTMENTS.leather,
+           key: key, name: cat.name, illegal: cat.illegal };
+}
+
 // Aliases
 CLASS_ABILITIES.warrior = CLASS_ABILITIES.fighter;
 CLASS_ABILITIES.priest = CLASS_ABILITIES.cleric;
