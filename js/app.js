@@ -678,6 +678,11 @@ function renderSpellSlots(root) {
           slots = slots.map((s, i) => s + bonus[i]);
         }
       }
+
+      // PHB Table 24: 6th-level priest spells require WIS 17+, 7th require 18+.
+      if (category === 'priest' && typeof applyPriestWisdomGate === 'function') {
+        slots = applyPriestWisdomGate(slots, wis);
+      }
       
       // Write slots with dormant indicator
       slots.forEach((n, i) => {
@@ -767,6 +772,18 @@ function renderSpellSlots(root) {
     appliedBonus = bonus;
   }
 
+  // PHB Table 24 footnotes: 6th-level priest spells are usable only with WIS 17+
+  // and 7th-level only with WIS 18+. Notes are gathered BEFORE gating, because
+  // afterwards the counts are zero and there is nothing left to explain.
+  // Keyed on the class GROUP, so it is a harmless no-op for paladins (4 spell
+  // levels) and rangers (3), who can never reach the gated levels anyway.
+  let wisGateNotes = [];
+  if (typeof getClassCategory === 'function' && getClassCategory(clazz) === 'priest' &&
+      typeof getPriestWisdomGateNotes === 'function') {
+    wisGateNotes = getPriestWisdomGateNotes(slots, wis);
+    if (wisGateNotes.length) slots = applyPriestWisdomGate(slots, wis);
+  }
+
   // Specialist wizards gain one additional spell per spell level, which must be
   // taken in their own school (PHB Ch.3).
   const spec = applySpecialistBonus(slots, clazz);
@@ -785,6 +802,10 @@ function renderSpellSlots(root) {
       }
       if (specSchool && n > 0) {
         notes.push(`Includes +1 specialist slot -- must be a ${specSchool} spell`);
+      }
+      const gated = wisGateNotes.find(g => g.level === i + 1);
+      if (gated) {
+        notes.push(`Locked: ${gated.level}th-level priest spells require Wisdom ${gated.min} (PHB Table 24). You have ${wis || '\u2014'}.`);
       }
       el.title = notes.join('\n');
     }
