@@ -4558,7 +4558,7 @@ function bindSheet(root, tab){
   // eleven different fields across the three character types. Bound for both
   // input and change so the <select> controls (char_type, mc_class*) are caught.
   const hitDiceFields =
-    /^(hit_dice_manual|clazz|level|char_type|mc_(class|level)[123]|dc_(original|new)_(class|level))$/;
+    /^(hit_dice_manual|clazz|level|char_type|con|mc_(class|level)[123]|dc_(original|new)_(class|level))$/;
   const onHpTrackingChange = (e) => {
     const f = (e.target && e.target.getAttribute) ? e.target.getAttribute('data-field') : null;
     if (!f) return;
