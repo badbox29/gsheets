@@ -4391,6 +4391,83 @@ function renderSpecialistMemorizedStatus(root) {
   rowEl.style.display = '';
 }
 
+// Spells known per level against the PHB Table 4 Intelligence cap.
+// Wizards only -- priests do not learn spells into books and take no INT cap.
+// Counts across ALL spellbooks: the PHB says a wizard's spell book "can be a
+// single book, a set of books, a bundle of scrolls", so the limit is on spells
+// known, not per volume. Reports only; never blocks, matching the memorized
+// counter's behaviour when a caster over-memorizes.
+function renderKnownSpellStatus(root) {
+  const wrap = root.querySelector('.spellbook-known-status');
+  const text = root.querySelector('.spellbook-known-text');
+  if (!wrap || !text) return;
+
+  const comp = (typeof getWizardComponent === 'function') ? getWizardComponent(root) : null;
+  if (!comp) { wrap.style.display = 'none'; return; }
+
+  // Table 4 column 3 is a number below INT 19 and the string "All" from 19 up.
+  const int = parseInt(val(root, 'int') || 0, 10);
+  const row = (typeof INT_TABLE !== 'undefined') ? INT_TABLE[int] : null;
+  const rawCap = row ? row[2] : 0;
+  const uncapped = (typeof rawCap === 'string');
+  const cap = uncapped ? Infinity : (parseInt(rawCap, 10) || 0);
+
+  if (!uncapped && cap <= 0) {
+    // INT below 9 -- cannot be a wizard at all. The spell browser already
+    // explains this, so say nothing here rather than showing 0/0 nine times.
+    wrap.style.display = 'none';
+    return;
+  }
+
+  // Tally by level across every spellbook. Level 0 (cantrips) is deliberately
+  // excluded -- Table 4 governs the nine wizard spell levels.
+  const known = {};
+  let freeCount = 0;
+  const sbData = (typeof getSpellbooksData === 'function') ? getSpellbooksData(root) : null;
+  if (sbData && Array.isArray(sbData.spellbooks)) {
+    sbData.spellbooks.forEach(sb => {
+      (sb.spells || []).forEach(s => {
+        const lv = parseInt(s.level, 10);
+        if (lv >= 1 && lv <= 9) {
+          known[lv] = (known[lv] || 0) + 1;
+          if (s.freeSpell) freeCount++;
+        }
+      });
+    });
+  }
+
+  const parts = [];
+  let anyOver = false;
+  for (let lv = 1; lv <= 9; lv++) {
+    const n = known[lv] || 0;
+    if (n === 0) continue;                       // don't list levels with nothing recorded
+    const over = !uncapped && n > cap;
+    if (over) anyOver = true;
+    const color = over ? '#f44336' : 'var(--text)';
+    parts.push('<span style="color:' + color + ';">Level ' + lv + ': ' + n + '/' +
+               (uncapped ? 'All' : cap) + '</span>');
+  }
+
+  if (!parts.length) {
+    text.innerHTML = '<span style="color:var(--muted);">No spells recorded' +
+      (uncapped ? '' : ' \u2014 Intelligence ' + int + ' allows ' + cap + ' per level') + '</span>';
+  } else {
+    text.innerHTML = parts.join(' <span style="color:var(--muted);">-</span> ');
+    if (anyOver) {
+      text.innerHTML += '<div style="margin-top:4px;color:#f44336;font-size:11px;">' +
+        'Over the Intelligence limit of ' + cap + ' spells per level (PHB Table 4). ' +
+        'Nothing is blocked \u2014 check with your DM.</div>';
+    }
+    if (freeCount > 0) {
+      text.innerHTML += '<div style="margin-top:4px;color:var(--muted);font-size:11px;">' +
+        'Includes ' + freeCount + ' free specialist spell' + (freeCount === 1 ? '' : 's') +
+        '. The PHB grants these without a learn roll but does not exempt them from the ' +
+        'per-level maximum, so they are counted.</div>';
+    }
+  }
+  wrap.style.display = '';
+}
+
 function renderMemorizedSpellStatus(root) {
   const statusText = root.querySelector('.spell-status-text');
   if (!statusText) return;
@@ -4446,6 +4523,7 @@ function renderMemorizedSpellStatus(root) {
   // class/level/load/spell change without wiring separate call sites.
   renderSpecialistSpellNotes(root);
   renderSpecialistMemorizedStatus(root);
+  renderKnownSpellStatus(root);
 }
 
 // Specialist spell reminders (PHB Ch.3). Populates two notes for specialist
