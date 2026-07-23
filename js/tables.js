@@ -480,6 +480,41 @@ const HIT_DICE = {
   rogue:   { die: 6,  cap: 10, flat: 2 }
 };
 
+// === Minimum Hit Die roll at high Constitution ===
+// PHB Table 3, footnotes ** / *** / ****:
+//   CON 20      -- all 1s rolled for Hit Dice are considered 2s
+//   CON 21-22   -- all 1s and 2s are considered 3s
+//   CON 23-25   -- all 1s, 2s and 3s are considered 4s
+// NOTE these footnotes carry NO warrior restriction. Only the single "*",
+// which marks the parenthetical hit point bonus, is warriors-only.
+// Uses CURRENT Constitution, not the starting score: Table 3's text says to
+// always use the character's current Constitution for hit point bonuses and
+// penalties. (con_initial exists solely to count revivals -- PHB p.21.)
+const CON_MIN_HD_ROLL = {
+  20: 2,
+  21: 3, 22: 3,
+  23: 4, 24: 4, 25: 4
+};
+
+// Lowest result any single Hit Die can yield. Returns 0 when no floor applies.
+function getMinHitDieRoll(con) {
+  const c = parseInt(con, 10);
+  if (isNaN(c)) return 0;
+  return CON_MIN_HD_ROLL[c] || 0;
+}
+
+// Apply the floor to one die result. The floor is PER DIE, so a multi-class
+// character rolling one die per class gets it on each roll separately.
+// It does NOT apply to the flat hit points gained after a class's Hit Dice cap
+// (warrior/priest 10th+, wizard/rogue 11th+) because no die is rolled there.
+// A floor at or above the die size makes every roll that value -- a d4 wielded
+// at CON 23 always yields 4. That is the rule as written, not a bug.
+function applyHitDieFloor(roll, con) {
+  const r = parseInt(roll, 10);
+  if (isNaN(r)) return roll;
+  return Math.max(r, getMinHitDieRoll(con));
+}
+
 // Hit Dice earned for one class across an inclusive level range.
 // Returns { die, dice, flat } or null. fromLevel lets a dual-class character
 // count only the levels above his original class's maximum.
