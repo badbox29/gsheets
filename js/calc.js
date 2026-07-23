@@ -4411,8 +4411,15 @@ function renderKnownSpellStatus(root) {
   const rawCap = row ? row[2] : 0;
   const uncapped = (typeof rawCap === 'string');
   const cap = uncapped ? Infinity : (parseInt(rawCap, 10) || 0);
-  // Table 4 column 5: the highest spell level this Intelligence permits.
-  const maxSpellLevel = row ? (parseInt(row[4], 10) || 0) : 0;
+  // Highest spell level this character may learn. Two limits apply and the
+  // lower wins: Table 4 column 5 (Intelligence) and the class progression
+  // (a 5th-level mage has only three spell levels regardless of Intelligence).
+  // renderSpellBrowser already computes exactly this and stashes it on
+  // root._spellLevelCap, so read that rather than recompute -- otherwise this
+  // counter could stay silent about a spell the browser itself refuses to add.
+  const intMaxLevel = row ? (parseInt(row[4], 10) || 0) : 0;
+  const browserCap = parseInt(root._spellLevelCap, 10);
+  const maxSpellLevel = (!isNaN(browserCap) && browserCap > 0) ? browserCap : intMaxLevel;
 
   if (!uncapped && cap <= 0) {
     // INT below 9 -- cannot be a wizard at all. The spell browser already
@@ -4462,10 +4469,13 @@ function renderKnownSpellStatus(root) {
   } else {
     text.innerHTML = parts.join(' <span style="color:var(--muted);">-</span> ');
     if (beyondLevels.length) {
+      const capReason = (maxSpellLevel === intMaxLevel && intMaxLevel > 0)
+        ? 'Intelligence ' + int + ' (PHB Table 4)'
+        : 'your caster level';
       text.innerHTML += '<div style="margin-top:4px;color:#f44336;font-size:11px;">' +
-        'Intelligence ' + int + ' allows spells up to level ' + maxSpellLevel +
-        ' (PHB Table 4). Level ' + beyondLevels.join(', ') +
-        ' cannot be learned at this Intelligence. Nothing is blocked \u2014 check with your DM.</div>';
+        'You can learn spells up to level ' + maxSpellLevel + ' \u2014 limited by ' + capReason +
+        '. Level ' + beyondLevels.join(', ') +
+        ' cannot be learned yet. Nothing is blocked \u2014 check with your DM.</div>';
     }
     if (anyOver) {
       text.innerHTML += '<div style="margin-top:4px;color:#f44336;font-size:11px;">' +
