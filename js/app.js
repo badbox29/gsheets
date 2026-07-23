@@ -1625,6 +1625,7 @@ function makeArmorNode(data={}, onChange){
     // never sees it. Deleting an equipped armor changes thief skills (PHB
     // Table 29) and must recompute them explicitly.
     if (sheetRoot && typeof renderThiefSkills === 'function') renderThiefSkills(sheetRoot);
+    if (sheetRoot && typeof renderRangerStealth === 'function') renderRangerStealth(sheetRoot);
   };
   el.querySelectorAll('input, select').forEach(inp =>
     inp.addEventListener('input', ()=>onChange && onChange())
@@ -3847,6 +3848,7 @@ function loadSheet(root, data){
   renderThiefSkills(root);
   updateThiefSkillsAccessibility(root); // NEW LINE - Update skill accessibility
   renderThiefSkillsSection(root);
+  if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
   renderThiefPointsSection(root);
   updateThiefPointsDisplay(root);
   renderCharacterBonuses(root);
