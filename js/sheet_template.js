@@ -268,6 +268,7 @@ const SHEET_HTML = `
 			</div>
 			<div class="col"></div>
 		  </div>
+		  <div class="hit-dice-note" style="display:none;margin-top:6px;font-size:11px;"></div>
 		  <div class="row" style="margin-top:8px">
 			<div class="col">
 			  <label>Starting CON</label>
