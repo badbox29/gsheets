@@ -1281,6 +1281,46 @@ SPELL_SLOTS_TABLES.warrior     = {}; // No spells
 SPELL_SLOTS_TABLES.rogue       = SPELL_SLOTS_TABLES.thief; // Actually gets spells if bard
 SPELL_SLOTS_TABLES.barbarian   = {}; // No spells
 
+// === Priest 6th/7th-level Wisdom gate (PHB Table 24 footnotes) ===
+//   *  6th-level priest spells are usable only by priests with WIS 17 or greater
+//   ** 7th-level priest spells are usable only by priests with WIS 18 or greater
+// This is a HARD GATE on access, and is a different rule from WIS_BONUS_SPELLS
+// (Table 5), which grants EXTRA slots at low spell levels for high Wisdom.
+// No interaction between the two: the lowest Wisdom that grants a bonus 6th-level
+// spell is 23, and a bonus 7th-level spell is 25, so both already clear the gate.
+// Paladins reach only 4 spell levels and rangers only 3, so this never bites them.
+const PRIEST_SPELL_LEVEL_WIS_MIN = { 6: 17, 7: 18 };
+
+// Returns a NEW array with any ungated spell levels zeroed. Never mutates input.
+function applyPriestWisdomGate(slots, wis) {
+  if (!Array.isArray(slots)) return slots;
+  const w = parseInt(wis, 10);
+  const out = slots.slice();
+  Object.keys(PRIEST_SPELL_LEVEL_WIS_MIN).forEach(lvl => {
+    const min = PRIEST_SPELL_LEVEL_WIS_MIN[lvl];
+    if (isNaN(w) || w < min) out[parseInt(lvl, 10) - 1] = 0;
+  });
+  return out;
+}
+
+// Which spell levels the character WOULD have had but cannot use, and why.
+// IMPORTANT: pass the RAW table values here, before applyPriestWisdomGate --
+// after gating the counts are zero and there is nothing left to report on.
+// Returns [] when nothing is gated.
+function getPriestWisdomGateNotes(slots, wis) {
+  const notes = [];
+  if (!Array.isArray(slots)) return notes;
+  const w = parseInt(wis, 10);
+  Object.keys(PRIEST_SPELL_LEVEL_WIS_MIN).forEach(lvl => {
+    const n = parseInt(lvl, 10);
+    const min = PRIEST_SPELL_LEVEL_WIS_MIN[lvl];
+    if ((slots[n - 1] || 0) > 0 && (isNaN(w) || w < min)) {
+      notes.push({ level: n, min: min });
+    }
+  });
+  return notes;
+}
+
 
 const WIS_BONUS_SPELLS = {
    1:[0,0,0,0,0,0,0,0,0],   2:[0,0,0,0,0,0,0,0,0],   3:[0,0,0,0,0,0,0,0,0],   4:[0,0,0,0,0,0,0,0,0],
