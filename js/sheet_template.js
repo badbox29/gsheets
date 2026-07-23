@@ -1076,6 +1076,10 @@ const SHEET_HTML = `
 			  <button class="add-spellbook-spell" style="padding:4px 12px;font-size:12px;margin-left:auto;">+ Add Spell</button>
 			</div>
 			
+			<!-- Spells known per level vs the PHB Table 4 Intelligence cap (wizards only) -->
+			<div class="spellbook-known-status" style="display:none;margin-bottom:12px;padding:8px;background:var(--glass);border-radius:4px;font-size:13px;">
+			  <strong>Spells Known:</strong> <span class="spellbook-known-text" style="margin-left:8px;">&mdash;</span>
+			</div>
 			<!-- Specialist free-spell entitlement (populated for specialist wizards only) -->
 			<div class="specialist-freespell-note" style="display:none;margin-bottom:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
 			<div class="list spellbook-list"></div>
