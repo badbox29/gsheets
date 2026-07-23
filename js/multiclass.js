@@ -5,55 +5,56 @@
 // HP is averaged across all classes
 
 // === Valid Multi-Class Combinations by Race (AD&D 2e PHB) ===
+// PHB Ch.3, "Multi-Class Combinations" (p.61). Transcribed from the book's own
+// per-race list -- multi-classing is restricted by ENUMERATION, not by a stated
+// group rule, so anything absent here is simply not offered.
+//
+// NOTE the asterisk in the printed table: half-elf Cleric entries read
+// "Cleric*" with "* or Druid" beneath, so every half-elf cleric combination has
+// a druid twin. Those are expanded explicitly below rather than left implicit.
+//
+// BARD APPEARS NOWHERE in the table -- a bard cannot multi-class at all.
+// Specialist wizards likewise cannot, the gnome illusionist being the single
+// exception the book calls out by name.
 const MULTICLASS_COMBOS = {
-  elf: [
-    ["fighter", "mage"],
-    ["fighter", "thief"],
-    ["mage", "thief"],
-    ["fighter", "mage", "thief"]
-  ],
-  "half-elf": [
-    // Any two classes
-    ["fighter", "cleric"],
-    ["fighter", "thief"],
-    ["fighter", "mage"],
-    ["fighter", "druid"],
-    ["fighter", "ranger"],
-    ["cleric", "ranger"],
-    ["cleric", "mage"],
-    ["thief", "mage"],
-    ["cleric", "thief"],
-    // Plus the triple:
-    ["fighter", "mage", "cleric"]
-  ],
-  halfelf: [
-    // Alias for "half-elf"
-    ["fighter", "cleric"],
-    ["fighter", "thief"],
-    ["fighter", "mage"],
-    ["fighter", "druid"],
-    ["fighter", "ranger"],
-    ["cleric", "ranger"],
-    ["cleric", "mage"],
-    ["thief", "mage"],
-    ["cleric", "thief"],
-    ["fighter", "mage", "cleric"]
-  ],
   dwarf: [
     ["fighter", "thief"],
     ["fighter", "cleric"]
   ],
-  gnome: [
+  elf: [
+    ["fighter", "mage"],
     ["fighter", "thief"],
+    ["mage", "thief"]
+  ],
+  gnome: [
+    ["fighter", "cleric"],
     ["fighter", "illusionist"],
+    ["fighter", "thief"],
+    ["cleric", "illusionist"],
     ["cleric", "thief"],
-    ["illusionist", "thief"],
-    ["cleric", "illusionist"]
+    ["illusionist", "thief"]
   ],
   halfling: [
     ["fighter", "thief"]
+  ],
+  "half-elf": [
+    ["fighter", "cleric"],
+    ["fighter", "druid"],
+    ["fighter", "thief"],
+    ["fighter", "mage"],
+    ["cleric", "ranger"],
+    ["druid", "ranger"],
+    ["cleric", "mage"],
+    ["druid", "mage"],
+    ["thief", "mage"],
+    ["fighter", "mage", "cleric"],
+    ["fighter", "mage", "druid"],
+    ["fighter", "mage", "thief"]
   ]
 };
+// Alias, not a copy -- the two lists drifting apart is exactly how the old
+// duplicated block accumulated three combinations the PHB does not allow.
+MULTICLASS_COMBOS.halfelf = MULTICLASS_COMBOS["half-elf"];
 
 /**
  * Normalize a class name for comparison
