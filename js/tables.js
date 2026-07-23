@@ -2296,11 +2296,19 @@ function getEffectiveWeaponSpeed(speed, magicBonus) {
 //
 // These are CAMPAIGN/table settings, not per-character, so they live in
 // localStorage rather than the character record.
+// Two categories, rendered as separate sections in the Settings modal:
+//   'phb'      -- rules the PHB itself marks optional. Enabling or disabling
+//                 one is playing by the book either way.
+//   'override' -- checks the app performs that the PHB states flatly. Turning
+//                 one OFF is a house rule, so these default ON and exist mainly
+//                 to silence a warning a DM has already waived.
+// Entries with no category are treated as 'phb'.
 const OPTIONAL_RULES = {
   weaponSpeedInitiative: {
     label:   'Weapon speed factor modifies initiative',
     detail:  'PHB Table 56. Weapon speed is added to the initiative roll (low roll wins). ' +
              'Magical bonuses reduce speed factor by 1 per plus, minimum 0.',
+    category: 'phb',
     default: true      // Chris's table uses this
   },
   encumbrancePenalties: {
@@ -2308,8 +2316,25 @@ const OPTIONAL_RULES = {
     detail:  'PHB "Effects of Encumbrance". Light x2/3 movement, Moderate x1/2 and -1 attack, ' +
              'Heavy x1/3 and -2 attack / +1 AC, Severe movement 1 and -4 attack / +3 AC. ' +
              'Encumbrance is itself an Optional Rule in the PHB, so ignoring it is RAW.',
+    category: 'phb',
     default: false     // Chris's table does not use encumbrance
+  },
+  classGroupLegality: {
+    label:   'Warn on illegal class combinations',
+    detail:  'PHB Ch.3 allows only one class from each group -- warrior, wizard, priest, rogue. ' +
+             'Fighter/paladin, thief/bard and cleric/druid are therefore not legal multi- or ' +
+             'dual-class combinations. Advisory only; nothing is ever blocked. Switch off if ' +
+             'your DM has approved a combination and you would rather not see the banner.',
+    category: 'override',
+    default: true      // the tool's job is rules accuracy; opting out is deliberate
   }
+};
+const OPTIONAL_RULES_CATEGORIES = {
+  phb:      { label: '\u{1F4D6} Optional Rules',
+              blurb: 'Rules the PHB marks optional. Use them or not as your table prefers.' },
+  override: { label: '\u2696\uFE0F House Rules & Overrides',
+              blurb: 'Checks the app performs against the rules as written. Switching one off ' +
+                     'suppresses a warning rather than changing how anything is calculated.' }
 };
 
 // ===== Campaign Settings =====
@@ -2371,6 +2396,53 @@ function setOptionalRule(key, enabled) {
   } catch (e) { saved = {}; }
   saved[key] = !!enabled;
   localStorage.setItem(OPTIONAL_RULES_STORAGE_KEY, JSON.stringify(saved));
+}
+
+// PHB Ch.3, dual-class: a character "can acquire up to four classes, one from
+// each group." Multi-class combinations are enumerated per race and likewise
+// never pair two classes from one group. So fighter/paladin, thief/bard and
+// cleric/druid are all illegal -- but the app has no way to know your DM has
+// not allowed one, hence advisory only, and switchable off entirely.
+// Returns [] when the character is legal, single-classed, or the check is off.
+function validateClassGroups(root) {
+  const problems = [];
+  if (typeof isOptionalRule === 'function' && !isOptionalRule('classGroupLegality')) return problems;
+  if (typeof getClassCategory !== 'function') return problems;
+
+  const charType = (val(root, 'char_type') || 'single').toLowerCase();
+  const entries = [];
+
+  if (charType === 'multi') {
+    for (let i = 1; i <= 3; i++) {
+      const c = (val(root, 'mc_class' + i) || '').trim();
+      if (c) entries.push(c);
+    }
+  } else if (charType === 'dual') {
+    const oc = (val(root, 'dc_original_class') || '').trim();
+    const nc = (val(root, 'dc_new_class') || '').trim();
+    if (oc) entries.push(oc);
+    if (nc) entries.push(nc);
+  } else {
+    return problems;   // a single-class character cannot conflict with itself
+  }
+  if (entries.length < 2) return problems;
+
+  const byGroup = {};
+  entries.forEach(c => {
+    const cat = getClassCategory(c);
+    if (!cat) return;                       // unrecognised/homebrew: say nothing
+    (byGroup[cat] = byGroup[cat] || []).push(c);
+  });
+
+  Object.keys(byGroup).forEach(cat => {
+    if (byGroup[cat].length > 1) {
+      problems.push(byGroup[cat].join(' and ') + ' are both ' + cat +
+        '-group classes. The PHB allows only one class from each group ' +
+        '(warrior, wizard, priest, rogue).');
+    }
+  });
+
+  return problems;
 }
 
 // === Specialist Wizards (AD&D 2E, PHB Ch.3, Table 22) ===
