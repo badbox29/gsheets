@@ -591,24 +591,23 @@ function renderSavingThrows(root) {
 }
 
 // === THAC0 rules (AD&D 2e) ===
+// Resolved through getClassCategory rather than a hardcoded list. The old list
+// tested only mage/wizard/illusionist/specialist, so SEVEN of the eight
+// specialist schools -- abjurer, conjurer, diviner, enchanter, invoker,
+// necromancer, transmuter -- matched nothing and fell through to the flat 20
+// fallback. A 6th-level necromancer showed THAC0 20 where Table 20 gives 19.
+//
+// It was also order-dependent, because .includes() over an unordered list means
+// the first line to match wins: "demipaladin" sat on the PRIEST line and got
+// priest THAC0, and a "cleric/thief" would hit cleric before thief.
+// getClassCategory does exact-match first, then longest-key-first substring, so
+// homebrew and compound names resolve and "demipaladin" cannot be eaten by
+// "paladin". CLASS_CATEGORIES' four values map directly onto THAC0_TABLES' keys.
 function getThac0(clazz, level) {
-  level = Math.min(parseInt(level, 10) || 1, 20); // clamp 1–20
-  clazz = (clazz || "").toLowerCase();
-
-  if (["fighter","paladin","ranger","warrior","barbarian","hb_dpaladin"].some(c => clazz.includes(c))) {
-    return THAC0_TABLES.warrior[level-1];
-  }
-  if (["cleric","druid","priest","demipaladin"].some(c => clazz.includes(c))) {
-    return THAC0_TABLES.priest[level-1];
-  }
-  if (["thief","bard","rogue"].some(c => clazz.includes(c))) {
-    return THAC0_TABLES.rogue[level-1];
-  }
-  if (["mage","wizard","illusionist","specialist"].some(c => clazz.includes(c))) {
-    return THAC0_TABLES.wizard[level-1];
-  }
-
-  return 20; // fallback
+  level = Math.min(Math.max(parseInt(level, 10) || 1, 1), 20); // clamp 1-20
+  const cat = (typeof getClassCategory === 'function') ? getClassCategory(clazz) : null;
+  const table = cat && THAC0_TABLES[cat];
+  return table ? table[level - 1] : 20;   // unrecognised class -> unmodified 20
 }
 
 // Visible companion to the per-slot tooltips: explains why a priest's 6th- or
