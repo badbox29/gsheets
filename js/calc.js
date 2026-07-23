@@ -4411,6 +4411,8 @@ function renderKnownSpellStatus(root) {
   const rawCap = row ? row[2] : 0;
   const uncapped = (typeof rawCap === 'string');
   const cap = uncapped ? Infinity : (parseInt(rawCap, 10) || 0);
+  // Table 4 column 5: the highest spell level this Intelligence permits.
+  const maxSpellLevel = row ? (parseInt(row[4], 10) || 0) : 0;
 
   if (!uncapped && cap <= 0) {
     // INT below 9 -- cannot be a wizard at all. The spell browser already
@@ -4438,14 +4440,20 @@ function renderKnownSpellStatus(root) {
 
   const parts = [];
   let anyOver = false;
+  const beyondLevels = [];
   for (let lv = 1; lv <= 9; lv++) {
     const n = known[lv] || 0;
     if (n === 0) continue;                       // don't list levels with nothing recorded
     const over = !uncapped && n > cap;
+    // Separate problem from the count: Table 4 also caps the highest spell
+    // LEVEL a wizard may learn at all. An INT 9 wizard stops at 4th, so a
+    // recorded 6th-level spell is not merely surplus -- it is unlearnable.
+    const beyond = maxSpellLevel > 0 && lv > maxSpellLevel;
     if (over) anyOver = true;
-    const color = over ? '#f44336' : 'var(--text)';
+    if (beyond) beyondLevels.push(lv);
+    const color = (over || beyond) ? '#f44336' : 'var(--text)';
     parts.push('<span style="color:' + color + ';">Level ' + lv + ': ' + n + '/' +
-               (uncapped ? 'All' : cap) + '</span>');
+               (beyond ? '\u2014' : (uncapped ? 'All' : cap)) + '</span>');
   }
 
   if (!parts.length) {
@@ -4453,6 +4461,12 @@ function renderKnownSpellStatus(root) {
       (uncapped ? '' : ' \u2014 Intelligence ' + int + ' allows ' + cap + ' per level') + '</span>';
   } else {
     text.innerHTML = parts.join(' <span style="color:var(--muted);">-</span> ');
+    if (beyondLevels.length) {
+      text.innerHTML += '<div style="margin-top:4px;color:#f44336;font-size:11px;">' +
+        'Intelligence ' + int + ' allows spells up to level ' + maxSpellLevel +
+        ' (PHB Table 4). Level ' + beyondLevels.join(', ') +
+        ' cannot be learned at this Intelligence. Nothing is blocked \u2014 check with your DM.</div>';
+    }
     if (anyOver) {
       text.innerHTML += '<div style="margin-top:4px;color:#f44336;font-size:11px;">' +
         'Over the Intelligence limit of ' + cap + ' spells per level (PHB Table 4). ' +
