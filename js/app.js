@@ -4497,6 +4497,7 @@ function bindSheet(root, tab){
       // rename from "Leather Armor" to "Studded Leather" has to re-run them.
       if (e.target.classList.contains('title')) {
         if (typeof renderThiefSkills === 'function') renderThiefSkills(root);
+        if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
       }
     });
     // Separate listener for checkbox and select changes (use 'change' not 'input')
@@ -4505,6 +4506,7 @@ function bindSheet(root, tab){
         renderArmorClass(root);
         renderMovementRate(root);
         if (typeof renderThiefSkills === 'function') renderThiefSkills(root);
+        if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
       }
       // Also trigger for armor type dropdown changes
       if (e.target.classList.contains('armor-type')) {
@@ -4513,6 +4515,7 @@ function bindSheet(root, tab){
         // Only Armor-type items count as body armor for Table 29, so switching
         // an item to or from "Shield" changes which piece the lookup finds.
         if (typeof renderThiefSkills === 'function') renderThiefSkills(root);
+        if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
       }
     });
   }
@@ -4650,6 +4653,25 @@ function bindSheet(root, tab){
   renderHitDice(root);
   renderRevivals(root);
   renderThiefSkills(root);
+  if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
+
+  // Ranger stealth depends on class, level, race and Dexterity across all three
+  // character types. One delegated listener rather than patching each of the
+  // existing class/level/ability handlers separately.
+  const rangerStealthFields =
+    /^(clazz|level|race|dex|char_type|mc_(class|level)[123]|dc_(original|new)_(class|level))$/;
+  root.addEventListener('input', (e) => {
+    const f = (e.target && e.target.getAttribute) ? e.target.getAttribute('data-field') : null;
+    if (f && rangerStealthFields.test(f) && typeof renderRangerStealth === 'function') {
+      renderRangerStealth(root);
+    }
+  });
+  root.addEventListener('change', (e) => {
+    const f = (e.target && e.target.getAttribute) ? e.target.getAttribute('data-field') : null;
+    if (f && rangerStealthFields.test(f) && typeof renderRangerStealth === 'function') {
+      renderRangerStealth(root);
+    }
+  });
 
   // Hit Dice and revival tracking. One delegated listener rather than binding
   // each field separately -- Hit Dice depends on class and level, which live in
@@ -9621,6 +9643,7 @@ function recalculateAll(root) {
   if (typeof renderPrimeRequisiteBonus === 'function') renderPrimeRequisiteBonus(root);
   if (typeof renderThiefSkills === 'function') renderThiefSkills(root);
   if (typeof renderThiefSkillsSection === 'function') renderThiefSkillsSection(root);
+  if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
   if (typeof renderTurnUndeadTable === 'function') renderTurnUndeadTable(root);
   if (typeof renderCurrentHP === 'function') renderCurrentHP(root);
   if (typeof renderHitDice === 'function') renderHitDice(root);
