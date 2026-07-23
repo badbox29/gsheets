@@ -705,20 +705,33 @@ const SHEET_HTML = `
         <!-- Ranger Stealth (PHB Table 18) -->
         <section class="section ranger-stealth-display" style="display:none;">
           <h3>Ranger Stealth</h3>
-          <div class="row" style="margin-top:8px">
-            <div class="col">
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;">
+            <div style="flex:1 1 220px;min-width:200px;padding:10px 12px;border:1px solid var(--success, #6fbf73);border-radius:4px;background:rgba(111,191,115,0.06);">
+              <div style="font-size:11px;font-weight:bold;letter-spacing:0.6px;text-transform:uppercase;color:var(--success, #6fbf73);margin-bottom:8px;">Natural Surroundings</div>
               <label>Hide in Shadows</label>
+              <input data-field="ranger_hide" type="text" readonly title="PHB Table 18, adjusted for race (Table 27) and Dexterity (Table 28). Applies in forest, hill, marsh and other wild terrain.">
+              <label style="margin-top:8px;">Move Silently</label>
+              <input data-field="ranger_movesilently" type="text" readonly title="PHB Table 18, adjusted for race (Table 27) and Dexterity (Table 28). Applies in forest, hill, marsh and other wild terrain.">
+            </div>
+            <div style="flex:1 1 220px;min-width:200px;padding:10px 12px;border:1px solid var(--warning, #e0a34a);border-radius:4px;background:rgba(224,163,74,0.06);">
+              <div style="font-size:11px;font-weight:bold;letter-spacing:0.6px;text-transform:uppercase;color:var(--warning, #e0a34a);margin-bottom:8px;">Non-natural &mdash; Halved</div>
+              <label>Hide in Shadows</label>
+              <input data-field="ranger_hide_nonnatural" type="text" readonly title="Halved in non-natural surroundings such as a musty crypt or city streets (PHB Ch.3, Ranger).">
+              <label style="margin-top:8px;">Move Silently</label>
+              <input data-field="ranger_move_nonnatural" type="text" readonly title="Halved in non-natural surroundings such as a musty crypt or city streets (PHB Ch.3, Ranger).">
+            </div>
+          </div>
               <input data-field="ranger_hide" type="text" readonly title="PHB Table 18, adjusted for race (Table 27) and Dexterity (Table 28). Applies in natural surroundings.">
             </div>
             <div class="col">
-              <label>Move Silently</label>
-              <input data-field="ranger_movesilently" type="text" readonly title="PHB Table 18, adjusted for race (Table 27) and Dexterity (Table 28). Applies in natural surroundings.">
+              <label>Hide in Shadows &mdash; Non-natural</label>
+              <input data-field="ranger_hide_nonnatural" type="text" readonly title="Halved in non-natural surroundings, such as a musty crypt or city streets (PHB Ch.3, Ranger).">
             </div>
           </div>
           <div class="row" style="margin-top:8px">
             <div class="col">
-              <label>Hide &mdash; Non-natural</label>
-              <input data-field="ranger_hide_nonnatural" type="text" readonly title="Halved in non-natural surroundings, such as a musty crypt or city streets (PHB Ch.3, Ranger).">
+              <label>Move Silently &mdash; Natural</label>
+              <input data-field="ranger_movesilently" type="text" readonly title="PHB Table 18, adjusted for race (Table 27) and Dexterity (Table 28). Applies in natural surroundings.">
             </div>
             <div class="col">
               <label>Move Silently &mdash; Non-natural</label>
