@@ -857,6 +857,8 @@ const SHEET_HTML = `
 			</div>
 			<!-- Specialist spell reminder (populated for specialist wizards only) -->
 			<div class="specialist-slot-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
+			<!-- Wisdom gate on 6th/7th-level priest spells (PHB Table 24 footnotes) -->
+			<div class="wis-gate-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
         </section>
 
 		<!-- Wisdom-based Modifiers -->
