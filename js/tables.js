@@ -1972,6 +1972,107 @@ function getThiefArmorAdjustments(root, isBard) {
            key: key, name: cat.name, illegal: cat.illegal };
 }
 
+// === Ranger stealth (PHB Table 18) ===
+// Format: [Hide in Shadows, Move Silently]. Table 18 stops at ranger 16 and
+// marks 99% "maximum attainable", so 17-20 hold at the 16th-level row.
+// These are NOT thief skills: the ranger text names Tables 27 (race) and 28
+// (Dexterity) as the only modifiers and does NOT reference Table 29, so the
+// thief's armor percentage adjustments do not apply. The ranger's armor rule
+// is binary instead -- see RANGER_STEALTH_MAX_ARMOR below.
+const RANGER_STEALTH = {
+  1:  [10, 15],  2:  [15, 21],  3:  [20, 27],  4:  [25, 33],
+  5:  [31, 40],  6:  [37, 47],  7:  [43, 55],  8:  [49, 62],
+  9:  [56, 70], 10:  [63, 78], 11:  [70, 86], 12:  [77, 94],
+  13: [85, 99], 14:  [93, 99], 15:  [99, 99], 16:  [99, 99],
+  17: [99, 99], 18:  [99, 99], 19:  [99, 99], 20:  [99, 99]
+};
+const RANGER_STEALTH_CAP = 99;   // Table 18: "maximum attainable"
+
+// Armor categories a ranger may still hide and move silently in. PHB: "Hiding
+// in shadows and moving silently are not possible in any armor heavier than
+// studded leather -- the armor is inflexible and makes too much noise."
+// Elven chain IS allowed. Despite being chain, it weighs 15 lb against studded
+// leather's 20 and permits Move 12 where studded leather drops to 9 -- so it is
+// not "heavier than studded leather" by any measure the book uses. The rule's
+// own stated reason (inflexible, too much noise) also fails to apply: elven
+// chain is described as lighter and quieter, and wizards can cast in it.
+const RANGER_STEALTH_MAX_ARMOR = ['none', 'leather', 'padded', 'elven'];
+
+// Which sub-class is the ranger? Half-elves may be fighter/ranger or
+// cleric/ranger, so multi-class has to be searched rather than assumed.
+function getRangerComponent(root) {
+  const charType = (val(root, 'char_type') || 'single').toLowerCase();
+  const isRanger = c => !!c && String(c).toLowerCase().includes('ranger');
+
+  if (charType === 'multi') {
+    for (let i = 1; i <= 3; i++) {
+      const c = val(root, 'mc_class' + i) || '';
+      if (isRanger(c)) return { clazz: c, level: parseInt(val(root, 'mc_level' + i) || 0, 10) };
+    }
+    return null;
+  }
+  if (charType === 'dual') {
+    const nw = { clazz: val(root, 'dc_new_class') || '',
+                 level: parseInt(val(root, 'dc_new_level') || 0, 10) };
+    const og = { clazz: val(root, 'dc_original_class') || '',
+                 level: parseInt(val(root, 'dc_original_level') || 0, 10) };
+    if (isRanger(nw.clazz)) return nw;
+    if (isRanger(og.clazz)) { og.dormant = nw.level <= og.level; return og; }
+    return null;
+  }
+  const clazz = val(root, 'clazz') || '';
+  if (isRanger(clazz)) return { clazz: clazz, level: parseInt(val(root, 'level') || 0, 10) };
+  return null;
+}
+
+// Full stealth picture for a ranger, or null if the character is not one.
+// Returns natural and non-natural figures -- the PHB halves the chance in
+// "non-natural surroundings (a musty crypt or city streets)" -- plus the armor
+// verdict, so the UI can show why the numbers are unavailable.
+function getRangerStealth(root) {
+  const comp = getRangerComponent(root);
+  if (!comp || !comp.level) return null;
+
+  const base = RANGER_STEALTH[Math.min(Math.max(comp.level, 1), 20)];
+  if (!base) return null;
+
+  // Race and Dexterity adjustments come from the THIEF tables (27 and 28),
+  // index 4 = Hide in Shadows, index 3 = Move Silently.
+  const race = (val(root, 'race') || '').trim().toLowerCase();
+  let racial = [0, 0, 0, 0, 0, 0, 0, 0];
+  if (typeof THIEF_RACIAL_ADJUSTMENTS !== 'undefined') {
+    for (const key in THIEF_RACIAL_ADJUSTMENTS) {
+      if (race.includes(key)) { racial = THIEF_RACIAL_ADJUSTMENTS[key]; break; }
+    }
+  }
+  const dex = parseInt(val(root, 'dex') || 9, 10);
+  const dexAdj = (typeof THIEF_DEX_ADJUSTMENTS !== 'undefined')
+    ? (THIEF_DEX_ADJUSTMENTS[dex] || [0, 0, 0, 0, 0]) : [0, 0, 0, 0, 0];
+
+  const clamp = v => Math.max(0, Math.min(RANGER_STEALTH_CAP, v));
+  const hide = clamp(base[0] + racial[4] + dexAdj[4]);
+  const move = clamp(base[1] + racial[3] + dexAdj[3]);
+
+  const armor = (typeof getThiefArmorCategory === 'function')
+    ? getThiefArmorCategory(root) : { key: 'none', name: 'No armor' };
+  const blocked = RANGER_STEALTH_MAX_ARMOR.indexOf(armor.key) === -1;
+
+  return {
+    level: comp.level,
+    dormant: !!comp.dormant,
+    base: base,
+    racial: [racial[4], racial[3]],
+    dex: [dexAdj[4], dexAdj[3]],
+    hide: hide,
+    move: move,
+    hideNonNatural: Math.floor(hide / 2),
+    moveNonNatural: Math.floor(move / 2),
+    armorName: armor.name,
+    armorKey: armor.key,
+    blocked: blocked
+  };
+}
+
 // Aliases
 CLASS_ABILITIES.warrior = CLASS_ABILITIES.fighter;
 CLASS_ABILITIES.priest = CLASS_ABILITIES.cleric;
