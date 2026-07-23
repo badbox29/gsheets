@@ -611,7 +611,62 @@ function getThac0(clazz, level) {
   return 20; // fallback
 }
 
+// Visible companion to the per-slot tooltips: explains why a priest's 6th- or
+// 7th-level slots are blank. Computed independently of renderSpellSlots' four
+// branches -- each of those returns early, so this is called at the top rather
+// than threaded through all of them.
+function renderWisGateNote(root) {
+  const noteEl = root.querySelector('.wis-gate-note');
+  if (!noteEl) return;
+  const hide = () => { noteEl.style.display = 'none'; noteEl.innerHTML = ''; };
+  if (typeof getPriestWisdomGateNotes !== 'function' ||
+      typeof getClassCategory !== 'function') { hide(); return; }
+
+  const wis = parseInt(val(root, 'wis') || 0, 10);
+  const charType = (val(root, 'char_type') || 'single').toLowerCase();
+  const isPriestClazz = c => c && getClassCategory(c) === 'priest';
+
+  // Resolve the priest sub-class and the level it is at.
+  let clazz = '', level = 0;
+  if (charType === 'multi') {
+    for (let i = 1; i <= 3; i++) {
+      const c = val(root, 'mc_class' + i) || '';
+      if (isPriestClazz(c)) { clazz = c; level = parseInt(val(root, 'mc_level' + i) || 0, 10); break; }
+    }
+  } else if (charType === 'dual') {
+    const nc = val(root, 'dc_new_class') || '', nl = parseInt(val(root, 'dc_new_level') || 0, 10);
+    const oc = val(root, 'dc_original_class') || '', ol = parseInt(val(root, 'dc_original_level') || 0, 10);
+    if (isPriestClazz(nc)) { clazz = nc; level = nl; }
+    else if (nl > ol && isPriestClazz(oc)) { clazz = oc; level = ol; }  // dormant original casts nothing
+  } else {
+    const c = val(root, 'clazz') || '';
+    if (isPriestClazz(c)) { clazz = c; level = parseInt(val(root, 'level') || 0, 10); }
+  }
+  if (!clazz || !level) { hide(); return; }
+
+  // RAW table row -- the gate notes need the ungated numbers to know whether
+  // this character would have had slots at those levels at all.
+  const table = (typeof getSpellTableForClass === 'function') ? getSpellTableForClass(clazz) : null;
+  const raw = table && table[level];
+  if (!raw) { hide(); return; }
+
+  const gated = getPriestWisdomGateNotes(raw, wis);
+  if (!gated.length) { hide(); return; }
+
+  const items = gated
+    .map(g => `<li>${g.level}th-level priest spells require Wisdom ${g.min}</li>`)
+    .join('');
+  noteEl.innerHTML =
+    '<strong>Spell levels locked by Wisdom (PHB Table 24)</strong>' +
+    '<ul style="margin:6px 0 0 18px;padding:0;">' + items + '</ul>' +
+    '<div style="margin-top:6px;">Your Wisdom is ' + (wis || '\u2014') +
+    '. These slots are not granted until it rises.</div>';
+  noteEl.style.color = 'var(--warning, #e0a34a)';
+  noteEl.style.display = '';
+}
+
 function renderSpellSlots(root) {
+  renderWisGateNote(root);
   const clazz = (val(root,"clazz")||"").toLowerCase();
   const level = parseInt(val(root,"level")||0);
   const charType = (val(root, "char_type") || "single").toLowerCase();
