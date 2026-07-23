@@ -192,6 +192,8 @@ const SHEET_HTML = `
 
         <!-- Specialist wizard requirements warning (advisory only, never blocks) -->
           <div class="specialist-validation-message" style="display:none;margin-top:8px;padding:8px;border-radius:4px;font-size:12px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
+        <!-- Illegal class-group combination warning (advisory; switchable off in Settings) -->
+          <div class="class-group-validation-message" style="display:none;margin-top:8px;padding:8px;border-radius:4px;font-size:12px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
         </section>
 
         <!-- Ability Scores -->
@@ -719,6 +721,8 @@ const SHEET_HTML = `
             <div class="col"><label>Climb Walls</label><input data-field="thief_climb" type="number" min="0" max="100" readonly></div>
             <div class="col"><label>Read Languages</label><input data-field="thief_readlang" type="number" min="0" max="100" readonly></div>
           </div>
+		  <!-- Dual-class dormancy advisory (advisory only, never blocks) -->
+		  <div class="thief-dormant-note" style="display:none;margin-top:10px;padding:8px;border-radius:4px;font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
 		  <!-- Armor effect on thief skills (PHB Table 29) -->
 		  <div class="thief-armor-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
 		  <!-- Hidden fields to store discretionary points allocated to each skill -->
