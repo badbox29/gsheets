@@ -4118,11 +4118,19 @@ function showSpellDetails(root, spell) {
   //   1. Above the character's max castable level (class progression / INT cap)
   //   2. In a specialist wizard's OPPOSITION schools (PHB Table 22) -- they may
   //      study opposition spells for reference but never learn them.
-  const levelCap = (typeof root._spellLevelCap === 'number') ? root._spellLevelCap : 99;
+  // Computed live rather than read from root._spellLevelCap: that cache went
+  // stale on any level change and defaulted to 99 -- blocking nothing at all --
+  // before the spell browser had rendered even once.
+  const levelCap = getMaxSpellLevel(root).max;
   const spellLevelNum = (typeof spell.level === 'number') ? spell.level : parseInt(spell.level, 10) || 0;
-  const overCap = spellLevelNum > levelCap;
+  const overCap = levelCap > 0 && spellLevelNum > levelCap;
 
-  const clazz = (val(root, 'clazz') || '');
+  // Resolve the WIZARD sub-class, not the top-level class field. A multi-class
+  // gnome fighter/illusionist has an empty clazz, so reading it directly meant
+  // opposition blocking silently never fired for the one specialist actually
+  // permitted to multi-class -- and for every dual-class specialist too.
+  const wizComp = (typeof getWizardComponent === 'function') ? getWizardComponent(root) : null;
+  const clazz = wizComp ? wizComp.clazz : (val(root, 'clazz') || '');
   const opposed = (typeof isOppositionSpell === 'function') && isOppositionSpell(spell, clazz);
 
   const blocked = overCap || opposed;
@@ -4397,6 +4405,80 @@ function renderSpecialistMemorizedStatus(root) {
 // single book, a set of books, a bundle of scrolls", so the limit is on spells
 // known, not per volume. Reports only; never blocks, matching the memorized
 // counter's behaviour when a caster over-memorizes.
+// Highest spell level a character can actually cast. TWO limits apply and the
+// lower wins: the class progression (a 5th-level mage has three spell levels
+// however clever he is) and PHB Table 4's Intelligence ceiling.
+//
+// Computed on demand, NOT cached. root._spellLevelCap was written only by
+// renderSpellBrowser -- which runs on the refresh button and the filter
+// controls but not on class, level or Intelligence changes -- so it went stale
+// the moment a level was edited, and defaulted to 99 (blocking nothing) before
+// the browser had ever rendered.
+//
+// KNOWN LIMITATION: for a multi-class caster this returns the best figure
+// across all classes. A cleric/mage browsing priest spells is therefore judged
+// by whichever side reaches higher. The browser already filters by class
+// access, so this is an approximation rather than a hole.
+function getMaxSpellLevel(root) {
+  const out = { max: 0, intCapped: false, clazz: '', level: 0 };
+
+  const charType = (val(root, 'char_type') || 'single').toLowerCase();
+  const pairs = [];
+  if (charType === 'multi') {
+    for (let i = 1; i <= 3; i++) {
+      const c = val(root, 'mc_class' + i) || '';
+      if (c) pairs.push({ clazz: c, level: parseInt(val(root, 'mc_level' + i) || 0, 10) });
+    }
+  } else if (charType === 'dual') {
+    const nc = val(root, 'dc_new_class') || '';
+    const oc = val(root, 'dc_original_class') || '';
+    if (nc) pairs.push({ clazz: nc, level: parseInt(val(root, 'dc_new_level') || 0, 10) });
+    if (oc) pairs.push({ clazz: oc, level: parseInt(val(root, 'dc_original_level') || 0, 10) });
+  } else {
+    const c = val(root, 'clazz') || '';
+    if (c) pairs.push({ clazz: c, level: parseInt(val(root, 'level') || 0, 10) });
+  }
+
+  const int = parseInt(val(root, 'int') || 0, 10);
+  const intRow = (typeof INT_TABLE !== 'undefined') ? INT_TABLE[int] : null;
+  const intMax = intRow ? (parseInt(intRow[4], 10) || 0) : 0;
+
+  pairs.forEach(p => {
+    const key = (p.clazz || '').trim().toLowerCase();
+    if (!key || !p.level || typeof SPELL_SLOTS_TABLES === 'undefined') return;
+
+    const isWiz  = (typeof isWizardClass === 'function') && isWizardClass(p.clazz);
+    const isBard = key.indexOf('bard') !== -1;
+
+    // Specialist school names are not keys in SPELL_SLOTS_TABLES -- they use
+    // the mage progression (PHB Ch.3).
+    let tbl = SPELL_SLOTS_TABLES[key];
+    if (!tbl && isWiz) tbl = SPELL_SLOTS_TABLES.mage;
+    const slots = tbl ? tbl[p.level] : null;
+    if (!slots) return;
+
+    let cap = 0;
+    for (let i = slots.length - 1; i >= 0; i--) {
+      if (slots[i] > 0) { cap = i + 1; break; }
+    }
+    if (!cap) return;
+
+    // Table 4 caps wizards AND bards -- both learn spells into books and both
+    // key off Intelligence. Priests are not affected.
+    let capped = false;
+    if (isWiz || isBard) {
+      if (intMax === 0)      { cap = 0; capped = true; }
+      else if (intMax < cap) { cap = intMax; capped = true; }
+    }
+
+    if (cap > out.max) {
+      out.max = cap; out.intCapped = capped; out.clazz = p.clazz; out.level = p.level;
+    }
+  });
+
+  return out;
+}
+
 function renderKnownSpellStatus(root) {
   const wrap = root.querySelector('.spellbook-known-status');
   const text = root.querySelector('.spellbook-known-text');
@@ -4411,15 +4493,9 @@ function renderKnownSpellStatus(root) {
   const rawCap = row ? row[2] : 0;
   const uncapped = (typeof rawCap === 'string');
   const cap = uncapped ? Infinity : (parseInt(rawCap, 10) || 0);
-  // Highest spell level this character may learn. Two limits apply and the
-  // lower wins: Table 4 column 5 (Intelligence) and the class progression
-  // (a 5th-level mage has only three spell levels regardless of Intelligence).
-  // renderSpellBrowser already computes exactly this and stashes it on
-  // root._spellLevelCap, so read that rather than recompute -- otherwise this
-  // counter could stay silent about a spell the browser itself refuses to add.
+  // Highest spell level this character may learn -- see getMaxSpellLevel.
   const intMaxLevel = row ? (parseInt(row[4], 10) || 0) : 0;
-  const browserCap = parseInt(root._spellLevelCap, 10);
-  const maxSpellLevel = (!isNaN(browserCap) && browserCap > 0) ? browserCap : intMaxLevel;
+  const maxSpellLevel = getMaxSpellLevel(root).max;
 
   if (!uncapped && cap <= 0) {
     // INT below 9 -- cannot be a wizard at all. The spell browser already
