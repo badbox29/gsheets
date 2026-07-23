@@ -4482,17 +4482,26 @@ function bindSheet(root, tab){
         renderEncumbrance(root);
         renderMovementRate(root);
       }
+      // Thief skills key off the armor NAME (PHB Table 29 matches on it), so a
+      // rename from "Leather Armor" to "Studded Leather" has to re-run them.
+      if (e.target.classList.contains('title')) {
+        if (typeof renderThiefSkills === 'function') renderThiefSkills(root);
+      }
     });
     // Separate listener for checkbox and select changes (use 'change' not 'input')
     armorList.addEventListener('change', (e) => {
       if (e.target.classList.contains('equipped')) {
         renderArmorClass(root);
         renderMovementRate(root);
+        if (typeof renderThiefSkills === 'function') renderThiefSkills(root);
       }
       // Also trigger for armor type dropdown changes
       if (e.target.classList.contains('armor-type')) {
         renderArmorClass(root);
         renderMovementRate(root);
+        // Only Armor-type items count as body armor for Table 29, so switching
+        // an item to or from "Shield" changes which piece the lookup finds.
+        if (typeof renderThiefSkills === 'function') renderThiefSkills(root);
       }
     });
   }
