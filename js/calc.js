@@ -967,18 +967,82 @@ function renderPrimeRequisiteBonus(root) {
   }
 }
 
+// Resolve which sub-class is the rogue. PHB Ch.3 permits only one class per
+// group, so no legal character has two rogue-group classes and first-match is
+// safe. Dual-class checks the NEW class first -- that is the one being actively
+// advanced, matching getWizardComponent's behaviour.
+// The predicate mirrors renderThiefSkillsSection's (app.js) so the panel's
+// visibility and its numbers can never disagree.
+function getRogueComponent(root) {
+  const charType = (val(root, 'char_type') || 'single').toLowerCase();
+  const isRogue = (c) => {
+    const s = (c || '').toLowerCase();
+    return !!s && (s.includes('thief') || s.includes('bard') ||
+                   s.includes('rogue') || s.includes('assassin'));
+  };
+
+  if (charType === 'multi') {
+    for (let i = 1; i <= 3; i++) {
+      const c = val(root, 'mc_class' + i) || '';
+      if (isRogue(c)) return { clazz: c, level: parseInt(val(root, 'mc_level' + i) || 0, 10) };
+    }
+    return null;
+  }
+
+  if (charType === 'dual') {
+    const nw = { clazz: val(root, 'dc_new_class') || '',
+                 level: parseInt(val(root, 'dc_new_level') || 0, 10) };
+    const og = { clazz: val(root, 'dc_original_class') || '',
+                 level: parseInt(val(root, 'dc_original_level') || 0, 10) };
+    if (isRogue(nw.clazz)) return nw;
+    if (isRogue(og.clazz)) {
+      og.dormant = nw.level <= og.level;   // former class, new one has not passed it yet
+      return og;
+    }
+    return null;
+  }
+
+  const clazz = val(root, 'clazz') || '';
+  if (isRogue(clazz)) return { clazz: clazz, level: parseInt(val(root, 'level') || 0, 10) };
+  return null;
+}
+
 function renderThiefSkills(root) {
-  const clazz = (val(root, "clazz") || "").trim().toLowerCase();
-  const level = parseInt(val(root, "level") || 1, 10);
   const race = (val(root, "race") || "").trim().toLowerCase();
   const dex = parseInt(val(root, "dex") || 9, 10);
-  
-  // Only calculate for thieves and bards
-  const isThief = clazz.includes("thief") || clazz.includes("rogue");
+
+  // Read the rogue component rather than clazz/level directly -- those are empty
+  // for a multi-class fighter/thief, which is why the panel rendered blank.
+  const rogue = (typeof getRogueComponent === 'function') ? getRogueComponent(root) : null;
+  const clazz = rogue ? (rogue.clazz || '').trim().toLowerCase() : '';
+  const level = rogue ? rogue.level : 0;
+
+  const isThief = clazz.includes("thief") || clazz.includes("rogue") || clazz.includes("assassin");
   const isBard = clazz.includes("bard");
-  
-  if (!isThief && !isBard) {
-    // Not a thief or bard, clear all fields
+
+  // Dual-class dormancy advisory. The PHB penalty for falling back on a former
+  // class is losing that adventure's experience, not being unable -- so the
+  // skills stay visible and this only warns.
+  const dormantEl = root.querySelector('.thief-dormant-note');
+  if (dormantEl) {
+    if (rogue && rogue.dormant) {
+      const escD = s => String(s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      dormantEl.innerHTML =
+        '<strong style="color:var(--warning, #e0a34a);">\u26A0 Dormant class</strong>' +
+        '<div style="margin-top:4px;">Your ' + escD(rogue.clazz) + ' levels are dormant until ' +
+        'your new class passes level ' + escD(String(rogue.level)) + '. These skills are shown ' +
+        'for reference \u2014 using a former class\u2019s abilities costs you the experience for ' +
+        'that adventure, so check with your DM before relying on them.</div>';
+      dormantEl.style.display = '';
+    } else {
+      dormantEl.style.display = 'none';
+      dormantEl.innerHTML = '';
+    }
+  }
+
+  if ((!isThief && !isBard) || !level) {
+    // Not a rogue, or no level recorded -- clear all fields and the armor note
     val(root, 'thief_pickpockets', '');
     val(root, 'thief_openlocks', '');
     val(root, 'thief_traps', '');
@@ -987,6 +1051,8 @@ function renderThiefSkills(root) {
     val(root, 'thief_detectnoise', '');
     val(root, 'thief_climb', '');
     val(root, 'thief_readlang', '');
+    const armorNoteEl0 = root.querySelector('.thief-armor-note');
+    if (armorNoteEl0) { armorNoteEl0.style.display = 'none'; armorNoteEl0.innerHTML = ''; }
     return;
   }
   
@@ -4343,6 +4409,34 @@ function renderSpecialistValidation(root) {
     problems.map(p => '<div style="margin-top:4px;">\u2022 ' + esc(p) + '</div>').join('') +
     '<div style="margin-top:6px;color:var(--muted);font-size:11px;">' +
       'Advisory only \u2014 nothing is blocked, and your DM may allow exceptions.</div>';
+  el.style.display = '';
+}
+
+// PHB Ch.3 allows only one class per group (warrior, wizard, priest, rogue), so
+// fighter/paladin, thief/bard and cleric/druid are illegal combinations.
+// Advisory only, and suppressible entirely via the classGroupLegality override
+// in Settings -- a DM may well have approved the combination.
+function renderClassGroupValidation(root) {
+  const el = root.querySelector('.class-group-validation-message');
+  if (!el) return;
+
+  const problems = (typeof validateClassGroups === 'function') ? validateClassGroups(root) : [];
+  if (!problems.length) {
+    el.style.display = 'none';
+    el.innerHTML = '';
+    return;
+  }
+
+  // Class names are free text, so escape before injecting.
+  const esc = s => String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  el.innerHTML =
+    '<strong style="color:var(--warning, #e0a34a);">\u26A0 Class combination (PHB Ch.3)</strong>' +
+    problems.map(p => '<div style="margin-top:4px;">\u2022 ' + esc(p) + '</div>').join('') +
+    '<div style="margin-top:6px;color:var(--muted);font-size:11px;">' +
+      'Advisory only \u2014 nothing is blocked. Switch this check off under ' +
+      'House Rules &amp; Overrides in Settings if your DM has approved it.</div>';
   el.style.display = '';
 }
 
