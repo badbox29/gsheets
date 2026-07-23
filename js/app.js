@@ -7455,6 +7455,9 @@ function syncSpellbookToData(root) {
 
   // Refresh specialist free-spell checkboxes + earned/used counts on every sync.
   if (typeof renderSpecialistSpellNotes === 'function') renderSpecialistSpellNotes(root);
+  // Spells-known counter: syncSpellbookToData is the central hook for every
+  // add / edit / remove path, so one call here covers them all.
+  if (typeof renderKnownSpellStatus === 'function') renderKnownSpellStatus(root);
 }
 
 // Load spells for a specific spellbook into UI
@@ -7488,6 +7491,7 @@ function loadSpellbookSpells(root, spellbookId) {
 
   // Refresh specialist free-spell checkboxes + used count for the loaded book.
   if (typeof renderSpecialistSpellNotes === 'function') renderSpecialistSpellNotes(root);
+  if (typeof renderKnownSpellStatus === 'function') renderKnownSpellStatus(root);
 }
 
 // Create a single spellbook tab element
