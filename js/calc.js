@@ -1014,6 +1014,14 @@ function renderThiefSkills(root) {
   if (typeof THIEF_DEX_ADJUSTMENTS !== 'undefined') {
     dexAdj = THIEF_DEX_ADJUSTMENTS[dex] || [0, 0, 0, 0, 0];
   }
+
+  // Get armor adjustments (PHB Table 29). Applies to all eight skills.
+  let armorAdj = [0, 0, 0, 0, 0, 0, 0, 0];
+  let armorInfo = { key: 'leather', name: 'Leather', illegal: false };
+  if (typeof getThiefArmorAdjustments === 'function') {
+    armorInfo = getThiefArmorAdjustments(root, isBard);
+    armorAdj = armorInfo.adj;
+  }
   
   // Get discretionary points allocated to each skill
   const pointsPP = parseInt(val(root, 'thief_points_pickpockets')) || 0;
@@ -1038,14 +1046,17 @@ function renderThiefSkills(root) {
   
   // For bards, only calculate PP, DN, CW, RL (indices 0, 5, 6, 7)
   // Other skills (OL, TR, MS, HI - indices 1, 2, 3, 4) are not accessible
-  const pickpockets = Math.max(0, Math.min(99, baseSkills[0] + racialAdj[0] + dexAdj[0] + pointsPP));
-  const openlocks = isBard ? '' : Math.max(0, Math.min(99, baseSkills[1] + racialAdj[1] + dexAdj[1] + pointsOL));
-  const traps = isBard ? '' : Math.max(0, Math.min(99, baseSkills[2] + racialAdj[2] + dexAdj[2] + pointsTR));
-  const movesilently = isBard ? '' : Math.max(0, Math.min(99, baseSkills[3] + racialAdj[3] + dexAdj[3] + pointsMS));
-  const hide = isBard ? '' : Math.max(0, Math.min(99, baseSkills[4] + racialAdj[4] + dexAdj[4] + pointsHI));
-  const detectnoise = Math.max(0, Math.min(99, baseSkills[5] + racialAdj[5] + pointsDN));
-  const climb = Math.max(0, Math.min(99, baseSkills[6] + racialAdj[6] + pointsCW));
-  const readlang = Math.max(0, Math.min(99, baseSkills[7] + racialAdj[7] + pointsRL));
+  // PHB Ch.3: "no skill can be raised above 95 percent, including all
+  // adjustments for Dexterity, race, and armor." The old ceiling here was 99.
+  const cap = (typeof THIEF_SKILL_MAX !== 'undefined') ? THIEF_SKILL_MAX : 95;
+  const pickpockets = Math.max(0, Math.min(cap, baseSkills[0] + racialAdj[0] + dexAdj[0] + armorAdj[0] + pointsPP));
+  const openlocks = isBard ? '' : Math.max(0, Math.min(cap, baseSkills[1] + racialAdj[1] + dexAdj[1] + armorAdj[1] + pointsOL));
+  const traps = isBard ? '' : Math.max(0, Math.min(cap, baseSkills[2] + racialAdj[2] + dexAdj[2] + armorAdj[2] + pointsTR));
+  const movesilently = isBard ? '' : Math.max(0, Math.min(cap, baseSkills[3] + racialAdj[3] + dexAdj[3] + armorAdj[3] + pointsMS));
+  const hide = isBard ? '' : Math.max(0, Math.min(cap, baseSkills[4] + racialAdj[4] + dexAdj[4] + armorAdj[4] + pointsHI));
+  const detectnoise = Math.max(0, Math.min(cap, baseSkills[5] + racialAdj[5] + armorAdj[5] + pointsDN));
+  const climb = Math.max(0, Math.min(cap, baseSkills[6] + racialAdj[6] + armorAdj[6] + pointsCW));
+  const readlang = Math.max(0, Math.min(cap, baseSkills[7] + racialAdj[7] + armorAdj[7] + pointsRL));
   
   // Set values
   val(root, 'thief_pickpockets', pickpockets);
@@ -1057,45 +1068,55 @@ function renderThiefSkills(root) {
   val(root, 'thief_climb', climb);
   val(root, 'thief_readlang', readlang);
   
-  // Add tooltips showing breakdown (including discretionary points)
-  const ppEl = root.querySelector('[data-field="thief_pickpockets"]');
-  if (ppEl) {
-    ppEl.title = `Base: ${baseSkills[0]}, Race: ${racialAdj[0] >= 0 ? '+' : ''}${racialAdj[0]}, DEX: ${dexAdj[0] >= 0 ? '+' : ''}${dexAdj[0]}, Points: +${pointsPP}`;
-  }
-  
-  const olEl = root.querySelector('[data-field="thief_openlocks"]');
-  if (olEl) {
-    olEl.title = isBard ? 'Not available to bards' : `Base: ${baseSkills[1]}, Race: ${racialAdj[1] >= 0 ? '+' : ''}${racialAdj[1]}, DEX: ${dexAdj[1] >= 0 ? '+' : ''}${dexAdj[1]}, Points: +${pointsOL}`;
-  }
-  
-  const trEl = root.querySelector('[data-field="thief_traps"]');
-  if (trEl) {
-    trEl.title = isBard ? 'Not available to bards' : `Base: ${baseSkills[2]}, Race: ${racialAdj[2] >= 0 ? '+' : ''}${racialAdj[2]}, DEX: ${dexAdj[2] >= 0 ? '+' : ''}${dexAdj[2]}, Points: +${pointsTR}`;
-  }
-  
-  const msEl = root.querySelector('[data-field="thief_movesilently"]');
-  if (msEl) {
-    msEl.title = isBard ? 'Not available to bards' : `Base: ${baseSkills[3]}, Race: ${racialAdj[3] >= 0 ? '+' : ''}${racialAdj[3]}, DEX: ${dexAdj[3] >= 0 ? '+' : ''}${dexAdj[3]}, Points: +${pointsMS}`;
-  }
-  
-  const hiEl = root.querySelector('[data-field="thief_hide"]');
-  if (hiEl) {
-    hiEl.title = isBard ? 'Not available to bards' : `Base: ${baseSkills[4]}, Race: ${racialAdj[4] >= 0 ? '+' : ''}${racialAdj[4]}, DEX: ${dexAdj[4] >= 0 ? '+' : ''}${dexAdj[4]}, Points: +${pointsHI}`;
-  }
-  
-  const dnEl = root.querySelector('[data-field="thief_detectnoise"]');
-  if (dnEl) {
-    dnEl.title = `Base: ${baseSkills[5]}, Race: ${racialAdj[5] >= 0 ? '+' : ''}${racialAdj[5]}, Points: +${pointsDN}`;
-  }
-  
-  const clEl = root.querySelector('[data-field="thief_climb"]');
-  if (clEl) {
-    clEl.title = `Base: ${baseSkills[6]}, Race: ${racialAdj[6] >= 0 ? '+' : ''}${racialAdj[6]}, Points: +${pointsCW}`;
-  }
-  
-  const rlEl = root.querySelector('[data-field="thief_readlang"]');
-  if (rlEl) {
-    rlEl.title = `Base: ${baseSkills[7]}, Race: ${racialAdj[7] >= 0 ? '+' : ''}${racialAdj[7]}, Points: +${pointsRL}`;
+  // Tooltip breakdown, built in one loop rather than eight near-identical blocks.
+  // DEX (Table 28) applies only to the first five skills; armor (Table 29)
+  // applies to all eight, though Read Languages is "--" in every column.
+  const SKILL_FIELDS = [
+    'thief_pickpockets', 'thief_openlocks', 'thief_traps', 'thief_movesilently',
+    'thief_hide', 'thief_detectnoise', 'thief_climb', 'thief_readlang'
+  ];
+  const skillPoints = [pointsPP, pointsOL, pointsTR, pointsMS, pointsHI, pointsDN, pointsCW, pointsRL];
+  const sgn = v => (v >= 0 ? '+' : '') + v;
+
+  SKILL_FIELDS.forEach((field, i) => {
+    const el = root.querySelector('[data-field="' + field + '"]');
+    if (!el) return;
+    if (isBard && i >= 1 && i <= 4) { el.title = 'Not available to bards'; return; }
+    const parts = ['Base: ' + baseSkills[i], 'Race: ' + sgn(racialAdj[i])];
+    if (i < 5) parts.push('DEX: ' + sgn(dexAdj[i]));
+    if (armorAdj[i] !== 0) parts.push('Armor (' + armorInfo.name + '): ' + sgn(armorAdj[i]));
+    parts.push('Points: +' + skillPoints[i]);
+    const total = baseSkills[i] + racialAdj[i] + (i < 5 ? dexAdj[i] : 0) + armorAdj[i] + skillPoints[i];
+    if (total > THIEF_SKILL_MAX) parts.push('capped at ' + THIEF_SKILL_MAX + '%');
+    el.title = parts.join(', ');
+  });
+
+  // Visible armor note (PHB Table 29). Silent when wearing leather, which is the
+  // baseline the Table 26 scores already assume and adjusts nothing.
+  const armorNoteEl = root.querySelector('.thief-armor-note');
+  if (armorNoteEl) {
+    if (armorInfo.key === 'leather' && !armorInfo.illegal) {
+      armorNoteEl.style.display = 'none';
+      armorNoteEl.innerHTML = '';
+    } else {
+      const labels = ['Pick Pockets','Open Locks','Find/Remove Traps','Move Silently',
+                      'Hide in Shadows','Detect Noise','Climb Walls','Read Languages'];
+      const shown = armorAdj
+        .map((v, i) => (v !== 0 && !(isBard && i >= 1 && i <= 4)) ? labels[i] + ' ' + sgn(v) + '%' : null)
+        .filter(Boolean);
+      let html = '<strong>Armor: ' + armorInfo.name + '</strong> (PHB Table 29)';
+      if (shown.length) html += '<div style="margin-top:4px;">' + shown.join(' &middot; ') + '</div>';
+      if (armorInfo.key === 'chain') {
+        html += '<div style="margin-top:4px;">Includes the additional \u22125% bards suffer in non-elven chain mail.</div>';
+      }
+      if (armorInfo.illegal) {
+        html += '<div style="margin-top:6px;color:var(--warning, #e0a34a);">This armor is heavier than your class may wear. ' +
+                'Table 29 does not cover it, so the worst column is applied \u2014 check with your DM.</div>';
+      }
+      armorNoteEl.innerHTML = html;
+      armorNoteEl.style.color = armorInfo.illegal ? '' : 'var(--muted)';
+      armorNoteEl.style.display = '';
+    }
   }
 }
 
