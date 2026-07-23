@@ -256,8 +256,17 @@ function combineSpellSlots(classData, wisdom) {
     if (!table || !table[level]) return; // Not a caster or invalid level
     
     sources.push(clazz);
-    const slots = table[level];
-    
+    let slots = table[level];
+
+    // PHB Table 24 footnotes: 6th-level priest spells require WIS 17+, 7th
+    // require WIS 18+. Gate applied PER CLASS, before the slots are summed --
+    // combinedSlots mixes wizard and priest levels in one array, so gating the
+    // total would wrongly strip a multi-classed mage's 6th/7th-level slots.
+    if (CLASS_CATEGORIES[normalized] === 'priest' &&
+        typeof applyPriestWisdomGate === 'function') {
+      slots = applyPriestWisdomGate(slots, wisdom);
+    }
+
     // Add base slots from this class
     for (let i = 0; i < slots.length && i < 9; i++) {
       const baseSlots = slots[i] || 0;
@@ -271,7 +280,12 @@ function combineSpellSlots(classData, wisdom) {
     // Add wisdom bonus spells for priests only
     const category = CLASS_CATEGORIES[normalized];
     if (category === 'priest' && wisdom >= 13) {
-      const wisBonus = WIS_BONUS_SPELLS[wisdom] || [0,0,0,0,0,0,0,0,0];
+      // Gated for the same reason as the base slots above. In practice this is
+      // a no-op -- the lowest Wisdom granting a bonus 6th-level spell is 23 and
+      // a bonus 7th is 25, both of which already clear the gate -- but it keeps
+      // the two paths consistent if Table 5 is ever edited.
+      const wisBonus = applyPriestWisdomGate(
+        WIS_BONUS_SPELLS[wisdom] || [0,0,0,0,0,0,0,0,0], wisdom);
       for (let i = 0; i < wisBonus.length && i < 9; i++) {
         if (wisBonus[i] > 0) {
           combinedSlots[i] += wisBonus[i];
