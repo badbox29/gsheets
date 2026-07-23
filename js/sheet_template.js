@@ -719,6 +719,8 @@ const SHEET_HTML = `
             <div class="col"><label>Climb Walls</label><input data-field="thief_climb" type="number" min="0" max="100" readonly></div>
             <div class="col"><label>Read Languages</label><input data-field="thief_readlang" type="number" min="0" max="100" readonly></div>
           </div>
+		  <!-- Armor effect on thief skills (PHB Table 29) -->
+		  <div class="thief-armor-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
 		  <!-- Hidden fields to store discretionary points allocated to each skill -->
           <input data-field="thief_points_pickpockets" type="hidden" value="0">
           <input data-field="thief_points_openlocks" type="hidden" value="0">
