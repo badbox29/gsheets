@@ -148,6 +148,43 @@ function renderHitDice(root) {
     el.value = derived;
     el.style.color = '';
   }
+
+  // PHB Table 3 footnotes ** / *** / ****: at very high Constitution every Hit
+  // Die roll has a floor. Shown as a visible note rather than a tooltip because
+  // it changes dice outcomes at the table and a tooltip is easy to miss.
+  // Keyed to CURRENT Constitution -- Table 3 says to always use the current
+  // score for hit point bonuses and penalties. con_initial is only for revivals.
+  const noteEl = root.querySelector('.hit-dice-note');
+  if (!noteEl) return;
+
+  const con   = parseInt(val(root, 'con') || 0, 10);
+  const floor = (typeof getMinHitDieRoll === 'function') ? getMinHitDieRoll(con) : 0;
+
+  if (!floor) {
+    noteEl.style.display = 'none';
+    noteEl.textContent = '';
+    return;
+  }
+
+  let msg = 'Constitution ' + con + ': every Hit Die you roll counts a result below '
+          + floor + ' as ' + floor + ' (PHB Table 3). The floor applies per die, and '
+          + 'not to the flat hit points gained once your class stops rolling Hit Dice.';
+
+  // If exactly one die size is in play, say what the floor actually does to it.
+  // Multi-class values list several dice, so the concrete note is skipped there
+  // rather than guessing which die it refers to.
+  const dice = (el.value || '').match(/d(\d+)/g) || [];
+  if (dice.length === 1) {
+    const sides = parseInt(dice[0].slice(1), 10);
+    if (floor >= sides) {
+      msg += ' Your d' + sides + ' can no longer roll below ' + sides
+           + ' -- every Hit Die is automatically maximum.';
+    }
+  }
+
+  noteEl.textContent = msg;
+  noteEl.style.color = 'var(--info, #6fb3d2)';
+  noteEl.style.display = '';
 }
 
 // Revivals remaining. PHB p.21: a character's STARTING Constitution is the
