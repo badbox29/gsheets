@@ -1186,6 +1186,84 @@ function renderThiefSkills(root) {
   }
 }
 
+// Ranger stealth (PHB Table 18). Separate from renderThiefSkills because the
+// rules differ: rangers take race and Dexterity adjustments but NOT the thief's
+// Table 29 armor percentages, and their armor rule is a binary gate instead.
+function renderRangerStealth(root) {
+  const section = root.querySelector('.ranger-stealth-display');
+  if (!section) return;
+
+  const s = (typeof getRangerStealth === 'function') ? getRangerStealth(root) : null;
+  if (!s) { section.style.display = 'none'; return; }
+  section.style.display = '';
+
+  // An em dash, not 0%: when armor blocks stealth the attempt is impossible,
+  // not merely certain to fail.
+  const DASH = '\u2014';
+  val(root, 'ranger_hide',             s.blocked ? DASH : s.hide + '%');
+  val(root, 'ranger_movesilently',     s.blocked ? DASH : s.move + '%');
+  val(root, 'ranger_hide_nonnatural',  s.blocked ? DASH : s.hideNonNatural + '%');
+  val(root, 'ranger_move_nonnatural',  s.blocked ? DASH : s.moveNonNatural + '%');
+
+  const sgn = v => (v >= 0 ? '+' : '') + v;
+  const setTip = (field, base, racial, dexA, halved) => {
+    const el = root.querySelector('[data-field="' + field + '"]');
+    if (!el) return;
+    if (s.blocked) { el.title = 'Not possible in this armor.'; return; }
+    let t = 'Base: ' + base + '% (Table 18, ranger level ' + s.level + '), Race: ' +
+            sgn(racial) + ', DEX: ' + sgn(dexA);
+    if (halved) t += ', halved for non-natural surroundings';
+    el.title = t;
+  };
+  setTip('ranger_hide',            s.base[0], s.racial[0], s.dex[0], false);
+  setTip('ranger_movesilently',    s.base[1], s.racial[1], s.dex[1], false);
+  setTip('ranger_hide_nonnatural', s.base[0], s.racial[0], s.dex[0], true);
+  setTip('ranger_move_nonnatural', s.base[1], s.racial[1], s.dex[1], true);
+
+  const esc = x => String(x)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  const noteEl = section.querySelector('.ranger-stealth-note');
+  if (noteEl) {
+    if (s.blocked) {
+      noteEl.innerHTML =
+        '<strong style="color:var(--warning, #e0a34a);">Stealth unavailable in ' +
+          esc(s.armorName) + '</strong>' +
+        '<div style="margin-top:4px;">Hiding in shadows and moving silently are not possible ' +
+        'in armor heavier than studded leather \u2014 it is inflexible and makes too much ' +
+        'noise (PHB Ch.3, Ranger).</div>';
+      noteEl.style.color = '';
+    } else {
+      let why = 'Studded leather or lighter, so stealth is available.';
+      if (s.armorKey === 'elven') {
+        why = 'Elven chain weighs less than studded leather and is described as lighter and ' +
+              'quieter, so it does not trip the ranger\u2019s armor restriction.';
+      }
+      noteEl.innerHTML =
+        '<strong>Armor: ' + esc(s.armorName) + '</strong>' +
+        '<div style="margin-top:4px;">' + why + ' The upper figures apply in natural ' +
+        'surroundings; use the halved ones in a crypt, dungeon or city street.</div>';
+      noteEl.style.color = 'var(--muted)';
+    }
+    noteEl.style.display = '';
+  }
+
+  const dormEl = section.querySelector('.ranger-stealth-dormant');
+  if (dormEl) {
+    if (s.dormant) {
+      dormEl.innerHTML =
+        '<strong style="color:var(--warning, #e0a34a);">\u26A0 Dormant class</strong>' +
+        '<div style="margin-top:4px;">Your ranger levels are dormant until your new class ' +
+        'passes level ' + esc(String(s.level)) + '. Shown for reference \u2014 using a former ' +
+        'class\u2019s abilities costs you the experience for that adventure.</div>';
+      dormEl.style.display = '';
+    } else {
+      dormEl.style.display = 'none';
+      dormEl.innerHTML = '';
+    }
+  }
+}
+
 function renderCoinWeight(root) {
   const cp = parseInt(val(root, "cp") || 0, 10);
   const sp = parseInt(val(root, "sp") || 0, 10);
