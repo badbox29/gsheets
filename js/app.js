@@ -3814,6 +3814,7 @@ function loadSheet(root, data){
 
   // === Force recalculation of dependent fields ===
   if (typeof renderSpecialistValidation === 'function') renderSpecialistValidation(root);
+  if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(root);
   renderSavingThrows(root);
   renderAttackMatrix(root);
   renderSpellSlots(root);
@@ -4601,12 +4602,14 @@ function bindSheet(root, tab){
            'mc_class1', 'mc_class2', 'mc_class3',
            'dc_new_class', 'dc_original_class'].indexOf(f) !== -1) {
         if (typeof renderSpecialistValidation === 'function') renderSpecialistValidation(root);
+        if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(root);
       }
     });
   });
 
   // Initial render
   if (typeof renderSpecialistValidation === 'function') renderSpecialistValidation(root);
+  if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(root);
   renderAttackMatrix(root);
   renderSavingThrows(root);
   renderSpellSlots(root);
@@ -5545,7 +5548,42 @@ function renderOptionalRules(root) {
 
   listEl.innerHTML = '';
 
-  Object.keys(OPTIONAL_RULES).forEach(key => {
+  // Group by category so PHB-optional rules and house-rule overrides read as
+  // different things. Entries with no category fall back to 'phb'.
+  const cats = (typeof OPTIONAL_RULES_CATEGORIES !== 'undefined') ? OPTIONAL_RULES_CATEGORIES : {};
+  const order = Object.keys(cats).length ? Object.keys(cats) : ['phb'];
+  const grouped = {};
+  Object.keys(OPTIONAL_RULES).forEach(k => {
+    const c = OPTIONAL_RULES[k].category || 'phb';
+    (grouped[c] = grouped[c] || []).push(k);
+  });
+
+  order.forEach(cat => {
+    const keys = grouped[cat];
+    if (!keys || !keys.length) return;
+    const meta = cats[cat] || {};
+    // Only label the sections when there is more than one, or a lone group
+    // gets a redundant heading directly under the modal's own.
+    if (order.filter(c => grouped[c] && grouped[c].length).length > 1) {
+      const head = document.createElement('div');
+      head.style.cssText = 'margin:12px 0 6px;font-size:12px;font-weight:bold;color:var(--accent-light);';
+      head.textContent = meta.label || cat;
+      listEl.appendChild(head);
+      if (meta.blurb) {
+        const blurb = document.createElement('div');
+        blurb.style.cssText = 'font-size:10px;color:var(--muted);margin-bottom:8px;line-height:1.4;';
+        blurb.textContent = meta.blurb;
+        listEl.appendChild(blurb);
+      }
+    }
+    keys.forEach(key => renderOneOptionalRule(listEl, key));
+  });
+}
+
+// One checkbox row. Split out of renderOptionalRules so the grouping loop above
+// stays readable.
+function renderOneOptionalRule(listEl, key) {
+  {
     const rule = OPTIONAL_RULES[key];
 
     const wrap = document.createElement('div');
@@ -5577,9 +5615,11 @@ function renderOptionalRules(root) {
       // Recalculate every open tab -- these rules affect movement, combat, etc.
       document.querySelectorAll('.sheet-container').forEach(sheet => {
         if (typeof recalculateAll === 'function') recalculateAll(sheet);
+        // Advisory banners are not part of recalculateAll, so refresh them too.
+        if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(sheet);
       });
     });
-  });
+  }
 }
 
 function closeKvSettingsModal(root) {
