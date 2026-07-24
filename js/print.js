@@ -615,8 +615,12 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // Consumables count DOWN during play, and the quantity itself changes -- pick
   // up two arrows and any pre-drawn set of boxes is already wrong. So this is
   // just open space, sized for hash marks. Players tally the usual way.
+  // Sized for a few hand-written hash marks, and NO TALLER. This cell is empty,
+  // so whatever height it takes is imposed on every other cell in its row --
+  // at fontSize 9 with 3pt margins it was forcing ~17pt rows to hold ~7pt of
+  // text, and making data rows taller than the blank write-in rows beneath them.
   const tallyBoxes = () =>
-    ({ text: ' ', fontSize: 9, margin: [0, 3, 0, 3] });
+    ({ text: ' ', fontSize: 6, margin: [0, 2, 0, 2] });
 
   // === BASIC INFO ===
   const characterName = val(root, 'name') || '';
