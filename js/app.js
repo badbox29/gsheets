@@ -4892,7 +4892,7 @@ function bindSheet(root, tab){
     root.addEventListener(evt, (e) => {
       const f = e.target && e.target.getAttribute && e.target.getAttribute('data-field');
       if (!f) return;
-      if (['clazz', 'race', 'char_type', 'int', 'wis', 'con', 'cha', 'dex',
+      if (['clazz', 'race', 'char_type', 'str', 'int', 'wis', 'con', 'cha', 'dex',
            'mc_class1', 'mc_class2', 'mc_class3',
            'dc_new_class', 'dc_original_class'].indexOf(f) !== -1) {
         if (typeof renderSpecialistValidation === 'function') renderSpecialistValidation(root);
