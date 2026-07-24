@@ -2468,6 +2468,34 @@ function weaponSizeOptions(sel) {
   ).join('');
 }
 
+// Fill a weapon Group filter dropdown from WEAPON_GROUP_ORDER.
+//
+// Both browsers' option lists were written by hand and had drifted badly: the
+// Learn browser offered 9 of the 21 groups, the inventory browser 13, and both
+// carried phantom values ("Club/Mace", "Other") matching no weapon at all. A
+// missing group could not be filtered to; a phantom one silently returned an
+// empty list, which reads as "no such weapons exist" rather than as a bug.
+//
+// Generated from the one ordered list in tables.js so the two can never diverge
+// from each other or from the data again. REBUILDS rather than appends, so it
+// is idempotent and safe to call more than once.
+function populateWeaponGroupFilter(sel) {
+  if (!sel || typeof WEAPON_GROUP_ORDER === 'undefined') return;
+
+  // The two browsers word the leading option differently ("All Groups" vs
+  // "All Types"), so it is preserved rather than imposed.
+  const first    = sel.querySelector('option[value=""]');
+  const allLabel = first ? first.textContent : 'All Groups';
+  const current  = sel.value;
+
+  sel.innerHTML = '<option value="">' + allLabel + '</option>' +
+    WEAPON_GROUP_ORDER.map(g => '<option value="' + g + '">' + g + '</option>').join('');
+
+  // Keep the player's selection across a rebuild -- unless it was one of the
+  // phantom values, which have nothing to restore to.
+  if (current && WEAPON_GROUP_ORDER.indexOf(current) !== -1) sel.value = current;
+}
+
 // Which granular type a saved weapon record represents.
 //
 // Migration lives here rather than in loadSheet because every path that builds
@@ -5308,6 +5336,7 @@ function bindSheet(root, tab){
   
   const weaponInventoryTypeFilter = qs(root, '.weapon-inventory-type-filter');
   if (weaponInventoryTypeFilter) {
+    populateWeaponGroupFilter(weaponInventoryTypeFilter);
     weaponInventoryTypeFilter.addEventListener('change', () => renderWeaponInventoryBrowser(root));
   }
   
@@ -5406,6 +5435,7 @@ function bindSheet(root, tab){
   
   const weaponGroupFilter = qs(root, '.weapon-group-filter');
   if (weaponGroupFilter) {
+    populateWeaponGroupFilter(weaponGroupFilter);
     weaponGroupFilter.addEventListener('change', () => renderWeaponBrowser(root));
   }
   
