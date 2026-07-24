@@ -5050,8 +5050,15 @@ function bindSheet(root, tab){
       qs(root,'.weapons-list').appendChild(makeWeaponNode({}, ()=>{
         markUnsaved(tab,true,root);
         renderEncumbrance(root);
+        // Proficiency badges and the status stripe are painted as a side effect
+        // of renderCombatQuickReference, which walks every weapon row. Without
+        // this, editing a row's name or Type left its badge stale until
+        // something else happened to trigger a recalculation.
+        if (typeof renderCombatQuickReference === 'function') renderCombatQuickReference(root);
       }));
       markUnsaved(tab,true,root);
+      // A newly added row has no badge or stripe until something paints it.
+      if (typeof renderCombatQuickReference === 'function') renderCombatQuickReference(root);
     };
   }
 
