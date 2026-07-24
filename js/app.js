@@ -2451,7 +2451,10 @@ function weaponStrBonusOptions(selected, category, wtype) {
 // rather than free text because the notes field has historically collected
 // things like "num att 32", which is 3/2 written without the slash.
 function weaponAttacksOptions(sel) {
-  const vals = ['', '1', '3/2', '2', '5/2', '3'];
+  // PHB Table 35 needs 1/2, 4, 5 and 6 as well: a 1st-level heavy crossbow
+  // specialist fires once every two rounds, and a 13th-level dart specialist
+  // throws six times a round.
+  const vals = ['', '1/2', '1', '3/2', '2', '5/2', '3', '4', '5', '6'];
   return vals.map(v =>
     '<option value="' + v + '"' + (String(sel || '') === v ? ' selected' : '') + '>' +
     (v === '' ? 'Auto' : v) + '</option>'
