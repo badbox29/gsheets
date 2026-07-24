@@ -783,9 +783,10 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // reading nothing at all. The real classes are .title, .speed, .damage-sm,
   // .damage-l, .magic-bonus, .damage-type and .weapon-str-bonus.
   //
-  // Where the character record has no value, core_wp.json is consulted through
-  // lookupWeaponData() so a weapon the player typed by name still prints its
-  // book Size, Speed Factor and damage dice.
+  // Where the character record has no value, core_wp.json is consulted for the
+  // book Size, Speed Factor and damage dice. The row's stored weapon type key
+  // is what resolves that lookup, so this works for a weapon under any name;
+  // matching on the name itself is only the fallback for pre-migration rows.
   const weapons = [];
   const weaponNodes = root.querySelectorAll('.weapons-list .item');
 
@@ -807,7 +808,14 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     const name = (node.querySelector('.title')?.value || '').trim();
     if (!name) return;
 
-    const ref = (typeof lookupWeaponData === 'function') ? lookupWeaponData(name) : null;
+    // THE ANCHOR RULE: resolve the book row through the row's stored type key
+    // FIRST, so a flavour-named weapon prints the Size, speed factor and damage
+    // dice of whatever it actually is. lookupWeaponData is NAME-based and can
+    // only ever match a weapon the player named exactly as the book does, so it
+    // drops to being the fallback for rows saved before the type dropdown.
+    const typeKey = (node.querySelector('.weapon-wtype')?.value || '').trim();
+    const ref = ((typeof getWeaponTypeStats === 'function') ? getWeaponTypeStats(typeKey) : null)
+      || ((typeof lookupWeaponData === 'function') ? lookupWeaponData(name) : null);
     const magic = parseInt(node.querySelector('.magic-bonus')?.value, 10) || 0;
 
     // Speed: the row's own value wins, then the book. A magical bonus reduces
