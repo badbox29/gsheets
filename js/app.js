@@ -9733,6 +9733,7 @@ function recalculateAll(root) {
   if (typeof renderThiefSkills === 'function') renderThiefSkills(root);
   if (typeof renderThiefSkillsSection === 'function') renderThiefSkillsSection(root);
   if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
+  if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
   if (typeof renderTurnUndeadTable === 'function') renderTurnUndeadTable(root);
   if (typeof renderCurrentHP === 'function') renderCurrentHP(root);
   if (typeof renderHitDice === 'function') renderHitDice(root);
