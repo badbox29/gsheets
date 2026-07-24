@@ -1296,6 +1296,66 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       margin: [0, 0, 0, 5]
     });
 
+    // Druid Standing (PHB Ch.3). The six-of-each allotment is already reflected
+    // in the Slots row above -- collectSheet writes the on-screen totals -- so
+    // what prints here is the role, the surrendered XP, and how the bonus spell-
+    // level pool was allocated, none of which the slot grid can convey.
+    const druidClazz = String((sheet && sheet.clazz) || '').toLowerCase();
+    if (druidClazz.indexOf('druid') !== -1) {
+      const role  = String((sheet && sheet.druid_role) || '').toLowerCase();
+      const level = parseInt((sheet && sheet.level) || 0, 10);
+      // Match the app's derived-role logic: 15th is the Grand Druid, 17th+ a
+      // hierophant, when nothing is stored.
+      let effRole = role;
+      if (!effRole && !isNaN(level)) {
+        if (level > 16)      effRole = 'hierophant';
+        else if (level >= 15) effRole = 'grand';
+      }
+      const ROLE_LABELS = {
+        archdruid:  'Archdruid',
+        grand:      'Grand Druid',
+        hierophant: 'Hierophant (stepped down)'
+      };
+      const POOL_SIZE = { archdruid: 4, grand: 6 };
+
+      const roleLabel   = ROLE_LABELS[effRole] || '';
+      const surrendered = String((sheet && sheet.druid_surrendered_xp) || '').trim();
+
+      // Pool allocation, read from the six stored boxes. "3rd x2" costs 6.
+      const allocParts = [];
+      let spent = 0;
+      for (let i = 1; i <= 6; i++) {
+        const n = parseInt((sheet && sheet['druid_bonus_' + i]) || 0, 10) || 0;
+        if (n > 0) {
+          const ord = (i === 1) ? '1st' : (i === 2) ? '2nd' : (i === 3) ? '3rd' : (i + 'th');
+          allocParts.push(n > 1 ? (ord + ' \u00d7' + n) : ord);
+          spent += n * i;
+        }
+      }
+
+      // Only print the section when there is something role-specific to say.
+      if (roleLabel || surrendered || allocParts.length) {
+        spellAccessBlocks.push(subLabel('Druid Standing'));
+        if (roleLabel) {
+          spellAccessBlocks.push({ text: roleLabel, fontSize: 6, margin: [0, 0, 0, 2] });
+        }
+        const pool = POOL_SIZE[effRole];
+        if (pool) {
+          const allocText = allocParts.length ? allocParts.join(', ') : 'none allocated';
+          spellAccessBlocks.push({
+            text: 'Bonus spell levels: ' + spent + ' of ' + pool + ' allocated (' + allocText + ')',
+            fontSize: 6, margin: [0, 0, 0, 2]
+          });
+        }
+        if (surrendered) {
+          spellAccessBlocks.push({
+            text: 'Experience surrendered on stepping down: ' + surrendered,
+            fontSize: 6, margin: [0, 0, 0, 4]
+          });
+        }
+      }
+    }
+
     if (spheresList.length) {
       spellAccessBlocks.push(subLabel('Spheres of Access'));
       spellAccessBlocks.push({ text: spheresList.join(', '), fontSize: 6, margin: [0, 0, 0, 4] });
