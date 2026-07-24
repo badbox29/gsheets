@@ -1441,9 +1441,17 @@ function getWeaponSpecialization(root, weaponEl) {
   const category = q('.weapon-category');
   const group = q('.weapon-group');
 
-  const profs = root._weaponProfs || [];
+  // The Type dropdown stores a KEY ("sword_long"); weapon proficiencies are
+  // named in the book's style ("Sword, Long"). WEAPON_TYPES carries both, so
+  // resolve the key to its wpName rather than comparing the key to a name.
+  // The label ("Long Sword") is accepted too, defensively -- nothing should
+  // depend on which of the three spellings a record happens to hold.
+  const td = (typeof WEAPON_TYPES !== 'undefined') ? WEAPON_TYPES[wtype] : null;
   const norm = s => String(s || '').trim().toLowerCase();
-  const specialized = profs.some(p => p && p.specialized && norm(p.name) === norm(wtype));
+  const names = [td && td.wpName, td && td.label, wtype].filter(Boolean).map(norm);
+
+  const profs = root._weaponProfs || [];
+  const specialized = profs.some(p => p && p.specialized && names.indexOf(norm(p.name)) !== -1);
 
   return { specialized, wtype, category, group, level };
 }
