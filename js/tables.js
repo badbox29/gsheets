@@ -2002,7 +2002,25 @@ const CLASS_ABILITIES = {
     ],
     3: [{ name: "Identify Plants/Animals", notes: "Automatically identify plants, animals, pure water" }],
     7: [{ name: "Immunity", notes: "Immune to charm spells cast by woodland creatures" }],
-    12: [{ name: "Challenge", notes: "Must challenge and defeat higher-level druids to advance" }]
+    12: [{ name: "Challenge", notes: "Must challenge and defeat higher-level druids to advance" }],
+    // Hierophant powers (PHB Ch.3). Level-keyed, so they apply to any druid who
+    // reaches these levels -- but only a hierophant (a former Grand Druid who
+    // stepped down) can advance past 16th, so 17th+ are hierophant-only in
+    // practice. Beyond 15th a druid gains no new spells, acquiring these spell-
+    // like powers instead.
+    16: [
+      { name: "Extra Longevity", notes: "Lifespan extends by 10 years per experience level" },
+      { name: "Poison Immunity", notes: "Immune to all natural (ingested or insinuated) animal and vegetable poisons, including monster poisons; not mineral poisons or poison gas" },
+      { name: "Vigorous Health", notes: "No longer subject to the ability score adjustments for aging" },
+      { name: "Alter Appearance", notes: "Alter own appearance at will (1 round); height/weight +/-50%, apparent age childhood to extreme old age, any human or humanoid features. Not magical -- undetectable short of true seeing" }
+    ],
+    17: [
+      { name: "Hibernation", notes: "Can biologically hibernate; body slows to appear dead, aging ceases. Wakes at a preordained time or on a significant environmental change" },
+      { name: "Elemental Plane of Earth", notes: "Can enter, survive on, move about, and return from the Elemental Plane of Earth at will (transference takes 1 round)" }
+    ],
+    18: [{ name: "Elemental Plane of Fire", notes: "Can enter and survive in the Elemental Plane of Fire" }],
+    19: [{ name: "Elemental Plane of Water", notes: "Can enter and survive in the Elemental Plane of Water" }],
+    20: [{ name: "Elemental Plane of Air", notes: "Can enter and survive in the Elemental Plane of Air" }]
   },
   mage: {
     1: [{ name: "Spell Casting", notes: "Can cast wizard spells from spellbook" }],
