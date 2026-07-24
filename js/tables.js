@@ -2962,6 +2962,15 @@ const OPTIONAL_RULES = {
     category: 'override',
     default: true      // checked = the book's rule
   },
+  classAbilityMinimums: {
+    label:   'Warn when ability scores are below class minimums',
+    detail:  'PHB Table 13. Each class has minimum scores a character must meet to belong to ' +
+             'it -- a paladin needs Strength 12, Constitution 9, Wisdom 13 and Charisma 17, for ' +
+             'example. Specialist wizards are covered separately by Table 22. Advisory only; ' +
+             'nothing is blocked, and the PHB itself allows a DM to permit a reroll or a raise.',
+    category: 'override',
+    default: true
+  },
   classGroupLegality: {
     label:   'Warn on illegal class combinations',
     detail:  'PHB Ch.3 allows only one class from each group -- warrior, wizard, priest, rogue. ' +
@@ -3086,6 +3095,129 @@ function validateClassGroups(root) {
   });
 
   return problems;
+}
+
+// === Class ability minimums (PHB Table 13) ===
+// Specialist wizards read "Var" in every column -- their requirements live in
+// Table 22 and are handled by validateSpecialist(), so they are skipped here.
+// Table 13's asterisk marks OPTIONAL classes (paladin, ranger, specialist,
+// druid, bard) and notes that "Specialist includes illusionist" -- that is a
+// campaign-permission matter for the DM, not a score check, so it is not modelled.
+const CLASS_ABILITY_MINIMUMS = {
+  fighter: { str: 9 },
+  paladin: { str: 12, con: 9, wis: 13, cha: 17 },
+  ranger:  { str: 13, dex: 13, con: 14, wis: 14 },
+  mage:    { int: 9 },
+  cleric:  { wis: 9 },
+  druid:   { wis: 12, cha: 15 },
+  thief:   { dex: 9 },
+  bard:    { dex: 12, int: 13, cha: 15 }
+};
+const ABILITY_LABELS = {
+  str: 'Strength', dex: 'Dexterity', con: 'Constitution',
+  int: 'Intelligence', wis: 'Wisdom', cha: 'Charisma'
+};
+
+// Advisory only. The PHB's own remedy for failing these is asking the DM to
+// permit a reroll or a raised score -- a character-creation check, not
+// something that stops play, so nothing here blocks.
+function validateClassMinimums(root) {
+  const problems = [];
+  if (typeof isOptionalRule === 'function' && !isOptionalRule('classAbilityMinimums')) return problems;
+
+  const charType = (val(root, 'char_type') || 'single').toLowerCase();
+  const classes = [];
+  if (charType === 'multi') {
+    for (let i = 1; i <= 3; i++) {
+      const c = (val(root, 'mc_class' + i) || '').trim();
+      if (c) classes.push(c);
+    }
+  } else if (charType === 'dual') {
+    const oc = (val(root, 'dc_original_class') || '').trim();
+    const nc = (val(root, 'dc_new_class') || '').trim();
+    if (oc) classes.push(oc);
+    if (nc) classes.push(nc);
+  } else {
+    const c = (val(root, 'clazz') || '').trim();
+    if (c) classes.push(c);
+  }
+  if (!classes.length) return problems;
+
+  classes.forEach(clazz => {
+    const key = clazz.trim().toLowerCase();
+
+    // Specialists: Table 13 defers to Table 22, which validateSpecialist covers.
+    if (typeof SPECIALIST_WIZARDS !== 'undefined' && SPECIALIST_WIZARDS[key]) return;
+
+    // Exact match first, then longest-key substring so compound and homebrew
+    // names still resolve. Unrecognised classes say nothing at all.
+    let mins = CLASS_ABILITY_MINIMUMS[key];
+    if (!mins) {
+      const k = Object.keys(CLASS_ABILITY_MINIMUMS)
+        .sort((a, b) => b.length - a.length)
+        .find(kk => key.indexOf(kk) !== -1);
+      if (k) mins = CLASS_ABILITY_MINIMUMS[k];
+    }
+    if (!mins) return;
+
+    Object.keys(mins).forEach(stat => {
+      const score = parseInt(val(root, stat) || 0, 10);
+      if (!score) return;                       // blank score: nothing to judge yet
+      if (score < mins[stat]) {
+        problems.push(clazz + ' requires ' + ABILITY_LABELS[stat] + ' ' + mins[stat] +
+                      ' (PHB Table 13). This character has ' + score + '.');
+      }
+    });
+  });
+
+  return problems;
+}
+
+// === Warrior melee attacks per round (PHB Table 15) ===
+// WARRIORS ONLY -- the table is headed "Warrior Level" and the rule sits in the
+// warrior group description. Every other class stays at 1 melee attack per
+// round for its whole career.
+// MELEE ONLY. Missile weapons have separate rates of fire (PHB Table 45) which
+// are not derived from level.
+const WARRIOR_ATTACKS_PER_ROUND = [
+  { minLevel: 13, rate: '2'   },
+  { minLevel: 7,  rate: '3/2' },
+  { minLevel: 1,  rate: '1'   }
+];
+
+// Base melee attacks per round. Returns { rate, clazz, level, isWarrior }.
+// Non-warriors get '1'.
+function getBaseAttacksPerRound(root) {
+  const charType = (val(root, 'char_type') || 'single').toLowerCase();
+  const pairs = [];
+  if (charType === 'multi') {
+    for (let i = 1; i <= 3; i++) {
+      const c = val(root, 'mc_class' + i) || '';
+      if (c) pairs.push({ clazz: c, level: parseInt(val(root, 'mc_level' + i) || 0, 10) });
+    }
+  } else if (charType === 'dual') {
+    // Both sides count: a dual-class character retains his old class's combat
+    // ability, he merely forfeits the adventure's experience for using it.
+    const nc = val(root, 'dc_new_class') || '';
+    const oc = val(root, 'dc_original_class') || '';
+    if (nc) pairs.push({ clazz: nc, level: parseInt(val(root, 'dc_new_level') || 0, 10) });
+    if (oc) pairs.push({ clazz: oc, level: parseInt(val(root, 'dc_original_level') || 0, 10) });
+  } else {
+    const c = val(root, 'clazz') || '';
+    if (c) pairs.push({ clazz: c, level: parseInt(val(root, 'level') || 0, 10) });
+  }
+
+  let best = { rate: '1', clazz: '', level: 0, isWarrior: false };
+  pairs.forEach(p => {
+    const cat = (typeof getClassCategory === 'function') ? getClassCategory(p.clazz) : null;
+    if (cat !== 'warrior' || !p.level) return;
+    const row = WARRIOR_ATTACKS_PER_ROUND.find(r => p.level >= r.minLevel);
+    if (!row) return;
+    if (p.level > best.level) {
+      best = { rate: row.rate, clazz: p.clazz, level: p.level, isWarrior: true };
+    }
+  });
+  return best;
 }
 
 // === Specialist Wizards (AD&D 2E, PHB Ch.3, Table 22) ===
