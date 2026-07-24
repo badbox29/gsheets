@@ -1573,47 +1573,123 @@ function makeValuableNode(data={}, onChange){
   
   return el;
 }
+
 function makeArmorNode(data={}, onChange){
   const el = document.createElement('div');
   el.className = 'item';
   el.style.flexDirection = 'column';
   el.style.alignItems = 'stretch';
+
+  // Build the construction dropdown from ARMOR_TYPES / SHIELD_TYPES /
+  // WEARABLE_TYPES. THE POINT OF THIS FIELD: it is the anchor that ties a
+  // free-text name to the rules. "Gladiator Armor" or "Shadowsilk Wrap" are
+  // NAMES; the type is what Table 29, ranger stealth and the class
+  // restrictions actually read. Nothing parses the label -- the option VALUE
+  // is the key, so relabelling can never break a rule.
+  const opt = (v, lbl, sel) =>
+    '<option value="' + v + '"' + (sel === v ? ' selected' : '') + '>' + lbl + '</option>';
+  const cur = data.armorTypeKey || '';
+  let typeOpts = '<option value="">— select —</option>';
+  if (typeof ARMOR_TYPES !== 'undefined') {
+    typeOpts += '<optgroup label="Armor">';
+    Object.keys(ARMOR_TYPES).forEach(k => { typeOpts += opt(k, ARMOR_TYPES[k].label, cur); });
+    typeOpts += '</optgroup>';
+  }
+  if (typeof SHIELD_TYPES !== 'undefined') {
+    typeOpts += '<optgroup label="Shields">';
+    Object.keys(SHIELD_TYPES).forEach(k => { typeOpts += opt(k, SHIELD_TYPES[k].label, cur); });
+    typeOpts += '</optgroup>';
+  }
+  if (typeof WEARABLE_TYPES !== 'undefined') {
+    typeOpts += '<optgroup label="Other worn">';
+    Object.keys(WEARABLE_TYPES).forEach(k => { typeOpts += opt(k, WEARABLE_TYPES[k].label, cur); });
+    typeOpts += '</optgroup>';
+  }
+
+  const slots = ['Armor','Shield','Helmet','Bracers','Gauntlets','Boots','Cloak','Belt','Ring','Other'];
+  const slotOpts = slots.map(s => opt(s, s, data.armorType || 'Armor')).join('');
+
   el.innerHTML =
+    // --- Identity row: always visible, mirrors the weapon card ---
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div style="width:80px;text-align:center;">Equipped</div>' +
-      '<div style="flex:1;">Name</div>' +
-      '<div style="width:90px;text-align:center;">Type</div>' +
-      '<div style="width:70px;text-align:center;">Base AC</div>' +
-      '<div style="width:60px;text-align:center;">Magic</div>' +
-      '<div style="width:80px;text-align:center;">Weight (lbs)</div>' +
-      '<div style="width:70px;"></div>' + // Space for Remove button
+      '<div style="width:60px;text-align:center;">Equipped</div>' +
+      '<div style="flex:1;">Armor</div>' +
+      '<div style="flex:2;">Notes</div>' +
+      '<div style="width:148px;"></div>' +
     '</div>' +
-    '<div style="display:flex;align-items:stretch;gap:8px;">' +
-      '<label style="display:inline-flex;align-items:center;justify-content:center;margin:0;width:80px;">' +
-        '<input class="equipped" type="checkbox" '+(data.equipped?'checked':'')+' style="width:auto;">' +
-      '</label>' +
-      '<input class="title" placeholder="Name" value="'+(data.name||'')+'" style="flex:1">' +
-      '<select class="armor-type" style="width:90px;">' +
-        '<option value="Armor"'+(data.armorType==='Armor'?' selected':'')+'>Armor</option>' +
-        '<option value="Shield"'+(data.armorType==='Shield'?' selected':'')+'>Shield</option>' +
-        '<option value="Helmet"'+(data.armorType==='Helmet'?' selected':'')+'>Helmet</option>' +
-        '<option value="Bracers"'+(data.armorType==='Bracers'?' selected':'')+'>Bracers</option>' +
-        '<option value="Gauntlets"'+(data.armorType==='Gauntlets'?' selected':'')+'>Gauntlets</option>' +
-        '<option value="Boots"'+(data.armorType==='Boots'?' selected':'')+'>Boots</option>' +
-        '<option value="Cloak"'+(data.armorType==='Cloak'?' selected':'')+'>Cloak</option>' +
-        '<option value="Belt"'+(data.armorType==='Belt'?' selected':'')+'>Belt</option>' +
-        '<option value="Ring"'+(data.armorType==='Ring'?' selected':'')+'>Ring</option>' +
-        '<option value="Other"'+(data.armorType==='Other'?' selected':'')+'>Other</option>' +
-      '</select>' +
-      '<input class="base-ac" type="number" placeholder="" value="'+(data.baseAC||'')+'" style="width:70px;text-align:center;">' +
-      '<input class="ac-bonus" type="number" placeholder="" value="'+(data.acBonus||'')+'" style="width:60px;text-align:center;">' +
-      '<input class="weight" type="number" step="0.1" placeholder="" value="'+(data.weight||'')+'" style="width:80px;text-align:center;">' +
+    '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
+      '<input type="checkbox" class="equipped" '+(data.equipped?'checked':'')+' style="width:60px;margin:auto;">' +
+      '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1">' +
+      '<input class="notes" placeholder="" value="'+(data.notes||'')+'" style="flex:2">' +
+      '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
       '<button class="rm">Remove</button>' +
     '</div>' +
-    '<div style="margin-top:6px;">' +
-      '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Notes</label>' +
-      '<input class="notes" placeholder="" value="'+(data.notes||'')+'" style="width:100%">' +
+
+    '<div class="armor-details" style="display:none;">' +
+      '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
+        '<div style="flex:1;text-align:center;">Type</div>' +
+        '<div style="width:100px;text-align:center;">Worn As</div>' +
+        '<div style="width:70px;text-align:center;">Base AC</div>' +
+        '<div style="width:60px;text-align:center;">Magic</div>' +
+        '<div style="width:80px;text-align:center;">Weight (lbs)</div>' +
+      '</div>' +
+      '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
+        '<select class="armor-type" style="flex:1;">' + typeOpts + '</select>' +
+        '<select class="armor-slot" style="width:100px;">' + slotOpts + '</select>' +
+        '<input class="base-ac" type="number" placeholder="" value="'+(data.baseAC||'')+'" style="width:70px;text-align:center;">' +
+        '<input class="ac-bonus" type="number" placeholder="" value="'+(data.acBonus||'')+'" style="width:60px;text-align:center;">' +
+        '<input class="weight" type="number" step="0.1" placeholder="" value="'+(data.weight||'')+'" style="width:80px;text-align:center;">' +
+      '</div>' +
+      '<div class="armor-type-note" style="display:none;font-size:11px;line-height:1.4;padding:6px 8px;background:var(--glass);border-radius:4px;"></div>' +
     '</div>';
+
+  // Collapse/expand, same pattern as the weapon card.
+  const armorToggleBtn = el.querySelector('.toggle-details');
+  const armorDetails   = el.querySelector('.armor-details');
+  if (armorToggleBtn && armorDetails) {
+    armorToggleBtn.onclick = () => {
+      const open = armorDetails.style.display !== 'none';
+      armorDetails.style.display = open ? 'none' : 'block';
+      armorToggleBtn.textContent = open ? 'Details' : 'Hide';
+    };
+  }
+
+  // Picking a type PREFILLS AC and weight, but only into blank fields -- an
+  // enchanted or homebrew piece keeps whatever the player typed. This is the
+  // autofill-not-authority rule: the stored type drives the rules either way.
+  const typeSel = el.querySelector('.armor-type');
+  const noteEl  = el.querySelector('.armor-type-note');
+  const applyTypeDefaults = (userInitiated) => {
+    const key = typeSel.value;
+    const d = (typeof ARMOR_TYPES !== 'undefined' && ARMOR_TYPES[key])
+           || (typeof SHIELD_TYPES !== 'undefined' && SHIELD_TYPES[key])
+           || (typeof WEARABLE_TYPES !== 'undefined' && WEARABLE_TYPES[key]) || null;
+    if (noteEl) {
+      if (d && d.defends) {
+        noteEl.textContent = d.defends;
+        noteEl.style.color = 'var(--muted)';
+        noteEl.style.display = '';
+      } else {
+        noteEl.style.display = 'none';
+        noteEl.textContent = '';
+      }
+    }
+    if (!d || !userInitiated) return;
+    const acEl = el.querySelector('.base-ac');
+    const wtEl = el.querySelector('.weight');
+    if (acEl && !acEl.value && typeof d.ac === 'number')     acEl.value = d.ac;
+    if (wtEl && !wtEl.value && typeof d.weight === 'number') wtEl.value = d.weight;
+    // Keep the wear slot consistent with the chosen type.
+    const slotEl = el.querySelector('.armor-slot');
+    if (slotEl) {
+      if (d.size) slotEl.value = 'Shield';
+      else if (d.slot) slotEl.value = d.slot;
+      else if (typeof ARMOR_TYPES !== 'undefined' && ARMOR_TYPES[key]) slotEl.value = 'Armor';
+    }
+  };
+  applyTypeDefaults(false);
+  typeSel.addEventListener('change', () => { applyTypeDefaults(true); onChange && onChange(); });
+
   el.querySelector('.rm').onclick = ()=>{
     // Capture the parent BEFORE removing -- afterwards el is detached and
     // closest() cannot find the sheet root.
@@ -1621,8 +1697,7 @@ function makeArmorNode(data={}, onChange){
     el.remove();
     onChange && onChange();
     // .remove() fires no input/change event, so the delegated armor listener
-    // never sees it. Deleting an equipped armor changes thief skills (PHB
-    // Table 29) and must recompute them explicitly.
+    // never sees it.
     if (sheetRoot && typeof renderThiefSkills === 'function') renderThiefSkills(sheetRoot);
     if (sheetRoot && typeof renderRangerStealth === 'function') renderRangerStealth(sheetRoot);
   };
@@ -1630,7 +1705,7 @@ function makeArmorNode(data={}, onChange){
     inp.addEventListener('input', ()=>onChange && onChange())
   );
   el.querySelector('.equipped').addEventListener('change', ()=>onChange && onChange());
-  el.querySelector('.armor-type').addEventListener('change', ()=>onChange && onChange());
+  el.querySelector('.armor-slot').addEventListener('change', ()=>onChange && onChange());
   return el;
 }
 
