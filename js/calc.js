@@ -1359,6 +1359,61 @@ function renderRangerStealth(root) {
   }
 }
 
+// Melee attacks per round (PHB Table 15), derived with manual override -- the
+// same pattern as Hit Dice: the readonly field shows the EFFECTIVE value and
+// tints amber when an override is in force, and the override field is what the
+// player types into.
+//
+// The Core tab is the home for this. The Combat Quick Ref box in the sidebar
+// mirrors the effective value and is made readonly, so there is exactly one
+// place to edit it and the two can never disagree.
+function renderAttacksPerRound(root) {
+  const autoEl = root.querySelector('[data-field="attacks_per_round_auto"]');
+  const manEl  = root.querySelector('[data-field="attacks_per_round_manual"]');
+  const quickEl = root.querySelector('.combat-attacks-per-round');
+  const noteEl = root.querySelector('.attacks-per-round-note');
+
+  const base = (typeof getBaseAttacksPerRound === 'function')
+    ? getBaseAttacksPerRound(root) : { rate: '1', isWarrior: false, clazz: '', level: 0 };
+
+  const override = manEl ? (manEl.value || '').trim() : '';
+  const effective = override || base.rate;
+
+  if (autoEl) {
+    autoEl.value = effective;
+    autoEl.style.color = override ? 'var(--warning, #e0a34a)' : '';
+  }
+
+  if (quickEl) {
+    // Mirror only. Editing lives on the Core tab now.
+    quickEl.value = effective;
+    quickEl.readOnly = true;
+    quickEl.style.color = override ? 'var(--warning, #e0a34a)' : '';
+    quickEl.title = 'Melee attacks per round. Edit on the Core tab under Combat.';
+  }
+
+  if (!noteEl) return;
+
+  // The note earns its place only when there is something to explain: an
+  // override in force, or a warrior who has actually risen above 1 per round.
+  if (override) {
+    noteEl.innerHTML =
+      'Manual override in effect (' + String(override).replace(/[<>&]/g, '') + '). ' +
+      'Table 15 would give ' + base.rate + ' for this character. Clear the override to return to it.';
+    noteEl.style.color = 'var(--warning, #e0a34a)';
+    noteEl.style.display = '';
+  } else if (base.isWarrior && base.rate !== '1') {
+    noteEl.textContent =
+      base.rate + ' melee attacks per round at ' + base.clazz + ' level ' + base.level +
+      ' (PHB Table 15). Missile weapons have their own rates of fire and are not affected.';
+    noteEl.style.color = 'var(--info, #6fb3d2)';
+    noteEl.style.display = '';
+  } else {
+    noteEl.style.display = 'none';
+    noteEl.textContent = '';
+  }
+}
+
 function renderCoinWeight(root) {
   const cp = parseInt(val(root, "cp") || 0, 10);
   const sp = parseInt(val(root, "sp") || 0, 10);
