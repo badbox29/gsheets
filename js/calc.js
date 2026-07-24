@@ -1235,7 +1235,7 @@ function renderRangerStealth(root) {
       noteEl.style.color = '';
     } else {
       let why = 'Studded leather or lighter, so stealth is available.';
-      if (s.armorKey === 'elven') {
+      if (s.armorKey === 'elven_chain') {
         why = 'Elven chain weighs less than studded leather and is described as lighter and ' +
               'quieter, so it does not trip the ranger\u2019s armor restriction.';
       }
