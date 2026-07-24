@@ -251,13 +251,18 @@ function resolveWeaponProficiency(root, rowEl) {
   // -- a flavour name now resolves to the Sword group instead of nothing at
   // all. The name is only read when no type has been set, i.e. legacy rows.
   //
-  // SCOPE NOTE: this fixes the GROUP fallback only. getWeaponProficiencyStatus
-  // still matches "proficient" on the weapon's NAME, so a proficiency in
-  // "Long Sword" will not recognise "Moon Hunter" as an exact match -- it will
-  // fall to "related" via the shared group. Closing that gap needs the granular
-  // type on the proficiency card as well, which belongs with the specialization
-  // work, since that is where per-weapon identity has to live anyway.
+  // Proficiency records carry type keys too now, so a key match on BOTH sides
+  // means the same specific weapon and reads as fully proficient. That is what
+  // lets a renamed weapon be recognised at all; matching on names never could.
+  // Group stays as the fallback wherever either side has no type set.
   const typeVal = typeEl ? typeEl.value : '';
+
+  // Pass a REAL key only. A pre-migration row still holds a coarse group here
+  // ("Sword"), which is not a WEAPON_TYPES key and must never be compared
+  // against one -- the two vocabularies look alike and are not interchangeable.
+  const weaponTypeKey = (typeof getWeaponTypeData === 'function' && getWeaponTypeData(typeVal))
+    ? typeVal : '';
+
   let weaponGroup = (typeof getWeaponGroup === 'function') ? getWeaponGroup(typeVal, '') : '';
   if (!weaponGroup) {
     const match = (typeof lookupWeaponData === 'function') ? lookupWeaponData(weaponName) : null;
@@ -267,7 +272,7 @@ function resolveWeaponProficiency(root, rowEl) {
   const override = statusEl ? (statusEl.value || 'auto') : 'auto';
 
   const status = (override === 'auto')
-    ? getWeaponProficiencyStatus(weaponName, weaponGroup, root._weaponProfs)
+    ? getWeaponProficiencyStatus(weaponName, weaponGroup, root._weaponProfs, weaponTypeKey)
     : override;
 
   const fullPenalty = getNonProfPenalty(root);
