@@ -1941,27 +1941,76 @@ const THIEF_SKILL_MAX = 95;
 // (thieves are limited to leather, studded, padded or elven chain; bards to
 // chain mail). Illegal armor falls back to the worst column and is reported,
 // never blocked.
+// Infer an ARMOR_TYPES key from a free-text armor name. Used ONLY as a
+// migration fallback for records saved before the type dropdown existed --
+// once armorTypeKey is set, the stored value always wins. Order matters:
+// longer, more specific names are tested first so "elven chain mail" cannot be
+// eaten by "chain" and "studded leather" cannot be eaten by "leather".
+const ARMOR_NAME_INFERENCE = [
+  ['elven chain',    'elven_chain'],
+  ['studded',        'studded'],
+  ['bronze plate',   'bronze_plate'],
+  ['field plate',    'field_plate'],
+  ['full plate',     'full_plate'],
+  ['plate mail',     'plate'],
+  ['banded',         'banded'],
+  ['splint',         'splint'],
+  ['brigandine',     'brigandine'],
+  ['scale',          'scale'],
+  ['ring mail',      'ring'],
+  ['chain',          'chain'],
+  ['hide',           'hide'],
+  ['padded',         'padded'],
+  ['leather',        'leather']
+];
+function inferArmorTypeKey(name) {
+  const n = (name || '').trim().toLowerCase();
+  if (!n) return '';
+  if (n === 'none') return 'none';
+  const hit = ARMOR_NAME_INFERENCE.find(pair => n.includes(pair[0]));
+  return hit ? hit[1] : '';
+}
+
+// Resolve the equipped body armor to a Table 29 column.
+// THE ANCHOR RULE: read the stored armorTypeKey. The name is only consulted
+// when that is blank, i.e. for records predating the dropdown -- which is why
+// a homebrew "Shadowsilk Wrap" now works as long as its Type is set.
+// Returns { key, typeKey, name, illegal }.
 function getThiefArmorCategory(root) {
   const items = Array.from(root.querySelectorAll('.armor-list .item'));
-  let worn = '';
+  let worn = '', typeKey = '';
   items.forEach(item => {
     const cb = item.querySelector('.equipped');
     if (!cb || !cb.checked) return;
-    const type = (item.querySelector('.armor-type') || {}).value || 'Armor';
-    if (type !== 'Armor') return;               // shields/rings/cloaks are not body armor
+    // .armor-slot is the wear location; fall back to .armor-type for records
+    // rendered by the pre-rewrite card, where that class held the slot.
+    const slotEl = item.querySelector('.armor-slot') || item.querySelector('.armor-type');
+    const slot = (slotEl || {}).value || 'Armor';
+    if (slot !== 'Armor') return;                 // shields and worn items are not body armor
     const name = ((item.querySelector('.title') || {}).value || '').trim();
-    if (name) worn = name;
+    const stored = item.querySelector('.armor-slot')
+      ? ((item.querySelector('.armor-type') || {}).value || '')
+      : '';
+    if (name || stored) {
+      worn = name;
+      typeKey = stored || inferArmorTypeKey(name);
+    }
   });
 
-  const n = worn.toLowerCase();
-  if (!worn || n === 'none')          return { key: 'none',    name: worn || 'No armor', illegal: false };
-  if (n.includes('elven chain'))      return { key: 'elven',   name: worn, illegal: false };
-  if (n.includes('studded') || n.includes('padded'))
-                                      return { key: 'padded',  name: worn, illegal: false };
-  if (n.includes('leather'))          return { key: 'leather', name: worn, illegal: false };
-  if (n.includes('chain'))            return { key: 'chain',   name: worn, illegal: false };
-  // Anything heavier is outside the table and outside what the class may wear.
-  return { key: 'padded', name: worn, illegal: true };
+  if (!typeKey) return { key: 'none', typeKey: 'none', name: worn || 'No armor', illegal: false };
+
+  const data = (typeof ARMOR_TYPES !== 'undefined') ? ARMOR_TYPES[typeKey] : null;
+  if (!data) return { key: 'none', typeKey: '', name: worn || 'No armor', illegal: false };
+
+  // thiefColumn null means the armor sits outside Table 29 entirely -- the
+  // worst column applies and it is flagged, never blocked.
+  const col = data.thiefColumn;
+  return {
+    key: col || 'padded',
+    typeKey: typeKey,
+    name: worn || data.label,
+    illegal: !col && typeKey !== 'none'
+  };
 }
 
 // The adjustment row for a character. Bards take the extra -5% in ordinary
@@ -2092,7 +2141,13 @@ const RANGER_STEALTH_CAP = 99;   // Table 18: "maximum attainable"
 // not "heavier than studded leather" by any measure the book uses. The rule's
 // own stated reason (inflexible, too much noise) also fails to apply: elven
 // chain is described as lighter and quieter, and wizards can cast in it.
-const RANGER_STEALTH_MAX_ARMOR = ['none', 'leather', 'padded', 'elven'];
+// Now keyed off ARMOR_TYPES entries rather than Table 29 column names, since
+// the stored armorTypeKey is the anchor. Studded leather is explicitly the
+// PHB's line ("not possible in any armor heavier than studded leather").
+// Elven chain qualifies on the numbers -- 15 lb and Move 12 against studded
+// leather's 25 lb and Move 9 -- and the rule's own stated reason (inflexible,
+// too much noise) does not apply to it either.
+const RANGER_STEALTH_MAX_ARMOR = ['none', 'padded', 'leather', 'studded', 'elven_chain'];
 
 // Which sub-class is the ranger? Half-elves may be fighter/ranger or
 // cleric/ranger, so multi-class has to be searched rather than assumed.
