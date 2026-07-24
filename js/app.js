@@ -818,12 +818,40 @@ function renderSpellSlots(root) {
   // Base slots
   let slots = table[level] ? [...table[level]] : Array(9).fill(0);
 
-  // Hard whitelist for Wisdom bonuses: cleric & druid only
+ // Grand Druid allotment (PHB Ch.3): from 15th level a druid "knows six spells
+  // of each level, instead of the normal spell progression". Replaces the Table
+  // 24 row entirely, BEFORE the Wisdom bonus and gate are applied on top.
+  let druidAllotmentApplied = false;
+  if (typeof applyGrandDruidAllotment === 'function') {
+    const afterAllotment = applyGrandDruidAllotment(slots, clazz, level);
+    if (afterAllotment !== slots) { slots = afterAllotment; druidAllotmentApplied = true; }
+  }
+
+  // Hard whitelist for Wisdom bonuses: cleric & druid only. The Grand Druid's
+  // Table 5 bonus is a separate grant from Wisdom, not part of the "normal spell
+  // progression" the allotment replaces, so it still stacks on top.
   let appliedBonus = null;
   if ((clazz.includes("cleric") || clazz.includes("druid")) && WIS_BONUS_SPELLS[wis]) {
     const bonus = WIS_BONUS_SPELLS[wis];
     slots = slots.map((s,i) => s + bonus[i]);
     appliedBonus = bonus;
+  }
+
+  // Druid bonus spell-level pool (Grand Druid 6, archdruid 4). A pool spent as
+  // whole spells, folded into the slot row. MUST precede the Wisdom gate so a
+  // level spent on a 6th-level spell by a WIS 16 druid is zeroed like any other.
+  let druidBonusAlloc = null;
+  if (typeof getDruidRole === 'function' && isDruidClass(clazz)) {
+    const role = getDruidRole(clazz, level, val(root, 'druid_role'));
+    const pool = getDruidBonusPool(role);
+    if (pool > 0) {
+      const alloc = [];
+      for (let i = 1; i <= 9; i++) alloc[i-1] = parseInt(val(root, 'druid_bonus_' + i) || 0, 10) || 0;
+      if (typeof getDruidBonusSpent === 'function' && getDruidBonusSpent(alloc) > 0) {
+        slots = applyDruidBonusSpells(slots, alloc);
+        druidBonusAlloc = alloc;
+      }
+    }
   }
 
   // PHB Table 24 footnotes: 6th-level priest spells are usable only with WIS 17+
@@ -3026,6 +3054,14 @@ function collectSheet(root){
     hit_dice_manual: val(root,'hit_dice_manual'),
     con_initial: val(root,'con_initial'),
     deaths_to_date: val(root,'deaths_to_date'),
+    druid_role: val(root,'druid_role'),
+    druid_surrendered_xp: val(root,'druid_surrendered_xp'),
+    druid_bonus_1: val(root,'druid_bonus_1'),
+    druid_bonus_2: val(root,'druid_bonus_2'),
+    druid_bonus_3: val(root,'druid_bonus_3'),
+    druid_bonus_4: val(root,'druid_bonus_4'),
+    druid_bonus_5: val(root,'druid_bonus_5'),
+    druid_bonus_6: val(root,'druid_bonus_6'),
     ac: val(root,'ac'),
 	ac_manual: val(root,'ac_manual'),
     str: val(root,'str'),
@@ -3652,8 +3688,16 @@ function loadSheet(root, data){
   val(root,'hp',m.hp||'');
   val(root,'damage_taken',m.damage_taken||'');
   val(root,'hit_dice_manual',m.hit_dice_manual||'');
-  val(root,'con_initial',m.con_initial||'');
-  val(root,'deaths_to_date',m.deaths_to_date||'');
+	val(root,'con_initial',m.con_initial||'');
+	val(root,'deaths_to_date',m.deaths_to_date||'');
+	val(root,'druid_role',m.druid_role||'');
+	val(root,'druid_surrendered_xp',m.druid_surrendered_xp||'');
+	val(root,'druid_bonus_1',m.druid_bonus_1||'');
+	val(root,'druid_bonus_2',m.druid_bonus_2||'');
+	val(root,'druid_bonus_3',m.druid_bonus_3||'');
+	val(root,'druid_bonus_4',m.druid_bonus_4||'');
+	val(root,'druid_bonus_5',m.druid_bonus_5||'');
+	val(root,'druid_bonus_6',m.druid_bonus_6||'');
   val(root,'ac',m.ac||'');
   val(root,'ac_manual',m.ac_manual||'');
   val(root,'str',m.str||'');
