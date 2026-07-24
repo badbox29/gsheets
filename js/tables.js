@@ -1975,6 +1975,99 @@ function getThiefArmorAdjustments(root, isBard) {
            key: key, name: cat.name, illegal: cat.illegal };
 }
 
+// === Armor construction types (PHB Ch.6 equipment list + Table 46) ===
+// THE ANCHOR: this is the source of truth for how a piece of armor behaves.
+// core_armor.json is only a convenience that prefills these when the player
+// picks a known armor by name -- once a record exists, every rule reads the
+// stored type, never the name. That is what lets "Gladiator Armor" or
+// "Shadowsilk Wrap" resolve correctly: those are NAMES, this is the TYPE.
+//
+// ac / weight verified against the printed equipment list and Table 46.
+// Movement is deliberately absent -- the PHB movement table has not been
+// audited yet, and core_armor.json already carried three weight errors
+// (studded leather 20 vs 25, great helm 15 vs 10, basinet 8 vs 5).
+//
+// thiefColumn maps to THIEF_ARMOR_ADJUSTMENTS. null means the armor is outside
+// Table 29 entirely, so the worst column applies. 'leather' is the baseline the
+// Table 26 base scores already assume, hence all zeros.
+const ARMOR_TYPES = {
+  none:         { label: 'None',              ac: 10, weight:  0, thiefColumn: 'none',    rangerStealth: true,  metal: false },
+  padded:       { label: 'Padded',            ac:  8, weight: 10, thiefColumn: 'padded',  rangerStealth: true,  metal: false },
+  leather:      { label: 'Leather',           ac:  8, weight: 15, thiefColumn: 'leather', rangerStealth: true,  metal: false },
+  studded:      { label: 'Studded Leather',   ac:  7, weight: 25, thiefColumn: 'padded',  rangerStealth: true,  metal: true  },
+  ring:         { label: 'Ring Mail',         ac:  7, weight: 30, thiefColumn: null,      rangerStealth: false, metal: true  },
+  hide:         { label: 'Hide',              ac:  6, weight: 30, thiefColumn: null,      rangerStealth: false, metal: false },
+  brigandine:   { label: 'Brigandine',        ac:  6, weight: 35, thiefColumn: null,      rangerStealth: false, metal: true  },
+  scale:        { label: 'Scale Mail',        ac:  6, weight: 40, thiefColumn: null,      rangerStealth: false, metal: true  },
+  chain:        { label: 'Chain Mail',        ac:  5, weight: 40, thiefColumn: 'chain',   rangerStealth: false, metal: true  },
+  elven_chain:  { label: 'Elven Chain Mail',  ac:  5, weight: 15, thiefColumn: 'elven',   rangerStealth: true,  metal: true  },
+  banded:       { label: 'Banded Mail',       ac:  4, weight: 35, thiefColumn: null,      rangerStealth: false, metal: true  },
+  splint:       { label: 'Splint Mail',       ac:  4, weight: 40, thiefColumn: null,      rangerStealth: false, metal: true  },
+  bronze_plate: { label: 'Bronze Plate Mail', ac:  4, weight: 45, thiefColumn: null,      rangerStealth: false, metal: true  },
+  plate:        { label: 'Plate Mail',        ac:  3, weight: 50, thiefColumn: null,      rangerStealth: false, metal: true  },
+  field_plate:  { label: 'Field Plate',       ac:  2, weight: 60, thiefColumn: null,      rangerStealth: false, metal: true  },
+  full_plate:   { label: 'Full Plate',        ac:  1, weight: 70, thiefColumn: null,      rangerStealth: false, metal: true  }
+};
+
+// === Shields (PHB Ch.6) ===
+// Size and material on one dropdown, but the KEY carries the facts -- nothing
+// parses the label, so relabelling can never break a rule. The PHB does not
+// distinguish wooden from metal shields anywhere except the druid restriction,
+// and gives no price or weight difference, so material is a flag only.
+// NOTE the PHB's size rule: "reference to the size of the shield is relative to
+// the character. A human's small shield would have all the effects of a medium
+// shield used by a gnome." Not modelled -- surfaced as a note if it matters.
+const SHIELD_TYPES = {
+  buckler_wood:  { label: 'Buckler, wooden', size: 'buckler', wooden: true,  weight:  3, defends: 'One attack per round, of your choice' },
+  buckler_metal: { label: 'Buckler, metal',  size: 'buckler', wooden: false, weight:  3, defends: 'One attack per round, of your choice' },
+  small_wood:    { label: 'Small, wooden',   size: 'small',   wooden: true,  weight:  5, defends: 'Two frontal attacks; the hand may carry items but not weapons' },
+  small_metal:   { label: 'Small, metal',    size: 'small',   wooden: false, weight:  5, defends: 'Two frontal attacks; the hand may carry items but not weapons' },
+  medium_wood:   { label: 'Medium, wooden',  size: 'medium',  wooden: true,  weight: 10, defends: 'Any frontal or flank attacks' },
+  medium_metal:  { label: 'Medium, metal',   size: 'medium',  wooden: false, weight: 10, defends: 'Any frontal or flank attacks' },
+  body_wood:     { label: 'Body, wooden',    size: 'body',    wooden: true,  weight: 15, defends: 'Front and front flank only; +1 melee, +2 vs missiles. Very heavy.' },
+  body_metal:    { label: 'Body, metal',     size: 'body',    wooden: false, weight: 15, defends: 'Front and front flank only; +1 melee, +2 vs missiles. Very heavy.' }
+};
+
+// === Other worn items ===
+// Only the SLOT matters for rules: PHB Ch.3 multi-class thief text says he
+// "must remove his gauntlets to open locks and his helmet to detect noise."
+// It does not qualify by material, so any gauntlets and any helmet count.
+const WEARABLE_TYPES = {
+  helmet_leather:  { label: 'Helmet, leather cap', slot: 'Helmet',    weight:  1, metal: false },
+  helmet_coif:     { label: 'Helmet, padded coif', slot: 'Helmet',    weight:  1, metal: false },
+  helmet_basinet:  { label: 'Helmet, basinet',     slot: 'Helmet',    weight:  5, metal: true  },
+  helmet_metal:    { label: 'Helmet, metal helm',  slot: 'Helmet',    weight: 10, metal: true  },
+  helmet_great:    { label: 'Helmet, great helm',  slot: 'Helmet',    weight: 10, metal: true  },
+  gauntlets_leather:{ label:'Gauntlets, leather',  slot: 'Gauntlets', weight:  1, metal: false },
+  gauntlets_metal: { label: 'Gauntlets, metal',    slot: 'Gauntlets', weight:  2, metal: true  },
+  boots_soft:      { label: 'Boots, soft leather', slot: 'Boots',     weight:  3, metal: false },
+  boots_hard:      { label: 'Boots, hard leather', slot: 'Boots',     weight:  4, metal: false },
+  boots_metal:     { label: 'Boots, metal-shod',   slot: 'Boots',     weight:  5, metal: true  },
+  cloak:           { label: 'Cloak',               slot: 'Cloak',     weight:  3, metal: false },
+  bracers:         { label: 'Bracers',             slot: 'Bracers',   weight:  1, metal: false },
+  belt:            { label: 'Belt',                slot: 'Belt',      weight:  1, metal: false }
+};
+
+// === Class armor restrictions (PHB Ch.3) ===
+// null means no restriction. Keys are ARMOR_TYPES keys.
+// Druid is RAW: "only 'natural' armors -- leather armor and wooden shields...
+// All other armors are forbidden to him." The wider padded/leather/hide list is
+// a HOUSE RULE behind the druidArmorRestriction override, which DEFAULTS ON
+// (= the book's rule), per the "tool ships RAW" principle.
+const CLASS_ARMOR_ALLOWED = {
+  wizard:  [],                                                    // no armor at all
+  thief:   ['none', 'leather', 'studded', 'padded', 'elven_chain'],
+  bard:    ['none', 'padded', 'leather', 'studded', 'ring', 'hide',
+            'brigandine', 'scale', 'chain', 'elven_chain'],        // "up to and including chain mail"
+  druid:   ['none', 'leather'],
+  cleric:  null,
+  warrior: null
+};
+const DRUID_ARMOR_HOUSE = ['none', 'padded', 'leather', 'hide'];
+
+function getArmorTypeData(key) { return ARMOR_TYPES[key] || null; }
+function getShieldTypeData(key) { return SHIELD_TYPES[key] || null; }
+
 // === Ranger stealth (PHB Table 18) ===
 // Format: [Hide in Shadows, Move Silently]. Table 18 stops at ranger 16 and
 // marks 99% "maximum attainable", so 17-20 hold at the 16th-level row.
