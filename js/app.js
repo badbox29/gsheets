@@ -2644,7 +2644,8 @@ function makeWeaponNode(data={}, onChange){
             ? getWeaponGroup(wTypeKey, wTypeKey)
             : wTypeKey) +
       '</select>' +
-      '<select class="weapon-prof-status" style="width:120px;" title="' +
+      '<div style="display:flex;flex-direction:column;width:120px;min-width:0;">' +
+        '<select class="weapon-prof-status" style="width:100%;" title="' +
         'Proficiency with this weapon (PHB Table 34 penalty column).&#10;' +
         'Auto: derived from your Weapon Proficiencies, using the PHB&#10;' +
         '  related-weapons list. Related weapons cost HALF the penalty.&#10;' +
@@ -2653,13 +2654,19 @@ function makeWeaponNode(data={}, onChange){
         '  PHB list omits (e.g. short sword vs long sword).&#10;' +
         'Not Proficient: force the full penalty.">' +
         weaponProficiencyOptions(data.profStatus) +
-      '</select>' +
+        '</select>' +
+        // The badge is this dropdown's OUTPUT, so it belongs under it rather
+        // than orphaned at the foot of the card. Living in a FIXED-WIDTH column
+        // with min-width:0 it is structurally incapable of widening the card --
+        // which is what crushed the sidebar when it was a flex:1 sibling.
+        // min-height reserves its line so the card does not twitch as the badge
+        // appears and clears; the ellipsis is a safety net, since the longest
+        // status ("Not Proficient (-5)" for a wizard) only just fits.
+        '<div class="weapon-prof-badge" style="font-size:11px;margin-top:4px;' +
+          'min-height:14px;text-align:center;white-space:nowrap;overflow:hidden;' +
+          'text-overflow:ellipsis;"></div>' +
       '</div>' +
-    // On its own line, not as a flex:1 column. As a flex item its min-width was
-    // auto, so once it carried text it could not shrink and pushed the card
-    // wider than its grid column -- which is what was crushing the sidebar.
-    // Full width suits it better anyway: it is a status note, not a column.
-    '<div class="weapon-prof-badge" style="font-size:11px;margin-top:6px;min-height:14px;"></div>' +
+    '</div>' +
   '</div>';
   // Details toggle. Weapons carry four rows of fields now -- eight weapons
   // expanded is an unreadable wall -- so everything but the identity row is
