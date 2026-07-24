@@ -2618,7 +2618,10 @@ function makeWeaponNode(data={}, onChange){
       '<div style="width:120px;text-align:center;">Proficiency</div>' +
       '<div style="flex:1;"></div>' +
     '</div>' +
-    '<div style="display:flex;align-items:stretch;gap:8px;">' +
+    // flex-start, not stretch: the Proficiency column is a stack (select plus
+    // its badge caption) and under stretch every other control grew to match
+    // its height. Each control keeps its natural height instead.
+    '<div style="display:flex;align-items:flex-start;gap:8px;">' +
       '<select class="weapon-category" style="width:120px;">' +
         weaponCategoryOptions(data.category) +
       '</select>' +
