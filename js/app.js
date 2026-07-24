@@ -3687,8 +3687,15 @@ function loadSheet(root, data){
   // The Core tab override is the field players edit now. Migrate any value from
   // the old sidebar box on first load so nothing entered before this change is
   // silently lost -- the sidebar is a readonly mirror from here on.
+  // Migrate ONLY from records saved before the Core-tab field existed. Testing
+  // for undefined rather than falsy is essential: a new record stores '' when
+  // there is no override, and `||` would fall through to attacks_per_round --
+  // which now holds the EFFECTIVE value, so every load would copy the derived
+  // number into the override field and permanently flag a manual override.
   val(root, 'attacks_per_round_manual',
-      m.attacks_per_round_manual || m.attacks_per_round || '');
+      (m.attacks_per_round_manual !== undefined)
+        ? m.attacks_per_round_manual
+        : (m.attacks_per_round || ''));
   if (typeof renderAttacksPerRound === 'function') renderAttacksPerRound(root);
 
   // Skills lists
