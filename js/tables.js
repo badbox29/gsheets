@@ -937,6 +937,79 @@ function getSpecializationCost(group) {
   return 1;                    // melee weapons and crossbows
 }
 
+// === Specialist attacks per round (PHB Table 35) ===
+// Three level bands: 1-6, 7-12, 13+. Replaces Table 15's rate for the
+// SPECIALIZED weapon only -- every other weapon still uses the Table 15 base.
+// The book writes these as "3/2", "1/1", "4/1" etc; the "/1" forms are just
+// whole numbers and are normalised here to match the Attacks/Rd dropdown.
+// BOW SPECIALISTS GAIN NO EXTRA ATTACKS -- the PHB says so outright, and bows
+// have no column in the table. They get point-blank range instead.
+const WEAPON_SPECIALIST_ATTACKS = {
+  melee:        ['3/2', '2',   '5/2'],
+  lightXbow:    ['1',   '3/2', '2'  ],
+  heavyXbow:    ['1/2', '1',   '3/2'],
+  thrownDagger: ['3',   '4',   '5'  ],
+  thrownDart:   ['4',   '5',   '6'  ],
+  otherMissile: ['3/2', '2',   '5/2']
+  // bow: intentionally absent
+};
+
+// Point-blank range, granted to BOW AND CROSSBOW specialists only (PHB Ch.5).
+// +2 to hit, no extra damage. Strength applies for bows, magic for both.
+const POINT_BLANK_RANGE = { bow: '6-30 ft', crossbow: '6-60 ft' };
+
+// Which Table 35 column a weapon uses. Returns a key of
+// WEAPON_SPECIALIST_ATTACKS, 'bow' (no extra attacks), or null.
+// `wtype` is the weapon card's Type dropdown value -- the weapon's mechanical
+// identity regardless of what the player has named it.
+function getSpecialistWeaponColumn(wtype, category, group) {
+  const t = (wtype || '').trim().toLowerCase();
+  const c = (category || '').trim().toLowerCase();
+  const g = (group || '').trim().toLowerCase();
+
+  if (g === 'bow')      return 'bow';               // no extra attacks
+  if (g === 'crossbow') {
+    // Table 35 lists only Light and Heavy. Hand crossbow rides with light.
+    return t.indexOf('heavy') !== -1 ? 'heavyXbow' : 'lightXbow';
+  }
+
+  // Thrown columns apply only when the weapon is actually being thrown.
+  // "Melee/Thrown" weapons like the dagger use the MELEE column in melee.
+  const thrown = c === 'thrown';
+  if (thrown && g === 'dagger') return 'thrownDagger';
+  if (thrown && g === 'dart')   return 'thrownDart';
+  if (thrown || c === 'ranged') return 'otherMissile';
+
+  return 'melee';
+}
+
+// Attacks per round for a SPECIALIZED weapon. Returns null when the character
+// cannot specialize, the rule is off, or the weapon is a bow.
+function getSpecialistAttackRate(fighterLevel, wtype, category, group) {
+  const lvl = parseInt(fighterLevel, 10);
+  if (!lvl || lvl < 1) return null;
+
+  const col = getSpecialistWeaponColumn(wtype, category, group);
+  const row = WEAPON_SPECIALIST_ATTACKS[col];
+  if (!row) return null;                             // bow, or unknown column
+
+  const band = lvl >= 13 ? 2 : (lvl >= 7 ? 1 : 0);
+  return row[band];
+}
+
+// Combat bonuses from specialization. MELEE ONLY gets +1/+2; bow and crossbow
+// specialists get point-blank range instead and no flat bonuses.
+// PHB: "The attack bonuses are not magical and do not enable the character to
+// affect a creature that can be injured only by magical weapons."
+function getSpecialistCombatBonuses(wtype, category, group) {
+  const col = getSpecialistWeaponColumn(wtype, category, group);
+  if (col === 'melee') return { hit: 1, damage: 2, pointBlank: null };
+  if (col === 'bow')       return { hit: 0, damage: 0, pointBlank: POINT_BLANK_RANGE.bow };
+  if (col === 'lightXbow' || col === 'heavyXbow')
+                           return { hit: 0, damage: 0, pointBlank: POINT_BLANK_RANGE.crossbow };
+  return { hit: 0, damage: 0, pointBlank: null };    // thrown and other missiles
+}
+
 // === Racial Languages (AD&D 2E, PHB Chapter 2 racial descriptions) ===
 // `native`  : the character's native tongue. FREE -- costs no proficiency slot
 //             and does NOT count against the Intelligence language cap.
@@ -2943,7 +3016,13 @@ const OPTIONAL_RULES = {
     detail:  'PHB Table 56. Weapon speed is added to the initiative roll (low roll wins). ' +
              'Magical bonuses reduce speed factor by 1 per plus, minimum 0.',
     category: 'phb',
-    default: true      // Chris's table uses this
+    // DEFAULTS POLICY: 'phb' entries ship OFF -- the book presents them as
+    // additions to the base game, so ticking one is always the departure.
+    // This mirrors 'override' entries, which ship ON because there the book's
+    // rule is the default and unticking is the departure. Either way the
+    // shipped state is the book as written, and no default reflects any one
+    // table's house habits.
+    default: false
   },
   encumbrancePenalties: {
     label:   'Encumbrance affects movement and combat',
@@ -2961,6 +3040,16 @@ const OPTIONAL_RULES = {
              'Advisory only; nothing is ever blocked.',
     category: 'override',
     default: true      // checked = the book's rule
+  },
+  weaponSpecialization: {
+    label:   'Weapon specialization',
+    detail:  'PHB Ch.5, an optional rule. A SINGLE-CLASS FIGHTER may specialize in one weapon ' +
+             '-- not rangers, paladins, multi-class or dual-class characters. Costs 2 proficiency ' +
+             'slots for a melee weapon or crossbow, 3 for any other bow. Melee specialists gain ' +
+             '+1 to hit and +2 damage; bow and crossbow specialists gain a point-blank range ' +
+             'category instead. Extra attacks come from Table 35, except for bows, which gain none.',
+    category: 'phb',
+    default: false
   },
   classAbilityMinimums: {
     label:   'Warn when ability scores are below class minimums',
