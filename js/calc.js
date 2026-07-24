@@ -4762,14 +4762,24 @@ function addSpellToSpellbook(root, spell) {
 // The slot ARITHMETIC lives in renderSpellSlots (app.js) -- this function owns
 // the CONTROL and its readout, not the totals.
 function renderDruidRole(root) {
-  const section = root.querySelector('.druid-role-section');
-  if (!section) return;
+  // The Druid Standing controls now live on TWO tabs: the role dropdown, the
+  // surrendered-XP field and the advisory note are on Abilities
+  // (.druid-standing-section), and the bonus spell-level pool is on Magic
+  // (.druid-slots-section). Each is shown/hidden on its own so a druid without
+  // a pool still sees the role controls, and neither is a descendant of the
+  // other -- pool inputs are queried against root, not a shared section.
+  const standing = root.querySelector('.druid-standing-section');
+  const slotsSec = root.querySelector('.druid-slots-section');
+  if (!standing && !slotsSec) return;
 
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  const hide = () => { section.style.display = 'none'; };
+  const hideAll = () => {
+    if (standing) standing.style.display = 'none';
+    if (slotsSec) slotsSec.style.display = 'none';
+  };
 
-  if (typeof isDruidClass !== 'function' || !isDruidClass(val(root, 'clazz'))) { hide(); return; }
-  section.style.display = '';
+  if (typeof isDruidClass !== 'function' || !isDruidClass(val(root, 'clazz'))) { hideAll(); return; }
+  if (standing) standing.style.display = '';
 
   const level      = parseInt(val(root, 'level') || 0, 10);
   const storedRole = val(root, 'druid_role');
@@ -4778,7 +4788,7 @@ function renderDruidRole(root) {
 
   // Advisory campaign notes (single-in-the-world, level cap, hierophant-only
   // 17th+). Plus the one state the rules forbid: a hierophant below 16th level.
-  const noteEl = section.querySelector('.druid-role-note');
+  const noteEl = standing ? standing.querySelector('.druid-role-note') : null;
   if (noteEl) {
     let notes = (typeof getDruidRoleNotes === 'function')
       ? getDruidRoleNotes(val(root, 'clazz'), level, role) : [];
@@ -4797,16 +4807,13 @@ function renderDruidRole(root) {
     }
   }
 
-  // Bonus spell-level pool. Shown only when the role grants one.
-  const poolWrap = section.querySelector('.druid-bonus-pool');
-  const pool     = (typeof getDruidBonusPool === 'function') ? getDruidBonusPool(role) : 0;
-  if (!poolWrap) return;
-
-  if (pool <= 0) {
-    poolWrap.style.display = 'none';
-    return;
-  }
-  poolWrap.style.display = '';
+  // Bonus spell-level pool. The whole Magic-tab section is shown only when the
+  // role grants a pool; an ordinary druid or a stepped-down hierophant sees no
+  // pool section at all.
+  const pool = (typeof getDruidBonusPool === 'function') ? getDruidBonusPool(role) : 0;
+  if (!slotsSec) return;
+  if (pool <= 0) { slotsSec.style.display = 'none'; return; }
+  slotsSec.style.display = '';
 
   // Disable any pool input for a spell level the WIS gate locks (6th needs 17,
   // 7th needs 18). The pool has no 7th box, so only the 6th can be gated here,
@@ -4814,7 +4821,7 @@ function renderDruidRole(root) {
   // ever changes. A gated box is zeroed and disabled with an explanatory title.
   const alloc = [];
   for (let i = 1; i <= 6; i++) {
-    const box = section.querySelector('[data-field="druid_bonus_' + i + '"]');
+    const box = slotsSec.querySelector('[data-field="druid_bonus_' + i + '"]');
     if (!box) { alloc[i-1] = 0; continue; }
     const gateMin = (typeof PRIEST_SPELL_LEVEL_WIS_MIN !== 'undefined')
       ? PRIEST_SPELL_LEVEL_WIS_MIN[i] : undefined;
@@ -4832,7 +4839,7 @@ function renderDruidRole(root) {
   }
 
   // Running total: "N of POOL spell levels allocated", red when over budget.
-  const readout = section.querySelector('.druid-bonus-readout');
+  const readout = slotsSec.querySelector('.druid-bonus-readout');
   if (readout) {
     const spent = (typeof getDruidBonusSpent === 'function') ? getDruidBonusSpent(alloc) : 0;
     const over  = spent > pool;
