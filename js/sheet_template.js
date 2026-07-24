@@ -707,6 +707,31 @@ const SHEET_HTML = `
 
     <div class="vtab-content" data-vtab="abilities">
       <main class="card">
+        <!-- Grand Druid / Archdruid / Hierophant standing (PHB Ch.3). Hidden by
+             default; renderDruidRole() reveals it for druids. The bonus spell-
+             level pool this governs lives on the Magic tab (Bonus Spell Levels). -->
+        <section class="section druid-standing-section" style="display:none;">
+          <h3>Druid Standing</h3>
+          <div class="row">
+            <div class="col">
+              <label>Role</label>
+              <select data-field="druid_role">
+                <option value="">Ordinary druid</option>
+                <option value="archdruid">Archdruid (+4 spell levels)</option>
+                <option value="grand">Grand Druid (+6 spell levels)</option>
+                <option value="hierophant">Hierophant (stepped down)</option>
+              </select>
+            </div>
+            <div class="col">
+              <label>Surrendered XP</label>
+              <input data-field="druid_surrendered_xp" type="number" min="0"
+                     placeholder="on stepping down">
+            </div>
+          </div>
+          <!-- Advisory campaign notes (single-in-the-world, level cap, etc.) -->
+          <div class="druid-role-note" style="display:none;margin-top:8px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
+        </section>
+
         <!-- Ranger Stealth (PHB Table 18) -->
         <section class="section ranger-stealth-display" style="display:none;">
           <h3>Ranger Stealth</h3>
@@ -895,33 +920,16 @@ const SHEET_HTML = `
 			<div class="wis-gate-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
         </section>
 
-		<!-- Grand Druid / Archdruid / Hierophant (PHB Ch.3). Hidden by default;
-		     renderDruidRole() reveals it for druids only. -->
-		<section class="section druid-role-section" style="display:none;">
-		  <h3>Druid Standing</h3>
-		  <div class="row">
-			<div class="col">
-			  <label>Role</label>
-			  <select data-field="druid_role">
-				<option value="">Ordinary druid</option>
-				<option value="archdruid">Archdruid (+4 spell levels)</option>
-				<option value="grand">Grand Druid (+6 spell levels)</option>
-				<option value="hierophant">Hierophant (stepped down)</option>
-			  </select>
-			</div>
-			<div class="col">
-			  <label>Surrendered XP</label>
-			  <input data-field="druid_surrendered_xp" type="number" min="0"
-			         placeholder="on stepping down">
-			</div>
-		  </div>
-		  <!-- Advisory campaign notes (single-in-the-world, level cap, etc.) -->
-		  <div class="druid-role-note" style="display:none;margin-top:8px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
-
-		  <!-- Bonus spell-level pool. Shown only when the role grants one. -->
-		  <div class="druid-bonus-pool" style="display:none;margin-top:12px;">
+		<!-- Grand Druid / Archdruid bonus spell-level pool (PHB Ch.3). The role
+		     dropdown that governs this lives on the Abilities tab (Druid
+		     Standing); only the spell slots belong here. renderDruidRole()
+		     reveals this for a druid whose role grants a pool. -->
+		<section class="section druid-slots-section" style="display:none;">
+		  <h3>Bonus Spell Levels</h3>
+		  <div class="druid-bonus-pool">
 			<label style="display:block;margin-bottom:6px;">
-			  Bonus Spell Levels &mdash; allocate the pool across spell levels
+			  Allocate the pool across spell levels &mdash; set your role under
+			  Abilities &rarr; Druid Standing
 			</label>
 			<div class="row">
 			  <div class="col"><label>1st</label><input data-field="druid_bonus_1" type="number" min="0" value="0"></div>
