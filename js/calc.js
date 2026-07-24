@@ -491,12 +491,25 @@ function renderCombatQuickReference(root) {
       // These bonuses are NOT magical and do not let the weapon strike a
       // creature that can only be injured by magical weapons.
       let specBonus = null;
+      let specRate = null;
       if (weapon.specialized && typeof getSpecialistCombatBonuses === 'function') {
         specBonus = getSpecialistCombatBonuses(
           weapon.weaponTypeKey, weapon.category, weapon.wtype);
         hitBase += specBonus.hit;
         dmgBase += specBonus.damage;
+        // Table 35 replaces the Table 15 rate for the specialized weapon only.
+        // Returns null for bows, which gain no extra attacks.
+        if (typeof getSpecialistAttackRate === 'function') {
+          specRate = getSpecialistAttackRate(
+            weapon.specLevel, weapon.weaponTypeKey, weapon.category, weapon.wtype);
+        }
       }
+
+      // The character's Table 15 melee base, used when nothing more specific
+      // applies. Missile weapons have their own rates of fire (Table 45) which
+      // the app does not model, so this is a floor rather than an authority.
+      const baseRate = (typeof getBaseAttacksPerRound === 'function')
+        ? getBaseAttacksPerRound(root).rate : '1';
       const cat = (weapon.category || '').toLowerCase();
       // PHB Table 34: attack penalty for wielding a weapon you are not
       // proficient with. Related weapons cost half, rounded up.
@@ -555,6 +568,29 @@ function renderCombatQuickReference(root) {
         const dmg   = adj.damage + dmgBase;
         html += 'Missile: d20' + sign(toHit) + ' → ' + weapon.damageSM + dmgSign(dmg) +
                 ' / ' + weapon.damageL + dmgSign(dmg) + '<br>';
+      }
+
+      // Attacks per round for this weapon. An explicit dropdown selection wins;
+      // otherwise Table 35 for the specialized weapon, falling back to the
+      // character's Table 15 base.
+      const rateSrc = weapon.attacks ? 'set on the weapon card'
+                    : (specRate ? 'PHB Table 35, specialist' : 'PHB Table 15');
+      const rate = weapon.attacks || specRate || baseRate;
+      if (rate) {
+        html += '<span title="' + rateSrc + '">Attacks: ' + rate + '/round</span><br>';
+      }
+
+      if (specBonus && specBonus.pointBlank) {
+        html += '<span style="color:var(--info, #6fb3d2);" ' +
+                'title="Point-blank range is granted to bow and crossbow specialists only. ' +
+                'No extra damage. With the weapon already nocked or cocked and the target in ' +
+                'sight, you may fire at the start of the round before initiative is rolled.">' +
+                'Point blank ' + specBonus.pointBlank + ': +2 to hit</span><br>';
+      } else if (weapon.specialized && specBonus && specBonus.hit) {
+        html += '<span style="color:var(--info, #6fb3d2);" ' +
+                'title="Specialization bonuses are not magical and do not let this weapon ' +
+                'harm a creature that can only be injured by magical weapons.">' +
+                'Specialized: +1 hit, +2 damage (included above)</span><br>';
       }
 
       html += '</div>';
