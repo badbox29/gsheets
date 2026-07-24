@@ -2351,6 +2351,9 @@ function addWeaponFromInventoryBrowser(root, weapon) {
     if (activeTab) markUnsaved(activeTab, true, root);
     renderEncumbrance(root);
     renderMovementRate(root);
+    // Repaint proficiency badges and status stripes when any field on any
+    // weapon row changes -- they are a side effect of renderCombatQuickReference.
+    if (typeof renderCombatQuickReference === 'function') renderCombatQuickReference(root);
   });
   
   weaponsList.appendChild(newWeaponNode);
@@ -2362,6 +2365,11 @@ function addWeaponFromInventoryBrowser(root, weapon) {
   // Trigger encumbrance recalculation
   renderEncumbrance(root);
   renderMovementRate(root);
+  
+  // A browser-added weapon arrives with its name, category and granular type
+  // key already set, so it can be judged immediately -- there is no reason to
+  // make the player tick Equipped just to find out whether they can use it.
+  if (typeof renderCombatQuickReference === 'function') renderCombatQuickReference(root);
   
   // Visual feedback
   const addBtn = event?.target;
