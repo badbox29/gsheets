@@ -2117,6 +2117,103 @@ const DRUID_ARMOR_HOUSE = ['none', 'padded', 'leather', 'hide'];
 function getArmorTypeData(key) { return ARMOR_TYPES[key] || null; }
 function getShieldTypeData(key) { return SHIELD_TYPES[key] || null; }
 
+// Which armor types a given class may wear. Returns null for "no restriction".
+// CLASS_ARMOR_ALLOWED is keyed by a mix of specific classes and groups, because
+// the PHB states them that way -- druid and bard have their own lists while
+// their GROUPS (priest, rogue) do not. So specific names are tested first.
+function getArmorAllowedList(clazz) {
+  const c = (clazz || '').trim().toLowerCase();
+  if (!c) return null;
+
+  if (c.includes('druid')) {
+    // RAW is leather only. The wider padded/leather/hide list is a house rule
+    // behind an override that DEFAULTS ON (= the book's rule).
+    const strict = (typeof isOptionalRule !== 'function') || isOptionalRule('druidArmorRestriction');
+    return strict ? CLASS_ARMOR_ALLOWED.druid : DRUID_ARMOR_HOUSE;
+  }
+  if (c.includes('bard'))   return CLASS_ARMOR_ALLOWED.bard;
+  if (c.includes('thief') || c.includes('assassin')) return CLASS_ARMOR_ALLOWED.thief;
+
+  const cat = (typeof getClassCategory === 'function') ? getClassCategory(clazz) : null;
+  if (cat === 'wizard') return CLASS_ARMOR_ALLOWED.wizard;
+  if (cat === 'rogue')  return CLASS_ARMOR_ALLOWED.thief;
+  return null;                                  // cleric and warrior: anything
+}
+
+// Every class the character actually has, as {clazz, level} pairs.
+function getAllClassComponents(root) {
+  const charType = (val(root, 'char_type') || 'single').toLowerCase();
+  const out = [];
+  if (charType === 'multi') {
+    for (let i = 1; i <= 3; i++) {
+      const c = val(root, 'mc_class' + i) || '';
+      if (c) out.push({ clazz: c, level: parseInt(val(root, 'mc_level' + i) || 0, 10) });
+    }
+  } else if (charType === 'dual') {
+    const nc = val(root, 'dc_new_class') || '';
+    const oc = val(root, 'dc_original_class') || '';
+    if (nc) out.push({ clazz: nc, level: parseInt(val(root, 'dc_new_level') || 0, 10) });
+    if (oc) out.push({ clazz: oc, level: parseInt(val(root, 'dc_original_level') || 0, 10) });
+  } else {
+    const c = val(root, 'clazz') || '';
+    if (c) out.push({ clazz: c, level: parseInt(val(root, 'level') || 0, 10) });
+  }
+  return out;
+}
+
+// Advisory list of armor a class should not be wearing. NEVER blocks.
+// Multi-class is reported per class rather than as a single verdict: a
+// fighter/mage may legitimately wear plate as a fighter while being unable to
+// cast in it, so naming the affected class is more useful than a flat "illegal".
+function getArmorRestrictionProblems(root) {
+  const problems = [];
+  if (typeof ARMOR_TYPES === 'undefined') return problems;
+
+  const comps = getAllClassComponents(root);
+  if (!comps.length) return problems;
+
+  Array.from(root.querySelectorAll('.armor-list .item')).forEach(item => {
+    const cb = item.querySelector('.equipped');
+    if (!cb || !cb.checked) return;
+
+    const slotEl = item.querySelector('.armor-slot') || item.querySelector('.armor-type');
+    const slot = (slotEl || {}).value || 'Armor';
+    const typeKey = item.querySelector('.armor-slot')
+      ? ((item.querySelector('.armor-type') || {}).value || '')
+      : '';
+    const name = ((item.querySelector('.title') || {}).value || '').trim();
+
+    if (slot === 'Shield') {
+      // The PHB distinguishes wooden from metal shields ONLY for druids.
+      const sh = SHIELD_TYPES[typeKey];
+      if (sh && !sh.wooden) {
+        comps.forEach(cp => {
+          if ((cp.clazz || '').toLowerCase().includes('druid')) {
+            problems.push((name || sh.label) + ': druids may use only wooden shields.');
+          }
+        });
+      }
+      return;
+    }
+    if (slot !== 'Armor') return;               // helmets, boots and the rest carry no class rule
+
+    const key = typeKey || (typeof inferArmorTypeKey === 'function' ? inferArmorTypeKey(name) : '');
+    if (!key || key === 'none') return;
+    const data = ARMOR_TYPES[key];
+    if (!data) return;
+
+    comps.forEach(cp => {
+      const allowed = getArmorAllowedList(cp.clazz);
+      if (!allowed) return;                     // unrestricted class
+      if (allowed.indexOf(key) !== -1) return;  // permitted
+      const who = comps.length > 1 ? ' as a ' + cp.clazz : '';
+      problems.push((name || data.label) + ' (' + data.label + ') is not permitted' + who + '.');
+    });
+  });
+
+  return problems;
+}
+
 // === Ranger stealth (PHB Table 18) ===
 // Format: [Hide in Shadows, Move Silently]. Table 18 stops at ranger 16 and
 // marks 99% "maximum attainable", so 17-20 hold at the 16th-level row.
@@ -2573,6 +2670,15 @@ const OPTIONAL_RULES = {
              'Encumbrance is itself an Optional Rule in the PHB, so ignoring it is RAW.',
     category: 'phb',
     default: false     // Chris's table does not use encumbrance
+  },
+  druidArmorRestriction: {
+    label:   'Restrict druids to leather armor (PHB)',
+    detail:  'PHB Ch.3: a druid may use "only \'natural\' armors -- leather armor and wooden ' +
+             'shields... All other armors are forbidden to him." Unticking widens the list to ' +
+             'padded, leather and hide, a common house reading based on avoiding metal. ' +
+             'Advisory only; nothing is ever blocked.',
+    category: 'override',
+    default: true      // checked = the book's rule
   },
   classGroupLegality: {
     label:   'Warn on illegal class combinations',
