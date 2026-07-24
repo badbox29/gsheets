@@ -2506,6 +2506,203 @@ function lookupWeaponData(name) {
   return WEAPONS_DATA.find(w => (w["Weapon Name"] || "").trim().toLowerCase() === n) || null;
 }
 
+// === Weapon types (granular) ===
+//
+// THE ANCHOR, same principle as ARMOR_TYPES: the stored weapon type key is the
+// source of truth for what a weapon IS. core_wp.json holds what it DOES.
+//
+// Historically core_wp.json's Type and Group columns were pure duplicates --
+// all 77 rows had Type === Group -- so one column was doing no work. This table
+// takes the granular axis: GROUP stays coarse (the 21 values below, used for
+// related-weapon fallback and PHB Table 35 column selection) while the KEY is
+// per specific weapon, because 2e specialization is declared on one weapon --
+// a long sword, not "swords" -- and Group cannot answer that (Sword covers 11
+// weapons, Polearm 18, Dagger 7).
+//
+// DELIBERATELY NOT STORED HERE: damage, speed, size, range, weight, cost.
+// Those are STATISTICS and live in core_wp.json; wpName points at the canonical
+// row and getWeaponTypeStats() reads them live. Only CLASSIFICATION is stored,
+// so the two can never drift apart. This is also what lets a flavour-named
+// weapon work: "Moon Hunter" tagged sword_long resolves Size M and 1d8/1d12.
+//
+// label is display only -- nothing parses it, so relabelling can never break a
+// rule. Change a label freely; never change a key, or saved records orphan.
+const WEAPON_TYPES = {
+  // --- Sword ---
+  sword_bastard:           { label: 'Bastard Sword',       group: 'Sword',     category: 'Melee',         wpName: "Sword, Bastard" },
+  sword_broad:             { label: 'Broad Sword',         group: 'Sword',     category: 'Melee',         wpName: "Sword, Broad" },
+  sword_cutlass:           { label: 'Cutlass',             group: 'Sword',     category: 'Melee',         wpName: "Cutlass" },
+  sword_falchion:          { label: 'Falchion',            group: 'Sword',     category: 'Melee',         wpName: "Falchion" },
+  sword_katana:            { label: 'Katana',              group: 'Sword',     category: 'Melee',         wpName: "Katana" },
+  sword_khopesh:           { label: 'Khopesh',             group: 'Sword',     category: 'Melee',         wpName: "Sword, Khopesh" },
+  sword_long:              { label: 'Long Sword',          group: 'Sword',     category: 'Melee',         wpName: "Sword, Long" },
+  sword_scimitar:          { label: 'Scimitar',            group: 'Sword',     category: 'Melee',         wpName: "Scimitar" },
+  sword_short:             { label: 'Short Sword',         group: 'Sword',     category: 'Melee',         wpName: "Sword, Short" },
+  sword_two_handed:        { label: 'Two-Handed Sword',    group: 'Sword',     category: 'Melee',         wpName: "Sword, Two-Handed" },
+  sword_wakizashi:         { label: 'Wakizashi',           group: 'Sword',     category: 'Melee',         wpName: "Wakizashi" },
+  // --- Dagger ---
+  dagger:                  { label: 'Dagger',              group: 'Dagger',    category: 'Melee/Thrown',  wpName: "Dagger" },
+  dagger_dirk:             { label: 'Dirk',                group: 'Dagger',    category: 'Melee',         wpName: "Dirk" },
+  dagger_kama:             { label: 'Kama',                group: 'Dagger',    category: 'Melee',         wpName: "Kama" },
+  dagger_knife:            { label: 'Knife',               group: 'Dagger',    category: 'Melee/Thrown',  wpName: "Knife" },
+  dagger_sai:              { label: 'Sai',                 group: 'Dagger',    category: 'Melee',         wpName: "Sai" },
+  dagger_sickle:           { label: 'Sickle',              group: 'Dagger',    category: 'Melee',         wpName: "Sickle" },
+  dagger_stiletto:         { label: 'Stiletto',            group: 'Dagger',    category: 'Melee',         wpName: "Stiletto" },
+  // --- Axe ---
+  axe_battle:              { label: 'Battle Axe',          group: 'Axe',       category: 'Melee',         wpName: "Battle Axe" },
+  axe_hand:                { label: 'Hand Axe',            group: 'Axe',       category: 'Melee/Thrown',  wpName: "Hand Axe" },
+  // --- Club ---
+  club:                    { label: 'Club',                group: 'Club',      category: 'Melee',         wpName: "Club" },
+  // --- Flail ---
+  flail_footmans:          { label: 'Footman\'s Flail',    group: 'Flail',     category: 'Melee',         wpName: "Flail, Footman's" },
+  flail_horsemans:         { label: 'Horseman\'s Flail',   group: 'Flail',     category: 'Melee',         wpName: "Flail, Horseman's" },
+  flail_nunchaku:          { label: 'Nunchaku',            group: 'Flail',     category: 'Melee',         wpName: "Nunchaku" },
+  flail_scourge:           { label: 'Scourge',             group: 'Flail',     category: 'Melee',         wpName: "Scourge" },
+  flail_three_section:     { label: 'Three-Section Staff', group: 'Flail',     category: 'Melee',         wpName: "Three-Section Staff" },
+  // --- Hammer ---
+  hammer:                  { label: 'Hammer',              group: 'Hammer',    category: 'Melee/Thrown',  wpName: "Hammer" },
+  hammer_maul:             { label: 'Maul',                group: 'Hammer',    category: 'Melee',         wpName: "Maul" },
+  hammer_war:              { label: 'War Hammer',          group: 'Hammer',    category: 'Melee',         wpName: "War Hammer" },
+  // --- Mace ---
+  mace_footmans:           { label: 'Footman\'s Mace',     group: 'Mace',      category: 'Melee',         wpName: "Mace, Footman's" },
+  mace_horsemans:          { label: 'Horseman\'s Mace',    group: 'Mace',      category: 'Melee',         wpName: "Mace, Horseman's" },
+  mace_morning_star:       { label: 'Morning Star',        group: 'Mace',      category: 'Melee',         wpName: "Morning Star" },
+  // --- Pick ---
+  pick_military:           { label: 'Military Pick',       group: 'Pick',      category: 'Melee',         wpName: "Pick, Military" },
+  // --- Polearm ---
+  polearm_bardiche:        { label: 'Bardiche',            group: 'Polearm',   category: 'Melee',         wpName: "Bardiche" },
+  polearm_bec_de_corbin:   { label: 'Bec de Corbin',       group: 'Polearm',   category: 'Melee',         wpName: "Bec de Corbin" },
+  polearm_bill_guisarme:   { label: 'Bill-Guisarme',       group: 'Polearm',   category: 'Melee',         wpName: "Bill-Guisarme" },
+  polearm_fauchard:        { label: 'Fauchard',            group: 'Polearm',   category: 'Melee',         wpName: "Fauchard" },
+  polearm_fauchard_fork:   { label: 'Fauchard-Fork',       group: 'Polearm',   category: 'Melee',         wpName: "Fauchard-Fork" },
+  polearm_fork_military:   { label: 'Military Fork',       group: 'Polearm',   category: 'Melee',         wpName: "Fork, Military" },
+  polearm_glaive:          { label: 'Glaive',              group: 'Polearm',   category: 'Melee',         wpName: "Glaive" },
+  polearm_glaive_guisarme: { label: 'Glaive-Guisarme',     group: 'Polearm',   category: 'Melee',         wpName: "Glaive-Guisarme" },
+  polearm_guisarme:        { label: 'Guisarme',            group: 'Polearm',   category: 'Melee',         wpName: "Guisarme" },
+  polearm_guisarme_voulge: { label: 'Guisarme-Voulge',     group: 'Polearm',   category: 'Melee',         wpName: "Guisarme-Voulge" },
+  polearm_halberd:         { label: 'Halberd',             group: 'Polearm',   category: 'Melee',         wpName: "Halberd" },
+  polearm_lucern_hammer:   { label: 'Lucern Hammer',       group: 'Polearm',   category: 'Melee',         wpName: "Lucern Hammer" },
+  polearm_partisan:        { label: 'Partisan',            group: 'Polearm',   category: 'Melee',         wpName: "Partisan" },
+  polearm_pike_awl:        { label: 'Awl Pike',            group: 'Polearm',   category: 'Melee',         wpName: "Pike, Awl" },
+  polearm_ranseur:         { label: 'Ranseur',             group: 'Polearm',   category: 'Melee',         wpName: "Ranseur" },
+  polearm_scythe:          { label: 'Scythe',              group: 'Polearm',   category: 'Melee',         wpName: "Scythe" },
+  polearm_spetum:          { label: 'Spetum',              group: 'Polearm',   category: 'Melee',         wpName: "Spetum" },
+  polearm_voulge:          { label: 'Voulge',              group: 'Polearm',   category: 'Melee',         wpName: "Voulge" },
+  // --- Spear ---
+  spear:                   { label: 'Spear',               group: 'Spear',     category: 'Melee/Thrown',  wpName: "Spear" },
+  spear_javelin:           { label: 'Javelin',             group: 'Spear',     category: 'Thrown',        wpName: "Javelin" },
+  spear_pilum:             { label: 'Pilum',               group: 'Spear',     category: 'Thrown',        wpName: "Pilum" },
+  spear_trident:           { label: 'Trident',             group: 'Spear',     category: 'Melee/Thrown',  wpName: "Trident" },
+  // --- Lance ---
+  lance_heavy:             { label: 'Heavy Lance',         group: 'Lance',     category: 'Melee',         wpName: "Lance, Heavy" },
+  lance_jousting:          { label: 'Jousting Lance',      group: 'Lance',     category: 'Melee',         wpName: "Lance, Jousting" },
+  lance_light:             { label: 'Light Lance',         group: 'Lance',     category: 'Melee',         wpName: "Lance, Light" },
+  // --- Staff ---
+  staff_bo:                { label: 'Bo Stick',            group: 'Staff',     category: 'Melee',         wpName: "Bo Stick" },
+  staff_quarterstaff:      { label: 'Quarterstaff',        group: 'Staff',     category: 'Melee',         wpName: "Quarterstaff" },
+  // --- Whip ---
+  whip:                    { label: 'Whip',                group: 'Whip',      category: 'Melee',         wpName: "Whip" },
+  // --- Net ---
+  net:                     { label: 'Net',                 group: 'Net',       category: 'Thrown',        wpName: "Net" },
+  // --- Bola ---
+  bola:                    { label: 'Bola',                group: 'Bola',      category: 'Thrown',        wpName: "Bola" },
+  // --- Bow ---
+  bow_composite_long:      { label: 'Composite Long Bow',  group: 'Bow',       category: 'Ranged',        wpName: "Composite Long Bow" },
+  bow_composite_short:     { label: 'Composite Short Bow', group: 'Bow',       category: 'Ranged',        wpName: "Composite Short Bow" },
+  bow_long:                { label: 'Long Bow',            group: 'Bow',       category: 'Ranged',        wpName: "Long Bow" },
+  bow_short:               { label: 'Short Bow',           group: 'Bow',       category: 'Ranged',        wpName: "Short Bow" },
+  // --- Crossbow ---
+  crossbow_hand:           { label: 'Hand Crossbow',       group: 'Crossbow',  category: 'Ranged',        wpName: "Hand Crossbow" },
+  crossbow_heavy:          { label: 'Heavy Crossbow',      group: 'Crossbow',  category: 'Ranged',        wpName: "Heavy Crossbow" },
+  crossbow_light:          { label: 'Light Crossbow',      group: 'Crossbow',  category: 'Ranged',        wpName: "Light Crossbow" },
+  // --- Sling ---
+  sling:                   { label: 'Sling',               group: 'Sling',     category: 'Ranged',        wpName: "Sling" },
+  sling_staff:             { label: 'Staff Sling',         group: 'Sling',     category: 'Ranged',        wpName: "Staff Sling" },
+  // --- Dart ---
+  dart:                    { label: 'Dart',                group: 'Dart',      category: 'Thrown',        wpName: "Dart" },
+  dart_shuriken:           { label: 'Shuriken',            group: 'Dart',      category: 'Thrown',        wpName: "Shuriken" },
+  // --- Blowgun ---
+  blowgun:                 { label: 'Blowgun',             group: 'Blowgun',   category: 'Ranged',        wpName: "Blowgun" },
+  // --- Firearm ---
+  firearm_arquebus:        { label: 'Arquebus',            group: 'Firearm',   category: 'Ranged',        wpName: "Arquebus" },
+  firearm_blunderbuss:     { label: 'Blunderbuss',         group: 'Firearm',   category: 'Ranged',        wpName: "Blunderbuss" }
+};
+
+// Display order for the type dropdown's optgroups. Melee first, then reach,
+// then missile -- roughly how a player thinks about picking a weapon, and it
+// keeps the eleven swords at the top where they are looked for most.
+const WEAPON_GROUP_ORDER = [
+  'Sword', 'Dagger', 'Axe', 'Club', 'Flail', 'Hammer', 'Mace', 'Pick',
+  'Polearm', 'Spear', 'Lance', 'Staff', 'Whip', 'Net', 'Bola',
+  'Bow', 'Crossbow', 'Sling', 'Dart', 'Blowgun', 'Firearm'
+];
+
+function getWeaponTypeData(key) {
+  if (!key) return null;
+  return WEAPON_TYPES[key] || null;
+}
+
+// The core_wp.json row a type key points at -- damage, speed, size, range,
+// weight, cost. Returns null until WEAPONS_DATA has loaded, so callers must
+// tolerate that (this is the same async caveat lookupWeaponData already has).
+function getWeaponTypeStats(key) {
+  const t = getWeaponTypeData(key);
+  if (!t) return null;
+  return lookupWeaponData(t.wpName);
+}
+
+// The coarse Group for a weapon. Prefers the stored type key; falls back to
+// whatever coarse value a pre-dropdown record carried, so nothing regresses
+// before the migration has touched a character.
+function getWeaponGroup(typeKey, fallbackGroup) {
+  const t = getWeaponTypeData(typeKey);
+  if (t) return t.group;
+  return (fallbackGroup || '').trim();
+}
+
+// --- Name inference (migration fallback only) -------------------------------
+//
+// Used ONLY to seed a type on records saved before the dropdown existed, and to
+// prefill when the player types a recognised name. Once weaponTypeKey is set,
+// the stored value always wins.
+//
+// Built from the table rather than hand-ordered like ARMOR_NAME_INFERENCE,
+// because 77 weapons is too many to order reliably by hand. Two safeguards:
+//   1. LONGEST FIRST, so "Composite Long Bow" cannot be eaten by "Long Bow",
+//      "Long Bow" cannot be eaten by "Bow", "War Hammer" by "Hammer",
+//      "Staff Sling" by "Sling", or "Three-Section Staff" by "Staff".
+//   2. WORD BOUNDARIES, not raw substring. Short names would otherwise produce
+//      nonsense: "Net" would match "bayonet", "Sai" would match "corsair",
+//      "Dart" would match "Dartmoor Pike". \b stops all three.
+// Both the canonical name and the label are matchable, so "Sword, Long" and
+// "Long Sword" both resolve.
+let _weaponInferenceList = null;
+function buildWeaponInferenceList() {
+  const out = [];
+  Object.keys(WEAPON_TYPES).forEach(key => {
+    const t = WEAPON_TYPES[key];
+    [t.wpName, t.label].forEach(n => {
+      const s = (n || '').trim().toLowerCase();
+      if (s && !out.some(e => e.text === s)) out.push({ text: s, key: key });
+    });
+  });
+  out.sort((a, b) => b.text.length - a.text.length);
+  out.forEach(e => {
+    e.re = new RegExp('\\b' + e.text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+  });
+  return out;
+}
+
+function inferWeaponTypeKey(name) {
+  const n = (name || '').trim().toLowerCase();
+  if (!n) return '';
+  if (!_weaponInferenceList) _weaponInferenceList = buildWeaponInferenceList();
+  const exact = _weaponInferenceList.find(e => e.text === n);
+  if (exact) return exact.key;
+  const hit = _weaponInferenceList.find(e => e.re.test(n));
+  return hit ? hit.key : '';
+}
+
 // === Class Display Names ===
 //
 // The class field is FREE TEXT, so it holds whatever the player typed --
