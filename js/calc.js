@@ -2107,10 +2107,10 @@ function addWeaponFromInventoryBrowser(root, weapon) {
   if (!weaponsList) return;
   
   const wCategory = weapon.Category || '';
-  // Group, not Type. getDefaultWeaponStrMode reasons about the coarse axis, and
-  // core_wp.json's Type column is a byte-for-byte duplicate of Group anyway --
-  // reading Group makes which axis this is unambiguous.
-  const wGroup    = weapon.Group || weapon.Type || '';
+  // Group is the only coarse axis. core_wp.json used to carry a Type column
+  // that duplicated it byte-for-byte; that column has been deleted, and the
+  // granular axis now lives in WEAPON_TYPES in tables.js instead.
+  const wGroup    = weapon.Group || '';
 
   const newWeaponNode = makeWeaponNode({
     name: weapon['Weapon Name'],
