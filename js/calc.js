@@ -3822,10 +3822,30 @@ function renderWeaponProficiencies(root) {
                         title="Specialization is available to single-class fighters only (PHB). This flag is not being counted.">Specialized (N/A)</span>`;
     }
 
+    // Group is derived from the key and shown read-only, so the player can see
+    // WHY a related-weapon match does or does not happen.
+    const profGroup = (typeof getWeaponGroup === 'function')
+      ? getWeaponGroup(prof.weaponTypeKey, prof.group || '')
+      : (prof.group || '');
+
+    // weaponTypeOptions lives in app.js, which loads AFTER calc.js -- fine,
+    // because this only runs at render time, long after both have executed.
+    // Guarded anyway so a load failure degrades instead of throwing.
+    const typeOptsHTML = (typeof weaponTypeOptions === 'function')
+      ? weaponTypeOptions(prof.weaponTypeKey || '')
+      : '';
+
     profDiv.innerHTML = `
       <div style="flex:1;">
         <strong>${prof.name}</strong>
-        <span style="margin-left:8px;font-size:11px;color:var(--muted);">${prof.group}</span>
+        <span style="margin-left:8px;font-size:11px;color:var(--muted);">${profGroup || '\u2014'}</span>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
+          <label style="font-size:11px;color:var(--muted);margin:0;">Type</label>
+          <select class="weapon-prof-type" data-index="${index}" style="width:170px;font-size:11px;padding:2px;"
+                  title="Which specific weapon this proficiency covers.&#10;Set it and a weapon you have renamed still counts as proficient,&#10;instead of falling back to a group match.&#10;Leave it blank for anything with no equivalent in the book.">
+            ${typeOptsHTML}
+          </select>
+        </div>
         <div style="font-size:11px;color:var(--muted);margin-top:2px;">Slots: ${totalSlots}${prof.specialized && specAllowed ? ` (${prof.slots} + ${specCost} specialization)` : ''}</div>
       </div>
       ${specHTML}
@@ -3849,6 +3869,32 @@ function renderWeaponProficiencies(root) {
       const index = parseInt(cb.getAttribute('data-index'), 10);
       if (!root._weaponProfs || !root._weaponProfs[index]) return;
       root._weaponProfs[index].specialized = cb.checked;
+      renderWeaponProficiencies(root);
+      const tab = document.querySelector('.tab.active');
+      if (tab) markUnsaved(tab, true, root);
+    };
+  });
+
+  // Attach type dropdowns. This is the anchor for the proficiency: setting it
+  // is what lets a renamed weapon on the Weapons list be recognised as this
+  // exact weapon rather than merely something in the same group.
+  listDiv.querySelectorAll('.weapon-prof-type').forEach(sel => {
+    sel.onchange = () => {
+      const index = parseInt(sel.getAttribute('data-index'), 10);
+      if (!root._weaponProfs || !root._weaponProfs[index]) return;
+      const p = root._weaponProfs[index];
+      p.weaponTypeKey = sel.value;
+
+      // Group is DERIVED. A CLEARED type deliberately leaves the old group
+      // standing rather than blanking it: proficiencies like Shield or
+      // Wrestling have a real group and no entry in WEAPON_TYPES at all, and
+      // wiping their group would break the slot counter and the related-weapon
+      // fallback for them.
+      if (typeof getWeaponGroup === 'function') {
+        const g = getWeaponGroup(sel.value, '');
+        if (g) p.group = g;
+      }
+
       renderWeaponProficiencies(root);
       const tab = document.querySelector('.tab.active');
       if (tab) markUnsaved(tab, true, root);
