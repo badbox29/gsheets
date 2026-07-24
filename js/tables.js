@@ -2790,9 +2790,21 @@ function getPHBRelatedSet(weaponName) {
 //      -> yes (sensible fallback for the ~39 exotic weapons the PHB omits:
 //         katana/wakizashi, nunchaku/scourge, the exotic polearms, etc.)
 //   3. Otherwise -> no
-function areWeaponsRelated(nameA, groupA, nameB, groupB) {
-  const setA = getPHBRelatedSet(nameA);
-  const setB = getPHBRelatedSet(nameB);
+// The book name for a weapon, resolved through its type key when it has one.
+//
+// PHB_RELATED_WEAPONS is keyed by canonical names, so without this a renamed
+// weapon can never appear in a PHB set and falls through to the GROUP fallback
+// -- which is wider than the book. "Moon Hunter" would come back related to a
+// short sword, where the PHB's sword set is only scimitar / bastard / long /
+// broad. Resolving the name first keeps the book's narrower answer.
+function canonicalWeaponName(name, typeKey) {
+  const t = (typeof getWeaponTypeData === 'function') ? getWeaponTypeData(typeKey) : null;
+  return t ? t.wpName : (name || "");
+}
+
+function areWeaponsRelated(nameA, groupA, nameB, groupB, keyA, keyB) {
+  const setA = getPHBRelatedSet(canonicalWeaponName(nameA, keyA));
+  const setB = getPHBRelatedSet(canonicalWeaponName(nameB, keyB));
 
   if (setA && setB) return setA === setB;
   if (setA || setB) return false;   // one is listed, the other isn't
@@ -2804,16 +2816,27 @@ function areWeaponsRelated(nameA, groupA, nameB, groupB) {
 
 // A character's proficiency status with a given weapon.
 // Returns "proficient" | "related" | "none".
-function getWeaponProficiencyStatus(weaponName, weaponGroup, weaponProfs) {
+function getWeaponProficiencyStatus(weaponName, weaponGroup, weaponProfs, weaponTypeKey) {
   const profs = weaponProfs || [];
-  const n = (weaponName || "").trim().toLowerCase();
-  if (!n) return "none";
+  const n     = (weaponName || "").trim().toLowerCase();
+  const key   = (weaponTypeKey || "").trim();
+  if (!n && !key) return "none";
 
-  // Exact match -- fully proficient.
-  if (profs.some(p => (p.name || "").trim().toLowerCase() === n)) return "proficient";
+  // 1. TYPE KEY MATCH -- the anchor, and the reason this parameter exists.
+  //    Two records naming the same specific weapon ARE the same weapon,
+  //    whatever the player has called them, so a proficiency in Long Sword
+  //    recognises a long sword named "Moon Hunter" as fully proficient rather
+  //    than merely related. Names cannot do this; keys can.
+  if (key && profs.some(p => (p.weaponTypeKey || "").trim() === key)) return "proficient";
 
-  // Related weapon -- half penalty.
-  if (profs.some(p => areWeaponsRelated(weaponName, weaponGroup, p.name, p.group))) {
+  // 2. NAME MATCH -- for a weapon row or a proficiency that has no type set,
+  //    i.e. anything not yet migrated, or a genuinely homebrew weapon with no
+  //    equivalent in the book.
+  if (n && profs.some(p => (p.name || "").trim().toLowerCase() === n)) return "proficient";
+
+  // 3. Related weapon -- half penalty.
+  if (profs.some(p => areWeaponsRelated(weaponName, weaponGroup, p.name, p.group,
+                                        key, p.weaponTypeKey))) {
     return "related";
   }
 
