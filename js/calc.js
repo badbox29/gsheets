@@ -299,7 +299,7 @@ function resolveWeaponProficiency(root, rowEl) {
       tip   = 'A related weapon costs HALF the normal non-proficiency penalty,\n' +
               'rounded up (PHB "Related Weapons Bonus"). Full penalty would be ' + fullPenalty + '.';
     } else {
-      text  = 'Not Proficient (' + penalty + ')';
+      text  = 'Not Prof. (' + penalty + ')';
       color = 'var(--error, #ff6b6b)';
       tip   = 'Non-proficiency attack penalty (PHB Table 34).\n' +
               'Warrior -2, Wizard -5, Priest -3, Rogue -3.';
