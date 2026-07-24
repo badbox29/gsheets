@@ -3036,6 +3036,7 @@ function collectSheet(root){
     com: val(root,'com'),
     movement_flying: val(root,'movement_flying'),
 	attacks_per_round: (qs(root, '.combat-attacks-per-round') && qs(root, '.combat-attacks-per-round').value) || '',
+    attacks_per_round_manual: val(root, 'attacks_per_round_manual'),
     saves: [
       val(root,'save1'),
       val(root,'save2'),
@@ -3680,6 +3681,11 @@ function loadSheet(root, data){
   if (attacksPerRoundEl) {
     attacksPerRoundEl.value = m.attacks_per_round || '';
   }
+  // The Core tab override is the field players edit now. Migrate any value from
+  // the old sidebar box on first load so nothing entered before this change is
+  // silently lost -- the sidebar is a readonly mirror from here on.
+  val(root, 'attacks_per_round_manual',
+      m.attacks_per_round_manual || m.attacks_per_round || '');
   if (typeof renderAttacksPerRound === 'function') renderAttacksPerRound(root);
 
   // Skills lists
@@ -4974,7 +4980,7 @@ function bindSheet(root, tab){
   // eleven different fields across the three character types. Bound for both
   // input and change so the <select> controls (char_type, mc_class*) are caught.
   const hitDiceFields =
-    /^(hit_dice_manual|clazz|level|char_type|con|mc_(class|level)[123]|dc_(original|new)_(class|level))$/;
+    /^(hit_dice_manual|attacks_per_round_manual|clazz|level|char_type|con|mc_(class|level)[123]|dc_(original|new)_(class|level))$/;
   const onHpTrackingChange = (e) => {
     const f = (e.target && e.target.getAttribute) ? e.target.getAttribute('data-field') : null;
     if (!f) return;
