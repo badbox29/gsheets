@@ -3035,7 +3035,6 @@ function collectSheet(root){
     alignment: val(root,'alignment'),
     campaign_setting: val(root,'campaign_setting') || 'core',
     xp: val(root,'xp'),
-	xp: val(root,'xp'),
     char_type: val(root,'char_type'),
     mc_class1: val(root,'mc_class1'),
     mc_class2: val(root,'mc_class2'),
