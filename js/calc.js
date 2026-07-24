@@ -1189,6 +1189,33 @@ function renderThiefSkills(root) {
 // Ranger stealth (PHB Table 18). Separate from renderThiefSkills because the
 // rules differ: rangers take race and Dexterity adjustments but NOT the thief's
 // Table 29 armor percentages, and their armor rule is a binary gate instead.
+// Class armor restrictions (PHB Ch.3). Advisory only -- a DM may have granted
+// an exception, and the specialist suite's no-blocking philosophy applies.
+function renderArmorRestrictions(root) {
+  const el = root.querySelector('.armor-restriction-note');
+  if (!el) return;
+
+  const problems = (typeof getArmorRestrictionProblems === 'function')
+    ? getArmorRestrictionProblems(root) : [];
+  if (!problems.length) {
+    el.style.display = 'none';
+    el.innerHTML = '';
+    return;
+  }
+
+  // Armor names are free text.
+  const esc = s => String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  el.innerHTML =
+    '<strong style="color:var(--warning, #e0a34a);">\u26A0 Armor restrictions (PHB Ch.3)</strong>' +
+    problems.map(p => '<div style="margin-top:4px;">\u2022 ' + esc(p) + '</div>').join('') +
+    '<div style="margin-top:6px;color:var(--muted);font-size:11px;">' +
+      'Advisory only \u2014 nothing is blocked. Druid and other class limits can be adjusted ' +
+      'under House Rules &amp; Overrides in Settings.</div>';
+  el.style.display = '';
+}
+
 function renderRangerStealth(root) {
   const section = root.querySelector('.ranger-stealth-display');
   if (!section) return;
