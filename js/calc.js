@@ -1937,7 +1937,6 @@ async function renderWeaponInventoryBrowser(root) {
   if (searchTerm) {
     filteredWeapons = filteredWeapons.filter(weapon => 
       weapon['Weapon Name'].toLowerCase().includes(searchTerm) ||
-      (weapon.Type && weapon.Type.toLowerCase().includes(searchTerm)) ||
       (weapon.Group && weapon.Group.toLowerCase().includes(searchTerm))
     );
   }
@@ -1958,10 +1957,12 @@ async function renderWeaponInventoryBrowser(root) {
     }
   }
   
-  // Apply type filter
+  // Apply type filter. The dropdown's option values are coarse GROUP names
+  // ("Sword", "Polearm"), so it is matched against Group -- core_wp.json's Type
+  // column is a duplicate of Group and is no longer read anywhere.
   if (typeFilter) {
     filteredWeapons = filteredWeapons.filter(weapon => 
-      weapon.Type === typeFilter
+      weapon.Group === typeFilter
     );
   }
   
@@ -1975,7 +1976,7 @@ async function renderWeaponInventoryBrowser(root) {
     // Filters selected - sort by category, then type, then name
     filteredWeapons.sort((a, b) => {
       if (a.Category !== b.Category) return a.Category.localeCompare(b.Category);
-      if (a.Type !== b.Type) return a.Type.localeCompare(b.Type);
+      if (a.Group !== b.Group) return (a.Group || '').localeCompare(b.Group || '');
       return a['Weapon Name'].localeCompare(b['Weapon Name']);
     });
   }
@@ -2000,7 +2001,7 @@ async function renderWeaponInventoryBrowser(root) {
     let infoHTML = `
       <div>
         <strong>${weapon['Weapon Name']}</strong>
-        <span style="margin-left:8px;font-size:11px;color:var(--muted);">${weapon.Category || ''} - ${weapon.Type || ''}</span>
+        <span style="margin-left:8px;font-size:11px;color:var(--muted);">${weapon.Category || ''} - ${weapon.Group || ''}</span>
       </div>
     `;
     
@@ -3496,8 +3497,7 @@ async function renderWeaponBrowser(root) {
   if (searchTerm) {
     filteredWeapons = filteredWeapons.filter(weapon => 
       weapon['Weapon Name'].toLowerCase().includes(searchTerm) ||
-      (weapon.Group && weapon.Group.toLowerCase().includes(searchTerm)) ||
-      (weapon.Type && weapon.Type.toLowerCase().includes(searchTerm))
+      (weapon.Group && weapon.Group.toLowerCase().includes(searchTerm))
     );
   }
   
@@ -3553,7 +3553,7 @@ async function renderWeaponBrowser(root) {
         <span style="margin-left:8px;font-size:11px;color:var(--muted);">${weapon.Group || ''}</span>
       </div>
       <div style="font-size:11px;color:var(--muted);margin-top:2px;">
-        ${weapon.Category || ''} ${weapon.Type ? `| ${weapon.Type}` : ''}
+        ${weapon.Category || ''}
         ${weapon['Damage (S-M)'] ? `| Damage: ${weapon['Damage (S-M)']}` : ''}
       </div>
     `;
