@@ -1124,15 +1124,28 @@ function renderThiefSkills(root) {
   const climb = Math.max(0, Math.min(cap, baseSkills[6] + racialAdj[6] + armorAdj[6] + pointsCW));
   const readlang = Math.max(0, Math.min(cap, baseSkills[7] + racialAdj[7] + armorAdj[7] + pointsRL));
   
+  // PHB Ch.3: a MULTI-CLASSED thief in armor not normally allowed to thieves
+  // loses every thieving ability except open locks and detect noise -- and even
+  // those need his gauntlets and helmet off. This is a separate rule from the
+  // Table 29 percentages a single-class thief takes, and it removes the ability
+  // outright rather than penalising it.
+  const mcPenalty = (typeof getMultiClassThiefArmorPenalty === 'function')
+    ? getMultiClassThiefArmorPenalty(root)
+    : { active: false, disabled: [], armorName: '', gauntlets: false, helmet: false };
+
+  // An em dash, not 0%: the ability is not possible, not merely certain to fail.
+  const DASH = '\u2014';
+  const gate = (i, v) => (mcPenalty.active && mcPenalty.disabled.indexOf(i) !== -1) ? DASH : v;
+
   // Set values
-  val(root, 'thief_pickpockets', pickpockets);
-  val(root, 'thief_openlocks', openlocks);
-  val(root, 'thief_traps', traps);
-  val(root, 'thief_movesilently', movesilently);
-  val(root, 'thief_hide', hide);
-  val(root, 'thief_detectnoise', detectnoise);
-  val(root, 'thief_climb', climb);
-  val(root, 'thief_readlang', readlang);
+  val(root, 'thief_pickpockets', gate(0, pickpockets));
+  val(root, 'thief_openlocks',   gate(1, openlocks));
+  val(root, 'thief_traps',       gate(2, traps));
+  val(root, 'thief_movesilently',gate(3, movesilently));
+  val(root, 'thief_hide',        gate(4, hide));
+  val(root, 'thief_detectnoise', gate(5, detectnoise));
+  val(root, 'thief_climb',       gate(6, climb));
+  val(root, 'thief_readlang',    gate(7, readlang));
   
   // Tooltip breakdown, built in one loop rather than eight near-identical blocks.
   // DEX (Table 28) applies only to the first five skills; armor (Table 29)
@@ -1148,6 +1161,14 @@ function renderThiefSkills(root) {
     const el = root.querySelector('[data-field="' + field + '"]');
     if (!el) return;
     if (isBard && i >= 1 && i <= 4) { el.title = 'Not available to bards'; return; }
+    if (mcPenalty.active && mcPenalty.disabled.indexOf(i) !== -1) {
+      let why = 'Unavailable: a multi-classed thief in ' + mcPenalty.armorName +
+                ' loses every thieving ability except open locks and detect noise (PHB Ch.3).';
+      if (i === 1 && mcPenalty.gauntlets) why = 'Unavailable: remove your gauntlets to open locks (PHB Ch.3).';
+      if (i === 5 && mcPenalty.helmet)    why = 'Unavailable: remove your helmet to detect noise (PHB Ch.3).';
+      el.title = why;
+      return;
+    }
     const parts = ['Base: ' + baseSkills[i], 'Race: ' + sgn(racialAdj[i])];
     if (i < 5) parts.push('DEX: ' + sgn(dexAdj[i]));
     if (armorAdj[i] !== 0) parts.push('Armor (' + armorInfo.name + '): ' + sgn(armorAdj[i]));
