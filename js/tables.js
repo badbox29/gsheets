@@ -2214,6 +2214,68 @@ function getArmorRestrictionProblems(root) {
   return problems;
 }
 
+// PHB Ch.3, Multi-Class Benefits and Restrictions:
+//   "A multi-classed thief cannot use any thieving abilities other than open
+//    locks or detect noise if he is wearing armor that is normally not allowed
+//    to thieves. He must remove his gauntlets to open locks and his helmet to
+//    detect noise."
+//
+// MULTI-CLASS ONLY. A single-class thief in heavy armor takes the Table 29
+// percentage penalties instead and loses nothing outright -- the two are
+// separate rules and the book keeps them separate.
+//
+// Returns { active, disabled:[skill indices], armorName, gauntlets, helmet }.
+// Skill index order matches THIEF_SKILLS_BASE:
+//   0 Pick Pockets, 1 Open Locks, 2 Find/Remove Traps, 3 Move Silently,
+//   4 Hide in Shadows, 5 Detect Noise, 6 Climb Walls, 7 Read Languages
+function getMultiClassThiefArmorPenalty(root) {
+  const out = { active: false, disabled: [], armorName: '', gauntlets: false, helmet: false };
+
+  if ((val(root, 'char_type') || 'single').toLowerCase() !== 'multi') return out;
+  if (typeof ARMOR_TYPES === 'undefined') return out;
+
+  // Is one of the classes a thief? Bards are rogues but this rule names thieves.
+  const hasThief = [1, 2, 3].some(i => {
+    const c = (val(root, 'mc_class' + i) || '').toLowerCase();
+    return c.includes('thief') || c.includes('assassin');
+  });
+  if (!hasThief) return out;
+
+  const allowed = CLASS_ARMOR_ALLOWED.thief;
+  let badArmor = '';
+  Array.from(root.querySelectorAll('.armor-list .item')).forEach(item => {
+    const cb = item.querySelector('.equipped');
+    if (!cb || !cb.checked) return;
+
+    const slotEl = item.querySelector('.armor-slot') || item.querySelector('.armor-type');
+    const slot = (slotEl || {}).value || 'Armor';
+    const typeKey = item.querySelector('.armor-slot')
+      ? ((item.querySelector('.armor-type') || {}).value || '')
+      : '';
+    const name = ((item.querySelector('.title') || {}).value || '').trim();
+
+    if (slot === 'Gauntlets') { out.gauntlets = true; return; }
+    if (slot === 'Helmet')    { out.helmet = true;    return; }
+    if (slot !== 'Armor') return;
+
+    const key = typeKey || (typeof inferArmorTypeKey === 'function' ? inferArmorTypeKey(name) : '');
+    if (!key || key === 'none') return;
+    if (allowed.indexOf(key) === -1) {
+      badArmor = name || (ARMOR_TYPES[key] ? ARMOR_TYPES[key].label : key);
+    }
+  });
+
+  if (badArmor) {
+    out.active = true;
+    out.armorName = badArmor;
+    out.disabled = [0, 2, 3, 4, 6, 7];          // everything except Open Locks and Detect Noise
+    if (out.gauntlets) out.disabled.push(1);    // gauntlets block open locks
+    if (out.helmet)    out.disabled.push(5);    // helmet blocks detect noise
+  }
+
+  return out;
+}
+
 // === Ranger stealth (PHB Table 18) ===
 // Format: [Hide in Shadows, Move Silently]. Table 18 stops at ranger 16 and
 // marks 99% "maximum attainable", so 17-20 hold at the 16th-level row.
