@@ -269,6 +269,15 @@ function resolveWeaponProficiency(root, rowEl) {
     weaponGroup = match ? (match.Group || '') : typeVal;
   }
 
+  // An empty row is not "Not Proficient" -- it is not a weapon yet. Now that
+  // every row gets a badge painted rather than only the equipped ones, blank
+  // placeholder rows would otherwise be accused of a penalty they cannot
+  // incur. Clear the badge and return neutral.
+  if (!String(weaponName).trim() && !typeVal) {
+    if (badgeEl) { badgeEl.innerHTML = ''; badgeEl.title = ''; }
+    return { status: 'proficient', penalty: 0 };
+  }
+
   const override = statusEl ? (statusEl.value || 'auto') : 'auto';
 
   const status = (override === 'auto')
@@ -385,6 +394,14 @@ function renderCombatQuickReference(root) {
   
   const equippedWeapons = [];
   qsa(root, '.weapons-list .item').forEach(el => {
+    // Paint EVERY row's proficiency badge, equipped or not. This call renders
+    // the badge as a SIDE EFFECT, and it used to sit inside the equipped branch
+    // below -- so an unequipped weapon never got a badge at all, and unequipping
+    // one left the last badge painted and stranded until the character was
+    // reloaded. The quick-reference list further down still collects only
+    // equipped weapons; this just makes sure every card tells the truth.
+    const prof = resolveWeaponProficiency(root, el);
+
     const equipped = el.querySelector('.equipped');
     if (equipped && equipped.checked) {
       const catEl  = el.querySelector('.weapon-category');
@@ -398,8 +415,6 @@ function renderCombatQuickReference(root) {
       const wtype    = typeEl ? typeEl.value : '';
       const wGroup   = (typeof getWeaponGroup === 'function')
         ? getWeaponGroup(wtype, wtype) : wtype;
-
-      const prof = resolveWeaponProficiency(root, el);
 
       const hitAdjEl = el.querySelector('.weapon-hit-adj');
       const dmgAdjEl = el.querySelector('.weapon-dmg-adj');
