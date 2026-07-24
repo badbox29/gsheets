@@ -2205,8 +2205,11 @@ function getRangerStealth(root) {
   const move = clamp(base[1] + racial[3] + dexAdj[3]);
 
   const armor = (typeof getThiefArmorCategory === 'function')
-    ? getThiefArmorCategory(root) : { key: 'none', name: 'No armor' };
-  const blocked = RANGER_STEALTH_MAX_ARMOR.indexOf(armor.key) === -1;
+    ? getThiefArmorCategory(root) : { key: 'none', typeKey: 'none', name: 'No armor' };
+  // typeKey, NOT key. key is the Table 29 COLUMN ('elven', 'padded', ...) while
+  // RANGER_STEALTH_MAX_ARMOR lists ARMOR_TYPES keys ('elven_chain', 'studded').
+  // The two vocabularies overlap enough to look interchangeable and are not.
+  const blocked = RANGER_STEALTH_MAX_ARMOR.indexOf(armor.typeKey || 'none') === -1;
 
   return {
     level: comp.level,
@@ -2219,7 +2222,7 @@ function getRangerStealth(root) {
     hideNonNatural: Math.floor(hide / 2),
     moveNonNatural: Math.floor(move / 2),
     armorName: armor.name,
-    armorKey: armor.key,
+    armorKey: armor.typeKey || armor.key,
     blocked: blocked
   };
 }
