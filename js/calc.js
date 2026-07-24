@@ -246,11 +246,23 @@ function resolveWeaponProficiency(root, rowEl) {
 
   const weaponName = nameEl ? nameEl.value : '';
 
-  // The weapon row stores Type, not Group. Recover the Group from core_wp.json
-  // where we can -- it is the fallback used for weapons the PHB's related list
-  // does not cover.
-  const match = (typeof lookupWeaponData === 'function') ? lookupWeaponData(weaponName) : null;
-  const weaponGroup = match ? (match.Group || '') : (typeEl ? typeEl.value : '');
+  // THE ANCHOR RULE: the row's stored type key is the source of truth for what
+  // this weapon IS, so it is consulted FIRST. That inversion is the whole point
+  // -- a flavour name now resolves to the Sword group instead of nothing at
+  // all. The name is only read when no type has been set, i.e. legacy rows.
+  //
+  // SCOPE NOTE: this fixes the GROUP fallback only. getWeaponProficiencyStatus
+  // still matches "proficient" on the weapon's NAME, so a proficiency in
+  // "Long Sword" will not recognise "Moon Hunter" as an exact match -- it will
+  // fall to "related" via the shared group. Closing that gap needs the granular
+  // type on the proficiency card as well, which belongs with the specialization
+  // work, since that is where per-weapon identity has to live anyway.
+  const typeVal = typeEl ? typeEl.value : '';
+  let weaponGroup = (typeof getWeaponGroup === 'function') ? getWeaponGroup(typeVal, '') : '';
+  if (!weaponGroup) {
+    const match = (typeof lookupWeaponData === 'function') ? lookupWeaponData(weaponName) : null;
+    weaponGroup = match ? (match.Group || '') : typeVal;
+  }
 
   const override = statusEl ? (statusEl.value || 'auto') : 'auto';
 
@@ -375,7 +387,12 @@ function renderCombatQuickReference(root) {
       const strEl  = el.querySelector('.weapon-str-bonus');
 
       const category = catEl  ? catEl.value  : '';
+      // wtype holds the GRANULAR key; wGroup is the COARSE group derived from
+      // it, and the group is what getDefaultWeaponStrMode reasons about. Passing
+      // the value as its own fallback keeps pre-migration rows working.
       const wtype    = typeEl ? typeEl.value : '';
+      const wGroup   = (typeof getWeaponGroup === 'function')
+        ? getWeaponGroup(wtype, wtype) : wtype;
 
       const prof = resolveWeaponProficiency(root, el);
 
@@ -395,8 +412,9 @@ function renderCombatQuickReference(root) {
         dmgAdj: dmgAdjEl ? dmgAdjEl.value : '',
         attacks: atkEl ? atkEl.value : '',
         category: category,
-        wtype: wtype,
-        strMode: (strEl && strEl.value) || getDefaultWeaponStrMode(category, wtype),
+        weaponTypeKey: wtype,
+        wtype: wGroup,
+        strMode: (strEl && strEl.value) || getDefaultWeaponStrMode(category, wGroup),
         profStatus: prof.status,
         profPenalty: prof.penalty,
         effSpeed: getEffectiveWeaponSpeed(
@@ -2052,10 +2070,19 @@ function backfillWeaponCategories(root) {
     if (!match) return;
 
     catEl.value  = match.Category || '';
-    typeEl.value = match.Type     || '';
+    // The dropdown holds a GRANULAR key now, not the coarse Type. match came
+    // from an exact name lookup, so inference on that same name always hits.
+    typeEl.value = (typeof inferWeaponTypeKey === 'function')
+      ? (inferWeaponTypeKey(match['Weapon Name']) || '')
+      : '';
 
     if (strEl && !strEl.dataset.userSet) {
-      strEl.value = getDefaultWeaponStrMode(catEl.value, typeEl.value);
+      strEl.value = getDefaultWeaponStrMode(
+        catEl.value,
+        (typeof getWeaponGroup === 'function')
+          ? getWeaponGroup(typeEl.value, typeEl.value)
+          : typeEl.value
+      );
     }
     filled++;
   });
@@ -2079,7 +2106,10 @@ function addWeaponFromInventoryBrowser(root, weapon) {
   if (!weaponsList) return;
   
   const wCategory = weapon.Category || '';
-  const wType     = weapon.Type     || '';
+  // Group, not Type. getDefaultWeaponStrMode reasons about the coarse axis, and
+  // core_wp.json's Type column is a byte-for-byte duplicate of Group anyway --
+  // reading Group makes which axis this is unambiguous.
+  const wGroup    = weapon.Group || weapon.Type || '';
 
   const newWeaponNode = makeWeaponNode({
     name: weapon['Weapon Name'],
@@ -2090,13 +2120,20 @@ function addWeaponFromInventoryBrowser(root, weapon) {
     speed: weapon['Speed Factor'] || '',
     damageType: '',
     equipped: false,
-    notes: `${weapon.Type || ''} | ${weapon.Group || ''}`,
-    // Carry the real Category/Type through instead of discarding them into the
-    // notes string. These drive how Strength applies to the weapon (PHB).
+    // This was the Type and Group interpolated together, which printed the same
+    // word twice ("Sword | Sword") because those two columns are duplicates.
+    // Both now live in real structured fields, so Notes goes back to being the
+    // player's own space.
+    notes: '',
+    // The name came straight out of core_wp.json, so inference is an exact hit.
+    // This is the one place the granular key costs nothing to obtain.
     category: wCategory,
-    wtype:    wType,
+    weaponTypeKey: (typeof inferWeaponTypeKey === 'function')
+                     ? (inferWeaponTypeKey(weapon['Weapon Name']) || '')
+                     : '',
+    wtype:    wGroup,
     strBonus: (typeof getDefaultWeaponStrMode === 'function')
-                ? getDefaultWeaponStrMode(wCategory, wType)
+                ? getDefaultWeaponStrMode(wCategory, wGroup)
                 : ''
   }, () => {
     const activeTab = document.querySelector('.tab.active');
