@@ -1300,10 +1300,15 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     // in the Slots row above -- collectSheet writes the on-screen totals -- so
     // what prints here is the role, the surrendered XP, and how the bonus spell-
     // level pool was allocated, none of which the slot grid can convey.
-    const druidClazz = String((sheet && sheet.clazz) || '').toLowerCase();
+    // collectSheet() nests all flat scalar fields under sheet.meta (clazz,
+    // level, xp, druid_role, druid_bonus_*, ...). Only the array/object groups
+    // sit at the top level. Page 1 sidesteps this by scraping the DOM directly;
+    // every field read here must go through meta.
+    const meta = (sheet && sheet.meta) || {};
+    const druidClazz = String(meta.clazz || '').toLowerCase();
     if (druidClazz.indexOf('druid') !== -1) {
-      const role  = String((sheet && sheet.druid_role) || '').toLowerCase();
-      const level = parseInt((sheet && sheet.level) || 0, 10);
+      const role  = String(meta.druid_role || '').toLowerCase();
+      const level = parseInt(meta.level || 0, 10);
       // Match the app's derived-role logic: 15th is the Grand Druid, 17th+ a
       // hierophant, when nothing is stored.
       let effRole = role;
@@ -1319,13 +1324,13 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       const POOL_SIZE = { archdruid: 4, grand: 6 };
 
       const roleLabel   = ROLE_LABELS[effRole] || '';
-      const surrendered = String((sheet && sheet.druid_surrendered_xp) || '').trim();
+      const surrendered = String(meta.druid_surrendered_xp || '').trim();
 
       // Pool allocation, read from the six stored boxes. "3rd x2" costs 6.
       const allocParts = [];
       let spent = 0;
       for (let i = 1; i <= 6; i++) {
-        const n = parseInt((sheet && sheet['druid_bonus_' + i]) || 0, 10) || 0;
+        const n = parseInt(meta['druid_bonus_' + i] || 0, 10) || 0;
         if (n > 0) {
           const ord = (i === 1) ? '1st' : (i === 2) ? '2nd' : (i === 3) ? '3rd' : (i + 'th');
           allocParts.push(n > 1 ? (ord + ' \u00d7' + n) : ord);
