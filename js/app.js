@@ -2367,26 +2367,48 @@ function weaponCategoryOptions(selected) {
 }
 
 function weaponTypeOptions(selected) {
-  // The full set of Type values used in core_wp.json, so a weapon backfilled
-  // from the browser (Type: "Sword", "Polearm", ...) displays honestly rather
-  // than falling back to blank. Only Bow / Crossbow / Sling / Blowgun / Firearm
-  // actually change how Strength applies -- the rest are descriptive.
-  const types = [
-    '', 'Axe', 'Blowgun', 'Bola', 'Bow', 'Club', 'Crossbow', 'Dagger', 'Dart',
-    'Firearm', 'Flail', 'Hammer', 'Lance', 'Mace', 'Net', 'Pick', 'Polearm',
-    'Sling', 'Spear', 'Staff', 'Sword', 'Whip', 'Other'
-  ];
+  // Granular per-weapon types, grouped under <optgroup> headings by their
+  // coarse Group. The option VALUE is a WEAPON_TYPES key and the LABEL is
+  // display only -- nothing parses the label, so it can be reworded freely.
+  //
+  // 77 flat options would be unusable, and the optgroup headings double as a
+  // visible statement of the coarse/granular relationship: the eleven swords
+  // sit under "Sword", which is still the value the related-weapon rules and
+  // the Table 35 columns reason about.
   const sel = (selected || '').trim();
+  const esc = s => String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-  // Keep an unrecognized value (a custom weapon typed by hand) rather than
-  // silently dropping it to blank.
-  if (sel && !types.some(t => t.toLowerCase() === sel.toLowerCase())) {
-    types.push(sel);
+  let out = '<option value="">--</option>';
+
+  // tables.js may not have loaded, or an older copy may be cached. Degrade to
+  // a bare dropdown rather than throwing and taking the whole card down.
+  if (typeof WEAPON_TYPES === 'undefined' || typeof WEAPON_GROUP_ORDER === 'undefined') {
+    if (sel) out += '<option value="' + esc(sel) + '" selected>' + esc(sel) + '</option>';
+    return out;
   }
 
-  return types.map(t =>
-    '<option value="'+t+'"'+(t.toLowerCase() === sel.toLowerCase() ? ' selected' : '')+'>'+(t || '--')+'</option>'
-  ).join('');
+  // A stored value that is not a key is either a pre-migration coarse value
+  // ("Sword") or something typed by hand. Keep it as its own option, flagged,
+  // so it displays honestly and survives a save instead of being silently
+  // dropped to blank. The migration in a later step clears these out.
+  if (sel && !WEAPON_TYPES[sel]) {
+    out += '<option value="' + esc(sel) + '" selected>' + esc(sel) + ' (legacy)</option>';
+  }
+
+  WEAPON_GROUP_ORDER.forEach(group => {
+    const keys = Object.keys(WEAPON_TYPES).filter(k => WEAPON_TYPES[k].group === group);
+    if (!keys.length) return;
+    out += '<optgroup label="' + esc(group) + '">';
+    keys.forEach(k => {
+      out += '<option value="' + k + '"' + (k === sel ? ' selected' : '') + '>' +
+             esc(WEAPON_TYPES[k].label) + '</option>';
+    });
+    out += '</optgroup>';
+  });
+
+  return out;
 }
 
 function weaponProficiencyOptions(selected) {
@@ -2541,7 +2563,10 @@ function makeWeaponNode(data={}, onChange){
         '  grants exceptional-STR bonuses must be custom crafted (3-5x cost).&#10;' +
         'None: no STR adjustment -- crossbows and other mechanical devices.&#10;' +
         'Defaults are set from Category and Type; override as your DM allows.">' +
-        weaponStrBonusOptions(data.strBonus, data.category, data.wtype) +
+        weaponStrBonusOptions(data.strBonus, data.category,
+          (typeof getWeaponGroup === 'function')
+            ? getWeaponGroup(data.wtype, data.wtype)
+            : data.wtype) +
       '</select>' +
       '<select class="weapon-prof-status" style="width:130px;" title="' +
         'Proficiency with this weapon (PHB Table 34 penalty column).&#10;' +
@@ -2613,7 +2638,16 @@ function makeWeaponNode(data={}, onChange){
     s.addEventListener('change', () => {
       if (strSel.dataset.userSet === '1') return;
       if (typeof getDefaultWeaponStrMode === 'function') {
-        strSel.value = getDefaultWeaponStrMode(catSel.value, typeSel.value);
+        // typeSel now holds a WEAPON_TYPES key, but getDefaultWeaponStrMode
+        // reasons about the coarse group ("bow", "crossbow"). Passing the value
+        // as its own fallback handles both vocabularies: a key resolves to its
+        // group, a pre-migration coarse value passes through untouched.
+        strSel.value = getDefaultWeaponStrMode(
+          catSel.value,
+          (typeof getWeaponGroup === 'function')
+            ? getWeaponGroup(typeSel.value, typeSel.value)
+            : typeSel.value
+        );
       }
       onChange && onChange();
     });
