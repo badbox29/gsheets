@@ -219,6 +219,18 @@ const SHEET_HTML = `
 		    <div class="attack-matrix" style="margin-top:10px;"></div>
 		  </div>
 		  <div class="row">
+			<div class="col">
+			  <label>Melee Attacks/Round</label>
+			  <input data-field="attacks_per_round_auto" type="text" readonly style="font-weight:bold;" title="Derived from PHB Table 15. Warriors gain extra melee attacks with level: 1/round at levels 1-6, 3/2 at 7-12, 2/round at 13 and up. All other classes stay at 1 per round. Melee only -- missile weapons have their own rates of fire.">
+			</div>
+			<div class="col">
+			  <label>Attacks/Round Override</label>
+			  <input data-field="attacks_per_round_manual" type="text" placeholder="auto" title="Leave blank to use the derived value. Set this for weapon specialization, haste, or anything the class tables do not cover.">
+			</div>
+			<div class="col"></div>
+		  </div>
+		  <div class="attacks-per-round-note" style="display:none;margin-top:6px;font-size:11px;"></div>
+		  <div class="row">
 			<div class="col single-multi-hp">
 			  <label>HP (Max)</label>
 			  <input data-field="hp" type="number">
