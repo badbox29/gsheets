@@ -112,7 +112,13 @@
     .tab.unsaved .label::after{ content:" •"; color:var(--accent-light); }
 
     /* Layout / cards */
-    .grid{display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-top:10px}
+    /* minmax(0, ...) rather than a bare fr: grid items default to
+       min-width:auto, so a column cannot shrink below its content's minimum
+       width. Any single wide row in the main column would otherwise stop
+       honouring 2fr and steal the sidebar's share. minmax(0, ...) lets the
+       columns hold their ratio and makes overflowing content the card's
+       problem instead of the layout's. */
+    .grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:20px;margin-top:10px}
     .card{
       background:var(--panel);
       padding:16px;
