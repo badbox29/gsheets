@@ -4755,6 +4755,98 @@ function addSpellToSpellbook(root, spell) {
 // the +1 bonus slot at that level. used/1: GREEN at 1/1 (bonus active), NORMAL at
 // 0/1 (available, unused), NEVER red (it's optional). Works for single/multi/dual
 // via getWizardComponent -> the wizard sub-class + sub-level.
+// Druid Standing panel (PHB Ch.3, "The Grand Druid and Hierophant Druids").
+// Reveals the section for druids only, drives the bonus-spell-level pool, and
+// surfaces the advisory campaign notes. Never blocks: the pool over-spend goes
+// red the way over-memorization does, and every rules constraint here is a note.
+// The slot ARITHMETIC lives in renderSpellSlots (app.js) -- this function owns
+// the CONTROL and its readout, not the totals.
+function renderDruidRole(root) {
+  const section = root.querySelector('.druid-role-section');
+  if (!section) return;
+
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const hide = () => { section.style.display = 'none'; };
+
+  if (typeof isDruidClass !== 'function' || !isDruidClass(val(root, 'clazz'))) { hide(); return; }
+  section.style.display = '';
+
+  const level      = parseInt(val(root, 'level') || 0, 10);
+  const storedRole = val(root, 'druid_role');
+  const role       = (typeof getDruidRole === 'function') ? getDruidRole(val(root, 'clazz'), level, storedRole) : '';
+  const wis        = parseInt(val(root, 'wis') || 0, 10);
+
+  // Advisory campaign notes (single-in-the-world, level cap, hierophant-only
+  // 17th+). Plus the one state the rules forbid: a hierophant below 16th level.
+  const noteEl = section.querySelector('.druid-role-note');
+  if (noteEl) {
+    let notes = (typeof getDruidRoleNotes === 'function')
+      ? getDruidRoleNotes(val(root, 'clazz'), level, role) : [];
+    if ((storedRole || '').toLowerCase() === 'hierophant' && !isNaN(level) &&
+        level < 16 && level > 0) {
+      notes = ['A hierophant druid is a former Grand Druid who has stepped down at ' +
+               '16th level; the title is not available below 16th.'].concat(notes);
+    }
+    if (notes.length) {
+      noteEl.innerHTML = notes.map(n => '<div style="margin-top:4px;">\u2022 ' + esc(n) + '</div>').join('');
+      noteEl.style.color = 'var(--warning, #e0a34a)';
+      noteEl.style.display = '';
+    } else {
+      noteEl.style.display = 'none';
+      noteEl.innerHTML = '';
+    }
+  }
+
+  // Bonus spell-level pool. Shown only when the role grants one.
+  const poolWrap = section.querySelector('.druid-bonus-pool');
+  const pool     = (typeof getDruidBonusPool === 'function') ? getDruidBonusPool(role) : 0;
+  if (!poolWrap) return;
+
+  if (pool <= 0) {
+    poolWrap.style.display = 'none';
+    return;
+  }
+  poolWrap.style.display = '';
+
+  // Disable any pool input for a spell level the WIS gate locks (6th needs 17,
+  // 7th needs 18). The pool has no 7th box, so only the 6th can be gated here,
+  // but the loop reads PRIEST_SPELL_LEVEL_WIS_MIN so it stays correct if that
+  // ever changes. A gated box is zeroed and disabled with an explanatory title.
+  const alloc = [];
+  for (let i = 1; i <= 6; i++) {
+    const box = section.querySelector('[data-field="druid_bonus_' + i + '"]');
+    if (!box) { alloc[i-1] = 0; continue; }
+    const gateMin = (typeof PRIEST_SPELL_LEVEL_WIS_MIN !== 'undefined')
+      ? PRIEST_SPELL_LEVEL_WIS_MIN[i] : undefined;
+    const gated = (gateMin !== undefined) && (isNaN(wis) || wis < gateMin);
+    if (gated) {
+      box.value = 0;
+      box.disabled = true;
+      box.title = i + 'th-level priest spells require Wisdom ' + gateMin +
+                  ' (PHB Table 24). You have ' + (wis || '\u2014') + '.';
+    } else {
+      box.disabled = false;
+      box.title = '';
+    }
+    alloc[i-1] = parseInt(box.value || 0, 10) || 0;
+  }
+
+  // Running total: "N of POOL spell levels allocated", red when over budget.
+  const readout = section.querySelector('.druid-bonus-readout');
+  if (readout) {
+    const spent = (typeof getDruidBonusSpent === 'function') ? getDruidBonusSpent(alloc) : 0;
+    const over  = spent > pool;
+    const roleLabel = (typeof DRUID_ROLES !== 'undefined' && DRUID_ROLES[role])
+      ? DRUID_ROLES[role].label : 'Druid';
+    readout.innerHTML =
+      '<strong>' + esc(roleLabel) + ':</strong> ' + spent + ' of ' + pool +
+      ' bonus spell levels allocated' +
+      (over ? ' \u2014 over budget' : '') +
+      '. These are added to your spell slots above.';
+    readout.style.color = over ? 'var(--error, #d9534f)' : 'var(--muted)';
+  }
+}
+
 function renderSpecialistMemorizedStatus(root) {
   const rowEl = root.querySelector('.specialist-mem-status');
   const textEl = root.querySelector('.specialist-mem-status-text');
@@ -5042,6 +5134,7 @@ function renderMemorizedSpellStatus(root) {
   renderSpecialistSpellNotes(root);
   renderSpecialistMemorizedStatus(root);
   renderKnownSpellStatus(root);
+  renderDruidRole(root);
 }
 
 // Specialist spell reminders (PHB Ch.3). Populates two notes for specialist
