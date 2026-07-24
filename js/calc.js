@@ -3978,8 +3978,11 @@ function renderWeaponProficiencies(root) {
     return;
   }
   
-  // PHB: weapon specialization is available to SINGLE-CLASS FIGHTERS ONLY.
-  const specAllowed = canSpecialize(root);
+  // PHB: weapon specialization is available to SINGLE-CLASS FIGHTERS ONLY, and
+  // is itself an optional rule (Ch.5) -- switching it off in Settings hides the
+  // control and stops the slot charge, without clearing anyone's saved flag.
+  const specRuleOn = (typeof isOptionalRule !== 'function') || isOptionalRule('weaponSpecialization');
+  const specAllowed = specRuleOn && canSpecialize(root);
 
   weaponProfs.forEach((prof, index) => {
     const profDiv = document.createElement('div');
@@ -3987,7 +3990,10 @@ function renderWeaponProficiencies(root) {
     profDiv.style.cssText = 'padding:8px;margin-bottom:8px;border:1px solid var(--border);border-radius:4px;background:var(--glass);display:flex;justify-content:space-between;align-items:center;';
 
     const specCost = getSpecializationCost(prof.group);
-    const totalSlots = (parseInt(prof.slots, 10) || 1) + (prof.specialized ? specCost : 0);
+    // Only charge for specialization when the rule is actually in play. The
+    // flag is left alone so ticking the rule back on restores it intact.
+    const totalSlots = (parseInt(prof.slots, 10) || 1) +
+                       ((prof.specialized && specAllowed) ? specCost : 0);
 
     let specHTML = '';
     if (specAllowed) {
