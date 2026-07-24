@@ -275,6 +275,8 @@ function resolveWeaponProficiency(root, rowEl) {
   // incur. Clear the badge and return neutral.
   if (!String(weaponName).trim() && !typeVal) {
     if (badgeEl) { badgeEl.innerHTML = ''; badgeEl.title = ''; }
+    rowEl.style.borderLeft = '';
+    rowEl.style.paddingLeft = '';
     return { status: 'proficient', penalty: 0 };
   }
 
@@ -287,20 +289,42 @@ function resolveWeaponProficiency(root, rowEl) {
   const fullPenalty = getNonProfPenalty(root);
   const penalty     = getWeaponAttackPenalty(status, fullPenalty);
 
+  // Specialization supersedes the Proficient badge -- you cannot specialize
+  // without being proficient first, so the two can never both apply and showing
+  // the lesser one wastes the space.
+  const spec = (typeof getWeaponSpecialization === 'function')
+    ? getWeaponSpecialization(root, rowEl) : null;
+  const isSpecialized = !!(spec && spec.specialized) && status === 'proficient';
+
+  // Status colour, reused for the badge AND the card's left edge so a glance
+  // down the list reads as a column of statuses.
+  const statusColor = isSpecialized          ? 'var(--info, #6fb3d2)'
+                    : status === 'proficient' ? 'var(--accent-light)'
+                    : status === 'related'    ? 'var(--warning, #e0a34a)'
+                    : 'var(--error, #ff6b6b)';
+  rowEl.style.borderLeft = '3px solid ' + statusColor;
+  rowEl.style.paddingLeft = '8px';
+
   if (badgeEl) {
     let text, color, tip;
-    if (status === 'proficient') {
+    if (isSpecialized) {
+      text  = 'Specialized';
+      color = statusColor;
+      tip   = 'Specialized (PHB Ch.5): +1 to hit and +2 damage with a melee weapon, ' +
+              'or a point-blank range category with a bow or crossbow.\n' +
+              'Proficiency is a prerequisite, so this replaces the Proficient badge.';
+    } else if (status === 'proficient') {
       text  = 'Proficient';
       color = 'var(--accent-light)';
       tip   = 'No attack penalty.';
     } else if (status === 'related') {
       text  = 'Related (' + penalty + ')';
-      color = 'var(--muted)';
+      color = statusColor;
       tip   = 'A related weapon costs HALF the normal non-proficiency penalty,\n' +
               'rounded up (PHB "Related Weapons Bonus"). Full penalty would be ' + fullPenalty + '.';
     } else {
       text  = 'Not Prof. (' + penalty + ')';
-      color = 'var(--error, #ff6b6b)';
+      color = statusColor;
       tip   = 'Non-proficiency attack penalty (PHB Table 34).\n' +
               'Warrior -2, Wizard -5, Priest -3, Rogue -3.';
     }
