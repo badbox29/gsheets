@@ -1395,6 +1395,147 @@ function getPriestWisdomGateNotes(slots, wis) {
 }
 
 
+// ---------------------------------------------------------------------------
+// GRAND DRUID, ARCHDRUID AND HIEROPHANT -- PHB Ch.3, "The Grand Druid and
+// Hierophant Druids". Four separate rules live here.
+//
+// 1. ALLOTMENT. The Grand Druid "knows six spells of each level (instead of the
+//    normal spell progression)". Priests have seven spell levels, so that is a
+//    flat row of six. Stepping down relinquishes ONLY the bonus spell levels
+//    and the experience points -- "he keeps the rest of his abilities" -- and
+//    "beyond 15th level, a druid never gains any new spells", so this row holds
+//    from 15th all the way through 20th. SPELL_SLOTS_TABLES.druid stays a
+//    faithful Table 24 transcription; this is applied over the top of it.
+//
+// 2. BONUS SPELL LEVELS. A pool, not slots: "up to six additional spell levels,
+//    either as a single spell or as several spells whose levels total to six".
+//    Archdruids -- the three of the Grand Druid's nine attendants who roam as
+//    his messengers and agents -- each receive four. Relinquished on stepping
+//    down. A six-level pool cannot reach a 7th-level spell.
+//
+// 3. THE LEVEL CAP. The text gives the Grand Druid exactly one advancement,
+//    "500,000 more experience points" to reach 16th, and then the only forward
+//    path it offers is resignation. So he holds at 16th for as long as he keeps
+//    the title. Level is a manual field, so this is ADVISORY -- a campaign
+//    constraint, not arithmetic the tool owns.
+//
+// 4. HIEROPHANT XP. Table 23's druid column stacks TWO scales in one strip of
+//    numbers. Rows 1-16 are cumulative from zero (16th reads 3,500,000, which
+//    is the 3,000,000 for 15th plus the "only 500,000 more" the text specifies).
+//    Rows 17-20 carry the asterisk and count from the post-reset baseline of
+//    1 XP, so they are kept OUT of XP_TABLES.druid -- a non-monotonic array
+//    there would make "XP to next level" produce nonsense.
+// ---------------------------------------------------------------------------
+
+const GRAND_DRUID_SLOTS     = [6,6,6,6,6,6,6,0,0];
+const GRAND_DRUID_MIN_LEVEL = 15;
+const GRAND_DRUID_MAX_LEVEL = 16;
+
+// Single source of truth for the roles. bonusLevels feeds the pool control.
+const DRUID_ROLES = {
+  archdruid:  { label: 'Archdruid',                 bonusLevels: 4 },
+  grand:      { label: 'Grand Druid',               bonusLevels: 6 },
+  hierophant: { label: 'Hierophant (stepped down)', bonusLevels: 0 }
+};
+
+// Table 23, druid column, rows 17-20 -- the post-reset scale.
+const HIEROPHANT_XP = { 17: 500000, 18: 1000000, 19: 1500000, 20: 2000000 };
+
+function isDruidClass(clazz) {
+  return (clazz || '').toLowerCase().includes('druid');
+}
+
+// The role actually in effect. A 15th-level druid IS the Grand Druid by
+// definition -- "only one person in a world can ever hold this title at one
+// time. Consequently, only one druid can be 15th level at any time" -- and only
+// a hierophant reaches 17th. So the role is DERIVED when the stored field is
+// blank rather than silently written into the character record. An explicitly
+// stored role always wins.
+function getDruidRole(clazz, level, storedRole) {
+  if (!isDruidClass(clazz)) return '';
+  const stored = (storedRole || '').toLowerCase();
+  if (stored && DRUID_ROLES[stored]) return stored;
+  const lvl = parseInt(level, 10);
+  if (isNaN(lvl)) return '';
+  if (lvl > GRAND_DRUID_MAX_LEVEL)  return 'hierophant';
+  if (lvl >= GRAND_DRUID_MIN_LEVEL) return 'grand';
+  return '';
+}
+
+// Six of each level, replacing Table 24 from 15th onward. Returns a NEW array
+// and never mutates its input. Applies on LEVEL alone: every role that can be
+// at 15th or above -- sitting Grand Druid or stepped-down hierophant -- keeps
+// the allotment, because resignation surrenders the pool and the XP, not this.
+function applyGrandDruidAllotment(slots, clazz, level) {
+  if (!isDruidClass(clazz)) return slots;
+  const lvl = parseInt(level, 10);
+  if (isNaN(lvl) || lvl < GRAND_DRUID_MIN_LEVEL) return slots;
+  return GRAND_DRUID_SLOTS.slice();
+}
+
+// How many bonus spell levels the role grants. 0 for everyone else.
+function getDruidBonusPool(role) {
+  const r = DRUID_ROLES[(role || '').toLowerCase()];
+  return r ? r.bonusLevels : 0;
+}
+
+// Levels consumed by an allocation. alloc is indexed 0-8 and holds a COUNT of
+// bonus spells taken at each spell level, so a 3rd-level spell costs 3.
+function getDruidBonusSpent(alloc) {
+  if (!Array.isArray(alloc)) return 0;
+  return alloc.reduce((sum, n, i) => sum + ((parseInt(n, 10) || 0) * (i + 1)), 0);
+}
+
+// Fold an allocation into a slot row. Returns a NEW array. MUST run BEFORE
+// applyPriestWisdomGate: Table 24's footnotes read "Usable only by priests with
+// 17 [18] or greater Wisdom" -- a restriction on the PRIEST, not on the column
+// -- so it survives the progression being replaced, and a pool level spent on a
+// 6th-level spell by a WIS 16 druid is correctly zeroed out.
+function applyDruidBonusSpells(slots, alloc) {
+  if (!Array.isArray(slots) || !Array.isArray(alloc)) return slots;
+  return slots.map((n, i) => (n || 0) + (parseInt(alloc[i], 10) || 0));
+}
+
+// The XP a hierophant needs for his NEXT level, on the post-reset scale.
+// Returns null outside 17-20, including for a sitting Grand Druid at 16 -- he
+// has no next level to buy, which is a different answer from "unknown".
+function getHierophantNextXP(level) {
+  const lvl = parseInt(level, 10);
+  if (isNaN(lvl)) return null;
+  return (typeof HIEROPHANT_XP[lvl + 1] === 'number') ? HIEROPHANT_XP[lvl + 1] : null;
+}
+
+// Campaign constraints and standing reminders. ADVISORY ONLY -- these are facts
+// about the world the DM runs, not numbers the tool derives, so nothing here
+// ever blocks. Returns [] when there is nothing to say.
+function getDruidRoleNotes(clazz, level, role) {
+  const notes = [];
+  if (!isDruidClass(clazz)) return notes;
+  const lvl = parseInt(level, 10);
+  const r   = (role || '').toLowerCase();
+
+  if (r === 'grand') {
+    notes.push('Only one druid in the world may hold the title of Grand Druid, ' +
+               'and only one druid may be 15th level at any time.');
+    if (!isNaN(lvl) && lvl >= GRAND_DRUID_MAX_LEVEL) {
+      notes.push('A Grand Druid advances no further while he holds the title. ' +
+                 '17th level requires stepping down as a hierophant druid, which ' +
+                 'surrenders the six bonus spell levels and all experience but 1.');
+    }
+  }
+  if (r === 'archdruid') {
+    notes.push('Three of the Grand Druid\'s nine attendants are archdruids, ' +
+               'roaming as his messengers and agents. Each receives four ' +
+               'additional spell levels.');
+  }
+  if (!isNaN(lvl) && lvl > GRAND_DRUID_MAX_LEVEL && r !== 'hierophant') {
+    notes.push('Only a hierophant druid -- a former Grand Druid who has stepped ' +
+               'down -- reaches 17th level or higher.');
+  }
+  return notes;
+}
+
+
 const WIS_BONUS_SPELLS = {
    1:[0,0,0,0,0,0,0,0,0],   2:[0,0,0,0,0,0,0,0,0],   3:[0,0,0,0,0,0,0,0,0],   4:[0,0,0,0,0,0,0,0,0],
    5:[0,0,0,0,0,0,0,0,0],   6:[0,0,0,0,0,0,0,0,0],   7:[0,0,0,0,0,0,0,0,0],   8:[0,0,0,0,0,0,0,0,0],
