@@ -2543,20 +2543,28 @@ function makeWeaponNode(data={}, onChange){
         'Manual only -- the weapon list carries no range data.">' +
     '</div>' +
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div style="width:130px;text-align:center;">Category</div>' +
-      '<div style="width:110px;text-align:center;">Type</div>' +
-      '<div style="width:130px;text-align:center;">STR Bonus</div>' +
-      '<div style="width:130px;text-align:center;">Proficiency</div>' +
+      '<div style="width:120px;text-align:center;">Category</div>' +
+      '<div style="width:150px;text-align:center;">Type</div>' +
+      '<div style="width:90px;text-align:center;">Group</div>' +
+      '<div style="width:120px;text-align:center;">STR Bonus</div>' +
+      '<div style="width:120px;text-align:center;">Proficiency</div>' +
       '<div style="flex:1;"></div>' +
     '</div>' +
     '<div style="display:flex;align-items:stretch;gap:8px;">' +
-      '<select class="weapon-category" style="width:130px;">' +
+      '<select class="weapon-category" style="width:120px;">' +
         weaponCategoryOptions(data.category) +
       '</select>' +
-      '<select class="weapon-wtype" style="width:110px;">' +
+      '<select class="weapon-wtype" style="width:150px;" title="' +
+        'The specific weapon this is, mechanically.&#10;' +
+        'Set it on a custom or magical weapon and every rule that needs to know&#10;' +
+        '  what it IS -- group, size, damage dice, speed -- resolves correctly,&#10;' +
+        '  however you have named it.&#10;' +
+        'Picking a Type fills BLANK fields only; anything you typed is kept.">' +
         weaponTypeOptions(data.wtype) +
       '</select>' +
-      '<select class="weapon-str-bonus" style="width:130px;" title="' +
+      '<input class="weapon-group" readonly tabindex="-1" value="" ' +
+        'style="width:90px;text-align:center;background:var(--glass);color:var(--muted);">' +
+      '<select class="weapon-str-bonus" style="width:120px;" title="' +
         'How Strength applies to this weapon (PHB).&#10;' +
         'Exceptional: full STR row incl. 18/xx -- melee and hurled weapons.&#10;' +
         'Standard: STR bonus capped at plain 18 -- an ordinary bow. A bow that&#10;' +
@@ -2568,7 +2576,7 @@ function makeWeaponNode(data={}, onChange){
             ? getWeaponGroup(data.wtype, data.wtype)
             : data.wtype) +
       '</select>' +
-      '<select class="weapon-prof-status" style="width:130px;" title="' +
+      '<select class="weapon-prof-status" style="width:120px;" title="' +
         'Proficiency with this weapon (PHB Table 34 penalty column).&#10;' +
         'Auto: derived from your Weapon Proficiencies, using the PHB&#10;' +
         '  related-weapons list. Related weapons cost HALF the penalty.&#10;' +
@@ -2652,6 +2660,77 @@ function makeWeaponNode(data={}, onChange){
       onChange && onChange();
     });
   });
+
+  // --- Type -> Group display, and Type -> stat prefill ------------------------
+  // Group is DERIVED, never stored as its own input: there is one place to set
+  // the weapon's identity, so the coarse and granular values cannot disagree.
+  const groupEl = el.querySelector('.weapon-group');
+
+  const syncWeaponGroup = () => {
+    if (!groupEl) return;
+    const v = typeSel ? typeSel.value : '';
+    const g = (typeof getWeaponGroup === 'function') ? getWeaponGroup(v, v) : '';
+    groupEl.value = g || '';
+    groupEl.title = g
+      ? 'Coarse weapon group, derived from Type.\u000a' +
+        'Used for the PHB related-weapon half-penalty fallback and for\u000a' +
+        '  Table 35 column selection.\u000a' +
+        'Not editable -- change the Type and this follows.'
+      : 'No group yet. Pick a Type and this fills in.';
+  };
+
+  // THE ANCHOR RULE, same as the armor card: a Type PREFILLS blank fields and
+  // never overwrites one the player has filled. An enchanted or homebrew weapon
+  // keeps its own numbers while still resolving a real group, size and dice.
+  const fillIfBlank = (selector, value) => {
+    const f = el.querySelector(selector);
+    if (!f || value === undefined || value === null || value === '') return;
+    if (String(f.value).trim() !== '') return;
+    f.value = value;
+  };
+
+  if (typeSel) {
+    typeSel.addEventListener('change', () => {
+      const key = typeSel.value;
+      const t   = (typeof getWeaponTypeData === 'function') ? getWeaponTypeData(key) : null;
+
+      if (t) {
+        // Category is CLASSIFICATION, so it lives in WEAPON_TYPES and is
+        // available even before core_wp.json has finished loading.
+        fillIfBlank('.weapon-category', t.category);
+
+        // Everything else is a STATISTIC, read live through the wpName pointer
+        // so it is never duplicated and cannot drift from the book.
+        const stats = (typeof getWeaponTypeStats === 'function') ? getWeaponTypeStats(key) : null;
+        if (stats) {
+          fillIfBlank('.speed',        stats['Speed Factor']);
+          fillIfBlank('.damage-sm',    stats['Damage (S-M)']);
+          fillIfBlank('.damage-l',     stats['Damage (L)']);
+          fillIfBlank('.weapon-size',  stats['Size']);
+          fillIfBlank('.weapon-range', stats['Range']);
+          // core_wp.json stores weight as "7 lb"; the field is type=number and
+          // rejects the unit, so strip everything but the digits.
+          const w = parseFloat(String(stats['Weight'] || '').replace(/[^0-9.]/g, ''));
+          if (!isNaN(w)) fillIfBlank('.weight', w);
+        }
+      }
+
+      // ORDERING TRAP: the STR-mode listener above is registered first, so it
+      // has already run against the OLD Category by the time we get here. If we
+      // just filled a blank Category, its answer is stale -- re-derive it.
+      if (strSel && strSel.dataset.userSet !== '1' && typeof getDefaultWeaponStrMode === 'function') {
+        strSel.value = getDefaultWeaponStrMode(
+          catSel ? catSel.value : '',
+          (typeof getWeaponGroup === 'function') ? getWeaponGroup(key, key) : key
+        );
+      }
+
+      syncWeaponGroup();
+      onChange && onChange();
+    });
+  }
+
+  syncWeaponGroup();
   el.querySelector('.equipped').addEventListener('change', ()=>onChange && onChange());
   return el;
 }
