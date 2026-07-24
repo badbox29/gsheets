@@ -1350,7 +1350,9 @@ const SHEET_HTML = `
 
 		<!-- Armor & Shields -->
 		<section class="section">
-		  <h3>Armor & Shields <button class="add-armor">+ Add Custom Armor</button></h3>
+		  <h3>Armor &amp; Shields <button class="add-armor">+ Add Custom Armor</button></h3>
+		  <!-- Class armor restrictions (advisory; never blocks) -->
+		  <div class="armor-restriction-note" style="display:none;margin-bottom:10px;padding:8px;border-radius:4px;font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
 		  <div class="list armor-list"></div>
 		</section>
 	  </main>
