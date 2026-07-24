@@ -298,9 +298,14 @@ function resolveWeaponProficiency(root, rowEl) {
 
   // Status colour, reused for the badge AND the card's left edge so a glance
   // down the list reads as a column of statuses.
-  const statusColor = isSpecialized          ? 'var(--info, #6fb3d2)'
+  // Related stays MUTED rather than amber: --accent-light is #e3c48f and amber
+  // is #e0a34a, near-identical in hue, so a 3px amber stripe would read as
+  // "Proficient" at a glance -- and identically so to anyone with a red-green
+  // deficiency. Grey is also the honest signal: a half penalty is a downgrade,
+  // not a warning, and amber is worth reserving for real problems.
+  const statusColor = isSpecialized           ? 'var(--info, #6fb3d2)'
                     : status === 'proficient' ? 'var(--accent-light)'
-                    : status === 'related'    ? 'var(--warning, #e0a34a)'
+                    : status === 'related'    ? 'var(--muted)'
                     : 'var(--error, #ff6b6b)';
   rowEl.style.borderLeft = '3px solid ' + statusColor;
   rowEl.style.paddingLeft = '8px';
