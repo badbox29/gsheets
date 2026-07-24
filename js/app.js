@@ -2615,8 +2615,14 @@ function makeWeaponNode(data={}, onChange){
       '<div style="width:150px;text-align:center;">Type</div>' +
       '<div style="width:90px;text-align:center;">Group</div>' +
       '<div style="width:120px;text-align:center;">STR Bonus</div>' +
-      '<div style="width:120px;text-align:center;">Proficiency</div>' +
-      '<div style="flex:1;"></div>' +
+      // Left-aligned so the label sits over the left edge of its dropdown, and
+      // flex:1 so the status can run past 120px into the space the old spacer
+      // was wasting. min-width:0 plus ellipsis means it shrinks rather than
+      // widening the card -- the sidebar can never be squeezed by it again.
+      '<div style="flex:1;min-width:0;text-align:left;white-space:nowrap;' +
+           'overflow:hidden;text-overflow:ellipsis;">Proficiency' +
+        '<span class="weapon-prof-badge"></span>' +
+      '</div>' +
     '</div>' +
     // flex-start, not stretch: the Proficiency column is a stack (select plus
     // its badge caption) and under stretch every other control grew to match
@@ -2647,8 +2653,7 @@ function makeWeaponNode(data={}, onChange){
             ? getWeaponGroup(wTypeKey, wTypeKey)
             : wTypeKey) +
       '</select>' +
-      '<div style="display:flex;flex-direction:column;width:120px;min-width:0;">' +
-        '<select class="weapon-prof-status" style="width:100%;" title="' +
+      '<select class="weapon-prof-status" style="width:120px;" title="' +
         'Proficiency with this weapon (PHB Table 34 penalty column).&#10;' +
         'Auto: derived from your Weapon Proficiencies, using the PHB&#10;' +
         '  related-weapons list. Related weapons cost HALF the penalty.&#10;' +
@@ -2658,17 +2663,6 @@ function makeWeaponNode(data={}, onChange){
         'Not Proficient: force the full penalty.">' +
         weaponProficiencyOptions(data.profStatus) +
         '</select>' +
-        // The badge is this dropdown's OUTPUT, so it belongs under it rather
-        // than orphaned at the foot of the card. Living in a FIXED-WIDTH column
-        // with min-width:0 it is structurally incapable of widening the card --
-        // which is what crushed the sidebar when it was a flex:1 sibling.
-        // min-height reserves its line so the card does not twitch as the badge
-        // appears and clears; the ellipsis is a safety net, since the longest
-        // status ("Not Proficient (-5)" for a wizard) only just fits.
-        '<div class="weapon-prof-badge" style="font-size:11px;margin-top:4px;' +
-          'min-height:14px;text-align:center;white-space:nowrap;overflow:hidden;' +
-          'text-overflow:ellipsis;"></div>' +
-      '</div>' +
     '</div>' +
   '</div>';
   // Details toggle. Weapons carry four rows of fields now -- eight weapons
