@@ -615,12 +615,17 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // Consumables count DOWN during play, and the quantity itself changes -- pick
   // up two arrows and any pre-drawn set of boxes is already wrong. So this is
   // just open space, sized for hash marks. Players tally the usual way.
-  // Sized for a few hand-written hash marks, and NO TALLER. This cell is empty,
-  // so whatever height it takes is imposed on every other cell in its row --
-  // at fontSize 9 with 3pt margins it was forcing ~17pt rows to hold ~7pt of
-  // text, and making data rows taller than the blank write-in rows beneath them.
+  // An ordinary empty cell -- NO taller than any other cell on the sheet.
+  //
+  // This cell holds nothing, so whatever height it takes is imposed on every
+  // other cell in its row. It started at fontSize 9 with 3pt margins, forcing
+  // ~17pt rows to carry ~7pt of text; even 2pt margins left ammunition rows 43%
+  // taller than the proficiency tables. A row is ~9.2pt (7.2pt of line plus
+  // gridLayout's 1pt top and bottom padding), and matching that exactly is what
+  // makes the section sit level with the rest of the sheet. Writing room comes
+  // from the blank rows underneath, not from inflating every data row.
   const tallyBoxes = () =>
-    ({ text: ' ', fontSize: 6, margin: [0, 2, 0, 2] });
+    ({ text: ' ', fontSize: 6 });
 
   // === BASIC INFO ===
   const characterName = val(root, 'name') || '';
