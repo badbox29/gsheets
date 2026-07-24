@@ -3601,10 +3601,20 @@ function addWeaponProficiency(root, weapon) {
     return;
   }
   
-  // Add the weapon proficiency
+  // The name came straight out of core_wp.json, so inference is an exact hit
+  // and the granular key costs nothing here.
+  const profTypeKey = (typeof inferWeaponTypeKey === 'function')
+    ? (inferWeaponTypeKey(weapon['Weapon Name']) || '')
+    : '';
+
   root._weaponProfs.push({
     name: weapon['Weapon Name'],
-    group: weapon.Group || '',
+    weaponTypeKey: profTypeKey,
+    // Derived from the key, with the browser's own Group as the fallback for
+    // the impossible case where inference misses.
+    group: (typeof getWeaponGroup === 'function')
+      ? getWeaponGroup(profTypeKey, weapon.Group || '')
+      : (weapon.Group || ''),
     slots: 1
   });
   
@@ -3725,7 +3735,49 @@ function renderProficiencySlots(root) {
 }
 
 // Render weapon proficiencies list
+// Backfill weaponTypeKey on proficiency records saved before the type dropdown.
+//
+// NON-DESTRUCTIVE: only fills a key that is missing, inferring it from the
+// proficiency's NAME. Proficiencies are nearly always added from the Learn
+// browser, so their names are canonical and inference is an exact hit; a
+// hand-typed custom may not resolve and is simply left for the player to set.
+//
+// Where a key IS known, group is re-derived from it, because group is a derived
+// value now. This also quietly repairs records whose group was typed into the
+// old prompt() as "Swords" or similar and had stopped matching anything.
+function migrateWeaponProfTypes(root) {
+  const profs = root._weaponProfs || [];
+
+  profs.forEach(p => {
+    if (!p) return;
+
+    if (!p.weaponTypeKey && typeof inferWeaponTypeKey === 'function') {
+      const guess = inferWeaponTypeKey(p.name);
+      if (guess) {
+        // Same guard as resolveWeaponTypeKey on the weapon card: if the record
+        // already claims a group and the name lands in a DIFFERENT one, the
+        // name is misleading. Do not assert a weapon we are unsure about.
+        const g       = (typeof getWeaponGroup === 'function') ? getWeaponGroup(guess, '') : '';
+        const claimed = (p.group || '').trim();
+        if (!claimed || !g || g.toLowerCase() === claimed.toLowerCase()) {
+          p.weaponTypeKey = guess;
+        }
+      }
+    }
+
+    if (p.weaponTypeKey && typeof getWeaponGroup === 'function') {
+      const g = getWeaponGroup(p.weaponTypeKey, '');
+      if (g) p.group = g;
+    }
+  });
+}
+
 function renderWeaponProficiencies(root) {
+  // Migrate FIRST. renderCombatQuickReference below resolves proficiency
+  // status, so it has to see the keys -- otherwise it reports the old
+  // name-matched answer and does not run again until something else changes.
+  migrateWeaponProfTypes(root);
+
   renderProficiencySlots(root);
   if (typeof renderCombatQuickReference === 'function') renderCombatQuickReference(root);
 
@@ -3825,7 +3877,10 @@ function addCustomWeaponProficiency(root) {
   const weaponName = prompt('Enter weapon name:');
   if (!weaponName || !weaponName.trim()) return;
   
-  const group = prompt('Enter weapon group (e.g., Sword, Axe, Bow):', '');
+  // The group prompt is gone. It was free text, so "Swords" or a stray capital
+  // silently broke related-weapon matching with nothing on screen to say so --
+  // the proficiency simply stopped counting and looked fine. Group is DERIVED
+  // from the type key now, and the type comes from a controlled dropdown.
   const slots = prompt('Enter slots required:', '1');
   
   // Initialize weapon proficiencies array if it doesn't exist
@@ -3840,10 +3895,18 @@ function addCustomWeaponProficiency(root) {
     return;
   }
   
-  // Add the custom weapon proficiency
+  // The typed name may well be a book weapon ("long sword"), in which case
+  // inference resolves it and the group fills itself. A genuinely homebrew name
+  // resolves to nothing, and the player picks a Type on the card instead.
+  const customTypeKey = (typeof inferWeaponTypeKey === 'function')
+    ? (inferWeaponTypeKey(weaponName) || '')
+    : '';
+
   root._weaponProfs.push({
     name: weaponName.trim(),
-    group: group ? group.trim() : '',
+    weaponTypeKey: customTypeKey,
+    // DERIVED from the key, never entered. See the note on the prompts above.
+    group: (typeof getWeaponGroup === 'function') ? getWeaponGroup(customTypeKey, '') : '',
     slots: parseInt(slots) || 1
   });
   
