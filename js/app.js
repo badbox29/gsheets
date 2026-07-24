@@ -3680,6 +3680,7 @@ function loadSheet(root, data){
   if (attacksPerRoundEl) {
     attacksPerRoundEl.value = m.attacks_per_round || '';
   }
+  if (typeof renderAttacksPerRound === 'function') renderAttacksPerRound(root);
 
   // Skills lists
   const wlist = qs(root,'.weapon-profs-list'); wlist.innerHTML='';
@@ -4842,6 +4843,7 @@ function bindSheet(root, tab){
   if (attacksPerRoundInput) {
     attacksPerRoundInput.addEventListener('input', () => {
       markUnsaved(tab, true, root);
+      if (typeof renderAttacksPerRound === 'function') renderAttacksPerRound(root);
     });
   }
   
@@ -4977,7 +4979,11 @@ function bindSheet(root, tab){
     const f = (e.target && e.target.getAttribute) ? e.target.getAttribute('data-field') : null;
     if (!f) return;
     if (f === 'con_initial' || f === 'deaths_to_date') renderRevivals(root);
-    else if (hitDiceFields.test(f)) renderHitDice(root);
+    else if (hitDiceFields.test(f)) {
+      renderHitDice(root);
+      // Table 15 keys off the same class-and-level fields as Hit Dice.
+      if (typeof renderAttacksPerRound === 'function') renderAttacksPerRound(root);
+    }
   };
   root.addEventListener('input', onHpTrackingChange);
   root.addEventListener('change', onHpTrackingChange);
@@ -9949,6 +9955,7 @@ function recalculateAll(root) {
   if (typeof renderTurnUndeadTable === 'function') renderTurnUndeadTable(root);
   if (typeof renderCurrentHP === 'function') renderCurrentHP(root);
   if (typeof renderHitDice === 'function') renderHitDice(root);
+  if (typeof renderAttacksPerRound === 'function') renderAttacksPerRound(root);
   if (typeof renderRevivals === 'function') renderRevivals(root);
   if (typeof renderEncumbrance === 'function') renderEncumbrance(root);
   if (typeof renderProficiencySlots === 'function') renderProficiencySlots(root);
