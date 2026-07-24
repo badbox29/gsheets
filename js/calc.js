@@ -288,18 +288,27 @@ function resolveWeaponProficiency(root, rowEl) {
   const penalty     = getWeaponAttackPenalty(status, fullPenalty);
 
   if (badgeEl) {
+    let text, color, tip;
     if (status === 'proficient') {
-      badgeEl.innerHTML = '<span style="color:var(--accent-light);">Proficient</span>';
-      badgeEl.title = 'No attack penalty.';
+      text  = 'Proficient';
+      color = 'var(--accent-light)';
+      tip   = 'No attack penalty.';
     } else if (status === 'related') {
-      badgeEl.innerHTML = '<span style="color:var(--muted);">Related (' + penalty + ')</span>';
-      badgeEl.title = 'A related weapon costs HALF the normal non-proficiency penalty,\n' +
-                      'rounded up (PHB "Related Weapons Bonus"). Full penalty would be ' + fullPenalty + '.';
+      text  = 'Related (' + penalty + ')';
+      color = 'var(--muted)';
+      tip   = 'A related weapon costs HALF the normal non-proficiency penalty,\n' +
+              'rounded up (PHB "Related Weapons Bonus"). Full penalty would be ' + fullPenalty + '.';
     } else {
-      badgeEl.innerHTML = '<span style="color:var(--error, #ff6b6b);">Not Proficient (' + penalty + ')</span>';
-      badgeEl.title = 'Non-proficiency attack penalty (PHB Table 34).\n' +
-                      'Warrior -2, Wizard -5, Priest -3, Rogue -3.';
+      text  = 'Not Proficient (' + penalty + ')';
+      color = 'var(--error, #ff6b6b)';
+      tip   = 'Non-proficiency attack penalty (PHB Table 34).\n' +
+              'Warrior -2, Wizard -5, Priest -3, Rogue -3.';
     }
+    // The separator is built WITH the status rather than sitting in the
+    // template, so a blank row leaves no dangling pipe beside the label.
+    badgeEl.innerHTML = '<span style="opacity:0.5;">&nbsp;|&nbsp;</span>' +
+                        '<span style="color:' + color + ';">' + text + '</span>';
+    badgeEl.title = tip;
   }
 
   return { status, penalty };
