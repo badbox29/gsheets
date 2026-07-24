@@ -2468,7 +2468,47 @@ function weaponSizeOptions(sel) {
   ).join('');
 }
 
+// Which granular type a saved weapon record represents.
+//
+// Migration lives here rather than in loadSheet because every path that builds
+// a weapon row goes through makeWeaponNode -- load, manual add, and the browser
+// -- so one resolver covers all three and none of them can drift.
+function resolveWeaponTypeKey(data) {
+  const stored = (data.weaponTypeKey || '').trim();
+  const coarse = (data.wtype || '').trim();
+
+  // 1. A stored granular key always wins. THIS IS THE ANCHOR -- the whole point
+  //    of the field is that it survives whatever the player names the weapon.
+  if (stored && typeof getWeaponTypeData === 'function' && getWeaponTypeData(stored)) {
+    return stored;
+  }
+
+  // 2. A pre-migration record carries only a coarse group and a free-text name,
+  //    and the name is where the specificity actually lives. Infer it once.
+  if (typeof inferWeaponTypeKey === 'function') {
+    const guess = inferWeaponTypeKey(data.name);
+    if (guess) {
+      // GUARD: if the record already asserted a coarse group and the name lands
+      // in a DIFFERENT one, the name is misleading -- something recorded as a
+      // Sword but flavour-named "...Dagger of the Sea". Do not assert a specific
+      // weapon we are not confident about; fall through and let the player pick.
+      const g = (typeof getWeaponGroup === 'function') ? getWeaponGroup(guess, '') : '';
+      if (!coarse || !g || g.toLowerCase() === coarse.toLowerCase()) return guess;
+    }
+  }
+
+  // 3. Nothing recognisable. Keep the coarse value -- weaponTypeOptions renders
+  //    it as "(legacy)" so it reads honestly, and getWeaponGroup passes it
+  //    straight through, so the related-weapon rules keep working in the
+  //    meantime. Never blank out data we cannot improve on.
+  return coarse;
+}
+
 function makeWeaponNode(data={}, onChange){
+  // Resolved once, up front, so the Type dropdown and the STR-mode default can
+  // never disagree about what this weapon is.
+  const wTypeKey = resolveWeaponTypeKey(data);
+
   const el = document.createElement('div');
   el.className = 'item';
   el.style.flexDirection = 'column';
@@ -2560,7 +2600,7 @@ function makeWeaponNode(data={}, onChange){
         '  what it IS -- group, size, damage dice, speed -- resolves correctly,&#10;' +
         '  however you have named it.&#10;' +
         'Picking a Type fills BLANK fields only; anything you typed is kept.">' +
-        weaponTypeOptions(data.wtype) +
+        weaponTypeOptions(wTypeKey) +
       '</select>' +
       '<input class="weapon-group" readonly tabindex="-1" value="" ' +
         'style="width:90px;text-align:center;background:var(--glass);color:var(--muted);">' +
@@ -2573,8 +2613,8 @@ function makeWeaponNode(data={}, onChange){
         'Defaults are set from Category and Type; override as your DM allows.">' +
         weaponStrBonusOptions(data.strBonus, data.category,
           (typeof getWeaponGroup === 'function')
-            ? getWeaponGroup(data.wtype, data.wtype)
-            : data.wtype) +
+            ? getWeaponGroup(wTypeKey, wTypeKey)
+            : wTypeKey) +
       '</select>' +
       '<select class="weapon-prof-status" style="width:120px;" title="' +
         'Proficiency with this weapon (PHB Table 34 penalty column).&#10;' +
@@ -3128,7 +3168,20 @@ function collectSheet(root){
       // How Strength applies to this weapon (PHB). Category/Type drive the
       // default; strBonus is the explicit, DM-overridable setting.
       category: (n.querySelector('.weapon-category') && n.querySelector('.weapon-category').value) || '',
-      wtype: (n.querySelector('.weapon-wtype') && n.querySelector('.weapon-wtype').value) || '',
+      // TWO VOCABULARIES, TWO FIELDS -- never one field carrying two meanings.
+      // weaponTypeKey is the GRANULAR key ("sword_long"). wtype is the COARSE
+      // group ("Sword"), DERIVED from it, kept because every existing consumer
+      // already reads it and because a group is what the related-weapon rules
+      // and the Table 35 columns actually reason about. Deriving rather than
+      // storing separately means the two can never fall out of step.
+      weaponTypeKey: (function () {
+        const v = (n.querySelector('.weapon-wtype') && n.querySelector('.weapon-wtype').value) || '';
+        return (typeof getWeaponTypeData === 'function' && getWeaponTypeData(v)) ? v : '';
+      })(),
+      wtype: (function () {
+        const v = (n.querySelector('.weapon-wtype') && n.querySelector('.weapon-wtype').value) || '';
+        return (typeof getWeaponGroup === 'function') ? getWeaponGroup(v, v) : v;
+      })(),
       strBonus: (n.querySelector('.weapon-str-bonus') && n.querySelector('.weapon-str-bonus').value) || '',
       profStatus: (n.querySelector('.weapon-prof-status') && n.querySelector('.weapon-prof-status').value) || 'auto',
       // Per-weapon adjustments. All five are optional and blank means inherit:
