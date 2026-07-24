@@ -3929,6 +3929,7 @@ function loadSheet(root, data){
   updateThiefSkillsAccessibility(root); // NEW LINE - Update skill accessibility
   renderThiefSkillsSection(root);
   if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
+  if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
   renderThiefPointsSection(root);
   updateThiefPointsDisplay(root);
   renderCharacterBonuses(root);
@@ -4580,6 +4581,7 @@ function bindSheet(root, tab){
       if (e.target.classList.contains('title')) {
         if (typeof renderThiefSkills === 'function') renderThiefSkills(root);
         if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
+		if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
       }
     });
     // Separate listener for checkbox and select changes (use 'change' not 'input')
@@ -4589,6 +4591,7 @@ function bindSheet(root, tab){
         renderMovementRate(root);
         if (typeof renderThiefSkills === 'function') renderThiefSkills(root);
         if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
+		if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
       }
       // Also trigger for armor type dropdown changes
       // Both axes matter: .armor-slot decides whether a piece counts as body
@@ -4601,6 +4604,7 @@ function bindSheet(root, tab){
         // an item to or from "Shield" changes which piece the lookup finds.
         if (typeof renderThiefSkills === 'function') renderThiefSkills(root);
         if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
+		if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
       }
     });
   }
@@ -4739,6 +4743,7 @@ function bindSheet(root, tab){
   renderRevivals(root);
   renderThiefSkills(root);
   if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
+  if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
 
   // Ranger stealth depends on class, level, race and Dexterity across all three
   // character types. One delegated listener rather than patching each of the
@@ -4747,14 +4752,16 @@ function bindSheet(root, tab){
     /^(clazz|level|race|dex|char_type|mc_(class|level)[123]|dc_(original|new)_(class|level))$/;
   root.addEventListener('input', (e) => {
     const f = (e.target && e.target.getAttribute) ? e.target.getAttribute('data-field') : null;
-    if (f && rangerStealthFields.test(f) && typeof renderRangerStealth === 'function') {
-      renderRangerStealth(root);
+    if (f && rangerStealthFields.test(f)) {
+      if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
+      if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
     }
   });
   root.addEventListener('change', (e) => {
     const f = (e.target && e.target.getAttribute) ? e.target.getAttribute('data-field') : null;
-    if (f && rangerStealthFields.test(f) && typeof renderRangerStealth === 'function') {
-      renderRangerStealth(root);
+    if (f && rangerStealthFields.test(f)) {
+      if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
+      if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
     }
   });
 
@@ -5724,6 +5731,7 @@ function renderOneOptionalRule(listEl, key) {
         if (typeof recalculateAll === 'function') recalculateAll(sheet);
         // Advisory banners are not part of recalculateAll, so refresh them too.
         if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(sheet);
+        if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(sheet);
       });
     });
   }
