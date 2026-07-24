@@ -5008,6 +5008,7 @@ function bindSheet(root, tab){
   renderThiefSkills(root);
   if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
   if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
+  if (typeof renderDruidRole === 'function') renderDruidRole(root);
 
   // Ranger stealth depends on class, level, race and Dexterity across all three
   // character types. One delegated listener rather than patching each of the
@@ -5047,6 +5048,23 @@ function bindSheet(root, tab){
   };
   root.addEventListener('input', onHpTrackingChange);
   root.addEventListener('change', onHpTrackingChange);
+
+  // Druid Standing (PHB Ch.3). The role dropdown and the six bonus-pool boxes
+  // all feed the spell-slot totals, so any change re-runs renderSpellSlots --
+  // which recomputes the slots AND calls renderDruidRole through the render
+  // suite, refreshing the pool readout and gate-disabling in one pass. Role and
+  // level also change which pool levels the WIS gate gates, hence level is here.
+  const druidRoleFields =
+    /^(druid_role|druid_bonus_[1-9]|clazz|level|wis)$/;
+  const onDruidRoleChange = (e) => {
+    const f = (e.target && e.target.getAttribute) ? e.target.getAttribute('data-field') : null;
+    if (f && druidRoleFields.test(f)) {
+      renderSpellSlots(root);
+      if (typeof renderDruidRole === 'function') renderDruidRole(root);
+    }
+  };
+  root.addEventListener('input', onDruidRoleChange);
+  root.addEventListener('change', onDruidRoleChange);
 
   // Mark unsaved on any input/textarea change
   qsa(root, 'input,textarea').forEach(inp=>{
