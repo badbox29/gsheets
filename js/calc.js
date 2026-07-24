@@ -1359,6 +1359,40 @@ function renderRangerStealth(root) {
   }
 }
 
+// Is this weapon the one the character specialized in?
+//
+// The link is PROFICIENCY NAME -> weapon card TYPE, not the weapon's own name.
+// Both draw on the same core_wp.json vocabulary, so a weapon called "Moon
+// Hunter" with Type "Short Sword" correctly picks up a Short Sword
+// specialization. Matching on the name would fail for every flavour-named or
+// magical weapon on the sheet.
+//
+// Returns { specialized, wtype, category, group, level } or null when the
+// character cannot specialize at all.
+function getWeaponSpecialization(root, weaponEl) {
+  if (typeof isOptionalRule === 'function' && !isOptionalRule('weaponSpecialization')) return null;
+  if (typeof canSpecialize !== 'function' || !canSpecialize(root)) return null;
+
+  const level = parseInt(val(root, 'level') || 0, 10);
+  if (!level) return null;
+
+  const q = sel => {
+    const el = weaponEl && weaponEl.querySelector(sel);
+    return el ? (el.value || '').trim() : '';
+  };
+  const wtype = q('.weapon-wtype');
+  if (!wtype) return null;                    // no mechanical identity set
+
+  const category = q('.weapon-category');
+  const group = q('.weapon-group');
+
+  const profs = root._weaponProfs || [];
+  const norm = s => String(s || '').trim().toLowerCase();
+  const specialized = profs.some(p => p && p.specialized && norm(p.name) === norm(wtype));
+
+  return { specialized, wtype, category, group, level };
+}
+
 // Melee attacks per round (PHB Table 15), derived with manual override -- the
 // same pattern as Hit Dice: the readonly field shows the EFFECTIVE value and
 // tints amber when an override is in force, and the override field is what the
