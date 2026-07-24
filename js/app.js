@@ -3698,6 +3698,9 @@ function loadSheet(root, data){
 	val(root,'druid_bonus_4',m.druid_bonus_4||'');
 	val(root,'druid_bonus_5',m.druid_bonus_5||'');
 	val(root,'druid_bonus_6',m.druid_bonus_6||'');
+	// Baseline for the Hierophant XP-transfer detector: seed it from the loaded
+	// role so a load never looks like a fresh selection and never moves XP.
+	root._prevDruidRole = (m.druid_role || '').toLowerCase();
   val(root,'ac',m.ac||'');
   val(root,'ac_manual',m.ac_manual||'');
   val(root,'str',m.str||'');
@@ -5058,10 +5061,48 @@ function bindSheet(root, tab){
     /^(druid_role|druid_bonus_[1-9]|clazz|level|wis)$/;
   const onDruidRoleChange = (e) => {
     const f = (e.target && e.target.getAttribute) ? e.target.getAttribute('data-field') : null;
-    if (f && druidRoleFields.test(f)) {
-      renderSpellSlots(root);
-      if (typeof renderDruidRole === 'function') renderDruidRole(root);
+    if (!f || !druidRoleFields.test(f)) return;
+
+    // XP transfer on the deliberate act of stepping down or reversing it. Fires
+    // ONLY on an explicit change of the role dropdown -- never from the derived
+    // role, a level edit, or a load -- so a misclick is the only thing it can be.
+    // PHB Ch.3: on stepping down the former Grand Druid "must relinquish... all
+    // his experience points but 1". Reversing ADDS the surrendered XP back to
+    // whatever is now in the main field, so a session played while mistakenly
+    // stepped down keeps its earnings.
+    if (f === 'druid_role') {
+      const prev = (root._prevDruidRole || '').toLowerCase();
+      const now  = (val(root, 'druid_role') || '').toLowerCase();
+
+      if (now === 'hierophant' && prev !== 'hierophant') {
+        // Step down: move all but 1 XP into the surrendered field.
+        const xp = parseInt(val(root, 'xp') || 0, 10);
+        if (!isNaN(xp) && xp > 1) {
+          const existing = parseInt(val(root, 'druid_surrendered_xp') || 0, 10) || 0;
+          val(root, 'druid_surrendered_xp', String(existing + (xp - 1)));
+          val(root, 'xp', '1');
+        }
+      } else if (prev === 'hierophant' && now !== 'hierophant') {
+        // Reverse: add the surrendered XP back to the current main total, then
+        // clear the surrendered field. Addition, not overwrite, preserves any
+        // XP earned while stepped down.
+        const surr = parseInt(val(root, 'druid_surrendered_xp') || 0, 10) || 0;
+        if (surr > 0) {
+          const xp = parseInt(val(root, 'xp') || 0, 10) || 0;
+          val(root, 'xp', String(xp + surr));
+          val(root, 'druid_surrendered_xp', '');
+        }
+      }
+
+      root._prevDruidRole = now;
+
+      // XP changed, so the level/next-level and XP progression displays must
+      // refresh alongside the spell-slot render below.
+      if (typeof renderXPProgression === 'function') renderXPProgression(root);
     }
+
+    renderSpellSlots(root);
+    if (typeof renderDruidRole === 'function') renderDruidRole(root);
   };
   root.addEventListener('input', onDruidRoleChange);
   root.addEventListener('change', onDruidRoleChange);
