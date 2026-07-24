@@ -2987,7 +2987,13 @@ function collectSheet(root){
   const armor = qsa(root,'.armor-list .item')
     .map(n=>({
       name: n.querySelector('.title').value,
-      armorType: n.querySelector('.armor-type').value,
+      // armorType = WHERE it is worn (Armor / Shield / Helmet / ...).
+      // armorTypeKey = WHAT IT IS (leather, plate, buckler_wood, ...), the
+      // anchor every rule reads. The class names were swapped in the card
+      // rewrite -- .armor-slot now holds the wear location and .armor-type
+      // holds the construction -- so both are read defensively here.
+      armorType: (n.querySelector('.armor-slot') || n.querySelector('.armor-type') || {}).value || 'Armor',
+      armorTypeKey: (n.querySelector('.armor-type') ? n.querySelector('.armor-type').value : '') || '',
       baseAC: n.querySelector('.base-ac').value,
       acBonus: n.querySelector('.ac-bonus').value,
       equipped: n.querySelector('.equipped').checked,
@@ -4585,7 +4591,10 @@ function bindSheet(root, tab){
         if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
       }
       // Also trigger for armor type dropdown changes
-      if (e.target.classList.contains('armor-type')) {
+      // Both axes matter: .armor-slot decides whether a piece counts as body
+      // armor at all, .armor-type decides which Table 29 column it uses.
+      if (e.target.classList.contains('armor-type') ||
+          e.target.classList.contains('armor-slot')) {
         renderArmorClass(root);
         renderMovementRate(root);
         // Only Armor-type items count as body armor for Table 29, so switching
