@@ -2654,8 +2654,12 @@ function makeWeaponNode(data={}, onChange){
         'Not Proficient: force the full penalty.">' +
         weaponProficiencyOptions(data.profStatus) +
       '</select>' +
-      '<div class="weapon-prof-badge" style="flex:1;display:flex;align-items:center;font-size:11px;padding-left:6px;"></div>' +
-    '</div>' +
+      '</div>' +
+    // On its own line, not as a flex:1 column. As a flex item its min-width was
+    // auto, so once it carried text it could not shrink and pushed the card
+    // wider than its grid column -- which is what was crushing the sidebar.
+    // Full width suits it better anyway: it is a status note, not a column.
+    '<div class="weapon-prof-badge" style="font-size:11px;margin-top:6px;min-height:14px;"></div>' +
   '</div>';
   // Details toggle. Weapons carry four rows of fields now -- eight weapons
   // expanded is an unreadable wall -- so everything but the identity row is
