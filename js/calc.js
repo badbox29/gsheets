@@ -440,6 +440,12 @@ function renderCombatQuickReference(root) {
         hitAdj: hitAdjEl ? hitAdjEl.value : '',
         dmgAdj: dmgAdjEl ? dmgAdjEl.value : '',
         attacks: atkEl ? atkEl.value : '',
+        // Resolved from the weapon's TYPE against the proficiency list, so a
+        // flavour-named weapon still matches the proficiency it really is.
+        specialized: (typeof getWeaponSpecialization === 'function')
+          ? !!(getWeaponSpecialization(root, el) || {}).specialized
+          : false,
+        specLevel: parseInt(val(root, 'level') || 0, 10),
         category: category,
         weaponTypeKey: wtype,
         wtype: wGroup,
@@ -472,12 +478,25 @@ function renderCombatQuickReference(root) {
       // hitAdj 1, dmgAdj 0. Blank means inherit; "0" is a real override, hence
       // the explicit empty-string test rather than a falsy one.
       const enchant = weapon.magicBonus || 0;
-      const hitBase = (weapon.hitAdj !== '' && weapon.hitAdj !== undefined && weapon.hitAdj !== null)
+      let hitBase = (weapon.hitAdj !== '' && weapon.hitAdj !== undefined && weapon.hitAdj !== null)
         ? (parseInt(weapon.hitAdj, 10) || 0)
         : enchant;
-      const dmgBase = (weapon.dmgAdj !== '' && weapon.dmgAdj !== undefined && weapon.dmgAdj !== null)
+      let dmgBase = (weapon.dmgAdj !== '' && weapon.dmgAdj !== undefined && weapon.dmgAdj !== null)
         ? (parseInt(weapon.dmgAdj, 10) || 0)
         : enchant;
+
+      // Weapon specialization (PHB Ch.5). Melee specialists gain +1 to hit and
+      // +2 damage ON TOP of Strength and magic. Bow and crossbow specialists
+      // gain no flat bonus -- they get a point-blank range category instead.
+      // These bonuses are NOT magical and do not let the weapon strike a
+      // creature that can only be injured by magical weapons.
+      let specBonus = null;
+      if (weapon.specialized && typeof getSpecialistCombatBonuses === 'function') {
+        specBonus = getSpecialistCombatBonuses(
+          weapon.weaponTypeKey, weapon.category, weapon.wtype);
+        hitBase += specBonus.hit;
+        dmgBase += specBonus.damage;
+      }
       const cat = (weapon.category || '').toLowerCase();
       // PHB Table 34: attack penalty for wielding a weapon you are not
       // proficient with. Related weapons cost half, rounded up.
