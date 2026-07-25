@@ -128,7 +128,14 @@ const RACIAL_COMBAT_BONUSES = {
     defensive: [
       { name: "AC Bonus vs Giants", notes: "Giants, ogres, trolls, ogre magi, titans get -4 to hit you" }
     ],
-    special: []
+    special: [
+      // PHB Ch.2: "All magical items that are not specifically suited to the
+      // character's class have a 20% chance to malfunction when used by a
+      // dwarf." Note the exclusion list is the OPPOSITE way round from what
+      // intuition suggests -- rods, wands and potions DO malfunction; weapons
+      // and armor do not.
+      { name: "Magic Item Malfunction", notes: "20% chance of malfunction each time you use a magical item not suited to your class -- rods, staves, wands, rings, amulets, potions, horns, jewels and the like. Weapons, shields, armor, gauntlets and girdles are exempt, as are priest items used by a dwarven cleric. Affects only that use; a cursed item that malfunctions reveals itself" }
+    ]
   },
   gnome: {
     combat: [
@@ -137,38 +144,43 @@ const RACIAL_COMBAT_BONUSES = {
     defensive: [
       { name: "AC Bonus vs Giants", notes: "Gnolls, bugbears, ogres, trolls, ogre magi, giants, titans get -4 to hit you" }
     ],
-    special: []
+    special: [
+      // PHB Ch.2. The gnome exclusion list is NOT the dwarf's -- gnomes exempt
+      // illusionist items and thief-duplicating items, dwarves exempt gauntlets
+      // and girdles. Transcribed separately for that reason.
+      { name: "Magic Item Failure", notes: "20% chance of failure each time you use a magical item. Weapons, armor, shields, illusionist items, and (for gnome thieves) items that duplicate thieving abilities are exempt. A device that fails reveals a cursed item" }
+    ]
   },
   halfling: {
     combat: [
       { name: "Ranged Attack Bonus", notes: "+1 to hit with slings and thrown weapons" }
     ],
-    defensive: [
-      { name: "AC Bonus vs Large", notes: "Creatures larger than man-sized get -4 to hit you" }
-    ],
-    special: []
+    // DELIBERATELY EMPTY. This slot previously held "creatures larger than
+    // man-sized get -4 to hit you". PHB Ch.2 grants that -4 to DWARVES and
+    // GNOMES only; the halfling entry has no such ability.
+    defensive: [],
+    special: [
+      { name: "Surprise Bonus", notes: "Opponents take -4 on their surprise rolls, or -2 if you must open a door or screen to attack. Requires that you are not in metal armor AND are either alone, with a party of only halflings and elves likewise out of metal armor, or 90+ feet ahead of your party" }
+    ]
   },
   elf: {
     combat: [
-      { name: "Weapon Bonus", notes: "+1 to hit with longsword, shortsword, longbow, shortbow" }
+      // PHB Ch.2: "When employing a bow of any sort other than a crossbow, or
+      // when using a short or long sword". Any bow qualifies -- composite and
+      // flight bows included -- not just the long and short bow.
+      { name: "Weapon Bonus", notes: "+1 to hit with any bow other than a crossbow, and with short and long swords" }
     ],
     defensive: [],
     special: [
-      { name: "Sleep/Charm Resistance", notes: "90% resistant to sleep and charm spells" }
+      { name: "Sleep/Charm Resistance", notes: "90% resistant to sleep and all charm-related spells (in addition to any normal saving throw)" },
+      { name: "Surprise Bonus", notes: "Opponents take -4 on their surprise rolls, or -2 if you must open a door or screen to attack. Requires that you are not in metal armor AND are either alone, with a party of only elves and halflings likewise out of metal armor, or 90+ feet ahead of your party" }
     ]
   },
   "half-elf": {
     combat: [],
     defensive: [],
     special: [
-      { name: "Sleep/Charm Resistance", notes: "30% resistant to sleep and charm spells" }
-    ]
-  },
-  halfelf: {
-    combat: [],
-    defensive: [],
-    special: [
-      { name: "Sleep/Charm Resistance", notes: "30% resistant to sleep and charm spells" }
+      { name: "Sleep/Charm Resistance", notes: "30% resistant to sleep and all charm-related spells (in addition to any normal saving throw)" }
     ]
   },
   human: {
@@ -176,17 +188,20 @@ const RACIAL_COMBAT_BONUSES = {
     defensive: [],
     special: []
   },
+  // NOT A PHB CHAPTER 2 RACE. The six player character races are human, elf,
+  // dwarf, gnome, half-elf and halfling. Half-orc is kept as a homebrew stub so
+  // an existing character does not break, but it has no PHB entry to transcribe
+  // and no entry in RACE_LANGUAGES.
   "half-orc": {
-    combat: [],
-    defensive: [],
-    special: []
-  },
-  halforc: {
     combat: [],
     defensive: [],
     special: []
   }
 };
+// Aliases, not copies -- duplicated blocks drifting apart is how the old
+// multi-class table accumulated three combinations the PHB does not allow.
+RACIAL_COMBAT_BONUSES.halfelf  = RACIAL_COMBAT_BONUSES["half-elf"];
+RACIAL_COMBAT_BONUSES.halforc  = RACIAL_COMBAT_BONUSES["half-orc"];
 
 const CLASS_COMBAT_BONUSES = {
   fighter: {
