@@ -3262,6 +3262,27 @@ const OPTIONAL_RULES = {
     category: 'override',
     default: true
   },
+  classAlignmentRequirements: {
+    label:   'Warn when alignment conflicts with the class',
+    detail:  'PHB Chapter 3. A paladin must be lawful good and must always remain lawful good; ' +
+             'a ranger is always good; a druid must be neutral; a thief may be any alignment ' +
+             'except lawful good; a bard must always be partially neutral. Fighters, wizards and ' +
+             'clerics have no restriction -- a cleric takes any alignment acceptable to his order, ' +
+             'which is the DM\'s call. Homebrew classes are never judged. Advisory only; nothing ' +
+             'is blocked.',
+    category: 'override',
+    default: true
+  },
+  kitAlignmentRequirements: {
+    label:   'Warn when alignment conflicts with the kit',
+    detail:  'Kits carry their own alignment requirements from the Complete handbooks -- the ' +
+             'Cavalier is lawful good, the Wanderer is neutral, the Feralan is partially neutral. ' +
+             'These stack with the class requirement rather than replacing it. Kits whose ' +
+             'requirement depends on the character\'s deity are reported but never judged. ' +
+             'Advisory only; nothing is blocked.',
+    category: 'override',
+    default: true
+  },
   agingEffects: {
     label:   'Show aging effects for the entered age',
     detail:  'PHB Tables 11 and 12. On reaching middle age, old age and venerable age a character ' +
