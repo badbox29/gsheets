@@ -729,7 +729,9 @@ function renderSpellSlots(root) {
       if (category === 'priest' && wis >= 13) {
         const bonus = WIS_BONUS_SPELLS[wis];
         if (bonus) {
-          slots = slots.map((s, i) => s + bonus[i]);
+          // PHB Table 5: bonus spells apply only at levels the priest can
+          // already cast (see single-class path above).
+          slots = slots.map((s, i) => s + (s > 0 ? bonus[i] : 0));
         }
       }
 
