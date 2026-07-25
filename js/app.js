@@ -833,7 +833,10 @@ function renderSpellSlots(root) {
   let appliedBonus = null;
   if ((clazz.includes("cleric") || clazz.includes("druid")) && WIS_BONUS_SPELLS[wis]) {
     const bonus = WIS_BONUS_SPELLS[wis];
-    slots = slots.map((s,i) => s + bonus[i]);
+    // PHB Table 5: bonus spells are available "only when the priest is entitled
+    // to spells of the appropriate level." Add the bonus only where the priest
+    // already has at least one slot of that level from the class progression.
+    slots = slots.map((s,i) => s + (s > 0 ? bonus[i] : 0));
     appliedBonus = bonus;
   }
 
