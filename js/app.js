@@ -3430,6 +3430,7 @@ function collectSheet(root){
     familyHistory: val(root,'family_history'),
     height: val(root,'height'),
     weight: val(root,'weight'),
+    age: val(root,'age'),
     hair: val(root,'hair'),
     eyes: val(root,'eyes'),
     appearanceNotes: val(root,'appearance_notes'),
@@ -4049,6 +4050,7 @@ function loadSheet(root, data){
   val(root,'family_history', d.familyHistory || '');
   val(root,'height', d.height || '');
   val(root,'weight', d.weight || '');
+  val(root,'age', d.age || '');
   val(root,'hair', d.hair || '');
   val(root,'eyes', d.eyes || '');
   val(root,'appearance_notes', d.appearanceNotes || '');
@@ -4166,6 +4168,8 @@ function loadSheet(root, data){
   // === Force recalculation of dependent fields ===
   if (typeof renderSpecialistValidation === 'function') renderSpecialistValidation(root);
   if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(root);
+  if (typeof renderExceptionalStrengthLock === 'function') renderExceptionalStrengthLock(root);
+  if (typeof renderAgingEffects === 'function') renderAgingEffects(root);
   renderSavingThrows(root);
   renderAttackMatrix(root);
   renderSpellSlots(root);
@@ -4966,6 +4970,13 @@ function bindSheet(root, tab){
            'dc_new_class', 'dc_original_class'].indexOf(f) !== -1) {
         if (typeof renderSpecialistValidation === 'function') renderSpecialistValidation(root);
         if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(root);
+        if (typeof renderExceptionalStrengthLock === 'function') renderExceptionalStrengthLock(root);
+      }
+      // Aging keys off race AND age, so it takes its own branch rather than
+      // pushing 'age' into the list above and running four validators on every
+      // keystroke in a field none of them read.
+      if (f === 'age' || f === 'race') {
+        if (typeof renderAgingEffects === 'function') renderAgingEffects(root);
       }
     });
   });
@@ -4973,6 +4984,8 @@ function bindSheet(root, tab){
   // Initial render
   if (typeof renderSpecialistValidation === 'function') renderSpecialistValidation(root);
   if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(root);
+  if (typeof renderExceptionalStrengthLock === 'function') renderExceptionalStrengthLock(root);
+  if (typeof renderAgingEffects === 'function') renderAgingEffects(root);
   renderAttackMatrix(root);
   renderSavingThrows(root);
   renderSpellSlots(root);
