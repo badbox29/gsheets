@@ -3435,6 +3435,196 @@ function validateClassMinimums(root) {
   return problems;
 }
 
+// === Racial ability requirements (PHB Table 7) ===
+// [min, max] for the ROLLED score, before Table 8 adjustments are applied.
+// Humans have no row in Table 7 -- "Any character can be a human, if the player
+// so desires" -- so they are never checked.
+const RACE_ABILITY_REQUIREMENTS = {
+  dwarf:      { str: [8, 18],  dex: [3, 17], con: [11, 18], int: [3, 18], wis: [3, 18], cha: [3, 17] },
+  elf:        { str: [3, 18],  dex: [6, 18], con: [7, 18],  int: [8, 18], wis: [3, 18], cha: [8, 18] },
+  gnome:      { str: [6, 18],  dex: [3, 18], con: [8, 18],  int: [6, 18], wis: [3, 18], cha: [3, 18] },
+  "half-elf": { str: [3, 18],  dex: [6, 18], con: [6, 18],  int: [4, 18], wis: [3, 18], cha: [3, 18] },
+  halfling:   { str: [7, 18],  dex: [7, 18], con: [10, 18], int: [6, 18], wis: [3, 17], cha: [3, 18] }
+};
+RACE_ABILITY_REQUIREMENTS.halfelf = RACE_ABILITY_REQUIREMENTS["half-elf"];
+
+// === Racial ability adjustments (PHB Table 8) ===
+// Note there is NO half-elf row and no human row -- those two races take no
+// adjustment at all.
+//
+// The app does NOT apply these. Ability scores are entered by the player and
+// assumed to be FINAL, post-adjustment values. This table exists so the Table 7
+// check can work backwards from the entered score to the rolled one, which is
+// what Table 7 actually governs: the chapter says to consult Table 7 BEFORE
+// making adjustments, and that a character whose adjusted scores fall outside
+// the range is still legal -- "The adjustments can also raise a score to 19 or
+// lower it to 2." An elf legitimately showing Constitution 6 rolled a 7.
+const RACE_ABILITY_ADJUSTMENTS = {
+  dwarf:    { con: +1, cha: -1 },
+  elf:      { dex: +1, con: -1 },
+  gnome:    { int: +1, wis: -1 },
+  halfling: { dex: +1, str: -1 }
+};
+
+// Resolve a free-text race field to a canonical key. Letters-only substring
+// matching, the same approach validateSpecialist uses, so "Half-Elf",
+// "halfelf", "Deep Gnome" and "Grey Elf" all resolve. ORDER MATTERS: "halfelf"
+// contains "elf", so it must be tested first. Returns null for anything
+// unrecognised -- homebrew races are never judged.
+function getRaceKey(race) {
+  const r = (race || "").toLowerCase().replace(/[^a-z]/g, "");
+  if (!r) return null;
+  if (r.indexOf("halfelf")  !== -1) return "half-elf";
+  if (r.indexOf("halfling") !== -1) return "halfling";
+  if (r.indexOf("dwarf")    !== -1 || r.indexOf("dwarves") !== -1) return "dwarf";
+  if (r.indexOf("gnome")    !== -1) return "gnome";
+  if (r.indexOf("elf")      !== -1 || r.indexOf("elven")   !== -1) return "elf";
+  if (r.indexOf("human")    !== -1) return "human";
+  return null;
+}
+
+// PHB Table 7 footnote: "Halfling fighters do not roll for exceptional
+// Strength." Only warriors get exceptional Strength at all, and the only
+// warrior class open to a halfling is fighter, so no class check is needed --
+// every halfling is covered.
+function racePermitsExceptionalStrength(race) {
+  return getRaceKey(race) !== "halfling";
+}
+
+// Advisory only, like the other validators. Compares the ROLLED score -- the
+// entered score with the Table 8 adjustment backed out -- against Table 7.
+// Returns [] when the race is human, unrecognised, or the check is switched off.
+function validateRaceRequirements(root) {
+  const problems = [];
+  if (typeof isOptionalRule === 'function' && !isOptionalRule('raceAbilityRequirements')) return problems;
+
+  const raceKey = getRaceKey(val(root, 'race'));
+  if (!raceKey || raceKey === 'human') return problems;
+
+  const reqs = RACE_ABILITY_REQUIREMENTS[raceKey];
+  if (!reqs) return problems;
+  const adj = RACE_ABILITY_ADJUSTMENTS[raceKey] || {};
+
+  ['str', 'dex', 'con', 'int', 'wis', 'cha'].forEach(stat => {
+    const shown = parseInt(val(root, stat) || 0, 10);
+    if (!shown) return;                       // blank score: nothing to judge yet
+    const mod    = adj[stat] || 0;
+    const rolled = shown - mod;               // back out Table 8
+    const range  = reqs[stat];
+    if (!range) return;
+    if (rolled < range[0] || rolled > range[1]) {
+      let msg = ABILITY_LABELS[stat] + ' ' + shown;
+      if (mod) {
+        msg += ' implies a rolled ' + rolled + ' after the ' +
+               (mod > 0 ? '+' : '') + mod + ' racial adjustment';
+      }
+      msg += '. PHB Table 7 requires ' + range[0] + '-' + range[1] +
+             ' (' + raceKey + ') before racial adjustments.';
+      problems.push(msg);
+    }
+  });
+
+  return problems;
+}
+
+// === Classes each race may take (PHB Chapter 2) ===
+// Transcribed from the per-race prose. Human is absent deliberately: "Humans
+// can choose to be of any class -- warrior, wizard, priest, or rogue -- and can
+// rise to great level in any class." Humans are never checked.
+//
+// "specialist" stands for all eight specialist schools. Chapter 2 grants the
+// elf a "wizard", the half-elf a "specialist wizard" and the gnome an
+// "illusionist"; WHICH specialists accept WHICH races is Table 22's business
+// and validateSpecialist() already checks it. Collapsing them here keeps a
+// half-elf necromancer from drawing two warnings for one problem.
+//
+// NOTE the gnome row: "specialist" is present but "mage" is NOT. Chapter 2
+// offers a gnome "a fighter, a thief, a cleric, or an illusionist" -- never a
+// plain mage. That asymmetry is intentional, not a missing entry.
+//
+// Paladin appears in no demihuman row, which is the book's own way of making
+// paladins human-only.
+const RACE_CLASSES = {
+  dwarf:      ["cleric", "fighter", "thief"],
+  elf:        ["cleric", "fighter", "mage", "specialist", "thief", "ranger"],
+  gnome:      ["cleric", "fighter", "thief", "specialist"],
+  halfling:   ["cleric", "fighter", "thief"],
+  "half-elf": ["cleric", "druid", "fighter", "ranger", "mage", "specialist", "thief", "bard"]
+};
+RACE_CLASSES.halfelf = RACE_CLASSES["half-elf"];
+
+// Reduce a free-text class name to one of the tokens used in RACE_CLASSES.
+// Returns null for anything we should not judge -- explicitly-marked homebrew
+// (hb_ prefix) and unrecognised names both pass silently.
+function getRaceClassToken(clazz) {
+  const c = (clazz || "").trim().toLowerCase();
+  if (!c) return null;
+  if (c.indexOf("hb_") === 0) return null;      // homebrew: never judged
+
+  // Specialist schools first -- exact, then substring so "gnome illusionist"
+  // resolves as well as "illusionist".
+  if (typeof SPECIALIST_WIZARDS !== 'undefined') {
+    if (SPECIALIST_WIZARDS[c]) return "specialist";
+    const sk = Object.keys(SPECIALIST_WIZARDS)
+      .sort((a, b) => b.length - a.length)
+      .find(k => c.indexOf(k) !== -1);
+    if (sk) return "specialist";
+  }
+
+  const MAP = {
+    fighter: "fighter", paladin: "paladin", ranger: "ranger",
+    mage: "mage", wizard: "mage", specialist: "specialist",
+    cleric: "cleric", priest: "cleric", druid: "druid",
+    thief: "thief", rogue: "thief", bard: "bard"
+  };
+  if (MAP[c]) return MAP[c];
+  const key = Object.keys(MAP)
+    .sort((a, b) => b.length - a.length)
+    .find(k => c.indexOf(k) !== -1);
+  return key ? MAP[key] : null;
+}
+
+// Advisory only. Returns [] for humans, unrecognised races, homebrew classes,
+// or when the check is switched off.
+function validateRaceClass(root) {
+  const problems = [];
+  if (typeof isOptionalRule === 'function' && !isOptionalRule('raceClassLegality')) return problems;
+
+  const raceKey = getRaceKey(val(root, 'race'));
+  if (!raceKey || raceKey === 'human') return problems;
+  const allowed = RACE_CLASSES[raceKey];
+  if (!allowed) return problems;
+
+  const charType = (val(root, 'char_type') || 'single').toLowerCase();
+  const classes = [];
+  if (charType === 'multi') {
+    for (let i = 1; i <= 3; i++) {
+      const c = (val(root, 'mc_class' + i) || '').trim();
+      if (c) classes.push(c);
+    }
+  } else if (charType === 'dual') {
+    const oc = (val(root, 'dc_original_class') || '').trim();
+    const nc = (val(root, 'dc_new_class') || '').trim();
+    if (oc) classes.push(oc);
+    if (nc) classes.push(nc);
+  } else {
+    const c = (val(root, 'clazz') || '').trim();
+    if (c) classes.push(c);
+  }
+  if (!classes.length) return problems;
+
+  classes.forEach(clazz => {
+    const token = getRaceClassToken(clazz);
+    if (!token) return;                        // homebrew or unrecognised: silent
+    if (allowed.indexOf(token) === -1) {
+      problems.push(clazz + ' is not a class the PHB permits for this race (' +
+        raceKey + ', Chapter 2). Permitted: ' + allowed.join(', ') + '.');
+    }
+  });
+
+  return problems;
+}
+
 // === Warrior melee attacks per round (PHB Table 15) ===
 // WARRIORS ONLY -- the table is headed "Warrior Level" and the rule sits in the
 // warrior group description. Every other class stays at 1 melee attack per
