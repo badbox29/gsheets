@@ -1910,58 +1910,68 @@ function getXPTable(clazz) {
 // Common racial traits that can be auto-populated
 const RACIAL_ABILITIES = {
   human: [
-    { name: "No racial abilities", notes: "Humans have no special racial abilities but can dual-class" }
+    { name: "Unlimited Advancement", notes: "May be of any character class -- warrior, wizard, priest or rogue -- and rise to any level in it. Humans have no other special racial ability, and are the only race that may dual-class" }
   ],
   elf: [
     { name: "Infravision", notes: "60 ft range" },
-    { name: "Resistance to Sleep/Charm", notes: "90% resistant to sleep and charm spells" },
-    { name: "Secret/Concealed Doors", notes: "1-in-6 chance to notice secret doors when passing within 10', 2-in-6 when searching" },
-    { name: "Surprise Bonus", notes: "+1 to surprise rolls when not in metal armor" },
-    { name: "Bow/Sword Bonus", notes: "+1 to hit with bows and swords" }
+    { name: "Resistance to Sleep/Charm", notes: "90% resistance to sleep and all charm-related spells. This is in addition to any normal saving throw allowed" },
+    // PHB Ch.2 gives THREE distinct chances, not one. A secret door is
+    // "constructed so as to be hard to notice"; a concealed door is "hidden
+    // from sight by screens, curtains, or the like". The passive chance
+    // applies to CONCEALED doors only.
+    { name: "Notice Concealed Doors", notes: "Merely passing within 10 feet of a concealed door: 1 in 6 (roll a 1 on 1d6), no searching required" },
+    { name: "Search for Doors", notes: "When actively searching: 1 in 3 (roll 1-2 on 1d6) to find a secret door, 1 in 2 (roll 1-3 on 1d6) to discover a concealed portal" },
+    { name: "Surprise Bonus", notes: "Opponents take -4 on their surprise rolls, reduced to -2 if you must open a door or screen to attack. Requires that you are not in metal armor AND are either alone, with a party of only elves and halflings likewise out of metal armor, or 90+ feet ahead of your party" },
+    { name: "Bow/Sword Bonus", notes: "+1 to hit with any bow other than a crossbow, and with short and long swords" }
   ],
   "half-elf": [
     { name: "Infravision", notes: "60 ft range" },
-    { name: "Resistance to Sleep/Charm", notes: "30% resistant to sleep and charm spells" },
-    { name: "Secret/Concealed Doors", notes: "1-in-6 chance to notice secret doors when passing within 10'" }
-  ],
-  halfelf: [
-    { name: "Infravision", notes: "60 ft range" },
-    { name: "Resistance to Sleep/Charm", notes: "30% resistant to sleep and charm spells" },
-    { name: "Secret/Concealed Doors", notes: "1-in-6 chance to notice secret doors when passing within 10'" }
+    { name: "Resistance to Sleep/Charm", notes: "30% resistance to sleep and all charm-related spells. This is in addition to any normal saving throw allowed" },
+    // Identical to the elf's, per PHB Ch.2: "Secret or concealed doors are
+    // difficult to hide from half-elves, just as they are from elves."
+    { name: "Notice Concealed Doors", notes: "Merely passing within 10 feet of a concealed door: 1 in 6 (roll a 1 on 1d6), no searching required" },
+    { name: "Search for Doors", notes: "When actively searching: 1 in 3 (roll 1-2 on 1d6) to find a secret door, 1 in 2 (roll 1-3 on 1d6) to locate a concealed door" }
   ],
   dwarf: [
     { name: "Infravision", notes: "60 ft range" },
-    { name: "Constitution Bonuses", notes: "Already applied to saving throws" },
-    { name: "Detect Construction", notes: "1-in-3 to detect slopes, new construction, traps involving stonework within 10'" },
+    { name: "Constitution Save Bonuses", notes: "+1 per 3 1/2 points of Constitution against wands, staves, rods and spells, and the same bonus against poison (PHB Table 9). Already applied to your saving throws" },
+    // Four separate abilities with four DIFFERENT chances -- previously merged
+    // into a single "1-in-3", which was wrong for three of them.
+    { name: "Detect Stonework", notes: "Within 10 feet, and only when deliberately trying: grade or slope in passage 1-5 on 1d6; new tunnel or passage construction 1-5 on 1d6; sliding or shifting walls or rooms 1-4 on 1d6; stonework traps, pits and deadfalls 1-3 on 1d6" },
+    { name: "Determine Depth", notes: "Approximate depth below the surface, 1-3 on 1d6. May be attempted at any time, not only within 10 feet" },
     { name: "Attack Bonus vs. Orcs/Goblins", notes: "+1 to hit orcs, half-orcs, goblins, hobgoblins" },
-    { name: "AC Bonus vs. Giants", notes: "-4 AC bonus vs. giants, ogres, trolls, ogre magi, titans" }
+    { name: "AC Bonus vs. Giants", notes: "-4 AC bonus vs. giants, ogres, trolls, ogre magi, titans" },
+    { name: "Nonmagical Nature", notes: "Dwarves never use magical (wizard) spells. Priest spells are allowed" },
+    { name: "Magic Item Malfunction", notes: "20% chance of malfunction each time you use a magical item not suited to your class -- rods, staves, wands, rings, amulets, potions, horns, jewels and the like. Weapons, shields, armor, gauntlets and girdles are exempt, as are priest items used by a dwarven cleric. Affects only that use; a cursed item that malfunctions reveals itself" }
   ],
   halfling: [
-    { name: "Infravision", notes: "60 ft range" },
-    { name: "Constitution Bonuses", notes: "Already applied to saving throws" },
-    { name: "Attack Bonus vs. Large", notes: "+1 to hit with slings and thrown weapons" },
-    { name: "AC Bonus vs. Large", notes: "-4 AC bonus vs. creatures larger than man-sized" },
-    { name: "Hide in Shadows", notes: "Can hide in natural outdoor settings with 90% success in light cover, 2-in-3 otherwise" }
+    // NOT automatic. PHB Ch.2: 15% chance of normal infravision (pure Stout),
+    // and failing that a 25% chance of limited infravision to 30 feet.
+    { name: "Infravision (chance-based)", notes: "15% chance of normal infravision to 60 ft (pure Stout lineage). Failing that, a 25% chance of limited infravision to 30 ft (mixed Stout/Tallfellow or Stout/Hairfeet). Otherwise none" },
+    { name: "Constitution Save Bonuses", notes: "+1 per 3 1/2 points of Constitution against wands, staves, rods and spells, and the same bonus against poison (PHB Table 9). Already applied to your saving throws" },
+    { name: "Sling/Thrown Bonus", notes: "+1 to hit with slings and thrown weapons" },
+    { name: "Surprise Bonus", notes: "Opponents take -4 on their surprise rolls, reduced to -2 if you must open a door or screen to attack. Requires that you are not in metal armor AND are either alone, with a party of only halflings and elves likewise out of metal armor, or 90+ feet ahead of your party" },
+    { name: "Stoutish Senses", notes: "Only for pure or partially Stout halflings, and only while concentrating to the exclusion of all else: note an up or down grade 75% of the time (roll 1-3 on 1d4); determine direction half the time (roll 1-3 on 1d6)" }
+    // REMOVED: "AC Bonus vs. Large" -- PHB Ch.2 grants that -4 to dwarves and
+    // gnomes only, never halflings. Also removed "Hide in Shadows", which is
+    // not a halfling ability anywhere in the chapter.
   ],
   gnome: [
     { name: "Infravision", notes: "60 ft range" },
-    { name: "Constitution Bonuses", notes: "Already applied to saving throws" },
-    { name: "Detect Construction", notes: "1-in-3 to detect slopes, unsafe walls, traps involving stonework within 10'" },
+    { name: "Constitution Save Bonuses", notes: "+1 per 3 1/2 points of Constitution against wands, staves, rods and spells (PHB Table 9). Unlike dwarves and halflings, gnomes receive NO poison bonus. Already applied to your saving throws" },
+    // Note the d10 on unsafe walls -- the gnome list is not the dwarf's.
+    { name: "Detect Stonework", notes: "Within 10 feet, after stopping and concentrating for one round: grade or slope in passage 1-5 on 1d6; unsafe walls, ceiling and floors 1-7 on 1d10" },
+    { name: "Determine Depth/Direction", notes: "Approximate depth underground 1-4 on 1d6; approximate direction underground 1-3 on 1d6. These two may be attempted at any time" },
     { name: "Attack Bonus vs. Kobolds/Goblins", notes: "+1 to hit kobolds and goblins" },
     { name: "AC Bonus vs. Giants", notes: "-4 AC bonus vs. gnolls, bugbears, ogres, trolls, ogre magi, giants, titans" },
-    { name: "Illusion Resistance", notes: "+1 bonus to saving throws vs. illusions (included in INT effects)" }
-  ],
-  "half-orc": [
-    { name: "Infravision", notes: "60 ft range" },
-    { name: "Constitution Bonus", notes: "+1 to Constitution" },
-    { name: "Charisma Penalty", notes: "-2 to Charisma" }
-  ],
-  halforc: [
-    { name: "Infravision", notes: "60 ft range" },
-    { name: "Constitution Bonus", notes: "+1 to Constitution" },
-    { name: "Charisma Penalty", notes: "-2 to Charisma" }
+    { name: "Magic Item Failure", notes: "20% chance of failure each time you use a magical item. Weapons, armor, shields, illusionist items, and (for gnome thieves) items that duplicate thieving abilities are exempt. A device that fails reveals a cursed item" }
+    // REMOVED: "Illusion Resistance +1 vs. illusions" -- not a 2e PHB gnome
+    // ability; it appears nowhere in Chapter 2.
   ]
 };
+
+// Alias, not a copy -- see the note on RACIAL_COMBAT_BONUSES.
+RACIAL_ABILITIES.halfelf = RACIAL_ABILITIES["half-elf"];
 
 // === Class Abilities by Level (AD&D 2E) ===
 // Format: { level: [{ name, notes }] }
@@ -2119,7 +2129,6 @@ const THIEF_RACIAL_ADJUSTMENTS = {
   gnome: [0, 5, 10, 5, 5, 10, -15, 0],
   halfelf: [10, 0, 0, 0, 5, 0, 0, 0],
   halfling: [5, 5, 5, 10, 15, 5, -15, -5],
-  halforc: [0, 0, 0, 0, 0, 0, 0, 0],
   human: [0, 0, 0, 0, 0, 0, 0, 0]
 };
 
