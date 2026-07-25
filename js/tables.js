@@ -3241,6 +3241,36 @@ const OPTIONAL_RULES = {
              'your DM has approved a combination and you would rather not see the banner.',
     category: 'override',
     default: true      // the tool's job is rules accuracy; opting out is deliberate
+  },
+  raceAbilityRequirements: {
+    label:   'Warn when ability scores fall outside racial limits',
+    detail:  'PHB Table 7. Every demihuman race has a minimum and a maximum for each ability. ' +
+             'The check runs against the ROLLED score, not the one on the sheet -- the Table 8 ' +
+             'racial adjustment is backed out first, so an elf showing Constitution 6 is read as ' +
+             'a rolled 7 and passes. Humans have no limits and are never checked. Advisory only; ' +
+             'nothing is blocked.',
+    category: 'override',
+    default: true
+  },
+  raceClassLegality: {
+    label:   'Warn on classes a race may not take',
+    detail:  'PHB Chapter 2. Each demihuman race has a fixed list of classes -- a dwarf may be a ' +
+             'cleric, fighter or thief; a gnome may take the illusionist but not the plain mage; ' +
+             'paladins are human-only. Specialist wizards defer to Table 22, and homebrew classes ' +
+             'are never judged. Advisory only; nothing is blocked. This is a common place for a DM ' +
+             'to allow an exception.',
+    category: 'override',
+    default: true
+  },
+  agingEffects: {
+    label:   'Show aging effects for the entered age',
+    detail:  'PHB Tables 11 and 12. On reaching middle age, old age and venerable age a character ' +
+             'takes cumulative ability score adjustments -- -1 Str, -1 Con, +1 Int and +1 Wis at ' +
+             'middle age, and further sets after that. The app reports which bracket the character ' +
+             'has reached and the running total; it never changes a score. Switch off to hide the ' +
+             'notice entirely.',
+    category: 'override',
+    default: true
   }
 };
 const OPTIONAL_RULES_CATEGORIES = {
