@@ -3655,6 +3655,113 @@ function validateRaceClass(root) {
   return problems;
 }
 
+// === Starting age (PHB Table 11) ===
+// Starting age = base + the variable die roll.
+//
+// Table 11's "Maximum Age Range" column is DELIBERATELY NOT TRANSCRIBED. The
+// chapter states the maximum age "should be secretly determined and recorded by
+// the DM. Player characters may have an idea of how long they expect to live,
+// but do not know their true allotted life span." Do not add it.
+const RACE_STARTING_AGE = {
+  dwarf:      { base: 40,  dice: "5d6"  },
+  elf:        { base: 100, dice: "5d6"  },
+  gnome:      { base: 60,  dice: "3d12" },
+  "half-elf": { base: 15,  dice: "1d6"  },
+  halfling:   { base: 20,  dice: "3d4"  },
+  human:      { base: 15,  dice: "1d4"  }
+};
+RACE_STARTING_AGE.halfelf = RACE_STARTING_AGE["half-elf"];
+
+// === Aging effects (PHB Table 12) ===
+// Ages are the PRINTED values. Table 12 describes them as 1/2 and 2/3 of the
+// base maximum, but the book rounds (half-elf middle age prints as 62, not
+// 62.5), so the printed figures are used rather than recomputed.
+//
+// Unlike Table 11's maximum age range, these thresholds ARE printed for players
+// in Chapter 2, so displaying them is fine.
+//
+// The three footnotes are the mechanical payload, and the chapter states "All
+// aging adjustments are cumulative" -- a venerable character has taken all
+// three sets, not just the last.
+const AGING_BRACKETS = [
+  { key: "middle",    label: "Middle Age", effects: { str: -1,          con: -1, int: 1, wis: 1 } },
+  { key: "old",       label: "Old Age",    effects: { str: -2, dex: -2, con: -1,         wis: 1 } },
+  { key: "venerable", label: "Venerable",  effects: { str: -1, dex: -1, con: -1, int: 1, wis: 1 } }
+];
+
+const RACE_AGING = {
+  dwarf:      { middle: 125, old: 167, venerable: 250 },
+  elf:        { middle: 175, old: 233, venerable: 350 },
+  gnome:      { middle: 100, old: 133, venerable: 200 },
+  "half-elf": { middle: 62,  old: 83,  venerable: 125 },
+  halfling:   { middle: 50,  old: 67,  venerable: 100 },
+  human:      { middle: 45,  old: 60,  venerable: 90  }
+};
+RACE_AGING.halfelf = RACE_AGING["half-elf"];
+
+// === Average height and weight (PHB Table 10) ===
+// Height in INCHES, weight in POUNDS. Base is split male/female -- "Females
+// tend to be lighter and shorter than males" -- and the same die modifier
+// applies to both.
+const RACE_HEIGHT_WEIGHT = {
+  dwarf:      { height: { male: 43, female: 41, dice: "1d10" }, weight: { male: 130, female: 105, dice: "4d10" } },
+  elf:        { height: { male: 55, female: 50, dice: "1d10" }, weight: { male: 90,  female: 70,  dice: "3d10" } },
+  gnome:      { height: { male: 38, female: 36, dice: "1d6"  }, weight: { male: 72,  female: 68,  dice: "5d4"  } },
+  "half-elf": { height: { male: 60, female: 58, dice: "2d6"  }, weight: { male: 110, female: 85,  dice: "3d12" } },
+  halfling:   { height: { male: 32, female: 30, dice: "2d8"  }, weight: { male: 52,  female: 48,  dice: "5d4"  } },
+  human:      { height: { male: 60, female: 59, dice: "2d10" }, weight: { male: 140, female: 100, dice: "6d10" } }
+};
+RACE_HEIGHT_WEIGHT.halfelf = RACE_HEIGHT_WEIGHT["half-elf"];
+
+// Which aging brackets a character has reached, and the cumulative effect.
+// Returns null when race or age is missing or unrecognised. Deliberately NOT
+// gated on the optional rule -- the render layer decides whether to show it, so
+// this stays a pure lookup.
+function getAgingStatus(race, age) {
+  const key = getRaceKey(race);
+  const yrs = parseInt(age, 10);
+  if (!key || !yrs || yrs < 1) return null;
+  const thresholds = RACE_AGING[key];
+  if (!thresholds) return null;
+
+  const reached = [];
+  const cumulative = {};
+  let next = null;
+
+  AGING_BRACKETS.forEach(b => {
+    const at = thresholds[b.key];
+    if (yrs >= at) {
+      reached.push({ key: b.key, label: b.label, at: at, effects: b.effects });
+      Object.keys(b.effects).forEach(stat => {
+        cumulative[stat] = (cumulative[stat] || 0) + b.effects[stat];
+      });
+    } else if (!next) {
+      next = { key: b.key, label: b.label, at: at };
+    }
+  });
+
+  return {
+    race: key,
+    age: yrs,
+    current: reached.length ? reached[reached.length - 1] : null,
+    reached: reached,
+    cumulative: cumulative,
+    next: next
+  };
+}
+
+// "-1 Str, -1 Con, +1 Int, +1 Wis" from an effects object. Fixed stat order so
+// two brackets never print their adjustments in a different sequence.
+function formatAgingEffects(effects) {
+  const ORDER = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+  const SHORT = { str: 'Str', dex: 'Dex', con: 'Con', int: 'Int', wis: 'Wis', cha: 'Cha' };
+  if (!effects) return '';
+  return ORDER
+    .filter(s => effects[s])
+    .map(s => (effects[s] > 0 ? '+' : '') + effects[s] + ' ' + SHORT[s])
+    .join(', ');
+}
+
 // === Warrior melee attacks per round (PHB Table 15) ===
 // WARRIORS ONLY -- the table is headed "Warrior Level" and the rule sits in the
 // warrior group description. Every other class stays at 1 melee attack per
