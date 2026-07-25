@@ -5220,8 +5220,130 @@ function renderClassGroupValidation(root) {
     problems.map(p => '<div style="margin-top:4px;">\u2022 ' + esc(p) + '</div>').join('') +
     '<div style="margin-top:6px;color:var(--muted);font-size:11px;">' +
       'Advisory only \u2014 nothing is blocked. Switch this check off under ' +
+      function renderClassGroupValidation(root) {
+  const el = root.querySelector('.class-group-validation-message');
+  if (!el) return;
+
+  // Four independent advisory checks share this banner. Each has its own
+  // Settings toggle and returns [] when switched off, so combining them here
+  // needs no extra gating.
+  const sources = [
+    { heading: 'Class combination (PHB Ch.3)',
+      problems: (typeof validateClassGroups === 'function') ? validateClassGroups(root) : [] },
+    { heading: 'Class ability minimums (PHB Table 13)',
+      problems: (typeof validateClassMinimums === 'function') ? validateClassMinimums(root) : [] },
+    { heading: 'Racial ability requirements (PHB Table 7)',
+      problems: (typeof validateRaceRequirements === 'function') ? validateRaceRequirements(root) : [] },
+    { heading: 'Class not open to this race (PHB Ch.2)',
+      problems: (typeof validateRaceClass === 'function') ? validateRaceClass(root) : [] }
+  ];
+
+  const active   = sources.filter(s => s.problems.length);
+  const problems = active.reduce((all, s) => all.concat(s.problems), []);
+  if (!problems.length) {
+    el.style.display = 'none';
+    el.innerHTML = '';
+    return;
+  }
+
+  // Class and race names are free text, so escape before injecting.
+  const esc = s => String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  // One source gets its own specific heading; two or more fall back to the
+  // generic one rather than trying to name every combination.
+  const heading = (active.length === 1) ? active[0].heading : 'Character build';
+
+  el.innerHTML =
+    '<strong style="color:var(--warning, #e0a34a);">\u26A0 ' + heading + '</strong>' +
+    problems.map(p => '<div style="margin-top:4px;">\u2022 ' + esc(p) + '</div>').join('') +
+    '<div style="margin-top:6px;color:var(--muted);font-size:11px;">' +
+      'Advisory only \u2014 nothing is blocked. Switch this check off under ' +
       'House Rules &amp; Overrides in Settings if your DM has approved it.</div>';
   el.style.display = '';
+}
+
+// PHB Tables 11 and 12. Reports which aging bracket the character has reached
+// and the cumulative adjustment, and never changes an ability score.
+// Informational, so it uses --info blue rather than the amber reserved for
+// actual problems.
+function renderAgingEffects(root) {
+  const el = root.querySelector('.aging-note');
+  if (!el) return;
+
+  const hide = () => { el.style.display = 'none'; el.innerHTML = ''; };
+
+  if (typeof isOptionalRule === 'function' && !isOptionalRule('agingEffects')) return hide();
+  if (typeof getAgingStatus !== 'function') return hide();
+
+  const status = getAgingStatus(val(root, 'race'), val(root, 'age'));
+  if (!status) return hide();
+
+  const esc = s => String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  let html = '';
+
+  if (status.current) {
+    html += '<strong style="color:var(--info, #6fb3d2);">' + esc(status.current.label) +
+            '</strong> \u2014 age ' + status.age + ', reached at ' + status.current.at + '.';
+    html += '<div style="margin-top:6px;">Cumulative adjustment: <strong>' +
+            esc(formatAgingEffects(status.cumulative)) + '</strong></div>';
+    // Only break out the individual brackets once more than one has stacked --
+    // with a single bracket the itemised line just repeats the total.
+    if (status.reached.length > 1) {
+      html += status.reached.map(b =>
+        '<div style="margin-top:3px;color:var(--muted);">\u2022 ' + esc(b.label) +
+        ' (' + b.at + '): ' + esc(formatAgingEffects(b.effects)) + '</div>').join('');
+    }
+  } else {
+    html += '<strong style="color:var(--info, #6fb3d2);">Prime of life</strong> \u2014 age ' +
+            status.age + '. No aging adjustments yet.';
+  }
+
+  if (status.next) {
+    const nb = (typeof AGING_BRACKETS !== 'undefined')
+      ? AGING_BRACKETS.find(b => b.key === status.next.key) : null;
+    html += '<div style="margin-top:6px;color:var(--muted);">Next: ' + esc(status.next.label) +
+            ' at ' + status.next.at +
+            (nb ? ' (' + esc(formatAgingEffects(nb.effects)) + ')' : '') + '.</div>';
+  }
+
+  html += '<div style="margin-top:6px;color:var(--muted);font-size:11px;">' +
+          'PHB Table 12. Advisory only \u2014 no ability score is changed for you. ' +
+          'Apply these by hand if your table uses them.</div>';
+
+  el.innerHTML = html;
+  el.style.display = '';
+}
+
+// PHB Table 7 footnote: "Halfling fighters do not roll for exceptional
+// Strength." Locks AND clears the field, because getStrengthData() and
+// getEncumbranceData() take scalars and cannot see race -- a value left sitting
+// in the input would still be read and applied.
+function renderExceptionalStrengthLock(root) {
+  const input = root.querySelector('[data-field="str_exceptional"]');
+  const note  = root.querySelector('.str-exceptional-note');
+  if (!input) return;
+
+  const permitted = (typeof racePermitsExceptionalStrength !== 'function') ||
+                    racePermitsExceptionalStrength(val(root, 'race'));
+
+  if (permitted) {
+    input.readOnly = false;
+    input.style.opacity = '';
+    input.style.cursor = '';
+    if (note) { note.style.display = 'none'; note.innerHTML = ''; }
+    return;
+  }
+
+  if (input.value) input.value = '';
+  input.readOnly = true;
+  input.style.opacity = '0.5';
+  input.style.cursor = 'not-allowed';
+  if (note) {
+    note.innerHTML = 'Locked \u2014 PHB Table 7: halfling fighters do not roll for exceptional Strength.';
+    note.style.display = '';
+  }
 }
 
 function getWizardComponent(root) {
@@ -5562,18 +5684,22 @@ function renderMovementRate(root) {
   const race = (val(root, "race") || "").trim().toLowerCase();
   
   // Base movement rates by race (in inches per round)
+  // PHB Ch.14 movement rates.
+  //
+  // ORDER IS LOAD-BEARING. The loop below tests race.includes(raceKey) and
+  // breaks on the first hit, and "half-elf" contains "elf" -- so the half-elf
+  // keys must sit ahead of the bare 'elf' key or a half-elf resolves through
+  // 'elf' and reports its race name as "Elf". Both are 12 today so nothing is
+  // visibly wrong, but the ordering matters the moment they diverge.
   const raceMovement = {
-    'human': 12,
-    'elf': 12,
     'half-elf': 12,
     'half elf': 12,
     'halfelf': 12,
+    'human': 12,
+    'elf': 12,
     'dwarf': 6,
     'halfling': 6,
-    'gnome': 6,
-    'half-orc': 12,
-    'half orc': 12,
-    'halforc': 12
+    'gnome': 6
   };
   
   let baseMovement = 12; // Default to human
