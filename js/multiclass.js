@@ -288,7 +288,11 @@ function combineSpellSlots(classData, wisdom) {
       const wisBonus = applyPriestWisdomGate(
         WIS_BONUS_SPELLS[wisdom] || [0,0,0,0,0,0,0,0,0], wisdom);
       for (let i = 0; i < wisBonus.length && i < 9; i++) {
-        if (wisBonus[i] > 0) {
+        // PHB Table 5: bonus spells apply only at levels this priest can
+        // already cast -- gate on THIS class's own base slots (slots[i]), not
+        // the combined total, so the bonus never leaks onto levels only the
+        // wizard half of a multi-class caster reaches.
+        if (wisBonus[i] > 0 && slots[i] > 0) {
           combinedSlots[i] += wisBonus[i];
           details[i].push(`Wisdom bonus: +${wisBonus[i]}`);
         }
