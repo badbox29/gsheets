@@ -1741,6 +1741,18 @@ const SHEET_HTML = `
                   <span style="font-weight:600;font-size:12px;">Bend Bars (d100)</span>
                   <span style="font-size:10px;opacity:0.6;">Roll under STR percentage</span>
                 </button>
+                <button class="game-roll" data-roll="starting-age" style="padding:6px 10px;text-align:left;display:flex;flex-direction:column;">
+                  <span style="font-weight:600;font-size:12px;">Starting Age</span>
+                  <span style="font-size:10px;opacity:0.6;">PHB Table 11, by race</span>
+                </button>
+                <button class="game-roll" data-roll="height" style="padding:6px 10px;text-align:left;display:flex;flex-direction:column;">
+                  <span style="font-weight:600;font-size:12px;">Height</span>
+                  <span style="font-size:10px;opacity:0.6;">PHB Table 10, male and female</span>
+                </button>
+                <button class="game-roll" data-roll="weight" style="padding:6px 10px;text-align:left;display:flex;flex-direction:column;">
+                  <span style="font-weight:600;font-size:12px;">Weight</span>
+                  <span style="font-size:10px;opacity:0.6;">PHB Table 10, male and female</span>
+                </button>
               </div>
             </div>
             
