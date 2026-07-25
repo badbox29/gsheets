@@ -485,7 +485,6 @@ function renderSavingThrows(root) {
   else if (/\bgnome\b/.test(raceRaw)) raceKey = "gnome";
   else if (/\bhalf[-\s]?elf\b/.test(raceRaw)) raceKey = "halfelf";
   else if (/\belf\b/.test(raceRaw)) raceKey = "elf";
-  else if (/\bhalf[-\s]?orc\b/.test(raceRaw)) raceKey = "halforc";
 
   // Kit detection
   const kitRaw = (val(root, "kit") || "").toLowerCase();
@@ -8675,6 +8674,85 @@ function bindDiceRollers(root) {
             modifiers = `STR bend bars: ${bendBars}%\n(Roll ${bendBars} or less to succeed)`;
           }
           break;
+
+        // The three cases below are wrapped in braces. The older cases declare
+        // their consts directly in the switch's own block scope, which works
+        // only as long as every name is unique across every case -- braces make
+        // each of these self-contained instead.
+        case 'starting-age': {
+          const ageKey = (typeof getRaceKey === 'function') ? getRaceKey(val(root, 'race')) : null;
+          const ageRow = (ageKey && typeof RACE_STARTING_AGE !== 'undefined') ? RACE_STARTING_AGE[ageKey] : null;
+          if (!ageRow) {
+            result = { formula: 'Starting Age \u2014 race not recognised', rolls: [], modifier: 0, total: '\u2014' };
+            modifiers = 'PHB Table 11 covers dwarf, elf, gnome, half-elf, halfling and human.\n' +
+                        'Set the Race field to one of those first.';
+            break;
+          }
+          result = rollDiceFormula(ageRow.dice + '+' + ageRow.base);
+          if (result) {
+            result.formula = 'Starting Age (' + ageKey + ')';
+            modifiers = 'PHB Table 11: base ' + ageRow.base + ' + ' + ageRow.dice + '.\n' +
+                        'Variable roll ' + (result.total - ageRow.base) +
+                        ', starting age ' + result.total + '.';
+          }
+          break;
+        }
+
+        case 'height': {
+          const htKey = (typeof getRaceKey === 'function') ? getRaceKey(val(root, 'race')) : null;
+          const htRow = (htKey && typeof RACE_HEIGHT_WEIGHT !== 'undefined') ? RACE_HEIGHT_WEIGHT[htKey] : null;
+          if (!htRow) {
+            result = { formula: 'Height \u2014 race not recognised', rolls: [], modifier: 0, total: '\u2014' };
+            modifiers = 'PHB Table 10 covers dwarf, elf, gnome, half-elf, halfling and human.\n' +
+                        'Set the Race field to one of those first.';
+            break;
+          }
+          // ONE die roll applied to BOTH bases. This is a single character whose
+          // gender may simply not be recorded yet -- not two characters -- so the
+          // same modifier is added to the male and female base figures.
+          const htRoll = rollDiceFormula(htRow.height.dice);
+          if (!htRoll) break;
+          const htM  = htRow.height.male   + htRoll.total;
+          const htF  = htRow.height.female + htRoll.total;
+          const inch = n => Math.floor(n / 12) + "' " + (n % 12) + '"';
+          const htG  = (val(root, 'gender') || '').toLowerCase();
+          result = htRoll;
+          result.formula = 'Height (' + htKey + ')';
+          result.total = (htG === 'female') ? htF + ' in (' + inch(htF) + ')'
+                       : (htG === 'male')   ? htM + ' in (' + inch(htM) + ')'
+                       : htM + ' / ' + htF + ' in';
+          modifiers = 'PHB Table 10. ' + htRow.height.dice + ' rolled ' + htRoll.total + '.\n' +
+                      'Male:   ' + htM + ' in (' + inch(htM) + ')\n' +
+                      'Female: ' + htF + ' in (' + inch(htF) + ')' +
+                      (htG ? '' : '\nSet Gender in Basic Info to pick one automatically.');
+          break;
+        }
+
+        case 'weight': {
+          const wtKey = (typeof getRaceKey === 'function') ? getRaceKey(val(root, 'race')) : null;
+          const wtRow = (wtKey && typeof RACE_HEIGHT_WEIGHT !== 'undefined') ? RACE_HEIGHT_WEIGHT[wtKey] : null;
+          if (!wtRow) {
+            result = { formula: 'Weight \u2014 race not recognised', rolls: [], modifier: 0, total: '\u2014' };
+            modifiers = 'PHB Table 10 covers dwarf, elf, gnome, half-elf, halfling and human.\n' +
+                        'Set the Race field to one of those first.';
+            break;
+          }
+          const wtRoll = rollDiceFormula(wtRow.weight.dice);
+          if (!wtRoll) break;
+          const wtM = wtRow.weight.male   + wtRoll.total;
+          const wtF = wtRow.weight.female + wtRoll.total;
+          const wtG = (val(root, 'gender') || '').toLowerCase();
+          result = wtRoll;
+          result.formula = 'Weight (' + wtKey + ')';
+          result.total = (wtG === 'female') ? wtF + ' lb'
+                       : (wtG === 'male')   ? wtM + ' lb'
+                       : wtM + ' / ' + wtF + ' lb';
+          modifiers = 'PHB Table 10. ' + wtRow.weight.dice + ' rolled ' + wtRoll.total + '.\n' +
+                      'Male:   ' + wtM + ' lb\n' +
+                      'Female: ' + wtF + ' lb' +
+                      (wtG ? '' : '\nSet Gender in Basic Info to pick one automatically.');
+          break;
+        }
       }
       
       if (result) {
@@ -9254,7 +9332,6 @@ function renderCharacterBonuses(root) {
   else if (/\bgnome\b/.test(raceRaw)) race = "gnome";
   else if (/\bhalf[-\s]?elf\b/.test(raceRaw)) race = /\bhalf[-\s]?elf\b/.test(raceRaw) ? "half-elf" : "halfelf";
   else if (/\belf\b/.test(raceRaw)) race = "elf";
-  else if (/\bhalf[-\s]?orc\b/.test(raceRaw)) race = /\bhalf[-\s]?orc\b/.test(raceRaw) ? "half-orc" : "halforc";
   else if (/\bhuman\b/.test(raceRaw)) race = "human";
   
   // Collect all bonuses
