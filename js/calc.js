@@ -5194,36 +5194,6 @@ function renderClassGroupValidation(root) {
   const el = root.querySelector('.class-group-validation-message');
   if (!el) return;
 
-  // Two independent advisory checks share this banner: illegal class-group
-  // combinations (PHB Ch.3) and ability scores below the class minimums
-  // (Table 13). Each has its own Settings toggle and returns [] when switched
-  // off, so combining them here needs no extra gating.
-  const groupProblems = (typeof validateClassGroups === 'function') ? validateClassGroups(root) : [];
-  const minProblems   = (typeof validateClassMinimums === 'function') ? validateClassMinimums(root) : [];
-  const problems = groupProblems.concat(minProblems);
-  if (!problems.length) {
-    el.style.display = 'none';
-    el.innerHTML = '';
-    return;
-  }
-
-  // Class names are free text, so escape before injecting.
-  const esc = s => String(s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-  const heading = (groupProblems.length && minProblems.length)
-    ? 'Character build (PHB Ch.3)'
-    : (groupProblems.length ? 'Class combination (PHB Ch.3)'
-                            : 'Class ability minimums (PHB Table 13)');
-  el.innerHTML =
-    '<strong style="color:var(--warning, #e0a34a);">\u26A0 ' + heading + '</strong>' +
-    problems.map(p => '<div style="margin-top:4px;">\u2022 ' + esc(p) + '</div>').join('') +
-    '<div style="margin-top:6px;color:var(--muted);font-size:11px;">' +
-      'Advisory only \u2014 nothing is blocked. Switch this check off under ' +
-      function renderClassGroupValidation(root) {
-  const el = root.querySelector('.class-group-validation-message');
-  if (!el) return;
-
   // Four independent advisory checks share this banner. Each has its own
   // Settings toggle and returns [] when switched off, so combining them here
   // needs no extra gating.
