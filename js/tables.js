@@ -53,66 +53,67 @@ const CHA_TABLE = {
 };
 
 	
+// === Constitution saving throw bonuses (PHB Table 9) ===
+// Dwarves, gnomes and halflings are magic resistant: the book states the bonus
+// as "+1 for every 3 1/2 points of Constitution score" and tabulates it in
+// Table 9. Table 9 stops at 19 because that is the highest score a demihuman
+// can reach at creation -- Table 7 caps Constitution at 18 and Table 8 grants
+// at most a further +1 -- so no higher row is reachable.
+//
+// SIGN CONVENTION: saving throws are rolled against a target number and a lower
+// target is better, so a BONUS is stored here as a NEGATIVE adjustment. Table
+// 9's printed +4 is -4 in this table.
+const CON_MAGIC_SAVE_BONUS = [
+  { min: 18, bonus: -5 },
+  { min: 14, bonus: -4 },
+  { min: 11, bonus: -3 },
+  { min: 7,  bonus: -2 },
+  { min: 4,  bonus: -1 }
+];
+
+function getConMagicSaveBonus(con) {
+  const score = parseInt(con, 10);
+  if (!score) return 0;
+  const row = CON_MAGIC_SAVE_BONUS.find(r => score >= r.min);
+  return row ? row.bonus : 0;
+}
+
+// Which save categories each race applies that bonus to. Index order is
+// 0 Paralyzation/Poison/Death, 1 Rod/Staff/Wand, 2 Petrification/Polymorph,
+// 3 Breath Weapon, 4 Spell.
+//
+// All three races get it against "magical wands, staves, rods, and spells"
+// (indices 1 and 4). Only dwarves and halflings extend it to poison -- the
+// gnome entry in Chapter 2 says nothing about poison, so index 0 is
+// deliberately absent from gnome below. That asymmetry is the book's, not a
+// transcription slip.
+//
+// KNOWN CAVEAT: index 0 is the COMBINED Paralyzation/Poison/Death Magic
+// category. The book grants the bonus against poison alone, but 2e gives no
+// way to split the category, so a dwarf or halfling also receives it against
+// paralyzation and death magic here. Flagged rather than silently dropped.
 const RACE_SAVE_BONUSES = {
+  // PHB Ch.2: "dwarves have exceptional resistance to toxic substances. All
+  // dwarven characters make saving throws against poison with the same bonuses
+  // that they get against magical attacks."
   dwarf: {
-    0: ({con}) => {  // Paralyzation/Poison/Death
-      if (con >= 19) return -3;
-      if (con >= 17) return -2;
-      if (con >= 14) return -1;
-      return 0;
-    },
-    1: ({con}) => {  // Rod/Staff/Wand
-      if (con >= 19) return -3;
-      if (con >= 17) return -2;
-      if (con >= 14) return -1;
-      return 0;
-    },
-    4: ({con}) => {  // Spell
-      if (con >= 19) return -3;
-      if (con >= 17) return -2;
-      if (con >= 14) return -1;
-      return 0;
-    }
+    0: ({con}) => getConMagicSaveBonus(con),   // poison (see caveat above)
+    1: ({con}) => getConMagicSaveBonus(con),   // Rod/Staff/Wand
+    4: ({con}) => getConMagicSaveBonus(con)    // Spell
   },
+  // PHB Ch.2: "Halflings have a similar resistance to poisons of all sorts, so
+  // they gain a Constitution bonus identical to that for saving throws vs.
+  // magical attacks when they make saving throws vs. poison."
   halfling: {
-    0: ({con}) => {  // Paralyzation/Poison/Death
-      if (con >= 19) return -3;
-      if (con >= 17) return -2;
-      if (con >= 14) return -1;
-      return 0;
-    },
-    1: ({con}) => {  // Rod/Staff/Wand
-      if (con >= 19) return -3;
-      if (con >= 17) return -2;
-      if (con >= 14) return -1;
-      return 0;
-    },
-    4: ({con}) => {  // Spell
-      if (con >= 19) return -3;
-      if (con >= 17) return -2;
-      if (con >= 14) return -1;
-      return 0;
-    }
+    0: ({con}) => getConMagicSaveBonus(con),   // poison (see caveat above)
+    1: ({con}) => getConMagicSaveBonus(con),   // Rod/Staff/Wand
+    4: ({con}) => getConMagicSaveBonus(con)    // Spell
   },
+  // PHB Ch.2: the gnome entry grants the bonus against "magical wands, staves,
+  // rods, and spells" ONLY. No poison clause for gnomes.
   gnome: {
-    0: ({con}) => {  // Paralyzation/Poison/Death
-      if (con >= 19) return -3;
-      if (con >= 17) return -2;
-      if (con >= 14) return -1;
-      return 0;
-    },
-    1: ({con}) => {  // Rod/Staff/Wand
-      if (con >= 19) return -3;
-      if (con >= 17) return -2;
-      if (con >= 14) return -1;
-      return 0;
-    },
-    4: ({con}) => {  // Spell
-      if (con >= 19) return -3;
-      if (con >= 17) return -2;
-      if (con >= 14) return -1;
-      return 0;
-    }
+    1: ({con}) => getConMagicSaveBonus(con),   // Rod/Staff/Wand
+    4: ({con}) => getConMagicSaveBonus(con)    // Spell
   }
 };
 
