@@ -421,6 +421,7 @@ const SHEET_HTML = `
             <div class="col">
               <label>Exceptional STR (warriors only)</label>
               <input data-field="str_exceptional" type="text" placeholder="01-00">
+              <div class="str-exceptional-note" style="display:none;margin-top:4px;font-size:11px;line-height:1.35;color:var(--muted);"></div>
             </div>
           </div>
         </section>
@@ -1433,7 +1434,12 @@ const SHEET_HTML = `
           <div class="row">
             <div class="col"><label>Height</label><input data-field="height" type="text"></div>
             <div class="col"><label>Weight</label><input data-field="weight" type="text"></div>
+            <div class="col">
+              <label>Age</label>
+              <input data-field="age" type="number" min="1" step="1" title="Current age in years. PHB Table 12 applies cumulative ability score adjustments at middle age, old age and venerable age. The sheet reports which bracket you have reached but never changes a score.">
+            </div>
           </div>
+          <div class="aging-note" style="display:none;margin-top:8px;padding:8px;border-radius:4px;font-size:12px;line-height:1.45;border:1px solid var(--info, #6fb3d2);background:rgba(111,179,210,0.08);"></div>
           <div class="row" style="margin-top:8px">
             <div class="col"><label>Hair</label><input data-field="hair" type="text"></div>
             <div class="col"><label>Eyes</label><input data-field="eyes" type="text"></div>
