@@ -21,10 +21,20 @@ const MULTICLASS_COMBOS = {
     ["fighter", "thief"],
     ["fighter", "cleric"]
   ],
+  // CONFLICT IN THE BOOK, resolved in favour of Chapter 2. The Ch.3 table on
+  // p.61 lists only Fighter/Mage, Fighter/Thief and Mage/Thief for elves, but
+  // the Ch.2 elf entry states outright that "an elf can choose to be a
+  // multi-class fighter/mage, fighter/thief, fighter/mage/thief, or mage/thief."
+  // Both are the PHB. The prose enumerates the triple deliberately, summary
+  // tables lose rows more readily than prose invents them, and this check is
+  // advisory only -- so a wrong ALLOW costs nothing while a wrong WARNING on a
+  // legal character is the banner fatigue the classGroupLegality toggle exists
+  // to prevent. Half-elves get the same triple from the p.61 table directly.
   elf: [
     ["fighter", "mage"],
     ["fighter", "thief"],
-    ["mage", "thief"]
+    ["mage", "thief"],
+    ["fighter", "mage", "thief"]
   ],
   gnome: [
     ["fighter", "cleric"],
