@@ -3465,6 +3465,110 @@ function validateClassMinimums(root) {
   return problems;
 }
 
+// === ALIGNMENT (PHB Chapter 4) ===
+// Chapter 4 defines a CLOSED vocabulary: two axes -- ethos (law / neutrality /
+// chaos) and morals (good / neutrality / evil) -- combining into nine
+// alignments. Storing a KEY rather than the player's typing is what lets any
+// rule read alignment reliably; nothing anywhere should ever parse the label.
+//
+// The tenth entry is not an alignment. Ch.4 "Non-Aligned Creatures": for
+// unintelligent monsters and animals "alignment is simply not applicable... For
+// these creatures, alignment is always detected as neutral." It exists so a
+// war dog or a direwolf can be recorded honestly instead of being forced into
+// True Neutral, which is a philosophical position an animal cannot hold.
+const ALIGNMENTS = {
+  lg: { label: 'Lawful Good',     abbr: 'LG', ethos: 'lawful',  morals: 'good' },
+  ln: { label: 'Lawful Neutral',  abbr: 'LN', ethos: 'lawful',  morals: 'neutral' },
+  le: { label: 'Lawful Evil',     abbr: 'LE', ethos: 'lawful',  morals: 'evil' },
+  ng: { label: 'Neutral Good',    abbr: 'NG', ethos: 'neutral', morals: 'good' },
+  tn: { label: 'True Neutral',    abbr: 'N',  ethos: 'neutral', morals: 'neutral' },
+  ne: { label: 'Neutral Evil',    abbr: 'NE', ethos: 'neutral', morals: 'evil' },
+  cg: { label: 'Chaotic Good',    abbr: 'CG', ethos: 'chaotic', morals: 'good' },
+  cn: { label: 'Chaotic Neutral', abbr: 'CN', ethos: 'chaotic', morals: 'neutral' },
+  ce: { label: 'Chaotic Evil',    abbr: 'CE', ethos: 'chaotic', morals: 'evil' },
+
+  nonaligned: { label: 'Non-aligned (animal / unintelligent)', abbr: '\u2014',
+                ethos: null, morals: null, notAnAlignment: true }
+};
+
+// Display order for dropdowns. Object key order is reliable in practice for
+// string keys, but an explicit list means reordering the menu never risks
+// touching the data.
+const ALIGNMENT_ORDER = ['lg','ln','le','ng','tn','ne','cg','cn','ce','nonaligned'];
+
+// Values the app itself writes that are deliberately NOT alignments. They are
+// kept out of ALIGNMENTS so no rule can ever treat them as one.
+const ALIGNMENT_NON_VALUES = {
+  unknown: 'Unknown',
+  other:   'Other (see notes)'
+};
+
+// Free text -> key. Existing sheets hold whatever anyone typed, and kits.js
+// holds book phrasing, so this has to be forgiving. Returns '' when nothing
+// matches -- callers preserve the original text rather than discarding it.
+const ALIGNMENT_ALIASES = {
+  'lawfulgood': 'lg', 'lg': 'lg',
+  'lawfulneutral': 'ln', 'ln': 'ln',
+  'lawfulevil': 'le', 'le': 'le',
+  'neutralgood': 'ng', 'ng': 'ng',
+  'neutralevil': 'ne', 'ne': 'ne',
+  'chaoticgood': 'cg', 'cg': 'cg',
+  'chaoticneutral': 'cn', 'cn': 'cn',
+  'chaoticevil': 'ce', 'ce': 'ce',
+  // True Neutral collects the most spellings by far.
+  'trueneutral': 'tn', 'tn': 'tn', 'n': 'tn', 'neutral': 'tn',
+  'neutralneutral': 'tn', 'nn': 'tn', 'truen': 'tn',
+  // Non-aligned.
+  'nonaligned': 'nonaligned', 'unaligned': 'nonaligned', 'none': 'nonaligned',
+  'na': 'nonaligned', 'animal': 'nonaligned'
+};
+
+function normalizeAlignmentKey(text) {
+  if (!text) return '';
+  const raw = String(text).trim().toLowerCase();
+  if (ALIGNMENTS[raw]) return raw;                 // already a key
+  // Letters only: "Lawful Good", "lawful-good", "L.G." and "lawfulgood" all
+  // collapse to the same lookup.
+  const flat = raw.replace(/[^a-z]/g, '');
+  return ALIGNMENT_ALIASES[flat] || '';
+}
+
+function getAlignmentData(key) {
+  return ALIGNMENTS[normalizeAlignmentKey(key)] || null;
+}
+
+// Full name for display. Unrecognised text is returned UNCHANGED so a legacy
+// or homebrew value never vanishes from a sheet or a printout.
+function getAlignmentLabel(key) {
+  const a = getAlignmentData(key);
+  if (a) return a.label;
+  if (key && ALIGNMENT_NON_VALUES[String(key).trim().toLowerCase()]) {
+    return ALIGNMENT_NON_VALUES[String(key).trim().toLowerCase()];
+  }
+  return key ? String(key) : '';
+}
+
+function getAlignmentAbbr(key) {
+  const a = getAlignmentData(key);
+  return a ? a.abbr : (key ? String(key) : '');
+}
+
+// Ch.4 describes alignment along two axes; these read one axis at a time so a
+// rule can ask the question the book actually asks. Non-aligned answers false
+// to everything -- it holds no position on either axis.
+function isAlignmentGood(key)    { const a = getAlignmentData(key); return !!a && a.morals === 'good'; }
+function isAlignmentEvil(key)    { const a = getAlignmentData(key); return !!a && a.morals === 'evil'; }
+function isAlignmentLawful(key)  { const a = getAlignmentData(key); return !!a && a.ethos  === 'lawful'; }
+function isAlignmentChaotic(key) { const a = getAlignmentData(key); return !!a && a.ethos  === 'chaotic'; }
+
+// "Partially neutral" is the bard's own wording -- neutral on EITHER axis, so
+// LN, NG, TN, NE and CN qualify while the four corners do not. Expressed as the
+// principle rather than a list of five, because kits.js uses the same phrase.
+function isAlignmentPartiallyNeutral(key) {
+  const a = getAlignmentData(key);
+  return !!a && !a.notAnAlignment && (a.ethos === 'neutral' || a.morals === 'neutral');
+}
+
 // === Racial ability requirements (PHB Table 7) ===
 // [min, max] for the ROLLED score, before Table 8 adjustments are applied.
 // Humans have no row in Table 7 -- "Any character can be a human, if the player
