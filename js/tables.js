@@ -131,9 +131,8 @@ const RACIAL_COMBAT_BONUSES = {
     special: [
       // PHB Ch.2: "All magical items that are not specifically suited to the
       // character's class have a 20% chance to malfunction when used by a
-      // dwarf." Note the exclusion list is the OPPOSITE way round from what
-      // intuition suggests -- rods, wands and potions DO malfunction; weapons
-      // and armor do not.
+      // dwarf." Note the exclusion list runs the OPPOSITE way from intuition --
+      // rods, wands and potions DO malfunction; weapons and armor do not.
       { name: "Magic Item Malfunction", notes: "20% chance of malfunction each time you use a magical item not suited to your class -- rods, staves, wands, rings, amulets, potions, horns, jewels and the like. Weapons, shields, armor, gauntlets and girdles are exempt, as are priest items used by a dwarven cleric. Affects only that use; a cursed item that malfunctions reveals itself" }
     ]
   },
@@ -187,21 +186,11 @@ const RACIAL_COMBAT_BONUSES = {
     combat: [],
     defensive: [],
     special: []
-  },
-  // NOT A PHB CHAPTER 2 RACE. The six player character races are human, elf,
-  // dwarf, gnome, half-elf and halfling. Half-orc is kept as a homebrew stub so
-  // an existing character does not break, but it has no PHB entry to transcribe
-  // and no entry in RACE_LANGUAGES.
-  "half-orc": {
-    combat: [],
-    defensive: [],
-    special: []
   }
 };
-// Aliases, not copies -- duplicated blocks drifting apart is how the old
+// Alias, not a copy -- duplicated blocks drifting apart is how the old
 // multi-class table accumulated three combinations the PHB does not allow.
-RACIAL_COMBAT_BONUSES.halfelf  = RACIAL_COMBAT_BONUSES["half-elf"];
-RACIAL_COMBAT_BONUSES.halforc  = RACIAL_COMBAT_BONUSES["half-orc"];
+RACIAL_COMBAT_BONUSES.halfelf = RACIAL_COMBAT_BONUSES["half-elf"];
 
 const CLASS_COMBAT_BONUSES = {
   fighter: {
