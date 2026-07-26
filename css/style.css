@@ -855,6 +855,18 @@
 	  display: inline-block;
 	}
 
+	/* Muted text so the question reads as secondary to the heading beside it,
+	   which is full gold. The "i" itself keeps the accent so the control still
+	   announces itself -- the label is the quiet part, not the affordance. */
+	.disclosure.info > summary {
+	  color: var(--muted);
+	  font-weight: 400;
+	}
+
+	.disclosure.info > summary:hover {
+	  color: var(--accent-light);
+	}
+
 	.disclosure.info > summary::before {
 	  content: "i";
 	  font-style: italic;
@@ -867,6 +879,8 @@
 	  border: 1px solid currentColor;
 	  border-radius: 50%;
 	  transform: none;
+	  color: var(--accent-light);
+	  flex-shrink: 0;
 	}
 
 	/* Cancel the chevron rotation inherited from the base disclosure rule. */
