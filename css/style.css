@@ -816,3 +816,26 @@
 	  flex-shrink: 0;
 	  cursor: pointer;
 	}
+
+    /* ===== Roll history detail disclosure =====
+       Replaces the old hover-only title attribute, which never fired on touch.
+       Native <details>, so no JS. Styled here rather than inline because inline
+       styles bypass theming entirely (see the theme tokenization to-do). */
+    .roll-history details > summary {
+      cursor: pointer;
+      color: var(--accent-light);
+      font-size: 11px;
+      list-style: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      user-select: none;
+    }
+    .roll-history details > summary::-webkit-details-marker { display: none; }
+    .roll-history details > summary::before {
+      content: "\25B8";
+      display: inline-block;
+      transition: transform 0.15s ease;
+    }
+    .roll-history details[open] > summary::before { transform: rotate(90deg); }
+    .roll-history details > summary:hover { text-decoration: underline; }
