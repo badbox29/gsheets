@@ -4402,13 +4402,15 @@ function renderNWProficiencies(root) {
       .map(g => g.charAt(0).toUpperCase() + g.slice(1))
       .join(', ');
 
+    const checkText = formatNWPCheck(root, nwp);
+
     nwpDiv.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px;">
         <div style="flex:1;">
           <strong>${nwp.name}</strong>
           <span style="margin-left:8px;font-size:11px;color:var(--muted);">${groupLabel}</span>
           <div style="font-size:11px;color:var(--muted);margin-top:2px;">
-            ${slotText} | Check: ${nwp.abilityCheck}
+            ${slotText} | ${checkText}
           </div>
           ${nwp.notes ? `<div style="font-size:11px;color:var(--muted);margin-top:4px;font-style:italic;">${nwp.notes}</div>` : ''}
         </div>
@@ -4426,6 +4428,46 @@ function renderNWProficiencies(root) {
       deleteNWProficiency(root, index);
     };
   });
+}
+
+// Render the PHB Chapter 5 proficiency check as a TARGET NUMBER rather than the
+// raw Table 37 string. "Check: Wis / -1" tells a player nothing he can act on;
+// "Wis 14 -1 = roll 13 or less" is the number he actually rolls against.
+// The arithmetic lives in getNWPCheckTarget (tables.js); this is display only.
+function formatNWPCheck(root, nwp) {
+  if (typeof getNWPCheckTarget !== 'function') {
+    return `Check: ${nwp.abilityCheck || 'N/A'}`;
+  }
+
+  const c = getNWPCheckTarget(root, nwp);
+
+  // Table 37 lists Blind-fighting and Mountaineering as "NA / NA" -- they have
+  // no check at all, so printing a target number would be a lie.
+  if (!c.hasCheck) {
+    return `<span title="PHB Table 37 lists no ability check for this proficiency.">No check required</span>`;
+  }
+
+  const sign  = n => (n < 0 ? `-${Math.abs(n)}` : `+${n}`);
+  const parts = [`${c.abilityLabel} ${c.score}`];
+  if (c.modifier) parts.push(sign(c.modifier));
+  c.adjustments.forEach(a => parts.push(sign(a.mod)));
+
+  const why = c.adjustments.map(a => `${a.label} ${sign(a.mod)}`).join(', ');
+  const tip = 'PHB Ch.5: roll 1d20; equal to or under the target succeeds. '
+            + 'A natural 20 always fails.' + (why ? ` Includes: ${why}.` : '');
+
+  // Below 1 no roll can ever succeed. For Tracking the book says the trail is
+  // then permanently lost to that character.
+  if (c.impossible) {
+    return `<span style="color:var(--error, #ff6b6b);" title="${tip}">`
+         + `${parts.join(' ')} = no roll can succeed</span>`;
+  }
+
+  const note = c.alwaysFailsOn20
+    ? ` <span style="color:var(--muted);" title="A roll of 20 always fails, however high the target.">(20 still fails)</span>`
+    : '';
+
+  return `<span title="${tip}">${parts.join(' ')} = roll ${c.target} or less</span>${note}`;
 }
 
 // Delete a non-weapon proficiency
