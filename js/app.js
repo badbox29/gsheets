@@ -3621,6 +3621,91 @@ function showSpellMigrationBanner(root, changes) {
 
 // Populate the Campaign Setting dropdown from CAMPAIGN_SETTINGS. Greyed
 // (disabled:false) settings appear but are non-selectable. Idempotent.
+// === ALIGNMENT DROPDOWN (PHB Chapter 4) ===
+// Options are built from ALIGNMENTS in tables.js so the vocabulary lives in
+// exactly one place. Two menus come off the same data: the character's own,
+// which offers the nine alignments and nothing else, and the follower menu,
+// which also offers Non-aligned, Unknown and Other -- a war dog holds no
+// ethical position at all, and a DM's notes on an NPC are not always tidy.
+function buildAlignmentOptions(mode) {
+  if (typeof ALIGNMENTS === 'undefined' || typeof ALIGNMENT_ORDER === 'undefined') {
+    return '<option value=""></option>';
+  }
+
+  const esc = s => String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+  let html = '<option value=""></option>';
+
+  ALIGNMENT_ORDER.forEach(key => {
+    const a = ALIGNMENTS[key];
+    if (a.notAnAlignment && mode !== 'follower') return;
+    const suffix = a.notAnAlignment ? '' : ' (' + a.abbr + ')';
+    html += '<option value="' + key + '">' + esc(a.label + suffix) + '</option>';
+  });
+
+  if (mode === 'follower' && typeof ALIGNMENT_NON_VALUES !== 'undefined') {
+    Object.keys(ALIGNMENT_NON_VALUES).forEach(k => {
+      html += '<option value="' + k + '">' + esc(ALIGNMENT_NON_VALUES[k]) + '</option>';
+    });
+  }
+
+  return html;
+}
+
+// Fills a <select> and selects `raw`, which may already be a key, may be
+// legacy free text, or may be something nobody recognises.
+//
+// UNRECOGNISED TEXT IS NEVER DISCARDED. Assigning an unmatched value to a
+// <select> silently blanks it, and collectSheet would then write that blank
+// straight back over the character's real alignment on the next save. So
+// anything that does not resolve is injected as its own option and left
+// selected -- a sheet that held "Lawful Stupid" still holds it afterwards.
+function fillAlignmentSelect(selectEl, raw, mode) {
+  if (!selectEl) return;
+  selectEl.innerHTML = buildAlignmentOptions(mode);
+
+  const text = (raw === undefined || raw === null) ? '' : String(raw).trim();
+  if (!text) { selectEl.value = ''; return; }
+
+  let target = (typeof normalizeAlignmentKey === 'function')
+    ? normalizeAlignmentKey(text) : '';
+
+  // A value the app itself wrote on a follower card ("unknown", "other").
+  if (!target && typeof ALIGNMENT_NON_VALUES !== 'undefined' &&
+      ALIGNMENT_NON_VALUES[text.toLowerCase()]) {
+    target = text.toLowerCase();
+  }
+
+  // Either unrecognised, or a real key this particular menu does not offer.
+  // Keep the original text verbatim rather than losing it.
+  if (!target || !Array.from(selectEl.options).some(o => o.value === target)) {
+    const opt = document.createElement('option');
+    opt.value = text;
+    opt.textContent = text + '  (unrecognised)';
+    selectEl.appendChild(opt);
+    selectEl.value = text;
+    return;
+  }
+
+  selectEl.value = target;
+}
+
+function populateAlignmentDropdown(root) {
+  const sel = qs(root, '[data-field="alignment"]');
+  if (!sel) return;
+  fillAlignmentSelect(sel, sel.value, 'character');
+}
+
+// loadSheet's counterpart to val(). Fills the options and sets the value in
+// one call, so nothing can set a value before its option exists.
+function setAlignmentValue(root, raw) {
+  const sel = qs(root, '[data-field="alignment"]');
+  if (!sel) return;
+  fillAlignmentSelect(sel, raw, 'character');
+}
+
 function populateCampaignSettings(root) {
   const sel = root.querySelector('[data-field="campaign_setting"]');
   if (!sel || sel.options.length > 0) return;
@@ -3666,7 +3751,7 @@ function loadSheet(root, data){
   val(root,'clazz',m.clazz||'');
   val(root,'level',m.level||'');
   val(root,'kit',m.kit||'');
-  val(root,'alignment',m.alignment||'');
+  setAlignmentValue(root, m.alignment || '');
   val(root,'campaign_setting', m.campaign_setting || 'core');
   val(root,'xp',m.xp||'');
   // Load multi-class/dual-class data (backward compatible - defaults to 'single')
@@ -4981,6 +5066,7 @@ function bindSheet(root, tab){
   });
 
   // Initial render
+  populateAlignmentDropdown(root);
   if (typeof renderSpecialistValidation === 'function') renderSpecialistValidation(root);
   if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(root);
   if (typeof renderExceptionalStrengthLock === 'function') renderExceptionalStrengthLock(root);
