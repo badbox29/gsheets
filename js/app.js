@@ -9627,7 +9627,30 @@ function renderCharacterBonuses(root) {
       });
     }
   });
-  
+
+  // === Proficiency bonuses (PHB Ch.5) ===
+  // Blind-fighting is the only proficiency whose numbers modify COMBAT rather
+  // than a proficiency check, so it belongs here beside THAC0 rather than on the
+  // proficiency card. Note the AC entry is NOT "no penalty" -- darkness costs
+  // him nothing only inside melee range; missile penalties still apply.
+  ((root && root._nwps) || []).forEach(p => {
+    const pname = String((p && p.name) || '').trim().toLowerCase();
+    if (pname !== 'blind-fighting' && pname !== 'blind fighting') return;
+
+    allCombat.push({ name: 'Blind-Fighting \u2014 darkness',
+      notes: '\u22122 to attack in total darkness instead of \u22124; \u22121 under starlight or moonlight',
+      source: 'Proficiency' });
+    allCombat.push({ name: 'Blind-Fighting \u2014 invisible foes',
+      notes: 'Attack penalty reduced to \u22122, though he only knows their general location and cannot target them exactly',
+      source: 'Proficiency' });
+    allDefensive.push({ name: 'Blind-Fighting \u2014 Armor Class',
+      notes: 'No AC penalty from darkness against threats within melee reach. Missile penalties still apply.',
+      source: 'Proficiency' });
+    allSpecial.push({ name: 'Blind-Fighting \u2014 movement and abilities',
+      notes: 'Half the normal movement penalty in darkness. Special abilities normally lost in darkness are retained at half effectiveness. Does not allow spell use.',
+      source: 'Proficiency' });
+  });
+
   // Add kit bonuses and track replacements
   let replacedAbilities = [];
   if (kitRaw && KIT_COMBAT_BONUSES) {
