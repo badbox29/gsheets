@@ -171,17 +171,8 @@
     "Notes": "Create pottery and ceramic items"
   },
   {
-    "Proficiency Name": "Reading/Writing",
-    "Category": "Wizard",
-    "Slots": "1",
-    "Ability Check": "Int / +1",
-    "Modifier": "+1",
-    "Source": "PHB",
-    "Notes": "Literate in ONE language you can speak. Reading and writing are a single purchase -- one slot covers both. PHB Table 37: Priest and Wizard groups only."
-  },
-  {
     "Proficiency Name": "Religion",
-    "Category": "General",
+    "Category": "Priest",
     "Slots": "1",
     "Ability Check": "Wis / 0",
     "Modifier": "0",
@@ -325,7 +316,7 @@
   },
   {
     "Proficiency Name": "Reading Lips",
-    "Category": "Wizard",
+    "Category": "Rogue",
     "Slots": "2",
     "Ability Check": "Int / -2",
     "Modifier": "-2",
@@ -459,15 +450,6 @@
     "Notes": "Make and repair weapons. Must specialize by weapon type. Requires forge."
   },
   {
-    "Proficiency Name": "Languages, Ancient",
-    "Category": "Priest",
-    "Slots": "1",
-    "Ability Check": "Int / 0",
-    "Modifier": "0",
-    "Source": "PHB",
-    "Notes": "One slot buys EITHER the ability to read and write the language OR to speak it -- the character's choice, not both."
-  },
-  {
     "Proficiency Name": "Healing",
     "Category": "Priest",
     "Slots": "2",
@@ -522,15 +504,6 @@
     "Notes": "Create fake documents and signatures. Detect forgeries."
   },
   {
-    "Proficiency Name": "Gaming",
-    "Category": "Rogue",
-    "Slots": "1",
-    "Ability Check": "Cha / 0",
-    "Modifier": "0",
-    "Source": "PHB",
-    "Notes": "Skilled at games of chance. Know how to cheat effectively."
-  },
-  {
     "Proficiency Name": "Juggling",
     "Category": "Rogue",
     "Slots": "1",
@@ -547,15 +520,6 @@
     "Modifier": "0",
     "Source": "PHB",
     "Notes": "Make impressive leaps. Add to jumping distance."
-  },
-  {
-    "Proficiency Name": "Set Snares",
-    "Category": "Rogue",
-    "Slots": "1",
-    "Ability Check": "Dex / -1",
-    "Modifier": "-1",
-    "Source": "PHB",
-    "Notes": "Create and set traps. Covers both hunting and security traps."
   },
   {
     "Proficiency Name": "Tightrope Walking",
@@ -595,20 +559,20 @@
   },
   {
     "Proficiency Name": "Animal Lore",
-    "Category": "General",
+    "Category": "Warrior",
     "Slots": "1",
     "Ability Check": "Int / 0",
     "Modifier": "0",
-    "Source": "Complete Ranger",
+    "Source": "PHB",
     "Notes": "Identify species, habits, and abilities of animals"
   },
   {
     "Proficiency Name": "Appraising",
-    "Category": "General",
+    "Category": "Rogue",
     "Slots": "1",
     "Ability Check": "Int / 0",
     "Modifier": "0",
-    "Source": "Complete Thief",
+    "Source": "PHB"
     "Notes": "Estimate value of common and precious items accurately"
   },
   {
@@ -640,16 +604,16 @@
   },
   {
     "Proficiency Name": "Riding, Airborne",
-    "Category": "Warrior",
+    "Category": "General",
     "Slots": "2",
     "Ability Check": "Wis / -2",
     "Modifier": "-2",
-    "Source": "Complete Fighter",
+    "Source": "PHB",
     "Notes": "Ride flying mounts like griffons, hippogriffs, pegasi"
   },
   {
     "Proficiency Name": "Riding, Land-Based",
-    "Category": "Warrior",
+    "Category": "General",
     "Slots": "1",
     "Ability Check": "Wis / +3",
     "Modifier": "+3",
