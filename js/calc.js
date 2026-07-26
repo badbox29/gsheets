@@ -4618,6 +4618,116 @@ function renderProficiencyAbilities(root) {
   }
 }
 
+// --- Tracking (PHB Ch.5, Tables 39 and 40) ---
+// Two phases in the book: FINDING a trail (gated by prerequisites) and
+// FOLLOWING it (re-checked on three triggers). The panel computes the chance
+// and the party's movement rate, and states the rules it cannot enforce.
+PROF_ABILITY_BUILDERS['tracking'] = function (root, entry, panelEl) {
+  const st = getProfAbilityState(root, 'tracking');
+  const esc = s => String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  const base = getNWPCheckTarget(root, entry.nwp);
+  const coop = getProficiencyCooperation(root);
+
+  let total = base.hasCheck ? base.target : 0;
+  const lines = [];
+  base.adjustments.forEach(a =>
+    lines.push(`${a.label}: ${a.mod < 0 ? a.mod : '+' + a.mod}`));
+
+  (TRACKING_MODIFIERS || []).forEach(m => {
+    if (m.repeating) {
+      const n = Math.max(0, parseInt(st[m.key], 10) || 0);
+      const times = Math.floor(n / m.per);
+      if (times > 0) {
+        const amt = m.mod * times;
+        total += amt;
+        lines.push(`${m.label} (${n}): ${amt < 0 ? amt : '+' + amt}`);
+      }
+    } else if (st[m.key]) {
+      total += m.mod;
+      if (m.mod !== 0) lines.push(`${m.label}: ${m.mod < 0 ? m.mod : '+' + m.mod}`);
+    }
+  });
+
+  // Tracking states the cooperation rule in its own words: "+1 to the ability
+  // score of the MOST ADEPT tracker. Once he loses the trail, it is lost to all."
+  if (coop) { total += 1; lines.push('Most adept of several trackers: +1'); }
+
+  // The below-zero rule is a LATCH, not a live comparison: "further tracking is
+  // impossible even if the chance later improves." Nothing here can enforce
+  // that across sessions, so it is stated rather than modelled.
+  const lost = total < 0;
+  const move = (typeof getTrackingMovement === 'function') ? getTrackingMovement(total) : null;
+
+  const rows = (TRACKING_MODIFIERS || []).map(m => m.repeating
+    ? `<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+         <input type="number" class="trk-num" data-key="${m.key}" min="0" step="1"
+                value="${Math.max(0, parseInt(st[m.key], 10) || 0)}"
+                style="width:52px;flex-shrink:0;padding:2px 4px;font-size:11px;">
+         <span>${esc(m.countLabel)}
+           <span style="color:var(--muted);">(${m.mod > 0 ? '+' : ''}${m.mod} per ${m.per})</span>
+         </span>
+       </div>`
+    : `<label style="display:flex;align-items:center;gap:6px;margin-bottom:4px;color:var(--text);cursor:pointer;">
+         <input type="checkbox" class="trk-chk" data-key="${m.key}" ${st[m.key] ? 'checked' : ''}
+                style="width:auto;flex-shrink:0;">
+         <span>${esc(m.label)}
+           <span style="color:var(--muted);">(${m.mod > 0 ? '+' : ''}${m.mod})</span>
+         </span>
+       </label>`).join('');
+
+  const result = lost
+    ? `<div style="color:var(--error, #ff6b6b);font-weight:600;">Trail lost \u2014 chance ${total}</div>
+       <div style="font-size:11px;color:var(--muted);margin-top:2px;">
+         Below 0 the trail is totally lost to this character and further tracking is
+         impossible, even if the chance later improves. Others may still track it.
+       </div>`
+    : `<div style="font-weight:600;color:var(--accent-light);">Chance to track: ${total} or less on 1d20</div>
+       <div style="font-size:11px;color:var(--muted);margin-top:2px;">
+         Movement while tracking: ${move ? esc(move.label) : '\u2014'} (whole party)
+         \u00B7 a natural 20 always fails
+       </div>`;
+
+  panelEl.innerHTML = `
+    <div style="display:flex;flex-wrap:wrap;gap:16px;">
+      <div style="flex:1 1 260px;font-size:11px;">
+        <div style="font-weight:600;margin-bottom:6px;">Conditions (cumulative)</div>
+        ${rows}
+      </div>
+      <div style="flex:1 1 220px;">
+        <div style="padding:8px;border:1px solid var(--border);border-radius:4px;background:var(--glass);">
+          ${result}
+          ${lines.length ? `<div style="font-size:11px;color:var(--muted);margin-top:6px;white-space:pre-wrap;">${esc(lines.join('\n'))}</div>` : ''}
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5;">
+          <strong style="color:var(--text);">Finding the trail</strong><br>
+          Indoors: must have seen the creature within 30 minutes and start where it
+          was last seen. Outdoors: must have seen it, have eyewitness reports, or
+          have obvious evidence it is in the area. On a failure no further attempt
+          is possible until those conditions are met again under different
+          circumstances.<br><br>
+          <strong style="color:var(--text);">While following</strong><br>
+          Re-check when the chance drops, when a second track crosses the first, or
+          whenever the party resumes after a halt. After a failed check one more is
+          allowed following an hour spent searching; fail that and no further
+          attempts can be made.<br><br>
+          A separate check identifies the creature type and rough number, if the
+          character knows that kind of creature. Flying and noncorporeal creatures
+          are effectively untrackable.
+        </div>
+      </div>
+    </div>
+  `;
+
+  panelEl.querySelectorAll('.trk-chk').forEach(el => {
+    el.onchange = () => { st[el.dataset.key] = el.checked; renderProficiencyAbilities(root); };
+  });
+  panelEl.querySelectorAll('.trk-num').forEach(el => {
+    el.onchange = () => { st[el.dataset.key] = el.value; renderProficiencyAbilities(root); };
+  });
+};
+
 // Delete a non-weapon proficiency
 function deleteNWProficiency(root, index) {
   if (!root._nwps || !root._nwps[index]) return;
