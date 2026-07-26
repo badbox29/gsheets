@@ -3590,6 +3590,169 @@ function isAlignmentPartiallyNeutral(key) {
   return !!a && !a.notAnAlignment && (a.ethos === 'neutral' || a.morals === 'neutral');
 }
 
+// === Class alignment requirements (PHB Chapter 3) ===
+// Written as the PRINCIPLE the book states, with the permitted list DERIVED
+// from it, rather than nine hand-typed keys per class. The ranger reads
+// "always good" and the bard "always partially neutral" -- deriving means each
+// sentence is expressed once and no list can go stale behind an edit.
+//
+// Classes absent from this table have NO restriction and are never judged:
+//   Fighter  -- "any alignment: good or evil, lawful or chaotic, or neutral"
+//   Mage / specialist -- the class entries state no restriction at all
+//   Cleric   -- "not restricted to good; they can have any alignment
+//               acceptable to their order", which is the DM's call, not ours
+const PLAYER_ALIGNMENTS = ALIGNMENT_ORDER.filter(k => !ALIGNMENTS[k].notAnAlignment);
+
+const CLASS_ALIGNMENT_REQUIREMENTS = {
+  paladin: {
+    allowed:  ['lg'],
+    describe: 'must be lawful good'
+  },
+  ranger: {
+    allowed:  PLAYER_ALIGNMENTS.filter(isAlignmentGood),
+    describe: 'must be good (lawful, neutral or chaotic)'
+  },
+  druid: {
+    // "the druid must be neutral in alignment" -- unqualified, unlike the
+    // bard's "partially neutral" printed a few pages later. Ch.4's own True
+    // Neutral paragraph uses a druid as its worked example.
+    allowed:  ['tn'],
+    describe: 'must be true neutral'
+  },
+  thief: {
+    allowed:  PLAYER_ALIGNMENTS.filter(k => k !== 'lg'),
+    describe: 'may be any alignment except lawful good'
+  },
+  bard: {
+    allowed:  PLAYER_ALIGNMENTS.filter(isAlignmentPartiallyNeutral),
+    describe: 'must be partially neutral (neutral on at least one axis)'
+  }
+};
+
+// Which classes does this character actually hold? Same shape as the block
+// inside validateClassMinimums; that one is left alone rather than refactored
+// mid-audit, but it could be moved onto this later.
+function getCharacterClassList(root) {
+  const charType = (val(root, 'char_type') || 'single').toLowerCase();
+  const classes = [];
+  if (charType === 'multi') {
+    for (let i = 1; i <= 3; i++) {
+      const c = (val(root, 'mc_class' + i) || '').trim();
+      if (c) classes.push(c);
+    }
+  } else if (charType === 'dual') {
+    const oc = (val(root, 'dc_original_class') || '').trim();
+    const nc = (val(root, 'dc_new_class') || '').trim();
+    if (oc) classes.push(oc);
+    if (nc) classes.push(nc);
+  } else {
+    const c = (val(root, 'clazz') || '').trim();
+    if (c) classes.push(c);
+  }
+  return classes;
+}
+
+// EXACT MATCH ONLY -- deliberately unlike CLASS_ABILITY_MINIMUMS and
+// getClassCategory, which both fall back to substring matching. "hb_dpaladin"
+// contains "paladin", so a substring fallback would silently bind a homebrew
+// class to lawful good and strip a character of powers he has already lost in
+// play. An alignment restriction is absolute where a minimum score is a
+// nudge, so the safe failure here is saying nothing.
+function validateClassAlignment(root) {
+  const problems = [];
+  if (typeof isOptionalRule === 'function' &&
+      !isOptionalRule('classAlignmentRequirements')) return problems;
+
+  const key = normalizeAlignmentKey(val(root, 'alignment'));
+  if (!key) return problems;            // blank or unrecognised: nothing to judge
+
+  const classes = getCharacterClassList(root);
+  if (!classes.length) return problems;
+
+  const label = getAlignmentLabel(key);
+
+  classes.forEach(clazz => {
+    const req = CLASS_ALIGNMENT_REQUIREMENTS[clazz.trim().toLowerCase()];
+    if (!req) return;                   // unrecognised or unrestricted class
+    if (req.allowed.indexOf(key) !== -1) return;
+    problems.push('A ' + clazz + ' ' + req.describe +
+                  ' (PHB Ch.3). This character is ' + label + '.');
+  });
+
+  return problems;
+}
+
+// === Kit alignment requirements (Complete handbooks, via kits.js) ===
+// kits.js records these as free-text prose. Twelve distinct phrases appear
+// across the whole file: Any / Lawful good / Lawful Good / Neutral /
+// Any non-lawful / Any good / Any lawful / Lawful / Chaotic / Any neutral /
+// Any evil / Deity-dependent.
+//
+// Returns true (satisfied), false (violated) or null (cannot be judged).
+//
+// THE ORDER OF THE CHECKS MATTERS. A named alignment is tested BEFORE the
+// axis words, and the leading "Any" is NOT stripped first, because bare
+// "Neutral" (the druid kits) means true neutral while "Any neutral" (the
+// Feralan) means neutral on either axis. Stripping "Any" would collapse the
+// two into one rule and quietly tighten nine kits.
+function matchesAlignmentRequirement(alignKey, phrase) {
+  const a = getAlignmentData(alignKey);
+  if (!a) return null;
+
+  const p = String(phrase || '').trim().toLowerCase();
+  if (!p) return null;
+  if (p === 'any') return true;
+  if (p.indexOf('deity') !== -1) return null;   // "Deity-dependent"
+
+  // A named alignment: "Lawful good", "Lawful Good", "Neutral".
+  const exact = normalizeAlignmentKey(p);
+  if (exact) return exact === alignKey;
+
+  // Otherwise an axis phrase, optionally negated ("Any non-lawful").
+  const negated = /non-?\s*(lawful|chaotic|good|evil|neutral)/.test(p);
+
+  let ok = null;
+  if      (/lawful/.test(p))  ok = isAlignmentLawful(alignKey);
+  else if (/chaotic/.test(p)) ok = isAlignmentChaotic(alignKey);
+  else if (/good/.test(p))    ok = isAlignmentGood(alignKey);
+  else if (/evil/.test(p))    ok = isAlignmentEvil(alignKey);
+  else if (/neutral/.test(p)) ok = isAlignmentPartiallyNeutral(alignKey);
+
+  if (ok === null) return null;
+  return negated ? !ok : ok;
+}
+
+function validateKitAlignment(root) {
+  const problems = [];
+  if (typeof isOptionalRule === 'function' &&
+      !isOptionalRule('kitAlignmentRequirements')) return problems;
+  if (typeof getKitsForClass !== 'function') return problems;
+
+  const kitValue = (val(root, 'kit') || '').trim();
+  const clazz    = (val(root, 'clazz') || '').trim().toLowerCase();
+  if (!kitValue || !clazz) return problems;
+
+  // The select stores the kit NAME with whitespace removed, not the KITS
+  // object key -- same lookup renderKitAbilities uses.
+  const kit = getKitsForClass(clazz)
+    .find(k => k.name.toLowerCase().replace(/\s+/g, '') === kitValue);
+  if (!kit || !kit.requirements || !kit.requirements.alignment) return problems;
+
+  const key = normalizeAlignmentKey(val(root, 'alignment'));
+  if (!key) return problems;
+
+  // Only a definite FALSE is reported. "Deity-dependent" returns null and says
+  // nothing at all -- an amber banner that can never be cleared is exactly the
+  // warning fatigue the override toggles exist to prevent.
+  if (matchesAlignmentRequirement(key, kit.requirements.alignment) === false) {
+    problems.push('The ' + kit.name + ' kit requires ' +
+                  kit.requirements.alignment + '. This character is ' +
+                  getAlignmentLabel(key) + '.');
+  }
+
+  return problems;
+}
+
 // === Racial ability requirements (PHB Table 7) ===
 // [min, max] for the ROLLED score, before Table 8 adjustments are applied.
 // Humans have no row in Table 7 -- "Any character can be a human, if the player
