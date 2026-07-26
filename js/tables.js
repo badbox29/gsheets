@@ -928,15 +928,22 @@ const TRACKING_NON_RANGER_PENALTY = -6;
 
 // Table 39, applied CUMULATIVELY -- the book's own example stacks terrain,
 // group size, age of trail and weather in a single check.
+// `per` and `countLabel` appear only on the repeating rows: the player enters a
+// QUANTITY and the modifier applies once per `per` units, floored. So eleven
+// creatures give +5, not +5.5, and eleven hours of rain give -55 because that
+// row counts every single hour.
 const TRACKING_MODIFIERS = [
   { key: "soft",        label: "Soft or muddy ground",              mod:  +4 },
   { key: "brush",       label: "Thick brush, vines, or reeds",      mod:  +3 },
   { key: "signs",       label: "Occasional signs of passage, dust", mod:  +2 },
   { key: "normal",      label: "Normal ground, wood floor",         mod:   0 },
   { key: "rocky",       label: "Rocky ground or shallow water",     mod: -10 },
-  { key: "perTwo",      label: "Every two creatures in the group",  mod:  +1, repeating: true },
-  { key: "per12Hours",  label: "Every 12 hours since trail made",   mod:  -1, repeating: true },
-  { key: "perHourRain", label: "Every hour of rain, snow, or sleet", mod: -5, repeating: true },
+  { key: "perTwo",      label: "Every two creatures in the group",  mod:  +1,
+    repeating: true, per: 2,  countLabel: "Creatures in the group" },
+  { key: "per12Hours",  label: "Every 12 hours since trail made",   mod:  -1,
+    repeating: true, per: 12, countLabel: "Hours since the trail was made" },
+  { key: "perHourRain", label: "Every hour of rain, snow, or sleet", mod: -5,
+    repeating: true, per: 1,  countLabel: "Hours of rain, snow or sleet" },
   { key: "poorLight",   label: "Poor lighting (moon or starlight)", mod:  -6 },
   { key: "hidden",      label: "Tracked party tries to hide trail", mod:  -5 }
 ];
