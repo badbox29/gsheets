@@ -865,6 +865,30 @@ const SHEET_HTML = `
             </div>
           </div>
         </section>
+
+        <!-- Proficiency Abilities (PHB Ch.5). Hidden unless the character has a
+             proficiency with interactive rules. Sits ABOVE the divider with the
+             other COMPUTED panels (ranger stealth, thief skills); everything
+             below the divider is static reference prose. -->
+        <section class="section proficiency-abilities-display" style="display:none;">
+          <h3>Proficiency Abilities</h3>
+          <div class="prof-ability-intro" style="font-size:11px;color:var(--muted);margin-bottom:10px;">
+            Proficiencies whose rules need working out at the table. Conditions reset
+            when the sheet is reloaded.
+          </div>
+          <div class="prof-ability-coop-row" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;font-size:11px;">
+            <label style="display:inline-flex;align-items:center;gap:6px;margin:0;color:var(--text);cursor:pointer;">
+              <input type="checkbox" class="prof-ability-coop" style="width:auto;flex-shrink:0;">
+              Working with another proficient character
+            </label>
+            <span style="color:var(--muted);">
+              PHB: use the higher ability score, +1 &mdash; never more than +1.
+            </span>
+            <button class="prof-ability-reset" style="padding:3px 10px;font-size:11px;margin-left:auto;">Reset</button>
+          </div>
+          <div class="prof-ability-tabs" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;"></div>
+          <div class="prof-ability-panel"></div>
+        </section>
 		
 		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
 
