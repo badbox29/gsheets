@@ -8768,6 +8768,46 @@ function bindDiceRollers(root) {
           result.formula = 'Ability Check (d20)';
           modifiers = 'Roll under ability score to succeed\n(Refer to specific ability scores on sheet)';
           break;
+
+        // PHB Ch.5: "the player rolls 1d20. If the roll is equal to or less
+        // than the character's adjusted ability score, the character
+        // accomplished what he was trying to do. (A roll of 20 always fails.)"
+        // One d20 answers this for every proficiency at once, so rather than
+        // add a selector the result is reported against all of them.
+        case 'proficiency-check': {
+          result = rollDiceFormula('1d20');
+          result.formula = 'Proficiency Check (d20)';
+
+          const profList = root._nwps || [];
+          const natural20 = result.total === 20;
+          const profLines = [];
+
+          if (typeof getNWPCheckTarget !== 'function') {
+            modifiers = 'Roll equal to or under the adjusted ability score.\n' +
+                        'A natural 20 always fails.';
+          } else if (!profList.length) {
+            modifiers = 'No nonweapon proficiencies recorded.\n\n' +
+                        'Roll equal to or under the adjusted ability score.\n' +
+                        'A natural 20 always fails.';
+          } else {
+            profList.forEach(n => {
+              const c = getNWPCheckTarget(root, n);
+              if (!c.hasCheck) {
+                profLines.push(`—  ${c.name}: no check required`);
+              } else if (c.impossible) {
+                profLines.push(`✗  ${c.name}: impossible (target ${c.target})`);
+              } else {
+                const made = !natural20 && result.total <= c.target;
+                profLines.push(`${made ? '✓' : '✗'}  ${c.name}: need ${c.target} or less`);
+              }
+            });
+            profLines.sort();
+            modifiers = (natural20
+              ? 'NATURAL 20 — every proficiency check fails.\n\n'
+              : '') + profLines.join('\n');
+          }
+          break;
+        }
           
         case 'reaction':
           result = rollDiceFormula('2d10');
