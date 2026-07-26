@@ -1058,6 +1058,44 @@ const NWP_BONUS_SLOT_EFFECTS = {
 // it therefore falls under the general rule and each extra slot gives +1 to the
 // check. A DM may well allow another mount type by analogy -- the book doesn't.
 
+// === Proficiency Abilities registry (PHB Ch.5) ===
+// Proficiencies whose rules need working out at the table rather than a single
+// target number. Each entry gets a tab in the Proficiency Abilities section.
+// Keys are lowercased proficiency names, matching NWP_TABLE37_GROUPS.
+//
+// ADDING ONE is an entry here plus a builder in calc.js -- no layout work.
+// `kind` tells the builder what shape the panel is, since these are NOT
+// parallel: a modifier stack takes inputs and produces a target, a calculator
+// produces figures from level and ability, and a reference panel has no inputs
+// at all. Do not expect a shared template.
+const PROFICIENCY_ABILITIES = {
+  "tracking":          { label: "Tracking",          kind: "modifiers" },
+  "tightrope walking": { label: "Tightrope Walking", kind: "modifiers" },
+  "disguise":          { label: "Disguise",          kind: "modifiers" },
+  "forgery":           { label: "Forgery",           kind: "modifiers" },
+  "set snares":        { label: "Set Snares",        kind: "modifiers" },
+  "hunting":           { label: "Hunting",           kind: "modifiers" },
+  "jumping":           { label: "Jumping",           kind: "calculator" },
+  "healing":           { label: "Healing",           kind: "calculator" },
+  "riding, land-based":{ label: "Riding (Land)",     kind: "reference" },
+  "riding, airborne":  { label: "Riding (Air)",      kind: "reference" }
+};
+
+// Which registry entries this character actually has. Order follows the
+// registry, not the character's proficiency list, so the tab strip does not
+// reshuffle when a proficiency is added or deleted.
+function getProficiencyAbilities(root) {
+  const owned = (root && root._nwps) || [];
+  const have = {};
+  owned.forEach(n => {
+    const k = String((n && n.name) || "").trim().toLowerCase();
+    if (PROFICIENCY_ABILITIES[k]) have[k] = n;
+  });
+  return Object.keys(PROFICIENCY_ABILITIES)
+    .filter(k => have[k])
+    .map(k => Object.assign({ key: k, nwp: have[k] }, PROFICIENCY_ABILITIES[k]));
+}
+
 // Returns everything the UI needs to print "Wis 14 -1 = roll 13 or less".
 // `nwp` accepts either a stored card object (name / abilityCheck / bonusSlots)
 // or a raw core_nwp.json record.
