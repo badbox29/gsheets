@@ -1038,12 +1038,18 @@ const NWP_BONUS_SLOT_EFFECTS = {
   "mountaineering":     "+10% to climb chances per extra slot",
   "tightrope walking":  "reduces the width penalties by 1 per extra slot",
   "musical instrument": "one additional instrument per extra slot",
-  "animal training":    "one additional creature type per extra slot",
+  // "...train other types of creatures OR improve his skill with an already
+  // chosen type" -- the player picks, so this one can go either way.
+  "animal training":    "another creature type, or +1 with one already known",
   "riding, airborne":   "one additional mount type per extra slot",
-  "riding, land-based": "one additional mount type per extra slot",
   "survival":           "one additional terrain type per extra slot",
   "religion":           "a wider region, or no check needed for one faith"
 };
+// NOT an exception: Riding, Land-Based. The Airborne entry explicitly allows
+// extra slots to buy other mount types; the Land-Based entry does NOT say so,
+// and only states that the mount type is declared when the slot is filled. RAW
+// it therefore falls under the general rule and each extra slot gives +1 to the
+// check. A DM may well allow another mount type by analogy -- the book doesn't.
 
 // Returns everything the UI needs to print "Wis 14 -1 = roll 13 or less".
 // `nwp` accepts either a stored card object (name / abilityCheck / bonusSlots)
