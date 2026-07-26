@@ -5062,6 +5062,12 @@ function bindSheet(root, tab){
       if (f === 'age' || f === 'race') {
         if (typeof renderAgingEffects === 'function') renderAgingEffects(root);
       }
+      // Alignment and kit feed only the two alignment checks, so they take
+      // their own branch for exactly the same reason. Class changes are
+      // already covered by the list above.
+      if (f === 'alignment' || f === 'kit') {
+        if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(root);
+      }
     });
   });
 
