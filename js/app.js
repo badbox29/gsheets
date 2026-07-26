@@ -2042,7 +2042,7 @@ function makeHenchmanNode(h, onChange){
         '<div><label style="font-size:11px;color:var(--muted);">COM</label>' +
           '<input class="henchman-com" type="number" placeholder="--" value="'+(h.com||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Alignment</label>' +
-          '<input class="henchman-alignment" placeholder="e.g., LG" value="'+(h.alignment||'')+'" style="width:100%;"></div>' +
+          alignmentSelectHTML('henchman-alignment', h.alignment) + '</div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Loyalty Score</label>' +
           '<input class="henchman-loyalty" type="number" placeholder="e.g., 2d6" value="'+(h.loyalty||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Morale</label>' +
@@ -2148,7 +2148,7 @@ function makeHirelingNode(h, onChange){
         '<div><label style="font-size:11px;color:var(--muted);">Purpose/Task</label>' +
           '<input class="hireling-purpose" placeholder="e.g., Guard the stronghold" value="'+(h.purpose||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Alignment</label>' +
-          '<input class="hireling-alignment" placeholder="e.g., LG" value="'+(h.alignment||'')+'" style="width:100%;"></div>' +
+          alignmentSelectHTML('hireling-alignment', h.alignment) + '</div>' +
         '<div><label style="font-size:11px;color:var(--muted);">THAC0</label>' +
           '<input class="hireling-thac0" type="number" placeholder="--" value="'+(h.thac0||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">STR</label>' +
@@ -2262,7 +2262,7 @@ function makeCompanionNode(c, onChange){
         '<div><label style="font-size:11px;color:var(--muted);">Attacks</label>' +
           '<input class="companion-attacks" placeholder="e.g., 1d6/1d6" value="'+(c.attacks||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Alignment</label>' +
-          '<input class="companion-alignment" placeholder="e.g., N" value="'+(c.alignment||'')+'" style="width:100%;"></div>' +
+          alignmentSelectHTML('companion-alignment', c.alignment) + '</div>' +
         '<div><label style="font-size:11px;color:var(--muted);">STR</label>' +
           '<input class="companion-str" type="number" placeholder="--" value="'+(c.str||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">DEX</label>' +
@@ -3627,7 +3627,7 @@ function showSpellMigrationBanner(root, changes) {
 // which offers the nine alignments and nothing else, and the follower menu,
 // which also offers Non-aligned, Unknown and Other -- a war dog holds no
 // ethical position at all, and a DM's notes on an NPC are not always tidy.
-function buildAlignmentOptions(mode) {
+function buildAlignmentOptions(mode, selectedKey) {
   if (typeof ALIGNMENTS === 'undefined' || typeof ALIGNMENT_ORDER === 'undefined') {
     return '<option value=""></option>';
   }
@@ -3636,22 +3636,57 @@ function buildAlignmentOptions(mode) {
     .replace(/&/g, '&amp;').replace(/</g, '&lt;')
     .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
+  // Marked as each option is built. Searching the finished string for the
+  // right option afterwards would break on any value containing a quote.
+  const sel = k => (selectedKey && k === selectedKey) ? ' selected' : '';
+
   let html = '<option value=""></option>';
 
   ALIGNMENT_ORDER.forEach(key => {
     const a = ALIGNMENTS[key];
     if (a.notAnAlignment && mode !== 'follower') return;
     const suffix = a.notAnAlignment ? '' : ' (' + a.abbr + ')';
-    html += '<option value="' + key + '">' + esc(a.label + suffix) + '</option>';
+    html += '<option value="' + key + '"' + sel(key) + '>' +
+            esc(a.label + suffix) + '</option>';
   });
 
   if (mode === 'follower' && typeof ALIGNMENT_NON_VALUES !== 'undefined') {
     Object.keys(ALIGNMENT_NON_VALUES).forEach(k => {
-      html += '<option value="' + k + '">' + esc(ALIGNMENT_NON_VALUES[k]) + '</option>';
+      html += '<option value="' + k + '"' + sel(k) + '>' +
+              esc(ALIGNMENT_NON_VALUES[k]) + '</option>';
     });
   }
 
   return html;
+}
+
+// A finished <select> for a follower card, with `value` already selected.
+// Returning markup rather than an element means each node builder needs ONE
+// swap inside its innerHTML string and no follow-up call afterwards.
+// Unrecognised text is preserved as its own option exactly as on the
+// character's own menu, so a DM's note reading "chaotic-ish" survives.
+function alignmentSelectHTML(cls, value, style) {
+  const esc = s => String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+  const text = String(value == null ? '' : value).trim();
+
+  let target = (text && typeof normalizeAlignmentKey === 'function')
+    ? normalizeAlignmentKey(text) : '';
+  if (!target && text && typeof ALIGNMENT_NON_VALUES !== 'undefined' &&
+      ALIGNMENT_NON_VALUES[text.toLowerCase()]) {
+    target = text.toLowerCase();
+  }
+
+  let opts = buildAlignmentOptions('follower', target);
+  if (text && !target) {
+    opts += '<option value="' + esc(text) + '" selected>' +
+            esc(text) + '  (unrecognised)</option>';
+  }
+
+  return '<select class="' + esc(cls) + '" style="' +
+         esc(style || 'width:100%;') + '">' + opts + '</select>';
 }
 
 // Fills a <select> and selects `raw`, which may already be a key, may be
