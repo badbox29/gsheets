@@ -919,6 +919,170 @@ function getNWPSlotCost(nwp, allowedGroups) {
   return inGroup ? base : base + 1;
 }
 
+// === Tracking (PHB Chapter 5, Tables 39 and 40) ===
+// Tracking is a 2-slot Warrior-group proficiency checked against Wisdom.
+// THE GATE: "Characters who are not rangers roll a proficiency check with a -6
+// penalty to their ability scores; rangers have no penalty." Nothing modelled
+// this before, so every non-ranger tracker was rolling six points too easy.
+const TRACKING_NON_RANGER_PENALTY = -6;
+
+// Table 39, applied CUMULATIVELY -- the book's own example stacks terrain,
+// group size, age of trail and weather in a single check.
+const TRACKING_MODIFIERS = [
+  { key: "soft",        label: "Soft or muddy ground",              mod:  +4 },
+  { key: "brush",       label: "Thick brush, vines, or reeds",      mod:  +3 },
+  { key: "signs",       label: "Occasional signs of passage, dust", mod:  +2 },
+  { key: "normal",      label: "Normal ground, wood floor",         mod:   0 },
+  { key: "rocky",       label: "Rocky ground or shallow water",     mod: -10 },
+  { key: "perTwo",      label: "Every two creatures in the group",  mod:  +1, repeating: true },
+  { key: "per12Hours",  label: "Every 12 hours since trail made",   mod:  -1, repeating: true },
+  { key: "perHourRain", label: "Every hour of rain, snow, or sleet", mod: -5, repeating: true },
+  { key: "poorLight",   label: "Poor lighting (moon or starlight)", mod:  -6 },
+  { key: "hidden",      label: "Tracked party tries to hide trail", mod:  -5 }
+];
+
+// Table 40. The chance is the ADJUSTED Wisdom score being rolled against, not
+// a percentage -- a higher number means an easier check and faster pursuit.
+const TRACKING_MOVEMENT = [
+  { max:  6, fraction: 1 / 3, label: "1/3 normal" },
+  { max: 13, fraction: 1 / 2, label: "1/2 normal" },
+  { max: Infinity, fraction: 3 / 4, label: "3/4 normal" }
+];
+
+function getTrackingMovement(chance) {
+  const c = parseInt(chance, 10);
+  if (isNaN(c)) return null;
+  return TRACKING_MOVEMENT.find(r => c <= r.max) || null;
+}
+
+// === Nonweapon proficiency checks (PHB Chapter 5) ===
+// "Add the modifier listed in Table 37 to the appropriate ability score. Then
+//  the player rolls 1d20. If the roll is equal to or less than the character's
+//  adjusted ability score, the character accomplished what he was trying to do.
+//  (A roll of 20 always fails.)"
+// Nothing computed this before -- the card printed the raw "Wis / -1" string
+// and left the arithmetic to the player.
+const NWP_NATURAL_FAIL = 20;
+
+const NWP_ABILITY_SHORT = {
+  str: "Str", dex: "Dex", con: "Con", int: "Int", wis: "Wis", cha: "Cha"
+};
+
+const NWP_ABILITY_ALIASES = {
+  str: "str", strength: "str",
+  dex: "dex", dexterity: "dex",
+  con: "con", constitution: "con",
+  int: "int", intelligence: "int",
+  wis: "wis", wisdom: "wis",
+  cha: "cha", charisma: "cha"
+};
+
+// Table 37 states the check as a "Wis / -1" string. Two shapes need handling
+// beyond the obvious: "NA / NA" (Blind-fighting and Mountaineering have no
+// check at all) and "Str or Cha / 0" (non-PHB entries offering a choice).
+function parseNWPCheck(checkStr) {
+  const raw = (checkStr || "").trim();
+  const none = { hasCheck: false, abilities: [], modifier: 0 };
+  if (!raw) return none;
+
+  const parts = raw.split("/");
+  const abilityPart = (parts[0] || "").trim();
+  if (/^na$/i.test(abilityPart)) return none;
+
+  const abilities = abilityPart
+    .split(/\s+or\s+/i)
+    .map(t => NWP_ABILITY_ALIASES[t.trim().toLowerCase()])
+    .filter(Boolean);
+  if (!abilities.length) return none;
+
+  const modifier = parseInt((parts[1] || "").trim(), 10);
+  return { hasCheck: true, abilities, modifier: isNaN(modifier) ? 0 : modifier };
+}
+
+// UNCONDITIONAL adjustments only. The situational ones -- a specialist's +3 to
+// Spellcraft for his own school, Astrology aiding Navigation under visible
+// stars, Animal Lore aiding Set Snares for game -- are deliberately NOT folded
+// in here. They depend on circumstance, and baking them into the printed target
+// would overstate the character every time the circumstance does not apply.
+// Those surface as notes instead.
+function getNWPCheckAdjustments(root, profName) {
+  const name = (profName || "").trim().toLowerCase();
+  const out = [];
+
+  // Ch.5 Tracking: "Characters who are not rangers roll a proficiency check
+  // with a -6 penalty to their ability scores; rangers have no penalty."
+  if (name === "tracking") {
+    const isRanger = getAllClassComponents(root)
+      .some(c => (c.clazz || "").trim().toLowerCase().includes("ranger"));
+    if (!isRanger) {
+      out.push({ label: "Not a ranger", mod: TRACKING_NON_RANGER_PENALTY });
+    }
+  }
+
+  // Ch.5 Stonemasonry: dwarves gain +2. The ONLY racial bonus to a nonweapon
+  // proficiency anywhere in the chapter.
+  if (name === "stonemasonry") {
+    const race = (val(root, "race") || "").replace(/[^a-z]/gi, "").toLowerCase();
+    if (race.includes("dwar")) out.push({ label: "Dwarf", mod: 2 });
+  }
+
+  return out;
+}
+
+// Returns everything the UI needs to print "Wis 14 -1 = roll 13 or less".
+// `nwp` accepts either a stored card object (name / abilityCheck / bonusSlots)
+// or a raw core_nwp.json record.
+function getNWPCheckTarget(root, nwp) {
+  const name = (nwp && (nwp.name || nwp["Proficiency Name"])) || "";
+  const checkStr = (nwp && (nwp.abilityCheck || nwp["Ability Check"])) || "";
+  const parsed = parseNWPCheck(checkStr);
+
+  if (!parsed.hasCheck) {
+    return { hasCheck: false, name };
+  }
+
+  // "Str or Cha" -- use whichever score serves the character better.
+  let ability = parsed.abilities[0];
+  let score = 0;
+  parsed.abilities.forEach(a => {
+    const s = parseInt(val(root, a) || 0, 10) || 0;
+    if (s > score) { score = s; ability = a; }
+  });
+
+  const adjustments = getNWPCheckAdjustments(root, name);
+
+  // PHB: "For every additional proficiency slot a character spends on a
+  // nonweapon proficiency, he gains a +1 bonus to those proficiency checks."
+  // The field does not exist yet, so this reads 0 until it is built.
+  const bonusSlots = Math.max(0, parseInt(nwp && nwp.bonusSlots, 10) || 0);
+  if (bonusSlots > 0) {
+    adjustments.push({
+      label: bonusSlots + " extra slot" + (bonusSlots > 1 ? "s" : ""),
+      mod: bonusSlots
+    });
+  }
+
+  const adjTotal = adjustments.reduce((s, a) => s + a.mod, 0);
+  const target = score + parsed.modifier + adjTotal;
+
+  return {
+    hasCheck: true,
+    name,
+    ability,
+    abilityLabel: NWP_ABILITY_SHORT[ability] || ability.toUpperCase(),
+    score,
+    modifier: parsed.modifier,
+    adjustments,
+    target,
+    naturalFail: NWP_NATURAL_FAIL,
+    // A 20 always fails, so a target at or above 20 is not truly automatic.
+    alwaysFailsOn20: target >= NWP_NATURAL_FAIL,
+    // No roll can succeed. For Tracking the book says the trail is then
+    // permanently lost TO THAT CHARACTER.
+    impossible: target < 1
+  };
+}
+
 // === Weapon Specialization (PHB, Chapter 5) ===
 // "Weapon specialization is an optional rule that enables a fighter (only) to
 //  choose a single weapon and specialize in its use... Multi-class characters
@@ -3094,6 +3258,15 @@ function getWeaponProficiencyStatus(weaponName, weaponGroup, weaponProfs, weapon
 // Multi/dual-class characters use the BEST (least severe) penalty available --
 // a fighter/mage swings a sword at -2, not -5.
 function getNonProfPenalty(root) {
+  // Chapter 5 is optional in full, but the rest of it opts out of itself -- a
+  // table ignoring proficiencies just leaves the lists empty and the counters
+  // read "0 of 4", which is unused rather than wrong. THIS is the one part that
+  // imposes itself: the penalty applies to weapons you LACK a proficiency for,
+  // so an empty list paints every weapon red. Hence the override.
+  if (typeof isOptionalRule === "function" && !isOptionalRule("nonProficiencyPenalty")) {
+    return 0;
+  }
+
   const charType = (val(root, "char_type") || "single").toLowerCase();
   const classes = [];
 
@@ -3230,6 +3403,17 @@ const OPTIONAL_RULES = {
              'it -- a paladin needs Strength 12, Constitution 9, Wisdom 13 and Charisma 17, for ' +
              'example. Specialist wizards are covered separately by Table 22. Advisory only; ' +
              'nothing is blocked, and the PHB itself allows a DM to permit a reroll or a raise.',
+    category: 'override',
+    default: true
+  },
+  nonProficiencyPenalty: {
+    label:   'Apply non-proficiency attack penalties',
+    detail:  'PHB Table 34. A character attacking with a weapon he is not proficient in takes a ' +
+             'penalty to his attack roll -- warrior -2, priest and rogue -3, wizard -5, halved ' +
+             'and rounded up for a related weapon. Chapter 5 is optional in full, but this is ' +
+             'the only part of it that imposes itself on a table that ignores proficiencies: ' +
+             'with an empty proficiency list every weapon is penalised. Switch off to silence ' +
+             'the penalty and the weapon status stripes entirely.',
     category: 'override',
     default: true
   },
