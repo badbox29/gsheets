@@ -4752,6 +4752,572 @@ PROF_ABILITY_BUILDERS['tracking'] = function (root, entry, panelEl) {
   });
 };
 
+// --- Riding, Land-Based (PHB Ch.5) ---
+// A REFERENCE panel: no inputs. Its value over the printed prose is marking
+// which feats are automatic and which need a check, and computing the -4 leap
+// target the player would otherwise work out mid-combat.
+// NOTE the proficiency is NOT required to ride -- only Airborne says that. Land
+// riding without it works; the proficiency buys these feats.
+PROF_ABILITY_BUILDERS['riding, land-based'] = function (root, entry, panelEl) {
+  const esc = s => String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  const c = getNWPCheckTarget(root, entry.nwp);
+  const fail = (typeof NWP_NATURAL_FAIL === 'number') ? NWP_NATURAL_FAIL : 20;
+  const fmt = t => t < 1 ? 'no roll can succeed'
+    : t >= fail ? 'automatic, but a natural 20 still fails'
+    : `roll ${t} or less`;
+
+  const head = c.hasCheck
+    ? `<div style="font-weight:600;color:var(--accent-light);">Riding check: ${esc(c.abilityLabel)} ${c.score}${c.modifier ? (c.modifier < 0 ? ' ' + c.modifier : ' +' + c.modifier) : ''} = ${fmt(c.target)}</div>
+       <div style="font-size:11px;color:var(--muted);margin-top:2px;">
+         Leaping down to attack takes &minus;4: ${fmt(c.target - 4)}
+       </div>`
+    : '<div style="color:var(--muted);">No ability check listed.</div>';
+
+  // check: 'no' automatic, 'yes' needs a proficiency check, 'penalty' at -4.
+  const feats = [
+    { check: 'no',  name: 'Vault into the saddle',
+      text: 'Automatic while the mount stands still, even in armor. A check is needed to get it moving in the same round, or to vault onto a moving mount. Failure means falling to the ground.' },
+    { check: 'no',  name: 'Jump obstacles, leap gaps',
+      text: 'Automatic under 3 ft tall or 12 ft across. A check pushes that to 7 ft tall or 30 ft across. Failure means the mount balks, then a second check to keep your seat.' },
+    { check: 'yes', name: 'Spur to great speed',
+      text: '+6 ft per round to the mount\u2019s movement, up to 4 turns, with a check each turn. Fail the first and no further attempts may be made, though the mount moves normally. Fail a later one and it slows to a walk and you must dismount and lead it for a turn. Either way, after 4 turns of racing the steed must be walked by its dismounted rider for one turn.' },
+    { check: 'no',  name: 'Guide with the knees',
+      text: 'Frees both hands for bows or two-handed weapons. No check unless you take damage while riding \u2014 then a check, and failure means falling for an extra 1d6.' },
+    { check: 'no',  name: 'Hang alongside the steed',
+      text: 'Armor Class improved by 6, and any attack that would have struck your normal AC strikes the mount instead. You cannot attack or wear armor while doing it.' },
+    { check: 'penalty', name: 'Leap down and attack',
+      text: 'Melee attack against anything within 10 ft, at &minus;4 to the check. Failure means landing badly for 1d3 damage.' }
+  ];
+
+  const tag = f => f.check === 'no'
+    ? '<span style="color:var(--success, #6fbf73);">automatic</span>'
+    : f.check === 'penalty'
+    ? '<span style="color:var(--warning, #e0a34a);">check at &minus;4</span>'
+    : '<span style="color:var(--info, #6fb3d2);">check</span>';
+
+  panelEl.innerHTML = `
+    <div style="padding:8px;border:1px solid var(--border);border-radius:4px;background:var(--glass);margin-bottom:12px;">
+      ${head}
+    </div>
+    <div style="font-size:11px;">
+      ${feats.map(f => `
+        <div style="margin-bottom:8px;">
+          <div><strong>${esc(f.name)}</strong> &middot; ${tag(f)}</div>
+          <div style="color:var(--muted);margin-top:1px;">${f.text}</div>
+        </div>`).join('')}
+    </div>
+    <details class="disclosure" style="font-size:11px;">
+      <summary>mount types</summary>
+      <div style="color:var(--muted);margin-top:6px;line-height:1.5;">
+        The mount type is declared when the proficiency slot is filled. The book
+        names griffons, unicorns and dire wolves among the possibilities, along
+        with virtually any creature used as a mount by humans, demihumans or
+        humanoids. Unlike Riding, Airborne, this entry does <strong>not</strong>
+        say that additional slots buy additional mount types \u2014 so RAW they give
+        +1 to the check instead. A DM may well allow the Airborne reading.
+      </div>
+    </details>
+  `;
+};
+
+// --- Healing (PHB Ch.5) ---
+// A CALCULATOR panel. The one thing it computes that the book does not hand you
+// is the HERBALISM interaction: that proficiency raises the complete-rest
+// recovery rate from 2 to 3, adds +2 to disease checks, and is what makes
+// swallowed or touched poisons treatable at all. Detecting it removes three
+// separate "do I have the other one?" lookups.
+PROF_ABILITY_BUILDERS['healing'] = function (root, entry, panelEl) {
+  const esc = s => String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  const c    = getNWPCheckTarget(root, entry.nwp);
+  const coop = getProficiencyCooperation(root) ? 1 : 0;
+  const fail = (typeof NWP_NATURAL_FAIL === 'number') ? NWP_NATURAL_FAIL : 20;
+  const fmt  = t => t < 1 ? 'no roll can succeed'
+    : t >= fail ? 'automatic, 20 still fails'
+    : `roll ${t} or less`;
+
+  const herb = ((root && root._nwps) || [])
+    .some(n => String((n && n.name) || '').trim().toLowerCase() === 'herbalism');
+
+  const baseT    = (c.hasCheck ? c.target : 0) + coop;
+  const diseaseT = baseT + (herb ? 2 : 0);
+
+  const rates = [
+    { hp: 1, when: 'Travelling or nonstrenuous activity', ok: true },
+    { hp: 2, when: 'Complete rest', ok: !herb },
+    { hp: 3, when: 'Complete rest, healer also has herbalism', ok: herb }
+  ];
+
+  panelEl.innerHTML = `
+    <div style="padding:8px;border:1px solid var(--border);border-radius:4px;background:var(--glass);margin-bottom:12px;">
+      <div style="font-weight:600;color:var(--accent-light);">Healing check: ${fmt(baseT)}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px;">
+        Disease treatment: ${fmt(diseaseT)}${herb ? ' (includes +2 for herbalism)' : ''}
+        ${coop ? ' \u00B7 includes +1 for assistance' : ''}
+      </div>
+      <div style="font-size:11px;margin-top:4px;color:${herb ? 'var(--success, #6fbf73)' : 'var(--muted)'};">
+        Herbalism: ${herb ? 'yes \u2014 better rest recovery, +2 vs disease, and swallowed or touched poisons treatable' : 'no \u2014 without it, rest recovery caps at 2 hp/day and swallowed or touched poisons cannot be treated'}
+      </div>
+    </div>
+
+    <div style="font-size:11px;margin-bottom:12px;">
+      <div style="font-weight:600;margin-bottom:4px;">First aid</div>
+      <div style="color:var(--muted);margin-bottom:10px;">
+        Tend within one round of wounding and make a successful check to restore
+        <strong style="color:var(--text);">1d3 hit points</strong> \u2014 never more than
+        were lost in the previous round. Only one attempt per character per day.
+      </div>
+
+      <div style="font-weight:600;margin-bottom:4px;">Recovery under care \u2014 no check, just regular attention</div>
+      ${rates.map(r => `
+        <div style="display:flex;gap:8px;margin-bottom:2px;${r.ok ? '' : 'opacity:0.45;'}">
+          <span style="width:64px;flex-shrink:0;color:${r.ok ? 'var(--accent-light)' : 'var(--muted)'};">${r.hp} hp/day</span>
+          <span style="color:var(--muted);">${esc(r.when)}</span>
+        </div>`).join('')}
+      <div style="color:var(--muted);margin-top:6px;">Up to six patients at a time.</div>
+    </div>
+
+    <details class="disclosure" style="font-size:11px;">
+      <summary>poison and disease</summary>
+      <div style="color:var(--muted);margin-top:6px;line-height:1.5;">
+        <strong style="color:var(--text);">Poison</strong><br>
+        Only for poison that entered <em>through a wound</em>. Begin tending the
+        round after the character is poisoned and continue for the next five
+        rounds: the victim gains <strong style="color:var(--text);">+2 to his saving
+        throw</strong>, delayed until the last round of tending. No check is
+        required, but the victim must be tended immediately, can do nothing
+        himself, and the healer normally sacrifices any other action. If care or
+        rest is interrupted he saves immediately and normally \u2014 and it cannot be
+        retried, since more healing does not help.<br><br>
+        Swallowed or touched poisons need <strong style="color:var(--text);">both
+        healing and herbalism</strong>: healing to diagnose, herbalism to prepare
+        a purgative.<br><br>
+        <strong style="color:var(--text);">Disease</strong><br>
+        A successful check automatically reduces a normal disease to its mildest
+        form and shortest duration. Herbalism adds +2 to that check. A magical
+        disease can be <em>diagnosed</em> on a successful check, but being magical
+        it can only be treated by magical means.
+      </div>
+    </details>
+  `;
+};
+
+// --- Shared helpers for the remaining panels ---
+const PA_ESC = s => String(s == null ? '' : s)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+function paFmt(t) {
+  const fail = (typeof NWP_NATURAL_FAIL === 'number') ? NWP_NATURAL_FAIL : 20;
+  return t < 1 ? 'no roll can succeed'
+    : t >= fail ? 'automatic, 20 still fails'
+    : 'roll ' + t + ' or less';
+}
+
+function paBox(main, sub) {
+  return '<div style="padding:8px;border:1px solid var(--border);border-radius:4px;' +
+    'background:var(--glass);margin-bottom:12px;">' +
+    '<div style="font-weight:600;color:var(--accent-light);">' + main + '</div>' +
+    (sub ? '<div style="font-size:11px;color:var(--muted);margin-top:2px;">' + sub + '</div>' : '') +
+    '</div>';
+}
+
+function paHasProf(root, name) {
+  const n = String(name).toLowerCase();
+  return ((root && root._nwps) || [])
+    .some(p => String((p && p.name) || '').trim().toLowerCase() === n);
+}
+
+function paLevel(root) {
+  const comps = (typeof getAllClassComponents === 'function') ? getAllClassComponents(root) : [];
+  const lv = comps.map(c => parseInt(c.level, 10) || 0).filter(Boolean);
+  return lv.length ? Math.max.apply(null, lv) : (parseInt(val(root, 'level'), 10) || 0);
+}
+
+// Height is a FREE-TEXT field, so parse defensively. Returns inches or null --
+// null means the caps cannot be computed and the panel says so rather than
+// inventing a number.
+function paHeightInches(root) {
+  const t = String(val(root, 'height') || '').trim().toLowerCase();
+  if (!t) return null;
+  let m = t.match(/(\d+)\s*(?:'|ft|feet)\s*(\d+)?/);
+  if (m) return parseInt(m[1], 10) * 12 + (parseInt(m[2], 10) || 0);
+  m = t.match(/(\d+(?:\.\d+)?)\s*cm/);
+  if (m) return Math.round(parseFloat(m[1]) / 2.54);
+  m = t.match(/(\d+)\s*(?:"|in\b|inch)/);
+  if (m) return parseInt(m[1], 10);
+  m = t.match(/^(\d+(?:\.\d+)?)$/);
+  if (m) {
+    const n = parseFloat(m[1]);
+    if (n >= 24 && n <= 108) return Math.round(n);   // inches
+    if (n >= 2 && n <= 9)    return Math.round(n * 12); // feet
+  }
+  return null;
+}
+
+// --- Jumping (PHB Ch.5) ---
+// CALCULATOR. The book gives formulas and two height caps; this resolves them
+// against the character's own level and height so nothing is worked out at the
+// table. No proficiency check is mentioned for jumping itself.
+PROF_ABILITY_BUILDERS['jumping'] = function (root, entry, panelEl) {
+  const lvl = paLevel(root);
+  const half = Math.floor(lvl / 2);
+  const h = paHeightInches(root);
+  const ft = n => (n / 12).toFixed(1).replace(/\.0$/, '');
+  const capBroad = h ? ft(h * 6) + ' ft' : null;
+  const capHigh  = h ? ft(h * 1.5) + ' ft' : null;
+
+  const jumps = [
+    { n: 'Running broad jump', f: `2d6 + ${lvl} ft`,  c: capBroad ? `max ${capBroad} (6\u00D7 height)` : null,
+      note: 'Needs a 20-foot running start.' },
+    { n: 'Running high jump',  f: `1d3 + ${half} ft`, c: capHigh ? `max ${capHigh} (1\u00BD\u00D7 height)` : null,
+      note: 'Needs a 20-foot running start.' },
+    { n: 'Standing broad jump', f: `1d6 + ${half} ft`, c: null, note: 'No run-up.' },
+    { n: 'Standing high jump',  f: '3 ft',             c: null, note: 'No run-up. A flat figure.' }
+  ];
+
+  panelEl.innerHTML =
+    paBox('Level ' + lvl + (h ? ' \u00B7 height ' + ft(h) + ' ft' : ''),
+      h ? 'Caps are computed from the Height field in Character Details.'
+        : 'Set Height in Character Details to compute the 6\u00D7 and 1\u00BD\u00D7 caps.') +
+    '<div style="font-size:11px;margin-bottom:12px;">' +
+    jumps.map(j =>
+      '<div style="display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap;">' +
+      '<span style="width:150px;flex-shrink:0;"><strong>' + PA_ESC(j.n) + '</strong></span>' +
+      '<span style="color:var(--accent-light);width:110px;flex-shrink:0;">' + j.f + '</span>' +
+      '<span style="color:var(--muted);">' + (j.c ? j.c + ' \u00B7 ' : '') + PA_ESC(j.note) + '</span>' +
+      '</div>').join('') +
+    '</div>' +
+    '<details class="disclosure" style="font-size:11px;">' +
+    '<summary>pole vault</summary>' +
+    '<div style="color:var(--muted);margin-top:6px;line-height:1.5;">' +
+    'Requires at least a 30-foot running start. The pole must be 4 to 10 feet longer ' +
+    'than the character\u2019s height' + (h ? ' \u2014 for him, ' + ft(h + 48) + ' to ' + ft(h + 120) + ' ft' : '') + '. ' +
+    'The vault spans a distance equal to 1\u00BD times the length of the pole, and clears a ' +
+    'height equal to the pole\u2019s length. He may choose to land on his feet if the vault ' +
+    'carries him over an obstacle no higher than half the pole\u2019s length. The pole is ' +
+    'dropped at the end of the vault in all cases.<br><br>' +
+    'The book\u2019s example: with a 12-foot pole he could vault through a window 12 feet up, ' +
+    'land on his feet in an opening 6 feet up, or cross a moat 18 feet wide.' +
+    '</div></details>';
+};
+
+// --- Tightrope Walking (PHB Ch.5) ---
+// MODIFIERS, but with a BAND selector rather than checkboxes -- the width
+// categories are mutually exclusive. Extra proficiency slots reduce the
+// penalties by 1 each, which is why this proficiency is in
+// NWP_BONUS_SLOT_EFFECTS and its slots are NOT added to the check target.
+PROF_ABILITY_BUILDERS['tightrope walking'] = function (root, entry, panelEl) {
+  const st = getProfAbilityState(root, 'tightrope walking');
+  const c = getNWPCheckTarget(root, entry.nwp);
+  const coop = getProficiencyCooperation(root) ? 1 : 0;
+  const slots = Math.max(0, parseInt(entry.nwp.bonusSlots, 10) || 0);
+
+  const bands = [
+    { key: 'rope',   label: '1 inch or less (a rope)', pen: -10 },
+    { key: 'narrow', label: '2 to 6 inches',           pen: -5 },
+    { key: 'plank',  label: '7 to 12 inches',          pen: 0 },
+    { key: 'wide',   label: 'Wider than 1 foot',       pen: null }
+  ];
+  const band = bands.find(b => b.key === (st.band || 'rope')) || bands[0];
+  const wind = Math.min(6, Math.max(0, parseInt(st.wind, 10) || 0));
+  const rod  = !!st.rod;
+
+  let body;
+  if (band.pen === null) {
+    body = paBox('No check required',
+      'Wider than 1 foot needs no check for a proficient character under normal circumstances.');
+  } else {
+    const relief = slots + (rod ? 2 : 0);
+    const pen = Math.min(0, band.pen + relief) - wind;
+    const target = (c.hasCheck ? c.target : 0) + pen + coop;
+    const parts = [];
+    if (band.pen) parts.push('Width ' + band.pen);
+    if (relief)   parts.push('Reduced by ' + relief + (rod ? ' (rod' + (slots ? ' + slots' : '') + ')' : ' (extra slots)'));
+    if (wind)     parts.push('Wind or vibration -' + wind);
+    if (coop)     parts.push('Assistance +1');
+    body = paBox('Balance check: ' + paFmt(target),
+      'One check every 60 feet or part thereof \u00B7 movement 60 ft per round' +
+      (parts.length ? '<br>' + PA_ESC(parts.join(' \u00B7 ')) : ''));
+  }
+
+  panelEl.innerHTML = body +
+    '<div style="font-size:11px;margin-bottom:12px;">' +
+    '<div style="font-weight:600;margin-bottom:4px;">Surface width</div>' +
+    bands.map(b =>
+      '<label style="display:flex;align-items:center;gap:6px;margin-bottom:4px;color:var(--text);cursor:pointer;">' +
+      '<input type="radio" name="trw-band" class="trw-band" value="' + b.key + '"' +
+      (b.key === band.key ? ' checked' : '') + ' style="width:auto;flex-shrink:0;">' +
+      '<span>' + PA_ESC(b.label) +
+      '<span style="color:var(--muted);"> (' + (b.pen === null ? 'no check' : b.pen) + ')</span>' +
+      '</span></label>').join('') +
+    '<label style="display:flex;align-items:center;gap:6px;margin:8px 0 4px;color:var(--text);cursor:pointer;">' +
+    '<input type="checkbox" class="trw-rod"' + (rod ? ' checked' : '') + ' style="width:auto;flex-shrink:0;">' +
+    '<span>Using a balancing rod <span style="color:var(--muted);">(penalties reduced by 2)</span></span></label>' +
+    '<div style="display:flex;align-items:center;gap:6px;">' +
+    '<input type="number" class="trw-wind" min="0" max="6" step="1" value="' + wind + '" ' +
+    'style="width:52px;flex-shrink:0;padding:2px 4px;font-size:11px;">' +
+    '<span>Wind or vibration <span style="color:var(--muted);">(penalties increased by 2 to 6, DM\u2019s call)</span></span>' +
+    '</div>' +
+    (slots ? '<div style="color:var(--info, #6fb3d2);margin-top:6px;">' + slots +
+      ' extra proficiency slot' + (slots > 1 ? 's' : '') + ' reduce the penalties by ' + slots + '.</div>' : '') +
+    '</div>' +
+    '<details class="disclosure" style="font-size:11px;">' +
+    '<summary>fighting on the rope</summary>' +
+    '<div style="color:var(--muted);margin-top:6px;line-height:1.5;">' +
+    'A character may fight while on a tightrope at <strong style="color:var(--text);">&minus;5 to his attack roll</strong>, ' +
+    'and must make a successful check at the beginning of each round to avoid falling off. ' +
+    'Since he cannot maneuver he gains <strong style="color:var(--text);">no Dexterity adjustment to Armor Class</strong>. ' +
+    'If struck while on the rope he must roll an immediate check to retain his balance.<br><br>' +
+    'Any narrow surface not angled up or down more than 45 degrees can be negotiated.' +
+    '</div></details>';
+
+  panelEl.querySelectorAll('.trw-band').forEach(el => {
+    el.onchange = () => { st.band = el.value; renderProficiencyAbilities(root); };
+  });
+  const rodEl = panelEl.querySelector('.trw-rod');
+  if (rodEl) rodEl.onchange = () => { st.rod = rodEl.checked; renderProficiencyAbilities(root); };
+  const windEl = panelEl.querySelector('.trw-wind');
+  if (windEl) windEl.onchange = () => { st.wind = windEl.value; renderProficiencyAbilities(root); };
+};
+
+// --- Disguise (PHB Ch.5) ---
+// The two penalties are INDEPENDENT axes and the book states their combination
+// explicitly: race or sex -7, a specific person -10, together -17.
+PROF_ABILITY_BUILDERS['disguise'] = function (root, entry, panelEl) {
+  const st = getProfAbilityState(root, 'disguise');
+  const c = getNWPCheckTarget(root, entry.nwp);
+  const coop = getProficiencyCooperation(root) ? 1 : 0;
+
+  const opts = [
+    { key: 'race',     label: 'Another race or sex', mod: -7 },
+    { key: 'specific', label: 'A specific individual', mod: -10 }
+  ];
+  let pen = 0;
+  const parts = [];
+  opts.forEach(o => { if (st[o.key]) { pen += o.mod; parts.push(o.label + ' ' + o.mod); } });
+  if (coop) parts.push('Assistance +1');
+  const target = (c.hasCheck ? c.target : 0) + pen + coop;
+
+  panelEl.innerHTML =
+    paBox('Disguise check: ' + paFmt(target),
+      parts.length ? PA_ESC(parts.join(' \u00B7 '))
+        : 'Unmodified \u2014 any general type of person of about the same height, age, weight and race.') +
+    '<div style="font-size:11px;margin-bottom:12px;">' +
+    opts.map(o =>
+      '<label style="display:flex;align-items:center;gap:6px;margin-bottom:4px;color:var(--text);cursor:pointer;">' +
+      '<input type="checkbox" class="dsg-chk" data-key="' + o.key + '"' + (st[o.key] ? ' checked' : '') +
+      ' style="width:auto;flex-shrink:0;">' +
+      '<span>' + PA_ESC(o.label) + ' <span style="color:var(--muted);">(' + o.mod + ')</span></span></label>').join('') +
+    '<div style="color:var(--muted);margin-top:6px;">These are cumulative \u2014 a specific person of ' +
+    'another race or sex is &minus;17, which the book calls extremely difficult.</div>' +
+    '</div>' +
+    '<div style="font-size:11px;color:var(--muted);">A failed roll means the attempt was too obvious in some way.</div>';
+
+  panelEl.querySelectorAll('.dsg-chk').forEach(el => {
+    el.onchange = () => { st[el.dataset.key] = el.checked; renderProficiencyAbilities(root); };
+  });
+};
+
+// --- Forgery (PHB Ch.5) ---
+// The odd one out: THE PLAYER SHOULD NOT ROLL THIS. "The forger only thinks he
+// has been successful; the DM rolls the check in secret and the forger does not
+// learn of a failure until it is too late." So the panel shows the target and
+// the three outcome tiers as reference and pointedly offers no roll.
+PROF_ABILITY_BUILDERS['forgery'] = function (root, entry, panelEl) {
+  const st = getProfAbilityState(root, 'forgery');
+  const c = getNWPCheckTarget(root, entry.nwp);
+  const coop = getProficiencyCooperation(root) ? 1 : 0;
+
+  const cases = [
+    { key: 'generic', label: 'Document with no personal handwriting (military orders, decrees)',
+      mod: 0, needs: 'Must have seen a similar document before.' },
+    { key: 'name', label: 'A name or signature',
+      mod: -2, needs: 'Requires an autograph of that person.' },
+    { key: 'hand', label: 'A longer document in a particular hand',
+      mod: -3, needs: 'Requires a large sample of that person\u2019s handwriting.' }
+  ];
+  const cur = cases.find(x => x.key === (st.mode || 'generic')) || cases[0];
+  const target = (c.hasCheck ? c.target : 0) + cur.mod + coop;
+
+  panelEl.innerHTML =
+    paBox('Forgery check: ' + paFmt(target),
+      PA_ESC(cur.needs) + (cur.mod ? ' \u00B7 ' + cur.mod + ' penalty' : '') + (coop ? ' \u00B7 Assistance +1' : '')) +
+    '<div style="font-size:11px;margin-bottom:12px;">' +
+    '<div style="font-weight:600;margin-bottom:4px;">What is being forged</div>' +
+    cases.map(x =>
+      '<label style="display:flex;align-items:center;gap:6px;margin-bottom:4px;color:var(--text);cursor:pointer;">' +
+      '<input type="radio" name="frg-mode" class="frg-mode" value="' + x.key + '"' +
+      (x.key === cur.key ? ' checked' : '') + ' style="width:auto;flex-shrink:0;">' +
+      '<span>' + PA_ESC(x.label) + ' <span style="color:var(--muted);">(' + (x.mod || 0) + ')</span></span></label>').join('') +
+    '</div>' +
+    '<div style="padding:8px;border:1px solid var(--warning, #e0a34a);border-radius:4px;font-size:11px;margin-bottom:12px;">' +
+    '<strong style="color:var(--warning, #e0a34a);">The DM rolls this in secret.</strong> ' +
+    '<span style="color:var(--muted);">The forger only thinks he has been successful, ' +
+    'and does not learn of a failure until it is too late.</span></div>' +
+    '<details class="disclosure" style="font-size:11px;">' +
+    '<summary>outcomes</summary>' +
+    '<div style="color:var(--muted);margin-top:6px;line-height:1.5;">' +
+    '<strong style="color:var(--text);">Creating a forgery</strong><br>' +
+    'Success \u2014 passes examination by all but those intimately familiar with the handwriting, ' +
+    'or anyone with forgery proficiency who examines it carefully.<br>' +
+    'Failure \u2014 detectable by anyone familiar with that type of document or handwriting, if examined closely.<br>' +
+    'Natural 20 \u2014 immediately detectable by anyone who normally handles such documents, without close examination.<br><br>' +
+    '<strong style="color:var(--text);">Detecting a forgery</strong><br>' +
+    'Success \u2014 the authenticity of any document can be ascertained.<br>' +
+    'Failure \u2014 the answer is unknown.<br>' +
+    'Natural 20 \u2014 the character reaches the incorrect conclusion.' +
+    '</div></details>';
+
+  panelEl.querySelectorAll('.frg-mode').forEach(el => {
+    el.onchange = () => { st.mode = el.value; renderProficiencyAbilities(root); };
+  });
+};
+
+// --- Set Snares (PHB Ch.5) ---
+// Man-traps are THIEVES ONLY -- "thief characters (and only thieves)". Animal
+// Lore gives +2 for GAME ONLY, explicitly not monsters or intelligent beings.
+PROF_ABILITY_BUILDERS['set snares'] = function (root, entry, panelEl) {
+  const st = getProfAbilityState(root, 'set snares');
+  const c = getNWPCheckTarget(root, entry.nwp);
+  const coop = getProficiencyCooperation(root) ? 1 : 0;
+  const lore = paHasProf(root, 'animal lore');
+  const isThief = (typeof getAllClassComponents === 'function' ? getAllClassComponents(root) : [])
+    .some(x => String(x.clazz || '').trim().toLowerCase().indexOf('thief') !== -1);
+
+  const large = !!st.large;
+  const game  = !!st.game;
+  let pen = 0;
+  const parts = [];
+  if (large) { pen -= 4; parts.push('Larger creature -4'); }
+  if (game && lore) { pen += 2; parts.push('Animal lore, game only +2'); }
+  if (coop) parts.push('Assistance +1');
+  const target = (c.hasCheck ? c.target : 0) + pen + coop;
+
+  panelEl.innerHTML =
+    paBox('Snare check: ' + paFmt(target),
+      (parts.length ? PA_ESC(parts.join(' \u00B7 ')) + '<br>' : '') +
+      'Rolled when the snare is first constructed, and again every time it is set.') +
+    '<div style="font-size:11px;margin-bottom:12px;">' +
+    '<label style="display:flex;align-items:center;gap:6px;margin-bottom:4px;color:var(--text);cursor:pointer;">' +
+    '<input type="checkbox" class="sns-large"' + (large ? ' checked' : '') + ' style="width:auto;flex-shrink:0;">' +
+    '<span>For a larger creature \u2014 tiger pit, net snare <span style="color:var(--muted);">(&minus;4)</span></span></label>' +
+    '<label style="display:flex;align-items:center;gap:6px;margin-bottom:4px;color:var(--text);cursor:pointer;' +
+    (lore ? '' : 'opacity:0.45;') + '">' +
+    '<input type="checkbox" class="sns-game"' + (game ? ' checked' : '') + (lore ? '' : ' disabled') +
+    ' style="width:auto;flex-shrink:0;">' +
+    '<span>Catching game <span style="color:var(--muted);">(+2 with animal lore' +
+    (lore ? '' : ' \u2014 not known') + ')</span></span></label>' +
+    '<div style="color:var(--muted);margin-top:6px;">A successful check does not ensure the snare ' +
+    'catches anything, only that it works if triggered. The DM decides whether it is triggered. ' +
+    'Failure is opaque \u2014 bad workmanship, scent left in the area, poor concealment \u2014 and the ' +
+    'exact nature of the problem need not be known.</div>' +
+    '</div>' +
+    '<details class="disclosure" style="font-size:11px;">' +
+    '<summary>time, help and man-traps</summary>' +
+    '<div style="color:var(--muted);margin-top:6px;line-height:1.5;">' +
+    'Small snare or trap \u2014 1 hour, one person.<br>' +
+    'Larger trap \u2014 2d4 hours, two to three people, though only one need have the proficiency.<br>' +
+    'Man-trap \u2014 1d8 hours, one or more people depending on its nature.<br>' +
+    'Appropriate materials are required in every case.<br><br>' +
+    '<strong style="color:' + (isThief ? 'var(--success, #6fbf73)' : 'var(--warning, #e0a34a)') + ';">Man-traps: ' +
+    (isThief ? 'available to this character.' : 'thieves only \u2014 not available to this character.') + '</strong> ' +
+    'Thief characters, and only thieves, can rig traps meant for people \u2014 crossbows, deadfalls, ' +
+    'spiked springboards. The procedure is the same as for a large trap, and the DM determines damage.' +
+    '</div></details>';
+
+  const lg = panelEl.querySelector('.sns-large');
+  if (lg) lg.onchange = () => { st.large = lg.checked; renderProficiencyAbilities(root); };
+  const gm = panelEl.querySelector('.sns-game');
+  if (gm) gm.onchange = () => { st.game = gm.checked; renderProficiencyAbilities(root); };
+};
+
+// --- Hunting (PHB Ch.5) ---
+// The penalty counts NON-PROFICIENT hunters, so extra bodies hurt here -- the
+// inverse of the cooperation rule, which is why cooperation is not offered.
+PROF_ABILITY_BUILDERS['hunting'] = function (root, entry, panelEl) {
+  const st = getProfAbilityState(root, 'hunting');
+  const c = getNWPCheckTarget(root, entry.nwp);
+  const others = Math.max(0, parseInt(st.others, 10) || 0);
+  const yards  = Math.max(0, parseInt(st.close, 10) || 0);
+  const target = (c.hasCheck ? c.target : 0) - others;
+  const checks = Math.ceil(yards / 20);
+
+  panelEl.innerHTML =
+    paBox('Stalking check: ' + paFmt(target),
+      (others ? others + ' nonproficient hunter' + (others > 1 ? 's' : '') + ' in the party \u00B7 &minus;' + others + '<br>' : '') +
+      'Success brings the hunter and those with him within 101 to 200 yards (100 + 1d100).') +
+    '<div style="font-size:11px;margin-bottom:12px;">' +
+    '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">' +
+    '<input type="number" class="hnt-others" min="0" step="1" value="' + others + '" ' +
+    'style="width:52px;flex-shrink:0;padding:2px 4px;font-size:11px;">' +
+    '<span>Nonproficient hunters in the party <span style="color:var(--muted);">(&minus;1 each)</span></span></div>' +
+    '<div style="display:flex;align-items:center;gap:6px;">' +
+    '<input type="number" class="hnt-close" min="0" step="20" value="' + yards + '" ' +
+    'style="width:60px;flex-shrink:0;padding:2px 4px;font-size:11px;">' +
+    '<span>Yards to close <span style="color:var(--muted);">(one check per 20 yards' +
+    (checks ? ' \u2014 ' + checks + ' check' + (checks > 1 ? 's' : '') : '') + ')</span></span></div>' +
+    '<div style="color:var(--muted);margin-top:8px;">If the stalking succeeds, the hunter ' +
+    'automatically surprises the game. The type of animal depends on the terrain and the DM.</div>' +
+    '</div>';
+
+  const o = panelEl.querySelector('.hnt-others');
+  if (o) o.onchange = () => { st.others = o.value; renderProficiencyAbilities(root); };
+  const cl = panelEl.querySelector('.hnt-close');
+  if (cl) cl.onchange = () => { st.close = cl.value; renderProficiencyAbilities(root); };
+};
+
+// --- Riding, Airborne (PHB Ch.5) ---
+// REFERENCE. Unlike land riding, this proficiency is REQUIRED to handle a
+// flying mount at all, and extra slots DO buy additional mount types.
+PROF_ABILITY_BUILDERS['riding, airborne'] = function (root, entry, panelEl) {
+  const c = getNWPCheckTarget(root, entry.nwp);
+  const head = c.hasCheck
+    ? 'Riding check: ' + paFmt(c.target)
+    : 'No ability check listed.';
+
+  const feats = [
+    { k: 'no', n: 'Leap on and take off',
+      t: 'Leap onto the saddle while the creature stands on the ground and spur it airborne, as a single action. No check required.' },
+    { k: 'mix', n: 'Drop 10 feet',
+      t: 'To the ground, or onto another mount land-based or flying. No check when at light encumbrance dropping to the ground; a check in every other situation. Failure means normal falling damage, or missing the target entirely and perhaps taking a great deal more.' },
+    { k: 'penalty', n: 'Drop and attack',
+      t: 'A character dropping to the ground may attempt an immediate melee attack if his check is made at &minus;4. Failure carries the same consequences as above.' },
+    { k: 'yes', n: 'Spur to greater speed',
+      t: '+1d4 to the mount\u2019s movement rate on a successful check, held for four consecutive rounds. Fail and you may try again next round; fail twice and no attempt is possible for a full turn. Afterwards its movement drops to \u2154 and its Maneuverability Class worsens by one class, until it lands and rests at least one hour.' },
+    { k: 'mix', n: 'Guide with knees and feet',
+      t: 'Keeps the hands free. A check is needed only after the character suffers damage. Fail and he is knocked from the saddle \u2014 then a second check to catch himself and hang from the side by one hand, or some equally perilous position. Fail that and he falls.' }
+  ];
+  const tag = k => k === 'no'
+    ? '<span style="color:var(--success, #6fbf73);">automatic</span>'
+    : k === 'penalty'
+    ? '<span style="color:var(--warning, #e0a34a);">check at &minus;4</span>'
+    : k === 'mix'
+    ? '<span style="color:var(--muted);">conditional</span>'
+    : '<span style="color:var(--info, #6fb3d2);">check</span>';
+
+  panelEl.innerHTML =
+    paBox(head, c.hasCheck ? 'Dropping and attacking takes &minus;4: ' + paFmt(c.target - 4) : '') +
+    '<div style="font-size:11px;">' +
+    feats.map(f =>
+      '<div style="margin-bottom:8px;">' +
+      '<div><strong>' + PA_ESC(f.n) + '</strong> &middot; ' + tag(f.k) + '</div>' +
+      '<div style="color:var(--muted);margin-top:1px;">' + f.t + '</div></div>').join('') +
+    '</div>' +
+    '<details class="disclosure" style="font-size:11px;">' +
+    '<summary>mounts and the saddle strap</summary>' +
+    '<div style="color:var(--muted);margin-top:6px;line-height:1.5;">' +
+    'The particular creature is chosen when the proficiency is taken, and <strong style="color:var(--text);">' +
+    'additional slots buy additional mount types</strong>. Unlike land-based riding, a character ' +
+    '<strong style="color:var(--text);">must</strong> have this proficiency, or ride with someone who does, ' +
+    'to handle a flying mount at all.<br><br>' +
+    'A rider can strap himself into the saddle to avoid being thrown \u2014 though that could be a ' +
+    'disadvantage if his mount is slain and plummets toward the ground.' +
+    '</div></details>';
+};
+
 // Delete a non-weapon proficiency
 function deleteNWProficiency(root, index) {
   if (!root._nwps || !root._nwps[index]) return;
