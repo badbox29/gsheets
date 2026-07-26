@@ -4297,7 +4297,12 @@ async function renderNWPBrowser(root) {
 
     // Effective cost for THIS character, including the Table 38 surcharge.
     const baseSlots = parseInt(nwp.Slots, 10) || 1;
-    const effCost   = getNWPSlotCost({ slots: nwp.Slots, category: nwp.Category }, allowedGroups);
+    // Pass the WHOLE record. A synthetic {slots, category} object has no name,
+    // so getNWPGroups cannot reach NWP_TABLE37_GROUPS and falls back to the one
+    // stored Category -- which charged a thief the out-of-group surcharge for
+    // Blind-fighting, Gaming and Set Snares, all of which are Rogue as well as
+    // Warrior. getNWPSlotCost already reads nwp.slots || nwp.Slots.
+    const effCost   = getNWPSlotCost(nwp, allowedGroups);
     const isCrossover = effCost > baseSlots;
 
     const slotText = isCrossover
