@@ -3885,9 +3885,15 @@ function renderProficiencySlots(root) {
   const allowedGroups = getAllowedNWPGroups(root);
   let nwpSpent = 0;
   let crossoverCount = 0;
+  let bonusSlotTotal = 0;
   nwps.forEach(n => {
     const cost = getNWPSlotCost(n, allowedGroups);
-    nwpSpent += cost;
+    // PHB: additional slots may be spent on a proficiency already known, for
+    // +1 to its checks (or, for eight of them, some other benefit). Those
+    // slots come out of the same budget and were never being charged.
+    const extra = Math.max(0, parseInt(n.bonusSlots, 10) || 0);
+    nwpSpent += cost + extra;
+    bonusSlotTotal += extra;
     if (cost > (parseInt(n.slots, 10) || 1)) crossoverCount++;
   });
 
@@ -3939,6 +3945,10 @@ function renderProficiencySlots(root) {
     if (crossoverCount > 0) {
       t += `\n  (includes ${crossoverCount} out-of-group proficienc${crossoverCount > 1 ? 'ies' : 'y'}`;
       t += `\n   at +1 slot each -- PHB Table 38)`;
+    }
+    if (bonusSlotTotal > 0) {
+      t += `\n  (includes ${bonusSlotTotal} extra slot${bonusSlotTotal === 1 ? '' : 's'} spent`;
+      t += `\n   to improve proficiencies)`;
     }
     if (allowedGroups && allowedGroups.size > 0) {
       const groupList = Array.from(allowedGroups)
@@ -4404,6 +4414,17 @@ function renderNWProficiencies(root) {
 
     const checkText = formatNWPCheck(root, nwp);
 
+    // PHB: extra slots spent on a proficiency already known buy +1 to its
+    // checks -- except for the eight in NWP_BONUS_SLOT_EFFECTS, where they buy
+    // something the check target cannot express. Show which applies.
+    const bonusSlots = Math.max(0, parseInt(nwp.bonusSlots, 10) || 0);
+    const altEffect  = (typeof NWP_BONUS_SLOT_EFFECTS === 'object' && NWP_BONUS_SLOT_EFFECTS)
+      ? NWP_BONUS_SLOT_EFFECTS[(nwp.name || '').trim().toLowerCase()]
+      : null;
+    const effectNote = altEffect
+      ? `<span style="color:var(--info, #6fb3d2);">${altEffect}</span>`
+      : `<span style="color:var(--muted);">each extra slot gives +1 to this check</span>`;
+
     nwpDiv.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px;">
         <div style="flex:1;">
@@ -4411,6 +4432,14 @@ function renderNWProficiencies(root) {
           <span style="margin-left:8px;font-size:11px;color:var(--muted);">${groupLabel}</span>
           <div style="font-size:11px;color:var(--muted);margin-top:2px;">
             ${slotText} | ${checkText}
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <label style="display:inline;margin:0;color:var(--muted);">Extra slots</label>
+            <input type="number" class="nwp-bonus-slots" data-index="${index}"
+                   min="0" max="9" step="1" value="${bonusSlots}"
+                   style="width:48px;flex-shrink:0;padding:2px 4px;font-size:11px;"
+                   title="Additional proficiency slots spent to improve this proficiency (PHB Ch.5). These come out of your nonweapon proficiency budget.">
+            ${effectNote}
           </div>
           ${nwp.notes ? `<div style="font-size:11px;color:var(--muted);margin-top:4px;font-style:italic;">${nwp.notes}</div>` : ''}
         </div>
@@ -4426,6 +4455,22 @@ function renderNWProficiencies(root) {
     btn.onclick = () => {
       const index = parseInt(btn.getAttribute('data-index'), 10);
       deleteNWProficiency(root, index);
+    };
+  });
+
+  // Extra slots spent to improve a proficiency (PHB Ch.5). Rides in the _nwps
+  // array, so collectSheet/loadSheet persist it with no further wiring.
+  listDiv.querySelectorAll('.nwp-bonus-slots').forEach(inp => {
+    inp.onchange = () => {
+      const i = parseInt(inp.getAttribute('data-index'), 10);
+      if (!root._nwps || !root._nwps[i]) return;
+      root._nwps[i].bonusSlots = Math.max(0, parseInt(inp.value, 10) || 0);
+      // Re-render rather than patching in place: this changes the check target,
+      // the effect note AND the slot counter, and renderNWProficiencies calls
+      // renderProficiencySlots on its way in.
+      renderNWProficiencies(root);
+      const tab = document.querySelector('.tab.active');
+      if (tab) markUnsaved(tab, true, root);
     };
   });
 }
