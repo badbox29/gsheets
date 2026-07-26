@@ -659,9 +659,27 @@ const SHEET_HTML = `
 
         <!-- Non-Weapon Proficiencies Browser -->
         <section class="section nwp-browser-section">
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <h3>Non-Weapon Proficiencies Browser</h3>
-            <button class="toggle-nwp-browser-visibility" style="padding:4px 12px;font-size:12px;">Show/Hide</button>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+            <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+              <h3 style="margin:0;">Non-Weapon Proficiencies Browser</h3>
+              <details class="disclosure info" style="font-size:11px;flex-shrink:0;">
+                <summary>what about secondary skills?</summary>
+                <div class="info-body">
+                  <strong style="color:var(--text);">This tool uses nonweapon proficiencies.</strong><br>
+                  PHB Chapter 5 offers two alternative systems: nonweapon proficiencies,
+                  and the Secondary Skills table. The book is explicit that they are
+                  alternatives &mdash; secondary skills &ldquo;should not be used in
+                  combination with nonweapon proficiencies.&rdquo;<br><br>
+                  Proficiencies are the more detailed system and the one nearly every
+                  2nd Edition table plays with, so they are what the sheet implements.
+                  Secondary skills are not built in. If your DM prefers them, record the
+                  rolled skill under Character Details or as a class ability and leave
+                  the proficiency lists empty &mdash; the slot counters will simply read
+                  zero, which is unused rather than wrong.
+                </div>
+              </details>
+            </div>
+            <button class="toggle-nwp-browser-visibility" style="padding:4px 12px;font-size:12px;flex-shrink:0;">Show/Hide</button>
           </div>
           <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
             Search and browse available non-weapon proficiencies. Click "Learn" to add a proficiency.
