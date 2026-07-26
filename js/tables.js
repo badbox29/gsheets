@@ -943,8 +943,15 @@ const TRACKING_MODIFIERS = [
 
 // Table 40. The chance is the ADJUSTED Wisdom score being rolled against, not
 // a percentage -- a higher number means an easier check and faster pursuit.
+// Table 40. The printed table OVERLAPS AT 14 -- it reads "7-14" and then
+// "14 or greater" on consecutive rows, which is an error in the book, not a
+// transcription slip. Resolved in favour of the top band: "14 or greater"
+// names 14 explicitly as its lower bound, while "7-14" includes it only as a
+// range endpoint, and it is the player-favourable reading. A genuine coin
+// flip -- if a DM rules the other way, change the middle band's max to 14.
+// The slowdown applies to the whole party, not just the tracker.
 const TRACKING_MOVEMENT = [
-  { max:  6, fraction: 1 / 3, label: "1/3 normal" },
+  { max:  6, fraction: 1 / 4, label: "1/4 normal" },
   { max: 13, fraction: 1 / 2, label: "1/2 normal" },
   { max: Infinity, fraction: 3 / 4, label: "3/4 normal" }
 ];
