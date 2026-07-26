@@ -4538,6 +4538,86 @@ function formatNWPCheck(root, nwp) {
   return `<span title="${tip}">${parts.join(' ')} = roll ${c.target} or less</span>${note}`;
 }
 
+// === Proficiency Abilities (PHB Ch.5) ===
+// One tab per learned proficiency that has interactive rules. Registry lives in
+// tables.js; builders register themselves here, keyed by the same name.
+//
+// ALL STATE IN THIS SECTION IS EPHEMERAL. root._profAbilityState and
+// root._profAbilityTab are deliberately NOT read by collectSheet -- these
+// describe one attempt under one set of conditions, not the character. A saved
+// "in a sleet storm" would be wrong the next time the sheet is opened. If
+// anyone later adds these to collectSheet, that is a bug, not an improvement.
+const PROF_ABILITY_BUILDERS = {};   // key -> function(root, entry, panelEl)
+
+// PHB: "If two proficient characters work together... use the higher ability
+// score, +1 for assistance. Never more than +1."
+function getProficiencyCooperation(root) {
+  const el = root && root.querySelector('.prof-ability-coop');
+  return !!(el && el.checked);
+}
+
+// Per-panel scratch state, created on demand and never persisted.
+function getProfAbilityState(root, key) {
+  if (!root._profAbilityState) root._profAbilityState = {};
+  if (!root._profAbilityState[key]) root._profAbilityState[key] = {};
+  return root._profAbilityState[key];
+}
+
+function renderProficiencyAbilities(root) {
+  const sec = root.querySelector('.proficiency-abilities-display');
+  if (!sec) return;
+
+  const entries = (typeof getProficiencyAbilities === 'function')
+    ? getProficiencyAbilities(root) : [];
+
+  if (!entries.length) { sec.style.display = 'none'; return; }
+  sec.style.display = '';
+
+  // Keep the active tab across re-renders when it is still valid -- otherwise
+  // deleting an unrelated proficiency would throw the player back to tab one.
+  let active = root._profAbilityTab;
+  if (!entries.some(e => e.key === active)) active = entries[0].key;
+  root._profAbilityTab = active;
+
+  const tabsEl  = sec.querySelector('.prof-ability-tabs');
+  const panelEl = sec.querySelector('.prof-ability-panel');
+  if (!tabsEl || !panelEl) return;
+
+  tabsEl.innerHTML = '';
+  entries.forEach(e => {
+    const b = document.createElement('button');
+    b.textContent = e.label;
+    b.className = 'prof-ability-tab';
+    b.style.cssText = 'padding:4px 12px;font-size:12px;flex-shrink:0;' +
+      (e.key === active ? '' : 'opacity:0.5;');
+    b.onclick = () => { root._profAbilityTab = e.key; renderProficiencyAbilities(root); };
+    tabsEl.appendChild(b);
+  });
+
+  // Handlers are ASSIGNED, not added, so re-rendering cannot stack duplicates.
+  const coop = sec.querySelector('.prof-ability-coop');
+  if (coop) coop.onchange = () => renderProficiencyAbilities(root);
+
+  // Reset means "an unmodified attempt by this character alone" -- so it clears
+  // the cooperation toggle as well as every panel's conditions.
+  const resetBtn = sec.querySelector('.prof-ability-reset');
+  if (resetBtn) resetBtn.onclick = () => {
+    if (coop) coop.checked = false;
+    root._profAbilityState = {};
+    renderProficiencyAbilities(root);
+  };
+
+  panelEl.innerHTML = '';
+  const entry = entries.find(e => e.key === active);
+  const build = PROF_ABILITY_BUILDERS[active];
+  if (build) {
+    build(root, entry, panelEl);
+  } else {
+    panelEl.innerHTML =
+      '<div style="font-size:11px;color:var(--muted);">No panel built for this proficiency yet.</div>';
+  }
+}
+
 // Delete a non-weapon proficiency
 function deleteNWProficiency(root, index) {
   if (!root._nwps || !root._nwps[index]) return;
