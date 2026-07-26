@@ -5194,7 +5194,7 @@ function renderClassGroupValidation(root) {
   const el = root.querySelector('.class-group-validation-message');
   if (!el) return;
 
-  // Four independent advisory checks share this banner. Each has its own
+  // Six independent advisory checks share this banner. Each has its own
   // Settings toggle and returns [] when switched off, so combining them here
   // needs no extra gating.
   const sources = [
@@ -5205,7 +5205,11 @@ function renderClassGroupValidation(root) {
     { heading: 'Racial ability requirements (PHB Table 7)',
       problems: (typeof validateRaceRequirements === 'function') ? validateRaceRequirements(root) : [] },
     { heading: 'Class not open to this race (PHB Ch.2)',
-      problems: (typeof validateRaceClass === 'function') ? validateRaceClass(root) : [] }
+      problems: (typeof validateRaceClass === 'function') ? validateRaceClass(root) : [] },
+    { heading: 'Alignment and class (PHB Ch.4)',
+      problems: (typeof validateClassAlignment === 'function') ? validateClassAlignment(root) : [] },
+    { heading: 'Alignment and kit (Complete handbooks)',
+      problems: (typeof validateKitAlignment === 'function') ? validateKitAlignment(root) : [] }
   ];
 
   const active   = sources.filter(s => s.problems.length);
