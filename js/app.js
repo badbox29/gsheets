@@ -8545,10 +8545,16 @@ function addRollToHistory(root, result) {
   // adjustment and every proficiency result were simply unreachable. A native
   // <details> is discoverable, works on touch, and stays collapsed so the
   // history remains scannable. Same pattern as .print-extras in the print modal.
+  // No shared escape helper exists in this project -- every function that needs
+  // one declares it locally. Following that convention rather than adding a
+  // global here.
+  const esc = s => String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
   const detailBlock = result.modifierInfo ? `
     <details style="margin-top:4px;">
       <summary style="cursor:pointer;color:var(--muted);font-size:11px;list-style:none;">details</summary>
-      <div style="white-space:pre-wrap;color:var(--text);font-size:11px;margin-top:4px;padding-left:4px;border-left:2px solid var(--border);">${escapeHtml(result.modifierInfo)}</div>
+      <div style="white-space:pre-wrap;color:var(--text);font-size:11px;margin-top:4px;padding-left:4px;border-left:2px solid var(--border);">${esc(result.modifierInfo)}</div>
     </details>` : '';
 
   entry.innerHTML = `
