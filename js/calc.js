@@ -4441,6 +4441,7 @@ function renderNWProficiencies(root) {
           <div style="font-size:11px;color:var(--muted);margin-top:2px;">
             ${slotText} | ${checkText}
           </div>
+          ${canImprove ? `
           <div style="font-size:11px;color:var(--muted);margin-top:4px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
             <label style="display:inline;margin:0;color:var(--muted);">Extra slots</label>
             <input type="number" class="nwp-bonus-slots" data-index="${index}"
@@ -4448,7 +4449,7 @@ function renderNWProficiencies(root) {
                    style="width:48px;flex-shrink:0;padding:2px 4px;font-size:11px;"
                    title="Additional proficiency slots spent to improve this proficiency (PHB Ch.5). These come out of your nonweapon proficiency budget.">
             ${effectNote}
-          </div>
+          </div>` : ''}
           ${nwp.notes ? `<div style="font-size:11px;color:var(--muted);margin-top:4px;font-style:italic;">${nwp.notes}</div>` : ''}
         </div>
         <button class="delete-nwp" data-index="${index}" style="padding:4px 8px;font-size:11px;margin-left:8px;">Delete</button>
