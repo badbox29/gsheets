@@ -3011,7 +3011,7 @@ const PHB_RELATED_WEAPONS = [
   ["Heavy Crossbow", "Light Crossbow"],
   ["Dagger", "Knife"],
   ["Glaive", "Halberd", "Bardiche", "Voulge", "Guisarme", "Glaive-Guisarme", "Guisarme-Voulge"],
-  ["Spear", "Trident", "Javelin"],
+  ["Harpoon", "Spear", "Trident", "Javelin"],
   // PHB lumps all of these into ONE related set, where core_wp.json splits them
   // across the Mace / Flail / Hammer / Club groups. The book wins.
   ["Mace, Footman's", "Mace, Horseman's", "Morning Star",
