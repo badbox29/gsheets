@@ -4321,7 +4321,7 @@ async function renderNWPBrowser(root) {
         <span style="margin-left:8px;font-size:11px;color:var(--muted);">${browseGroupLabel}</span>
       </div>
       <div style="font-size:11px;color:var(--muted);margin-top:2px;">
-        ${slotText} | Check: ${nwp['Ability Check'] || 'N/A'}
+        ${slotText} | ${formatNWPCheck(root, nwp)}
       </div>
       ${nwp.Notes ? `<div style="font-size:11px;color:var(--muted);margin-top:4px;font-style:italic;">${nwp.Notes}</div>` : ''}
     `;
@@ -4503,7 +4503,8 @@ function renderNWProficiencies(root) {
 // The arithmetic lives in getNWPCheckTarget (tables.js); this is display only.
 function formatNWPCheck(root, nwp) {
   if (typeof getNWPCheckTarget !== 'function') {
-    return `Check: ${nwp.abilityCheck || 'N/A'}`;
+    // Accepts a stored card object OR a raw core_nwp.json record.
+    return `Check: ${nwp.abilityCheck || nwp['Ability Check'] || 'N/A'}`;
   }
 
   const c = getNWPCheckTarget(root, nwp);
