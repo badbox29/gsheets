@@ -4425,6 +4425,14 @@ function renderNWProficiencies(root) {
       ? `<span style="color:var(--info, #6fb3d2);">${altEffect}</span>`
       : `<span style="color:var(--muted);">each extra slot gives +1 to this check</span>`;
 
+    // Extra slots buy +1 to the check, or whatever NWP_BONUS_SLOT_EFFECTS says.
+    // A proficiency with NEITHER -- no check and no alternate benefit -- has
+    // nothing to sell, so the control is hidden rather than offering a
+    // meaningless purchase. Blind-fighting is currently the only one.
+    const parsedCheck = (typeof parseNWPCheck === 'function')
+      ? parseNWPCheck(nwp.abilityCheck) : null;
+    const canImprove  = !!altEffect || !parsedCheck || parsedCheck.hasCheck;
+
     nwpDiv.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px;">
         <div style="flex:1;">
