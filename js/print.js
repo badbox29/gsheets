@@ -920,9 +920,22 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       hitDmg: `${signed(hitTotal)} / ${signed(dmgTotal)}${profTag}`,
       damage: damage || '\u2014',
       profStatus: prof.status,
-      // Range leads because it is the column's name and the thing you look for
-      // mid-combat; free-text notes follow it.
-      range: [wRange, wNotes].filter(Boolean).join(' \u2014 ')
+      // Bow and crossbow specialists get NO hit or damage bonus -- their
+      // benefit is a point-blank range category, which is not a flat modifier
+      // and so cannot show in the Hit/Dmg column. Without this the printed
+      // sheet gives an archer specialist nothing at all for his two extra
+      // slots. PHB Ch.5: +2 to hit inside the range, no extra damage, and with
+      // a nocked arrow or cocked bolt and the target in sight he may fire at
+      // the start of the round, before initiative.
+      // Range still leads -- it is the column's name and the thing you look
+      // for mid-combat -- then the point-blank note, then free-text notes.
+      range: [
+        wRange,
+        (specBonus && specBonus.pointBlank)
+          ? `Point-blank ${specBonus.pointBlank}: +2 hit, may fire before initiative`
+          : '',
+        wNotes
+      ].filter(Boolean).join(' \u2014 ')
     });
   });
   
@@ -3349,7 +3362,14 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
                               (spec && typeof getSpecializationCost === 'function'
                                 ? getSpecializationCost(p.group) : 0);
                             return [
-                              cell(p.name + (spec ? ' \u2605' : '')),
+                              // cell() runs String() over its argument, so an
+                              // inline array has to be built by hand here.
+                              // Roboto has no star glyph -- it printed as a
+                              // hollow box -- and an unexplained symbol is
+                              // worse than a plain word.
+                              spec
+                                ? { text: [p.name, { text: ' (specialized)', italics: true }], fontSize: 6 }
+                                : cell(p.name),
                               cell(p.group),
                               cell(String(eff), 6, { alignment: 'center' })
                             ];
