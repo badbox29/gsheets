@@ -871,6 +871,10 @@ const SHEET_HTML = `
              other COMPUTED panels (ranger stealth, thief skills); everything
              below the divider is static reference prose. -->
         <section class="section proficiency-abilities-display" style="display:none;">
+          <!-- Divider lives INSIDE the section so it hides along with it. A bare
+               <hr> placed before the section would leave a stray gold line above
+               Class Abilities for every character with no qualifying proficiency. -->
+          <hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
           <h3>Proficiency Abilities</h3>
           <div class="prof-ability-intro" style="font-size:11px;color:var(--muted);margin-bottom:10px;">
             Proficiencies whose rules need working out at the table. Conditions reset
