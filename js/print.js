@@ -880,14 +880,29 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     const adj = (typeof getWeaponStrAdjustments === 'function')
       ? getWeaponStrAdjustments(strDataForWeapons, strMode, str, strEx, clazz)
       : { toHit: 0, damage: 0 };
-    const hitTotal = (adj.toHit || 0) + hitBase + (prof.penalty || 0);
-    const dmgTotal = (adj.damage || 0) + dmgBase;
+    // Weapon specialization was missing from the printed numbers entirely --
+    // a specialized long sword printed +0/+0 where the app correctly shows
+    // +1/+2. Melee gains hit and damage; bows and crossbows gain a point-blank
+    // range category instead, which is not a flat modifier and so adds nothing
+    // here. getWeaponSpecialization already gates on the optional rule and on
+    // single-class fighters.
+    const wspec = (typeof getWeaponSpecialization === 'function')
+      ? getWeaponSpecialization(root, node) : null;
+    const specBonus = (wspec && wspec.specialized &&
+                       typeof getSpecialistCombatBonuses === 'function')
+      ? getSpecialistCombatBonuses(wspec.wtype, wspec.category, wspec.group)
+      : { hit: 0, damage: 0 };
+
+    const hitTotal = (adj.toHit || 0) + hitBase + (prof.penalty || 0) + (specBonus.hit || 0);
+    const dmgTotal = (adj.damage || 0) + dmgBase + (specBonus.damage || 0);
 
     // A number with no visible cause is worse than no number. The tag is what
     // makes the reduced to-hit explicable at the table, and what tells a player
     // which line to scratch out when the DM grants proficiency mid-session.
+    // Specialized REPLACES proficient, since proficiency is its prerequisite.
     const profTag = prof.status === 'none' ? ' (no prof)'
       : prof.status === 'related' ? ' (related)'
+      : (wspec && wspec.specialized) ? ' (spec)'
       : '';
 
     // Per-weapon values win over the character-level fallback and the book.
@@ -3323,11 +3338,22 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
                         cell('Slots', 6, { bold: true, alignment: 'center', color: palette.ink })
                       ],
                       ...(hasContent(weaponProfRows, 'weaponProfs')
-                        ? weaponProfRows.map(p => [
-                            cell(p.name),
-                            cell(p.group),
-                            cell(p.slots, 6, { alignment: 'center' })
-                          ])
+                        ? weaponProfRows.map(p => {
+                            // Slots printed RAW, so a specialized weapon showed
+                            // 1 where the app shows 2 and the rows did not sum
+                            // to the heading. Specialization was also invisible
+                            // on paper -- the one thing a player most needs to
+                            // see, since it changes his to-hit and damage.
+                            const spec = !!p.specialized;
+                            const eff  = (parseInt(p.slots, 10) || 1) +
+                              (spec && typeof getSpecializationCost === 'function'
+                                ? getSpecializationCost(p.group) : 0);
+                            return [
+                              cell(p.name + (spec ? ' \u2605' : '')),
+                              cell(p.group),
+                              cell(String(eff), 6, { alignment: 'center' })
+                            ];
+                          })
                         : [[cell('None', 6, { italics: true }), cell(''), cell('')]]),
                       ...blankRows('weaponProfs', 3)
                     ]
