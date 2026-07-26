@@ -8540,16 +8540,22 @@ function addRollToHistory(root, result) {
   const rollsDisplay = result.rolls ? result.rolls.join(', ') : result.total;
   const modDisplay = result.modifier ? ` ${result.modifier >= 0 ? '+' : ''}${result.modifier}` : '';
   
+  // Detail was previously hover-only via entry.title, which does not fire on
+  // touch at all -- so on a phone the STR/DEX breakdown, the WIS save
+  // adjustment and every proficiency result were simply unreachable. A native
+  // <details> is discoverable, works on touch, and stays collapsed so the
+  // history remains scannable. Same pattern as .print-extras in the print modal.
+  const detailBlock = result.modifierInfo ? `
+    <details style="margin-top:4px;">
+      <summary style="cursor:pointer;color:var(--muted);font-size:11px;list-style:none;">details</summary>
+      <div style="white-space:pre-wrap;color:var(--text);font-size:11px;margin-top:4px;padding-left:4px;border-left:2px solid var(--border);">${escapeHtml(result.modifierInfo)}</div>
+    </details>` : '';
+
   entry.innerHTML = `
     <div style="color:var(--accent-light);font-weight:600;">${result.formula}: ${result.total}</div>
     <div style="color:var(--muted);font-size:11px;">Rolls: [${rollsDisplay}]${modDisplay} - ${timestamp}</div>
+    ${detailBlock}
   `;
-  
-  // Add tooltip if modifier info exists
-  if (result.modifierInfo) {
-    entry.title = result.modifierInfo;
-    entry.style.cursor = 'help';
-  }
   
   // Add to top of history
   historyEl.insertBefore(entry, historyEl.firstChild);
