@@ -1065,6 +1065,38 @@ const NWP_BONUS_SLOT_EFFECTS = {
 // it therefore falls under the general rule and each extra slot gives +1 to the
 // check. A DM may well allow another mount type by analogy -- the book doesn't.
 
+// === Situational proficiency notes (PHB Ch.5) ===
+// Bonuses that depend on CIRCUMSTANCE, and are therefore deliberately NOT folded
+// into getNWPCheckTarget -- baking them into the printed target would overstate
+// the character every time the circumstance does not apply. They surface as a
+// disclosure on the proficiency card instead, so the player can see them
+// without a number silently moving.
+//
+// ONLY CROP-VERIFIED ENTRIES BELONG HERE. Astrology's +1 to Navigation,
+// Artistic Ability's +1 to music and art appraisal, and the specialist's +3 to
+// Spellcraft are all still OCR-only and are deliberately absent until checked
+// against the printed page.
+const NWP_SITUATIONAL_NOTES = {
+  "animal lore": [
+    "+2 to Set Snares when the snare is meant to catch game \u2014 no benefit against monsters or intelligent beings."
+  ],
+  "set snares": [
+    "+2 with Animal Lore, when catching game only.",
+    "A successful check does not mean anything is caught \u2014 only that the snare works if triggered. The DM decides whether it is.",
+    "Man-traps are thieves only."
+  ],
+  "healing": [
+    "With Herbalism, recovery under complete rest rises from 2 to 3 hit points per day.",
+    "With Herbalism, +2 to checks for treating disease.",
+    "Swallowed or touched poisons need both Healing and Herbalism \u2014 healing to diagnose, herbalism to prepare a purgative."
+  ],
+  "herbalism": [
+    "With Healing, recovery under complete rest rises from 2 to 3 hit points per day.",
+    "With Healing, +2 to checks for treating disease.",
+    "Swallowed or touched poisons need both proficiencies together."
+  ]
+};
+
 // === Proficiency Abilities registry (PHB Ch.5) ===
 // Proficiencies whose rules need working out at the table rather than a single
 // target number. Each entry gets a tab in the Proficiency Abilities section.
