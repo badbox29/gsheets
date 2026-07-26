@@ -882,7 +882,7 @@ const SHEET_HTML = `
           </div>
           <div class="prof-ability-coop-row" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;font-size:11px;">
             <label style="display:inline-flex;align-items:center;gap:6px;margin:0;color:var(--text);cursor:pointer;">
-              <input type="checkbox" class="prof-ability-coop" style="width:auto;flex-shrink:0;">
+              <input type="checkbox" class="prof-ability-coop ephemeral" style="width:auto;flex-shrink:0;">
               Working with another proficient character
             </label>
             <span style="color:var(--muted);">
