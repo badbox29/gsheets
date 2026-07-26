@@ -53,7 +53,10 @@ const SHEET_HTML = `
             </div>
           </div>
           <div class="row" style="margin-top:8px">
-            <div class="col"><label>Alignment</label><input data-field="alignment" type="text"></div>
+            <div class="col">
+              <label>Alignment</label>
+              <select data-field="alignment" title="PHB Chapter 4. Alignment pairs an ethos - lawful, neutral or chaotic - with a moral outlook - good, neutral or evil. Some classes restrict the choice: a paladin must be lawful good, a druid true neutral, a bard partially neutral, and a thief may be anything except lawful good."></select>
+            </div>
             <div class="col">
               <label>XP <span class="xp-note" style="font-size:10px;color:var(--muted);font-weight:normal;"></span></label>
               <input data-field="xp" type="number">
