@@ -665,7 +665,7 @@ const SHEET_HTML = `
               <details class="disclosure info" style="font-size:11px;flex-shrink:0;">
                 <summary>what about secondary skills?</summary>
                 <div class="info-body">
-                  <strong style="color:var(--text);">This tool uses nonweapon proficiencies.</strong><br>
+                  <strong>This tool uses nonweapon proficiencies.</strong><br>
                   PHB Chapter 5 offers two alternative systems: nonweapon proficiencies,
                   and the Secondary Skills table. The book is explicit that they are
                   alternatives &mdash; secondary skills &ldquo;should not be used in
