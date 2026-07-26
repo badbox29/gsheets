@@ -1732,6 +1732,10 @@ const SHEET_HTML = `
                   <span style="font-weight:600;font-size:12px;">Ability Check (d20)</span>
                   <span style="font-size:10px;opacity:0.6;">Roll under ability score</span>
                 </button>
+                <button class="game-roll" data-roll="proficiency-check" style="padding:6px 10px;text-align:left;display:flex;flex-direction:column;">
+                  <span style="font-weight:600;font-size:12px;">Proficiency Check (d20)</span>
+                  <span style="font-size:10px;opacity:0.6;">Checks every proficiency at once</span>
+                </button>
                 <button class="game-roll" data-roll="reaction" style="padding:6px 10px;text-align:left;display:flex;flex-direction:column;">
                   <span style="font-weight:600;font-size:12px;">Reaction (2d10)</span>
                   <span style="font-size:10px;opacity:0.6;">2-7 neg, 8-14 neutral, 15+ pos</span>
