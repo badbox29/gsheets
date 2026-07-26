@@ -3918,6 +3918,14 @@ function renderProficiencySlots(root) {
     nwpLabel += ` (${budget.nwpBase} class + ${budget.intBonus} INT`;
     nwpLabel += budget.nwpAdj ? `, ${budget.nwpAdj > 0 ? '+' : ''}${budget.nwpAdj} manual)` : ')';
   }
+  // Spend that ISN'T visible in the proficiency list below. Languages are the
+  // big one -- they draw on the same pool, so "4 / 7 used" over an empty list
+  // reads as a contradiction with only a hover tooltip to resolve it, and on a
+  // phone there is no hover at all.
+  const spendParts = [];
+  if (langSpent > 0)      spendParts.push(`${langSpent} on languages`);
+  if (bonusSlotTotal > 0) spendParts.push(`${bonusSlotTotal} on extra slots`);
+  if (spendParts.length)  nwpLabel += ` \u00B7 ${spendParts.join(', ')}`;
   nwpTextEl.textContent = nwpLabel;
   nwpTextEl.style.color = nwpOver ? overColor : okColor;
 
