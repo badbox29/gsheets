@@ -929,7 +929,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // Both totals summed RAW slots only, so the printed sheet disagreed with the
   // app's counter: weapon specialization was free, and the Table 38 crossover
   // surcharge was ignored. A thief with Mountaineering printed 7 of 7 where the
-  // app correctly said 8 of 7.
+  // app correctly said 8 of 7..
   const wpSpent = weaponProfRows.reduce((n, p) => {
     let c = parseInt(p.slots, 10) || 0;
     if (p.specialized && typeof getSpecializationCost === 'function') {
