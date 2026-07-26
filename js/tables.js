@@ -1029,6 +1029,22 @@ function getNWPCheckAdjustments(root, profName) {
   return out;
 }
 
+// The general rule is that each extra proficiency slot spent on a nonweapon
+// proficiency buys +1 to its checks. These eight are the exceptions the PHB
+// spells out in the proficiency descriptions -- their extra slots buy something
+// the check target cannot express. The slots are still spent and still charged;
+// they simply do not move the number, so the card shows this text instead.
+const NWP_BONUS_SLOT_EFFECTS = {
+  "mountaineering":     "+10% to climb chances per extra slot",
+  "tightrope walking":  "reduces the width penalties by 1 per extra slot",
+  "musical instrument": "one additional instrument per extra slot",
+  "animal training":    "one additional creature type per extra slot",
+  "riding, airborne":   "one additional mount type per extra slot",
+  "riding, land-based": "one additional mount type per extra slot",
+  "survival":           "one additional terrain type per extra slot",
+  "religion":           "a wider region, or no check needed for one faith"
+};
+
 // Returns everything the UI needs to print "Wis 14 -1 = roll 13 or less".
 // `nwp` accepts either a stored card object (name / abilityCheck / bonusSlots)
 // or a raw core_nwp.json record.
@@ -1053,9 +1069,13 @@ function getNWPCheckTarget(root, nwp) {
 
   // PHB: "For every additional proficiency slot a character spends on a
   // nonweapon proficiency, he gains a +1 bonus to those proficiency checks."
-  // The field does not exist yet, so this reads 0 until it is built.
+  // EXCEPT for the eight in NWP_BONUS_SLOT_EFFECTS, whose extra slots buy
+  // something else entirely. For those the slots are still SPENT -- and still
+  // charged against the budget by renderProficiencySlots -- but they must not
+  // move the check target, so nothing is pushed here.
   const bonusSlots = Math.max(0, parseInt(nwp && nwp.bonusSlots, 10) || 0);
-  if (bonusSlots > 0) {
+  const altEffect  = NWP_BONUS_SLOT_EFFECTS[(name || "").trim().toLowerCase()] || null;
+  if (bonusSlots > 0 && !altEffect) {
     adjustments.push({
       label: bonusSlots + " extra slot" + (bonusSlots > 1 ? "s" : ""),
       mod: bonusSlots
@@ -1074,6 +1094,9 @@ function getNWPCheckTarget(root, nwp) {
     modifier: parsed.modifier,
     adjustments,
     target,
+    bonusSlots,
+    // Non-null when extra slots buy something other than +1 to the check.
+    altEffect,
     naturalFail: NWP_NATURAL_FAIL,
     // A 20 always fails, so a target at or above 20 is not truly automatic.
     alwaysFailsOn20: target >= NWP_NATURAL_FAIL,
