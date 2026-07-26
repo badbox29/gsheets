@@ -4471,6 +4471,13 @@ function renderNWProficiencies(root) {
             ${effectNote}
           </div>` : ''}
           ${nwp.notes ? `<div style="font-size:11px;color:var(--muted);margin-top:4px;font-style:italic;">${nwp.notes}</div>` : ''}
+          ${situational.length ? `
+          <details class="disclosure" style="font-size:11px;margin-top:4px;">
+            <summary>situational</summary>
+            <ul style="margin:4px 0 0 16px;padding:0;color:var(--muted);">
+              ${situational.map(s => `<li style="margin-bottom:2px;">${s}</li>`).join('')}
+            </ul>
+          </details>` : ''}
         </div>
         <button class="delete-nwp" data-index="${index}" style="padding:4px 8px;font-size:11px;margin-left:8px;">Delete</button>
       </div>
