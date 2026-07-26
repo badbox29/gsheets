@@ -8551,9 +8551,11 @@ function addRollToHistory(root, result) {
   const esc = s => String(s == null ? '' : s)
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+  // Summary carries NO inline styles -- inline beats the stylesheet, and the
+  // .roll-history details rules in style.css do the work.
   const detailBlock = result.modifierInfo ? `
     <details style="margin-top:4px;">
-      <summary style="cursor:pointer;color:var(--muted);font-size:11px;list-style:none;">details</summary>
+      <summary>details</summary>
       <div style="white-space:pre-wrap;color:var(--text);font-size:11px;margin-top:4px;padding-left:4px;border-left:2px solid var(--border);">${esc(result.modifierInfo)}</div>
     </details>` : '';
 
