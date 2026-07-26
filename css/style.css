@@ -844,3 +844,49 @@
     .disclosure[open] > summary::before { transform: rotate(90deg); }
     .roll-history details > summary:hover,
     .disclosure > summary:hover { text-decoration: underline; }
+    /* ===== Info variant of the disclosure =====
+	   A circled "i" instead of a chevron, and the panel FLOATS rather than
+	   pushing the layout down -- so it can sit inline beside a heading. The
+	   circle is drawn in CSS rather than using a glyph like U+24D8, which not
+	   every font carries. Click-to-toggle, so unlike a title= tooltip it works
+	   on touch. */
+	.disclosure.info {
+	  position: relative;
+	  display: inline-block;
+	}
+
+	.disclosure.info > summary::before {
+	  content: "i";
+	  font-style: italic;
+	  font-weight: 700;
+	  font-size: 10px;
+	  line-height: 13px;
+	  width: 14px;
+	  height: 14px;
+	  text-align: center;
+	  border: 1px solid currentColor;
+	  border-radius: 50%;
+	  transform: none;
+	}
+
+	/* Cancel the chevron rotation inherited from the base disclosure rule. */
+	.disclosure.info[open] > summary::before {
+	  transform: none;
+	}
+
+	.disclosure.info > .info-body {
+	  position: absolute;
+	  z-index: 30;
+	  top: 100%;
+	  left: 0;
+	  width: 320px;
+	  max-width: 78vw;
+	  margin-top: 6px;
+	  padding: 10px;
+	  background: var(--panel);
+	  border: 1px solid var(--border);
+	  border-radius: 6px;
+	  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+	  line-height: 1.5;
+	  font-weight: 400;
+	}
