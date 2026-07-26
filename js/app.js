@@ -270,6 +270,27 @@ function resolveSheetRoot(fromEl) {
 
 
 // Toggle unsaved state and manage sidebar + autosave
+// Close any open info disclosure when the click lands outside it. A <details>
+// normally only toggles from its own summary, which is fine for an inline
+// panel but wrong for one that floats over the page like a popover.
+// ONE document-level listener, guarded so opening several character tabs
+// cannot stack duplicates.
+if (!window._infoDisclosureBound) {
+  window._infoDisclosureBound = true;
+  document.addEventListener('click', (e) => {
+    document.querySelectorAll('details.disclosure.info[open]').forEach(d => {
+      // Clicking the summary of an already-open panel still lands INSIDE it,
+      // so the browser's own toggle handles closing and this is a no-op --
+      // otherwise the two would fight and it would never close.
+      if (!d.contains(e.target)) d.open = false;
+    });
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    document.querySelectorAll('details.disclosure.info[open]').forEach(d => { d.open = false; });
+  });
+}
+
 function markUnsaved(tab, unsaved, root){
   // If a non-tab element was passed (e.g., a button inside the sheet), try to resolve the tab from it
   if (tab && typeof tab.closest === 'function' && !tab.classList?.contains('tab')) {
