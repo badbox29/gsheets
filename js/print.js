@@ -926,8 +926,29 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     ? getCharacterProficiencySlots(root)
     : null;
 
-  const wpSpent = weaponProfRows.reduce((n, p) => n + (parseInt(p.slots, 10) || 0), 0);
-  const nwpProfSpent = nwpRows.reduce((n, p) => n + (parseInt(p.slots, 10) || 0), 0);
+  // Both totals summed RAW slots only, so the printed sheet disagreed with the
+  // app's counter: weapon specialization was free, and the Table 38 crossover
+  // surcharge was ignored. A thief with Mountaineering printed 7 of 7 where the
+  // app correctly said 8 of 7.
+  const wpSpent = weaponProfRows.reduce((n, p) => {
+    let c = parseInt(p.slots, 10) || 0;
+    if (p.specialized && typeof getSpecializationCost === 'function') {
+      c += getSpecializationCost(p.group);
+    }
+    return n + c;
+  }, 0);
+
+  const nwpAllowedGroups = (typeof getAllowedNWPGroups === 'function')
+    ? getAllowedNWPGroups(root)
+    : null;
+
+  const nwpProfSpent = nwpRows.reduce((n, p) => {
+    const base = (typeof getNWPSlotCost === 'function')
+      ? getNWPSlotCost(p, nwpAllowedGroups)
+      : (parseInt(p.slots, 10) || 0);
+    return n + base + Math.max(0, parseInt(p.bonusSlots, 10) || 0);
+  }, 0);
+
   const langSpent = (typeof getLanguageSlotsSpent === 'function')
     ? getLanguageSlotsSpent(root)
     : 0;
@@ -3339,12 +3360,30 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
                         cell('Check', 6, { bold: true, color: palette.ink })
                       ],
                       ...(hasContent(nwpRows, 'nwps')
-                        ? nwpRows.map(p => [
-                            cell(p.name),
-                            cell(p.category),
-                            cell(p.slots, 6, { alignment: 'center' }),
-                            cell(p.abilityCheck)
-                          ])
+                        ? nwpRows.map(p => {
+                            // Print the TARGET NUMBER, not the raw "Wis / -1"
+                            // string -- a player working from paper needs the
+                            // number he rolls against, and the -6 non-ranger
+                            // tracking penalty is invisible in the raw string.
+                            const c = (typeof getNWPCheckTarget === 'function')
+                              ? getNWPCheckTarget(root, p) : null;
+                            const checkText = !c ? (p.abilityCheck || '')
+                              : !c.hasCheck   ? '\u2014'
+                              : c.impossible  ? `${c.abilityLabel} \u2014 none`
+                              : `${c.abilityLabel} ${c.target} or less`;
+                            // Effective cost, matching the app card: base +
+                            // Table 38 surcharge + any extra slots spent.
+                            const extra = Math.max(0, parseInt(p.bonusSlots, 10) || 0);
+                            const eff = (typeof getNWPSlotCost === 'function')
+                              ? getNWPSlotCost(p, nwpAllowedGroups) + extra
+                              : (parseInt(p.slots, 10) || 1) + extra;
+                            return [
+                              cell(p.name),
+                              cell(p.category),
+                              cell(String(eff), 6, { alignment: 'center' }),
+                              cell(checkText)
+                            ];
+                          })
                         : [[cell('None', 6, { italics: true }), cell(''), cell(''), cell('')]]),
                       ...blankRows('nwps', 4)
                     ]
