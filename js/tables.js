@@ -1094,6 +1094,24 @@ const NWP_SITUATIONAL_NOTES = {
     "With Healing, recovery under complete rest rises from 2 to 3 hit points per day.",
     "With Healing, +2 to checks for treating disease.",
     "Swallowed or touched poisons need both proficiencies together."
+  ],
+  "astrology": [
+    "+1 to all Navigation checks, provided the stars can be seen.",
+    "Forecasts reach only 30 days ahead and are vague at best \u2014 a successful check foresees a general event, not a guaranteed outcome.",
+    "A failed check yields no information; a natural 20 makes the prediction wildly inaccurate."
+  ],
+  "navigation": [
+    "+1 with Astrology, provided the stars can be seen."
+  ],
+  "artistic ability": [
+    "+1 to any check requiring artistic skill \u2014 music or dance \u2014 and to appraising objects of art.",
+    "The character\u2019s own art form is chosen when the proficiency is taken.",
+    "On a natural 1 when creating a work, it is truly lasting; on a failure it is aesthetically unpleasing or just plain bad."
+  ],
+  "spellcraft": [
+    "Wizard specialists gain +3 when identifying magic of their own school.",
+    "The caster must be observed until the very instant of casting, so this gives no advantage against combat spells.",
+    "A separate chance, at half the normal check, recognises magical or magically endowed constructs for what they are."
   ]
 };
 
