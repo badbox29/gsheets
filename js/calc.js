@@ -4453,6 +4453,13 @@ function renderNWProficiencies(root) {
       ? parseNWPCheck(nwp.abilityCheck) : null;
     const canImprove  = !!altEffect || !parsedCheck || parsedCheck.hasCheck;
 
+    // Circumstance-dependent bonuses. Kept OUT of the check target on purpose
+    // -- see NWP_SITUATIONAL_NOTES in tables.js -- so they are shown rather
+    // than silently added. Text is authored, not user input, so no escaping.
+    const situational = (typeof NWP_SITUATIONAL_NOTES === 'object' && NWP_SITUATIONAL_NOTES)
+      ? (NWP_SITUATIONAL_NOTES[(nwp.name || '').trim().toLowerCase()] || [])
+      : [];
+
     nwpDiv.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px;">
         <div style="flex:1;">
