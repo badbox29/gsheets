@@ -515,6 +515,13 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // Rows whose name is blank are placeholder rows in the UI, not real entries.
   const named = arr => (Array.isArray(arr) ? arr.filter(r => r && String(r.name || '').trim()) : []);
 
+  // Alignment is stored as a key ('lg'), so the PDF has to resolve it for
+  // print. Anything unrecognised -- a legacy free-text value, or a DM's own
+  // wording on a follower -- comes back from getAlignmentLabel unchanged and
+  // prints as stored rather than being dropped.
+  const alignLabel = v => (typeof getAlignmentLabel === 'function')
+    ? getAlignmentLabel(v) : (v == null ? '' : String(v));
+
   const cell = (t, size, opt) =>
     Object.assign({ text: (t === null || t === undefined) ? '' : String(t), fontSize: size || 6 }, opt || {});
 
@@ -634,7 +641,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   const clazz = val(root, 'clazz') || '';
   const level = val(root, 'level') || '';
   const kit = val(root, 'kit') || '';
-  const alignment = val(root, 'alignment') || '';
+  const alignment = alignLabel(val(root, 'alignment'));
   const xp = val(root, 'xp') || '';
 
   // The class field is free text, so it can hold an internal flag such as
@@ -1860,7 +1867,8 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     // print side by side. Using the same word for both read as a duplicated
     // label on Mr. Fluffles.
     push('Scores', abilities);
-    (extraFields || []).forEach(([label, key]) => push(label, rec[key]));
+    (extraFields || []).forEach(([label, key]) => push(label,
+      key === 'alignment' ? alignLabel(rec[key]) : rec[key]));
 
     return parts;
   };
