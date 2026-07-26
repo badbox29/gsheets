@@ -5251,7 +5251,14 @@ function bindSheet(root, tab){
   root.addEventListener('change', onDruidRoleChange);
 
   // Mark unsaved on any input/textarea change
-  qsa(root, 'input,textarea').forEach(inp=>{
+  // .ephemeral marks a control that describes a MOMENT, not the character --
+  // the Proficiency Abilities cooperation toggle, for instance. These are never
+  // collected by collectSheet, so marking the sheet dirty for one would trigger
+  // an autosave that writes nothing new AND restamps _updatedAt. Since KV merge
+  // resolves conflicts by "later stamp wins", that would let a device win a
+  // merge purely because someone ticked a box -- exactly the stale-autosave
+  // clobber the sync rebuild was meant to prevent.
+  qsa(root, 'input:not(.ephemeral),textarea:not(.ephemeral)').forEach(inp=>{
     const ev = inp.type === 'file' ? 'change' : 'input';
     inp.addEventListener(ev, ()=>markUnsaved(tab, true, root));
   });
