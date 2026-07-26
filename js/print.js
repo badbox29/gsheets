@@ -911,9 +911,21 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     const wRange   = (node.querySelector('.weapon-range')?.value || '').trim();
     const wNotes   = (node.querySelector('.notes')?.value || '').trim();
 
+    // PHB Table 35: a specialist's rate of attack rises with level, and differs
+    // per weapon column -- light crossbow 1 / 3-2 / 2 across levels 1-6, 7-12,
+    // 13+, thrown dagger 3 / 4 / 5, melee 3-2 / 2 / 5-2. Bows are deliberately
+    // absent from the table: bow specialists gain no extra attacks. Printing
+    // only the character-level figure gave a crossbow specialist his base rate
+    // for life. The per-weapon dropdown still wins when set, since it is an
+    // explicit override.
+    const specRate = (wspec && wspec.specialized &&
+                      typeof getSpecialistAttackRate === 'function')
+      ? getSpecialistAttackRate(wspec.level, wspec.wtype, wspec.category, wspec.group)
+      : null;
+
     weapons.push({
       name: name,
-      attacks: wAttacks || attacksPerRound || '\u2014',
+      attacks: wAttacks || specRate || attacksPerRound || '\u2014',
       size: wSize || ((ref && ref['Size']) ? ref['Size'] : '\u2014'),
       type: (node.querySelector('.damage-type')?.value || '').trim() || '\u2014',
       speed: (effSpeed === null) ? '\u2014' : String(effSpeed),
