@@ -3845,6 +3845,13 @@ function addWeaponProficiency(root, weapon) {
 
 // Render the weapon + nonweapon proficiency slot counters (PHB Table 34).
 function renderProficiencySlots(root) {
+  // FIRST statement deliberately. This function has two early returns below --
+  // missing elements, and an unrecognized class whose budget cannot be computed
+  // -- and the Proficiency Abilities section must still render for a homebrew
+  // class. Threading the call through both branches would be fragile, so it
+  // leads instead. Same reason renderWisGateNote leads renderSpellSlots.
+  if (typeof renderProficiencyAbilities === 'function') renderProficiencyAbilities(root);
+
   const wpTextEl  = root.querySelector('.wp-slot-text');
   const nwpTextEl = root.querySelector('.nwp-slot-text');
   const wpBoxEl   = root.querySelector('.wp-slot-counter');
