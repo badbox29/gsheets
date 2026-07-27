@@ -1710,10 +1710,7 @@ function makeArmorNode(data={}, onChange){
           'Enchanted?' +
         '</label>' +
         '<div class="magic-fields"' + (armorIsMagical ? '' : ' style="display:none;"') + '>' +
-          '<div>' +
-            '<div style="font-size:11px;color:var(--muted);text-align:center;">AC Bonus</div>' +
-            '<input class="ac-bonus" type="number" placeholder="" value="'+(data.acBonus||'')+'" style="text-align:center;">' +
-          '</div>' +
+          '<label>AC Bonus<input class="ac-bonus" type="number" value="'+(data.acBonus||'')+'"></label>' +
         '</div>' +
       '</div>' +
       '<div class="armor-type-note" style="display:none;font-size:11px;line-height:1.4;padding:6px 8px;background:var(--glass);border-radius:4px;"></div>' +
@@ -1735,10 +1732,13 @@ function makeArmorNode(data={}, onChange){
   // side ignoring the value, not the value being gone.
   const armorMagicChk    = el.querySelector('.is-magical');
   const armorMagicFields = el.querySelector('.magic-fields');
-  if (armorMagicChk && armorMagicFields) {
+  const armorMagicDot = el.querySelector('.magic-dot');
+  if (armorMagicChk) {
     armorMagicChk.addEventListener('change', () => {
-      // 'flex', not 'block' -- .magic-fields lays its inputs out with flexbox.
-      armorMagicFields.style.display = armorMagicChk.checked ? 'flex' : 'none';
+      const on = armorMagicChk.checked;
+      // 'inline-flex' so the revealed fields stay on the same line as the label.
+      if (armorMagicFields) armorMagicFields.style.display = on ? 'inline-flex' : 'none';
+      if (armorMagicDot)    armorMagicDot.style.display    = on ? 'block' : 'none';
       onChange && onChange();
     });
   }
@@ -2666,6 +2666,7 @@ function makeWeaponNode(data={}, onChange){
     '</div>' +
    '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
       '<input type="checkbox" class="equipped" '+(data.equipped?'checked':'')+' style="width:60px;margin:auto;">' +
+      '<span class="magic-dot" title="Enchanted"' + (armorIsMagical ? '' : ' style="display:none;"') + '></span>' +
       '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1">' +
       '<input class="notes" placeholder="" value="'+(data.notes||'')+'" style="flex:2">' +
       '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
