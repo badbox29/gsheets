@@ -2742,17 +2742,48 @@ function makeWeaponNode(data={}, onChange){
   el.className = 'item';
   el.style.flexDirection = 'column';
   el.style.alignItems = 'stretch';
+  // MIGRATION -- NOT OPTIONAL. Records written before the Enchanted checkbox
+  // existed carry bonuses but no isMagical flag. Any non-zero value among the
+  // three counts as enchanted, or every magic weapon on every saved character
+  // would load unticked with its numbers hidden. Once the flag exists it wins,
+  // so unticking a +1 weapon and saving is respected on the next load.
+  const weaponIsMagical = (data.isMagical !== undefined)
+    ? !!data.isMagical
+    : ((parseFloat(data.magicBonus) || 0) !== 0 ||
+       (parseFloat(data.hitAdj)     || 0) !== 0 ||
+       (parseFloat(data.dmgAdj)     || 0) !== 0);
+
+  // Badge text at build time. The live version is weaponBadgeText() in the
+  // wiring below; this one only has to cover the initial render.
+  // An ordinary +2 reads "(+2)". A weapon whose effects diverge from its
+  // enchantment -- Swordchucks +5 granting only +1 to hit -- reads "(+5: +1/+0)"
+  // so the collapsed card cannot mislead. Enchanted with no plus at all falls
+  // back to the dot, since "(+0)" reads as worthless.
+  const weaponInitialBadge = (() => {
+    const num = s => { const v = parseFloat(s); return isNaN(v) ? null : v; };
+    const m  = num(data.magicBonus) || 0;
+    const h  = num(data.hitAdj), d = num(data.dmgAdj);
+    const eh = (h === null) ? m : h, ed = (d === null) ? m : d;
+    if (m === 0 && eh === 0 && ed === 0) return '';
+    if (eh === m && ed === m) return '(' + magicSign(m) + ')';
+    return '(' + magicSign(m) + ': ' + magicSign(eh) + '/' + magicSign(ed) + ')';
+  })();
+
   el.innerHTML =
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
       '<div style="width:60px;text-align:center;">Equipped</div>' +
       '<div style="flex:1;">Weapon</div>' +
-      '<div style="flex:2;">Notes</div>' +
       '<div style="width:148px;"></div>' + // Space for Details + Remove buttons
     '</div>' +
    '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
       '<input type="checkbox" class="equipped" '+(data.equipped?'checked':'')+' style="width:60px;margin:auto;">' +
-      '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1">' +
-      '<input class="notes" placeholder="" value="'+(data.notes||'')+'" style="flex:2">' +
+      // Name and badge share one flex:1 cell so a wide badge squeezes the input
+      // instead of shifting the buttons. The input's width is driven from JS by
+      // sizeWeaponName() -- an <input> cannot shrink-to-fit in CSS.
+      '<div style="display:flex;align-items:center;gap:4px;flex:1;min-width:0;">' +
+        '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
+        magicBadgeHtml(weaponIsMagical, weaponInitialBadge) +
+      '</div>' +
       '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
       '<button class="rm">Remove</button>' +
     '</div>' +
@@ -2764,7 +2795,6 @@ function makeWeaponNode(data={}, onChange){
       '<div style="width:60px;text-align:center;">Speed</div>' +
       '<div style="width:90px;text-align:center;">Dmg (S-M)</div>' +
       '<div style="width:90px;text-align:center;">Dmg (L)</div>' +
-      '<div style="width:60px;text-align:center;">Magic</div>' +
       '<div style="width:80px;text-align:center;">Weight (lbs)</div>' +
       '<div style="flex:1;text-align:center;">Damage Type</div>' +
     '</div>' +
@@ -2772,32 +2802,53 @@ function makeWeaponNode(data={}, onChange){
       '<input class="speed" type="number" placeholder="" value="'+(data.speed||'')+'" style="width:60px;text-align:center;">' +
       '<input class="damage-sm" placeholder="" value="'+(data.damageSM||'')+'" style="width:90px;text-align:center;">' +
       '<input class="damage-l" placeholder="" value="'+(data.damageL||'')+'" style="width:90px;text-align:center;">' +
-      '<input class="magic-bonus" type="number" placeholder="0" value="'+(data.magicBonus||'')+'" style="width:60px;text-align:center;">' +
       '<input class="weight" type="number" step="0.1" placeholder="" value="'+(data.weight||'')+'" style="width:80px;text-align:center;">' +
       '<input class="damage-type" placeholder="B, P, S" value="'+(data.damageType||'')+'" style="flex:1" title="' +
         'Bludgeoning, Piercing or Slashing (PHB Table 44).&#10;' +
         'Some weapons carry two, e.g. P/S for a halberd.&#10;' +
         'Filled from the weapon list when you pick a Type, if left blank.">' +
     '</div>' +
+    // Magic, Hit Adj and Dmg Adj were spread across two separate rows. Grouped
+    // here they read as one idea and the card gets SHORTER, not taller.
+    // Magic is the ENCHANTMENT LEVEL -- what the weapon can strike, and its
+    // speed-factor reduction. The two adjustments are its EFFECTS, which can
+    // diverge from it. Keeping them adjacent is what makes that legible.
+    '<div class="magic-group">' +
+      '<label class="magic-toggle">' +
+        '<input type="checkbox" class="is-magical"' + (weaponIsMagical ? ' checked' : '') + '>' +
+        'Enchanted?' +
+      '</label>' +
+      '<div class="magic-fields"' + (weaponIsMagical ? '' : ' style="display:none;"') + '>' +
+        '<label title="' +
+          'Enchantment level -- 5 for a +5 weapon.&#10;' +
+          'This is what lets the weapon harm a creature injured only by magical&#10;' +
+          '  weapons, and it lowers the speed factor by 1 per plus.&#10;' +
+          'Hit and damage fall back to this when left blank.">Magic' +
+          '<input class="magic-bonus" type="number" placeholder="0" value="'+(data.magicBonus||'')+'">' +
+        '</label>' +
+        '<label title="' +
+          'To-hit bonus granted by this weapon.&#10;' +
+          'Leave blank to use the Magic value -- correct for an ordinary +N weapon.&#10;' +
+          'Set it when the enchantment is not uniform: a +5 weapon that only grants&#10;' +
+          '  +1 to hit takes Magic 5 and Hit Adj 1.&#10;' +
+          'Strength and any non-proficiency penalty are added on top of this.">Hit Adj' +
+          '<input class="weapon-hit-adj" type="number" value="'+(data.hitAdj!==undefined&&data.hitAdj!==null?data.hitAdj:'')+'">' +
+        '</label>' +
+        '<label title="' +
+          'Damage bonus granted by this weapon.&#10;' +
+          'Leave blank to use the Magic value.&#10;' +
+          'Set to 0 for a weapon that helps you hit but not hurt.&#10;' +
+          'Non-proficiency never reduces damage (PHB Table 34).">Dmg Adj' +
+          '<input class="weapon-dmg-adj" type="number" value="'+(data.dmgAdj!==undefined&&data.dmgAdj!==null?data.dmgAdj:'')+'">' +
+        '</label>' +
+      '</div>' +
+    '</div>' +
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div style="width:90px;text-align:center;">Hit Adj</div>' +
-      '<div style="width:90px;text-align:center;">Dmg Adj</div>' +
       '<div style="width:100px;text-align:center;">Attacks/Rd</div>' +
       '<div style="width:90px;text-align:center;">Size</div>' +
       '<div style="flex:1;text-align:center;">Range (S/M/L)</div>' +
     '</div>' +
     '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
-      '<input class="weapon-hit-adj" type="number" value="'+(data.hitAdj!==undefined&&data.hitAdj!==null?data.hitAdj:'')+'" style="width:90px;text-align:center;" title="' +
-        'To-hit bonus granted by this weapon.&#10;' +
-        'Leave blank to use the Magic value -- correct for an ordinary +N weapon.&#10;' +
-        'Set it when the enchantment is not uniform: a +5 weapon that only grants&#10;' +
-        '  +1 to hit takes Magic 5 and Hit Adj 1.&#10;' +
-        'Strength and any non-proficiency penalty are added on top of this.">' +
-      '<input class="weapon-dmg-adj" type="number" value="'+(data.dmgAdj!==undefined&&data.dmgAdj!==null?data.dmgAdj:'')+'" style="width:90px;text-align:center;" title="' +
-        'Damage bonus granted by this weapon.&#10;' +
-        'Leave blank to use the Magic value.&#10;' +
-        'Set to 0 for a weapon that helps you hit but not hurt.&#10;' +
-        'Non-proficiency never reduces damage (PHB Table 34).">' +
       '<select class="weapon-attacks" style="width:100px;" title="' +
         'Attacks per round with THIS weapon.&#10;' +
         'Blank uses the character-level Attacks/Round on the Combat tab.&#10;' +
@@ -2871,6 +2922,10 @@ function makeWeaponNode(data={}, onChange){
         weaponProficiencyOptions(data.profStatus) +
         '</select>' +
     '</div>' +
+    // Notes moved down from the identity row -- at flex:2 up there it truncated
+    // mid-word while consuming the width the name and badge needed.
+    '<div style="font-size:11px;color:var(--muted);margin:6px 0 2px;">Notes</div>' +
+    '<input class="notes" placeholder="" value="'+(data.notes||'')+'">' +
   '</div>';
   // Details toggle. Weapons carry four rows of fields now -- eight weapons
   // expanded is an unreadable wall -- so everything but the identity row is
