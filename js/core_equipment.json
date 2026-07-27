@@ -2,74 +2,110 @@
   {
     "Item Name": "Backpack",
     "Category": "Container",
-    "Capacity": "50 lb or 2 cubic feet",
+    "Capacity": "50 lb or 3'x2'x1'",
     "Weight": "2 lb",
     "Cost": "2 gp",
-    "Notes": "Leather or canvas, holds adventuring gear"
+    "Notes": "Leather or canvas, holds adventuring gear",
+    "Source": "PHB"
   },
   {
     "Item Name": "Sack, Small",
     "Category": "Container",
-    "Capacity": "20 lb or 0.5 cubic feet",
-    "Weight": "0.5 lb",
+    "Capacity": "15 lb or 1'x1'x8\"",
+    "Weight": "0.1 lb",
     "Cost": "5 cp",
-    "Notes": "Cloth or burlap sack"
+    "Notes": "Cloth or burlap sack",
+    "Source": "PHB"
   },
   {
     "Item Name": "Sack, Large",
     "Category": "Container",
-    "Capacity": "40 lb or 1 cubic foot",
-    "Weight": "1 lb",
-    "Cost": "1 sp",
-    "Notes": "Large cloth or burlap sack"
+    "Capacity": "30 lb or 2'x2'x1'",
+    "Weight": "0.5 lb",
+    "Cost": "2 sp",
+    "Notes": "Large cloth or burlap sack",
+    "Source": "PHB"
   },
   {
-    "Item Name": "Saddlebags",
+    "Item Name": "Saddlebags, Small",
     "Category": "Container",
-    "Capacity": "50 lb",
+    "Capacity": "20 lb or 1'x1'x6\"",
+    "Weight": "5 lb",
+    "Cost": "3 gp",
+    "Notes": "Paired bags for horse or mule",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Saddlebags, Large",
+    "Category": "Container",
+    "Capacity": "30 lb or 18\"x1'x6\"",
     "Weight": "8 lb",
     "Cost": "4 gp",
-    "Notes": "Paired bags for horse or mule"
+    "Notes": "Paired bags for horse or mule",
+    "Source": "PHB"
   },
   {
     "Item Name": "Chest, Small",
     "Category": "Container",
-    "Capacity": "20 lb",
-    "Weight": "25 lb",
+    "Capacity": "40 lb or 2'x1'x1'",
+    "Weight": "10 lb",
     "Cost": "1 gp",
-    "Notes": "Wooden chest with lock"
+    "Notes": "Wooden chest with lock",
+    "Source": "PHB"
   },
   {
     "Item Name": "Chest, Large",
     "Category": "Container",
-    "Capacity": "50 lb",
-    "Weight": "50 lb",
-    "Cost": "5 gp",
-    "Notes": "Large wooden chest with lock"
+    "Capacity": "100 lb or 3'x2'x2'",
+    "Weight": "25 lb",
+    "Cost": "2 gp",
+    "Notes": "Large wooden chest with lock",
+    "Source": "PHB"
   },
   {
-    "Item Name": "Barrel",
+    "Item Name": "Barrel, Small",
     "Category": "Container",
     "Capacity": "40 gallons",
     "Weight": "30 lb",
     "Cost": "2 gp",
-    "Notes": "Wooden barrel for liquids or goods"
+    "Notes": "Wooden barrel for liquids or goods",
+    "Source": "PHB"
   },
   {
-    "Item Name": "Basket",
+    "Item Name": "Basket, Small",
     "Category": "Container",
-    "Capacity": "20 lb",
+    "Capacity": "10 lb or 1'x1'x1'",
+    "Weight": "0.1 lb",
+    "Cost": "5 cp",
+    "Notes": "Woven basket",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Basket, Large",
+    "Category": "Container",
+    "Capacity": "20 lb or 2'x2'x2'",
     "Weight": "1 lb",
-    "Cost": "5 sp",
-    "Notes": "Woven basket"
+    "Cost": "3 sp",
+    "Notes": "Woven basket",
+    "Source": "PHB"
   },
   {
-    "Item Name": "Belt Pouch",
+    "Item Name": "Belt Pouch, Small",
     "Category": "Container",
-    "Capacity": "3 lb or 1/10 cubic foot",
+    "Capacity": "5 lb or 4\"x6\"x2\"",
     "Weight": "0.5 lb",
+    "Cost": "7 sp",
+    "Notes": "Small leather pouch worn on belt",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Belt Pouch, Large",
+    "Category": "Container",
+    "Capacity": "8 lb or 6\"x8\"x2\"",
+    "Weight": "1 lb",
     "Cost": "1 gp",
-    "Notes": "Small leather pouch worn on belt"
+    "Notes": "Small leather pouch worn on belt",
+    "Source": "PHB"
   },
   {
     "Item Name": "Waterskin",
@@ -77,7 +113,8 @@
     "Capacity": "1 gallon (8 lb)",
     "Weight": "1 lb (empty)",
     "Cost": "8 sp",
-    "Notes": "Leather container for water or wine"
+    "Notes": "Leather container for water or wine",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Wineskin",
@@ -85,7 +122,8 @@
     "Capacity": "1 gallon (8 lb)",
     "Weight": "1 lb (empty)",
     "Cost": "8 sp",
-    "Notes": "Leather container for wine or water"
+    "Notes": "Leather container for wine or water",
+    "Source": "PHB"
   },
   {
     "Item Name": "Flask, Leather",
@@ -93,7 +131,8 @@
     "Capacity": "1 pint",
     "Weight": "0.5 lb (empty)",
     "Cost": "3 cp",
-    "Notes": "Small leather drinking flask"
+    "Notes": "Small leather drinking flask",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Flask, Glass",
@@ -101,7 +140,8 @@
     "Capacity": "1 pint",
     "Weight": "1 lb",
     "Cost": "3 gp",
-    "Notes": "Glass flask, fragile"
+    "Notes": "Glass flask, fragile",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Vial, Glass",
@@ -109,15 +149,17 @@
     "Capacity": "1 ounce",
     "Weight": "0.1 lb",
     "Cost": "1 gp",
-    "Notes": "Small glass vial for potions or holy water"
+    "Notes": "Small glass vial for potions or holy water",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Bottle, Glass",
     "Category": "Container",
     "Capacity": "1 quart",
-    "Weight": "1 lb",
-    "Cost": "2 gp",
-    "Notes": "Glass bottle with cork"
+    "Weight": "0.1 lb",
+    "Cost": "10 gp",
+    "Notes": "Glass bottle with cork",
+    "Source": "PHB"
   },
   {
     "Item Name": "Jug, Clay",
@@ -125,7 +167,8 @@
     "Capacity": "1 gallon",
     "Weight": "8 lb (full)",
     "Cost": "3 cp",
-    "Notes": "Earthenware jug"
+    "Notes": "Earthenware jug",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Candle",
@@ -133,7 +176,8 @@
     "Capacity": "N/A",
     "Weight": "0.1 lb",
     "Cost": "1 cp",
-    "Notes": "Burns 1 hour, 5 ft radius light"
+    "Notes": "Burns 1 hour, 5 ft radius light",
+    "Source": "PHB"
   },
   {
     "Item Name": "Torch",
@@ -141,7 +185,8 @@
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "1 cp",
-    "Notes": "Burns 1 hour, 30 ft radius light, can be used as club"
+    "Notes": "Burns 1 hour, 30 ft radius light, can be used as club",
+    "Source": "PHB"
   },
   {
     "Item Name": "Lamp, Common",
@@ -149,7 +194,8 @@
     "Capacity": "1 pint oil",
     "Weight": "2 lb",
     "Cost": "1 sp",
-    "Notes": "Burns 6 hours per pint, 15 ft radius light"
+    "Notes": "Burns 6 hours per pint, 15 ft radius light",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Lantern, Bullseye",
@@ -157,7 +203,8 @@
     "Capacity": "1 pint oil",
     "Weight": "3 lb",
     "Cost": "12 gp",
-    "Notes": "Directed 60 ft cone, burns 6 hours per pint"
+    "Notes": "Directed 60 ft cone, burns 6 hours per pint",
+    "Source": "PHB"
   },
   {
     "Item Name": "Lantern, Hooded",
@@ -165,31 +212,35 @@
     "Capacity": "1 pint oil",
     "Weight": "2 lb",
     "Cost": "7 gp",
-    "Notes": "30 ft radius, can be shuttered, burns 6 hours per pint"
+    "Notes": "30 ft radius, can be shuttered, burns 6 hours per pint",
+    "Source": "PHB"
   },
   {
     "Item Name": "Oil, Lamp (1 pint)",
     "Category": "Light Source",
     "Capacity": "1 pint",
     "Weight": "1 lb",
-    "Cost": "1 sp",
-    "Notes": "Fuel for lanterns and lamps"
+    "Cost": "6 cp",
+    "Notes": "Fuel for lanterns and lamps",
+    "Source": "PHB"
   },
   {
-    "Item Name": "Oil, Flask (1 pint)",
+    "Item Name": "Oil, Greek Fire (per flask)",
     "Category": "Weapon",
     "Capacity": "1 pint",
-    "Weight": "1 lb",
-    "Cost": "2 sp",
-    "Notes": "Can be lit and thrown as weapon, 1d8 fire damage for 2 rounds"
+    "Weight": "2 lb",
+    "Cost": "10 gp",
+    "Notes": "Highly flammable. 2d6 damage first round, 1d6 second, then burns out",
+    "Source": "PHB"
   },
   {
-    "Item Name": "Tinder Box",
-    "Category": "Light Source",
+    "Item Name": "Flint and Steel",
+    "Category": "Adventuring Gear",
     "Capacity": "N/A",
-    "Weight": "1 lb",
-    "Cost": "8 sp",
-    "Notes": "Flint, steel, and tinder for starting fires"
+    "Weight": "0.1 lb",
+    "Cost": "5 sp",
+    "Notes": "Strike-a-light for starting fires",
+    "Source": "PHB"
   },
   {
     "Item Name": "Rope, Hemp (50 ft)",
@@ -197,7 +248,8 @@
     "Capacity": "N/A",
     "Weight": "20 lb",
     "Cost": "1 gp",
-    "Notes": "Supports 1,600 lb"
+    "Notes": "Supports 1,600 lb",
+    "Source": "PHB"
   },
   {
     "Item Name": "Rope, Silk (50 ft)",
@@ -205,15 +257,26 @@
     "Capacity": "N/A",
     "Weight": "8 lb",
     "Cost": "10 gp",
-    "Notes": "Supports 2,000 lb, lighter and stronger than hemp"
+    "Notes": "Supports 2,000 lb, lighter and stronger than hemp",
+    "Source": "PHB"
   },
   {
-    "Item Name": "Chain (10 ft)",
+    "Item Name": "Chain, Light (per ft)",
     "Category": "Adventuring Gear",
     "Capacity": "N/A",
-    "Weight": "20 lb",
-    "Cost": "30 gp",
-    "Notes": "Strong metal chain"
+    "Weight": "1 lb",
+    "Cost": "3 gp",
+    "Notes": "Priced per foot",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Chain, Heavy (per ft)",
+    "Category": "Adventuring Gear",
+    "Capacity": "N/A",
+    "Weight": "3 lb",
+    "Cost": "4 gp",
+    "Notes": "Priced per foot",
+    "Source": "PHB"
   },
   {
     "Item Name": "Grappling Hook",
@@ -221,7 +284,8 @@
     "Capacity": "N/A",
     "Weight": "4 lb",
     "Cost": "8 sp",
-    "Notes": "Attaches to rope for climbing"
+    "Notes": "Attaches to rope for climbing",
+    "Source": "PHB"
   },
   {
     "Item Name": "Piton, Iron",
@@ -229,7 +293,8 @@
     "Capacity": "N/A",
     "Weight": "0.5 lb",
     "Cost": "3 cp",
-    "Notes": "Metal spike for climbing, hammered into rock"
+    "Notes": "Metal spike for climbing, hammered into rock",
+    "Source": "PHB"
   },
   {
     "Item Name": "Hammer",
@@ -237,7 +302,8 @@
     "Capacity": "N/A",
     "Weight": "2 lb",
     "Cost": "5 sp",
-    "Notes": "For driving pitons or general use"
+    "Notes": "For driving pitons or general use",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Crowbar",
@@ -245,7 +311,8 @@
     "Capacity": "N/A",
     "Weight": "5 lb",
     "Cost": "2 gp",
-    "Notes": "+2 bonus to force doors"
+    "Notes": "+2 bonus to force doors",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Pole, 10 ft",
@@ -253,7 +320,8 @@
     "Capacity": "N/A",
     "Weight": "8 lb",
     "Cost": "3 sp",
-    "Notes": "Wooden pole for probing floors and ceilings"
+    "Notes": "Wooden pole for probing floors and ceilings",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Pole, Collapsible (5 ft)",
@@ -261,7 +329,8 @@
     "Capacity": "N/A",
     "Weight": "4 lb",
     "Cost": "8 sp",
-    "Notes": "Folds for easy carrying"
+    "Notes": "Folds for easy carrying",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Ladder, 10 ft",
@@ -269,7 +338,8 @@
     "Capacity": "N/A",
     "Weight": "20 lb",
     "Cost": "5 cp",
-    "Notes": "Wooden ladder"
+    "Notes": "Wooden ladder",
+    "Source": "PHB"
   },
   {
     "Item Name": "Spade or Shovel",
@@ -277,7 +347,8 @@
     "Capacity": "N/A",
     "Weight": "8 lb",
     "Cost": "2 gp",
-    "Notes": "For digging"
+    "Notes": "For digging",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Pick, Miner's",
@@ -285,7 +356,8 @@
     "Capacity": "N/A",
     "Weight": "10 lb",
     "Cost": "3 gp",
-    "Notes": "For breaking rock"
+    "Notes": "For breaking rock",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Blanket, Winter",
@@ -293,7 +365,8 @@
     "Capacity": "N/A",
     "Weight": "3 lb",
     "Cost": "5 sp",
-    "Notes": "Warm blanket for sleeping"
+    "Notes": "Warm blanket for sleeping",
+    "Source": "PHB"
   },
   {
     "Item Name": "Bedroll",
@@ -301,39 +374,53 @@
     "Capacity": "N/A",
     "Weight": "5 lb",
     "Cost": "1 sp",
-    "Notes": "Sleeping bag or padded mat"
+    "Notes": "Sleeping bag or padded mat",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Tent, Small",
     "Category": "Camping",
     "Capacity": "1-2 people",
-    "Weight": "20 lb",
+    "Weight": "10 lb",
     "Cost": "5 gp",
-    "Notes": "Canvas tent for 1-2 people"
+    "Notes": "Canvas tent for 1-2 people",
+    "Source": "PHB"
   },
   {
     "Item Name": "Tent, Large",
     "Category": "Camping",
     "Capacity": "4-6 people",
-    "Weight": "50 lb",
+    "Weight": "20 lb",
     "Cost": "25 gp",
-    "Notes": "Canvas pavilion tent"
+    "Notes": "Canvas pavilion tent",
+    "Source": "PHB"
   },
   {
-    "Item Name": "Rations, Trail (1 day)",
+    "Item Name": "Rations, Standard (1 wk)",
     "Category": "Food",
     "Capacity": "N/A",
-    "Weight": "1 lb",
-    "Cost": "5 sp",
-    "Notes": "Dried meat, bread, cheese - lasts weeks"
+    "Weight": "7 lb",
+    "Cost": "3 gp",
+    "Notes": "One week of ordinary provisions. PHB gives cost only; weight is a house figure at 1 lb/day",
+    "Source": "PHB"
   },
   {
-    "Item Name": "Rations, Iron (1 day)",
+    "Item Name": "Rations, Iron (1 wk)",
     "Category": "Food",
     "Capacity": "N/A",
-    "Weight": "1 lb",
-    "Cost": "5 sp",
-    "Notes": "Hard tack and dried meat - lasts months"
+    "Weight": "7 lb",
+    "Cost": "5 gp",
+    "Notes": "One week of preserved campaign provisions. PHB gives cost only; weight is a house figure at 1 lb/day",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Dry Rations (per week)",
+    "Category": "Food",
+    "Capacity": "N/A",
+    "Weight": "7 lb",
+    "Cost": "10 gp",
+    "Notes": "Listed separately from standard rations in PHB Table 44; the book does not say how they differ. PHB gives cost only; weight is a house figure at 1 lb/day",
+    "Source": "PHB"
   },
   {
     "Item Name": "Ale, Gallon",
@@ -341,7 +428,8 @@
     "Capacity": "1 gallon",
     "Weight": "8 lb",
     "Cost": "2 sp",
-    "Notes": "Common drink"
+    "Notes": "Common drink",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Wine, Common (1 bottle)",
@@ -349,7 +437,8 @@
     "Capacity": "1 quart",
     "Weight": "2 lb",
     "Cost": "1 sp",
-    "Notes": "Table wine"
+    "Notes": "Table wine",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Wine, Fine (1 bottle)",
@@ -357,7 +446,8 @@
     "Capacity": "1 quart",
     "Weight": "2 lb",
     "Cost": "10 gp",
-    "Notes": "Quality wine"
+    "Notes": "Quality wine",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Chalk",
@@ -365,7 +455,8 @@
     "Capacity": "N/A",
     "Weight": "0.1 lb",
     "Cost": "1 cp",
-    "Notes": "For marking walls and paths"
+    "Notes": "For marking walls and paths",
+    "Source": "PHB"
   },
   {
     "Item Name": "Charcoal",
@@ -373,7 +464,8 @@
     "Capacity": "N/A",
     "Weight": "0.1 lb",
     "Cost": "5 cp",
-    "Notes": "For drawing or marking"
+    "Notes": "For drawing or marking",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Ink, 1 oz",
@@ -381,7 +473,8 @@
     "Capacity": "1 oz",
     "Weight": "0.1 lb",
     "Cost": "8 gp",
-    "Notes": "Black ink"
+    "Notes": "Black ink",
+    "Source": "PHB"
   },
   {
     "Item Name": "Inkpen",
@@ -389,7 +482,8 @@
     "Capacity": "N/A",
     "Weight": "0.1 lb",
     "Cost": "1 sp",
-    "Notes": "Quill or reed pen"
+    "Notes": "Quill or reed pen",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Paper, Sheet",
@@ -397,7 +491,8 @@
     "Capacity": "N/A",
     "Weight": "0.1 lb",
     "Cost": "2 gp",
-    "Notes": "Single sheet of paper"
+    "Notes": "Single sheet of paper",
+    "Source": "PHB"
   },
   {
     "Item Name": "Parchment, Sheet",
@@ -405,15 +500,17 @@
     "Capacity": "N/A",
     "Weight": "0.1 lb",
     "Cost": "1 gp",
-    "Notes": "Single sheet of parchment"
+    "Notes": "Single sheet of parchment",
+    "Source": "PHB"
   },
   {
-    "Item Name": "Scroll Case",
+    "Item Name": "Map or Scroll Case",
     "Category": "Container",
     "Capacity": "10 sheets",
     "Weight": "0.5 lb",
-    "Cost": "1 gp",
-    "Notes": "Leather tube for scrolls and maps"
+    "Cost": "8 sp",
+    "Notes": "Leather tube for scrolls and maps",
+    "Source": "PHB"
   },
   {
     "Item Name": "Spellbook, Blank",
@@ -421,7 +518,8 @@
     "Capacity": "100 pages",
     "Weight": "3 lb",
     "Cost": "15 gp",
-    "Notes": "Leather-bound blank book for spells"
+    "Notes": "Leather-bound blank book for spells",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Book, Small",
@@ -429,15 +527,17 @@
     "Capacity": "50 pages",
     "Weight": "1 lb",
     "Cost": "5 gp",
-    "Notes": "Small journal or notebook"
+    "Notes": "Small journal or notebook",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Mirror, Small Metal",
     "Category": "Adventuring Gear",
     "Capacity": "N/A",
-    "Weight": "0.5 lb",
+    "Weight": "0.1 lb",
     "Cost": "10 gp",
-    "Notes": "Polished metal mirror, useful vs medusas and basilisks"
+    "Notes": "Polished metal mirror, useful vs medusas and basilisks",
+    "Source": "PHB"
   },
   {
     "Item Name": "Holy Symbol, Silver",
@@ -445,7 +545,8 @@
     "Capacity": "N/A",
     "Weight": "0.5 lb",
     "Cost": "25 gp",
-    "Notes": "Symbol of deity, required for clerics"
+    "Notes": "Symbol of deity, required for clerics",
+    "Source": "PHB"
   },
   {
     "Item Name": "Holy Symbol, Wood",
@@ -453,7 +554,8 @@
     "Capacity": "N/A",
     "Weight": "0.5 lb",
     "Cost": "1 gp",
-    "Notes": "Wooden religious symbol"
+    "Notes": "Wooden religious symbol",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Holy Water, Vial",
@@ -461,7 +563,8 @@
     "Capacity": "1 oz",
     "Weight": "0.1 lb",
     "Cost": "25 gp",
-    "Notes": "2d4 damage to undead and creatures from lower planes"
+    "Notes": "2d4 damage to undead and creatures from lower planes",
+    "Source": "PHB"
   },
   {
     "Item Name": "Spell Component Pouch",
@@ -469,15 +572,17 @@
     "Capacity": "2 lb of components",
     "Weight": "2 lb",
     "Cost": "10 gp",
-    "Notes": "Contains common spell components"
+    "Notes": "Contains common spell components",
+    "Source": "Non-PHB"
   },
   {
-    "Item Name": "Lock, Simple",
+    "Item Name": "Lock, Poor",
     "Category": "Tool",
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "20 gp",
-    "Notes": "Basic lock with key"
+    "Notes": "Basic lock with key",
+    "Source": "PHB"
   },
   {
     "Item Name": "Lock, Good",
@@ -485,7 +590,8 @@
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "100 gp",
-    "Notes": "Quality lock with key"
+    "Notes": "Quality lock with key",
+    "Source": "PHB"
   },
   {
     "Item Name": "Lock, Amazing",
@@ -493,7 +599,8 @@
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "500+ gp",
-    "Notes": "Masterwork lock, very difficult to pick"
+    "Notes": "Masterwork lock, very difficult to pick",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Thieves' Picks",
@@ -501,31 +608,35 @@
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "30 gp",
-    "Notes": "Set of lockpicks, required for Open Locks skill"
+    "Notes": "Set of lockpicks, required for Open Locks skill",
+    "Source": "PHB"
   },
   {
     "Item Name": "Musical Instrument",
     "Category": "Tool",
     "Capacity": "N/A",
-    "Weight": "1-10 lb",
+    "Weight": "0.5-3 lb",
     "Cost": "5-100 gp",
-    "Notes": "Varies by instrument type"
+    "Notes": "Varies by instrument type",
+    "Source": "PHB"
   },
   {
-    "Item Name": "Fishing Net, 10 sq ft",
+    "Item Name": "Fishing Net, 10 ft. sq.",
     "Category": "Tool",
     "Capacity": "N/A",
     "Weight": "5 lb",
     "Cost": "4 gp",
-    "Notes": "For fishing"
+    "Notes": "For fishing",
+    "Source": "PHB"
   },
   {
-    "Item Name": "Fishing Hook and Line",
+    "Item Name": "Fishhook",
     "Category": "Tool",
     "Capacity": "N/A",
-    "Weight": "0.5 lb",
+    "Weight": "0.1 lb",
     "Cost": "1 sp",
-    "Notes": "Basic fishing gear"
+    "Notes": "No appreciable weight",
+    "Source": "PHB"
   },
   {
     "Item Name": "Pole, Fishing (10 ft)",
@@ -533,7 +644,8 @@
     "Capacity": "N/A",
     "Weight": "5 lb",
     "Cost": "2 sp",
-    "Notes": "Simple fishing pole"
+    "Notes": "Simple fishing pole",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Healer's Bag",
@@ -541,7 +653,8 @@
     "Capacity": "10 uses",
     "Weight": "3 lb",
     "Cost": "25 gp",
-    "Notes": "Bandages, herbs, salves for Healing proficiency"
+    "Notes": "Bandages, herbs, salves for Healing proficiency",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Antitoxin, Vial",
@@ -549,7 +662,8 @@
     "Capacity": "1 dose",
     "Weight": "0.1 lb",
     "Cost": "50 gp",
-    "Notes": "+2 bonus to save vs poison for 1 hour"
+    "Notes": "+2 bonus to save vs poison for 1 hour",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Herbs, Healing",
@@ -557,7 +671,8 @@
     "Capacity": "1 use",
     "Weight": "0.1 lb",
     "Cost": "5 gp",
-    "Notes": "Grants +1 hp when applied to wounds"
+    "Notes": "Grants +1 hp when applied to wounds",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Manacles",
@@ -565,7 +680,8 @@
     "Capacity": "N/A",
     "Weight": "2 lb",
     "Cost": "15 gp",
-    "Notes": "Iron shackles with lock and key"
+    "Notes": "Iron shackles with lock and key",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Manacles, Masterwork",
@@ -573,7 +689,8 @@
     "Capacity": "N/A",
     "Weight": "2 lb",
     "Cost": "50 gp",
-    "Notes": "Very difficult to escape from"
+    "Notes": "Very difficult to escape from",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Signal Whistle",
@@ -581,7 +698,8 @@
     "Capacity": "N/A",
     "Weight": "0.1 lb",
     "Cost": "8 sp",
-    "Notes": "Loud whistle for signaling"
+    "Notes": "Loud whistle for signaling",
+    "Source": "PHB"
   },
   {
     "Item Name": "Signal Horn",
@@ -589,7 +707,8 @@
     "Capacity": "N/A",
     "Weight": "2 lb",
     "Cost": "1 gp",
-    "Notes": "Loud horn for signaling over distances"
+    "Notes": "Loud horn for signaling over distances",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Bell",
@@ -597,15 +716,17 @@
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "1 gp",
-    "Notes": "For alerting to intruders"
+    "Notes": "For alerting to intruders",
+    "Source": "PHB"
   },
   {
     "Item Name": "Magnifying Glass",
     "Category": "Tool",
     "Capacity": "N/A",
-    "Weight": "0.5 lb",
+    "Weight": "0.1 lb",
     "Cost": "100 gp",
-    "Notes": "+2 bonus to detailed examinations"
+    "Notes": "+2 bonus to detailed examinations",
+    "Source": "PHB"
   },
   {
     "Item Name": "Spyglass",
@@ -613,7 +734,8 @@
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "1000 gp",
-    "Notes": "See 4x distance clearly"
+    "Notes": "See 4x distance clearly",
+    "Source": "PHB"
   },
   {
     "Item Name": "Hourglass",
@@ -621,7 +743,8 @@
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "25 gp",
-    "Notes": "Measures 1 hour of time"
+    "Notes": "Measures 1 hour of time",
+    "Source": "PHB"
   },
   {
     "Item Name": "Merchant's Scale",
@@ -629,7 +752,8 @@
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "2 gp",
-    "Notes": "For weighing coins and goods"
+    "Notes": "For weighing coins and goods",
+    "Source": "PHB"
   },
   {
     "Item Name": "Whetstone",
@@ -637,7 +761,8 @@
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "2 cp",
-    "Notes": "For sharpening blades"
+    "Notes": "For sharpening blades",
+    "Source": "PHB"
   },
   {
     "Item Name": "Sewing Needle and Thread",
@@ -645,7 +770,8 @@
     "Capacity": "N/A",
     "Weight": "0.1 lb",
     "Cost": "5 sp",
-    "Notes": "For mending clothes and gear"
+    "Notes": "For mending clothes and gear",
+    "Source": "PHB"
   },
   {
     "Item Name": "Soap, 1 lb",
@@ -653,7 +779,8 @@
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "5 sp",
-    "Notes": "For bathing and cleaning"
+    "Notes": "For bathing and cleaning",
+    "Source": "PHB"
   },
   {
     "Item Name": "Perfume, Common",
@@ -661,7 +788,8 @@
     "Capacity": "1 oz",
     "Weight": "0.1 lb",
     "Cost": "5 gp",
-    "Notes": "Basic perfume or cologne"
+    "Notes": "Basic perfume or cologne",
+    "Source": "PHB"
   },
   {
     "Item Name": "Perfume, Exotic",
@@ -669,7 +797,8 @@
     "Capacity": "1 oz",
     "Weight": "0.1 lb",
     "Cost": "50 gp",
-    "Notes": "Rare and expensive perfume"
+    "Notes": "Rare and expensive perfume",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Playing Cards or Dice",
@@ -677,7 +806,8 @@
     "Capacity": "N/A",
     "Weight": "0.1 lb",
     "Cost": "5 sp",
-    "Notes": "Gaming equipment"
+    "Notes": "Gaming equipment",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Saddle, Riding",
@@ -685,7 +815,8 @@
     "Capacity": "N/A",
     "Weight": "35 lb",
     "Cost": "10 gp",
-    "Notes": "Standard riding saddle"
+    "Notes": "Standard riding saddle",
+    "Source": "PHB"
   },
   {
     "Item Name": "Saddle, Pack",
@@ -693,7 +824,8 @@
     "Capacity": "N/A",
     "Weight": "15 lb",
     "Cost": "5 gp",
-    "Notes": "For pack animals"
+    "Notes": "For pack animals",
+    "Source": "PHB"
   },
   {
     "Item Name": "Saddle, Military",
@@ -701,7 +833,8 @@
     "Capacity": "N/A",
     "Weight": "40 lb",
     "Cost": "20 gp",
-    "Notes": "War saddle, +2 to stay mounted in combat"
+    "Notes": "War saddle, +2 to stay mounted in combat",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Bit and Bridle",
@@ -709,7 +842,8 @@
     "Capacity": "N/A",
     "Weight": "3 lb",
     "Cost": "15 sp",
-    "Notes": "For controlling horse"
+    "Notes": "For controlling horse",
+    "Source": "PHB"
   },
   {
     "Item Name": "Feed, Horse (per day)",
@@ -717,7 +851,8 @@
     "Capacity": "10 lb",
     "Weight": "10 lb",
     "Cost": "5 cp",
-    "Notes": "Daily feed for one horse"
+    "Notes": "Daily feed for one horse",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Cart",
@@ -725,7 +860,8 @@
     "Capacity": "500 lb",
     "Weight": "200 lb",
     "Cost": "100 gp",
-    "Notes": "Two-wheeled cart"
+    "Notes": "Two-wheeled cart",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Wagon",
@@ -733,7 +869,8 @@
     "Capacity": "2000 lb",
     "Weight": "400 lb",
     "Cost": "200 gp",
-    "Notes": "Four-wheeled wagon"
+    "Notes": "Four-wheeled wagon",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Rowboat",
@@ -741,7 +878,8 @@
     "Capacity": "600 lb",
     "Weight": "100 lb",
     "Cost": "50 gp",
-    "Notes": "Small boat with oars"
+    "Notes": "Small boat with oars",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Bear Trap",
@@ -749,7 +887,8 @@
     "Capacity": "N/A",
     "Weight": "10 lb",
     "Cost": "2 gp",
-    "Notes": "2d4 damage, holds creature, DC 20 STR to escape"
+    "Notes": "2d4 damage, holds creature, DC 20 STR to escape",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Caltrops (20)",
@@ -757,7 +896,8 @@
     "Capacity": "20 caltrops",
     "Weight": "2 lb",
     "Cost": "1 gp",
-    "Notes": "Cover 5 sq ft, 1 hp damage and movement reduced"
+    "Notes": "Cover 5 sq ft, 1 hp damage and movement reduced",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Marbles (100)",
@@ -765,7 +905,8 @@
     "Capacity": "100 marbles",
     "Weight": "2 lb",
     "Cost": "1 gp",
-    "Notes": "Cover 5 sq ft, creatures must make DEX check or fall"
+    "Notes": "Cover 5 sq ft, creatures must make DEX check or fall",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Wax",
@@ -773,7 +914,8 @@
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "1 gp",
-    "Notes": "For sealing letters or making impressions of keys"
+    "Notes": "For sealing letters or making impressions of keys",
+    "Source": "PHB"
   },
   {
     "Item Name": "Disguise Kit",
@@ -781,7 +923,8 @@
     "Capacity": "10 uses",
     "Weight": "5 lb",
     "Cost": "25 gp",
-    "Notes": "Makeup, wigs, props for disguises"
+    "Notes": "Makeup, wigs, props for disguises",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Climber's Kit",
@@ -789,7 +932,8 @@
     "Capacity": "N/A",
     "Weight": "5 lb",
     "Cost": "20 gp",
-    "Notes": "Pitons, hammer, harness - +2 to climbing checks"
+    "Notes": "Pitons, hammer, harness - +2 to climbing checks",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Gag",
@@ -797,7 +941,8 @@
     "Capacity": "N/A",
     "Weight": "0.5 lb",
     "Cost": "3 sp",
-    "Notes": "Prevents speech and spellcasting"
+    "Notes": "Prevents speech and spellcasting",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Blindfold",
@@ -805,7 +950,8 @@
     "Capacity": "N/A",
     "Weight": "0.1 lb",
     "Cost": "5 cp",
-    "Notes": "Blocks vision"
+    "Notes": "Blocks vision",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Banner or Flag",
@@ -813,7 +959,8 @@
     "Capacity": "N/A",
     "Weight": "2 lb",
     "Cost": "1-20 gp",
-    "Notes": "Displays heraldry or signals"
+    "Notes": "Displays heraldry or signals",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Trap, Snare",
@@ -821,7 +968,8 @@
     "Capacity": "N/A",
     "Weight": "2 lb",
     "Cost": "1 gp",
-    "Notes": "Simple rope snare for catching small game"
+    "Notes": "Simple rope snare for catching small game",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Winter Gear",
@@ -829,7 +977,8 @@
     "Capacity": "N/A",
     "Weight": "7 lb",
     "Cost": "5 gp",
-    "Notes": "Fur-lined clothing for extreme cold"
+    "Notes": "Fur-lined clothing for extreme cold",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Desert Gear",
@@ -837,7 +986,8 @@
     "Capacity": "N/A",
     "Weight": "3 lb",
     "Cost": "3 gp",
-    "Notes": "Loose, light clothing and head wrap for desert"
+    "Notes": "Loose, light clothing and head wrap for desert",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Rain Cloak",
@@ -845,7 +995,8 @@
     "Capacity": "N/A",
     "Weight": "2 lb",
     "Cost": "2 gp",
-    "Notes": "Oiled cloak that repels water"
+    "Notes": "Oiled cloak that repels water",
+    "Source": "Non-PHB"
   },
   {
     "Item Name": "Mask, Theatrical",
@@ -853,6 +1004,178 @@
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "5 sp - 10 gp",
-    "Notes": "Various theatrical masks"
+    "Notes": "Various theatrical masks",
+    "Source": "Non-PHB"
+  },
+  {
+    "Item Name": "Block and Tackle",
+    "Category": "Tool",
+    "Capacity": "N/A",
+    "Weight": "5 lb",
+    "Cost": "5 gp",
+    "Notes": "Pulley system for lifting heavy loads",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Bucket",
+    "Category": "Adventuring Gear",
+    "Capacity": "N/A",
+    "Weight": "3 lb",
+    "Cost": "5 sp",
+    "Notes": "Wooden pail",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Iron Pot",
+    "Category": "Camping",
+    "Capacity": "N/A",
+    "Weight": "2 lb",
+    "Cost": "5 sp",
+    "Notes": "Cooking pot",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Crampons",
+    "Category": "Adventuring Gear",
+    "Capacity": "N/A",
+    "Weight": "2 lb",
+    "Cost": "4 gp",
+    "Notes": "Spiked frames for boots; ice and rock work",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Canvas (per sq yard)",
+    "Category": "Adventuring Gear",
+    "Capacity": "N/A",
+    "Weight": "1 lb",
+    "Cost": "4 sp",
+    "Notes": "Heavy cloth for sails, tents, tarps",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Cloth, Common (per 10 sq yds)",
+    "Category": "Adventuring Gear",
+    "Capacity": "N/A",
+    "Weight": "10 lb",
+    "Cost": "7 gp",
+    "Notes": "Ordinary cloth",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Cloth, Fine (per 10 sq yds)",
+    "Category": "Adventuring Gear",
+    "Capacity": "N/A",
+    "Weight": "10 lb",
+    "Cost": "50 gp",
+    "Notes": "Fine cloth",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Cloth, Rich (per 10 sq yds)",
+    "Category": "Adventuring Gear",
+    "Capacity": "N/A",
+    "Weight": "10 lb",
+    "Cost": "100 gp",
+    "Notes": "Rich cloth",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Lantern, Beacon",
+    "Category": "Light Source",
+    "Capacity": "1 pint oil",
+    "Weight": "50 lb",
+    "Cost": "150 gp",
+    "Notes": "240-ft beam. Mounted on a prow, wagon bed, or other large structure. Burns 2 hours per flask",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Tent, Pavilion",
+    "Category": "Camping",
+    "Capacity": "10+ people",
+    "Weight": "50 lb",
+    "Cost": "100 gp",
+    "Notes": "Large pavilion tent",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Papyrus, Sheet",
+    "Category": "Writing",
+    "Capacity": "N/A",
+    "Weight": "0.1 lb",
+    "Cost": "8 sp",
+    "Notes": "No appreciable weight",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Signet Ring or Personal Seal",
+    "Category": "Personal",
+    "Capacity": "N/A",
+    "Weight": "0.1 lb",
+    "Cost": "5 gp",
+    "Notes": "For sealing letters and documents",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Water Clock",
+    "Category": "Tool",
+    "Capacity": "N/A",
+    "Weight": "200 lb",
+    "Cost": "1000 gp",
+    "Notes": "Accurate to the half-hour. Needs a water source and must be left undisturbed",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Saddle Blanket",
+    "Category": "Animal Gear",
+    "Capacity": "N/A",
+    "Weight": "4 lb",
+    "Cost": "3 sp",
+    "Notes": "Padding worn under a saddle",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Halter",
+    "Category": "Animal Gear",
+    "Capacity": "N/A",
+    "Weight": "0.1 lb",
+    "Cost": "5 cp",
+    "Notes": "Headgear for leading an animal",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Horseshoes & Shoeing",
+    "Category": "Animal Gear",
+    "Capacity": "N/A",
+    "Weight": "10 lb",
+    "Cost": "1 gp",
+    "Notes": "Set of shoes plus the farrier work",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Cart Harness",
+    "Category": "Animal Gear",
+    "Capacity": "N/A",
+    "Weight": "10 lb",
+    "Cost": "2 gp",
+    "Notes": "Harness for drawing a cart",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Yoke, Horse",
+    "Category": "Animal Gear",
+    "Capacity": "N/A",
+    "Weight": "15 lb",
+    "Cost": "5 gp",
+    "Notes": "Draft yoke for horses",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Yoke, Ox",
+    "Category": "Animal Gear",
+    "Capacity": "N/A",
+    "Weight": "20 lb",
+    "Cost": "3 gp",
+    "Notes": "Draft yoke for oxen",
+    "Source": "PHB"
   }
 ]
