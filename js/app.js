@@ -3090,7 +3090,6 @@ function makeWeaponNode(data={}, onChange){
     if (missileHead) missileHead.style.display = showRow ? 'flex' : 'none';
     if (missileRow)  missileRow.style.display  = showRow ? 'flex' : 'none';
   };
-  };
   if (ammoSel) {
     populateWeaponAmmo();
     syncAmmoVisibility();
