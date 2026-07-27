@@ -2848,7 +2848,7 @@ function makeWeaponNode(data={}, onChange){
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
       '<div style="width:100px;text-align:center;">Attacks/Rd</div>' +
       '<div style="width:90px;text-align:center;">Size</div>' +
-      '<div style="width:150px;text-align:center;">Ammunition</div>' +
+      '<div class="weapon-ammo-head" style="width:150px;text-align:center;">Ammunition</div>' +
       '<div style="flex:1;text-align:center;">Range (S/M/L)</div>' +
     '</div>' +
     '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
@@ -3044,11 +3044,39 @@ function makeWeaponNode(data={}, onChange){
     if (chosen && names.indexOf(chosen) === -1) add(chosen, chosen + ' (missing)');
     ammoSel.value = chosen;
   };
+  // A launcher fires ammunition; a sword does not, and a thrown dagger is not
+  // launcher-and-ammunition. Shown for Ranged only.
+  //
+  // The selection is HIDDEN, never cleared -- consistent with the Enchanted
+  // groups. Switching a bow to a sword and back keeps the arrow choice, and the
+  // Quick Reference already ignores ammunition on anything but a missile line,
+  // so a stored value on a melee weapon is inert rather than wrong.
+  //
+  // .weapon-category is queried inside the function rather than captured,
+  // because catSel is declared further down this file and would be in the
+  // temporal dead zone at this point.
+  const ammoHead = el.querySelector('.weapon-ammo-head');
+  const syncAmmoVisibility = () => {
+    const cs  = el.querySelector('.weapon-category');
+    const cat = ((cs && cs.value) || '').trim().toLowerCase();
+    const show = cat === 'ranged';
+    if (ammoSel)  ammoSel.style.display  = show ? '' : 'none';
+    if (ammoHead) ammoHead.style.display = show ? '' : 'none';
+  };
   if (ammoSel) {
     populateWeaponAmmo();
+    syncAmmoVisibility();
     // 'focus' fires before the list drops open, so the options are already
     // current by the time the player sees them.
     ammoSel.addEventListener('focus', populateWeaponAmmo);
+
+    const catForAmmo  = el.querySelector('.weapon-category');
+    const typeForAmmo = el.querySelector('.weapon-wtype');
+    if (catForAmmo) catForAmmo.addEventListener('change', syncAmmoVisibility);
+    // Picking a Type can FILL Category programmatically, which fires no change
+    // event -- and that handler is registered after this one, so listening
+    // directly would read the old value. Defer a tick so it runs afterwards.
+    if (typeForAmmo) typeForAmmo.addEventListener('change', () => setTimeout(syncAmmoVisibility, 0));
   }
 
   // Remove button
