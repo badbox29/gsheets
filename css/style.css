@@ -699,7 +699,7 @@
 	  margin-top: 2px;
 	  word-break: break-word;
 	}
-/* Print options modal — checkbox rows */
+	/* Print options modal — checkbox rows */
 	.print-opt-row {
 	  display: flex;
 	  align-items: center;
