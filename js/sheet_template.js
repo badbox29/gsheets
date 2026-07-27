@@ -1306,6 +1306,7 @@ const SHEET_HTML = `
 			<div class="col"><label>Max Carry (lbs)</label><input data-field="encumbrance_max" type="text" readonly></div>
 			<div class="col"><label>Encumbrance Category</label><input data-field="encumbrance_category" type="text" readonly></div>
 		  </div>
+		  <div class="encumbrance-magic-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
 		</section>
 
 		<!-- Movement Rate -->
