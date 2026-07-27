@@ -1627,6 +1627,36 @@ function makeValuableNode(data={}, onChange){
   return el;
 }
 
+// ===== Enchanted-item badge: shared by the armor, weapon and ammunition cards =====
+// Rendered into the identity row so an enchanted item announces itself on a
+// COLLAPSED card, which is the whole point -- the number is what you would
+// otherwise expand the card to find.
+//
+//   enchanted, with a bonus -> "(+2)", or "(+5: +1/+0)" when a weapon's actual
+//                              effects diverge from its enchantment level
+//   enchanted, no bonus     -> a dot. "(+0)" reads as worthless, and elven chain
+//                              is exactly that case: magical, AC 5, no plus.
+//   mundane                 -> an EMPTY slot, still emitted, so every row in a
+//                              list keeps the same geometry
+function magicBadgeHtml(isMagical, text) {
+  if (!isMagical) return '<span class="magic-badge"></span>';
+  return '<span class="magic-badge" title="Enchanted">' +
+         (text ? text : '<span class="magic-dot"></span>') + '</span>';
+}
+
+// Refresh a badge in place. Called from the Enchanted tick AND from every bonus
+// field, so the collapsed view can never lag behind the expanded one.
+function updateMagicBadge(el, isMagical, text) {
+  const b = el.querySelector('.magic-badge');
+  if (!b) return;
+  if (!isMagical) { b.innerHTML = ''; b.removeAttribute('title'); return; }
+  b.innerHTML = text ? text : '<span class="magic-dot"></span>';
+  b.title = 'Enchanted';
+}
+
+// A cursed item must not render as "+-1".
+function magicSign(n) { return (n >= 0 ? '+' : '') + n; }
+
 function makeArmorNode(data={}, onChange){
   const el = document.createElement('div');
   el.className = 'item';
