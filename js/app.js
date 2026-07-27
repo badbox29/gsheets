@@ -1683,6 +1683,7 @@ function makeArmorNode(data={}, onChange){
     '</div>' +
     '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
       '<input type="checkbox" class="equipped" '+(data.equipped?'checked':'')+' style="width:60px;margin:auto;">' +
+      '<span class="magic-dot" title="Enchanted"' + (armorIsMagical ? '' : ' style="display:none;"') + '></span>' +
       '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1">' +
       '<input class="notes" placeholder="" value="'+(data.notes||'')+'" style="flex:2">' +
       '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
@@ -2666,7 +2667,6 @@ function makeWeaponNode(data={}, onChange){
     '</div>' +
    '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
       '<input type="checkbox" class="equipped" '+(data.equipped?'checked':'')+' style="width:60px;margin:auto;">' +
-      '<span class="magic-dot" title="Enchanted"' + (armorIsMagical ? '' : ' style="display:none;"') + '></span>' +
       '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1">' +
       '<input class="notes" placeholder="" value="'+(data.notes||'')+'" style="flex:2">' +
       '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
