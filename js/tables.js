@@ -3721,16 +3721,39 @@ const OPTIONAL_RULES = {
              'pound, which comes from the DMG\'s encumbrance rules. Unticked uses the 1st ' +
              'Edition figure of 10 coins to the pound, still common at many tables. Affects ' +
              'the coin weight field and therefore the encumbrance total.',
-    category: 'override',
-    default: true      // checked = the 2e rule
+    // Moved out of 'override': there is no PHB coin weight, so "checked" could
+    // never mean the book's rule. Settings persist by KEY, so an existing
+    // preference survives the move.
+    category: 'table',
+    default: true      // checked = the 2e figure, the commoner reading
+  },
+  ammoBonusStacks: {
+    label:   'Enchanted ammunition stacks with an enchanted launcher',
+    detail:  'The PHB does not say whether a +1 arrow fired from a +1 bow gives +2 or +1. ' +
+             'Checked adds both. Unticked takes the better of the two, which is the reading ' +
+             'that stops enchanted ammunition being worthless to anyone holding a magic bow. ' +
+             'Neither is more correct than the other -- ask your DM.',
+    category: 'table',
+    default: true
   }
 };
 const OPTIONAL_RULES_CATEGORIES = {
   phb:      { label: '\u{1F4D6} Optional Rules',
               blurb: 'Rules the PHB marks optional. Use them or not as your table prefers.' },
   override: { label: '\u2696\uFE0F House Rules & Overrides',
-              blurb: 'Checks the app performs against the rules as written. Switching one off ' +
-                     'suppresses a warning rather than changing how anything is calculated.' }
+              blurb: 'Checks against rules the PHB states flatly. Checked is always the ' +
+                     'book\'s rule, so unticking one is the departure.' },
+  // THIRD CATEGORY, and its invariant is deliberately different. The other two
+  // both have a book position to anchor to. These are questions the PHB simply
+  // does not answer, so NEITHER setting is more RAW than the other and the
+  // default is only the commoner reading.
+  // coinWeight2e was the first entry that never fitted 'override': it changes a
+  // divisor rather than suppressing a warning, and there is no PHB coin weight
+  // for "checked" to mean. Forcing a second such entry in would have quietly
+  // broken the rule that ON always means the book.
+  table:    { label: '\u{1F3B2} Table Rulings',
+              blurb: 'Questions the PHB leaves open. The default is the more common reading, ' +
+                     'not a rule -- settle these with your DM.' }
 };
 
 // ===== Campaign Settings =====
