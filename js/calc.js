@@ -258,6 +258,15 @@ function itemMagicBonus(itemEl, selector) {
   return parseInt((itemEl.querySelector(selector) || {}).value, 10) || 0;
 }
 
+// Ammunition names are player-entered free text and the Quick Reference builds
+// its rows with innerHTML, so the name must be escaped on the way in.
+// calc.js has no shared escape helper -- several renderers define their own
+// locally -- so this follows that pattern rather than introducing a global.
+function escAmmo(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 // Resolve the ammunition a weapon row is set to fire, and what it grants.
 // The link is BY NAME, matching the weapon card's dropdown -- see the note
 // there. A selection that no longer matches any record returns missing:true
@@ -733,7 +742,7 @@ function renderCombatQuickReference(root) {
                   'title="This weapon is set to fire ammunition that is no longer in your ' +
                   'Ammunition list -- most likely renamed or removed. The selection is kept ' +
                   'rather than cleared so it is not lost silently.">' +
-                  'Ammo: ' + escapeHtml(ammo.name) + ' (not in your ammunition list)</span><br>';
+                  'Ammo: ' + escAmmo(ammo.name) + ' (not in your ammunition list)</span><br>';
         } else {
           const bits = [];
           if (ammoHitAdd) bits.push(sign(ammoHitAdd) + ' hit');
@@ -746,7 +755,7 @@ function renderCombatQuickReference(root) {
                   'stacks with an enchanted launcher is not addressed by the PHB -- it is set ' +
                   'under Table Rulings in Settings, currently ' +
                   (ammoStacks ? 'STACKING' : 'BETTER OF THE TWO') + '.">' +
-                  'Ammo: ' + escapeHtml(ammo.name) + ' \u2014 ' + effect + '</span><br>';
+                  'Ammo: ' + escAmmo(ammo.name) + ' \u2014 ' + effect + '</span><br>';
         }
       } else if (magicHit || magicDmg) {
         // Adjustments with no enchantment level -- deliberately NOT called
