@@ -1554,7 +1554,11 @@ function renderCoinWeight(root) {
   
   // Calculate totals
   const totalCoins = cp + sp + ep + gp + pp;
-  const weightLbs = totalCoins / 10; // 10 coins = 1 lb in AD&D 2E
+  // Coins per pound is a toggle -- see COINS_PER_POUND_2E in tables.js. The PHB
+  // does not state a coin weight, so this reads the optional rule live and a
+  // Settings change applies without a reload.
+  const coinsPerPound = getCoinsPerPound();
+  const weightLbs = totalCoins / coinsPerPound;
   
   // Display
   coinTotalEl.value = totalCoins.toLocaleString();
@@ -1562,7 +1566,8 @@ function renderCoinWeight(root) {
   
   // Tooltip with breakdown
   if (totalCoins > 0) {
-    coinWeightEl.title = `${totalCoins.toLocaleString()} coins total (10 coins = 1 lb)`;
+    coinWeightEl.title = `${totalCoins.toLocaleString()} coins total ` +
+      `(${coinsPerPound} coins = 1 lb)`;
   } else {
     coinWeightEl.removeAttribute("title");
   }
@@ -1878,6 +1883,13 @@ function renderEncumbrance(root) {
   // Calculate total weight carried
   let totalWeight = 0;
   
+  // Clothing (PHB Ch.6): "Add five pounds for clothing, if any is worn."
+  // Applied unconditionally -- the sheet does not track whether a character is
+  // dressed, and 5 lbs is the book's abstraction for ordinary clothing. A robe
+  // or cloak itemised in the armor list is counted separately, on top of this;
+  // the PHB gives no guidance on that overlap.
+  totalWeight += ENCUMBRANCE_CLOTHING_WEIGHT;
+
   // Coin weight (already calculated)
   const coinWeight = parseFloat(val(root, "coin_weight")) || 0;
   totalWeight += coinWeight;
@@ -1962,6 +1974,8 @@ function renderEncumbrance(root) {
       `Heavy: ${moderate + 1}-${heavy} lbs\n` +
       `Severe: ${heavy + 1}-${severe} lbs\n` +
       `Max carried: ${severe} lbs\n\n` +
+      `Includes ${ENCUMBRANCE_CLOTHING_WEIGHT} lbs clothing (PHB) and ` +
+      `${coinWeight.toFixed(1)} lbs coin.\n\n` +
       eff.desc;
   }
 
