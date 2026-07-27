@@ -10409,6 +10409,11 @@ function recalculateAll(root) {
   if (typeof renderHitDice === 'function') renderHitDice(root);
   if (typeof renderAttacksPerRound === 'function') renderAttacksPerRound(root);
   if (typeof renderRevivals === 'function') renderRevivals(root);
+  // renderCoinWeight MUST run before renderEncumbrance -- encumbrance reads the
+  // coin_weight field that this writes. Without it, flipping the coin weight
+  // toggle recalculates encumbrance from the previous divisor's number, and the
+  // change appears not to work until the player happens to edit a coin field.
+  if (typeof renderCoinWeight === 'function') renderCoinWeight(root);
   if (typeof renderEncumbrance === 'function') renderEncumbrance(root);
   if (typeof renderProficiencySlots === 'function') renderProficiencySlots(root);
   if (typeof renderMovementRate === 'function') renderMovementRate(root);
