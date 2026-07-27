@@ -2863,8 +2863,8 @@ function makeWeaponNode(data={}, onChange){
       '</div>' +
     '</div>' +
     '<div class="weapon-missile-head" style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div class="weapon-ammo-head" style="width:150px;text-align:center;">Ammunition</div>' +
-      '<div class="weapon-range-head" style="flex:1;text-align:center;">Range (S/M/L)</div>' +
+      '<div class="weapon-ammo-head" style="width:220px;text-align:center;">Ammunition</div>' +
+      '<div class="weapon-range-head" style="width:160px;text-align:center;">Range (S/M/L)</div>' +
     '</div>' +
     '<div class="weapon-missile-row" style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
       '<select class="weapon-ammo" style="width:150px;" title="' +
@@ -2873,8 +2873,11 @@ function makeWeaponNode(data={}, onChange){
         'Whether an enchanted arrow stacks with an enchanted bow is a table&#10;' +
         '  ruling -- see Table Rulings in Settings.&#10;' +
         'The list is rebuilt each time you open it, so ammunition added since&#10;' +
-        '  this card was drawn still appears."></select>' +
-      '<input class="weapon-range" value="'+(data.range||'')+'" placeholder="e.g. 50/100/150" style="flex:1;text-align:center;" title="' +
+        '  this card was drawn still appears." style="width:220px;"></select>' +
+      // Fixed width, not flex:1. As the only flexing item on the row it took
+      // every spare pixel, so "70/140/210" sat in a field wide enough for a
+      // sentence. Trailing empty space reads better than a stretched input.
+      '<input class="weapon-range" value="'+(data.range||'')+'" placeholder="e.g. 50/100/150" style="width:160px;text-align:center;" title="' +
         'Short / medium / long range in yards, for missile weapons.&#10;' +
         'Filled from PHB Table 45 when you pick a Type, if left blank.&#10;' +
         'Bows and slings carry their flight-arrow / bullet ranges; sheaf&#10;' +
