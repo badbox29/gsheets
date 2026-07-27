@@ -1713,7 +1713,8 @@ function makeArmorNode(data={}, onChange){
     '</div>' +
     '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
       '<input type="checkbox" class="equipped" '+(data.equipped?'checked':'')+' style="width:60px;margin:auto;">' +
-      '<span class="magic-dot" title="Enchanted"' + (armorIsMagical ? '' : ' style="display:none;"') + '></span>' +
+      magicBadgeHtml(armorIsMagical,
+        (parseFloat(data.acBonus) || 0) !== 0 ? '(' + magicSign(parseFloat(data.acBonus)) + ')' : '') +
       '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1">' +
       '<input class="notes" placeholder="" value="'+(data.notes||'')+'" style="flex:2">' +
       '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
@@ -1763,15 +1764,32 @@ function makeArmorNode(data={}, onChange){
   // side ignoring the value, not the value being gone.
   const armorMagicChk    = el.querySelector('.is-magical');
   const armorMagicFields = el.querySelector('.magic-fields');
-  const armorMagicDot = el.querySelector('.magic-dot');
+
+  // The badge tracks BOTH the tick and the bonus value, so it is refreshed from
+  // one place that every relevant control calls.
+  const armorBadgeText = () => {
+    const n = parseFloat((el.querySelector('.ac-bonus') || {}).value);
+    return (!isNaN(n) && n !== 0) ? '(' + magicSign(n) + ')' : '';
+  };
+  const refreshArmorMagic = () => {
+    const on = !!(armorMagicChk && armorMagicChk.checked);
+    // 'inline-flex' so the revealed fields stay on the same line as the label.
+    if (armorMagicFields) armorMagicFields.style.display = on ? 'inline-flex' : 'none';
+    updateMagicBadge(el, on, armorBadgeText());
+  };
+
   if (armorMagicChk) {
     armorMagicChk.addEventListener('change', () => {
-      const on = armorMagicChk.checked;
-      // 'inline-flex' so the revealed fields stay on the same line as the label.
-      if (armorMagicFields) armorMagicFields.style.display = on ? 'inline-flex' : 'none';
-      if (armorMagicDot)    armorMagicDot.style.display    = on ? 'block' : 'none';
+      refreshArmorMagic();
       onChange && onChange();
     });
+  }
+  const armorAcBonusEl = el.querySelector('.ac-bonus');
+  if (armorAcBonusEl) {
+    // Refresh ONLY. The blanket 'input, select' listener at the end of this
+    // function already reports the change, so calling onChange here too would
+    // fire it twice for every keystroke.
+    armorAcBonusEl.addEventListener('input', refreshArmorMagic);
   }
 
   // Picking a type PREFILLS AC and weight -- an enchanted or homebrew piece
