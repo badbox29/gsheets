@@ -1,4 +1,4 @@
-// Adding temp variable for sync testing..
+// Adding temp variable for sync testing.
 const APP_JS_BUILD = 'prod-1';
 
 // Shortcuts & constants
@@ -3221,31 +3221,37 @@ function makeAmmunitionNode(data={}, onChange){
   el.innerHTML =
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
       '<div style="flex:1;">Ammo Type</div>' +
-      '<div style="width:70px;"></div>' +
+      '<div style="width:70px;text-align:center;">Qty</div>' +
+      '<div style="width:148px;"></div>' +
     '</div>' +
-    '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:8px;">' +
+    '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
       '<div style="display:flex;align-items:center;gap:4px;flex:1;min-width:0;">' +
         '<input class="title" placeholder="e.g., Arrows, Bolts" value="'+(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
         magicBadgeHtml(ammoIsMagical, ammoInitialBadge) +
       '</div>' +
+      // THE ONLY .quantity input on this card. The +/- buttons in the details
+      // panel drive THIS one, so there is never a second copy to drift out of
+      // sync -- collectSheet reads .quantity and must find exactly one.
+      '<input class="quantity" type="number" min="0" value="'+(data.quantity||0)+'" style="width:70px;text-align:center;">' +
+      '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
       '<button class="rm">Remove</button>' +
     '</div>' +
-    '<div style="display:flex;gap:8px;margin-bottom:8px;">' +
-      '<div style="flex:1;">' +
-        '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Quantity</label>' +
-        '<div style="display:flex;gap:4px;align-items:center;">' +
-          '<button class="ammo-minus-10" style="padding:4px 8px;font-size:11px;">-10</button>' +
-          '<button class="ammo-minus-1" style="padding:4px 8px;font-size:11px;">-1</button>' +
-          '<input class="quantity" type="number" min="0" value="'+(data.quantity||0)+'" style="width:80px;text-align:center;">' +
-          '<button class="ammo-plus-1" style="padding:4px 8px;font-size:11px;">+1</button>' +
-          '<button class="ammo-plus-10" style="padding:4px 8px;font-size:11px;">+10</button>' +
+    '<div class="ammo-details" style="display:none;">' +
+      '<div style="display:flex;gap:8px;margin-bottom:8px;">' +
+        '<div style="flex:1;">' +
+          '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Adjust Quantity</label>' +
+          '<div style="display:flex;gap:4px;align-items:center;">' +
+            '<button class="ammo-minus-10" style="padding:4px 8px;font-size:11px;">-10</button>' +
+            '<button class="ammo-minus-1" style="padding:4px 8px;font-size:11px;">-1</button>' +
+            '<button class="ammo-plus-1" style="padding:4px 8px;font-size:11px;">+1</button>' +
+            '<button class="ammo-plus-10" style="padding:4px 8px;font-size:11px;">+10</button>' +
+          '</div>' +
+        '</div>' +
+        '<div style="flex:1;">' +
+          '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Weight per Unit (lbs)</label>' +
+          '<input class="weight-per-unit" type="number" step="0.01" min="0" value="'+(data.weightPerUnit||0.1)+'" style="width:100%;">' +
         '</div>' +
       '</div>' +
-      '<div style="flex:1;">' +
-        '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Weight per Unit (lbs)</label>' +
-        '<input class="weight-per-unit" type="number" step="0.01" min="0" value="'+(data.weightPerUnit||0.1)+'" style="width:100%;">' +
-      '</div>' +
-    '</div>' +
     '<div class="magic-group">' +
       '<label class="magic-toggle">' +
         '<input type="checkbox" class="is-magical"' + (ammoIsMagical ? ' checked' : '') + '>' +
@@ -3276,7 +3282,8 @@ function makeAmmunitionNode(data={}, onChange){
       '</div>' +
     '</div>' +
     '<div style="font-size:11px;color:var(--muted);margin-top:6px;">' +
-      'Total Weight: <span class="ammo-total-weight" style="color:var(--accent-light);font-weight:600;">' + totalWeight + ' lbs</span>' +
+        'Total Weight: <span class="ammo-total-weight" style="color:var(--accent-light);font-weight:600;">' + totalWeight + ' lbs</span>' +
+      '</div>' +
     '</div>';
   
   // Remove button
@@ -3358,6 +3365,17 @@ el.querySelector('.ammo-minus-10').onclick = ()=>{
   el.querySelector('.title').addEventListener('input', ()=>{
     onChange && onChange();
   });
+
+  // Collapse/expand, matching the armor and weapon cards.
+  const ammoToggleBtn = el.querySelector('.toggle-details');
+  const ammoDetails   = el.querySelector('.ammo-details');
+  if (ammoToggleBtn && ammoDetails) {
+    ammoToggleBtn.onclick = () => {
+      const open = ammoDetails.style.display !== 'none';
+      ammoDetails.style.display = open ? 'none' : 'block';
+      ammoToggleBtn.textContent = open ? 'Details' : 'Hide';
+    };
+  }
 
   // The name field grows with its contents so the badge sits against the text.
   // Declared before refreshAmmoMagic, which calls it -- const arrow functions
