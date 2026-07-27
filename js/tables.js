@@ -2010,10 +2010,21 @@ const ENCUMBRANCE_EFFECTS = {
   "Light":        { moveMult: 2/3,   attack: 0,  ac: 0, desc: "Movement reduced by 1/3. No combat penalty." },
   "Moderate":     { moveMult: 1/2,   attack: -1, ac: 0, desc: "Movement halved. -1 attack." },
   "Heavy":        { moveMult: 1/3,   attack: -2, ac: 1, desc: "Movement reduced to 1/3. -2 attack, +1 AC (worse)." },
-  "Severe":       { moveMult: null,  attack: -4, ac: 3, desc: "Movement reduced to 1. -4 attack, +3 AC (worse)." },
+ "Severe":       { moveMult: null,  attack: -4, ac: 3, desc: "Movement reduced to 1. -4 attack, +3 AC (worse)." },
   "Overloaded":   { moveMult: 0,     attack: -4, ac: 3, desc: "Over max carried weight -- cannot move." }
 };
 
+// === Clothing weight (PHB Ch.6, "Encumbrance (Optional Rule)") ===
+// "Encumbrance is measured in pounds. To calculate encumbrance, simply total
+// the pounds of gear carried by the creature or character. Add five pounds for
+// clothing, if any is worn."
+// Applied as a flat constant. Ordinary clothing is not itemised on the sheet,
+// so this stands in for it. If a player HAS itemised a robe or cloak in the
+// armor list, that piece's own weight is counted as well -- the PHB gives no
+// guidance on the overlap, and 5 lbs is simply the book's shorthand for
+// "dressed". Surfaced as its own line in the encumbrance tooltip so the weight
+// is never unexplained.
+const ENCUMBRANCE_CLOTHING_WEIGHT = 5;
 // === Optional Rule toggle: encumbrance combat/movement effects ===
 // The PHB labels encumbrance an OPTIONAL RULE, so ignoring it entirely is RAW.
 // When false, encumbrance is purely INFORMATIONAL -- the category, weight
