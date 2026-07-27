@@ -2810,6 +2810,44 @@ function getArmorRestrictionProblems(root) {
     });
   });
 
+  // ---- Checks that look at the equipped set as a WHOLE, not item by item ----
+  // The loop above judges each piece against the character's class. These two
+  // judge combinations, so they need a second pass over the equipped list.
+  const worn = Array.from(root.querySelectorAll('.armor-list .item')).filter(item => {
+    const cb = item.querySelector('.equipped');
+    return cb && cb.checked;
+  });
+
+  const slotOf = item =>
+    ((item.querySelector('.armor-slot') || item.querySelector('.armor-type') || {}).value || 'Armor');
+  const nameOf = item =>
+    (((item.querySelector('.title') || {}).value || '').trim());
+
+  // 1. More than one suit of body armor.
+  // The AC calculation takes the best and ignores the rest, so the NUMBER is
+  // right -- but nothing was telling the player that plate over chain is not a
+  // thing. Bracers are excluded here and handled below, since they occupy a
+  // different slot and have their own rule.
+  const bodyArmor = worn.filter(item => slotOf(item) === 'Armor');
+  if (bodyArmor.length > 1) {
+    const names = bodyArmor.map(i => nameOf(i) || 'unnamed').join(', ');
+    problems.push('More than one suit of body armor is equipped (' + names +
+      '). Only the best applies to Armor Class; a character wears one suit.');
+  }
+
+  // 2. Bracers worn together with body armor.
+  // SOURCE NOTE: bracers of defense are a DMG magic item, NOT PHB Chapter 6 --
+  // the PHB armor table has no bracers at all. The restriction is recorded here
+  // as an ADVISORY pending confirmation against the DMG text; do not treat this
+  // wording as verified. If the DMG says something different, correct the
+  // message rather than deleting the check.
+  const bracers = worn.filter(item => slotOf(item) === 'Bracers');
+  if (bracers.length && bodyArmor.length) {
+    const bn = bracers.map(i => nameOf(i) || 'Bracers').join(', ');
+    problems.push(bn + ': bracers are generally held not to function while ' +
+      'body armor is worn. Check with your DM.');
+  }
+
   return problems;
 }
 
