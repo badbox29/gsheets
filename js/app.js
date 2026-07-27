@@ -1713,11 +1713,18 @@ function makeArmorNode(data={}, onChange){
     '</div>' +
     '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
       '<input type="checkbox" class="equipped" '+(data.equipped?'checked':'')+' style="width:60px;margin:auto;">' +
-      '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1">' +
-      // AFTER the name field, not before. The name is flex:1, so the badge sits
-      // at the right edge of the name column and lines up down the whole list.
-      magicBadgeHtml(armorIsMagical,
-        (parseFloat(data.acBonus) || 0) !== 0 ? '(' + magicSign(parseFloat(data.acBonus)) + ')' : '') +
+      // Name and badge share ONE flex:1 cell, matching the header's "Armor"
+      // column. The badge sits at the right edge of that column without pushing
+      // Notes out of alignment -- a wide badge squeezes the input instead of
+      // shifting the row. This is what keeps the header honest on the weapon
+      // card, whose badge can read "(+5: +1/+0)".
+      // min-width:0 on both is required, or a flex item refuses to shrink below
+      // its intrinsic width and the badge gets pushed out anyway.
+      '<div style="display:flex;align-items:center;gap:4px;flex:1;min-width:0;">' +
+        '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1;min-width:0;">' +
+        magicBadgeHtml(armorIsMagical,
+          (parseFloat(data.acBonus) || 0) !== 0 ? '(' + magicSign(parseFloat(data.acBonus)) + ')' : '') +
+      '</div>' +
       '<input class="notes" placeholder="" value="'+(data.notes||'')+'" style="flex:2">' +
       '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
       '<button class="rm">Remove</button>' +
