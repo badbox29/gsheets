@@ -1822,18 +1822,32 @@ function renderArmorClass(root) {
   // Process each equipped item
   equippedItems.forEach(item => {
     const name = item.querySelector('.title').value.trim();
-    const type = item.querySelector('.armor-type')?.value || "Armor";
+    // WHICH SLOT this piece occupies. The armor card rewrite renamed the
+    // classes -- .armor-slot now holds the WEAR LOCATION and .armor-type holds
+    // the CONSTRUCTION key ("plate", "buckler_wood") -- but this function was
+    // never updated. It was reading "plate" and matching none of the branches
+    // below, so every equipped armor contributed NOTHING and AC sat at 10.
+    // Read defensively, exactly as collectSheet does, so pre-rewrite records
+    // still resolve.
+    const type = (item.querySelector('.armor-slot') ||
+                  item.querySelector('.armor-type') || {}).value || "Armor";
     const baseACValue = parseInt(item.querySelector('.base-ac').value, 10);
     // Gated on the Enchanted tick. A hidden non-zero value silently improving
     // AC is exactly the bug the checkbox exists to prevent.
     const magicBonus = itemMagicBonus(item, '.ac-bonus');
-    
+
     if (!name) return;
-    
+
+    // SIGN: finalAC ADDS every term and lower is better, so an improvement must
+    // be NEGATIVE. Shields work because core_armor.json stores their AC as -1.
+    // The player types a PLUS -- "2" for plate mail +2 -- so the enchantment is
+    // SUBTRACTED. It was being added, which made a +2 suit AC 5 instead of 1:
+    // strictly worse than the plain armor.
+
     // Base AC providers (only best one counts)
     if (type === "Armor" || type === "Bracers") {
       if (baseACValue && baseACValue < baseAC) {
-        baseAC = baseACValue + magicBonus; // Magical armor adds to base
+        baseAC = baseACValue - magicBonus; // enchantment IMPROVES AC
         baseACSource = name;
       }
     }
@@ -1843,7 +1857,7 @@ function renderArmorClass(root) {
       if (baseACValue) {
         shieldBonus += baseACValue;
       }
-      shieldBonus += magicBonus; // Magical shield bonus
+      shieldBonus -= magicBonus; // Magical shield bonus
       shieldNames.push(name);
     }
     else if (type === "Ring") {
@@ -1851,7 +1865,7 @@ function renderArmorClass(root) {
       if (baseACValue) {
         ringBonus += baseACValue;
       }
-      ringBonus += magicBonus;
+      ringBonus -= magicBonus;
       ringNames.push(name);
     }
     else if (type === "Cloak") {
@@ -1859,7 +1873,7 @@ function renderArmorClass(root) {
       if (baseACValue) {
         cloakBonus += baseACValue;
       }
-      cloakBonus += magicBonus;
+      cloakBonus -= magicBonus;
       cloakNames.push(name);
     }
     // Helmet, Gauntlets, Boots, Belt, Other = no AC effect
