@@ -2,7 +2,7 @@
 
 A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and zero dependencies.
 
-**Version 8.0**
+**Version 9.0**
 
 ## Live Demo
 
@@ -21,7 +21,12 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 * Multi-character support via tabbed interface
 * Automatic local save (no manual saving required)
 * Unsaved change indicator during edits
-* Clean, printable layout
+* Full multi-class and dual-class support
+* Automatic calculation of saves, THAC0, attack matrices, spell slots, and proficiency budgets from the Player's Handbook tables
+* Searchable browsers for spells, weapons, armor, equipment, languages, and nonweapon proficiencies
+* Interactive panels for proficiencies whose rules need working out at the table
+* Optional-rules framework with live toggles for Player's Handbook options and house-rule overrides
+* Multi-page printable character sheet with configurable sections, blank write-in lines, and color schemes
 * Import / export character data
 * JSON-based storage for portability
 * Fast load times (no framework, no build step)
@@ -65,6 +70,18 @@ You can also host the files on any static web server — GitHub Pages, IIS, Apac
 
 ---
 
+## Optional Rules
+
+Second Edition marks a good deal of its content as optional, and different tables play with different pieces of it. The **⚙ Settings** panel carries a list of toggles, split into two groups:
+
+**Optional Rules** are things the Player's Handbook itself presents as additions to the base game — weapon specialization, weapon speed as an initiative modifier, encumbrance penalties. These ship switched **off**, so ticking one is always a deliberate departure from the base rules.
+
+**House Rules & Overrides** are checks the tool performs against rules the book states flatly — class ability minimums, legal class combinations, druid armor restrictions, non-proficiency attack penalties. These ship switched **on**, so unticking one is always the house rule. They exist so a DM who has already waived something doesn't have to look at a warning about it forever.
+
+Either way, the shipped state is the book as written. Toggles apply immediately to every open character with no reload.
+
+---
+
 ## Cloud Sync via Cloudflare KV
 
 The tool supports optional cloud sync using a Cloudflare Worker and KV storage. This allows you to access your characters from multiple browsers or devices without manually exporting and importing JSON files. Cloud sync is entirely opt-in and requires a free Cloudflare account.
@@ -75,7 +92,7 @@ Each user is assigned a unique sync token automatically when they first open the
 
 Cloud sync is disabled by default. Once enabled, changes are pushed to KV automatically within approximately 65 seconds of your last edit (60 second autosave + 5 second debounce). Additionally, any pending changes are flushed immediately if you close or navigate away from the tab.
 
-On page load, the tool will automatically pull any characters from KV that are not already in your local storage.
+On page load, the tool will automatically pull from KV, taking any character that is new to this browser or that has been edited more recently elsewhere.
 
 ### Setting Up the Worker
 
@@ -130,28 +147,79 @@ Follow these steps **in order** to avoid overwriting your data:
 
 | Event | Behavior |
 |---|---|
-| Page load | Pulls from KV if sync is enabled (adds characters not already local) |
+| Page load | Pulls from KV if sync is enabled (takes anything new or more recently edited elsewhere) |
 | Autosave (every ~60s after an edit) | Triggers a debounced push ~5 seconds later |
 | Tab closed or navigated away | Immediately flushes any pending push |
-| Manual Push to KV | Pushes all named characters immediately (requires typing PUSH to confirm) |
-| Manual Pull from KV | Pulls all characters from KV, merging with local storage |
+| Manual Push to KV | Merge with what's in KV, or force an overwrite (requires typing PUSH to confirm) |
+| Manual Pull from KV | Add only characters you don't have, or replace local copies outright |
+| Character deleted | Records a deletion marker so the character doesn't reappear on other devices |
 
 ### Best Practices
 
 * **Name your characters before syncing.** Unnamed or blank characters are intentionally excluded from KV pushes to keep the store clean.
 * **Use Push/Pull manually when switching devices mid-session.** Push on the device you are leaving, then Pull on the device you are switching to. The auto-sync timing means there can be a short window where the latest changes haven't reached KV yet.
-* **Avoid editing the same character on two browsers simultaneously.** The tool uses a last-write-wins strategy — whichever browser autosaves and pushes last will be the version stored in KV. Your local copy on either browser is always safe, but one browser's KV snapshot may fall behind.
+* **Avoid editing the same character on two browsers simultaneously.** Merging happens per character, not per field — if you edit hit points on one device and experience on another, the more recent save wins entirely rather than the two combining. Your local copy on either browser is always safe.
+* **Close and reopen a character after pulling.** A pull updates storage, not a sheet you already have open — an open tab will still hold the older copy and will overwrite it on its next save.
 * **Use JSON export as a backup.** Cloud sync is a convenience feature, not a replacement for periodic JSON exports. Your sync token is included in exports so you can restore your KV identity from a backup file if needed.
 
 ### Limitations
 
 * Requires a free Cloudflare account and a deployed worker
 * KV data expires after 90 days of inactivity (reset on every successful push)
+* Deletion markers are kept for 90 days — a device offline longer than that can resurrect a deleted character
+* Merging relies on device clocks being roughly in sync
 * Maximum payload size is 4 MB per user (sufficient for many characters)
 * Microsoft Edge users may need to add the site as a tracking prevention exception if localStorage or fetch calls are being blocked
 * I am not a developer.
 
 ### Recent Updates
+
+#### v9.0
+
+**Proficiencies**
+
+* Proficiency cards now show the number you actually roll against — "Wis 14 -1 = roll 13 or less" — instead of the raw table entry, with any adjustments listed on hover.
+* Implemented the rule that a natural 20 always fails a proficiency check, and flagged targets of 20 or more as automatic successes rather than printing a number the die can't reach.
+* Added a field for spending extra proficiency slots to improve a proficiency, including the eight cases where the extra slot buys something other than a flat bonus.
+* Added a **Proficiency Abilities** section with interactive panels for the proficiencies whose rules need working out at the table: tracking, healing, jumping, tightrope walking, disguise, forgery, set snares, hunting, and both kinds of riding.
+* Implemented tracking properly — the -6 penalty for non-rangers, the ten cumulative terrain and weather modifiers, the resulting movement rate, and the point below which the trail is lost for good.
+* Surfaced the situational cross-proficiency bonuses (astrology aiding navigation, animal lore aiding snares, healing paired with herbalism, and others) as notes rather than silently folding them into a number that only applies sometimes.
+* Corrected the nonweapon proficiency data: a wrong slot cost, six wrong category labels, three proficiencies wrongly credited to supplements, and four duplicate entries — one of which was overcharging wizards a slot.
+* Fixed the proficiency browser charging out-of-group surcharges for proficiencies that were in the character's group all along.
+* Added a dice roller preset that checks a single d20 against every proficiency the character has.
+
+**Combat and weapons**
+
+* Implemented weapon specialization effects: the melee bonuses, the point-blank range category for bows and crossbows, and the specialist's improved rate of attack by level.
+* Split the weapon card's magic bonus into separate hit and damage adjustments, and added per-weapon attacks per round, size, and range.
+* Added color-coded status stripes to weapon rows showing at a glance whether a weapon is specialized, proficient, related, or unfamiliar.
+* Added blind-fighting's combat modifiers to the character bonuses panel.
+
+**Character rules**
+
+* Corrected the experience tables — paladins were advancing on the ranger progression — and rebuilt all four priest and bard spell progression tables, which were shifted or invented at several levels.
+* Corrected the list of legal multi-class combinations against the book's own table.
+* Added Hit Dice display, along with tracking for starting Constitution and the number of times a character can still be raised from the dead.
+* Implemented the minimum Hit Die rolls granted by very high Constitution.
+* Implemented the Wisdom requirements for 6th and 7th level priest spells.
+* Implemented thief skill adjustments for armor, the 95% skill ceiling, and the separate multi-class restriction on thieving in heavy armor.
+* Added ranger hide and move silently, including the halved chance outside natural surroundings.
+* Added Grand Druid and hierophant handling, including the spell allotment and bonus spell levels.
+* Added warnings for ability scores below class minimums and for illegal class combinations.
+* Added a spells-known counter enforcing the Intelligence limits on how many spells a wizard can record per level.
+
+**Printing**
+
+* Rebuilt the printed sheet as a full multi-page character record covering combat, proficiencies, languages, spells, equipment, followers, and journals.
+* Added a print options panel to choose which sections appear, how many blank write-in lines each gets, and how many extra spellbook, memorization, and note pages to append.
+* Added a "changes to enter" page for players who run from paper and sync back to the tool between sessions.
+* Added six color schemes and a choice of title fonts.
+
+**Interface**
+
+* Reorganized companions and mounts around whether a creature is bonded rather than what kind of creature it is, so a ridden animal companion can be recorded properly.
+* Replaced hover-only tooltips with click-to-open panels in the places that most needed them, so the explanations work on a phone.
+* Roll history entries now expand to show how a result was calculated.
 
 #### v8.0
 
