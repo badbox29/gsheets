@@ -1762,7 +1762,9 @@ function makeArmorNode(data={}, onChange){
       // width down here it is actually readable, and the collapsed row is left
       // to do its real job: identify, equip, expand.
       '<div style="font-size:11px;color:var(--muted);margin:6px 0 2px;">Notes</div>' +
-      '<input class="notes" placeholder="" value="'+(data.notes||'')+'">' +
+      // See makeWeaponNode: style.css matches input[type=text], so a typeless
+      // input never picks up width:100%.
+      '<input class="notes" placeholder="" value="'+(data.notes||'')+'" style="width:100%;">' +
     '</div>';
 
   // Collapse/expand, same pattern as the weapon card.
@@ -2925,7 +2927,11 @@ function makeWeaponNode(data={}, onChange){
     // Notes moved down from the identity row -- at flex:2 up there it truncated
     // mid-word while consuming the width the name and badge needed.
     '<div style="font-size:11px;color:var(--muted);margin:6px 0 2px;">Notes</div>' +
-    '<input class="notes" placeholder="" value="'+(data.notes||'')+'">' +
+    // width:100% is explicit because style.css matches on input[type=text], an
+    // ATTRIBUTE selector -- a typeless <input> never gets the global rule. In a
+    // flex row that went unnoticed; in a block context it falls back to the
+    // browser default of about 20 characters.
+    '<input class="notes" placeholder="" value="'+(data.notes||'')+'" style="width:100%;">' +
   '</div>';
   // Details toggle. Weapons carry four rows of fields now -- eight weapons
   // expanded is an unreadable wall -- so everything but the identity row is
@@ -2939,6 +2945,63 @@ function makeWeaponNode(data={}, onChange){
       weaponToggleBtn.textContent = open ? 'Details' : 'Hide';
     };
   }
+
+  // The name field grows with its contents so the badge sits right against the
+  // text. An <input> cannot shrink-to-fit in CSS, so the width is set here in ch
+  // units. Clamped so an empty field stays clickable and a long name cannot push
+  // the badge into the buttons.
+  // Declared BEFORE refreshWeaponMagic, which calls it.
+  const sizeWeaponName = () => {
+    const inp = el.querySelector('.title');
+    if (!inp) return;
+    const n = (inp.value || inp.placeholder || '').length;
+    inp.style.width = Math.min(Math.max(n + 2, 12), 40) + 'ch';
+  };
+
+  // Enchanted toggle. HIDES, NEVER CLEARS -- unticking must not destroy the
+  // three recorded values. What makes an unticked weapon mundane is the
+  // calculation side ignoring them, not the values being gone.
+  const wpnMagicChk    = el.querySelector('.is-magical');
+  const wpnMagicFields = el.querySelector('.magic-fields');
+
+  // Live badge text. Mirrors weaponInitialBadge above -- keep the two in step.
+  const weaponBadgeText = () => {
+    const num = sel => {
+      const v = parseFloat((el.querySelector(sel) || {}).value);
+      return isNaN(v) ? null : v;
+    };
+    const m  = num('.magic-bonus') || 0;
+    const h  = num('.weapon-hit-adj'), d = num('.weapon-dmg-adj');
+    const eh = (h === null) ? m : h, ed = (d === null) ? m : d;
+    if (m === 0 && eh === 0 && ed === 0) return '';        // -> falls back to the dot
+    if (eh === m && ed === m) return '(' + magicSign(m) + ')';
+    return '(' + magicSign(m) + ': ' + magicSign(eh) + '/' + magicSign(ed) + ')';
+  };
+
+  const refreshWeaponMagic = () => {
+    const on = !!(wpnMagicChk && wpnMagicChk.checked);
+    if (wpnMagicFields) wpnMagicFields.style.display = on ? 'inline-flex' : 'none';
+    updateMagicBadge(el, on, weaponBadgeText());
+    sizeWeaponName();
+  };
+
+  if (wpnMagicChk) {
+    wpnMagicChk.addEventListener('change', () => {
+      refreshWeaponMagic();
+      onChange && onChange();
+    });
+  }
+  // All three bonus fields feed the badge, so all three refresh it. Refresh
+  // ONLY -- the blanket input listener at the end of this function already
+  // reports the value change, and calling onChange here would double it.
+  ['.magic-bonus', '.weapon-hit-adj', '.weapon-dmg-adj'].forEach(sel => {
+    const f = el.querySelector(sel);
+    if (f) f.addEventListener('input', refreshWeaponMagic);
+  });
+
+  const wpnTitleEl = el.querySelector('.title');
+  if (wpnTitleEl) wpnTitleEl.addEventListener('input', sizeWeaponName);
+  sizeWeaponName();
 
   // Remove button
   el.querySelector('.rm').onclick = ()=>{ el.remove(); onChange && onChange(); };
@@ -3500,6 +3563,7 @@ function collectSheet(root){
       damageSM: (n.querySelector('.damage-sm') && n.querySelector('.damage-sm').value) || '',
       damageL: (n.querySelector('.damage-l') && n.querySelector('.damage-l').value) || '',
       magicBonus: (n.querySelector('.magic-bonus') && n.querySelector('.magic-bonus').value) || '',
+      isMagical: !!(n.querySelector('.is-magical') || {}).checked,
       weight: (n.querySelector('.weight') && n.querySelector('.weight').value) || '',
       speed: (n.querySelector('.speed') && n.querySelector('.speed').value) || '',
       damageType: (n.querySelector('.damage-type') && n.querySelector('.damage-type').value) || '',
