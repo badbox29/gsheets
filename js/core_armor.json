@@ -136,6 +136,7 @@
   },
   {
     "Armor Name": "Elven Chain Mail",
+    "Source": "Non-PHB",
     "Armor Type": "Medium (Special)",
     "AC": "5",
     "Weight": "15 lb",
@@ -181,6 +182,7 @@
   },
   {
     "Armor Name": "Helmet, Leather Cap",
+    "Source": "Non-PHB",
     "Armor Type": "Helmet",
     "AC": "0",
     "Weight": "1 lb",
@@ -190,6 +192,7 @@
   },
   {
     "Armor Name": "Helmet, Padded Coif",
+    "Source": "Non-PHB",
     "Armor Type": "Helmet",
     "AC": "0",
     "Weight": "1 lb",
@@ -199,6 +202,7 @@
   },
   {
     "Armor Name": "Helmet, Metal Helm",
+    "Source": "Non-PHB",
     "Armor Type": "Helmet",
     "AC": "0",
     "Weight": "10 lb",
@@ -226,6 +230,7 @@
   },
   {
     "Armor Name": "Gauntlets, Leather",
+    "Source": "Non-PHB",
     "Armor Type": "Gauntlets",
     "AC": "0",
     "Weight": "1 lb",
@@ -235,6 +240,7 @@
   },
   {
     "Armor Name": "Gauntlets, Metal",
+    "Source": "Non-PHB",
     "Armor Type": "Gauntlets",
     "AC": "0",
     "Weight": "2 lb",
@@ -244,6 +250,7 @@
   },
   {
     "Armor Name": "Boots, Soft Leather",
+    "Source": "Non-PHB",
     "Armor Type": "Boots",
     "AC": "0",
     "Weight": "3 lb",
@@ -253,6 +260,7 @@
   },
   {
     "Armor Name": "Boots, Hard Leather",
+    "Source": "Non-PHB",
     "Armor Type": "Boots",
     "AC": "0",
     "Weight": "4 lb",
@@ -262,6 +270,7 @@
   },
   {
     "Armor Name": "Boots, Metal-Shod",
+    "Source": "Non-PHB",
     "Armor Type": "Boots",
     "AC": "0",
     "Weight": "5 lb",
@@ -271,6 +280,7 @@
   },
   {
     "Armor Name": "Cloak",
+    "Source": "PHB Table 44 (Clothing)",
     "Armor Type": "Clothing",
     "AC": "0",
     "Weight": "3 lb",
@@ -280,6 +290,7 @@
   },
   {
     "Armor Name": "Robes",
+    "Source": "PHB Table 44 (Clothing)",
     "Armor Type": "Clothing",
     "AC": "0",
     "Weight": "5 lb",
@@ -289,6 +300,7 @@
   },
   {
     "Armor Name": "Tunic and Pants",
+    "Source": "PHB Table 44 (Clothing)",
     "Armor Type": "Clothing",
     "AC": "0",
     "Weight": "3 lb",
@@ -298,6 +310,7 @@
   },
   {
     "Armor Name": "Leather Jacket",
+    "Source": "Non-PHB",
     "Armor Type": "Clothing",
     "AC": "0",
     "Weight": "4 lb",
@@ -307,6 +320,7 @@
   },
   {
     "Armor Name": "O-Yoroi",
+    "Source": "Non-PHB",
     "Armor Type": "Heavy (Oriental)",
     "AC": "1",
     "Weight": "50 lb",
@@ -316,6 +330,7 @@
   },
   {
     "Armor Name": "Do-Maru",
+    "Source": "Non-PHB",
     "Armor Type": "Medium (Oriental)",
     "AC": "4",
     "Weight": "40 lb",
@@ -325,6 +340,7 @@
   },
   {
     "Armor Name": "Leather Lamellar",
+    "Source": "Non-PHB",
     "Armor Type": "Light (Oriental)",
     "AC": "8",
     "Weight": "25 lb",
@@ -334,6 +350,7 @@
   },
   {
     "Armor Name": "Kozane",
+    "Source": "Non-PHB",
     "Armor Type": "Medium (Oriental)",
     "AC": "6",
     "Weight": "35 lb",
@@ -343,6 +360,7 @@
   },
   {
     "Armor Name": "Tatami-Do",
+    "Source": "Non-PHB",
     "Armor Type": "Medium (Oriental)",
     "AC": "6",
     "Weight": "30 lb",
@@ -352,6 +370,7 @@
   },
   {
     "Armor Name": "Padded Silk Armor",
+    "Source": "Non-PHB",
     "Armor Type": "Light (Oriental)",
     "AC": "8",
     "Weight": "8 lb",
@@ -361,6 +380,7 @@
   },
   {
     "Armor Name": "Dastana",
+    "Source": "Non-PHB",
     "Armor Type": "Bracers",
     "AC": "-1",
     "Weight": "5 lb",
@@ -370,6 +390,7 @@
   },
   {
     "Armor Name": "Greaves",
+    "Source": "Non-PHB",
     "Armor Type": "Leg Armor",
     "AC": "0",
     "Weight": "6 lb",
@@ -379,6 +400,7 @@
   },
   {
     "Armor Name": "Cuirass",
+    "Source": "Non-PHB",
     "Armor Type": "Partial Plate",
     "AC": "5",
     "Weight": "25 lb",
@@ -388,6 +410,7 @@
   },
   {
     "Armor Name": "Breastplate",
+    "Source": "Non-PHB",
     "Armor Type": "Partial Plate",
     "AC": "5",
     "Weight": "20 lb",
@@ -397,6 +420,7 @@
   },
   {
     "Armor Name": "Barding, Leather",
+    "Source": "Non-PHB",
     "Armor Type": "Horse Armor",
     "AC": "6",
     "Weight": "60 lb",
@@ -406,6 +430,7 @@
   },
   {
     "Armor Name": "Barding, Scale Mail",
+    "Source": "Non-PHB",
     "Armor Type": "Horse Armor",
     "AC": "4",
     "Weight": "75 lb",
@@ -415,6 +440,7 @@
   },
   {
     "Armor Name": "Barding, Chain Mail",
+    "Source": "Non-PHB",
     "Armor Type": "Horse Armor",
     "AC": "3",
     "Weight": "70 lb",
@@ -424,6 +450,7 @@
   },
   {
     "Armor Name": "Barding, Banded Mail",
+    "Source": "Non-PHB",
     "Armor Type": "Horse Armor",
     "AC": "2",
     "Weight": "80 lb",
@@ -433,6 +460,7 @@
   },
   {
     "Armor Name": "Barding, Plate Mail",
+    "Source": "Non-PHB",
     "Armor Type": "Horse Armor",
     "AC": "1",
     "Weight": "90 lb",
@@ -442,6 +470,7 @@
   },
   {
     "Armor Name": "Gladiator Armor",
+    "Source": "Non-PHB",
     "Armor Type": "Light (Special)",
     "AC": "7",
     "Weight": "15 lb",
@@ -451,6 +480,7 @@
   },
   {
     "Armor Name": "Ceremonial Armor",
+    "Source": "Non-PHB",
     "Armor Type": "Varies",
     "AC": "Varies",
     "Weight": "Varies",
