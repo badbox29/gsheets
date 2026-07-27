@@ -2026,6 +2026,32 @@ function renderEncumbrance(root) {
   } else if (category === "Overloaded!") {
     categoryEl.style.color = "#f44336";
   }
+
+  // Visible companion to the category tooltip. Without it, a Current Load of
+  // 115 lbs sitting next to a category of "Light" reads as a bug rather than a
+  // rule. Plain var(--glass), NOT amber -- this is information, not a problem,
+  // and amber stays reserved for real ones.
+  // Only numbers are interpolated here, so no HTML escaping is required. If
+  // this is ever extended to name the armor pieces, that text is player-entered
+  // and MUST be escaped.
+  const magicNoteEl = root.querySelector('.encumbrance-magic-note');
+  if (magicNoteEl) {
+    if (magicArmorWeight > 0) {
+      magicNoteEl.innerHTML =
+        '<strong>Magical armor excluded:</strong> carrying ' +
+        totalWeight.toFixed(1) + ' lbs, of which ' +
+        magicArmorWeight.toFixed(1) + ' lbs is magical armor. ' +
+        'Encumbrance effects are calculated on ' +
+        effectiveWeight.toFixed(1) + ' lbs.' +
+        '<br><span style="color:var(--muted);">PHB: the weight of magical armor ' +
+        'counts toward what you can carry, but not toward its effects on ' +
+        'movement and combat.</span>';
+      magicNoteEl.style.display = 'block';
+    } else {
+      magicNoteEl.style.display = 'none';
+      magicNoteEl.textContent = '';
+    }
+  }
 }
 
 async function renderSpellAccess(root) {
