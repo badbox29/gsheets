@@ -3136,7 +3136,13 @@ const WEAPON_TYPES = {
   mace_horsemans:          { label: 'Horseman\'s Mace',    group: 'Mace',      category: 'Melee',         wpName: "Mace, Horseman's" },
   mace_morning_star:       { label: 'Morning Star',        group: 'Mace',      category: 'Melee',         wpName: "Morning Star" },
   // --- Pick ---
-  pick_military:           { label: 'Military Pick',       group: 'Pick',      category: 'Melee',         wpName: "Pick, Military" },
+  // --- Pick ---
+  // KEY DELIBERATELY LEFT AS pick_military. The key is what a weapon card
+  // STORES, so renaming it would orphan every existing record; only the label
+  // and the wpName pointer change. Nothing parses the label, which is exactly
+  // why keys and labels are kept separate.
+  pick_military:           { label: 'Footman\'s Pick',     group: 'Pick',      category: 'Melee',         wpName: "Pick, Footman's" },
+  pick_horsemans:          { label: 'Horseman\'s Pick',    group: 'Pick',      category: 'Melee',         wpName: "Pick, Horseman's" },
   // --- Polearm ---
   polearm_bardiche:        { label: 'Bardiche',            group: 'Polearm',   category: 'Melee',         wpName: "Bardiche" },
   polearm_bec_de_corbin:   { label: 'Bec de Corbin',       group: 'Polearm',   category: 'Melee',         wpName: "Bec de Corbin" },
@@ -3149,7 +3155,9 @@ const WEAPON_TYPES = {
   polearm_guisarme:        { label: 'Guisarme',            group: 'Polearm',   category: 'Melee',         wpName: "Guisarme" },
   polearm_guisarme_voulge: { label: 'Guisarme-Voulge',     group: 'Polearm',   category: 'Melee',         wpName: "Guisarme-Voulge" },
   polearm_halberd:         { label: 'Halberd',             group: 'Polearm',   category: 'Melee',         wpName: "Halberd" },
+  polearm_hook_fauchard:   { label: 'Hook Fauchard',       group: 'Polearm',   category: 'Melee',         wpName: "Hook Fauchard" },
   polearm_lucern_hammer:   { label: 'Lucern Hammer',       group: 'Polearm',   category: 'Melee',         wpName: "Lucern Hammer" },
+  polearm_mancatcher:      { label: 'Mancatcher',          group: 'Polearm',   category: 'Melee',         wpName: "Mancatcher" },
   polearm_partisan:        { label: 'Partisan',            group: 'Polearm',   category: 'Melee',         wpName: "Partisan" },
   polearm_pike_awl:        { label: 'Awl Pike',            group: 'Polearm',   category: 'Melee',         wpName: "Pike, Awl" },
   polearm_ranseur:         { label: 'Ranseur',             group: 'Polearm',   category: 'Melee',         wpName: "Ranseur" },
@@ -3158,6 +3166,7 @@ const WEAPON_TYPES = {
   polearm_voulge:          { label: 'Voulge',              group: 'Polearm',   category: 'Melee',         wpName: "Voulge" },
   // --- Spear ---
   spear:                   { label: 'Spear',               group: 'Spear',     category: 'Melee/Thrown',  wpName: "Spear" },
+  spear_harpoon:           { label: 'Harpoon',             group: 'Spear',     category: 'Melee/Thrown',  wpName: "Harpoon" },
   spear_javelin:           { label: 'Javelin',             group: 'Spear',     category: 'Thrown',        wpName: "Javelin" },
   spear_pilum:             { label: 'Pilum',               group: 'Spear',     category: 'Thrown',        wpName: "Pilum" },
   spear_trident:           { label: 'Trident',             group: 'Spear',     category: 'Melee/Thrown',  wpName: "Trident" },
@@ -3165,6 +3174,7 @@ const WEAPON_TYPES = {
   lance_heavy:             { label: 'Heavy Lance',         group: 'Lance',     category: 'Melee',         wpName: "Lance, Heavy" },
   lance_jousting:          { label: 'Jousting Lance',      group: 'Lance',     category: 'Melee',         wpName: "Lance, Jousting" },
   lance_light:             { label: 'Light Lance',         group: 'Lance',     category: 'Melee',         wpName: "Lance, Light" },
+  lance_medium:            { label: 'Medium Lance',        group: 'Lance',     category: 'Melee',         wpName: "Lance, Medium" },
   // --- Staff ---
   staff_bo:                { label: 'Bo Stick',            group: 'Staff',     category: 'Melee',         wpName: "Bo Stick" },
   staff_quarterstaff:      { label: 'Quarterstaff',        group: 'Staff',     category: 'Melee',         wpName: "Quarterstaff" },
