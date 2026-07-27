@@ -30,7 +30,7 @@
     "Armor Name": "Studded Leather",
     "Armor Type": "Light",
     "AC": "7",
-    "Weight": "20 lb",
+    "Weight": "25 lb",
     "Cost": "20 gp",
     "Movement": "9",
     "Notes": "Leather armor reinforced with metal studs"
@@ -94,7 +94,7 @@
     "Armor Type": "Heavy",
     "AC": "4",
     "Weight": "35 lb",
-    "Cost": "90 gp",
+    "Cost": "200 gp",
     "Movement": "9",
     "Notes": "Overlapping metal bands on chain mail and leather"
   },
@@ -130,7 +130,7 @@
     "Armor Type": "Heavy",
     "AC": "1",
     "Weight": "70 lb",
-    "Cost": "4000+ gp",
+    "Cost": "4000-10000 gp",
     "Movement": "6",
     "Notes": "Best armor available, custom-fitted articulated plate"
   },
@@ -210,7 +210,7 @@
     "Armor Name": "Helmet, Great Helm",
     "Armor Type": "Helmet",
     "AC": "0",
-    "Weight": "15 lb",
+    "Weight": "10 lb",
     "Cost": "30 gp",
     "Movement": "0",
     "Notes": "Full face coverage, -1 to initiative, limits vision"
@@ -219,7 +219,7 @@
     "Armor Name": "Helmet, Basinet",
     "Armor Type": "Helmet",
     "AC": "0",
-    "Weight": "8 lb",
+    "Weight": "5 lb",
     "Cost": "8 gp",
     "Movement": "0",
     "Notes": "Close-fitting helmet with visor"
