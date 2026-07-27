@@ -2817,14 +2817,31 @@ function makeWeaponNode(data={}, onChange){
       : 'No group yet. Pick a Type and this fills in.';
   };
 
-  // THE ANCHOR RULE, same as the armor card: a Type PREFILLS blank fields and
-  // never overwrites one the player has filled. An enchanted or homebrew weapon
-  // keeps its own numbers while still resolving a real group, size and dice.
-  const fillIfBlank = (selector, value) => {
+  // THE ANCHOR RULE, same as the armor card: a Type PREFILLS fields and never
+  // overwrites one the player has filled. An enchanted or homebrew weapon keeps
+  // its own numbers while still resolving a real group, size and dice.
+  //
+  // "Is it blank" is not a good enough test on its own. Switching Long Bow ->
+  // Halberd left the bow's range sitting on the halberd, because the field was
+  // no longer empty and the halberd has nothing to say about range. So track
+  // PROVENANCE instead: dataset.autoVal remembers what WE last wrote. If the
+  // field still holds exactly that, it is ours to overwrite or clear; if it
+  // differs, the player has taken ownership and we never touch it again. Same
+  // idea as strSel.dataset.userSet just below.
+  //
+  // A weapon loaded from a saved character carries no autoVal, so every filled
+  // field reads as player-owned and nothing is disturbed. That is deliberate --
+  // this must never be able to rewrite an existing character's weapons.
+  const fillAuto = (selector, value) => {
     const f = el.querySelector(selector);
-    if (!f || value === undefined || value === null || value === '') return;
-    if (String(f.value).trim() !== '') return;
-    f.value = value;
+    if (!f) return;
+    const cur  = String(f.value).trim();
+    const mine = f.dataset.autoVal !== undefined && cur === f.dataset.autoVal;
+    if (cur !== '' && !mine) return;              // player owns it -- leave alone
+    const v = (value === undefined || value === null) ? '' : String(value);
+    f.value = v;
+    if (v === '') delete f.dataset.autoVal;
+    else          f.dataset.autoVal = v;
   };
 
   if (typeSel) {
@@ -2835,34 +2852,34 @@ function makeWeaponNode(data={}, onChange){
       if (t) {
         // Category is CLASSIFICATION, so it lives in WEAPON_TYPES and is
         // available even before core_wp.json has finished loading.
-        fillIfBlank('.weapon-category', t.category);
+        fillAuto('.weapon-category', t.category);
 
         // Everything else is a STATISTIC, read live through the wpName pointer
         // so it is never duplicated and cannot drift from the book.
         const stats = (typeof getWeaponTypeStats === 'function') ? getWeaponTypeStats(key) : null;
         if (stats) {
-          fillIfBlank('.speed',        stats['Speed Factor']);
-          fillIfBlank('.damage-sm',    stats['Damage (S-M)']);
-          fillIfBlank('.damage-l',     stats['Damage (L)']);
-          fillIfBlank('.weapon-size',  stats['Size']);
+          fillAuto('.speed',       stats['Speed Factor']);
+          fillAuto('.damage-sm',   stats['Damage (S-M)']);
+          fillAuto('.damage-l',    stats['Damage (L)']);
+          fillAuto('.weapon-size', stats['Size']);
           // core_wp.json stores Table 45 ranges as three fields, not one string.
-          // Compose them into the "S/M/L" form the Range field expects, and skip
-          // it entirely for a melee weapon that has no range data. Staff sling
-          // has no short range, so a band can legitimately be blank -- the dash
-          // keeps the three positions readable.
+          // Compose them into the "S/M/L" form the Range field expects. A melee
+          // weapon passes '' so that a stale range left by the PREVIOUS Type is
+          // cleared rather than inherited. Staff sling has no short range, so a
+          // band can legitimately be blank -- the dash keeps the three positions
+          // readable.
           const rS = stats['Range (S)'], rM = stats['Range (M)'], rL = stats['Range (L)'];
-          if (rM || rL) {
-            fillIfBlank('.weapon-range',
-              [rS || '--', rM || '--', rL || '--'].join('/'));
-          }
+          fillAuto('.weapon-range', (rM || rL)
+            ? [rS || '--', rM || '--', rL || '--'].join('/')
+            : '');
           // Weapon Type (B/P/S) -- feeds the optional Weapon Type vs. Armor rule
           // in PHB Ch.9. Blank for whip, scourge and mancatcher, which the book
           // itself leaves without a type.
-          fillIfBlank('.damage-type', stats['Type']);
+          fillAuto('.damage-type', stats['Type']);
           // core_wp.json stores weight as "7 lb"; the field is type=number and
           // rejects the unit, so strip everything but the digits.
           const w = parseFloat(String(stats['Weight'] || '').replace(/[^0-9.]/g, ''));
-          if (!isNaN(w)) fillIfBlank('.weight', w);
+          fillAuto('.weight', isNaN(w) ? '' : w);
         }
       }
 
