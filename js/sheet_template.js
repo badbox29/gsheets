@@ -1568,6 +1568,33 @@ const SHEET_HTML = `
 
         <hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
 
+        <!-- Animals, Mounts & Transport Browser -->
+		<section class="section">
+		  <div style="display:flex;justify-content:space-between;align-items:center;">
+			<h3 style="margin:0;">Animals, Mounts &amp; Transport Browser</h3>
+			<button class="toggle-animals-browser-visibility" style="padding:4px 12px;font-size:12px;">Show/Hide</button>
+		  </div>
+		  <div class="animals-browser-content" style="display:none;">
+			<p style="font-size:12px;color:var(--muted);margin:8px 0;">
+			  PHB Table 44 prices merged with Table 49 carrying capacities. Add an entry to either list below &mdash;
+			  <strong>Bonded</strong> for a companion or bonded mount, <strong>Unbonded</strong> for something merely
+			  owned or hired. Chapter 6 gives animals no weight, so nothing here can go into equipment.
+			</p>
+			<div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+			  <input class="animals-search ephemeral" type="text" placeholder="Search animals and transport..." style="flex:1;min-width:180px;">
+			  <select class="animals-category-filter" style="width:150px;">
+				<option value="">All</option>
+				<option value="Animal">Animals</option>
+				<option value="Transport">Transport</option>
+			  </select>
+			  <button class="refresh-animals" style="padding:4px 12px;font-size:12px;">Refresh</button>
+			</div>
+			<div class="animals-results" style="max-height:320px;overflow-y:auto;border:1px solid var(--border);border-radius:4px;padding:8px;"></div>
+		  </div>
+		</section>
+
+        <hr style="margin:24px 0;border:none;border-top:1px solid #555;opacity:0.4;">
+
         <!-- Unbonded Mounts & Vehicles -->
 		<section class="section">
 		  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
