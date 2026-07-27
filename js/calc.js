@@ -258,6 +258,36 @@ function itemMagicBonus(itemEl, selector) {
   return parseInt((itemEl.querySelector(selector) || {}).value, 10) || 0;
 }
 
+// Resolve the ammunition a weapon row is set to fire, and what it grants.
+// The link is BY NAME, matching the weapon card's dropdown -- see the note
+// there. A selection that no longer matches any record returns missing:true
+// rather than null, so the Quick Reference can say so instead of quietly
+// dropping it.
+// Returns null only when nothing is selected.
+function getWeaponAmmoBonus(root, weaponEl) {
+  if (!root || !weaponEl) return null;
+  const name = ((weaponEl.querySelector('.weapon-ammo') || {}).value || '').trim();
+  if (!name) return null;
+
+  const row = Array.from(root.querySelectorAll('.ammunition-list .item'))
+    .find(n => ((n.querySelector('.title') || {}).value || '').trim() === name);
+  if (!row) return { name: name, missing: true, hit: 0, dmg: 0 };
+  if (!itemIsEnchanted(row)) return { name: name, missing: false, hit: 0, dmg: 0 };
+
+  // Same inheritance rule as the weapon card: blank inherits the enchantment
+  // level, "0" is a real override meaning explicitly nothing.
+  const m = itemMagicBonus(row, '.ammo-magic-bonus');
+  const rawHit = (row.querySelector('.ammo-hit-adj') || {}).value;
+  const rawDmg = (row.querySelector('.ammo-dmg-adj') || {}).value;
+  const has = v => v !== '' && v !== undefined && v !== null;
+  return {
+    name: name,
+    missing: false,
+    hit: has(rawHit) ? (parseInt(rawHit, 10) || 0) : m,
+    dmg: has(rawDmg) ? (parseInt(rawDmg, 10) || 0) : m
+  };
+}
+
 function resolveWeaponProficiency(root, rowEl) {
   const nameEl   = rowEl.querySelector('.title');
   const typeEl   = rowEl.querySelector('.weapon-wtype');
@@ -586,6 +616,23 @@ function renderCombatQuickReference(root) {
         strData, weapon.strMode, str, strExceptional, clazz
       );
 
+      // Ammunition selected on this weapon, and what it contributes.
+      //
+      // STACKING IS A TABLE RULING, not a rule -- the PHB never says whether a
+      // +1 arrow from a +1 bow is +2 or +1. The toggle decides, and the
+      // comparison for "better of the two" is made against the weapon's own
+      // ENCHANTMENT (magicHit/magicDmg), not against hitBase/dmgBase, because
+      // those already have specialization folded in and specialization is not
+      // an enchantment competing with the arrow's.
+      const ammo = (typeof getWeaponAmmoBonus === 'function')
+        ? getWeaponAmmoBonus(root, el) : null;
+      const ammoStacks = (typeof isOptionalRule !== 'function') || isOptionalRule('ammoBonusStacks');
+      let ammoHitAdd = 0, ammoDmgAdd = 0;
+      if (ammo && !ammo.missing) {
+        ammoHitAdd = ammoStacks ? ammo.hit : Math.max(magicHit, ammo.hit) - magicHit;
+        ammoDmgAdd = ammoStacks ? ammo.dmg : Math.max(magicDmg, ammo.dmg) - magicDmg;
+      }
+
       // Which lines are meaningful for this weapon.
       const showMelee   = !cat || cat === 'melee' || cat === 'melee/thrown';
       const showThrown  = cat === 'thrown' || cat === 'melee/thrown';
@@ -628,8 +675,10 @@ function renderCombatQuickReference(root) {
       if (showMissile) {
         // adj is {0,0} for crossbows/slings, and the plain-18 row for an
         // ordinary bow, so this one expression covers every ranged case.
-        const toHit = dexMissile + adj.toHit + hitBase + profPen;
-        const dmg   = adj.damage + dmgBase;
+        // The ammunition's contribution lands here and NOWHERE ELSE -- melee and
+        // thrown attacks do not involve a launcher.
+        const toHit = dexMissile + adj.toHit + hitBase + profPen + ammoHitAdd;
+        const dmg   = adj.damage + dmgBase + ammoDmgAdd;
         html += 'Missile: d20' + sign(toHit) + ' → ' + weapon.damageSM + dmgSign(dmg) +
                 ' / ' + weapon.damageL + dmgSign(dmg) + '<br>';
       }
@@ -674,6 +723,31 @@ function renderCombatQuickReference(root) {
                 'per plus. Hit and damage adjustments are separate fields, so a weapon whose ' +
                 'enchantment is not uniform reports what it actually grants.">' +
                 'Magical +' + enchant + ': ' + effects + '</span><br>';
+      }
+
+      // Ammunition. Shown for missile weapons only -- a bow swung as a club
+      // fires nothing, and thrown weapons are not launcher-and-ammunition.
+      if (ammo && showMissile) {
+        if (ammo.missing) {
+          html += '<span style="color:var(--warning, #e0a34a);" ' +
+                  'title="This weapon is set to fire ammunition that is no longer in your ' +
+                  'Ammunition list -- most likely renamed or removed. The selection is kept ' +
+                  'rather than cleared so it is not lost silently.">' +
+                  'Ammo: ' + escapeHtml(ammo.name) + ' (not in your ammunition list)</span><br>';
+        } else {
+          const bits = [];
+          if (ammoHitAdd) bits.push(sign(ammoHitAdd) + ' hit');
+          if (ammoDmgAdd) bits.push(sign(ammoDmgAdd) + ' damage');
+          const effect = bits.length
+            ? bits.join(', ') + ' (included above)'
+            : 'no bonus applied';
+          html += '<span style="color:var(--magic, #a98fd0);" ' +
+                  'title="Bonuses from the ammunition itself. Whether an enchanted arrow ' +
+                  'stacks with an enchanted launcher is not addressed by the PHB -- it is set ' +
+                  'under Table Rulings in Settings, currently ' +
+                  (ammoStacks ? 'STACKING' : 'BETTER OF THE TWO') + '.">' +
+                  'Ammo: ' + escapeHtml(ammo.name) + ' \u2014 ' + effect + '</span><br>';
+        }
       } else if (magicHit || magicDmg) {
         // Adjustments with no enchantment level -- deliberately NOT called
         // magical, since nothing here says the weapon is.
