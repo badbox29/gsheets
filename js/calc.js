@@ -238,6 +238,26 @@ function renderRevivals(root) {
 
 // Resolve a weapon row's proficiency status and paint its badge.
 // Returns { status, penalty } so the caller can apply the penalty to to-hit.
+// ===== Enchantment gating, shared by the armor, weapon and ammunition cards =====
+// THE RULE: a bonus only counts when its row is ticked Enchanted. Unticking
+// HIDES the fields rather than clearing them, so the recorded numbers survive --
+// which means a hidden value would otherwise go on silently improving AC or
+// to-hit with nothing on screen to explain it. That is the bug the checkbox
+// exists to prevent, and this is the single place that prevents it.
+//
+// A row with NO checkbox falls through and reads its value as before, so any
+// card not yet converted keeps working.
+function itemIsEnchanted(itemEl) {
+  if (!itemEl) return false;
+  const chk = itemEl.querySelector('.is-magical');
+  return chk ? !!chk.checked : true;
+}
+
+function itemMagicBonus(itemEl, selector) {
+  if (!itemEl || !itemIsEnchanted(itemEl)) return 0;
+  return parseInt((itemEl.querySelector(selector) || {}).value, 10) || 0;
+}
+
 function resolveWeaponProficiency(root, rowEl) {
   const nameEl   = rowEl.querySelector('.title');
   const typeEl   = rowEl.querySelector('.weapon-wtype');
@@ -462,12 +482,16 @@ function renderCombatQuickReference(root) {
         name: el.querySelector('.title').value || 'Unnamed Weapon',
         damageSM: el.querySelector('.damage-sm').value || '1d6',
         damageL: el.querySelector('.damage-l').value || '1d6',
-        magicBonus: parseInt(el.querySelector('.magic-bonus').value || 0, 10),
+        magicBonus: itemMagicBonus(el, '.magic-bonus'),
         // Passed through as raw strings, not numbers -- "" means inherit from
         // magicBonus and "0" means an explicit zero, and Number("") is 0, which
         // would collapse the two.
-        hitAdj: hitAdjEl ? hitAdjEl.value : '',
-        dmgAdj: dmgAdjEl ? dmgAdjEl.value : '',
+        // Forced to "0" rather than "" when unticked: "" would inherit from
+        // magicBonus, which is already 0, so either works today -- but "0" says
+        // "explicitly nothing" and cannot be re-broken by a later change to the
+        // inheritance rule.
+        hitAdj: itemIsEnchanted(el) ? (hitAdjEl ? hitAdjEl.value : '') : '0',
+        dmgAdj: itemIsEnchanted(el) ? (dmgAdjEl ? dmgAdjEl.value : '') : '0',
         attacks: atkEl ? atkEl.value : '',
         // Free text on the card ("70/140/210"), passed through as typed rather
         // than parsed -- the player may have entered their own figures.
@@ -486,7 +510,9 @@ function renderCombatQuickReference(root) {
         profPenalty: prof.penalty,
         effSpeed: getEffectiveWeaponSpeed(
           (el.querySelector('.speed') || {}).value,
-          (el.querySelector('.magic-bonus') || {}).value
+          // 0 when unticked -- an untracked enchantment must not keep reducing
+          // the speed factor.
+          itemMagicBonus(el, '.magic-bonus')
         )
       });
     }
@@ -1798,7 +1824,9 @@ function renderArmorClass(root) {
     const name = item.querySelector('.title').value.trim();
     const type = item.querySelector('.armor-type')?.value || "Armor";
     const baseACValue = parseInt(item.querySelector('.base-ac').value, 10);
-    const magicBonus = parseInt(item.querySelector('.ac-bonus').value, 10) || 0;
+    // Gated on the Enchanted tick. A hidden non-zero value silently improving
+    // AC is exactly the bug the checkbox exists to prevent.
+    const magicBonus = itemMagicBonus(item, '.ac-bonus');
     
     if (!name) return;
     
@@ -1970,12 +1998,9 @@ function renderEncumbrance(root) {
   // limit -- but tallied separately so it can be subtracted out of the figure
   // that determines the encumbrance CATEGORY. See effectiveWeight below.
   //
-  // Detected from the card's Magic field (.ac-bonus) being non-zero.
-  // KNOWN GAP: armor that is magical but grants no AC bonus -- elven chain mail,
-  // or a suit with special properties only -- is NOT detected and will be
-  // treated as mundane. There is no separate "is magical" flag on the armor
-  // card; adding one was considered and deferred because the card already has a
-  // field labelled "Magic" and two similarly-named controls would confuse.
+  // Detected from the card's explicit Enchanted tick. This USED to infer it
+  // from a non-zero AC bonus, which could not see armor that is magical but
+  // grants no AC -- elven chain being exactly that case. That gap is closed.
   //
   // The exclusion is applied whether or not the piece is equipped, matching how
   // this function already counts armor weight. The PHB's worked example has the
@@ -1985,9 +2010,9 @@ function renderEncumbrance(root) {
   let magicArmorWeight = 0;
   armor.forEach(item => {
     const weight = parseFloat(item.querySelector('.weight')?.value) || 0;
-    const magicBonus = parseFloat(item.querySelector('.ac-bonus')?.value) || 0;
+    const chk = item.querySelector('.is-magical');
     totalWeight += weight;
-    if (magicBonus !== 0) magicArmorWeight += weight;
+    if (chk && chk.checked) magicArmorWeight += weight;
   });
   
   // Weapon weight
