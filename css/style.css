@@ -10,7 +10,7 @@
       --glass: rgba(255,255,255,0.035);
 
       /* Semantic colours. These carry RULES INFORMATION, not decoration:
-         --error = over-budget slots / out-of-group surcharge / not proficient.
+         --error = over-budget slots / out-of-group surcharge / not proficient..
          Previously these did not exist and the JS faked --error with a
          hardcoded #ff6b6b fallback. */
       --error: #e2645f;
