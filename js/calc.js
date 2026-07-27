@@ -1846,9 +1846,17 @@ function renderArmorClass(root) {
 
     // Base AC providers (only best one counts)
     if (type === "Armor" || type === "Bracers") {
-      if (baseACValue && baseACValue < baseAC) {
-        baseAC = baseACValue - magicBonus; // enchantment IMPROVES AC
-        baseACSource = name;
+      // Compare EFFECTIVE against EFFECTIVE. This used to test the candidate's
+      // UNENCHANTED value against the incumbent's already-enchanted one, which
+      // is not just wrong but ORDER-DEPENDENT: studded leather (7) and leather
+      // +5 (effective 3) gave AC 7 or AC 3 purely according to which row came
+      // first in the list.
+      // isNaN rather than truthiness, so a legitimate AC 0 -- the best the
+      // table reaches -- is not silently discarded as "blank".
+      const effectiveAC = baseACValue - magicBonus;
+      if (!isNaN(baseACValue) && effectiveAC < baseAC) {
+        baseAC = effectiveAC;
+        baseACSource = magicBonus ? (name + ' ' + magicSign(magicBonus)) : name;
       }
     }
     // AC Bonus providers (all stack)
