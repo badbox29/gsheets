@@ -1713,9 +1713,11 @@ function makeArmorNode(data={}, onChange){
     '</div>' +
     '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
       '<input type="checkbox" class="equipped" '+(data.equipped?'checked':'')+' style="width:60px;margin:auto;">' +
+      '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1">' +
+      // AFTER the name field, not before. The name is flex:1, so the badge sits
+      // at the right edge of the name column and lines up down the whole list.
       magicBadgeHtml(armorIsMagical,
         (parseFloat(data.acBonus) || 0) !== 0 ? '(' + magicSign(parseFloat(data.acBonus)) + ')' : '') +
-      '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1">' +
       '<input class="notes" placeholder="" value="'+(data.notes||'')+'" style="flex:2">' +
       '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
       '<button class="rm">Remove</button>' +
