@@ -16,12 +16,12 @@
       --error: #e2645f;
       --warning: #d9a441;
       --success: #67bd84;
-      --info: #6fa--info: #6fa8d0;
+      --info: #6fa8d0;
       /* --magic = enchanted item grouping on the weapon, armor and ammunition
          cards. Deliberately NOT --info blue: blue already means SPECIALIZED on
          weapon rows, and both would appear on the same card. Violet reads as
          "enchanted" without needing a legend. */
-      --magic: #a98fd0;8d0;
+      --magic: #a98fd0;
 
       /* Foreground for text sitting ON an accent-filled surface (badges,
          primary buttons). This is the variable whose absence made the NATIVE
