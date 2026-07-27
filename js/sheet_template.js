@@ -2359,7 +2359,7 @@ const SHEET_HTML = `
 	      weightless on purpose: encumbrance covers it with the flat 5 lb clothing allowance.
 	    </p>
 	    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
-	      <input class="goods-search" type="text" placeholder="Search goods and services..." style="flex:1;min-width:180px;">
+	      <input class="goods-search ephemeral" type="text" placeholder="Search goods and services..." style="flex:1;min-width:180px;">
 	      <select class="goods-category-filter" style="width:160px;">
 	        <option value="">All Categories</option>
 	        <option value="Clothing">Clothing</option>
