@@ -2025,6 +2025,22 @@ const ENCUMBRANCE_EFFECTS = {
 // "dressed". Surfaced as its own line in the encumbrance tooltip so the weight
 // is never unexplained.
 const ENCUMBRANCE_CLOTHING_WEIGHT = 5;
+
+// === Coin weight (NOT stated in PHB Chapter 6) ===
+// Chapter 6 gives coin values (Table 42) but never a coin weight. Two figures
+// are in common use at 2e tables:
+//   50 coins = 1 lb -- the 2nd Edition figure, from the DMG's encumbrance rules.
+//   10 coins = 1 lb -- the 1st Edition holdover, still widely used.
+// Because the PHB is silent, neither can be called RAW from this chapter, which
+// is why this is a toggle rather than a fixed constant. Do not "correct" one of
+// these away on a future audit -- both are deliberate.
+// Read live via getCoinsPerPound() so a Settings change applies without a reload.
+const COINS_PER_POUND_2E = 50;
+const COINS_PER_POUND_1E = 10;
+
+function getCoinsPerPound() {
+  return isOptionalRule('coinWeight2e') ? COINS_PER_POUND_2E : COINS_PER_POUND_1E;
+}
 // === Optional Rule toggle: encumbrance combat/movement effects ===
 // The PHB labels encumbrance an OPTIONAL RULE, so ignoring it entirely is RAW.
 // When false, encumbrance is purely INFORMATIONAL -- the category, weight
@@ -3618,6 +3634,16 @@ const OPTIONAL_RULES = {
              'notice entirely.',
     category: 'override',
     default: true
+  },
+  coinWeight2e: {
+    label:   'Coins weigh 1/50 lb (2nd Edition)',
+    detail:  'PHB Chapter 6 never states a coin weight, so neither figure is RAW from the ' +
+             'Player\'s Handbook alone. Checked uses the 2nd Edition figure of 50 coins to the ' +
+             'pound, which comes from the DMG\'s encumbrance rules. Unticked uses the 1st ' +
+             'Edition figure of 10 coins to the pound, still common at many tables. Affects ' +
+             'the coin weight field and therefore the encumbrance total.',
+    category: 'override',
+    default: true      // checked = the 2e rule
   }
 };
 const OPTIONAL_RULES_CATEGORIES = {
