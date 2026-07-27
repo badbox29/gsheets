@@ -2728,7 +2728,17 @@ async function renderArmorBrowser(root) {
     if (armor.AC) details.push(`AC: ${armor.AC}`);
     if (armor.Weight) details.push(`Weight: ${armor.Weight}`);
     if (armor.Cost) details.push(`Cost: ${armor.Cost}`);
-    if (armor.Movement) details.push(`Movement: ${armor.Movement}`);
+    // MOVEMENT IS DELIBERATELY NOT SHOWN -- DO NOT RE-ADD.
+    // core_armor.json carries a Movement column (12/9/6) inherited from 1st
+    // Edition, where the armor itself set a movement rate. AD&D 2e does not work
+    // that way: movement is driven by ENCUMBRANCE, by total weight carried, via
+    // PHB Table 47. Displaying it here presented a rule that does not exist in
+    // this edition, sitting right next to figures that do. The column is left in
+    // the JSON in case a table house-rules 1e-style armor movement, but nothing
+    // reads it.
+    // Provenance is shown instead: entries with no Source key are PHB Chapter 6,
+    // so only the exceptions announce themselves.
+    if (armor.Source) details.push(`Source: ${armor.Source}`);
     
     if (details.length > 0) {
       infoHTML += `<div style="font-size:11px;color:var(--muted);margin-top:2px;">${details.join(' | ')}</div>`;
