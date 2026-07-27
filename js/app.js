@@ -2848,6 +2848,7 @@ function makeWeaponNode(data={}, onChange){
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
       '<div style="width:100px;text-align:center;">Attacks/Rd</div>' +
       '<div style="width:90px;text-align:center;">Size</div>' +
+      '<div style="width:150px;text-align:center;">Ammunition</div>' +
       '<div style="flex:1;text-align:center;">Range (S/M/L)</div>' +
     '</div>' +
     '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
@@ -2863,6 +2864,13 @@ function makeWeaponNode(data={}, onChange){
         'Set it for a custom weapon, or one whose name does not match the book.">' +
         weaponSizeOptions(data.size) +
       '</select>' +
+      '<select class="weapon-ammo" style="width:150px;" title="' +
+        'Which ammunition this weapon fires, chosen from your own Ammunition list.&#10;' +
+        'Its enchantment is applied to missile attacks with this weapon.&#10;' +
+        'Whether an enchanted arrow stacks with an enchanted bow is a table&#10;' +
+        '  ruling -- see Table Rulings in Settings.&#10;' +
+        'The list is rebuilt each time you open it, so ammunition added since&#10;' +
+        '  this card was drawn still appears."></select>' +
       '<input class="weapon-range" value="'+(data.range||'')+'" placeholder="e.g. 50/100/150" style="flex:1;text-align:center;" title="' +
         'Short / medium / long range in yards, for missile weapons.&#10;' +
         'Filled from PHB Table 45 when you pick a Type, if left blank.&#10;' +
@@ -3003,9 +3011,56 @@ function makeWeaponNode(data={}, onChange){
   if (wpnTitleEl) wpnTitleEl.addEventListener('input', sizeWeaponName);
   sizeWeaponName();
 
+  // Ammunition selector. Rebuilt on FOCUS from the character's own ammunition
+  // list, so newly added ammo appears without a reload and a deleted record
+  // stops being offered -- no need to hook every change to the ammo list.
+  //
+  // A stored selection that no longer matches any record is KEPT and marked
+  // "(missing)" rather than dropped. Silently clearing it would destroy
+  // information the player put there, and the marker makes a broken link
+  // obvious instead of quiet.
+  //
+  // Options are built with textContent, not string concatenation, so ammunition
+  // names -- which are free text -- need no escaping.
+  const ammoSel = el.querySelector('.weapon-ammo');
+  const populateWeaponAmmo = () => {
+    if (!ammoSel) return;
+    const chosen = ammoSel.value || data.ammo || '';
+    const sheet  = el.closest('.sheet-container');
+    const names  = sheet
+      ? Array.from(sheet.querySelectorAll('.ammunition-list .item'))
+          .map(n => ((n.querySelector('.title') || {}).value || '').trim())
+          .filter(Boolean)
+      : [];
+    const add = (value, label) => {
+      const o = document.createElement('option');
+      o.value = value;
+      o.textContent = label;
+      ammoSel.appendChild(o);
+    };
+    ammoSel.innerHTML = '';
+    add('', 'None');
+    names.forEach(n => add(n, n));
+    if (chosen && names.indexOf(chosen) === -1) add(chosen, chosen + ' (missing)');
+    ammoSel.value = chosen;
+  };
+  if (ammoSel) {
+    populateWeaponAmmo();
+    // 'focus' fires before the list drops open, so the options are already
+    // current by the time the player sees them.
+    ammoSel.addEventListener('focus', populateWeaponAmmo);
+  }
+
   // Remove button
   el.querySelector('.rm').onclick = ()=>{ el.remove(); onChange && onChange(); };
-  el.querySelectorAll('input').forEach(inp =>
+  // 'input, select' -- NOT 'input' alone. This matched <input> TAGS only, so
+  // Attacks/Rd, Size and Proficiency (all <select>) never marked the sheet
+  // unsaved and a change to them could be lost. The armor card already reads
+  // 'input, select'; this brings the weapon card into line.
+  // The Category / Type / STR Bonus selects have their own 'change' handlers
+  // below and will now also fire this on 'input'. markUnsaved is idempotent, so
+  // the duplication is wasteful rather than wrong.
+  el.querySelectorAll('input, select').forEach(inp =>
     inp.addEventListener('input', ()=>onChange && onChange())
   );
 
@@ -3716,7 +3771,11 @@ function collectSheet(root){
       dmgAdj: (n.querySelector('.weapon-dmg-adj') && n.querySelector('.weapon-dmg-adj').value) || '',
       attacks: (n.querySelector('.weapon-attacks') && n.querySelector('.weapon-attacks').value) || '',
       size: (n.querySelector('.weapon-size') && n.querySelector('.weapon-size').value) || '',
-      range: (n.querySelector('.weapon-range') && n.querySelector('.weapon-range').value) || ''
+      range: (n.querySelector('.weapon-range') && n.querySelector('.weapon-range').value) || '',
+      // The ammunition this weapon fires, stored BY NAME -- that is the identity
+      // shown on the ammo card. A rename breaks the link, which the dropdown
+      // surfaces with a "(missing)" marker rather than silently clearing.
+      ammo: (n.querySelector('.weapon-ammo') && n.querySelector('.weapon-ammo').value) || ''
     }));
 	
   const ammunition = qsa(root,'.ammunition-list .item')
