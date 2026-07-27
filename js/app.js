@@ -1707,9 +1707,32 @@ function makeArmorNode(data={}, onChange){
     };
   }
 
-  // Picking a type PREFILLS AC and weight, but only into blank fields -- an
-  // enchanted or homebrew piece keeps whatever the player typed. This is the
-  // autofill-not-authority rule: the stored type drives the rules either way.
+  // Picking a type PREFILLS AC and weight -- an enchanted or homebrew piece
+  // keeps whatever the player typed. This is the autofill-not-authority rule:
+  // the stored type drives the rules either way.
+  //
+  // "Is it blank" is not a good enough test. Switching Plate Mail -> Leather
+  // left AC 3 and 50 lbs sitting on the leather, because the fields were no
+  // longer empty. So track PROVENANCE: dataset.autoVal remembers what WE last
+  // wrote. If the field still holds exactly that, it is ours to overwrite or
+  // clear; if it differs, the player has taken ownership and we never touch it
+  // again. Mirrors fillAuto on the weapon card -- keep the two in step.
+  //
+  // applyTypeDefaults(false) runs at construction and returns before this, so a
+  // card built from a saved character never gets an autoVal and is never
+  // rewritten.
+  const armorFillAuto = (selector, value) => {
+    const f = el.querySelector(selector);
+    if (!f) return;
+    const cur  = String(f.value).trim();
+    const mine = f.dataset.autoVal !== undefined && cur === f.dataset.autoVal;
+    if (cur !== '' && !mine) return;              // player owns it -- leave alone
+    const v = (value === undefined || value === null) ? '' : String(value);
+    f.value = v;
+    if (v === '') delete f.dataset.autoVal;
+    else          f.dataset.autoVal = v;
+  };
+
   const typeSel = el.querySelector('.armor-type');
   const noteEl  = el.querySelector('.armor-type-note');
   const applyTypeDefaults = (userInitiated) => {
@@ -1728,10 +1751,11 @@ function makeArmorNode(data={}, onChange){
       }
     }
     if (!d || !userInitiated) return;
-    const acEl = el.querySelector('.base-ac');
-    const wtEl = el.querySelector('.weight');
-    if (acEl && !acEl.value && typeof d.ac === 'number')     acEl.value = d.ac;
-    if (wtEl && !wtEl.value && typeof d.weight === 'number') wtEl.value = d.weight;
+    // Pass '' when the new type has no value for a field, so a stale figure left
+    // by the PREVIOUS type is cleared rather than inherited. SHIELD_TYPES carry
+    // no `ac` -- a shield's bonus is not a base AC -- so picking one clears it.
+    armorFillAuto('.base-ac', typeof d.ac     === 'number' ? d.ac     : '');
+    armorFillAuto('.weight',  typeof d.weight === 'number' ? d.weight : '');
     // Keep the wear slot consistent with the chosen type.
     const slotEl = el.querySelector('.armor-slot');
     if (slotEl) {
