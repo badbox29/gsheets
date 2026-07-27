@@ -2849,7 +2849,7 @@ function makeWeaponNode(data={}, onChange){
       '<div style="width:100px;text-align:center;">Attacks/Rd</div>' +
       '<div style="width:90px;text-align:center;">Size</div>' +
       '<div class="weapon-ammo-head" style="width:150px;text-align:center;">Ammunition</div>' +
-      '<div style="flex:1;text-align:center;">Range (S/M/L)</div>' +
+      '<div class="weapon-range-head" style="flex:1;text-align:center;">Range (S/M/L)</div>' +
     '</div>' +
     '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
       '<select class="weapon-attacks" style="width:100px;" title="' +
@@ -3055,13 +3055,28 @@ function makeWeaponNode(data={}, onChange){
   // .weapon-category is queried inside the function rather than captured,
   // because catSel is declared further down this file and would be in the
   // temporal dead zone at this point.
-  const ammoHead = el.querySelector('.weapon-ammo-head');
+  const ammoHead  = el.querySelector('.weapon-ammo-head');
+  const rangeEl   = el.querySelector('.weapon-range');
+  const rangeHead = el.querySelector('.weapon-range-head');
   const syncAmmoVisibility = () => {
     const cs  = el.querySelector('.weapon-category');
     const cat = ((cs && cs.value) || '').trim().toLowerCase();
-    const show = cat === 'ranged';
-    if (ammoSel)  ammoSel.style.display  = show ? '' : 'none';
-    if (ammoHead) ammoHead.style.display = show ? '' : 'none';
+
+    // Ammunition: a launcher only. A sword fires nothing and a thrown dagger is
+    // not launcher-and-ammunition.
+    const showAmmo = cat === 'ranged';
+    if (ammoSel)  ammoSel.style.display  = showAmmo ? '' : 'none';
+    if (ammoHead) ammoHead.style.display = showAmmo ? '' : 'none';
+
+    // Range: missile OR thrown. PHB Table 45 covers thrown weapons -- dagger,
+    // hand axe, javelin, spear -- as well as bows and crossbows, but a pure
+    // melee weapon has no range at all. Chapter 6's weapon table has no length
+    // or reach column, so there is nothing to show for a longsword.
+    // Blank category is treated as showing, matching how the Quick Reference
+    // defaults an unclassified weapon to a missile line.
+    const showRange = !cat || cat === 'ranged' || cat === 'thrown' || cat === 'melee/thrown';
+    if (rangeEl)   rangeEl.style.display   = showRange ? '' : 'none';
+    if (rangeHead) rangeHead.style.display = showRange ? '' : 'none';
   };
   if (ammoSel) {
     populateWeaponAmmo();
