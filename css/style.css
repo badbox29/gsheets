@@ -16,7 +16,12 @@
       --error: #e2645f;
       --warning: #d9a441;
       --success: #67bd84;
-      --info: #6fa8d0;
+      --info: #6fa--info: #6fa8d0;
+      /* --magic = enchanted item grouping on the weapon, armor and ammunition
+         cards. Deliberately NOT --info blue: blue already means SPECIALIZED on
+         weapon rows, and both would appear on the same card. Violet reads as
+         "enchanted" without needing a legend. */
+      --magic: #a98fd0;8d0;
 
       /* Foreground for text sitting ON an accent-filled surface (badges,
          primary buttons). This is the variable whose absence made the NATIVE
@@ -334,6 +339,7 @@
 	  --warning: #7f5a14;
 	  --success: #2b6440;
 	  --info: #1d5878;
+	  --magic: #6b4a9e;
 
 	  --badge-fg: #eceef1;
 	  --btn-fg: #eceef1;
@@ -904,4 +910,47 @@
 	  line-height: 1.5;
 	  font-weight: 400;
 	  color: var(--text);
+	}
+
+	/* === Enchanted item grouping (weapon / armor / ammunition cards) ===
+	   One rule for all three cards so the pattern is defined once. The checkbox
+	   sits INSIDE the outlined box, at its top, so the box visibly belongs to the
+	   tick that reveals it.
+
+	   The fields inside are HIDDEN, NEVER CLEARED, when the box is unticked --
+	   unticking must not destroy what a player recorded. The calculation side is
+	   what makes an unticked item mundane, not the absence of a value. */
+	.magic-group {
+	  border: 1px solid var(--magic, #a98fd0);
+	  border-radius: var(--radius, 4px);
+	  padding: 6px 8px;
+	  margin: 6px 0;
+	  background: color-mix(in srgb, var(--magic, #a98fd0) 7%, transparent);
+	}
+	.magic-group > label.magic-toggle {
+	  display: flex;
+	  align-items: center;
+	  gap: 6px;
+	  color: var(--magic, #a98fd0);
+	  font-weight: 600;
+	  font-size: 12px;
+	  margin: 0;
+	  cursor: pointer;
+	  user-select: none;
+	}
+	/* The global `input{width:100%}` rule would stretch this across the row. */
+	.magic-group > label.magic-toggle input[type="checkbox"] {
+	  width: auto;
+	  flex-shrink: 0;
+	  margin: 0;
+	}
+	.magic-group .magic-fields {
+	  display: flex;
+	  flex-wrap: wrap;
+	  gap: 8px;
+	  margin-top: 6px;
+	}
+	.magic-group .magic-fields > div {
+	  flex: 1 1 90px;
+	  min-width: 90px;
 	}
