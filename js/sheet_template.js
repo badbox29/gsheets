@@ -1224,7 +1224,10 @@ const SHEET_HTML = `
 		<section class="section equipment-browser-section">
 		  <div style="display:flex;justify-content:space-between;align-items:center;">
 			<h3>Carried Equipment Browser</h3>
-			<button class="toggle-equipment-browser-visibility" style="padding:4px 12px;font-size:12px;">Show/Hide</button>
+			<div style="display:flex;gap:6px;">
+			  <button class="open-goods-modal" style="padding:4px 12px;font-size:12px;">Price Reference</button>
+			  <button class="toggle-equipment-browser-visibility" style="padding:4px 12px;font-size:12px;">Show/Hide</button>
+			</div>
 		  </div>
 		  <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
 			Search and browse available equipment. Click "Add" to add an item to your inventory.
@@ -2342,6 +2345,32 @@ const SHEET_HTML = `
 	    <hr style="border:none;border-top:1px solid var(--border);margin:0 0 16px;">
 	    <div style="display:flex;justify-content:flex-end;">
 	      <button class="kv-modal-close" style="padding:8px 20px;">Close</button>
+	    </div>
+	  </div>
+	</div>
+
+	<!-- Goods & Services Price Reference (read-only) -->
+	<div class="goods-modal-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:10000;justify-content:center;align-items:center;">
+	  <div style="background:var(--panel);border-radius:8px;max-width:640px;width:94%;max-height:85vh;overflow-y:auto;padding:20px 24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+	    <h2 style="margin:0 0 4px 0;font-size:16px;">Goods &amp; Services Price Reference</h2>
+	    <p style="font-size:12px;color:var(--muted);margin:0 0 12px;">
+	      PHB Chapter 6, Table 44. Reference only &mdash; nothing here can be added to your
+	      inventory, because the book gives no weights for these sub-tables. Clothing is
+	      weightless on purpose: encumbrance covers it with the flat 5 lb clothing allowance.
+	    </p>
+	    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+	      <input class="goods-search" type="text" placeholder="Search goods and services..." style="flex:1;min-width:180px;">
+	      <select class="goods-category-filter" style="width:160px;">
+	        <option value="">All Categories</option>
+	        <option value="Clothing">Clothing</option>
+	        <option value="Provisioning">Provisioning</option>
+	        <option value="Food &amp; Lodging">Food &amp; Lodging</option>
+	        <option value="Service">Service</option>
+	      </select>
+	    </div>
+	    <div class="goods-results" style="max-height:50vh;overflow-y:auto;border:1px solid var(--border);border-radius:4px;padding:8px;"></div>
+	    <div style="display:flex;justify-content:flex-end;margin-top:16px;">
+	      <button class="goods-modal-close" style="padding:8px 16px;">Close</button>
 	    </div>
 	  </div>
 	</div>
