@@ -3797,6 +3797,138 @@ function updateLanguageFlag(root, index, flagName, value) {
 }
 
 // Add equipment item from browser to carried equipment
+// ===== Animals, Mounts & Transport browser (PHB Tables 44 + 49) =====
+// Feeds the two follower lists. There is DELIBERATELY no "add to equipment"
+// path: Chapter 6 gives animals no weight, so an inventory row would sit in the
+// encumbrance total contributing nothing -- the same reason the goods modal is
+// read-only. A goat belongs in the Unbonded list, which already covers animals
+// the character owns without a bond.
+function renderAnimalsBrowser(root) {
+  const resultsDiv = root.querySelector('.animals-results');
+  if (!resultsDiv) return;
+
+  if (typeof ANIMALS_DATA === 'undefined' || !ANIMALS_DATA || ANIMALS_DATA.length === 0) {
+    resultsDiv.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px;">' +
+      'Animal list not loaded. Check that js/core_animals.json is reachable.</p>';
+    return;
+  }
+
+  const esc = s => String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  const t   = ((root.querySelector('.animals-search') || {}).value || '').toLowerCase();
+  const cat = (root.querySelector('.animals-category-filter') || {}).value || '';
+
+  const rows = ANIMALS_DATA.filter(a =>
+    (!cat || a.Category === cat) &&
+    (!t   || (a.Name     || '').toLowerCase().indexOf(t) !== -1
+          || (a.Category || '').toLowerCase().indexOf(t) !== -1)
+  );
+
+  resultsDiv.innerHTML = '';
+  if (rows.length === 0) {
+    resultsDiv.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px;">' +
+      'Nothing matches.</p>';
+    return;
+  }
+
+  rows.forEach(a => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:10px;' +
+                        'padding:5px 6px;border-bottom:1px solid var(--border);font-size:12px;';
+
+    // Only the 14 Table 49 mounts have load bands; everything else is priced only.
+    const bands = a['Base Move']
+      ? ' &middot; carries ' + esc(a['Base Move']) +
+        ' <span style="opacity:0.7;">(2/3 move ' + esc(a['2/3 Move']) +
+        ', 1/3 move ' + esc(a['1/3 Move']) + ')</span>'
+      : '';
+
+    const info = document.createElement('div');
+    info.style.cssText = 'flex:1;min-width:0;';
+    info.innerHTML = '<strong>' + esc(a.Name) + '</strong>' +
+      '<span style="color:var(--muted);"> &middot; ' +
+      esc(a.Cost || 'no price listed') + bands + '</span>';
+
+    const btns = document.createElement('div');
+    btns.style.cssText = 'display:flex;gap:4px;flex-shrink:0;';
+
+    const bonded = document.createElement('button');
+    bonded.textContent = '+ Bonded';
+    bonded.style.cssText = 'padding:2px 8px;font-size:11px;';
+    bonded.title = 'Add to Bonded Mounts & Animal Companions. The book name goes into ' +
+                   'Species and Name is left blank for you to fill in.';
+    bonded.addEventListener('click', () => addAnimalFromBrowser(root, a, 'bonded'));
+
+    const unbonded = document.createElement('button');
+    unbonded.textContent = '+ Unbonded';
+    unbonded.style.cssText = 'padding:2px 8px;font-size:11px;';
+    unbonded.title = 'Add to Unbonded Mounts & Vehicles.';
+    unbonded.addEventListener('click', () => addAnimalFromBrowser(root, a, 'unbonded'));
+
+    btns.appendChild(bonded);
+    btns.appendChild(unbonded);
+    row.appendChild(info);
+    row.appendChild(btns);
+    resultsDiv.appendChild(row);
+  });
+
+  const count = document.createElement('div');
+  count.style.cssText = 'text-align:center;padding:8px;font-size:12px;color:var(--muted);' +
+                        'border-top:1px solid var(--border);margin-top:8px;';
+  count.textContent = 'Showing ' + rows.length + ' of ' + ANIMALS_DATA.length + ' entries';
+  resultsDiv.appendChild(count);
+}
+
+function addAnimalFromBrowser(root, entry, destination) {
+  // Table 49's load bands are a NOTE, not a computed field. Nothing yet works
+  // out a mount's actual movement from what it is carrying -- if that gets
+  // built, this note is the data it would use.
+  const capacityNote = entry['Base Move']
+    ? 'Carries ' + entry['Base Move'] + ' at full move, ' + entry['2/3 Move'] +
+      ' at 2/3 move, ' + entry['1/3 Move'] + ' at 1/3 move (PHB Table 49).'
+    : '';
+
+  const markDirty = () => {
+    const activeTab = document.querySelector('.tab.active');
+    if (activeTab) markUnsaved(activeTab, true, root);
+  };
+
+  if (destination === 'bonded') {
+    const list = root.querySelector('.companions-list');
+    if (!list) return;
+    // Species holds the book name and Name is left BLANK, because a companion is
+    // named by its owner. The companion node has no cost field, so the price
+    // rides along in notes rather than being silently dropped.
+    const notes = [entry.Cost ? 'Cost: ' + entry.Cost : '', capacityNote, entry.Notes || '']
+      .filter(Boolean).join(' ');
+    list.appendChild(makeCompanionNode({
+      name:     '',
+      species:  entry.Name,
+      capacity: entry['Base Move'] || '',
+      // Ticked only for the 14 Table 49 mounts -- an animal with a carrying
+      // capacity is one you can ride or load. One click undoes it.
+      isMount:  !!entry['Base Move'],
+      notes:    notes
+    }, markDirty));
+  } else {
+    const list = root.querySelector('.mounts-list');
+    if (!list) return;
+    // Movement is left blank on purpose. Table 49 gives carrying capacity, not
+    // speed, and Chapter 6 sends vehicle movement rates to the DMG.
+    const notes = [capacityNote, entry.Notes || ''].filter(Boolean).join(' ');
+    list.appendChild(makeMountNode({
+      name:     entry.Name,
+      type:     entry.Category,
+      cost:     entry.Cost || '',
+      capacity: entry['Base Move'] || '',
+      notes:    notes
+    }, markDirty));
+  }
+
+  markDirty();
+}
+
 function addEquipmentFromBrowser(root, item) {
   // Parse weight - extract just the number
   let weightValue = '';
