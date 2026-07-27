@@ -419,54 +419,77 @@
     "Notes": "Front torso protection only"
   },
   {
-    "Armor Name": "Barding, Leather",
-    "Source": "Non-PHB",
+    "Armor Name": "Barding, Leather or Padded",
+    "Armor Type": "Horse Armor",
+    "AC": "8",
+    "Weight": "60 lb",
+    "Cost": "150 gp",
+    "Movement": "-3",
+    "Notes": "Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from leather/padded armor, Table 46"
+  },
+  {
+    "Armor Name": "Barding, Full Scale",
     "Armor Type": "Horse Armor",
     "AC": "6",
-    "Weight": "60 lb",
-    "Cost": "30 gp",
-    "Movement": "-3",
-    "Notes": "Horse armor, leather"
-  },
-  {
-    "Armor Name": "Barding, Scale Mail",
-    "Source": "Non-PHB",
-    "Armor Type": "Horse Armor",
-    "AC": "4",
     "Weight": "75 lb",
-    "Cost": "150 gp",
+    "Cost": "1000 gp",
     "Movement": "-6",
-    "Notes": "Horse armor, scale mail"
+    "Notes": "Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from scale mail, Table 46"
   },
   {
-    "Armor Name": "Barding, Chain Mail",
-    "Source": "Non-PHB",
+    "Armor Name": "Barding, Chain",
     "Armor Type": "Horse Armor",
-    "AC": "3",
+    "AC": "5",
     "Weight": "70 lb",
     "Cost": "500 gp",
     "Movement": "-6",
-    "Notes": "Horse armor, chain mail"
+    "Notes": "Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from chain mail, Table 46"
   },
   {
     "Armor Name": "Barding, Banded Mail",
     "Source": "Non-PHB",
     "Armor Type": "Horse Armor",
-    "AC": "2",
+    "AC": "4",
     "Weight": "80 lb",
     "Cost": "750 gp",
     "Movement": "-6",
-    "Notes": "Horse armor, banded mail"
+    "Notes": "Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from banded mail, Table 46"
   },
   {
-    "Armor Name": "Barding, Plate Mail",
-    "Source": "Non-PHB",
+    "Armor Name": "Barding, Full Plate",
     "Armor Type": "Horse Armor",
-    "AC": "1",
-    "Weight": "90 lb",
+    "AC": "2",
+    "Weight": "85 lb",
     "Cost": "2000 gp",
     "Movement": "-9",
-    "Notes": "Horse armor, plate mail"
+    "Notes": "Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from stated outright on p.92: \"equivalent of a warrior's field plate... provides an Armor Class of 2 to the mount\""
+  },
+  {
+    "Armor Name": "Barding, Half Brigandine",
+    "Armor Type": "Horse Armor",
+    "AC": "6",
+    "Weight": "45 lb",
+    "Cost": "500 gp",
+    "Movement": "",
+    "Notes": "Half barding covers head, neck, chest and front quarters only. Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from brigandine, Table 46"
+  },
+  {
+    "Armor Name": "Barding, Half Scale",
+    "Armor Type": "Horse Armor",
+    "AC": "6",
+    "Weight": "50 lb",
+    "Cost": "500 gp",
+    "Movement": "",
+    "Notes": "Half barding covers head, neck, chest and front quarters only. Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from scale mail, Table 46"
+  },
+  {
+    "Armor Name": "Barding, Half Padded",
+    "Armor Type": "Horse Armor",
+    "AC": "8",
+    "Weight": "25 lb",
+    "Cost": "100 gp",
+    "Movement": "",
+    "Notes": "Half barding covers head, neck, chest and front quarters only. Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from padded armor, Table 46"
   },
   {
     "Armor Name": "Gladiator Armor",
