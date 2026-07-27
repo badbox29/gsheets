@@ -1708,7 +1708,6 @@ function makeArmorNode(data={}, onChange){
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
       '<div style="width:60px;text-align:center;">Equipped</div>' +
       '<div style="flex:1;">Armor</div>' +
-      '<div style="flex:2;">Notes</div>' +
       '<div style="width:148px;"></div>' +
     '</div>' +
     '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
@@ -1725,7 +1724,6 @@ function makeArmorNode(data={}, onChange){
         magicBadgeHtml(armorIsMagical,
           (parseFloat(data.acBonus) || 0) !== 0 ? '(' + magicSign(parseFloat(data.acBonus)) + ')' : '') +
       '</div>' +
-      '<input class="notes" placeholder="" value="'+(data.notes||'')+'" style="flex:2">' +
       '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
       '<button class="rm">Remove</button>' +
     '</div>' +
@@ -1755,6 +1753,13 @@ function makeArmorNode(data={}, onChange){
         '</div>' +
       '</div>' +
       '<div class="armor-type-note" style="display:none;font-size:11px;line-height:1.4;padding:6px 8px;background:var(--glass);border-radius:4px;"></div>' +
+      // Notes lives here rather than on the collapsed row. At flex:2 up there it
+      // truncated to uselessness -- "Interlocking metal plates covering most of
+      // the b" -- while consuming the width the name and badge needed. Full
+      // width down here it is actually readable, and the collapsed row is left
+      // to do its real job: identify, equip, expand.
+      '<div style="font-size:11px;color:var(--muted);margin:6px 0 2px;">Notes</div>' +
+      '<input class="notes" placeholder="" value="'+(data.notes||'')+'">' +
     '</div>';
 
   // Collapse/expand, same pattern as the weapon card.
