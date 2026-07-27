@@ -832,7 +832,14 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     const typeKey = (node.querySelector('.weapon-wtype')?.value || '').trim();
     const ref = ((typeof getWeaponTypeStats === 'function') ? getWeaponTypeStats(typeKey) : null)
       || ((typeof lookupWeaponData === 'function') ? lookupWeaponData(name) : null);
-    const magic = parseInt(node.querySelector('.magic-bonus')?.value, 10) || 0;
+    // Gated on the Enchanted tick, so the speed factor and the to-hit/damage
+    // defaults below match what the Combat Quick Reference shows. itemMagicBonus
+    // lives in calc.js; print.js already calls across for getEffectiveWeaponSpeed
+    // and resolveWeaponProficiency, so this is the established pattern rather
+    // than a new dependency.
+    const magic = (typeof itemMagicBonus === 'function')
+      ? itemMagicBonus(node, '.magic-bonus')
+      : (parseInt(node.querySelector('.magic-bonus')?.value, 10) || 0);
 
     // Speed: the row's own value wins, then the book. A magical bonus reduces
     // the speed factor by 1 per plus (PHB Table 56), floored at 0.
@@ -867,8 +874,13 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     // which is right for an ordinary +N weapon. Per-weapon Hit Adj / Dmg Adj
     // override it when the enchantment is not uniform. Blank inherits; "0" is a
     // real override, so these test for empty rather than for falsy.
-    const rawHit = node.querySelector('.weapon-hit-adj')?.value;
-    const rawDmg = node.querySelector('.weapon-dmg-adj')?.value;
+    // Both are forced to "0" when the row is not ticked Enchanted. Gating
+    // `magic` alone is not enough -- these OVERRIDE it, so an unticked weapon
+    // carrying Hit Adj 1 would otherwise still print +1 while the screen shows
+    // nothing. Mirrors the same guard in calc.js.
+    const wpnEnchanted = (typeof itemIsEnchanted === 'function') ? itemIsEnchanted(node) : true;
+    const rawHit = wpnEnchanted ? node.querySelector('.weapon-hit-adj')?.value : '0';
+    const rawDmg = wpnEnchanted ? node.querySelector('.weapon-dmg-adj')?.value : '0';
     const hitBase = (rawHit !== '' && rawHit !== undefined && rawHit !== null)
       ? (parseInt(rawHit, 10) || 0) : magic;
     const dmgBase = (rawDmg !== '' && rawDmg !== undefined && rawDmg !== null)
@@ -1031,7 +1043,11 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
             cell(a.name),
             cell(a.armorType, 6, { alignment: 'center' }),
             cell(a.baseAC, 6, { alignment: 'center' }),
-            cell(a.acBonus, 6, { alignment: 'center' }),
+            // Blank when the piece is not ticked Enchanted, so the printout
+            // cannot show a bonus the sheet is not applying. Tested against
+            // === false rather than falsy: a record from any path that never
+            // set the flag should still print its value rather than lose it.
+            cell(a.isMagical === false ? '' : a.acBonus, 6, { alignment: 'center' }),
             cell(a.equipped ? 'Yes' : '', 6, { alignment: 'center' }),
             cell(a.weight, 6, { alignment: 'center' }),
             cell(a.notes)
