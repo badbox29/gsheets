@@ -1720,7 +1720,10 @@ function makeArmorNode(data={}, onChange){
       // min-width:0 on both is required, or a flex item refuses to shrink below
       // its intrinsic width and the badge gets pushed out anyway.
       '<div style="display:flex;align-items:center;gap:4px;flex:1;min-width:0;">' +
-        '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1;min-width:0;">' +
+        // flex:0 0 auto, not flex:1 -- the width is driven by sizeArmorName()
+        // below. The wrapper is still flex:1, so its leftover space simply sits
+        // empty to the right of the badge and Notes stays where it is.
+        '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
         magicBadgeHtml(armorIsMagical,
           (parseFloat(data.acBonus) || 0) !== 0 ? '(' + magicSign(parseFloat(data.acBonus)) + ')' : '') +
       '</div>' +
@@ -1805,6 +1808,25 @@ function makeArmorNode(data={}, onChange){
     // fire it twice for every keystroke.
     armorAcBonusEl.addEventListener('input', refreshArmorMagic);
   }
+
+  // The name field grows with its contents so the badge sits immediately to the
+  // right of the text rather than at the far edge of the column. An <input>
+  // cannot shrink-to-fit in CSS -- there is no width:fit-content for form
+  // fields -- so the width is set here in ch units, the width of a "0" in the
+  // current font. With a proportional face that is an approximation, but it
+  // tracks closely and costs nothing. If it ever needs to be exact, measure a
+  // hidden mirror span with the input's computed font instead.
+  // Clamped so an empty field is still clickable and a very long name cannot
+  // push the badge into the buttons.
+  const sizeArmorName = () => {
+    const inp = el.querySelector('.title');
+    if (!inp) return;
+    const n = (inp.value || inp.placeholder || '').length;
+    inp.style.width = Math.min(Math.max(n + 2, 12), 40) + 'ch';
+  };
+  const armorTitleEl = el.querySelector('.title');
+  if (armorTitleEl) armorTitleEl.addEventListener('input', sizeArmorName);
+  sizeArmorName();
 
   // Picking a type PREFILLS AC and weight -- an enchanted or homebrew piece
   // keeps whatever the player typed. This is the autofill-not-authority rule:
