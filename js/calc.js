@@ -3152,6 +3152,75 @@ async function renderSpellBrowser(root) {
   resultsDiv.appendChild(countDiv);
 }
 
+// ===== Goods & Services price reference (PHB Chapter 6, Table 44) =====
+// READ ONLY BY DESIGN -- there is no Add button and there should not be one.
+// Clothing, Household Provisioning, Daily Food and Lodging and Services have no
+// weight column in the book, so an entry added to inventory would sit in the
+// encumbrance total contributing nothing. Clothing is the clearest case: the
+// PHB omits garment weights precisely because encumbrance covers them with the
+// flat 5 lb allowance in renderEncumbrance, so itemising them would double-count
+// the rule. If an Add path is ever wanted it must REQUIRE a weight from the
+// player rather than defaulting one to zero.
+function renderGoodsReference(root) {
+  const resultsDiv = root.querySelector('.goods-results');
+  if (!resultsDiv) return;
+
+  if (typeof GOODS_DATA === 'undefined' || !GOODS_DATA || GOODS_DATA.length === 0) {
+    resultsDiv.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px;">' +
+      'Goods list not loaded. Check that js/core_goods.json is reachable.</p>';
+    return;
+  }
+
+  const term = (root.querySelector('.goods-search') || {}).value || '';
+  const t    = term.toLowerCase();
+  const cat  = (root.querySelector('.goods-category-filter') || {}).value || '';
+
+  const rows = GOODS_DATA.filter(g =>
+    (!cat || g.Category === cat) &&
+    (!t   || (g['Item Name'] || '').toLowerCase().includes(t)
+          || (g.Category    || '').toLowerCase().includes(t)
+          || (g.Notes       || '').toLowerCase().includes(t))
+  );
+
+  if (rows.length === 0) {
+    resultsDiv.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px;">' +
+      'Nothing matches.</p>';
+    return;
+  }
+
+  // Grouped under the book's own headings -- this is a list you scan for a price,
+  // not one you hunt through item by item, so Table 44's groupings are the useful
+  // ordering. Any category not in the known list still renders, appended after.
+  const known = ['Clothing', 'Provisioning', 'Food & Lodging', 'Service'];
+  const cats  = known.concat(
+    [...new Set(rows.map(g => g.Category))].filter(c => known.indexOf(c) === -1)
+  );
+
+  // "Food & Lodging" contains an ampersand, so escaping is not optional here.
+  const esc = s => String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  let html = '';
+  cats.forEach(c => {
+    const group = rows.filter(g => g.Category === c);
+    if (!group.length) return;
+    html += '<div style="font-weight:600;color:var(--accent-light);font-size:12px;' +
+            'margin:10px 0 4px;">' + esc(c) + '</div>';
+    group.forEach(g => {
+      html += '<div style="display:flex;justify-content:space-between;gap:12px;' +
+              'padding:3px 6px;border-bottom:1px solid var(--border);font-size:12px;">' +
+              '<span>' + esc(g['Item Name']) + '</span>' +
+              '<span style="color:var(--muted);white-space:nowrap;">' + esc(g.Cost) + '</span>' +
+              '</div>';
+    });
+  });
+
+  html += '<div style="font-size:11px;color:var(--muted);margin-top:12px;font-style:italic;">' +
+          'Showing ' + rows.length + ' of ' + GOODS_DATA.length + ' entries.</div>';
+
+  resultsDiv.innerHTML = html;
+}
+
 async function renderEquipmentBrowser(root) {
   const resultsDiv = root.querySelector('.equipment-results');
   
