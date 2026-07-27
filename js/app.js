@@ -2629,7 +2629,10 @@ function makeWeaponNode(data={}, onChange){
       '<input class="damage-l" placeholder="" value="'+(data.damageL||'')+'" style="width:90px;text-align:center;">' +
       '<input class="magic-bonus" type="number" placeholder="0" value="'+(data.magicBonus||'')+'" style="width:60px;text-align:center;">' +
       '<input class="weight" type="number" step="0.1" placeholder="" value="'+(data.weight||'')+'" style="width:80px;text-align:center;">' +
-      '<input class="damage-type" placeholder="e.g., Slashing" value="'+(data.damageType||'')+'" style="flex:1">' +
+      '<input class="damage-type" placeholder="B, P, S" value="'+(data.damageType||'')+'" style="flex:1" title="' +
+        'Bludgeoning, Piercing or Slashing (PHB Table 44).&#10;' +
+        'Some weapons carry two, e.g. P/S for a halberd.&#10;' +
+        'Filled from the weapon list when you pick a Type, if left blank.">' +
     '</div>' +
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
       '<div style="width:90px;text-align:center;">Hit Adj</div>' +
@@ -2664,7 +2667,10 @@ function makeWeaponNode(data={}, onChange){
       '</select>' +
       '<input class="weapon-range" value="'+(data.range||'')+'" placeholder="e.g. 50/100/150" style="flex:1;text-align:center;" title="' +
         'Short / medium / long range in yards, for missile weapons.&#10;' +
-        'Manual only -- the weapon list carries no range data.">' +
+        'Filled from PHB Table 45 when you pick a Type, if left blank.&#10;' +
+        'Bows and slings carry their flight-arrow / bullet ranges; sheaf&#10;' +
+        'arrows and sling stones are shorter -- see core_ammo.json.&#10;' +
+        'Attack rolls take -2 at medium range and -5 at long.">' +
     '</div>' +
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
       '<div style="width:120px;text-align:center;">Category</div>' +
@@ -2839,7 +2845,20 @@ function makeWeaponNode(data={}, onChange){
           fillIfBlank('.damage-sm',    stats['Damage (S-M)']);
           fillIfBlank('.damage-l',     stats['Damage (L)']);
           fillIfBlank('.weapon-size',  stats['Size']);
-          fillIfBlank('.weapon-range', stats['Range']);
+          // core_wp.json stores Table 45 ranges as three fields, not one string.
+          // Compose them into the "S/M/L" form the Range field expects, and skip
+          // it entirely for a melee weapon that has no range data. Staff sling
+          // has no short range, so a band can legitimately be blank -- the dash
+          // keeps the three positions readable.
+          const rS = stats['Range (S)'], rM = stats['Range (M)'], rL = stats['Range (L)'];
+          if (rM || rL) {
+            fillIfBlank('.weapon-range',
+              [rS || '--', rM || '--', rL || '--'].join('/'));
+          }
+          // Weapon Type (B/P/S) -- feeds the optional Weapon Type vs. Armor rule
+          // in PHB Ch.9. Blank for whip, scourge and mancatcher, which the book
+          // itself leaves without a type.
+          fillIfBlank('.damage-type', stats['Type']);
           // core_wp.json stores weight as "7 lb"; the field is type=number and
           // rejects the unit, so strip everything but the digits.
           const w = parseFloat(String(stats['Weight'] || '').replace(/[^0-9.]/g, ''));
