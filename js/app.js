@@ -5714,6 +5714,34 @@ function bindSheet(root, tab){
     goodsCategoryFilter.addEventListener('change', () => renderGoodsReference(root));
   }
   
+  // Animals, Mounts & Transport browser. Rendered on first EXPAND rather than at
+  // load -- it feeds the follower lists and most sessions never open it.
+  const toggleAnimalsBrowserVis = qs(root, '.toggle-animals-browser-visibility');
+  if (toggleAnimalsBrowserVis) {
+    toggleAnimalsBrowserVis.onclick = () => {
+      const content = qs(root, '.animals-browser-content');
+      if (!content) return;
+      const opening = content.style.display === 'none';
+      content.style.display = opening ? 'block' : 'none';
+      if (opening && typeof renderAnimalsBrowser === 'function') renderAnimalsBrowser(root);
+    };
+  }
+
+  const refreshAnimals = qs(root, '.refresh-animals');
+  if (refreshAnimals) {
+    refreshAnimals.onclick = () => renderAnimalsBrowser(root);
+  }
+
+  const animalsSearch = qs(root, '.animals-search');
+  if (animalsSearch) {
+    animalsSearch.addEventListener('input', () => renderAnimalsBrowser(root));
+  }
+
+  const animalsCategoryFilter = qs(root, '.animals-category-filter');
+  if (animalsCategoryFilter) {
+    animalsCategoryFilter.addEventListener('change', () => renderAnimalsBrowser(root));
+  }
+
   // Toggle weapon inventory browser visibility
   const toggleWeaponInventoryBrowserVis = qs(root, '.toggle-weapon-inventory-browser-visibility');
   if (toggleWeaponInventoryBrowserVis) {
