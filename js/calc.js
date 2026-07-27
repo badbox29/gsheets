@@ -469,6 +469,9 @@ function renderCombatQuickReference(root) {
         hitAdj: hitAdjEl ? hitAdjEl.value : '',
         dmgAdj: dmgAdjEl ? dmgAdjEl.value : '',
         attacks: atkEl ? atkEl.value : '',
+        // Free text on the card ("70/140/210"), passed through as typed rather
+        // than parsed -- the player may have entered their own figures.
+        range: (el.querySelector('.weapon-range') || {}).value || '',
         // Resolved from the weapon's TYPE against the proficiency list, so a
         // flavour-named weapon still matches the proficiency it really is.
         specialized: (typeof getWeaponSpecialization === 'function')
@@ -513,6 +516,12 @@ function renderCombatQuickReference(root) {
       let dmgBase = (weapon.dmgAdj !== '' && weapon.dmgAdj !== undefined && weapon.dmgAdj !== null)
         ? (parseInt(weapon.dmgAdj, 10) || 0)
         : enchant;
+
+      // Snapshot the MAGICAL contribution before specialization is folded into
+      // hitBase/dmgBase below. Those two are mutated from here on, and the
+      // Magical row must report the enchantment's own share, not the total.
+      const magicHit = hitBase;
+      const magicDmg = dmgBase;
 
       // Weapon specialization (PHB Ch.5). Melee specialists gain +1 to hit and
       // +2 damage ON TOP of Strength and magic. Bow and crossbow specialists
@@ -620,6 +629,52 @@ function renderCombatQuickReference(root) {
                 'title="Specialization bonuses are not magical and do not let this weapon ' +
                 'harm a creature that can only be injured by magical weapons.">' +
                 'Specialized: +1 hit, +2 damage (included above)</span><br>';
+      }
+
+      // Magical enchantment. Reported whether or not the bonuses are uniform:
+      // a Swordchucks +5 granting only +1 to hit and nothing to damage should
+      // say exactly that, because the enchantment LEVEL and its EFFECTS are
+      // separate fields and only the level decides what the weapon can strike.
+      if (enchant) {
+        const bits = [];
+        if (magicHit) bits.push(sign(magicHit) + ' hit');
+        if (magicDmg) bits.push(sign(magicDmg) + ' damage');
+        const effects = bits.length
+          ? bits.join(', ') + ' (included above)'
+          : 'no hit or damage bonus';
+        html += '<span style="color:var(--magic, #a98fd0);" ' +
+                'title="The enchantment level is what lets this weapon harm a creature ' +
+                'injured only by magical weapons, and it lowers the weapon speed factor by 1 ' +
+                'per plus. Hit and damage adjustments are separate fields, so a weapon whose ' +
+                'enchantment is not uniform reports what it actually grants.">' +
+                'Magical +' + enchant + ': ' + effects + '</span><br>';
+      } else if (magicHit || magicDmg) {
+        // Adjustments with no enchantment level -- deliberately NOT called
+        // magical, since nothing here says the weapon is.
+        const bits = [];
+        if (magicHit) bits.push(sign(magicHit) + ' hit');
+        if (magicDmg) bits.push(sign(magicDmg) + ' damage');
+        html += '<span style="color:var(--muted);" ' +
+                'title="Hit and damage adjustments set on the weapon card with no enchantment ' +
+                'level. Not treated as magical.">' +
+                'Adjustments: ' + bits.join(', ') + ' (included above)</span><br>';
+      }
+
+      // PHB Table 45 range bands. DISPLAYED, NEVER APPLIED -- the sheet cannot
+      // know how far away the target is, so folding a modifier into the printed
+      // to-hit figure would silently assert a range. Each band covers every
+      // distance at or below its figure.
+      if (weapon.range && (showThrown || showMissile) &&
+          typeof getRangeModifiers === 'function') {
+        const rm = getRangeModifiers(weapon.weaponTypeKey);
+        html += '<span style="color:var(--muted);" ' +
+                'title="Short / medium / long range in yards (PHB Table 45). A band covers ' +
+                'every distance at or below its figure, so a heavy crossbow fired at 136 yards ' +
+                'is at medium range.' +
+                (rm.doubled ? ' Arquebus range modifiers are doubled.' : '') +
+                ' Apply the modifier yourself.">' +
+                'Range ' + weapon.range + ' yds: ' + sign(rm.short) + ' / ' +
+                sign(rm.medium) + ' / ' + sign(rm.long) + ' to hit</span><br>';
       }
 
       html += '</div>';
