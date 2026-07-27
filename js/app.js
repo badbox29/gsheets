@@ -1662,6 +1662,17 @@ function makeArmorNode(data={}, onChange){
   const slots = ['Armor','Shield','Helmet','Bracers','Gauntlets','Boots','Cloak','Belt','Ring','Other'];
   const slotOpts = slots.map(s => opt(s, s, data.armorType || 'Armor')).join('');
 
+  // MIGRATION -- NOT OPTIONAL. Records written before the Enchanted checkbox
+  // existed carry a bonus but no isMagical flag. Without this, every magic item
+  // on every saved character would load unticked, its group would collapse, and
+  // its AC bonus would sit in the file where nobody could see it. A non-zero
+  // acBonus is therefore read as enchanted.
+  // Once the flag exists it always wins, so a player who unticks a +1 item and
+  // saves gets that respected on the next load.
+  const armorIsMagical = (data.isMagical !== undefined)
+    ? !!data.isMagical
+    : (parseFloat(data.acBonus) || 0) !== 0;
+
   el.innerHTML =
     // --- Identity row: always visible, mirrors the weapon card ---
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
@@ -1683,15 +1694,27 @@ function makeArmorNode(data={}, onChange){
         '<div style="flex:1;text-align:center;">Type</div>' +
         '<div style="width:100px;text-align:center;">Worn As</div>' +
         '<div style="width:70px;text-align:center;">Base AC</div>' +
-        '<div style="width:60px;text-align:center;">Magic</div>' +
         '<div style="width:80px;text-align:center;">Weight (lbs)</div>' +
       '</div>' +
       '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
         '<select class="armor-type" style="flex:1;">' + typeOpts + '</select>' +
         '<select class="armor-slot" style="width:100px;">' + slotOpts + '</select>' +
         '<input class="base-ac" type="number" placeholder="" value="'+(data.baseAC||'')+'" style="width:70px;text-align:center;">' +
-        '<input class="ac-bonus" type="number" placeholder="" value="'+(data.acBonus||'')+'" style="width:60px;text-align:center;">' +
         '<input class="weight" type="number" step="0.1" placeholder="" value="'+(data.weight||'')+'" style="width:80px;text-align:center;">' +
+      '</div>' +
+      // The old "Magic" column is now a labelled AC Bonus inside the enchanted
+      // group, so the number and the fact of being magical are separate things.
+      '<div class="magic-group">' +
+        '<label class="magic-toggle">' +
+          '<input type="checkbox" class="is-magical"' + (armorIsMagical ? ' checked' : '') + '>' +
+          'Enchanted?' +
+        '</label>' +
+        '<div class="magic-fields"' + (armorIsMagical ? '' : ' style="display:none;"') + '>' +
+          '<div>' +
+            '<div style="font-size:11px;color:var(--muted);text-align:center;">AC Bonus</div>' +
+            '<input class="ac-bonus" type="number" placeholder="" value="'+(data.acBonus||'')+'" style="text-align:center;">' +
+          '</div>' +
+        '</div>' +
       '</div>' +
       '<div class="armor-type-note" style="display:none;font-size:11px;line-height:1.4;padding:6px 8px;background:var(--glass);border-radius:4px;"></div>' +
     '</div>';
@@ -1705,6 +1728,19 @@ function makeArmorNode(data={}, onChange){
       armorDetails.style.display = open ? 'none' : 'block';
       armorToggleBtn.textContent = open ? 'Details' : 'Hide';
     };
+  }
+
+  // Enchanted toggle. HIDES, NEVER CLEARS -- unticking must not destroy a bonus
+  // the player recorded. What makes an unticked item mundane is the calculation
+  // side ignoring the value, not the value being gone.
+  const armorMagicChk    = el.querySelector('.is-magical');
+  const armorMagicFields = el.querySelector('.magic-fields');
+  if (armorMagicChk && armorMagicFields) {
+    armorMagicChk.addEventListener('change', () => {
+      // 'flex', not 'block' -- .magic-fields lays its inputs out with flexbox.
+      armorMagicFields.style.display = armorMagicChk.checked ? 'flex' : 'none';
+      onChange && onChange();
+    });
   }
 
   // Picking a type PREFILLS AC and weight -- an enchanted or homebrew piece
@@ -3309,6 +3345,10 @@ function collectSheet(root){
       armorTypeKey: (n.querySelector('.armor-type') ? n.querySelector('.armor-type').value : '') || '',
       baseAC: n.querySelector('.base-ac').value,
       acBonus: n.querySelector('.ac-bonus').value,
+      // Explicit enchantment flag. This is what the encumbrance rule should key
+      // off instead of "acBonus is non-zero", which cannot see a magical item
+      // that grants no AC -- elven chain being the live example.
+      isMagical: !!(n.querySelector('.is-magical') || {}).checked,
       equipped: n.querySelector('.equipped').checked,
       weight: (n.querySelector('.weight') && n.querySelector('.weight').value) || '',
       notes: n.querySelector('.notes').value
