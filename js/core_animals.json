@@ -1,0 +1,592 @@
+[
+  {
+    "Name": "Boar",
+    "Category": "Animal",
+    "Cost": "10 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Bull",
+    "Category": "Animal",
+    "Cost": "20 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Calf",
+    "Category": "Animal",
+    "Cost": "5 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Camel",
+    "Category": "Animal",
+    "Cost": "50 gp",
+    "Base Move Load": "0-330 lbs",
+    "Reduced Load": "331-500 lbs",
+    "Max Load": "501-660 lbs",
+    "Notes": "Table 49. Loads above the base band reduce the animal's movement rate; the maximum is twice the normal load",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Capon",
+    "Category": "Animal",
+    "Cost": "3 cp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Cat",
+    "Category": "Animal",
+    "Cost": "1 sp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Chicken",
+    "Category": "Animal",
+    "Cost": "2 cp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Cow",
+    "Category": "Animal",
+    "Cost": "10 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Dog, Guard",
+    "Category": "Animal",
+    "Cost": "25 gp",
+    "Base Move Load": "0-15 lbs",
+    "Reduced Load": "16-20 lbs",
+    "Max Load": "21-30 lbs",
+    "Notes": "Table 49. Loads above the base band reduce the animal's movement rate; the maximum is twice the normal load",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Dog, Hunting",
+    "Category": "Animal",
+    "Cost": "17 gp",
+    "Base Move Load": "0-15 lbs",
+    "Reduced Load": "16-20 lbs",
+    "Max Load": "21-30 lbs",
+    "Notes": "Table 49. Loads above the base band reduce the animal's movement rate; the maximum is twice the normal load",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Dog, War",
+    "Category": "Animal",
+    "Cost": "20 gp",
+    "Base Move Load": "0-15 lbs",
+    "Reduced Load": "16-20 lbs",
+    "Max Load": "21-30 lbs",
+    "Notes": "Table 49. Loads above the base band reduce the animal's movement rate; the maximum is twice the normal load",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Donkey, Mule, or Ass",
+    "Category": "Animal",
+    "Cost": "8 gp",
+    "Base Move Load": "0-250 lbs",
+    "Reduced Load": "251-375 lbs",
+    "Max Load": "376-500 lbs",
+    "Notes": "Table 49. Loads above the base band reduce the animal's movement rate; the maximum is twice the normal load",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Elephant, Labor",
+    "Category": "Animal",
+    "Cost": "200 gp",
+    "Base Move Load": "0-500 lbs",
+    "Reduced Load": "501-750 lbs",
+    "Max Load": "751-1,000 lbs",
+    "Notes": "Table 49. Loads above the base band reduce the animal's movement rate; the maximum is twice the normal load",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Elephant, War",
+    "Category": "Animal",
+    "Cost": "500 gp",
+    "Base Move Load": "0-500 lbs",
+    "Reduced Load": "501-750 lbs",
+    "Max Load": "751-1,000 lbs",
+    "Notes": "Table 49. Loads above the base band reduce the animal's movement rate; the maximum is twice the normal load",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Falcon (trained)",
+    "Category": "Animal",
+    "Cost": "1,000 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Goat",
+    "Category": "Animal",
+    "Cost": "1 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Goose",
+    "Category": "Animal",
+    "Cost": "5 cp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Guinea Hen",
+    "Category": "Animal",
+    "Cost": "2 cp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Horse, Draft",
+    "Category": "Animal",
+    "Cost": "200 gp",
+    "Base Move Load": "0-260 lbs",
+    "Reduced Load": "261-390 lbs",
+    "Max Load": "391-520 lbs",
+    "Notes": "Table 49. Loads above the base band reduce the animal's movement rate; the maximum is twice the normal load",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Horse, Heavy War",
+    "Category": "Animal",
+    "Cost": "400 gp",
+    "Base Move Load": "0-260 lbs",
+    "Reduced Load": "261-390 lbs",
+    "Max Load": "391-520 lbs",
+    "Notes": "Table 49. Loads above the base band reduce the animal's movement rate; the maximum is twice the normal load",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Horse, Light War",
+    "Category": "Animal",
+    "Cost": "150 gp",
+    "Base Move Load": "0-170 lbs",
+    "Reduced Load": "171-255 lbs",
+    "Max Load": "256-340 lbs",
+    "Notes": "Table 49. Loads above the base band reduce the animal's movement rate; the maximum is twice the normal load",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Horse, Medium War",
+    "Category": "Animal",
+    "Cost": "225 gp",
+    "Base Move Load": "0-220 lbs",
+    "Reduced Load": "221-330 lbs",
+    "Max Load": "331-440 lbs",
+    "Notes": "Table 49. Loads above the base band reduce the animal's movement rate; the maximum is twice the normal load",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Horse, Riding",
+    "Category": "Animal",
+    "Cost": "75 gp",
+    "Base Move Load": "0-180 lbs",
+    "Reduced Load": "181-270 lbs",
+    "Max Load": "271-360 lbs",
+    "Notes": "Table 49. Loads above the base band reduce the animal's movement rate; the maximum is twice the normal load",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Hunting Cat (jaguar, etc.)",
+    "Category": "Animal",
+    "Cost": "5,000 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Ox",
+    "Category": "Animal",
+    "Cost": "15 gp",
+    "Base Move Load": "0-220 lbs",
+    "Reduced Load": "221-330 lbs",
+    "Max Load": "331-440 lbs",
+    "Notes": "Table 49. Loads above the base band reduce the animal's movement rate; the maximum is twice the normal load",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Partridge",
+    "Category": "Animal",
+    "Cost": "5 cp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Peacock",
+    "Category": "Animal",
+    "Cost": "5 sp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Pig",
+    "Category": "Animal",
+    "Cost": "3 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Pigeon",
+    "Category": "Animal",
+    "Cost": "1 cp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Pigeon, Homing",
+    "Category": "Animal",
+    "Cost": "100 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Pony",
+    "Category": "Animal",
+    "Cost": "30 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Ram",
+    "Category": "Animal",
+    "Cost": "4 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Sheep",
+    "Category": "Animal",
+    "Cost": "2 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Songbird",
+    "Category": "Animal",
+    "Cost": "10 sp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Swan",
+    "Category": "Animal",
+    "Cost": "5 sp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Yak",
+    "Category": "Animal",
+    "Cost": "",
+    "Base Move Load": "0-220 lbs",
+    "Reduced Load": "221-330 lbs",
+    "Max Load": "331-440 lbs",
+    "Notes": "Table 49 gives its carrying capacity; Table 44 lists no price",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Barge",
+    "Category": "Transport",
+    "Cost": "500 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Canoe, Small",
+    "Category": "Transport",
+    "Cost": "30 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Canoe, War",
+    "Category": "Transport",
+    "Cost": "50 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Caravel",
+    "Category": "Transport",
+    "Cost": "10,000 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Carriage, Common",
+    "Category": "Transport",
+    "Cost": "150 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Carriage, Coach (ornamented)",
+    "Category": "Transport",
+    "Cost": "7,000 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Chariot, Riding",
+    "Category": "Transport",
+    "Cost": "200 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Chariot, War",
+    "Category": "Transport",
+    "Cost": "500 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Coaster",
+    "Category": "Transport",
+    "Cost": "5,000 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Cog",
+    "Category": "Transport",
+    "Cost": "10,000 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Curragh",
+    "Category": "Transport",
+    "Cost": "500 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Drakkar",
+    "Category": "Transport",
+    "Cost": "25,000 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Dromond",
+    "Category": "Transport",
+    "Cost": "15,000 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Galleon",
+    "Category": "Transport",
+    "Cost": "50,000 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Great Galley",
+    "Category": "Transport",
+    "Cost": "30,000 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Knarr",
+    "Category": "Transport",
+    "Cost": "3,000 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Longship",
+    "Category": "Transport",
+    "Cost": "10,000 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Oar, Common",
+    "Category": "Transport",
+    "Cost": "2 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Oar, Galley",
+    "Category": "Transport",
+    "Cost": "10 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Raft or Small Keelboat",
+    "Category": "Transport",
+    "Cost": "100 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Sail",
+    "Category": "Transport",
+    "Cost": "20 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Sedan Chair",
+    "Category": "Transport",
+    "Cost": "100 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  },
+  {
+    "Name": "Wagon or Cart Wheel",
+    "Category": "Transport",
+    "Cost": "5 gp",
+    "Base Move Load": "",
+    "Reduced Load": "",
+    "Max Load": "",
+    "Notes": "Movement rates for transport are given in the DMG, not the PHB",
+    "Source": "PHB"
+  }
+]

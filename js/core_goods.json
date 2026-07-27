@@ -1,0 +1,520 @@
+[
+  {
+    "Item Name": "Belt",
+    "Category": "Clothing",
+    "Cost": "3 sp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Boots, Riding",
+    "Category": "Clothing",
+    "Cost": "3 gp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Boots, Soft",
+    "Category": "Clothing",
+    "Cost": "1 gp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Breeches",
+    "Category": "Clothing",
+    "Cost": "2 gp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Cap, Hat",
+    "Category": "Clothing",
+    "Cost": "1 sp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Cloak, Good Cloth",
+    "Category": "Clothing",
+    "Cost": "8 sp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Cloak, Fine Fur",
+    "Category": "Clothing",
+    "Cost": "50 gp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Girdle",
+    "Category": "Clothing",
+    "Cost": "3 gp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Gloves",
+    "Category": "Clothing",
+    "Cost": "1 gp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Gown, Common",
+    "Category": "Clothing",
+    "Cost": "12 sp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Hose",
+    "Category": "Clothing",
+    "Cost": "2 gp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Knife Sheath",
+    "Category": "Clothing",
+    "Cost": "3 cp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Mittens",
+    "Category": "Clothing",
+    "Cost": "3 sp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Pin",
+    "Category": "Clothing",
+    "Cost": "6 gp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Plain Brooch",
+    "Category": "Clothing",
+    "Cost": "10 gp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Robe, Common",
+    "Category": "Clothing",
+    "Cost": "9 gp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Robe, Embroidered",
+    "Category": "Clothing",
+    "Cost": "20 gp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Sandals",
+    "Category": "Clothing",
+    "Cost": "5 cp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Sash",
+    "Category": "Clothing",
+    "Cost": "2 sp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Shoes",
+    "Category": "Clothing",
+    "Cost": "1 gp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Silk Jacket",
+    "Category": "Clothing",
+    "Cost": "80 gp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Surcoat",
+    "Category": "Clothing",
+    "Cost": "6 sp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Sword Scabbard, Hanger, Baldric",
+    "Category": "Clothing",
+    "Cost": "4 gp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Tabard",
+    "Category": "Clothing",
+    "Cost": "6 sp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Toga, Coarse",
+    "Category": "Clothing",
+    "Cost": "8 cp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Tunic",
+    "Category": "Clothing",
+    "Cost": "8 sp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Vest",
+    "Category": "Clothing",
+    "Cost": "6 sp",
+    "Notes": "Clothing carries no weight in the PHB; encumbrance uses the flat 5 lb clothing allowance",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Barrel of Pickled Fish",
+    "Category": "Provisioning",
+    "Cost": "3 gp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Butter (per lb)",
+    "Category": "Provisioning",
+    "Cost": "2 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Coarse Sugar (per lb)",
+    "Category": "Provisioning",
+    "Cost": "1 gp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Eggs (per 100)",
+    "Category": "Provisioning",
+    "Cost": "8 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Eggs (per two dozen)",
+    "Category": "Provisioning",
+    "Cost": "2 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Figs (per lb)",
+    "Category": "Provisioning",
+    "Cost": "3 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Firewood (per day)",
+    "Category": "Provisioning",
+    "Cost": "1 cp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Herbs (per lb)",
+    "Category": "Provisioning",
+    "Cost": "5 cp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Nuts (per lb)",
+    "Category": "Provisioning",
+    "Cost": "1 gp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Raisins (per lb)",
+    "Category": "Provisioning",
+    "Cost": "2 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Rice (per lb)",
+    "Category": "Provisioning",
+    "Cost": "2 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Salt (per lb)",
+    "Category": "Provisioning",
+    "Cost": "1 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Salted Herring (per 100)",
+    "Category": "Provisioning",
+    "Cost": "1 gp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Spice, Exotic (saffron, clove) (per lb)",
+    "Category": "Provisioning",
+    "Cost": "15 gp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Spice, Rare (pepper, ginger) (per lb)",
+    "Category": "Provisioning",
+    "Cost": "2 gp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Spice, Uncommon (cinnamon) (per lb)",
+    "Category": "Provisioning",
+    "Cost": "1 gp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Tun of Cider (250 gal)",
+    "Category": "Provisioning",
+    "Cost": "8 gp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Tun of Good Wine (250 gal)",
+    "Category": "Provisioning",
+    "Cost": "20 gp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Ale (per gallon)",
+    "Category": "Food & Lodging",
+    "Cost": "2 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Banquet (per person)",
+    "Category": "Food & Lodging",
+    "Cost": "10 gp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Bread",
+    "Category": "Food & Lodging",
+    "Cost": "5 cp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Cheese",
+    "Category": "Food & Lodging",
+    "Cost": "4 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "City Rooms, Common (per month)",
+    "Category": "Food & Lodging",
+    "Cost": "20 gp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "City Rooms, Poor (per month)",
+    "Category": "Food & Lodging",
+    "Cost": "6 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Common Wine (pitcher)",
+    "Category": "Food & Lodging",
+    "Cost": "2 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Egg or Fresh Vegetables",
+    "Category": "Food & Lodging",
+    "Cost": "1 cp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Grain and Stabling for Horse (daily)",
+    "Category": "Food & Lodging",
+    "Cost": "5 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Honey",
+    "Category": "Food & Lodging",
+    "Cost": "5 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Inn Lodging, Common (per day/week)",
+    "Category": "Food & Lodging",
+    "Cost": "5 sp/3 gp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Inn Lodging, Poor (per day/week)",
+    "Category": "Food & Lodging",
+    "Cost": "5 cp/2 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Meat for One Meal",
+    "Category": "Food & Lodging",
+    "Cost": "1 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Meals, Good (per day)",
+    "Category": "Food & Lodging",
+    "Cost": "5 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Meals, Common (per day)",
+    "Category": "Food & Lodging",
+    "Cost": "3 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Meals, Poor (per day)",
+    "Category": "Food & Lodging",
+    "Cost": "1 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Separate Latrine for Rooms (per month)",
+    "Category": "Food & Lodging",
+    "Cost": "2 gp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Small Beer (per gallon)",
+    "Category": "Food & Lodging",
+    "Cost": "5 cp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Soup",
+    "Category": "Food & Lodging",
+    "Cost": "5 cp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Bath",
+    "Category": "Service",
+    "Cost": "3 cp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Clerk (per letter)",
+    "Category": "Service",
+    "Cost": "2 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Doctor, Leech, or Bleeding",
+    "Category": "Service",
+    "Cost": "3 gp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Guide, in City (per day)",
+    "Category": "Service",
+    "Cost": "2 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Lantern or Torchbearer (per night)",
+    "Category": "Service",
+    "Cost": "1 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Laundry (by load)",
+    "Category": "Service",
+    "Cost": "1 cp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Messenger, in City (per message)",
+    "Category": "Service",
+    "Cost": "1 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Minstrel (per performance)",
+    "Category": "Service",
+    "Cost": "3 gp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Mourner (per funeral)",
+    "Category": "Service",
+    "Cost": "2 sp",
+    "Notes": "",
+    "Source": "PHB"
+  },
+  {
+    "Item Name": "Teamster w/Wagon",
+    "Category": "Service",
+    "Cost": "1 sp/mile",
+    "Notes": "",
+    "Source": "PHB"
+  }
+]
