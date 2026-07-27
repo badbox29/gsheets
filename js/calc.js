@@ -547,6 +547,10 @@ function renderCombatQuickReference(root) {
         strMode: (strEl && strEl.value) || getDefaultWeaponStrMode(category, wGroup),
         profStatus: prof.status,
         profPenalty: prof.penalty,
+        // Ammunition this weapon fires, resolved here because `el` is the DOM
+        // row and only exists in this loop.
+        ammo: (typeof getWeaponAmmoBonus === 'function')
+          ? getWeaponAmmoBonus(root, el) : null,
         effSpeed: getEffectiveWeaponSpeed(
           (el.querySelector('.speed') || {}).value,
           // 0 when unticked -- an untracked enchantment must not keep reducing
@@ -633,8 +637,9 @@ function renderCombatQuickReference(root) {
       // ENCHANTMENT (magicHit/magicDmg), not against hitBase/dmgBase, because
       // those already have specialization folded in and specialization is not
       // an enchantment competing with the arrow's.
-      const ammo = (typeof getWeaponAmmoBonus === 'function')
-        ? getWeaponAmmoBonus(root, el) : null;
+      // Resolved in the COLLECTION loop, where the DOM row is in scope. This is
+      // the render loop and iterates plain objects -- there is no `el` here.
+      const ammo = weapon.ammo || null;
       const ammoStacks = (typeof isOptionalRule !== 'function') || isOptionalRule('ammoBonusStacks');
       let ammoHitAdd = 0, ammoDmgAdd = 0;
       if (ammo && !ammo.missing) {
