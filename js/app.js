@@ -5673,6 +5673,46 @@ function bindSheet(root, tab){
   if (equipmentCategoryFilter) {
     equipmentCategoryFilter.addEventListener('change', () => renderEquipmentBrowser(root));
   }
+
+  // Goods & Services price reference -- a read-only modal, rendered on open
+  // rather than at load so it costs nothing for a player who never opens it.
+  const openGoodsModal = qs(root, '.open-goods-modal');
+  if (openGoodsModal) {
+    openGoodsModal.onclick = () => {
+      const overlay = qs(root, '.goods-modal-overlay');
+      if (!overlay) return;
+      // 'flex', not 'block' -- the overlay centres its card with flexbox.
+      overlay.style.display = 'flex';
+      if (typeof renderGoodsReference === 'function') renderGoodsReference(root);
+    };
+  }
+
+  const goodsModalClose = qs(root, '.goods-modal-close');
+  if (goodsModalClose) {
+    goodsModalClose.onclick = () => {
+      const overlay = qs(root, '.goods-modal-overlay');
+      if (overlay) overlay.style.display = 'none';
+    };
+  }
+
+  const goodsOverlay = qs(root, '.goods-modal-overlay');
+  if (goodsOverlay) {
+    // Click the backdrop to dismiss -- but ONLY the backdrop. A click inside the
+    // card bubbles up to here as well and must not close the modal.
+    goodsOverlay.addEventListener('click', (e) => {
+      if (e.target === goodsOverlay) goodsOverlay.style.display = 'none';
+    });
+  }
+
+  const goodsSearch = qs(root, '.goods-search');
+  if (goodsSearch) {
+    goodsSearch.addEventListener('input', () => renderGoodsReference(root));
+  }
+
+  const goodsCategoryFilter = qs(root, '.goods-category-filter');
+  if (goodsCategoryFilter) {
+    goodsCategoryFilter.addEventListener('change', () => renderGoodsReference(root));
+  }
   
   // Toggle weapon inventory browser visibility
   const toggleWeaponInventoryBrowserVis = qs(root, '.toggle-weapon-inventory-browser-visibility');
