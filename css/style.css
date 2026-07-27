@@ -920,37 +920,69 @@
 	   The fields inside are HIDDEN, NEVER CLEARED, when the box is unticked --
 	   unticking must not destroy what a player recorded. The calculation side is
 	   what makes an unticked item mundane, not the absence of a value. */
+	/* INLINE-FLEX, not block: the box is only as wide as its contents, so ticking
+       the checkbox grows it SIDEWAYS and adds no height to an already busy card.
+       Everything inside stays on one line. */
 	.magic-group {
+	  display: inline-flex;
+	  align-items: center;
+	  gap: 10px;
 	  border: 1px solid var(--magic, #a98fd0);
 	  border-radius: var(--radius, 4px);
-	  padding: 6px 8px;
-	  margin: 6px 0;
+	  padding: 2px 8px;
+	  margin: 4px 0;
 	  background: color-mix(in srgb, var(--magic, #a98fd0) 7%, transparent);
 	}
 	.magic-group > label.magic-toggle {
-	  display: flex;
+	  display: inline-flex;
 	  align-items: center;
 	  gap: 6px;
 	  color: var(--magic, #a98fd0);
 	  font-weight: 600;
 	  font-size: 12px;
 	  margin: 0;
+	  white-space: nowrap;
 	  cursor: pointer;
 	  user-select: none;
 	}
-	/* The global `input{width:100%}` rule would stretch this across the row. */
+	/* The global `input{width:100%}` would stretch these across the row. */
 	.magic-group > label.magic-toggle input[type="checkbox"] {
 	  width: auto;
 	  flex-shrink: 0;
 	  margin: 0;
 	}
 	.magic-group .magic-fields {
-	  display: flex;
-	  flex-wrap: wrap;
-	  gap: 8px;
-	  margin-top: 6px;
+	  display: inline-flex;
+	  align-items: center;
+	  gap: 10px;
 	}
-	.magic-group .magic-fields > div {
-	  flex: 1 1 90px;
-	  min-width: 90px;
+	/* Field captions sit BESIDE their input, not above it -- stacking them is what
+	   made the box tall. The global `label{display:block;margin-bottom:6px}` has to
+	   be overridden for both. */
+	.magic-group .magic-fields label {
+	  display: inline-flex;
+	  align-items: center;
+	  gap: 5px;
+	  font-size: 11px;
+	  color: var(--muted);
+	  margin: 0;
+	  white-space: nowrap;
+	}
+	.magic-group .magic-fields input {
+	  width: 58px;
+	  text-align: center;
+	  padding: 2px 4px;
+	}
+
+	/* Collapsed-state indicator. Sits against the item's name so an enchanted item
+	   announces itself without the card being expanded. display:block is required --
+	   width and height do nothing on an inline element. */
+	.magic-dot {
+	  display: block;
+	  width: 8px;
+	  height: 8px;
+	  border-radius: 50%;
+	  background: var(--magic, #a98fd0);
+	  flex-shrink: 0;
+	  align-self: center;
 	}
