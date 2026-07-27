@@ -2793,22 +2793,39 @@ function makeWeaponNode(data={}, onChange){
     // player needs mid-combat are already surfaced on the Combat Quick
     // Reference card, so the card here is for editing, not for reading.
     '<div class="weapon-details" style="display:none;">' +
-    '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
+    // flex-wrap so this degrades to two lines on a phone instead of overflowing
+    // the card. Nothing here flexes any more -- Damage Type holds "B, P, S" and
+    // was taking every pixel the row had left over.
+    '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
       '<div style="width:60px;text-align:center;">Speed</div>' +
       '<div style="width:90px;text-align:center;">Dmg (S-M)</div>' +
       '<div style="width:90px;text-align:center;">Dmg (L)</div>' +
       '<div style="width:80px;text-align:center;">Weight (lbs)</div>' +
-      '<div style="flex:1;text-align:center;">Damage Type</div>' +
+      '<div style="width:100px;text-align:center;">Damage Type</div>' +
+      '<div style="width:100px;text-align:center;">Attacks/Rd</div>' +
+      '<div style="width:90px;text-align:center;">Size</div>' +
     '</div>' +
-    '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
+    '<div style="display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;margin-bottom:6px;">' +
       '<input class="speed" type="number" placeholder="" value="'+(data.speed||'')+'" style="width:60px;text-align:center;">' +
       '<input class="damage-sm" placeholder="" value="'+(data.damageSM||'')+'" style="width:90px;text-align:center;">' +
       '<input class="damage-l" placeholder="" value="'+(data.damageL||'')+'" style="width:90px;text-align:center;">' +
       '<input class="weight" type="number" step="0.1" placeholder="" value="'+(data.weight||'')+'" style="width:80px;text-align:center;">' +
-      '<input class="damage-type" placeholder="B, P, S" value="'+(data.damageType||'')+'" style="flex:1" title="' +
+      '<input class="damage-type" placeholder="B, P, S" value="'+(data.damageType||'')+'" style="width:100px;text-align:center;" title="' +
         'Bludgeoning, Piercing or Slashing (PHB Table 44).&#10;' +
         'Some weapons carry two, e.g. P/S for a halberd.&#10;' +
         'Filled from the weapon list when you pick a Type, if left blank.">' +
+      '<select class="weapon-attacks" style="width:100px;" title="' +
+        'Attacks per round with THIS weapon.&#10;' +
+        'Blank uses the character-level Attacks/Round on the Combat tab.&#10;' +
+        '3/2 means three attacks every two rounds.">' +
+        weaponAttacksOptions(data.attacks) +
+      '</select>' +
+      '<select class="weapon-size" style="width:90px;" title="' +
+        'Weapon size (S/M/L).&#10;' +
+        'Blank looks it up from the weapon list by name.&#10;' +
+        'Set it for a custom weapon, or one whose name does not match the book.">' +
+        weaponSizeOptions(data.size) +
+      '</select>' +
     '</div>' +
     // Magic, Hit Adj and Dmg Adj were spread across two separate rows. Grouped
     // here they read as one idea and the card gets SHORTER, not taller.
@@ -2845,25 +2862,11 @@ function makeWeaponNode(data={}, onChange){
         '</label>' +
       '</div>' +
     '</div>' +
-    '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div style="width:100px;text-align:center;">Attacks/Rd</div>' +
-      '<div style="width:90px;text-align:center;">Size</div>' +
+    '<div class="weapon-missile-head" style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
       '<div class="weapon-ammo-head" style="width:150px;text-align:center;">Ammunition</div>' +
       '<div class="weapon-range-head" style="flex:1;text-align:center;">Range (S/M/L)</div>' +
     '</div>' +
-    '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
-      '<select class="weapon-attacks" style="width:100px;" title="' +
-        'Attacks per round with THIS weapon.&#10;' +
-        'Blank uses the character-level Attacks/Round on the Combat tab.&#10;' +
-        '3/2 means three attacks every two rounds.">' +
-        weaponAttacksOptions(data.attacks) +
-      '</select>' +
-      '<select class="weapon-size" style="width:90px;" title="' +
-        'Weapon size (S/M/L).&#10;' +
-        'Blank looks it up from the weapon list by name.&#10;' +
-        'Set it for a custom weapon, or one whose name does not match the book.">' +
-        weaponSizeOptions(data.size) +
-      '</select>' +
+    '<div class="weapon-missile-row" style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
       '<select class="weapon-ammo" style="width:150px;" title="' +
         'Which ammunition this weapon fires, chosen from your own Ammunition list.&#10;' +
         'Its enchantment is applied to missile attacks with this weapon.&#10;' +
@@ -3058,6 +3061,11 @@ function makeWeaponNode(data={}, onChange){
   const ammoHead  = el.querySelector('.weapon-ammo-head');
   const rangeEl   = el.querySelector('.weapon-range');
   const rangeHead = el.querySelector('.weapon-range-head');
+  // The row holding both. Once Attacks/Rd and Size moved up to the row above,
+  // a melee weapon leaves this one entirely empty -- so hide the strip rather
+  // than leave two orphaned column headings over nothing.
+  const missileHead = el.querySelector('.weapon-missile-head');
+  const missileRow  = el.querySelector('.weapon-missile-row');
   const syncAmmoVisibility = () => {
     const cs  = el.querySelector('.weapon-category');
     const cat = ((cs && cs.value) || '').trim().toLowerCase();
@@ -3077,6 +3085,11 @@ function makeWeaponNode(data={}, onChange){
     const showRange = !cat || cat === 'ranged' || cat === 'thrown' || cat === 'melee/thrown';
     if (rangeEl)   rangeEl.style.display   = showRange ? '' : 'none';
     if (rangeHead) rangeHead.style.display = showRange ? '' : 'none';
+
+    const showRow = showAmmo || showRange;
+    if (missileHead) missileHead.style.display = showRow ? 'flex' : 'none';
+    if (missileRow)  missileRow.style.display  = showRow ? 'flex' : 'none';
+  };
   };
   if (ammoSel) {
     populateWeaponAmmo();
