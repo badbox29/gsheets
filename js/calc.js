@@ -762,9 +762,15 @@ function renderCombatQuickReference(root) {
                   (ammoStacks ? 'STACKING' : 'BETTER OF THE TWO') + '.">' +
                   'Ammo: ' + escAmmo(ammo.name) + ' \u2014 ' + effect + '</span><br>';
         }
-      } else if (magicHit || magicDmg) {
-        // Adjustments with no enchantment level -- deliberately NOT called
-        // magical, since nothing here says the weapon is.
+      }
+
+      // Adjustments with no enchantment level -- deliberately NOT called
+      // magical, since nothing here says the weapon is.
+      // STANDALONE CONDITION, not an else-if. Inserting the ammunition block
+      // above severed the original chain to if(enchant), so this quietly became
+      // "else if this weapon has no ammunition" and printed alongside the
+      // Magical row. Testing !enchant directly cannot be broken that way again.
+      if (!enchant && (magicHit || magicDmg)) {
         const bits = [];
         if (magicHit) bits.push(sign(magicHit) + ' hit');
         if (magicDmg) bits.push(sign(magicDmg) + ' damage');
