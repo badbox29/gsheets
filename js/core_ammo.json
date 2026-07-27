@@ -13,13 +13,13 @@
   {
     "Ammunition Name": "Arrow, Sheaf",
     "Ammunition Type": "Arrow",
-    "Weapon": "Bow (any)",
+    "Weapon": "Long Bow, Composite Long Bow",
     "Quantity": "1",
     "Damage Modifier": "+0",
-    "Range Modifier": "-1 increment",
+    "Range Modifier": "-20/-40/-40",
     "Cost": "3 sp per 6",
     "Weight": "0.1 lb each",
-    "Notes": "Heavier arrow, better penetration, shorter range"
+    "Notes": "Heavier metal head, shorter range than a flight arrow. PHB p.96: the flight/sheaf split applies to long bows of all types only -- short bows fire undifferentiated arrows. Deltas in yards from Table 45"
   },
   {
     "Ammunition Name": "Arrow, Barbed",
@@ -401,10 +401,10 @@
     "Weapon": "Sling",
     "Quantity": "1",
     "Damage Modifier": "-1",
-    "Range Modifier": "-1 increment",
+    "Range Modifier": "-10/-20/-40",
     "Cost": "Free",
     "Weight": "0.5 lb per 10",
-    "Notes": "Found stones, irregular shape reduces effectiveness"
+    "Notes": "Table 45: sling stone 40/80/160 against sling bullet 50/100/200. Deltas in yards"
   },
   {
     "Ammunition Name": "Sling Bullet, Silver",
