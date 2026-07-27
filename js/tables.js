@@ -1258,6 +1258,37 @@ const WEAPON_SPECIALIST_ATTACKS = {
 // +2 to hit, no extra damage. Strength applies for bows, magic for both.
 const POINT_BLANK_RANGE = { bow: '6-30 ft', crossbow: '6-60 ft' };
 
+// === Missile range modifiers (PHB Table 45) ===
+// "The attack roll modifiers for range are -2 for medium range and -5 for long
+// range." Short range carries no modifier.
+//
+// Each band INCLUDES every distance at or below its listed figure -- the book's
+// own example is a heavy crossbow (80/160/240) fired at 136 yards, which is at
+// MEDIUM range, not long. Table 45 ranges are in YARDS.
+//
+// THESE ARE NEVER APPLIED TO A NUMBER. The sheet cannot know how far away a
+// target is, so the modifiers are displayed beside the weapon's own bands and
+// the player applies whichever one the situation calls for. Do not "finish" this
+// by folding a modifier into the printed to-hit figure -- that would silently
+// assert a range.
+const RANGE_MODIFIERS = { short: 0, medium: -2, long: -5 };
+
+// "Arquebuses (if allowed) double all range modifiers." Keyed on the specific
+// weapon type rather than the Firearm group, because the book states the
+// doubling for the arquebus alone -- the blunderbuss in core_wp.json is not a
+// PHB weapon and inherits nothing.
+const ARQUEBUS_RANGE_MULTIPLIER = 2;
+
+function getRangeModifiers(weaponTypeKey) {
+  const dbl = (weaponTypeKey === 'firearm_arquebus') ? ARQUEBUS_RANGE_MULTIPLIER : 1;
+  return {
+    short:   RANGE_MODIFIERS.short  * dbl,
+    medium:  RANGE_MODIFIERS.medium * dbl,
+    long:    RANGE_MODIFIERS.long   * dbl,
+    doubled: dbl !== 1
+  };
+}
+
 // Which Table 35 column a weapon uses. Returns a key of
 // WEAPON_SPECIALIST_ATTACKS, 'bow' (no extra attacks), or null.
 // `wtype` is the weapon card's Type dropdown value -- the weapon's mechanical
