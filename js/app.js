@@ -3201,6 +3201,22 @@ function makeAmmunitionNode(data={}, onChange){
   const quantity = parseInt(data.quantity || 0, 10);
   const weightPerUnit = parseFloat(data.weightPerUnit || 0);
   const totalWeight = (quantity * weightPerUnit).toFixed(2);
+
+  // NO migration needed here, unlike armor and weapons. This card has never had
+  // magic fields, so there is no prior value to infer an enchantment from -- an
+  // existing record simply loads unticked, which is correct rather than lossy.
+  const ammoIsMagical = !!data.isMagical;
+
+  // Badge text at build time; the live version is ammoBadgeText() in the wiring.
+  const ammoInitialBadge = (() => {
+    const num = s => { const v = parseFloat(s); return isNaN(v) ? null : v; };
+    const m  = num(data.magicBonus) || 0;
+    const h  = num(data.hitAdj), d = num(data.dmgAdj);
+    const eh = (h === null) ? m : h, ed = (d === null) ? m : d;
+    if (m === 0 && eh === 0 && ed === 0) return '';
+    if (eh === m && ed === m) return '(' + magicSign(m) + ')';
+    return '(' + magicSign(m) + ': ' + magicSign(eh) + '/' + magicSign(ed) + ')';
+  })();
   
   el.innerHTML =
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
@@ -3208,7 +3224,10 @@ function makeAmmunitionNode(data={}, onChange){
       '<div style="width:70px;"></div>' +
     '</div>' +
     '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:8px;">' +
-      '<input class="title" placeholder="e.g., Arrows, Bolts" value="'+(data.name||'')+'" style="flex:1">' +
+      '<div style="display:flex;align-items:center;gap:4px;flex:1;min-width:0;">' +
+        '<input class="title" placeholder="e.g., Arrows, Bolts" value="'+(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
+        magicBadgeHtml(ammoIsMagical, ammoInitialBadge) +
+      '</div>' +
       '<button class="rm">Remove</button>' +
     '</div>' +
     '<div style="display:flex;gap:8px;margin-bottom:8px;">' +
@@ -3227,7 +3246,36 @@ function makeAmmunitionNode(data={}, onChange){
         '<input class="weight-per-unit" type="number" step="0.01" min="0" value="'+(data.weightPerUnit||0.1)+'" style="width:100%;">' +
       '</div>' +
     '</div>' +
-    '<div style="font-size:11px;color:var(--muted);">' +
+    '<div class="magic-group">' +
+      '<label class="magic-toggle">' +
+        '<input type="checkbox" class="is-magical"' + (ammoIsMagical ? ' checked' : '') + '>' +
+        'Enchanted?' +
+      '</label>' +
+      '<div class="magic-fields"' + (ammoIsMagical ? '' : ' style="display:none;"') + '>' +
+        '<label title="' +
+          'Enchantment level of the ammunition itself -- 1 for a +1 arrow.&#10;' +
+          'This applies to the WHOLE stack; a quiver of twenty +1 arrows is one&#10;' +
+          '  record, and the quantity does not change the bonus.&#10;' +
+          'The PHB does not say whether an enchanted arrow and an enchanted bow&#10;' +
+          '  stack. That is a table ruling, so the sheet reports this bonus and&#10;' +
+          '  leaves the combination to you and your DM.">Magic' +
+          '<input class="ammo-magic-bonus" type="number" placeholder="0" value="'+(data.magicBonus||'')+'">' +
+        '</label>' +
+        '<label title="' +
+          'To-hit bonus granted by this ammunition.&#10;' +
+          'Leave blank to use the Magic value -- correct for an ordinary +N arrow.&#10;' +
+          'Set it when the enchantment is not uniform.">Hit Adj' +
+          '<input class="ammo-hit-adj" type="number" value="'+(data.hitAdj!==undefined&&data.hitAdj!==null?data.hitAdj:'')+'">' +
+        '</label>' +
+        '<label title="' +
+          'Damage bonus granted by this ammunition.&#10;' +
+          'Leave blank to use the Magic value.&#10;' +
+          'Set to 0 for ammunition that helps you hit but not hurt.">Dmg Adj' +
+          '<input class="ammo-dmg-adj" type="number" value="'+(data.dmgAdj!==undefined&&data.dmgAdj!==null?data.dmgAdj:'')+'">' +
+        '</label>' +
+      '</div>' +
+    '</div>' +
+    '<div style="font-size:11px;color:var(--muted);margin-top:6px;">' +
       'Total Weight: <span class="ammo-total-weight" style="color:var(--accent-light);font-weight:600;">' + totalWeight + ' lbs</span>' +
     '</div>';
   
@@ -3310,7 +3358,58 @@ el.querySelector('.ammo-minus-10').onclick = ()=>{
   el.querySelector('.title').addEventListener('input', ()=>{
     onChange && onChange();
   });
-  
+
+  // The name field grows with its contents so the badge sits against the text.
+  // Declared before refreshAmmoMagic, which calls it -- const arrow functions
+  // are not hoisted.
+  const sizeAmmoName = () => {
+    const inp = el.querySelector('.title');
+    if (!inp) return;
+    const n = (inp.value || inp.placeholder || '').length;
+    inp.style.width = Math.min(Math.max(n + 2, 12), 40) + 'ch';
+  };
+
+  // Enchanted toggle. HIDES, NEVER CLEARS.
+  const ammoMagicChk    = el.querySelector('.is-magical');
+  const ammoMagicFields = el.querySelector('.magic-fields');
+
+  const ammoBadgeText = () => {
+    const num = sel => {
+      const v = parseFloat((el.querySelector(sel) || {}).value);
+      return isNaN(v) ? null : v;
+    };
+    const m  = num('.ammo-magic-bonus') || 0;
+    const h  = num('.ammo-hit-adj'), d = num('.ammo-dmg-adj');
+    const eh = (h === null) ? m : h, ed = (d === null) ? m : d;
+    if (m === 0 && eh === 0 && ed === 0) return '';        // -> falls back to the dot
+    if (eh === m && ed === m) return '(' + magicSign(m) + ')';
+    return '(' + magicSign(m) + ': ' + magicSign(eh) + '/' + magicSign(ed) + ')';
+  };
+
+  const refreshAmmoMagic = () => {
+    const on = !!(ammoMagicChk && ammoMagicChk.checked);
+    if (ammoMagicFields) ammoMagicFields.style.display = on ? 'inline-flex' : 'none';
+    updateMagicBadge(el, on, ammoBadgeText());
+    sizeAmmoName();
+  };
+
+  if (ammoMagicChk) {
+    ammoMagicChk.addEventListener('change', () => {
+      refreshAmmoMagic();
+      onChange && onChange();
+    });
+  }
+  // Unlike the armor and weapon cards, THIS card has no blanket 'input, select'
+  // listener -- every field is wired individually -- so these must call
+  // onChange themselves or an enchantment edit would never mark the sheet dirty.
+  ['.ammo-magic-bonus', '.ammo-hit-adj', '.ammo-dmg-adj'].forEach(sel => {
+    const f = el.querySelector(sel);
+    if (f) f.addEventListener('input', () => { refreshAmmoMagic(); onChange && onChange(); });
+  });
+
+  el.querySelector('.title').addEventListener('input', sizeAmmoName);
+  sizeAmmoName();
+
   return el;
 }
 
@@ -3606,7 +3705,11 @@ function collectSheet(root){
     .map(n=>({
       name: n.querySelector('.title').value,
       quantity: n.querySelector('.quantity').value,
-      weightPerUnit: n.querySelector('.weight-per-unit').value
+      weightPerUnit: n.querySelector('.weight-per-unit').value,
+      isMagical:  !!(n.querySelector('.is-magical') || {}).checked,
+      magicBonus: (n.querySelector('.ammo-magic-bonus') || {}).value || '',
+      hitAdj:     (n.querySelector('.ammo-hit-adj')     || {}).value || '',
+      dmgAdj:     (n.querySelector('.ammo-dmg-adj')     || {}).value || ''
     }));
 
   const magicItems = qsa(root,'.magic-items-list .item')
