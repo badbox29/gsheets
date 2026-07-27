@@ -986,3 +986,22 @@
 	  flex-shrink: 0;
 	  align-self: center;
 	}
+
+	/* Collapsed-state marker, sits just after the item's name. Fixed minimum width
+	   and right-aligned so a dot, "(+2)" and "(+5: +1/+0)" all end at the same
+	   column -- typing into a bonus field never reflows the row, and the badges
+	   line up vertically down a list of items.
+	   The slot is emitted even for mundane items, so every row keeps the same
+	   geometry and the name fields all end in the same place. */
+	.magic-badge {
+	  display: inline-flex;
+	  align-items: center;
+	  justify-content: flex-end;
+	  min-width: 26px;
+	  flex-shrink: 0;
+	  padding-left: 4px;
+	  color: var(--magic, #a98fd0);
+	  font-size: 11px;
+	  font-weight: 600;
+	  white-space: nowrap;
+	}
