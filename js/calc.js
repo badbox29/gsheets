@@ -1910,11 +1910,29 @@ function renderEncumbrance(root) {
     totalWeight += qty * weight;
   });
   
-  // Armor weight (all armor counts, equipped or not)
+  // Armor weight (all armor counts, equipped or not).
+  // Magical armor is added to totalWeight -- it counts against the carrying
+  // limit -- but tallied separately so it can be subtracted out of the figure
+  // that determines the encumbrance CATEGORY. See effectiveWeight below.
+  //
+  // Detected from the card's Magic field (.ac-bonus) being non-zero.
+  // KNOWN GAP: armor that is magical but grants no AC bonus -- elven chain mail,
+  // or a suit with special properties only -- is NOT detected and will be
+  // treated as mundane. There is no separate "is magical" flag on the armor
+  // card; adding one was considered and deferred because the card already has a
+  // field labelled "Magic" and two similarly-named controls would confuse.
+  //
+  // The exclusion is applied whether or not the piece is equipped, matching how
+  // this function already counts armor weight. The PHB's worked example has the
+  // armor worn, so a DM who rules that a magical suit stuffed in a pack DOES
+  // hamper you is reading it just as defensibly.
   const armor = Array.from(root.querySelectorAll('.armor-list .item'));
+  let magicArmorWeight = 0;
   armor.forEach(item => {
     const weight = parseFloat(item.querySelector('.weight')?.value) || 0;
+    const magicBonus = parseFloat(item.querySelector('.ac-bonus')?.value) || 0;
     totalWeight += weight;
+    if (magicBonus !== 0) magicArmorWeight += weight;
   });
   
   // Weapon weight
@@ -1941,6 +1959,12 @@ function renderEncumbrance(root) {
   const maxCarried = encData ? encData[4] : 0;
   maxCarryEl.value = maxCarried ? maxCarried.toFixed(0) : "";
 
+  // Weight that actually counts against movement and combat. PHB: the weight of
+  // magical armor "applies only toward the weight limit of the character. It
+  // does not apply when determining the effects of encumbrance on movement and
+  // combat." Clamped at zero for safety.
+  const effectiveWeight = Math.max(0, totalWeight - magicArmorWeight);
+
   // Determine encumbrance category by absolute weight (PHB Table 47)
   let category = "";
   let tooltip = "";
@@ -1951,18 +1975,22 @@ function renderEncumbrance(root) {
   } else {
     const [unenc, light, moderate, heavy, severe] = encData;
 
-    if (totalWeight <= unenc) {
-      category = "Unencumbered";
-    } else if (totalWeight <= light) {
-      category = "Light";
-    } else if (totalWeight <= moderate) {
-      category = "Moderate";
-    } else if (totalWeight <= heavy) {
-      category = "Heavy";
-    } else if (totalWeight <= severe) {
-      category = "Severe";
-    } else {
+    // Overloaded is a WEIGHT LIMIT question, so it tests the FULL carried
+    // weight -- magical armor still has to be physically hauled. Every other
+    // category drives movement and combat, so those test the EFFECTIVE weight
+    // with magical armor removed (PHB, "Magical Armor and Encumbrance").
+    if (totalWeight > severe) {
       category = "Overloaded!";
+    } else if (effectiveWeight <= unenc) {
+      category = "Unencumbered";
+    } else if (effectiveWeight <= light) {
+      category = "Light";
+    } else if (effectiveWeight <= moderate) {
+      category = "Moderate";
+    } else if (effectiveWeight <= heavy) {
+      category = "Heavy";
+    } else {
+      category = "Severe";
     }
 
     const eff = ENCUMBRANCE_EFFECTS[category] || ENCUMBRANCE_EFFECTS["Overloaded"];
@@ -1975,7 +2003,13 @@ function renderEncumbrance(root) {
       `Severe: ${heavy + 1}-${severe} lbs\n` +
       `Max carried: ${severe} lbs\n\n` +
       `Includes ${ENCUMBRANCE_CLOTHING_WEIGHT} lbs clothing (PHB) and ` +
-      `${coinWeight.toFixed(1)} lbs coin.\n\n` +
+      `${coinWeight.toFixed(1)} lbs coin.\n` +
+      (magicArmorWeight > 0
+        ? `Carrying ${totalWeight.toFixed(1)} lbs, but ${magicArmorWeight.toFixed(1)} lbs of ` +
+          `magical armor does not count toward encumbrance effects -- ` +
+          `${effectiveWeight.toFixed(1)} lbs applies (PHB).\n`
+        : ``) +
+      `\n` +
       eff.desc;
   }
 
