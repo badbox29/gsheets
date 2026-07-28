@@ -3042,9 +3042,10 @@ function addArmorFromBrowser(root, armor) {
   }, () => {
     const activeTab = document.querySelector('.tab.active');
     if (activeTab) markUnsaved(activeTab, true, root);
-    renderEncumbrance(root);
-    renderMovementRate(root);
-    renderAC(root);
+    // renderAC DOES NOT EXIST -- the function is renderArmorClass. This threw a
+    // ReferenceError on every edit to an armor row added from the browser, which
+    // killed the callback at that point. recalculateAll covers all of it.
+    if (typeof recalculateAll === 'function') recalculateAll(root);
   });
   
   armorList.appendChild(newArmorNode);
@@ -3053,10 +3054,11 @@ function addArmorFromBrowser(root, armor) {
   const activeTab = document.querySelector('.tab.active');
   if (activeTab) markUnsaved(activeTab, true, root);
   
-  // Trigger recalculations
-  renderEncumbrance(root);
-  renderMovementRate(root);
-  renderAC(root);
+  // recalculateAll rather than a hand-picked list. Armor moves Armor Class,
+  // encumbrance, movement, thief skills, ranger stealth and the class-restriction
+  // advisory, and the Combat Quick Reference mirrors several of those. Naming
+  // renderers individually is how this list drifted out of date to begin with.
+  if (typeof recalculateAll === 'function') recalculateAll(root);
   
   // Visual feedback
   const addBtn = event?.target;
