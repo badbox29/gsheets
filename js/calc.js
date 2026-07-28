@@ -6249,37 +6249,78 @@ function showSpellDetails(root, spell) {
     btn.onclick = () => modal.style.display = 'none';
   });
   
-  // Two independent reasons a spell can be browsed but not added:
+  // FOUR independent reasons a spell can be browsed but not added. Collected into
+  // a list rather than an if/else chain over the combinations -- that approach was
+  // already awkward at two reasons and would need sixteen branches at four.
   //   1. Above the character's max castable level (class progression / INT cap)
-  //   2. In a specialist wizard's OPPOSITION schools (PHB Table 22) -- they may
-  //      study opposition spells for reference but never learn them.
-  // Computed live rather than read from root._spellLevelCap: that cache went
+  //   2. In a specialist wizard's OPPOSITION schools (PHB Table 22)
+  //   3. Reachable only through a MINOR sphere, above 3rd level (PHB Ch.3)
+  //   4. Above what the patron deity can grant (PHB Ch.7, optional rule)
+  const reasons = [];
+
+  // (1) Computed live rather than read from root._spellLevelCap: that cache went
   // stale on any level change and defaulted to 99 -- blocking nothing at all --
   // before the spell browser had rendered even once.
   const levelCap = getMaxSpellLevel(root).max;
   const spellLevelNum = (typeof spell.level === 'number') ? spell.level : parseInt(spell.level, 10) || 0;
-  const overCap = levelCap > 0 && spellLevelNum > levelCap;
+  if (levelCap > 0 && spellLevelNum > levelCap) {
+    reasons.push('Above your maximum castable spell level (' + levelCap + ').');
+  }
 
-  // Resolve the WIZARD sub-class, not the top-level class field. A multi-class
+  // (2) Resolve the WIZARD sub-class, not the top-level class field. A multi-class
   // gnome fighter/illusionist has an empty clazz, so reading it directly meant
   // opposition blocking silently never fired for the one specialist actually
   // permitted to multi-class -- and for every dual-class specialist too.
   const wizComp = (typeof getWizardComponent === 'function') ? getWizardComponent(root) : null;
   const clazz = wizComp ? wizComp.clazz : (val(root, 'clazz') || '');
-  const opposed = (typeof isOppositionSpell === 'function') && isOppositionSpell(spell, clazz);
-
-  const blocked = overCap || opposed;
-
-  // Build the reason text (may cite both).
-  let blockReason = '';
-  if (overCap && opposed) {
-    blockReason = 'Above your max castable level (' + levelCap + ') and in an opposition school \u2014 reference only.';
-  } else if (overCap) {
-    blockReason = 'Above your maximum castable spell level (' + levelCap + ') \u2014 shown for reference only.';
-  } else if (opposed) {
+  if (typeof isOppositionSpell === 'function' && isOppositionSpell(spell, clazz)) {
     const oppList = (typeof getOppositionSchools === 'function') ? getOppositionSchools(clazz).join(', ') : '';
-    blockReason = 'Opposition school for your specialty' + (oppList ? ' (' + oppList + ')' : '') + ' \u2014 cannot be learned (PHB Table 22).';
+    reasons.push('Opposition school for your specialty' +
+                 (oppList ? ' (' + oppList + ')' : '') +
+                 ' \u2014 cannot be learned (PHB Table 22).');
   }
+
+  // (3) and (4) are PRIEST rules and apply only to priest spells. Detected from
+  // spell.class, falling back to "does it have spheres at all" so a saved record
+  // without a class field is still judged correctly.
+  const spellIsPriest =
+    String(spell.class || '').toLowerCase().includes('priest') ||
+    ((typeof getSpellSpheres === 'function') && getSpellSpheres(spell).length > 0);
+
+  if (spellIsPriest) {
+    const accessMap = (typeof getSphereAccessMap === 'function') ? getSphereAccessMap(root) : {};
+
+    // Only judge sphere access once the player has actually recorded some. An
+    // unconfigured priest is left alone rather than blocked out of every spell
+    // on the list -- same reasoning as the browser pool in renderSpellBrowser.
+    if (Object.keys(accessMap).length > 0 && typeof getSpellSphereAccess === 'function') {
+      const access = getSpellSphereAccess(spell, accessMap);
+
+      if (!access.allowed) {
+        reasons.push('Your deity grants no access to ' +
+                     (access.spheres.length ? access.spheres.join(' or ') : 'this spell\u2019s sphere') + '.');
+      } else if (!access.withinCap) {
+        // Reached only through a minor sphere. access.sphere names the BEST one,
+        // so this reports the sphere that got closest rather than an arbitrary one.
+        reasons.push('Only minor access to ' + access.sphere +
+                     ' \u2014 minor spheres are limited to spells of 3rd level and below (PHB Ch.3).');
+      }
+    }
+
+    // (4) Separate from sphere access on purpose: it is a limit on the patron, not
+    // on the sphere, so a player who hits it is told which of the two stopped him.
+    const deity = (typeof getDeityLevelCap === 'function')
+      ? getDeityLevelCap(root)
+      : { applied: false };
+
+    if (deity.applied && spellLevelNum > deity.cap) {
+      reasons.push('Your patron is a ' + deity.label +
+                   ' and cannot grant spells above level ' + deity.cap + ' (PHB Ch.7).');
+    }
+  }
+
+  const blocked = reasons.length > 0;
+  const blockReason = blocked ? (reasons.join(' ') + ' Shown for reference only.') : '';
 
   // Update button container to have both options
   const buttonContainer = modal.querySelector('.spell-modal-content > div:last-child');
