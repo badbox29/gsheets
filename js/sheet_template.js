@@ -1043,9 +1043,20 @@ const SHEET_HTML = `
 		    <!-- Priest Spheres -->
 		    <div class="priest-spheres" style="display:none;">
 			  <h4 style="margin-bottom:8px;">Priest Spheres</h4>
-			  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;" class="sphere-checkboxes">
+			  <p style="font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5;">
+			    Your deity grants each sphere at <strong>major</strong> access — any spell in it you are high enough level to cast —
+			    or <strong>minor</strong> access, which is limited to spells of <strong>3rd level and below</strong> (PHB Ch.3).
+			    The PHB publishes no per-deity sphere lists: &quot;Each deity's access to spheres is determined by the DM as he
+			    creates the pantheon of his world.&quot; Set these from what your DM granted you.
+			  </p>
+			  <div class="sphere-access-toolbar" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;">
 			    <!-- Populated dynamically -->
 			  </div>
+			  <!-- Class name kept for continuity; these are now three-state access rows, not checkboxes. -->
+			  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;" class="sphere-checkboxes">
+			    <!-- Populated dynamically -->
+			  </div>
+			  <div class="sphere-access-summary" style="margin-top:10px;font-size:12px;color:var(--muted);"></div>
 		    </div>
 		  
 		    <!-- Wizard Schools -->
@@ -1117,6 +1128,9 @@ const SHEET_HTML = `
 		  <!-- Specialist bonus-slot utilization (populated for specialist wizards only) -->
 		  <div class="specialist-mem-status" style="display:none;margin-bottom:12px;padding:8px;background:var(--glass);border-radius:4px;font-size:13px;">
 			<strong>Specialist Spells Memorized:</strong> <span class="specialist-mem-status-text" style="margin-left:8px;">—</span>
+		  </div>
+		  <div class="memorization-time-status" style="display:none;margin-bottom:12px;padding:8px;background:var(--glass);border-radius:4px;font-size:13px;" title="PHB Ch.7: &quot;The wizard must have a clear head gained from a restful night's sleep and then has to spend time studying his spell books. The amount of study time needed is 10 minutes per level of the spell being memorized.&quot;&#10;&#10;Priests are identical — &quot;the conditions for praying are identical to those needed for the wizard's studying.&quot;&#10;&#10;This is the time to memorize your CURRENT list from scratch. Spells already memorized and not yet cast do not need re-learning.">
+			<strong class="memorization-time-label">Study Time:</strong> <span class="memorization-time-text" style="margin-left:8px;">—</span>
 		  </div>
 		  
 		  <!-- Level filter -->
