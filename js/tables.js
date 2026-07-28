@@ -4802,3 +4802,83 @@ function applySpecialistBonus(baseSlots, clazz) {
   const slots = baseSlots.map(n => (n > 0 ? n + 1 : 0));
   return { slots, school };
 }
+
+// ===== Priest Sphere Access (PHB Ch.3 "Spells Allowed") =====
+//
+// A deity grants each sphere at one of two levels of access:
+//   MAJOR -- any spell in that sphere the priest is high enough level to cast
+//   MINOR -- spells of 3rd level or below in that sphere, and no higher
+//
+// PHB Ch.3: "A priest whose deity grants major access to a sphere can choose
+// from any spell within that sphere (provided he is high enough in level to cast
+// it), while one allowed only minor access to the sphere is limited to spells of
+// 3rd level or below in that sphere."
+//
+// There is deliberately NO deity -> spheres lookup table here. The PHB publishes
+// none: "Each deity's access to spheres is determined by the DM as he creates the
+// pantheon of his world." Access is recorded per character from whatever the DM
+// granted, which is why this is a stored character property and not a derivation.
+
+const SPHERE_ACCESS_NONE  = 'none';
+const SPHERE_ACCESS_MAJOR = 'major';
+const SPHERE_ACCESS_MINOR = 'minor';
+
+const MINOR_SPHERE_MAX_LEVEL = 3;
+
+// The Sphere of All is not granted by any deity and is never editable:
+// "All refers to spells usable by any priest, regardless of mythos. There are no
+// Powers (deities) of the Sphere of All." It therefore has no major/minor state.
+// Capping it at 3rd would also be flatly wrong -- it holds spells well above that
+// (atonement is 5th, exaction 7th).
+const SPHERE_ALL = 'All';
+
+// The 16 spheres of influence the PHB itself defines (Ch.3).
+// The spell data carries MORE than these: it splits the PHB's single "Elemental"
+// sphere into its four elements and adds eight further Tome of Magic spheres
+// (Chaos, Law, Numbers, Thought, Time, Travelers, War, Wards). Non-PHB spheres
+// are never blocked -- they are only tagged in the UI, so a table running strict
+// PHB can see at a glance which rows are not from the book.
+const PHB_CORE_SPHERES = [
+  'All', 'Animal', 'Astral', 'Charm', 'Combat', 'Creation', 'Divination',
+  'Elemental', 'Guardian', 'Healing', 'Necromantic', 'Plant', 'Protection',
+  'Summoning', 'Sun', 'Weather'
+];
+
+// The four spheres the data uses in place of the PHB's single "Elemental".
+// A DM who grants "Elemental, major" is granting all four of these.
+const ELEMENTAL_SPHERES = [
+  'Elemental Air', 'Elemental Earth', 'Elemental Fire', 'Elemental Water'
+];
+
+// Is this the Sphere of All? Compared case-insensitively because the sphere name
+// arrives from the spell data, the saved character record, and the UI, and those
+// three have disagreed on casing before.
+function isSphereAll(sphere) {
+  return (sphere || '').trim().toLowerCase() === SPHERE_ALL.toLowerCase();
+}
+
+// Does the PHB define this sphere? The four "Elemental *" spheres count as PHB --
+// they are that one PHB sphere subdivided, not an addition to it.
+function isPHBSphere(sphere) {
+  const s = (sphere || '').trim().toLowerCase();
+  if (!s) return false;
+  if (ELEMENTAL_SPHERES.some(e => e.toLowerCase() === s)) return true;
+  return PHB_CORE_SPHERES.some(p => p.toLowerCase() === s);
+}
+
+// Highest spell level castable within ONE sphere, given that sphere's access.
+//
+// Returns Infinity where the sphere imposes no ceiling of its own (major access,
+// and the Sphere of All). That is not "any level" -- the caller still has to clamp
+// to what the character's own slot progression allows, and to the deity power cap
+// if that optional rule is on. Keeping those limits separate is deliberate: they
+// come from three different rules and the UI needs to say which one is biting.
+//
+// Returns 0 for no access, which is distinct from Infinity and must not be
+// confused with it by a falsy check.
+function getSphereLevelCap(sphere, access) {
+  if (isSphereAll(sphere)) return Infinity;
+  if (access === SPHERE_ACCESS_MAJOR) return Infinity;
+  if (access === SPHERE_ACCESS_MINOR) return MINOR_SPHERE_MAX_LEVEL;
+  return 0;
+}
