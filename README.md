@@ -2,7 +2,7 @@
 
 A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and zero dependencies.
 
-**Version 9.0**
+**Version 10.0**
 
 ## Live Demo
 
@@ -23,8 +23,10 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 * Unsaved change indicator during edits
 * Full multi-class and dual-class support
 * Automatic calculation of saves, THAC0, attack matrices, spell slots, and proficiency budgets from the Player's Handbook tables
-* Searchable browsers for spells, weapons, armor, equipment, languages, and nonweapon proficiencies
+* Searchable browsers for spells, weapons, armor, equipment, ammunition, animals and transport, languages, and nonweapon proficiencies
+* A goods and services price reference covering clothing, provisions, lodging, and hirelings
 * Interactive panels for proficiencies whose rules need working out at the table
+* Enchanted items marked on the card and carried through to armor class, attack rolls, weapon speed, and encumbrance
 * Optional-rules framework with live toggles for Player's Handbook options and house-rule overrides
 * Multi-page printable character sheet with configurable sections, blank write-in lines, and color schemes
 * Import / export character data
@@ -44,7 +46,7 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 
 The tool must be served over `http://` — it will not work correctly if you simply double-click `index.html` and open it from your file system.
 
-The reason: several data files (spells, weapons, armor, ammunition, equipment, languages, and nonweapon proficiencies) are stored as JSON and loaded at runtime. Browsers block those requests when a page is opened directly from disk, so the sheet will load and calculate but every reference list will come up empty.
+The reason: several data files (spells, weapons, armor, ammunition, equipment, goods and services, animals and transport, languages, and nonweapon proficiencies) are stored as JSON and loaded at runtime. Browsers block those requests when a page is opened directly from disk, so the sheet will load and calculate but every reference list will come up empty.
 
 Any static web server works. The simplest option, if you have Python installed:
 
@@ -72,13 +74,15 @@ You can also host the files on any static web server — GitHub Pages, IIS, Apac
 
 ## Optional Rules
 
-Second Edition marks a good deal of its content as optional, and different tables play with different pieces of it. The **⚙ Settings** panel carries a list of toggles, split into two groups:
+Second Edition marks a good deal of its content as optional, and different tables play with different pieces of it. The **⚙ Settings** panel carries a list of toggles, split into three groups:
 
 **Optional Rules** are things the Player's Handbook itself presents as additions to the base game — weapon specialization, weapon speed as an initiative modifier, encumbrance penalties. These ship switched **off**, so ticking one is always a deliberate departure from the base rules.
 
 **House Rules & Overrides** are checks the tool performs against rules the book states flatly — class ability minimums, legal class combinations, druid armor restrictions, non-proficiency attack penalties. These ship switched **on**, so unticking one is always the house rule. They exist so a DM who has already waived something doesn't have to look at a warning about it forever.
 
-Either way, the shipped state is the book as written. Toggles apply immediately to every open character with no reload.
+**Table Rulings** are questions the Player's Handbook simply doesn't answer — how much a coin weighs, whether an enchanted arrow's bonus adds to an enchanted bow's. Neither setting is more correct than the other here; the default is only the more common reading. These are the ones to settle with your DM.
+
+For the first two groups the shipped state is the book as written. Toggles apply immediately to every open character with no reload.
 
 ---
 
@@ -173,6 +177,50 @@ Follow these steps **in order** to avoid overwriting your data:
 * I am not a developer.
 
 ### Recent Updates
+
+#### v10.0
+
+A systematic review of Player's Handbook Chapter 6, *Money and Equipment*, table by table.
+
+**Armor class**
+
+* Fixed armor not applying to Armor Class at all — a field rename had left the calculation reading the wrong value, so every equipped suit was contributing nothing.
+* Fixed magical armor making you *worse*: enchantment bonuses were being added to Armor Class rather than subtracted, so a +2 suit of plate came out at AC 5 instead of AC 1.
+* Fixed the choice of best armor comparing an unenchanted value against an enchanted one, which meant the answer depended on the order items happened to sit in the list.
+* Added advisories for wearing more than one suit of body armor, and for wearing bracers together with armor — which don't stack, though rings of protection still stack with whichever wins.
+
+**Encumbrance**
+
+* Added the five pounds the book charges for clothing.
+* Implemented the rule that magical armor counts toward what you can carry but not toward encumbrance's effects on movement and combat.
+* Added a toggle for coin weight, since the Player's Handbook never states one and tables differ between the 1st and 2nd Edition figures.
+
+**Weapons and ammunition**
+
+* Added the weapon type column — bludgeoning, piercing, slashing — for all 82 weapons.
+* Added missile ranges and rate of fire from Table 45, with the −2 medium and −5 long range modifiers shown per weapon.
+* Added five weapons the list was missing: harpoon, mancatcher, hook fauchard, medium lance, and the horseman's pick.
+* Added an ammunition selector so a bow knows which arrows it's firing, with a table ruling for whether enchanted ammunition stacks with an enchanted launcher.
+* Fixed weapon fields keeping stale values when the weapon type changed — a bow switched to a halberd kept the bow's range.
+
+**Magic items**
+
+* Added an explicit **Enchanted?** marker to weapon, armor, and ammunition cards, with the bonus fields grouped behind it and shown only when it applies.
+* Enchantment now shows on the collapsed card, so a +2 sword reads as such without expanding it. Weapons whose effects differ from their plus — a +5 weapon granting only +1 to hit — say so.
+* Unmarking an item stops its bonuses applying to armor class, attack rolls, damage, weapon speed, and encumbrance, without erasing the numbers.
+
+**Equipment data**
+
+* Corrected armor weights and costs against the book, including banded mail priced at less than half what it should be.
+* Corrected container capacities against Table 50 and added nineteen items the equipment list was missing.
+* Corrected the barding entries, which were priced from a different table and missing three types.
+* Added a goods and services price list covering clothing, provisions, food and lodging, and hirelings.
+* Added an animals and transport browser merging Table 44's prices with Table 49's carrying capacities, feeding both follower lists.
+
+**Fixes found along the way**
+
+* The Combat Quick Reference was never refreshed by a recalculation, so changing a level, an ability score, or an optional rule left it showing stale figures until an unrelated weapon edit corrected it.
+* Several weapon card dropdowns never marked the sheet as unsaved, so a change to them could be lost.
 
 #### v9.0
 
