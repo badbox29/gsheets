@@ -1689,7 +1689,9 @@ function makeArmorNode(data={}, onChange){
     typeOpts += '</optgroup>';
   }
 
-  const slots = ['Armor','Shield','Helmet','Bracers','Gauntlets','Boots','Cloak','Belt','Ring','Other'];
+  // "Bracers" REPLACES body armor (bracers of defense -- they do not stack).
+  // "Supplemental Armor" ADDS to it (dastana, vambraces worn over armor).
+  const slots = ['Armor','Shield','Helmet','Bracers','Supplemental Armor','Gauntlets','Boots','Cloak','Belt','Ring','Other'];
   const slotOpts = slots.map(s => opt(s, s, data.armorType || 'Armor')).join('');
 
   // MIGRATION -- NOT OPTIONAL. Records written before the Enchanted checkbox
