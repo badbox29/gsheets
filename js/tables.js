@@ -1,3 +1,26 @@
+// ===== escapeHtml — the ONLY HTML escape in this project =====
+// Lives in tables.js because it loads first, so calc.js, app.js and print.js can
+// all reach it without any load-order risk.
+//
+// This replaces 17 local copies that had drifted into FIVE different behaviours:
+// some escaped & < >, some added ", one escaped & " < and omitted > entirely,
+// and about half had no null guard — so String(undefined) rendered the literal
+// word "undefined" in some renderers and an empty string in others.
+//
+// Escapes all five characters, so it is correct in BOTH body text and attribute
+// values. Several call sites interpolate into title="…", where the & < > variant
+// was silently under-escaping.
+//
+// DO NOT add a local esc() helper. If this one is missing something, fix it here.
+function escapeHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 // === Magical Defense Adjustment ===
 const WIS_MDA = {
   1:-6, 2:-4, 3:-3, 4:-2, 5:-1, 6:-1,
