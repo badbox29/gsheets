@@ -3978,6 +3978,9 @@ function collectSheet(root){
     homeland: val(root,'homeland'),
     birthplace: val(root,'birthplace'),
     patronDeity: val(root,'patron_deity'),
+    // PHB Ch.7 optional rule: greater / lesser / demigod. Stored alongside the
+    // patron's name because it is a property of the deity, not of the character.
+    deityStatus: val(root,'deity_status'),
     birthorder: val(root,'birthorder'),
     father: val(root,'father'),
     mother: val(root,'mother'),
@@ -4710,6 +4713,10 @@ function loadSheet(root, data){
   val(root,'homeland', d.homeland || '');
   val(root,'birthplace', d.birthplace || '');
   val(root,'patron_deity', d.patronDeity || '');
+  // Absent on every character saved before this change. Empty resolves to
+  // "greater" in normalizeDeityPower(), so an old record is unrestricted --
+  // a missing value must never be the reason a priest loses spell levels.
+  val(root,'deity_status', d.deityStatus || '');
   val(root,'birthorder', d.birthorder || '');
   val(root,'father', d.father || '');
   val(root,'mother', d.mother || '');
