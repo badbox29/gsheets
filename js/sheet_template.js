@@ -2215,6 +2215,7 @@ const SHEET_HTML = `
 		  <div><strong>THAC0:</strong> <span class="combat-thac0">—</span></div>
 		  <div><strong>AC:</strong> <span class="combat-ac">—</span></div>
 		</div>
+		<div class="combat-ac-breakdown" style="margin-top:2px;padding-left:10px;line-height:1.5;"></div>
 		<div style="margin-top:4px;">
 		  <strong>Move:</strong> <span class="combat-move">—</span>
 		</div>
