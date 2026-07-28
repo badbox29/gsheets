@@ -11030,6 +11030,16 @@ function recalculateAll(root) {
   if (typeof renderArmorClass === 'function') renderArmorClass(root);
   if (typeof renderClassAbilities === 'function') renderClassAbilities(root);
   if (typeof renderCharacterBonuses === 'function') renderCharacterBonuses(root);
+  // LAST, and it was missing entirely. The Quick Reference reads THAC0, AC and
+  // Strength adjustments that the calls above produce, so it has to run after
+  // them -- but it was never in recalculateAll at all, only on the seventeen
+  // paths that touch a weapon row. Anything that recalculated WITHOUT touching
+  // a weapon left it stale: toggling an optional rule, changing a level or an
+  // ability score. Unequipping and re-equipping a weapon "fixed" it only
+  // because that is one of the seventeen.
+  // It also repaints the proficiency badges and stripes as a side effect, so
+  // those were going stale in exactly the same cases.
+  if (typeof renderCombatQuickReference === 'function') renderCombatQuickReference(root);
 }
 
 /**
