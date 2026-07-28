@@ -3743,9 +3743,21 @@ function collectSheet(root){
   // Core lists
   const spells = qsa(root,'.spells-list .item') // kept for back-compat; core no longer has it
     .map(n=>({name:n.querySelector('.title').value, level:n.querySelector('.val').value}));
-  // Collect selected spheres (priests)
-  const selectedSpheres = Array.from(root.querySelectorAll('.sphere-checkboxes input[type="checkbox"]:checked'))
-    .map(cb => cb.getAttribute('data-sphere'));
+  // Collect sphere ACCESS (priests) as { sphereName: 'major' | 'minor' }.
+  //
+  // SHAPE CHANGE, SAME KEY. This used to be a flat array of sphere names, which
+  // could not express major versus minor and therefore could not carry PHB Ch.3's
+  // 3rd-level cap on minor spheres. The key is deliberately left as
+  // `selectedSpheres` rather than renamed: renderSpellAccess accepts both shapes
+  // and promotes a legacy array to MAJOR access, so every character saved before
+  // this change keeps working and nobody loses a spell they had been casting.
+  //
+  // Spheres set to no access are omitted rather than written as 'none'. Absence
+  // is the no-access answer everywhere else in the sphere code, and carrying two
+  // spellings of the same state would eventually let them disagree.
+  const selectedSpheres = (typeof getSphereAccessMap === 'function')
+    ? getSphereAccessMap(root)
+    : {};
   
   // Collect selected schools (wizards)
   const selectedSchools = Array.from(root.querySelectorAll('.school-checkboxes input[type="checkbox"]:checked'))
