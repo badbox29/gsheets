@@ -1490,6 +1490,12 @@ const SHEET_HTML = `
           <div class="row" style="margin-top:8px">
             <div class="col"><label>Birthplace</label><input data-field="birthplace" type="text"></div>
             <div class="col"><label>Patron Deity</label><input data-field="patron_deity" type="text"></div>
+            <div class="col"><label>Deity Status</label><select data-field="deity_status" title="PHB Ch.7 optional rule: not all deities are equal.&#10;Demi-god grants spells up to 5th level, Lesser deity up to 6th, Greater deity all levels.&#10;&#10;Only has an effect while 'Patron deity power limits priest spell levels' is ticked in Settings > Optional Rules.&#10;Leave unset to be treated as a greater deity (no restriction).">
+              <option value="">— not specified —</option>
+              <option value="greater">Greater deity</option>
+              <option value="lesser">Lesser deity</option>
+              <option value="demigod">Demi-god</option>
+            </select></div>
           </div>
         </section>
 
