@@ -5528,41 +5528,43 @@ function bindSheet(root, tab){
   // Add event delegation for armor list to trigger encumbrance
   const armorList = qs(root, '.armor-list');
   if (armorList) {
+    // These fire for EVERY armor row regardless of how it was created, so this
+    // is the reliable place to react -- the per-node onChange differs by path
+    // (loadSheet passes markUnsaved only, the browser passes recalculateAll).
+    //
+    // recalculateAll rather than a hand-picked list. The old lists called
+    // renderArmorClass, which writes the AC FIELD, but the Combat Quick
+    // Reference keeps its own copy of AC and was never told -- which is why AC
+    // only moved after a save and reload. The 'input' branch also missed
+    // .base-ac and .ac-bonus entirely, so typing an AC updated nothing at all.
+    const armorChanged = () => {
+      if (typeof recalculateAll === 'function') recalculateAll(root);
+      // Advisories are not part of recalculateAll.
+      if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
+    };
+
     armorList.addEventListener('input', (e) => {
-      // Trigger if weight changes
-      if (e.target.classList.contains('weight')) {
-        renderEncumbrance(root);
-        renderMovementRate(root);
-      }
-      // Thief skills key off the armor NAME (PHB Table 29 matches on it), so a
-      // rename from "Leather Armor" to "Studded Leather" has to re-run them.
-      if (e.target.classList.contains('title')) {
-        if (typeof renderThiefSkills === 'function') renderThiefSkills(root);
-        if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
-		if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
+      // .title is here because thief skills key off the armor NAME -- PHB Table
+      // 29 matches on it, so renaming "Leather Armor" to "Studded Leather"
+      // changes which column applies.
+      if (e.target.classList.contains('weight')   ||
+          e.target.classList.contains('base-ac')  ||
+          e.target.classList.contains('ac-bonus') ||
+          e.target.classList.contains('title')) {
+        armorChanged();
       }
     });
-    // Separate listener for checkbox and select changes (use 'change' not 'input')
+    // Separate listener for checkboxes and selects -- 'change', not 'input'.
     armorList.addEventListener('change', (e) => {
-      if (e.target.classList.contains('equipped')) {
-        renderArmorClass(root);
-        renderMovementRate(root);
-        if (typeof renderThiefSkills === 'function') renderThiefSkills(root);
-        if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
-		if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
-      }
-      // Also trigger for armor type dropdown changes
-      // Both axes matter: .armor-slot decides whether a piece counts as body
-      // armor at all, .armor-type decides which Table 29 column it uses.
-      if (e.target.classList.contains('armor-type') ||
-          e.target.classList.contains('armor-slot')) {
-        renderArmorClass(root);
-        renderMovementRate(root);
-        // Only Armor-type items count as body armor for Table 29, so switching
-        // an item to or from "Shield" changes which piece the lookup finds.
-        if (typeof renderThiefSkills === 'function') renderThiefSkills(root);
-        if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
-		if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
+      // .equipped, plus both type axes: .armor-slot decides whether a piece
+      // counts as body armor at all, .armor-type decides its Table 29 column.
+      // .is-magical gates whether the AC bonus applies and whether the piece is
+      // excluded from encumbrance effects.
+      if (e.target.classList.contains('equipped')   ||
+          e.target.classList.contains('armor-type') ||
+          e.target.classList.contains('armor-slot') ||
+          e.target.classList.contains('is-magical')) {
+        armorChanged();
       }
     });
   }
