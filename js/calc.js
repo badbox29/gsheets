@@ -258,15 +258,6 @@ function itemMagicBonus(itemEl, selector) {
   return parseInt((itemEl.querySelector(selector) || {}).value, 10) || 0;
 }
 
-// Ammunition names are player-entered free text and the Quick Reference builds
-// its rows with innerHTML, so the name must be escaped on the way in.
-// calc.js has no shared escape helper -- several renderers define their own
-// locally -- so this follows that pattern rather than introducing a global.
-function escAmmo(s) {
-  return String(s == null ? '' : s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
 // Resolve the ammunition a weapon row is set to fire, and what it grants.
 // The link is BY NAME, matching the weapon card's dropdown -- see the note
 // there. A selection that no longer matches any record returns missing:true
@@ -462,7 +453,7 @@ function renderCombatQuickReference(root) {
       // Violet for enchantment, matching the Magical row on weapon entries --
       // one colour language across the whole panel.
       const colour = (l.kind === 'magic') ? 'var(--magic, #a98fd0)' : 'var(--muted)';
-      return '<div style="color:' + colour + ';">' + escAmmo(l.text) + '</div>';
+      return '<div style="color:' + colour + ';">' + escapeHtml(l.text) + '</div>';
     }).join('');
   }
 
@@ -765,7 +756,7 @@ function renderCombatQuickReference(root) {
                   'title="This weapon is set to fire ammunition that is no longer in your ' +
                   'Ammunition list -- most likely renamed or removed. The selection is kept ' +
                   'rather than cleared so it is not lost silently.">' +
-                  'Ammo: ' + escAmmo(ammo.name) + ' (not in your ammunition list)</span><br>';
+                  'Ammo: ' + escapeHtml(ammo.name) + ' (not in your ammunition list)</span><br>';
         } else {
           const bits = [];
           if (ammoHitAdd) bits.push(sign(ammoHitAdd) + ' hit');
@@ -778,7 +769,7 @@ function renderCombatQuickReference(root) {
                   'stacks with an enchanted launcher is not addressed by the PHB -- it is set ' +
                   'under Table Rulings in Settings, currently ' +
                   (ammoStacks ? 'STACKING' : 'BETTER OF THE TWO') + '.">' +
-                  'Ammo: ' + escAmmo(ammo.name) + ' \u2014 ' + effect + '</span><br>';
+                  'Ammo: ' + escapeHtml(ammo.name) + ' \u2014 ' + effect + '</span><br>';
         }
       }
 
@@ -1549,12 +1540,9 @@ function renderArmorRestrictions(root) {
   }
 
   // Armor names are free text.
-  const esc = s => String(s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
   el.innerHTML =
     '<strong style="color:var(--warning, #e0a34a);">\u26A0 Armor restrictions</strong>' +
-    problems.map(p => '<div style="margin-top:4px;">\u2022 ' + esc(p) + '</div>').join('') +
+    problems.map(p => '<div style="margin-top:4px;">\u2022 ' + escapeHtml(p) + '</div>').join('') +
     '<div style="margin-top:6px;color:var(--muted);font-size:11px;">' +
       'Advisory only \u2014 nothing is blocked. Druid and other class limits can be adjusted ' +
       'under House Rules &amp; Overrides in Settings.</div>';
@@ -1592,15 +1580,12 @@ function renderRangerStealth(root) {
   setTip('ranger_hide_nonnatural', s.base[0], s.racial[0], s.dex[0], true);
   setTip('ranger_move_nonnatural', s.base[1], s.racial[1], s.dex[1], true);
 
-  const esc = x => String(x)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
   const noteEl = section.querySelector('.ranger-stealth-note');
   if (noteEl) {
     if (s.blocked) {
       noteEl.innerHTML =
         '<strong style="color:var(--warning, #e0a34a);">Stealth unavailable in ' +
-          esc(s.armorName) + '</strong>' +
+          escapeHtml(s.armorName) + '</strong>' +
         '<div style="margin-top:4px;">Hiding in shadows and moving silently are not possible ' +
         'in armor heavier than studded leather \u2014 it is inflexible and makes too much ' +
         'noise (PHB Ch.3, Ranger).</div>';
@@ -1612,7 +1597,7 @@ function renderRangerStealth(root) {
               'quieter, so it does not trip the ranger\u2019s armor restriction.';
       }
       noteEl.innerHTML =
-        '<strong>Armor: ' + esc(s.armorName) + '</strong>' +
+        '<strong>Armor: ' + escapeHtml(s.armorName) + '</strong>' +
         '<div style="margin-top:4px;">' + why + ' The upper figures apply in natural ' +
         'surroundings; use the halved ones in a crypt, dungeon or city street.</div>';
       noteEl.style.color = 'var(--muted)';
@@ -1626,7 +1611,7 @@ function renderRangerStealth(root) {
       dormEl.innerHTML =
         '<strong style="color:var(--warning, #e0a34a);">\u26A0 Dormant class</strong>' +
         '<div style="margin-top:4px;">Your ranger levels are dormant until your new class ' +
-        'passes level ' + esc(String(s.level)) + '. Shown for reference \u2014 using a former ' +
+        'passes level ' + escapeHtml(String(s.level)) + '. Shown for reference \u2014 using a former ' +
         'class\u2019s abilities costs you the experience for that adventure.</div>';
       dormEl.style.display = '';
     } else {
@@ -3301,9 +3286,8 @@ async function renderSpellBrowser(root) {
     const values = Array.from(valueSet).filter(Boolean);
     if (current && !values.includes(current)) values.push(current);
     values.sort((a, b) => a.localeCompare(b));
-    const esc = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
     let html = '<option value="">' + allLabel + '</option>';
-    values.forEach(v => { html += '<option value="' + esc(v) + '">' + esc(v) + '</option>'; });
+    values.forEach(v => { html += '<option value="' + escapeHtml(v) + '">' + escapeHtml(v) + '</option>'; });
     selectEl.innerHTML = html;
     selectEl.value = current;
   };
@@ -3438,20 +3422,17 @@ function renderGoodsReference(root) {
   );
 
   // "Food & Lodging" contains an ampersand, so escaping is not optional here.
-  const esc = s => String(s == null ? '' : s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
   let html = '';
   cats.forEach(c => {
     const group = rows.filter(g => g.Category === c);
     if (!group.length) return;
     html += '<div style="font-weight:600;color:var(--accent-light);font-size:12px;' +
-            'margin:10px 0 4px;">' + esc(c) + '</div>';
+            'margin:10px 0 4px;">' + escapeHtml(c) + '</div>';
     group.forEach(g => {
       html += '<div style="display:flex;justify-content:space-between;gap:12px;' +
               'padding:3px 6px;border-bottom:1px solid var(--border);font-size:12px;">' +
-              '<span>' + esc(g['Item Name']) + '</span>' +
-              '<span style="color:var(--muted);white-space:nowrap;">' + esc(g.Cost) + '</span>' +
+              '<span>' + escapeHtml(g['Item Name']) + '</span>' +
+              '<span style="color:var(--muted);white-space:nowrap;">' + escapeHtml(g.Cost) + '</span>' +
               '</div>';
     });
   });
@@ -4054,9 +4035,6 @@ function renderAnimalsBrowser(root) {
     return;
   }
 
-  const esc = s => String(s == null ? '' : s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
   const t   = ((root.querySelector('.animals-search') || {}).value || '').toLowerCase();
   const cat = (root.querySelector('.animals-category-filter') || {}).value || '';
 
@@ -4080,16 +4058,16 @@ function renderAnimalsBrowser(root) {
 
     // Only the 14 Table 49 mounts have load bands; everything else is priced only.
     const bands = a['Base Move']
-      ? ' &middot; carries ' + esc(a['Base Move']) +
-        ' <span style="opacity:0.7;">(2/3 move ' + esc(a['2/3 Move']) +
-        ', 1/3 move ' + esc(a['1/3 Move']) + ')</span>'
+      ? ' &middot; carries ' + escapeHtml(a['Base Move']) +
+        ' <span style="opacity:0.7;">(2/3 move ' + escapeHtml(a['2/3 Move']) +
+        ', 1/3 move ' + escapeHtml(a['1/3 Move']) + ')</span>'
       : '';
 
     const info = document.createElement('div');
     info.style.cssText = 'flex:1;min-width:0;';
-    info.innerHTML = '<strong>' + esc(a.Name) + '</strong>' +
+    info.innerHTML = '<strong>' + escapeHtml(a.Name) + '</strong>' +
       '<span style="color:var(--muted);"> &middot; ' +
-      esc(a.Cost || 'no price listed') + bands + '</span>';
+      escapeHtml(a.Cost || 'no price listed') + bands + '</span>';
 
     const btns = document.createElement('div');
     btns.style.cssText = 'display:flex;gap:4px;flex-shrink:0;';
@@ -5226,9 +5204,6 @@ function renderProficiencyAbilities(root) {
 // and the party's movement rate, and states the rules it cannot enforce.
 PROF_ABILITY_BUILDERS['tracking'] = function (root, entry, panelEl) {
   const st = getProfAbilityState(root, 'tracking');
-  const esc = s => String(s == null ? '' : s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
   const base = getNWPCheckTarget(root, entry.nwp);
   const coop = getProficiencyCooperation(root);
 
@@ -5272,14 +5247,14 @@ PROF_ABILITY_BUILDERS['tracking'] = function (root, entry, panelEl) {
            <input type="number" class="trk-num" data-key="${m.key}" min="0" step="1"
                   value="${Math.max(0, parseInt(st[m.key], 10) || 0)}"
                   style="width:52px;flex-shrink:0;padding:2px 4px;font-size:11px;">
-           <span>${esc(m.countLabel)}
+           <span>${escapeHtml(m.countLabel)}
              <span style="color:var(--muted);">(${m.mod > 0 ? '+' : ''}${m.mod} per ${m.per})</span>
            </span>
          </div>`
       : `<label style="display:flex;align-items:center;gap:6px;margin-bottom:4px;color:var(--text);cursor:pointer;${dim}">
            <input type="checkbox" class="trk-chk" data-key="${m.key}" ${st[m.key] ? 'checked' : ''}
                   style="width:auto;flex-shrink:0;">
-           <span>${esc(m.label)}
+           <span>${escapeHtml(m.label)}
              <span style="color:var(--muted);">(${m.mod > 0 ? '+' : ''}${m.mod})</span>
            </span>
          </label>`;
@@ -5299,18 +5274,18 @@ PROF_ABILITY_BUILDERS['tracking'] = function (root, entry, panelEl) {
     : auto
     ? `<div style="font-weight:600;color:var(--success, #6fbf73);">Automatic success \u2014 only a natural 20 fails</div>
        <div style="font-size:11px;color:var(--muted);margin-top:2px;">
-         Chance ${total}, above the die \u00B7 movement ${move ? esc(move.label) : '\u2014'} (whole party)
+         Chance ${total}, above the die \u00B7 movement ${move ? escapeHtml(move.label) : '\u2014'} (whole party)
        </div>`
     : `<div style="font-weight:600;color:var(--accent-light);">Chance to track: ${total} or less on 1d20</div>
        <div style="font-size:11px;color:var(--muted);margin-top:2px;">
-         Movement while tracking: ${move ? esc(move.label) : '\u2014'} (whole party)
+         Movement while tracking: ${move ? escapeHtml(move.label) : '\u2014'} (whole party)
          \u00B7 a natural 20 always fails
        </div>`;
 
   panelEl.innerHTML = `
     <div style="padding:8px;border:1px solid var(--border);border-radius:4px;background:var(--glass);margin-bottom:12px;">
       ${result}
-      ${lines.length ? `<div style="font-size:11px;color:var(--muted);margin-top:6px;white-space:pre-wrap;">${esc(lines.join('\n'))}</div>` : ''}
+      ${lines.length ? `<div style="font-size:11px;color:var(--muted);margin-top:6px;white-space:pre-wrap;">${escapeHtml(lines.join('\n'))}</div>` : ''}
     </div>
 
     <div style="font-size:11px;font-weight:600;margin-bottom:6px;">Conditions \u2014 tick every one that applies, they are cumulative</div>
@@ -5354,9 +5329,7 @@ PROF_ABILITY_BUILDERS['tracking'] = function (root, entry, panelEl) {
 // NOTE the proficiency is NOT required to ride -- only Airborne says that. Land
 // riding without it works; the proficiency buys these feats.
 PROF_ABILITY_BUILDERS['riding, land-based'] = function (root, entry, panelEl) {
-  const esc = s => String(s == null ? '' : s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
+  
   const c = getNWPCheckTarget(root, entry.nwp);
   const fail = (typeof NWP_NATURAL_FAIL === 'number') ? NWP_NATURAL_FAIL : 20;
   const fmt = t => t < 1 ? 'no roll can succeed'
@@ -5364,7 +5337,7 @@ PROF_ABILITY_BUILDERS['riding, land-based'] = function (root, entry, panelEl) {
     : `roll ${t} or less`;
 
   const head = c.hasCheck
-    ? `<div style="font-weight:600;color:var(--accent-light);">Riding check: ${esc(c.abilityLabel)} ${c.score}${c.modifier ? (c.modifier < 0 ? ' ' + c.modifier : ' +' + c.modifier) : ''} = ${fmt(c.target)}</div>
+    ? `<div style="font-weight:600;color:var(--accent-light);">Riding check: ${escapeHtml(c.abilityLabel)} ${c.score}${c.modifier ? (c.modifier < 0 ? ' ' + c.modifier : ' +' + c.modifier) : ''} = ${fmt(c.target)}</div>
        <div style="font-size:11px;color:var(--muted);margin-top:2px;">
          Leaping down to attack takes &minus;4: ${fmt(c.target - 4)}
        </div>`
@@ -5399,7 +5372,7 @@ PROF_ABILITY_BUILDERS['riding, land-based'] = function (root, entry, panelEl) {
     <div style="font-size:11px;">
       ${feats.map(f => `
         <div style="margin-bottom:8px;">
-          <div><strong>${esc(f.name)}</strong> &middot; ${tag(f)}</div>
+          <div><strong>${escapeHtml(f.name)}</strong> &middot; ${tag(f)}</div>
           <div style="color:var(--muted);margin-top:1px;">${f.text}</div>
         </div>`).join('')}
     </div>
@@ -5424,9 +5397,6 @@ PROF_ABILITY_BUILDERS['riding, land-based'] = function (root, entry, panelEl) {
 // swallowed or touched poisons treatable at all. Detecting it removes three
 // separate "do I have the other one?" lookups.
 PROF_ABILITY_BUILDERS['healing'] = function (root, entry, panelEl) {
-  const esc = s => String(s == null ? '' : s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
   const c    = getNWPCheckTarget(root, entry.nwp);
   const coop = getProficiencyCooperation(root) ? 1 : 0;
   const fail = (typeof NWP_NATURAL_FAIL === 'number') ? NWP_NATURAL_FAIL : 20;
@@ -5470,7 +5440,7 @@ PROF_ABILITY_BUILDERS['healing'] = function (root, entry, panelEl) {
       ${rates.map(r => `
         <div style="display:flex;gap:8px;margin-bottom:2px;${r.ok ? '' : 'opacity:0.45;'}">
           <span style="width:64px;flex-shrink:0;color:${r.ok ? 'var(--accent-light)' : 'var(--muted)'};">${r.hp} hp/day</span>
-          <span style="color:var(--muted);">${esc(r.when)}</span>
+          <span style="color:var(--muted);">${escapeHtml(r.when)}</span>
         </div>`).join('')}
       <div style="color:var(--muted);margin-top:6px;">Up to six patients at a time.</div>
     </div>
@@ -5501,9 +5471,6 @@ PROF_ABILITY_BUILDERS['healing'] = function (root, entry, panelEl) {
 };
 
 // --- Shared helpers for the remaining panels ---
-const PA_ESC = s => String(s == null ? '' : s)
-  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
 function paFmt(t) {
   const fail = (typeof NWP_NATURAL_FAIL === 'number') ? NWP_NATURAL_FAIL : 20;
   return t < 1 ? 'no roll can succeed'
@@ -5580,9 +5547,9 @@ PROF_ABILITY_BUILDERS['jumping'] = function (root, entry, panelEl) {
     '<div style="font-size:11px;margin-bottom:12px;">' +
     jumps.map(j =>
       '<div style="display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap;">' +
-      '<span style="width:150px;flex-shrink:0;"><strong>' + PA_ESC(j.n) + '</strong></span>' +
+      '<span style="width:150px;flex-shrink:0;"><strong>' + escapeHtml(j.n) + '</strong></span>' +
       '<span style="color:var(--accent-light);width:110px;flex-shrink:0;">' + j.f + '</span>' +
-      '<span style="color:var(--muted);">' + (j.c ? j.c + ' \u00B7 ' : '') + PA_ESC(j.note) + '</span>' +
+      '<span style="color:var(--muted);">' + (j.c ? j.c + ' \u00B7 ' : '') + escapeHtml(j.note) + '</span>' +
       '</div>').join('') +
     '</div>' +
     '<details class="disclosure" style="font-size:11px;">' +
@@ -5635,7 +5602,7 @@ PROF_ABILITY_BUILDERS['tightrope walking'] = function (root, entry, panelEl) {
     if (coop)     parts.push('Assistance +1');
     body = paBox('Balance check: ' + paFmt(target),
       'One check every 60 feet or part thereof \u00B7 movement 60 ft per round' +
-      (parts.length ? '<br>' + PA_ESC(parts.join(' \u00B7 ')) : ''));
+      (parts.length ? '<br>' + escapeHtml(parts.join(' \u00B7 ')) : ''));
   }
 
   panelEl.innerHTML = body +
@@ -5645,7 +5612,7 @@ PROF_ABILITY_BUILDERS['tightrope walking'] = function (root, entry, panelEl) {
       '<label style="display:flex;align-items:center;gap:6px;margin-bottom:4px;color:var(--text);cursor:pointer;">' +
       '<input type="radio" name="trw-band" class="trw-band" value="' + b.key + '"' +
       (b.key === band.key ? ' checked' : '') + ' style="width:auto;flex-shrink:0;">' +
-      '<span>' + PA_ESC(b.label) +
+      '<span>' + escapeHtml(b.label) +
       '<span style="color:var(--muted);"> (' + (b.pen === null ? 'no check' : b.pen) + ')</span>' +
       '</span></label>').join('') +
     '<label style="display:flex;align-items:center;gap:6px;margin:8px 0 4px;color:var(--text);cursor:pointer;">' +
@@ -5698,14 +5665,14 @@ PROF_ABILITY_BUILDERS['disguise'] = function (root, entry, panelEl) {
 
   panelEl.innerHTML =
     paBox('Disguise check: ' + paFmt(target),
-      parts.length ? PA_ESC(parts.join(' \u00B7 '))
+      parts.length ? escapeHtml(parts.join(' \u00B7 '))
         : 'Unmodified \u2014 any general type of person of about the same height, age, weight and race.') +
     '<div style="font-size:11px;margin-bottom:12px;">' +
     opts.map(o =>
       '<label style="display:flex;align-items:center;gap:6px;margin-bottom:4px;color:var(--text);cursor:pointer;">' +
       '<input type="checkbox" class="dsg-chk" data-key="' + o.key + '"' + (st[o.key] ? ' checked' : '') +
       ' style="width:auto;flex-shrink:0;">' +
-      '<span>' + PA_ESC(o.label) + ' <span style="color:var(--muted);">(' + o.mod + ')</span></span></label>').join('') +
+      '<span>' + escapeHtml(o.label) + ' <span style="color:var(--muted);">(' + o.mod + ')</span></span></label>').join('') +
     '<div style="color:var(--muted);margin-top:6px;">These are cumulative \u2014 a specific person of ' +
     'another race or sex is &minus;17, which the book calls extremely difficult.</div>' +
     '</div>' +
@@ -5739,14 +5706,14 @@ PROF_ABILITY_BUILDERS['forgery'] = function (root, entry, panelEl) {
 
   panelEl.innerHTML =
     paBox('Forgery check: ' + paFmt(target),
-      PA_ESC(cur.needs) + (cur.mod ? ' \u00B7 ' + cur.mod + ' penalty' : '') + (coop ? ' \u00B7 Assistance +1' : '')) +
+      escapeHtml(cur.needs) + (cur.mod ? ' \u00B7 ' + cur.mod + ' penalty' : '') + (coop ? ' \u00B7 Assistance +1' : '')) +
     '<div style="font-size:11px;margin-bottom:12px;">' +
     '<div style="font-weight:600;margin-bottom:4px;">What is being forged</div>' +
     cases.map(x =>
       '<label style="display:flex;align-items:center;gap:6px;margin-bottom:4px;color:var(--text);cursor:pointer;">' +
       '<input type="radio" name="frg-mode" class="frg-mode" value="' + x.key + '"' +
       (x.key === cur.key ? ' checked' : '') + ' style="width:auto;flex-shrink:0;">' +
-      '<span>' + PA_ESC(x.label) + ' <span style="color:var(--muted);">(' + (x.mod || 0) + ')</span></span></label>').join('') +
+      '<span>' + escapeHtml(x.label) + ' <span style="color:var(--muted);">(' + (x.mod || 0) + ')</span></span></label>').join('') +
     '</div>' +
     '<div style="padding:8px;border:1px solid var(--warning, #e0a34a);border-radius:4px;font-size:11px;margin-bottom:12px;">' +
     '<strong style="color:var(--warning, #e0a34a);">The DM rolls this in secret.</strong> ' +
@@ -5793,7 +5760,7 @@ PROF_ABILITY_BUILDERS['set snares'] = function (root, entry, panelEl) {
 
   panelEl.innerHTML =
     paBox('Snare check: ' + paFmt(target),
-      (parts.length ? PA_ESC(parts.join(' \u00B7 ')) + '<br>' : '') +
+      (parts.length ? escapeHtml(parts.join(' \u00B7 ')) + '<br>' : '') +
       'Rolled when the snare is first constructed, and again every time it is set.') +
     '<div style="font-size:11px;margin-bottom:12px;">' +
     '<label style="display:flex;align-items:center;gap:6px;margin-bottom:4px;color:var(--text);cursor:pointer;">' +
@@ -5898,7 +5865,7 @@ PROF_ABILITY_BUILDERS['riding, airborne'] = function (root, entry, panelEl) {
     '<div style="font-size:11px;">' +
     feats.map(f =>
       '<div style="margin-bottom:8px;">' +
-      '<div><strong>' + PA_ESC(f.n) + '</strong> &middot; ' + tag(f.k) + '</div>' +
+      '<div><strong>' + escapeHtml(f.n) + '</strong> &middot; ' + tag(f.k) + '</div>' +
       '<div style="color:var(--muted);margin-top:1px;">' + f.t + '</div></div>').join('') +
     '</div>' +
     '<details class="disclosure" style="font-size:11px;">' +
@@ -6257,7 +6224,6 @@ function renderDruidRole(root) {
   const slotsSec = root.querySelector('.druid-slots-section');
   if (!standing && !slotsSec) return;
 
-  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const hideAll = () => {
     if (standing) standing.style.display = 'none';
     if (slotsSec) slotsSec.style.display = 'none';
@@ -6283,7 +6249,7 @@ function renderDruidRole(root) {
                '16th level; the title is not available below 16th.'].concat(notes);
     }
     if (notes.length) {
-      noteEl.innerHTML = notes.map(n => '<div style="margin-top:4px;">\u2022 ' + esc(n) + '</div>').join('');
+      noteEl.innerHTML = notes.map(n => '<div style="margin-top:4px;">\u2022 ' + escapeHtml(n) + '</div>').join('');
       noteEl.style.color = 'var(--warning, #e0a34a)';
       noteEl.style.display = '';
     } else {
@@ -6331,7 +6297,7 @@ function renderDruidRole(root) {
     const roleLabel = (typeof DRUID_ROLES !== 'undefined' && DRUID_ROLES[role])
       ? DRUID_ROLES[role].label : 'Druid';
     readout.innerHTML =
-      '<strong>' + esc(roleLabel) + ':</strong> ' + spent + ' of ' + pool +
+      '<strong>' + escapeHtml(roleLabel) + ':</strong> ' + spent + ' of ' + pool +
       ' bonus spell levels allocated' +
       (over ? ' \u2014 over budget' : '') +
       '. These are added to your spell slots above.';
@@ -6660,12 +6626,9 @@ function renderSpecialistValidation(root) {
   }
 
   // Race is free text, so escape before injecting into the banner.
-  const esc = s => String(s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
   el.innerHTML =
     '<strong style="color:var(--warning, #e0a34a);">\u26A0 Specialist requirements (PHB Table 22)</strong>' +
-    problems.map(p => '<div style="margin-top:4px;">\u2022 ' + esc(p) + '</div>').join('') +
+    problems.map(p => '<div style="margin-top:4px;">\u2022 ' + escapeHtml(p) + '</div>').join('') +
     '<div style="margin-top:6px;color:var(--muted);font-size:11px;">' +
       'Advisory only \u2014 nothing is blocked, and your DM may allow exceptions.</div>';
   el.style.display = '';
@@ -6705,17 +6668,13 @@ function renderClassGroupValidation(root) {
     return;
   }
 
-  // Class and race names are free text, so escape before injecting.
-  const esc = s => String(s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
   // One source gets its own specific heading; two or more fall back to the
   // generic one rather than trying to name every combination.
   const heading = (active.length === 1) ? active[0].heading : 'Character build';
 
   el.innerHTML =
     '<strong style="color:var(--warning, #e0a34a);">\u26A0 ' + heading + '</strong>' +
-    problems.map(p => '<div style="margin-top:4px;">\u2022 ' + esc(p) + '</div>').join('') +
+    problems.map(p => '<div style="margin-top:4px;">\u2022 ' + escapeHtml(p) + '</div>').join('') +
     '<div style="margin-top:6px;color:var(--muted);font-size:11px;">' +
       'Advisory only \u2014 nothing is blocked. Switch this check off under ' +
       'House Rules &amp; Overrides in Settings if your DM has approved it.</div>';
@@ -6738,21 +6697,19 @@ function renderAgingEffects(root) {
   const status = getAgingStatus(val(root, 'race'), val(root, 'age'));
   if (!status) return hide();
 
-  const esc = s => String(s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   let html = '';
 
   if (status.current) {
-    html += '<strong style="color:var(--info, #6fb3d2);">' + esc(status.current.label) +
+    html += '<strong style="color:var(--info, #6fb3d2);">' + escapeHtml(status.current.label) +
             '</strong> \u2014 age ' + status.age + ', reached at ' + status.current.at + '.';
     html += '<div style="margin-top:6px;">Cumulative adjustment: <strong>' +
-            esc(formatAgingEffects(status.cumulative)) + '</strong></div>';
+            escapeHtml(formatAgingEffects(status.cumulative)) + '</strong></div>';
     // Only break out the individual brackets once more than one has stacked --
     // with a single bracket the itemised line just repeats the total.
     if (status.reached.length > 1) {
       html += status.reached.map(b =>
-        '<div style="margin-top:3px;color:var(--muted);">\u2022 ' + esc(b.label) +
-        ' (' + b.at + '): ' + esc(formatAgingEffects(b.effects)) + '</div>').join('');
+        '<div style="margin-top:3px;color:var(--muted);">\u2022 ' + escapeHtml(b.label) +
+        ' (' + b.at + '): ' + escapeHtml(formatAgingEffects(b.effects)) + '</div>').join('');
     }
   } else {
     html += '<strong style="color:var(--info, #6fb3d2);">Prime of life</strong> \u2014 age ' +
@@ -6762,9 +6719,9 @@ function renderAgingEffects(root) {
   if (status.next) {
     const nb = (typeof AGING_BRACKETS !== 'undefined')
       ? AGING_BRACKETS.find(b => b.key === status.next.key) : null;
-    html += '<div style="margin-top:6px;color:var(--muted);">Next: ' + esc(status.next.label) +
+    html += '<div style="margin-top:6px;color:var(--muted);">Next: ' + escapeHtml(status.next.label) +
             ' at ' + status.next.at +
-            (nb ? ' (' + esc(formatAgingEffects(nb.effects)) + ')' : '') + '.</div>';
+            (nb ? ' (' + escapeHtml(formatAgingEffects(nb.effects)) + ')' : '') + '.</div>';
   }
 
   html += '<div style="margin-top:6px;color:var(--muted);font-size:11px;">' +
