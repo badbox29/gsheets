@@ -1905,6 +1905,8 @@ function renderArmorClass(root) {
   let ringNames = [];
   let cloakBonus = 0;
   let cloakNames = [];
+  let miscBonus = 0;
+  let miscNames = [];
   
   // Get all equipped armor/shields/accessories
   const armorItems = Array.from(root.querySelectorAll('.armor-list .item'));
@@ -1939,7 +1941,23 @@ function renderArmorClass(root) {
     // strictly worse than the plain armor.
 
     // Base AC providers (only best one counts)
-    if (type === "Armor" || type === "Bracers") {
+    // Supplementary armor: ADDS to Armor Class instead of setting it, the same
+    // shape as shields, rings and cloaks. Dastana is the live example -- "-1 to
+    // AC when used with other armor" -- and its stored -1 is a BONUS in exactly
+    // the convention shields use, not a base AC.
+    // This is deliberately NOT the Bracers slot: bracers of defense replace
+    // armor rather than supplementing it, which is the branch below.
+    if (type === "Supplemental Armor") {
+      if (!isNaN(baseACValue)) miscBonus += baseACValue;
+      miscBonus -= magicBonus;
+      miscNames.push(name);
+    }
+    else if (type === "Armor" || type === "Bracers") {
+      // GUARD: no armor in the book has a negative base AC. A negative here
+      // always means a BONUS has landed in a base-AC field -- which is what made
+      // an equipped Dastana produce AC -1, better than full plate and shield.
+      // Skip it rather than let it set the base.
+      if (baseACValue < 0) return;
       // Compare EFFECTIVE against EFFECTIVE. This used to test the candidate's
       // UNENCHANTED value against the incumbent's already-enchanted one, which
       // is not just wrong but ORDER-DEPENDENT: studded leather (7) and leather
@@ -1988,7 +2006,7 @@ function renderArmorClass(root) {
   const manualAdj = parseInt(val(root, "ac_manual") || 0, 10);
   
   // Calculate final AC (remember: lower is better in AD&D)
-  let finalAC = baseAC + shieldBonus + ringBonus + cloakBonus + dexAdj + manualAdj;
+  let finalAC = baseAC + shieldBonus + ringBonus + cloakBonus + dexAdj + manualAdj + miscBonus;
   
   // Set the normal AC field
   acField.value = finalAC;
@@ -2007,6 +2025,10 @@ function renderArmorClass(root) {
   
   if (cloakBonus !== 0) {
     tooltip += `Cloak: ${cloakBonus >= 0 ? "+" : ""}${cloakBonus} (${cloakNames.join(", ")})\n`;
+  }
+  
+  if (miscBonus !== 0) {
+    tooltip += `Supplemental: ${miscBonus >= 0 ? "+" : ""}${miscBonus} (${miscNames.join(", ")})\n`;
   }
   
   if (dexAdj !== 0) {
@@ -2987,13 +3009,23 @@ function addArmorFromBrowser(root, armor) {
     }
   }
   
-  // Determine armor type for the dropdown
-  let armorType = 'body';
-  if (armor['Armor Name'].toLowerCase().includes('shield')) {
-    armorType = 'shield';
-  } else if (armor['Armor Name'].toLowerCase().includes('helmet')) {
-    armorType = 'helmet';
-  }
+  // Which slot this occupies. This USED to guess from the item's NAME with three
+  // cases, and produced 'body' -- which is not one of the slot values at all, so
+  // it silently fell through. core_armor.json has carried an "Armor Type" field
+  // all along; read that instead of guessing.
+  const ARMOR_TYPE_TO_SLOT = {
+    'shield': 'Shield', 'helmet': 'Helmet', 'gauntlets': 'Gauntlets',
+    'boots': 'Boots', 'clothing': 'Other', 'leg armor': 'Other',
+    // Dastana is supplementary plate worn OVER armor -- "-1 to AC when used with
+    // other armor". It ADDS rather than replacing, so it must not land in the
+    // Bracers slot, which is the bracers-of-defense behaviour and competes with
+    // body armor instead of stacking.
+    'bracers': 'Supplemental Armor'
+  };
+  const rawType  = String(armor['Armor Type'] || '').toLowerCase().trim();
+  let armorType  = ARMOR_TYPE_TO_SLOT[rawType] || 'Armor';
+  // "Medium (Special)", "Light (Oriental)", "Partial Plate" and similar all
+  // describe construction, not slot -- they are worn as body armor.
   
   // Create the armor node and add it to the list
   const armorList = root.querySelector('.armor-list');
