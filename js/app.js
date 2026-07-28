@@ -1201,11 +1201,11 @@ function makeMemSpellNode(data={}, onChange){
       '</div>' +
       '<div style="margin-bottom:8px;">' +
         '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Description</label>' +
-        '<textarea class="description" placeholder="" style="width:100%;min-height:80px;resize:vertical;">'+(data.description||'')+'</textarea>' +
+        '<textarea class="description" placeholder="" style="width:100%;min-height:80px;resize:vertical;">'+escapeHtml(data.description||'')+'</textarea>' +
       '</div>' +
       '<div>' +
         '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Personal Notes</label>' +
-        '<textarea class="notes" placeholder="" style="width:100%;min-height:60px;resize:vertical;">'+(data.notes||'')+'</textarea>' +
+        '<textarea class="notes" placeholder="" style="width:100%;min-height:60px;resize:vertical;">'+escapeHtml(data.notes||'')+'</textarea>' +
       '</div>' +
     '</div>';
   
@@ -2087,9 +2087,9 @@ function makeMountNode(m, onChange){
           '</select></div>' +
       '</div>' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Special Abilities</label>' +
-      '<textarea class="mount-abilities" placeholder="" style="width:100%;min-height:60px;resize:vertical;overflow-y:hidden;margin-bottom:8px;">'+(m.abilities||'')+'</textarea>' +
+      '<textarea class="mount-abilities" placeholder="" style="width:100%;min-height:60px;resize:vertical;overflow-y:hidden;">'+escapeHtml(m.abilities||'')+'</textarea>' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Notes</label>' +
-      '<textarea class="mount-notes" placeholder="" style="width:100%;min-height:60px;resize:vertical;overflow-y:hidden;">'+(m.notes||'')+'</textarea>' +
+      '<textarea class="mount-notes" placeholder="" style="width:100%;min-height:60px;resize:vertical;overflow-y:hidden;">'+escapeHtml(m.notes||'')+'</textarea>' +
     '</div>';
   
   // Toggle details
@@ -2238,7 +2238,7 @@ function makeHenchmanNode(h, onChange){
           '</select></div>' +
       '</div>' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Notes</label>' +
-      '<textarea class="henchman-notes" placeholder="" style="width:100%;min-height:60px;resize:vertical;overflow-y:hidden;">'+(h.notes||'')+'</textarea>' +
+      '<textarea class="henchman-notes" placeholder="" style="width:100%;min-height:60px;resize:vertical;overflow-y:hidden;">'+escapeHtml(h.notes||'')+'</textarea>' +
     '</div>';
   
   // Toggle details
@@ -2346,7 +2346,7 @@ function makeHirelingNode(h, onChange){
           '</select></div>' +
       '</div>' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Notes</label>' +
-      '<textarea class="hireling-notes" placeholder="" style="width:100%;min-height:60px;resize:vertical;overflow-y:hidden;">'+(h.notes||'')+'</textarea>' +
+      '<textarea class="hireling-notes" placeholder="" style="width:100%;min-height:60px;resize:vertical;overflow-y:hidden;">'+escapeHtml(h.notes||'')+'</textarea>' +
     '</div>';
   
   // Toggle details
@@ -2487,9 +2487,9 @@ function makeCompanionNode(c, onChange){
       '</div>' +
       '</div>' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Special Abilities</label>' +
-      '<textarea class="companion-abilities" placeholder="" style="width:100%;min-height:60px;resize:vertical;overflow-y:hidden;margin-bottom:8px;">'+(c.abilities||'')+'</textarea>' +
+      '<textarea class="companion-abilities" placeholder="" style="width:100%;min-height:60px;resize:vertical;overflow-y:hidden;">'+escapeHtml(c.abilities||'')+'</textarea>' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Notes</label>' +
-      '<textarea class="companion-notes" placeholder="" style="width:100%;min-height:60px;resize:vertical;overflow-y:hidden;">'+(c.notes||'')+'</textarea>' +
+      '<textarea class="companion-notes" placeholder="" style="width:100%;min-height:60px;resize:vertical;overflow-y:hidden;">'+escapeHtml(c.notes||'')+'</textarea>' +
     '</div>';
   
   // Toggle details
@@ -3294,7 +3294,7 @@ function makeMagicItemNode(data={}, onChange){
     '</div>' +
     '<div style="margin-top:6px;">' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Description / Powers</label>' +
-      '<textarea class="notes" placeholder="" style="width:100%;min-height:60px;resize:vertical;">'+(data.notes||'')+'</textarea>' +
+      '<textarea class="notes" placeholder="" style="width:100%;min-height:60px;resize:vertical;">'+escapeHtml(data.notes||'')+'</textarea>' +
     '</div>';
   el.querySelector('.rm').onclick = ()=>{ el.remove(); onChange && onChange(); };
   el.querySelectorAll('input,textarea').forEach(inp =>
