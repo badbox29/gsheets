@@ -1076,12 +1076,12 @@ function makeProfNode(data={}, onChange){
       '<div style="width:70px;"></div>' + // Space for Remove button
     '</div>' +
     '<div style="display:flex;align-items:stretch;gap:8px;">' +
-      '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1">' +
+      '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1">' +
       '<button class="rm">Remove</button>' +
     '</div>' +
     '<div style="margin-top:6px;">' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Notes</label>' +
-      '<input class="notes val" placeholder="" value="'+(data.notes||'')+'" style="width:100%">' +
+      '<input class="notes val" placeholder="" value="'+escapeHtml(data.notes||'')+'" style="width:100%">' +
     '</div>';
   
   el.querySelector('.rm').onclick=()=>{ el.remove(); onChange && onChange(); };
@@ -1103,12 +1103,12 @@ function makeWeaponProfNode(data={}, onChange){
       '<div style="width:70px;"></div>' + // Space for Remove button
     '</div>' +
     '<div style="display:flex;align-items:stretch;gap:8px;">' +
-      '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1">' +
+      '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1">' +
       '<button class="rm">Remove</button>' +
     '</div>' +
     '<div style="margin-top:6px;">' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Notes</label>' +
-      '<input class="notes val" placeholder="" value="'+(data.notes||'')+'" style="width:100%">' +
+      '<input class="notes val" placeholder="" value="'+escapeHtml(data.notes||'')+'" style="width:100%">' +
     '</div>';
   
   el.querySelector('.rm').onclick=()=>{ el.remove(); onChange && onChange(); };
@@ -1133,12 +1133,12 @@ function makeAbilityNode(data={}, onChange){
       '<div style="width:70px;"></div>' + // Space for Remove button
     '</div>' +
     '<div style="display:flex;align-items:stretch;gap:8px;">' +
-      '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1">' +
+      '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1">' +
       '<button class="rm">Remove</button>' +
     '</div>' +
     '<div style="margin-top:6px;">' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Notes</label>' +
-      '<input class="notes val" placeholder="" value="'+(data.notes||'')+'" style="width:100%">' +
+      '<input class="notes val" placeholder="" value="'+escapeHtml(data.notes||'')+'" style="width:100%">' +
     '</div>';
   
   el.querySelector('.rm').onclick=()=>{ el.remove(); onChange && onChange(); };
@@ -1153,8 +1153,8 @@ function makeSpellNode(data={}, onChange){
   const el=document.createElement('div');
   el.className='item';
   el.innerHTML=
-    '<input class="title" placeholder="Spell" value="'+(data.name||'')+'">' +
-    '<input class="val" placeholder="Level" value="'+(data.level||'')+'">' +
+    '<input class="title" placeholder="Spell" value="'+escapeHtml(data.name||'')+'">' +
+    '<input class="val" placeholder="Level" value="'+escapeHtml(data.level||'')+'">' +
     '<button class="rm">Remove</button>';
   el.querySelector('.rm').onclick=()=>{ el.remove(); onChange && onChange(); };
   el.querySelectorAll('input,textarea').forEach(inp=>
@@ -1178,8 +1178,8 @@ function makeMemSpellNode(data={}, onChange){
       '<div style="width:75px;"></div>' + // Space for Forget button
     '</div>' +
     '<div style="display:flex;gap:8px;align-items:stretch;">' +
-      '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1;font-weight:bold;">' +
-      '<input class="level" type="text" placeholder="" value="'+(data.level||'')+'" style="width:50px;text-align:center;" readonly>' +
+      '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1;font-weight:bold;">' +
+      '<input class="level" type="text" placeholder="" value="'+escapeHtml(data.level||'')+'" style="width:50px;text-align:center;" readonly>' +
       '<button class="toggle-spell-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
       '<button class="cast-spell" style="padding:8px 12px;font-size:11px;background:rgba(100,150,255,0.3);border:1px solid rgba(100,150,255,0.5);">'+(data.cast ? 'Uncast' : 'Cast')+'</button>' +
       '<button class="rm">Forget</button>' +
@@ -1187,17 +1187,17 @@ function makeMemSpellNode(data={}, onChange){
     '<div class="spell-details" style="display:none;margin-top:8px;">' +
       '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:8px;">' +
         '<div><label style="font-size:11px;color:var(--muted);">School/Sphere</label>' +
-          '<input class="school-sphere" placeholder="" value="'+(data.schoolSphere||'')+'" style="width:100%;"></div>' +
+          '<input class="school-sphere" placeholder="" value="'+escapeHtml(data.schoolSphere||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Casting Time</label>' +
-          '<input class="cast-time" placeholder="" value="'+(data.castTime||'')+'" style="width:100%;"></div>' +
+          '<input class="cast-time" placeholder="" value="'+escapeHtml(data.castTime||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Range</label>' +
-          '<input class="range" placeholder="" value="'+(data.range||'')+'" style="width:100%;"></div>' +
+          '<input class="range" placeholder="" value="'+escapeHtml(data.range||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Duration</label>' +
-          '<input class="duration" placeholder="" value="'+(data.duration||'')+'" style="width:100%;"></div>' +
+          '<input class="duration" placeholder="" value="'+escapeHtml(data.duration||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Components</label>' +
-          '<input class="components" placeholder="" value="'+(data.components||'')+'" style="width:100%;"></div>' +
+          '<input class="components" placeholder="" value="'+escapeHtml(data.components||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Save</label>' +
-          '<input class="save" placeholder="" value="'+(data.save||'')+'" style="width:100%;"></div>' +
+          '<input class="save" placeholder="" value="'+escapeHtml(data.save||'')+'" style="width:100%;"></div>' +
       '</div>' +
       '<div style="margin-bottom:8px;">' +
         '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Description</label>' +
@@ -1333,8 +1333,8 @@ el.innerHTML =
       '<div style="width:70px;"></div>' + // Space for Remove button
     '</div>' +
 	'<div style="display:flex;gap:8px;align-items:stretch;">' +
-	  '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1;font-weight:bold;">' +
-	  '<input class="level" type="number" placeholder="" value="'+(data.level||'')+'" style="width:50px;text-align:center;">' +
+	  '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1;font-weight:bold;">' +
+	  '<input class="level" type="number" placeholder="" value="'+escapeHtml(data.level||'')+'" style="width:50px;text-align:center;">' +
 	  '<button class="toggle-spellbook-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
 	  '<button class="memorize-spell" style="padding:8px 12px;font-size:11px;background:var(--accent);border:none;border-radius:4px;cursor:pointer;">Memorize</button>' +
 	  '<button class="move-to-spellbook" style="padding:8px 12px;font-size:11px;">Move to...</button>' +
@@ -1565,14 +1565,14 @@ function makeItemNode(data={}, onChange){
       '<div style="width:70px;"></div>' + // Space for Remove button
     '</div>' +
     '<div style="display:flex;align-items:stretch;gap:8px;">' +
-      '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1">' +
-      '<input class="qty" type="number" placeholder="" value="'+(data.qty||'')+'" style="width:80px;text-align:center;">' +
-      '<input class="weight" type="number" step="0.1" placeholder="" value="'+(data.weight||'')+'" style="width:80px;text-align:center;">' +
+      '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1">' +
+      '<input class="qty" type="number" placeholder="" value="'+escapeHtml(data.qty||'')+'" style="width:80px;text-align:center;">' +
+      '<input class="weight" type="number" step="0.1" placeholder="" value="'+escapeHtml(data.weight||'')+'" style="width:80px;text-align:center;">' +
       '<button class="rm">Remove</button>' +
     '</div>' +
     '<div style="margin-top:6px;">' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Notes</label>' +
-      '<input class="notes" placeholder="" value="'+(data.notes||'')+'" style="width:100%">' +
+      '<input class="notes" placeholder="" value="'+escapeHtml(data.notes||'')+'" style="width:100%">' +
     '</div>';
   el.querySelector('.rm').onclick = ()=>{ el.remove(); onChange && onChange(); };
   el.querySelectorAll('input').forEach(inp =>
@@ -1595,18 +1595,18 @@ function makeValuableNode(data={}, onChange){
       '<div style="width:70px;"></div>' + // Remove button space
     '</div>' +
     '<div style="display:flex;gap:8px;align-items:stretch;margin-bottom:8px;">' +
-      '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1;">' +
-      '<input class="qty" type="number" placeholder="" value="'+(data.qty||'')+'" style="width:60px;text-align:center;">' +
-      '<input class="weight" type="number" step="0.1" placeholder="" value="'+(data.weight||'')+'" style="width:80px;text-align:center;">' +
+      '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1;">' +
+      '<input class="qty" type="number" placeholder="" value="'+escapeHtml(data.qty||'')+'" style="width:60px;text-align:center;">' +
+      '<input class="weight" type="number" step="0.1" placeholder="" value="'+escapeHtml(data.weight||'')+'" style="width:80px;text-align:center;">' +
       '<button class="rm">Remove</button>' +
     '</div>' +
     '<div style="margin-top:6px;">' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Notes</label>' +
       '<div style="display:flex;gap:6px;">' +
-        '<input class="notes" placeholder="" value="'+(data.notes||'')+'" style="flex:1">' +
+        '<input class="notes" placeholder="" value="'+escapeHtml(data.notes||'')+'" style="flex:1">' +
         '<div style="display:flex;flex-direction:column;width:100px;">' +
           '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Value (ea)</label>' +
-          '<input class="value-each" type="text" placeholder="" value="'+(data.valueEach||'')+'" style="width:100%">' +
+          '<input class="value-each" type="text" placeholder="" value="'+escapeHtml(data.valueEach||'')+'" style="width:100%">' +
         '</div>' +
       '</div>' +
     '</div>';
@@ -1725,7 +1725,7 @@ function makeArmorNode(data={}, onChange){
         // flex:0 0 auto, not flex:1 -- the width is driven by sizeArmorName()
         // below. The wrapper is still flex:1, so its leftover space simply sits
         // empty to the right of the badge and Notes stays where it is.
-        '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
+        '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
         magicBadgeHtml(armorIsMagical,
           (parseFloat(data.acBonus) || 0) !== 0 ? '(' + magicSign(parseFloat(data.acBonus)) + ')' : '') +
       '</div>' +
@@ -1743,8 +1743,8 @@ function makeArmorNode(data={}, onChange){
       '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
         '<select class="armor-type" style="flex:1;">' + typeOpts + '</select>' +
         '<select class="armor-slot" style="width:100px;">' + slotOpts + '</select>' +
-        '<input class="base-ac" type="number" placeholder="" value="'+(data.baseAC||'')+'" style="width:70px;text-align:center;">' +
-        '<input class="weight" type="number" step="0.1" placeholder="" value="'+(data.weight||'')+'" style="width:80px;text-align:center;">' +
+        '<input class="base-ac" type="number" placeholder="" value="'+escapeHtml(data.baseAC||'')+'" style="width:70px;text-align:center;">' +
+        '<input class="weight" type="number" step="0.1" placeholder="" value="'+escapeHtml(data.weight||'')+'" style="width:80px;text-align:center;">' +
       '</div>' +
       // The old "Magic" column is now a labelled AC Bonus inside the enchanted
       // group, so the number and the fact of being magical are separate things.
@@ -1754,7 +1754,7 @@ function makeArmorNode(data={}, onChange){
           'Enchanted?' +
         '</label>' +
         '<div class="magic-fields"' + (armorIsMagical ? '' : ' style="display:none;"') + '>' +
-          '<label>AC Bonus<input class="ac-bonus" type="number" value="'+(data.acBonus||'')+'"></label>' +
+          '<label>AC Bonus<input class="ac-bonus" type="number" value="'+escapeHtml(data.acBonus||'')+'"></label>' +
         '</div>' +
       '</div>' +
       '<div class="armor-type-note" style="display:none;font-size:11px;line-height:1.4;padding:6px 8px;background:var(--glass);border-radius:4px;"></div>' +
@@ -1766,7 +1766,7 @@ function makeArmorNode(data={}, onChange){
       '<div style="font-size:11px;color:var(--muted);margin:6px 0 2px;">Notes</div>' +
       // See makeWeaponNode: style.css matches input[type=text], so a typeless
       // input never picks up width:100%.
-      '<input class="notes" placeholder="" value="'+(data.notes||'')+'" style="width:100%;">' +
+      '<input class="notes" placeholder="" value="'+escapeHtml(data.notes||'')+'" style="width:100%;">' +
     '</div>';
 
   // Collapse/expand, same pattern as the weapon card.
@@ -2024,7 +2024,7 @@ function makeMountNode(m, onChange){
       '<div style="width:70px;"></div>' + // Space for Remove button
     '</div>' +
     '<div style="display:flex;gap:8px;align-items:stretch;margin-bottom:8px;">' +
-      '<input class="mount-name" placeholder="e.g., Shadowfax" value="'+(m.name||'')+'" style="flex:1;font-weight:bold;">' +
+      '<input class="mount-name" placeholder="e.g., Shadowfax" value="'+escapeHtml(m.name||'')+'" style="flex:1;font-weight:bold;">' +
       '<select class="mount-type" style="width:120px;">' +
         '<option value=""'+((m.type||'')==''?' selected':'')+'>--</option>' +
         '<option value="Animal"'+((m.type||'')==='Animal'?' selected':'')+'>Animal</option>' +
@@ -2039,45 +2039,45 @@ function makeMountNode(m, onChange){
     '<div class="mount-animal-fields" style="display:'+(m.type==='Animal'?'block':'none')+';margin-bottom:8px;">' +
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">' +
         '<div><label style="font-size:11px;color:var(--muted);">Species</label>' +
-          '<input class="mount-species" placeholder="e.g., War Horse" value="'+(m.species||'')+'" style="width:100%;"></div>' +
+          '<input class="mount-species" placeholder="e.g., War Horse" value="'+escapeHtml(m.species||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">HD</label>' +
-          '<input class="mount-hd" placeholder="e.g., 3+3" value="'+(m.hd||'')+'" style="width:100%;"></div>' +
+          '<input class="mount-hd" placeholder="e.g., 3+3" value="'+escapeHtml(m.hd||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">THAC0</label>' +
-          '<input class="mount-thac0" type="number" placeholder="20" value="'+(m.thac0||'')+'" style="width:100%;"></div>' +
+          '<input class="mount-thac0" type="number" placeholder="20" value="'+escapeHtml(m.thac0||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);"># of Attacks</label>' +
-          '<input class="mount-attacks" placeholder="e.g., 3" value="'+(m.attacks||'')+'" style="width:100%;"></div>' +
+          '<input class="mount-attacks" placeholder="e.g., 3" value="'+escapeHtml(m.attacks||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Morale</label>' +
-          '<input class="mount-morale" type="number" placeholder="--" value="'+(m.morale||'')+'" style="width:100%;"></div>' +
+          '<input class="mount-morale" type="number" placeholder="--" value="'+escapeHtml(m.morale||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">STR</label>' +
-          '<input class="mount-str" type="number" placeholder="--" value="'+(m.str||'')+'" style="width:100%;"></div>' +
+          '<input class="mount-str" type="number" placeholder="--" value="'+escapeHtml(m.str||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">DEX</label>' +
-          '<input class="mount-dex" type="number" placeholder="--" value="'+(m.dex||'')+'" style="width:100%;"></div>' +
+          '<input class="mount-dex" type="number" placeholder="--" value="'+escapeHtml(m.dex||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">CON</label>' +
-          '<input class="mount-con" type="number" placeholder="--" value="'+(m.con||'')+'" style="width:100%;"></div>' +
+          '<input class="mount-con" type="number" placeholder="--" value="'+escapeHtml(m.con||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">INT</label>' +
-          '<input class="mount-int" type="number" placeholder="--" value="'+(m.int||'')+'" style="width:100%;"></div>' +
+          '<input class="mount-int" type="number" placeholder="--" value="'+escapeHtml(m.int||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">WIS</label>' +
-          '<input class="mount-wis" type="number" placeholder="--" value="'+(m.wis||'')+'" style="width:100%;"></div>' +
+          '<input class="mount-wis" type="number" placeholder="--" value="'+escapeHtml(m.wis||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">CHA</label>' +
-          '<input class="mount-cha" type="number" placeholder="--" value="'+(m.cha||'')+'" style="width:100%;"></div>' +
+          '<input class="mount-cha" type="number" placeholder="--" value="'+escapeHtml(m.cha||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">PER</label>' +
-          '<input class="mount-per" type="number" placeholder="--" value="'+(m.per||'')+'" style="width:100%;"></div>' +
+          '<input class="mount-per" type="number" placeholder="--" value="'+escapeHtml(m.per||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">COM</label>' +
-          '<input class="mount-com" type="number" placeholder="--" value="'+(m.com||'')+'" style="width:100%;"></div>' +
+          '<input class="mount-com" type="number" placeholder="--" value="'+escapeHtml(m.com||'')+'" style="width:100%;"></div>' +
       '</div>' +
     '</div>' +
     '<div class="mount-details" style="display:none;margin-top:8px;">' +
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">' +
         '<div><label style="font-size:11px;color:var(--muted);">HP</label>' +
-          '<input class="mount-hp" type="number" placeholder="0" value="'+(m.hp||'')+'" style="width:100%;"></div>' +
+          '<input class="mount-hp" type="number" placeholder="0" value="'+escapeHtml(m.hp||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">AC</label>' +
-          '<input class="mount-ac" type="number" placeholder="10" value="'+(m.ac||'')+'" style="width:100%;"></div>' +
+          '<input class="mount-ac" type="number" placeholder="10" value="'+escapeHtml(m.ac||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Movement</label>' +
-          '<input class="mount-movement" placeholder="e.g., 24" value="'+(m.movement||'')+'" style="width:100%;"></div>' +
+          '<input class="mount-movement" placeholder="e.g., 24" value="'+escapeHtml(m.movement||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Carrying Capacity</label>' +
-          '<input class="mount-capacity" placeholder="e.g., 400 lbs" value="'+(m.capacity||'')+'" style="width:100%;"></div>' +
+          '<input class="mount-capacity" placeholder="e.g., 400 lbs" value="'+escapeHtml(m.capacity||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Cost</label>' +
-          '<input class="mount-cost" placeholder="e.g., 250 gp" value="'+(m.cost||'')+'" style="width:100%;"></div>' +
+          '<input class="mount-cost" placeholder="e.g., 250 gp" value="'+escapeHtml(m.cost||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Status</label>' +
           '<select class="mount-status" style="width:100%;">' +
             '<option value="Active"'+((m.status||'Active')==='Active'?' selected':'')+'>Active</option>' +
@@ -2177,46 +2177,46 @@ function makeHenchmanNode(h, onChange){
       '<div style="width:70px;"></div>' + // Space for Remove button
     '</div>' +
     '<div style="display:flex;gap:8px;align-items:stretch;">' +
-      '<input class="henchman-name" placeholder="e.g., Garrett the Bold" value="'+(h.name||'')+'" style="flex:1;font-weight:bold;">' +
+      '<input class="henchman-name" placeholder="e.g., Garrett the Bold" value="'+escapeHtml(h.name||'')+'" style="flex:1;font-weight:bold;">' +
       '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
       '<button class="rm">Remove</button>' +
     '</div>' +
     '<div class="henchman-details" style="display:none;margin-top:8px;">' +
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">' +
         '<div><label style="font-size:11px;color:var(--muted);">Race</label>' +
-          '<input class="henchman-race" placeholder="e.g., Human" value="'+(h.race||'')+'" style="width:100%;"></div>' +
+          '<input class="henchman-race" placeholder="e.g., Human" value="'+escapeHtml(h.race||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Class</label>' +
-          '<input class="henchman-class" placeholder="e.g., Fighter" value="'+(h.class||'')+'" style="width:100%;"></div>' +
+          '<input class="henchman-class" placeholder="e.g., Fighter" value="'+escapeHtml(h.class||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Level</label>' +
-          '<input class="henchman-level" type="number" placeholder="--" value="'+(h.level||'')+'" style="width:100%;"></div>' +
+          '<input class="henchman-level" type="number" placeholder="--" value="'+escapeHtml(h.level||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">HP</label>' +
-          '<input class="henchman-hp" type="number" placeholder="--" value="'+(h.hp||'')+'" style="width:100%;"></div>' +
+          '<input class="henchman-hp" type="number" placeholder="--" value="'+escapeHtml(h.hp||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">AC</label>' +
-          '<input class="henchman-ac" type="number" placeholder="--" value="'+(h.ac||'')+'" style="width:100%;"></div>' +
+          '<input class="henchman-ac" type="number" placeholder="--" value="'+escapeHtml(h.ac||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">THAC0</label>' +
-          '<input class="henchman-thac0" type="number" placeholder="--" value="'+(h.thac0||'')+'" style="width:100%;"></div>' +
+          '<input class="henchman-thac0" type="number" placeholder="--" value="'+escapeHtml(h.thac0||'')+'" style="width:100%;"></div>' +
        '<div><label style="font-size:11px;color:var(--muted);">STR</label>' +
-          '<input class="henchman-str" type="number" placeholder="--" value="'+(h.str||'')+'" style="width:100%;"></div>' +
+          '<input class="henchman-str" type="number" placeholder="--" value="'+escapeHtml(h.str||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">DEX</label>' +
-          '<input class="henchman-dex" type="number" placeholder="--" value="'+(h.dex||'')+'" style="width:100%;"></div>' +
+          '<input class="henchman-dex" type="number" placeholder="--" value="'+escapeHtml(h.dex||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">CON</label>' +
-          '<input class="henchman-con" type="number" placeholder="--" value="'+(h.con||'')+'" style="width:100%;"></div>' +
+          '<input class="henchman-con" type="number" placeholder="--" value="'+escapeHtml(h.con||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">INT</label>' +
-          '<input class="henchman-int" type="number" placeholder="--" value="'+(h.int||'')+'" style="width:100%;"></div>' +
+          '<input class="henchman-int" type="number" placeholder="--" value="'+escapeHtml(h.int||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">WIS</label>' +
-          '<input class="henchman-wis" type="number" placeholder="--" value="'+(h.wis||'')+'" style="width:100%;"></div>' +
+          '<input class="henchman-wis" type="number" placeholder="--" value="'+escapeHtml(h.wis||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">CHA</label>' +
-          '<input class="henchman-cha" type="number" placeholder="--" value="'+(h.cha||'')+'" style="width:100%;"></div>' +
+          '<input class="henchman-cha" type="number" placeholder="--" value="'+escapeHtml(h.cha||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">PER</label>' +
-          '<input class="henchman-per" type="number" placeholder="--" value="'+(h.per||'')+'" style="width:100%;"></div>' +
+          '<input class="henchman-per" type="number" placeholder="--" value="'+escapeHtml(h.per||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">COM</label>' +
-          '<input class="henchman-com" type="number" placeholder="--" value="'+(h.com||'')+'" style="width:100%;"></div>' +
+          '<input class="henchman-com" type="number" placeholder="--" value="'+escapeHtml(h.com||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Alignment</label>' +
           alignmentSelectHTML('henchman-alignment', h.alignment) + '</div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Loyalty Score</label>' +
-          '<input class="henchman-loyalty" type="number" placeholder="e.g., 2d6" value="'+(h.loyalty||'')+'" style="width:100%;"></div>' +
+          '<input class="henchman-loyalty" type="number" placeholder="e.g., 2d6" value="'+escapeHtml(h.loyalty||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Morale</label>' +
-          '<input class="henchman-morale" type="number" placeholder="--" value="'+(h.morale||'')+'" style="width:100%;"></div>' +
+          '<input class="henchman-morale" type="number" placeholder="--" value="'+escapeHtml(h.morale||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Share</label>' +
           '<select class="henchman-share" style="width:100%;">' +
             '<option value=""'+(h.share===''?' selected':'')+'>--</option>' +
@@ -2228,7 +2228,7 @@ function makeHenchmanNode(h, onChange){
       '</div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">' +
         '<div><label style="font-size:11px;color:var(--muted);">Equipment Held</label>' +
-          '<input class="henchman-equipment" placeholder="" value="'+(h.equipment||'')+'" style="width:100%;"></div>' +
+          '<input class="henchman-equipment" placeholder="" value="'+escapeHtml(h.equipment||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Status</label>' +
           '<select class="henchman-status" style="width:100%;">' +
             '<option value="Active"'+((h.status||'Active')==='Active'?' selected':'')+'>Active</option>' +
@@ -2301,42 +2301,42 @@ function makeHirelingNode(h, onChange){
       '<div style="width:70px;"></div>' + // Space for Remove button
     '</div>' +
     '<div style="display:flex;gap:8px;align-items:stretch;">' +
-      '<input class="hireling-name" placeholder="e.g., 10 Men-at-Arms" value="'+(h.name||'')+'" style="flex:1;font-weight:bold;">' +
+      '<input class="hireling-name" placeholder="e.g., 10 Men-at-Arms" value="'+escapeHtml(h.name||'')+'" style="flex:1;font-weight:bold;">' +
       '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
       '<button class="rm">Remove</button>' +
     '</div>' +
     '<div class="hireling-details" style="display:none;margin-top:8px;">' +
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">' +
         '<div><label style="font-size:11px;color:var(--muted);">Type</label>' +
-          '<input class="hireling-type" placeholder="e.g., Men-at-Arms, Torchbearer" value="'+(h.type||'')+'" style="width:100%;"></div>' +
+          '<input class="hireling-type" placeholder="e.g., Men-at-Arms, Torchbearer" value="'+escapeHtml(h.type||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Quantity</label>' +
-          '<input class="hireling-quantity" type="number" placeholder="1" value="'+(h.quantity||'')+'" style="width:100%;"></div>' +
+          '<input class="hireling-quantity" type="number" placeholder="1" value="'+escapeHtml(h.quantity||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Wage</label>' +
-          '<input class="hireling-wage" placeholder="e.g., 2 gp/month" value="'+(h.wage||'')+'" style="width:100%;"></div>' +
+          '<input class="hireling-wage" placeholder="e.g., 2 gp/month" value="'+escapeHtml(h.wage||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Duration</label>' +
-          '<input class="hireling-duration" placeholder="e.g., 6 months" value="'+(h.duration||'')+'" style="width:100%;"></div>' +
+          '<input class="hireling-duration" placeholder="e.g., 6 months" value="'+escapeHtml(h.duration||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Purpose/Task</label>' +
-          '<input class="hireling-purpose" placeholder="e.g., Guard the stronghold" value="'+(h.purpose||'')+'" style="width:100%;"></div>' +
+          '<input class="hireling-purpose" placeholder="e.g., Guard the stronghold" value="'+escapeHtml(h.purpose||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Alignment</label>' +
           alignmentSelectHTML('hireling-alignment', h.alignment) + '</div>' +
         '<div><label style="font-size:11px;color:var(--muted);">THAC0</label>' +
-          '<input class="hireling-thac0" type="number" placeholder="--" value="'+(h.thac0||'')+'" style="width:100%;"></div>' +
+          '<input class="hireling-thac0" type="number" placeholder="--" value="'+escapeHtml(h.thac0||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">STR</label>' +
-          '<input class="hireling-str" type="number" placeholder="--" value="'+(h.str||'')+'" style="width:100%;"></div>' +
+          '<input class="hireling-str" type="number" placeholder="--" value="'+escapeHtml(h.str||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">DEX</label>' +
-          '<input class="hireling-dex" type="number" placeholder="--" value="'+(h.dex||'')+'" style="width:100%;"></div>' +
+          '<input class="hireling-dex" type="number" placeholder="--" value="'+escapeHtml(h.dex||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">CON</label>' +
-          '<input class="hireling-con" type="number" placeholder="--" value="'+(h.con||'')+'" style="width:100%;"></div>' +
+          '<input class="hireling-con" type="number" placeholder="--" value="'+escapeHtml(h.con||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">INT</label>' +
-          '<input class="hireling-int" type="number" placeholder="--" value="'+(h.int||'')+'" style="width:100%;"></div>' +
+          '<input class="hireling-int" type="number" placeholder="--" value="'+escapeHtml(h.int||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">WIS</label>' +
-          '<input class="hireling-wis" type="number" placeholder="--" value="'+(h.wis||'')+'" style="width:100%;"></div>' +
+          '<input class="hireling-wis" type="number" placeholder="--" value="'+escapeHtml(h.wis||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">CHA</label>' +
-          '<input class="hireling-cha" type="number" placeholder="--" value="'+(h.cha||'')+'" style="width:100%;"></div>' +
+          '<input class="hireling-cha" type="number" placeholder="--" value="'+escapeHtml(h.cha||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">PER</label>' +
-          '<input class="hireling-per" type="number" placeholder="--" value="'+(h.per||'')+'" style="width:100%;"></div>' +
+          '<input class="hireling-per" type="number" placeholder="--" value="'+escapeHtml(h.per||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">COM</label>' +
-          '<input class="hireling-com" type="number" placeholder="--" value="'+(h.com||'')+'" style="width:100%;"></div>' +
+          '<input class="hireling-com" type="number" placeholder="--" value="'+escapeHtml(h.com||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Status</label>' +
           '<select class="hireling-status" style="width:100%;">' +
             '<option value="Active"'+((h.status||'Active')==='Active'?' selected':'')+'>Active</option>' +
@@ -2412,7 +2412,7 @@ function makeCompanionNode(c, onChange){
       '<div style="width:70px;"></div>' + // Space for Remove button
     '</div>' +
     '<div style="display:flex;gap:8px;align-items:stretch;">' +
-      '<input class="companion-name" placeholder="e.g., Whiskers" value="'+(c.name||'')+'" style="flex:1;font-weight:bold;">' +
+      '<input class="companion-name" placeholder="e.g., Whiskers" value="'+escapeHtml(c.name||'')+'" style="flex:1;font-weight:bold;">' +
       '<button class="move-to-unbonded" style="padding:8px 10px;font-size:11px;" title="Move to Unbonded Mounts &amp; Vehicles. Nothing is lost -- fields that list does not show are kept.">&rarr; Unbonded</button>' +
       '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
       '<button class="rm">Remove</button>' +
@@ -2420,37 +2420,37 @@ function makeCompanionNode(c, onChange){
     '<div class="companion-details" style="display:none;margin-top:8px;">' +
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">' +
         '<div><label style="font-size:11px;color:var(--muted);">Species</label>' +
-          '<input class="companion-species" placeholder="e.g., Wolf, Hawk" value="'+(c.species||'')+'" style="width:100%;"></div>' +
+          '<input class="companion-species" placeholder="e.g., Wolf, Hawk" value="'+escapeHtml(c.species||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">HD</label>' +
-          '<input class="companion-hd" placeholder="e.g., 2+2" value="'+(c.hd||'')+'" style="width:100%;"></div>' +
+          '<input class="companion-hd" placeholder="e.g., 2+2" value="'+escapeHtml(c.hd||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">HP</label>' +
-          '<input class="companion-hp" type="number" placeholder="--" value="'+(c.hp||'')+'" style="width:100%;"></div>' +
+          '<input class="companion-hp" type="number" placeholder="--" value="'+escapeHtml(c.hp||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">AC</label>' +
-          '<input class="companion-ac" type="number" placeholder="--" value="'+(c.ac||'')+'" style="width:100%;"></div>' +
+          '<input class="companion-ac" type="number" placeholder="--" value="'+escapeHtml(c.ac||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">THAC0</label>' +
-          '<input class="companion-thac0" type="number" placeholder="--" value="'+(c.thac0||'')+'" style="width:100%;"></div>' +
+          '<input class="companion-thac0" type="number" placeholder="--" value="'+escapeHtml(c.thac0||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Attacks</label>' +
-          '<input class="companion-attacks" placeholder="e.g., 1d6/1d6" value="'+(c.attacks||'')+'" style="width:100%;"></div>' +
+          '<input class="companion-attacks" placeholder="e.g., 1d6/1d6" value="'+escapeHtml(c.attacks||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Alignment</label>' +
           alignmentSelectHTML('companion-alignment', c.alignment) + '</div>' +
         '<div><label style="font-size:11px;color:var(--muted);">STR</label>' +
-          '<input class="companion-str" type="number" placeholder="--" value="'+(c.str||'')+'" style="width:100%;"></div>' +
+          '<input class="companion-str" type="number" placeholder="--" value="'+escapeHtml(c.str||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">DEX</label>' +
-          '<input class="companion-dex" type="number" placeholder="--" value="'+(c.dex||'')+'" style="width:100%;"></div>' +
+          '<input class="companion-dex" type="number" placeholder="--" value="'+escapeHtml(c.dex||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">CON</label>' +
-          '<input class="companion-con" type="number" placeholder="--" value="'+(c.con||'')+'" style="width:100%;"></div>' +
+          '<input class="companion-con" type="number" placeholder="--" value="'+escapeHtml(c.con||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">INT</label>' +
-          '<input class="companion-int" type="number" placeholder="--" value="'+(c.int||'')+'" style="width:100%;"></div>' +
+          '<input class="companion-int" type="number" placeholder="--" value="'+escapeHtml(c.int||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">WIS</label>' +
-          '<input class="companion-wis" type="number" placeholder="--" value="'+(c.wis||'')+'" style="width:100%;"></div>' +
+          '<input class="companion-wis" type="number" placeholder="--" value="'+escapeHtml(c.wis||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">CHA</label>' +
-          '<input class="companion-cha" type="number" placeholder="--" value="'+(c.cha||'')+'" style="width:100%;"></div>' +
+          '<input class="companion-cha" type="number" placeholder="--" value="'+escapeHtml(c.cha||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">PER</label>' +
-          '<input class="companion-per" type="number" placeholder="--" value="'+(c.per||'')+'" style="width:100%;"></div>' +
+          '<input class="companion-per" type="number" placeholder="--" value="'+escapeHtml(c.per||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">COM</label>' +
-          '<input class="companion-com" type="number" placeholder="--" value="'+(c.com||'')+'" style="width:100%;"></div>' +
+          '<input class="companion-com" type="number" placeholder="--" value="'+escapeHtml(c.com||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Loyalty</label>' +
-          '<input class="companion-loyalty" type="number" placeholder="--" value="'+(c.loyalty||'')+'" style="width:100%;"></div>' +
+          '<input class="companion-loyalty" type="number" placeholder="--" value="'+escapeHtml(c.loyalty||'')+'" style="width:100%;"></div>' +
         '<div style="grid-column: span 2;"><label style="font-size:11px;color:var(--muted);">Bond Type</label>' +
           '<select class="companion-bond" style="width:100%;">' +
             '<option value=""'+(c.bond===''?' selected':'')+'>--</option>' +
@@ -2481,9 +2481,9 @@ function makeCompanionNode(c, onChange){
       '</div>' +
       '<div class="companion-mount-fields" style="display:'+(c.isMount?'grid':'none')+';grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:8px;">' +
         '<div><label style="font-size:11px;color:var(--muted);">Movement</label>' +
-          '<input class="companion-movement" placeholder="e.g., 18" value="'+(c.movement||'')+'" style="width:100%;"></div>' +
+          '<input class="companion-movement" placeholder="e.g., 18" value="'+escapeHtml(c.movement||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Capacity</label>' +
-          '<input class="companion-capacity" placeholder="e.g., 220 lbs" value="'+(c.capacity||'')+'" style="width:100%;"></div>' +
+          '<input class="companion-capacity" placeholder="e.g., 220 lbs" value="'+escapeHtml(c.capacity||'')+'" style="width:100%;"></div>' +
       '</div>' +
       '</div>' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Special Abilities</label>' +
@@ -2782,7 +2782,7 @@ function makeWeaponNode(data={}, onChange){
       // instead of shifting the buttons. The input's width is driven from JS by
       // sizeWeaponName() -- an <input> cannot shrink-to-fit in CSS.
       '<div style="display:flex;align-items:center;gap:4px;flex:1;min-width:0;">' +
-        '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
+        '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
         magicBadgeHtml(weaponIsMagical, weaponInitialBadge) +
       '</div>' +
       '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
@@ -2805,11 +2805,11 @@ function makeWeaponNode(data={}, onChange){
       '<div style="width:90px;text-align:center;">Size</div>' +
     '</div>' +
     '<div style="display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;margin-bottom:6px;">' +
-      '<input class="speed" type="number" placeholder="" value="'+(data.speed||'')+'" style="width:60px;text-align:center;">' +
-      '<input class="damage-sm" placeholder="" value="'+(data.damageSM||'')+'" style="width:90px;text-align:center;">' +
-      '<input class="damage-l" placeholder="" value="'+(data.damageL||'')+'" style="width:90px;text-align:center;">' +
-      '<input class="weight" type="number" step="0.1" placeholder="" value="'+(data.weight||'')+'" style="width:80px;text-align:center;">' +
-      '<input class="damage-type" placeholder="B, P, S" value="'+(data.damageType||'')+'" style="width:100px;text-align:center;" title="' +
+      '<input class="speed" type="number" placeholder="" value="'+escapeHtml(data.speed||'')+'" style="width:60px;text-align:center;">' +
+      '<input class="damage-sm" placeholder="" value="'+escapeHtml(data.damageSM||'')+'" style="width:90px;text-align:center;">' +
+      '<input class="damage-l" placeholder="" value="'+escapeHtml(data.damageL||'')+'" style="width:90px;text-align:center;">' +
+      '<input class="weight" type="number" step="0.1" placeholder="" value="'+escapeHtml(data.weight||'')+'" style="width:80px;text-align:center;">' +
+      '<input class="damage-type" placeholder="B, P, S" value="'+escapeHtml(data.damageType||'')+'" style="width:100px;text-align:center;" title="' +
         'Bludgeoning, Piercing or Slashing (PHB Table 44).&#10;' +
         'Some weapons carry two, e.g. P/S for a halberd.&#10;' +
         'Filled from the weapon list when you pick a Type, if left blank.">' +
@@ -2842,7 +2842,7 @@ function makeWeaponNode(data={}, onChange){
           'This is what lets the weapon harm a creature injured only by magical&#10;' +
           '  weapons, and it lowers the speed factor by 1 per plus.&#10;' +
           'Hit and damage fall back to this when left blank.">Magic' +
-          '<input class="magic-bonus" type="number" placeholder="0" value="'+(data.magicBonus||'')+'">' +
+          '<input class="magic-bonus" type="number" placeholder="0" value="'+escapeHtml(data.magicBonus||'')+'">' +
         '</label>' +
         '<label title="' +
           'To-hit bonus granted by this weapon.&#10;' +
@@ -2850,14 +2850,14 @@ function makeWeaponNode(data={}, onChange){
           'Set it when the enchantment is not uniform: a +5 weapon that only grants&#10;' +
           '  +1 to hit takes Magic 5 and Hit Adj 1.&#10;' +
           'Strength and any non-proficiency penalty are added on top of this.">Hit Adj' +
-          '<input class="weapon-hit-adj" type="number" value="'+(data.hitAdj!==undefined&&data.hitAdj!==null?data.hitAdj:'')+'">' +
+          '<input class="weapon-hit-adj" type="number" value="'+escapeHtml(data.hitAdj!==undefined&&data.hitAdj!==null?data.hitAdj:'')+'">' +
         '</label>' +
         '<label title="' +
           'Damage bonus granted by this weapon.&#10;' +
           'Leave blank to use the Magic value.&#10;' +
           'Set to 0 for a weapon that helps you hit but not hurt.&#10;' +
           'Non-proficiency never reduces damage (PHB Table 34).">Dmg Adj' +
-          '<input class="weapon-dmg-adj" type="number" value="'+(data.dmgAdj!==undefined&&data.dmgAdj!==null?data.dmgAdj:'')+'">' +
+          '<input class="weapon-dmg-adj" type="number" value="'+escapeHtml(data.dmgAdj!==undefined&&data.dmgAdj!==null?data.dmgAdj:'')+'">' +
         '</label>' +
       '</div>' +
     '</div>' +
@@ -2876,7 +2876,7 @@ function makeWeaponNode(data={}, onChange){
       // Fixed width, not flex:1. As the only flexing item on the row it took
       // every spare pixel, so "70/140/210" sat in a field wide enough for a
       // sentence. Trailing empty space reads better than a stretched input.
-      '<input class="weapon-range" value="'+(data.range||'')+'" placeholder="e.g. 50/100/150" style="width:160px;text-align:center;" title="' +
+      '<input class="weapon-range" value="'+escapeHtml(data.range||'')+'" placeholder="e.g. 50/100/150" style="width:160px;text-align:center;" title="' +
         'Short / medium / long range in yards, for missile weapons.&#10;' +
         'Filled from PHB Table 45 when you pick a Type, if left blank.&#10;' +
         'Bows and slings carry their flight-arrow / bullet ranges; sheaf&#10;' +
@@ -2944,7 +2944,7 @@ function makeWeaponNode(data={}, onChange){
     // ATTRIBUTE selector -- a typeless <input> never gets the global rule. In a
     // flex row that went unnoticed; in a block context it falls back to the
     // browser default of about 20 characters.
-    '<input class="notes" placeholder="" value="'+(data.notes||'')+'" style="width:100%;">' +
+    '<input class="notes" placeholder="" value="'+escapeHtml(data.notes||'')+'" style="width:100%;">' +
   '</div>';
   // Details toggle. Weapons carry four rows of fields now -- eight weapons
   // expanded is an unreadable wall -- so everything but the identity row is
@@ -3289,7 +3289,7 @@ function makeMagicItemNode(data={}, onChange){
       '<div style="width:70px;"></div>' + // Space for Remove button
     '</div>' +
     '<div style="display:flex;align-items:stretch;gap:8px;">' +
-      '<input class="title" placeholder="" value="'+(data.name||'')+'" style="flex:1">' +
+      '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1">' +
       '<button class="rm">Remove</button>' +
     '</div>' +
     '<div style="margin-top:6px;">' +
@@ -3338,13 +3338,13 @@ function makeAmmunitionNode(data={}, onChange){
     '</div>' +
     '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
       '<div style="display:flex;align-items:center;gap:4px;flex:1;min-width:0;">' +
-        '<input class="title" placeholder="e.g., Arrows, Bolts" value="'+(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
+        '<input class="title" placeholder="e.g., Arrows, Bolts" value="'+escapeHtml(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
         magicBadgeHtml(ammoIsMagical, ammoInitialBadge) +
       '</div>' +
       // THE ONLY .quantity input on this card. The +/- buttons in the details
       // panel drive THIS one, so there is never a second copy to drift out of
       // sync -- collectSheet reads .quantity and must find exactly one.
-      '<input class="quantity" type="number" min="0" value="'+(data.quantity||0)+'" style="width:70px;text-align:center;">' +
+      '<input class="quantity" type="number" min="0" value="'+escapeHtml(data.quantity||0)+'" style="width:70px;text-align:center;">' +
       '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
       '<button class="rm">Remove</button>' +
     '</div>' +
@@ -3361,7 +3361,7 @@ function makeAmmunitionNode(data={}, onChange){
         '</div>' +
         '<div style="flex:1;">' +
           '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Weight per Unit (lbs)</label>' +
-          '<input class="weight-per-unit" type="number" step="0.01" min="0" value="'+(data.weightPerUnit||0.1)+'" style="width:100%;">' +
+          '<input class="weight-per-unit" type="number" step="0.01" min="0" value="'+escapeHtml(data.weightPerUnit||0.1)+'" style="width:100%;">' +
         '</div>' +
       '</div>' +
     '<div class="magic-group">' +
@@ -3377,19 +3377,19 @@ function makeAmmunitionNode(data={}, onChange){
           'The PHB does not say whether an enchanted arrow and an enchanted bow&#10;' +
           '  stack. That is a table ruling, so the sheet reports this bonus and&#10;' +
           '  leaves the combination to you and your DM.">Magic' +
-          '<input class="ammo-magic-bonus" type="number" placeholder="0" value="'+(data.magicBonus||'')+'">' +
+          '<input class="ammo-magic-bonus" type="number" placeholder="0" value="'+escapeHtml(data.magicBonus||'')+'">' +
         '</label>' +
         '<label title="' +
           'To-hit bonus granted by this ammunition.&#10;' +
           'Leave blank to use the Magic value -- correct for an ordinary +N arrow.&#10;' +
           'Set it when the enchantment is not uniform.">Hit Adj' +
-          '<input class="ammo-hit-adj" type="number" value="'+(data.hitAdj!==undefined&&data.hitAdj!==null?data.hitAdj:'')+'">' +
+          '<input class="ammo-hit-adj" type="number" value="'+escapeHtml(data.hitAdj!==undefined&&data.hitAdj!==null?data.hitAdj:'')+'">' +
         '</label>' +
         '<label title="' +
           'Damage bonus granted by this ammunition.&#10;' +
           'Leave blank to use the Magic value.&#10;' +
           'Set to 0 for ammunition that helps you hit but not hurt.">Dmg Adj' +
-          '<input class="ammo-dmg-adj" type="number" value="'+(data.dmgAdj!==undefined&&data.dmgAdj!==null?data.dmgAdj:'')+'">' +
+          '<input class="ammo-dmg-adj" type="number" value="'+escapeHtml(data.dmgAdj!==undefined&&data.dmgAdj!==null?data.dmgAdj:'')+'">' +
         '</label>' +
       '</div>' +
     '</div>' +
@@ -5128,7 +5128,7 @@ function openPicker(){
     '<div style="background:#232739;padding:20px;border-radius:8px;min-width:320px;color:#fff;border:1px solid var(--border)">' +
       '<h3 style="margin-top:0">Open Saved Character</h3>' +
       '<select id="charPicker" style="width:100%;margin-bottom:12px;padding:6px;border-radius:6px;background:#1a1d29;color:#fff;border:1px solid var(--border)">' +
-        names.map(n=>'<option value="'+n+'">'+n+'</option>').join('') +
+        names.map(n=>'<option value="'+escapeHtml(n)+'">'+escapeHtml(n)+'</option>').join('') +
       '</select>' +
       '<div style="text-align:right;display:flex;gap:8px;justify-content:flex-end">' +
         '<button id="cancelChar" class="ghost">Cancel</button>' +
