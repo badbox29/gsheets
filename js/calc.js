@@ -2493,6 +2493,73 @@ async function renderSpellAccess(root) {
   }
 }
 
+// Read the character's sphere access off the sheet as { sphereName: 'major'|'minor' }.
+//
+// Spheres set to 'none' are OMITTED rather than stored as 'none'. Absence is the
+// no-access answer everywhere else -- getSphereAccessFor() returns SPHERE_ACCESS_NONE
+// for a missing key -- so recording them would be a second way of saying the same
+// thing, and the two spellings would eventually disagree. It also keeps the saved
+// record to the handful of spheres a deity actually granted rather than all 27.
+//
+// The Sphere of All never appears here. It has no major/minor state and is not
+// rendered as a select, so there is nothing to read.
+function getSphereAccessMap(root) {
+  const map = {};
+  if (!root) return map;
+
+  Array.from(root.querySelectorAll('.sphere-checkboxes select[data-sphere]')).forEach(sel => {
+    const name = sel.getAttribute('data-sphere');
+    const v = sel.value;
+    if (name && (v === 'major' || v === 'minor')) map[name] = v;
+  });
+
+  return map;
+}
+
+// One-line summary under the sphere grid: how many of each access, the minor-sphere
+// cap spelled out, and the deity power cap when that optional rule is in force.
+//
+// Names the caps rather than leaving the player to discover them by finding a spell
+// missing from the browser.
+function renderSphereAccessSummary(root) {
+  const el = root.querySelector('.sphere-access-summary');
+  if (!el) return;
+
+  const map = getSphereAccessMap(root);
+  let major = 0, minor = 0;
+  Object.keys(map).forEach(k => {
+    if (map[k] === 'major') major++;
+    else if (map[k] === 'minor') minor++;
+  });
+
+  const parts = [];
+
+  if (major === 0 && minor === 0) {
+    parts.push('<span style="color:var(--muted);">No spheres granted yet \u2014 ' +
+               'only the Sphere of All is available.</span>');
+  } else {
+    parts.push('<strong>' + major + '</strong> major');
+    parts.push('<strong>' + minor + '</strong> minor' +
+               (minor > 0 ? ' <span style="color:var(--muted);">(3rd level and below)</span>' : ''));
+    parts.push('<span style="color:var(--muted);">Sphere of All always available</span>');
+  }
+
+  // The deity power cap is a separate limit from sphere access and is reported
+  // separately, so a player who cannot see a 6th-level spell knows which of the
+  // two rules is responsible.
+  const deity = (typeof getDeityLevelCap === 'function')
+    ? getDeityLevelCap(root)
+    : { applied: false };
+
+  if (deity.applied) {
+    parts.push('<span style="color:var(--accent);">Patron is a ' +
+               escapeHtml(String(deity.label || '')) +
+               ': nothing above level ' + deity.cap + '</span>');
+  }
+
+  el.innerHTML = parts.join(' <span style="color:var(--muted);">\u00B7</span> ');
+}
+
 // Show/hide spell browser based on class
 function toggleSpellBrowser(root) {
   const clazz = (val(root, "clazz") || "").trim().toLowerCase();
