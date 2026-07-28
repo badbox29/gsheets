@@ -2836,16 +2836,27 @@ function getArmorRestrictionProblems(root) {
   }
 
   // 2. Bracers worn together with body armor.
-  // SOURCE NOTE: bracers of defense are a DMG magic item, NOT PHB Chapter 6 --
-  // the PHB armor table has no bracers at all. The restriction is recorded here
-  // as an ADVISORY pending confirmation against the DMG text; do not treat this
-  // wording as verified. If the DMG says something different, correct the
-  // message rather than deleting the check.
+  // SOURCE: bracers of defense are a DMG magic item, not PHB Chapter 6 -- the
+  // PHB armor table has no bracers at all. Wording CONFIRMED by Chris's DM:
+  // "you can't wear armor and get an AC bonus from the Bracers AND armor, it is
+  // one or the other. Other magic items like a Ring of Protection DO stack with
+  // the Bracers of Defense."
+  //
+  // The CALCULATION already obeys this: renderArmorClass puts Armor and Bracers
+  // in the same branch, so only the better of the two sets base AC, while rings
+  // accumulate separately and therefore stack with whichever wins. This note
+  // exists because that is invisible -- a player wearing plate over AC 4 bracers
+  // should be told the bracers are contributing nothing, not left to wonder.
+  //
+  // Informational rather than a fault: wearing both is legal, it just does not
+  // stack. It rides in the advisory banner because that is where armor notes
+  // live, but nothing here is wrong with the character.
   const bracers = worn.filter(item => slotOf(item) === 'Bracers');
   if (bracers.length && bodyArmor.length) {
     const bn = bracers.map(i => nameOf(i) || 'Bracers').join(', ');
-    problems.push(bn + ': bracers are generally held not to function while ' +
-      'body armor is worn. Check with your DM.');
+    problems.push(bn + ' with body armor: these do not stack, so only the better ' +
+      'of the two applies to Armor Class. Rings of protection and similar items ' +
+      'still stack with whichever one wins.');
   }
 
   return problems;
