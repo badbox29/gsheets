@@ -67,10 +67,19 @@ function renderWisdomSaveAdjustments(root) {
     const total = base - adj + manualMod;
     mentalSaveEl.value = total;
 
-    // Build tooltip
+    // Build tooltip.
+    //
+    // SCOPE IS DISPUTED WITHIN THE PHB and the tooltip says so rather than
+    // picking a side. Ch.7 "Saving Throw" states it flatly: "Wisdom adjustments
+    // to saving throws apply to enchantment/charm spells." The Wisdom entry in
+    // Ch.1 describes the same adjustment against mind-affecting spells and lists
+    // examples that are not all one school -- magic jar is Necromancy, hypnotic
+    // pattern is Illusion. Narrowing this silently to Enchantment/Charm would
+    // strip the bonus from spells Ch.1 explicitly names, so the player is told
+    // both readings and rules it with his DM.
     const sign = adj >= 0 ? "+" : "";
     const modSign = manualMod >= 0 ? "+" : "";
-    mentalSaveEl.title = `Spell (Mental) Save\nBase Spell Save: ${base}\nWIS MDA: ${sign}${adj}${manualMod !== 0 ? `\nManual Mod: ${modSign}${manualMod}` : ""}\nFinal: ${total}\n(Applies to mind-affecting spells only)`;
+    mentalSaveEl.title = `Spell (Mental) Save\nBase Spell Save: ${base}\nWIS MDA: ${sign}${adj}${manualMod !== 0 ? `\nManual Mod: ${modSign}${manualMod}` : ""}\nFinal: ${total}\n\nScope: PHB Ch.7 says Wisdom adjustments apply to enchantment/charm spells.\nThe Ch.1 Wisdom entry describes it more broadly as mind-affecting magic and\nnames examples from other schools. Check with your DM which reading applies.`;
   }
 }
 
