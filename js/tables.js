@@ -5,7 +5,7 @@
 // This replaces 17 local copies that had drifted into FIVE different behaviours:
 // some escaped & < >, some added ", one escaped & " < and omitted > entirely,
 // and about half had no null guard — so String(undefined) rendered the literal
-// word "undefined" in some renderers and an empty string in others.
+// word "undefined" in some renderers and an empty string in others..
 //
 // Escapes all five characters, so it is correct in BOTH body text and attribute
 // values. Several call sites interpolate into title="…", where the & < > variant
