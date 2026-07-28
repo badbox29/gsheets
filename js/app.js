@@ -1432,11 +1432,43 @@ el.innerHTML =
 	  if (inp.classList.contains('level') || inp.classList.contains('title')) {
         const root = inp.closest('.sheet-container');
         if (root && inp.classList.contains('level')) {
+          // Editing a spell's level used to make it appear to DELETE ITSELF.
+          // Two causes, both fixed here:
+          //
+          //  1. sortSpellbook() clears the list's innerHTML and re-appends every
+          //     row. A focused input removed from the document loses focus, so
+          //     after one spinner click or one keystroke the field was dead and
+          //     the row had jumped to a new position.
+          //
+          //  2. With a level filter active, moving a spell to a level the filter
+          //     excludes hid the very row being edited. Indistinguishable from a
+          //     delete, which is the worst way for it to be wrong.
+          //
+          // The filter now FOLLOWS the spell rather than hiding it, and focus is
+          // restored after the re-sort.
+          const hadFocus = (document.activeElement === inp);
+
           sortSpellbook(root);
-          // Reapply current filter
+
           const filter = root.querySelector('.spellbook-level-filter');
           if (filter) {
+            // Only redirect a level-specific filter. 'All levels' ('') already
+            // shows the row, and an empty level field means the player is
+            // mid-edit -- retargeting to nothing would hide everything.
+            const newLevel = String(inp.value || '').trim();
+            if (filter.value !== '' && newLevel !== '' && filter.value !== newLevel) {
+              const hasOption = Array.from(filter.options)
+                .some(o => o.value === newLevel);
+              if (hasOption) filter.value = newLevel;
+            }
             filterSpellbook(root, filter.value);
+          }
+
+          // Re-focus after the sort. Deliberately no setSelectionRange: a
+          // number input throws on it in several browsers, and the field is
+          // short enough that focus alone is enough.
+          if (hadFocus && document.activeElement !== inp) {
+            try { inp.focus(); } catch (e) { /* detached mid-render */ }
           }
         }
       }
