@@ -5122,3 +5122,102 @@ function getMemorizationTime(spells) {
     byLevel:    byLevel
   };
 }
+
+// ===== Spell Casting Time (PHB Ch.7 -- OPTIONAL) =====
+//
+// "This entry is important, if the optional casting time rules are used. If only
+// a number is given, the casting time is added to the caster's initiative die
+// rolls. If the spell requires a round or number of rounds to cast, it goes into
+// effect at the end of the last round of casting time. ... Spells requiring a
+// turn or more go into effect at the end of the stated turn."
+//
+// The "only a number" wording is doing real work and is implemented literally.
+// "1" is an initiative modifier; "1 round" is NOT -- it is a spell that resolves
+// at the end of the round. Collapsing the two would hand every round-long spell a
+// bogus +1 initiative, so the bare-number test is anchored at both ends.
+//
+// The real data is messier than the rule: 'rd.' appears as often as 'round', and
+// entries like '3 or 1 turn' and '1 per claw' cannot be resolved without reading
+// the spell. Anything not confidently a bare number yields NO initiative
+// modifier. Over-reporting here would silently change combat order.
+
+function parseSpellCastingTime(castTime) {
+  const raw = String(castTime == null ? '' : castTime).trim();
+
+  const out = {
+    raw:        raw,
+    kind:       'none',   // initiative | rounds | turns | longer | special | none
+    initiative: null,     // non-null ONLY for kind 'initiative'
+    value:      null,     // magnitude, where one can be read
+    variable:   false,    // a range or per-level figure
+    text:       ''
+  };
+
+  if (!raw) return out;
+
+  // "If only a number is given" -- anchored, so '1 round' cannot reach here.
+  const bare = raw.match(/^(\d+)$/);
+  if (bare) {
+    out.kind       = 'initiative';
+    out.initiative = parseInt(bare[1], 10);
+    out.value      = out.initiative;
+    out.text       = '+' + out.initiative + ' initiative';
+    return out;
+  }
+
+  const low = raw.toLowerCase();
+
+  // Alternatives ('3 or 1 turn') need the spell text to resolve. Do not guess.
+  if (/\bor\b/.test(low)) {
+    out.kind = 'special';
+    out.text = 'varies - see spell';
+    return out;
+  }
+
+  // A range ('1-6 rd.') or a per-level figure ('1 round/level').
+  out.variable = /\d\s*[-\u2013]\s*\d/.test(low) || low.indexOf('/') !== -1;
+
+  const num = low.match(/(\d+)/);
+  if (num) out.value = parseInt(num[1], 10);
+
+  // \b works against 'rd.' because the period is a non-word character.
+  if (/\brds?\b|\brounds?\b/.test(low)) {
+    out.kind = 'rounds';
+    out.text = out.variable
+      ? 'resolves after ' + raw
+      : 'resolves at end of round ' + (out.value || 1);
+    return out;
+  }
+
+  if (/\bturns?\b/.test(low)) {
+    out.kind = 'turns';
+    out.text = out.variable
+      ? 'resolves after ' + raw
+      : 'resolves at end of turn ' + (out.value || 1);
+    return out;
+  }
+
+  if (/\b(hour|hours|hr|hrs|day|days|week|weeks|month|months|year|years)\b/.test(low)) {
+    out.kind = 'longer';
+    out.text = 'takes ' + raw;
+    return out;
+  }
+
+  out.kind = 'special';
+  out.text = raw;
+  return out;
+}
+
+// The initiative modifier for THIS spell with the optional rule guard applied.
+// Returns null when the rule is off, when the casting time is not a bare number,
+// or when it cannot be read -- callers add nothing on null.
+//
+// Mirrors getEffectiveWeaponSpeed's place in the weapon speed rule: the parser
+// stays pure and testable, the gate lives in the wrapper.
+function getSpellInitiativeModifier(castTime) {
+  if (typeof isOptionalRule !== 'function' ||
+      !isOptionalRule('spellCastingTimeInitiative')) return null;
+
+  const parsed = parseSpellCastingTime(castTime);
+  return parsed.kind === 'initiative' ? parsed.initiative : null;
+}
