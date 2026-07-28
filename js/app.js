@@ -1470,6 +1470,18 @@ el.innerHTML =
           if (hadFocus && document.activeElement !== inp) {
             try { inp.focus(); } catch (e) { /* detached mid-render */ }
           }
+
+          // The re-sort can move the row a long way -- a blank spell sorts to the
+          // end, so its first increment throws it to the top of the list, and any
+          // level change in a large book can send it off-screen. Follow it.
+          // 'nearest' scrolls only when the row is actually out of view, so a row
+          // that never moved doesn't twitch.
+          const movedRow = inp.closest('.item');
+          if (movedRow && typeof movedRow.scrollIntoView === 'function') {
+            try { movedRow.scrollIntoView({ block: 'nearest' }); } catch (e) {
+              movedRow.scrollIntoView(false);   // older browsers: no options arg
+            }
+          }
         }
       }
     });
@@ -1565,8 +1577,14 @@ function sortSpellbook(root) {
   const items = Array.from(spellbookList.querySelectorAll('.item'));
   
   items.sort((a, b) => {
-    const levelA = parseInt(a.querySelector('.level')?.value || 999, 10);
-    const levelB = parseInt(b.querySelector('.level')?.value || 999, 10);
+    // Blank levels sort FIRST, not last. A spell with no level yet is one the
+    // player is in the middle of adding, so it belongs at the top where it can
+    // be seen -- appending it to the end of a long book meant it could arrive
+    // off-screen, and its first increment then threw it all the way to the top.
+    // Only EMPTY values are affected; a non-numeric level still yields NaN and
+    // sorts as it always did.
+    const levelA = parseInt(a.querySelector('.level')?.value || -1, 10);
+    const levelB = parseInt(b.querySelector('.level')?.value || -1, 10);
     
     if (levelA !== levelB) {
       return levelA - levelB;
