@@ -6923,6 +6923,77 @@ function renderMemorizedSpellStatus(root) {
   renderSpecialistMemorizedStatus(root);
   renderKnownSpellStatus(root);
   renderDruidRole(root);
+  renderMemorizationTime(root);
+}
+
+// Study / prayer time for the current memorized list (PHB Ch.7).
+//
+// "The amount of study time needed is 10 minutes per level of the spell being
+// memorized." Priests are identical: "the conditions for praying are identical
+// to those needed for the wizard's studying."
+//
+// TWO figures, because they answer different questions:
+//   recovery  -- re-study only the spells marked Cast. Uncast spells stay put,
+//                since "a wizard cannot choose to forget a memorized spell to
+//                replace it with another one." This is the after-a-fight number.
+//   full list -- memorize the whole loadout from scratch, for when the player
+//                changes his selection entirely.
+//
+// Called from renderMemorizedSpellStatus, which the Cast button already invokes,
+// so toggling a spell refreshes this without a separate listener.
+function renderMemorizationTime(root) {
+  const wrap  = root.querySelector('.memorization-time-status');
+  const label = root.querySelector('.memorization-time-label');
+  const text  = root.querySelector('.memorization-time-text');
+  if (!wrap || !label || !text) return;
+
+  const clazz = (val(root, 'clazz') || '').trim().toLowerCase();
+  const isWiz = (typeof isWizardClass === 'function') && isWizardClass(clazz);
+  const isPri = (typeof isPriestClass === 'function') && isPriestClass(clazz);
+
+  if (!isWiz && !isPri) { wrap.style.display = 'none'; return; }
+
+  // The cast flag lives on the row's own class list, which is exactly what
+  // collectSheet persists (`cast: n.classList.contains('spell-cast')`), so the
+  // display and the saved record can never disagree about what has been spent.
+  const all  = [];
+  const cast = [];
+  Array.from(root.querySelectorAll('.memspells-list .item')).forEach(item => {
+    const lv = parseInt(item.querySelector('.level')?.value, 10);
+    if (!isFinite(lv) || lv < 0) return;
+    all.push(lv);
+    if (item.classList.contains('spell-cast')) cast.push(lv);
+  });
+
+  if (all.length === 0) { wrap.style.display = 'none'; return; }
+
+  wrap.style.display = '';
+
+  // A priest prays rather than studies; the arithmetic is the same and only the
+  // wording changes. A mixed caster gets the wizard wording -- the spellbook is
+  // the more demanding of the two and the figure covers both.
+  label.textContent = isWiz ? 'Study Time:' : 'Prayer Time:';
+
+  const fullTime = getMemorizationTime(all);
+  const castTime = getMemorizationTime(cast);
+
+  const parts = [];
+
+  if (castTime.spellCount > 0) {
+    parts.push('<strong>' + escapeHtml(castTime.text) + '</strong> to recover ' +
+               castTime.spellCount + ' cast spell' +
+               (castTime.spellCount === 1 ? '' : 's'));
+  } else {
+    parts.push('<span style="color:var(--muted);">nothing cast</span>');
+  }
+
+  parts.push('<span style="color:var(--muted);">' + escapeHtml(fullTime.text) +
+             ' for the full list of ' + fullTime.spellCount + '</span>');
+
+  parts.push('<span style="color:var(--muted);">after ' +
+             MEMORIZATION_REST_HOURS + ' hrs rest</span>');
+
+  text.innerHTML = parts.join(' <span style="color:var(--muted);">\u00B7</span> ');
 }
 
 // Specialist spell reminders (PHB Ch.3). Populates two notes for specialist
