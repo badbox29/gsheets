@@ -5052,3 +5052,73 @@ function getDeityLevelCap(root) {
     label:   row.label
   };
 }
+
+// ===== Memorization / Prayer Time (PHB Ch.7) =====
+//
+// "The wizard must have a clear head gained from a restful night's sleep and then
+// has to spend time studying his spell books. The amount of study time needed is
+// 10 minutes per level of the spell being memorized. Thus, a 9th-level spell (the
+// most powerful) would require 90 minutes of careful study."
+//
+// Priests use the same figures: "The conditions for praying are identical to those
+// needed for the wizard's studying." One helper serves both -- only the wording
+// differs, and that is the caller's business.
+//
+// The eight hours is from the same chapter, in the reversible-spell example:
+// "rest eight hours and study."
+
+const MEMORIZATION_MINUTES_PER_SPELL_LEVEL = 10;
+const MEMORIZATION_REST_HOURS = 8;
+
+// Minutes to memorize ONE spell of the given level.
+// Level 0 returns 0. That is arithmetic falling out of the formula, not a ruling:
+// cantrips are a Tome of Magic addition and the PHB gives them no study time.
+function getSpellMemorizationMinutes(level) {
+  const lv = parseInt(level, 10);
+  if (!isFinite(lv) || lv < 0) return 0;
+  return lv * MEMORIZATION_MINUTES_PER_SPELL_LEVEL;
+}
+
+// Render minutes as "45 min" / "1 hr 30 min" / "2 hrs".
+function formatMemorizationTime(minutes) {
+  const m = Math.max(0, Math.round(minutes || 0));
+  if (m === 0) return 'none';
+  if (m < 60) return m + ' min';
+
+  const h    = Math.floor(m / 60);
+  const rem  = m % 60;
+  const hStr = h + (h === 1 ? ' hr' : ' hrs');
+  return rem ? (hStr + ' ' + rem + ' min') : hStr;
+}
+
+// Total study/prayer time for an entire memorized loadout.
+//
+// Accepts an array of plain numbers OR of objects carrying a .level -- the
+// memorized list stores rows and the browser stores spell objects, and neither
+// should have to reshape before calling.
+//
+// Returns { minutes, text, spellCount, byLevel }, where byLevel[n] is how many
+// spells are memorized at level n.
+function getMemorizationTime(spells) {
+  const byLevel = {};
+  let minutes    = 0;
+  let spellCount = 0;
+
+  (Array.isArray(spells) ? spells : []).forEach(entry => {
+    const lv = parseInt(
+      (entry && typeof entry === 'object') ? entry.level : entry, 10
+    );
+    if (!isFinite(lv) || lv < 0) return;
+
+    byLevel[lv] = (byLevel[lv] || 0) + 1;
+    minutes    += getSpellMemorizationMinutes(lv);
+    spellCount++;
+  });
+
+  return {
+    minutes:    minutes,
+    text:       formatMemorizationTime(minutes),
+    spellCount: spellCount,
+    byLevel:    byLevel
+  };
+}
