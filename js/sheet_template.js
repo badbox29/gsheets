@@ -274,6 +274,11 @@ const SHEET_HTML = `
 			<div class="col"><label>Unarmored AC</label><input data-field="ac_unarmored" type="text" readonly></div>
 			<div class="col"><label>vs Missiles AC</label><input data-field="ac_vs_missiles" type="text" readonly></div>
 		  </div>
+		  <div class="row ac-casting-row" style="margin-top:8px;display:none;">
+			<div class="col"><label>While Casting AC</label><input data-field="ac_while_casting" type="text" readonly title="PHB Ch.7: &quot;During the round in which the spell is cast, the caster cannot move to dodge attacks. Therefore, no AC benefit from Dexterity is gained by spellcasters while casting spells.&quot;&#10;&#10;This is your Normal AC with the Dexterity Defensive Adjustment removed. Armour, shield and magical bonuses all still apply — only the Dexterity dodge is lost.&#10;&#10;Shown for spellcasters only."></div>
+			<div class="col"></div>
+			<div class="col"></div>
+		  </div>
 		  <div class="row" style="margin-top:8px">
 			<div class="col">
 			  <label>Hit Dice</label>
