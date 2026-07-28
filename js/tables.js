@@ -3641,6 +3641,25 @@ const OPTIONAL_RULES = {
     // table's house habits.
     default: false
   },
+  spellCastingTimeInitiative: {
+    label:   'Spell casting time modifies initiative',
+    detail:  'PHB Ch.7. Where a spell\'s casting time is given as a bare number, that number ' +
+             'is added to the initiative roll (low roll wins) -- the spell equivalent of weapon ' +
+             'speed factor. Spells timed in rounds or turns are NOT modifiers: they resolve at ' +
+             'the end of the stated round or turn instead, so a "1 round" spell is slower than ' +
+             'a "1" spell, not faster.',
+    category: 'phb',
+    default: false
+  },
+  deityPowerLevel: {
+    label:   'Patron deity power limits priest spell levels',
+    detail:  'PHB Ch.7. "Your DM may rule that not all deities are equal." Demi-gods grant ' +
+             'spells up to 5th level, lesser deities up to 6th, greater deities all levels. ' +
+             'Set the patron\'s status on the Details tab; an unset patron is treated as a ' +
+             'greater deity and is not restricted.',
+    category: 'phb',
+    default: false
+  },
   encumbrancePenalties: {
     label:   'Encumbrance affects movement and combat',
     detail:  'PHB "Effects of Encumbrance". Light x2/3 movement, Moderate x1/2 and -1 attack, ' +
