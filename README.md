@@ -191,6 +191,8 @@ A systematic review of Player's Handbook Chapter 6, *Money and Equipment*, table
 * Added a **Supplemental Armor** slot for pieces worn *over* armor rather than instead of it, such as armored vambraces. These add to Armor Class the way shields and rings do, where bracers of defense replace it.
 * Fixed armored vambraces granting AC −1 on their own — better than full plate and shield — because a bonus value was being read as though it were a base Armor Class.
 * Fixed the armor browser guessing which slot an item occupies from its name, with only three cases, instead of reading the armor type the data already carried.
+* Fixed Armor Class not updating live — equipping a piece, editing its Armor Class, or marking it enchanted left the Combat Quick Reference showing the old number until the character was saved and reloaded.
+* The Combat Quick Reference now shows what's driving Armor Class — the base armor, each enchantment, and each supplemental piece — the same way it already breaks down every equipped weapon.
 
 **Encumbrance**
 
