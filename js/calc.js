@@ -2408,6 +2408,7 @@ async function renderSpellAccess(root) {
   if (isPriest) {
     priestSpheresDiv.style.display = 'block';
     const sphereCheckboxes = priestSpheresDiv.querySelector('.sphere-checkboxes');
+    const sphereToolbar    = priestSpheresDiv.querySelector('.sphere-access-toolbar');
 
     // The core spheres plus any this character's campaign setting unlocks
     // (Dark Sun paraelementals, Spelljammer's Cosmos). Setting spheres are kept
@@ -2417,29 +2418,115 @@ async function renderSpellAccess(root) {
     const sphereList = getAllSpheres().concat(extraSpheres);
 
     // Rebuild every render so a setting change adds/removes the setting spheres.
-    // Preserve which boxes were checked across the rebuild.
-    const previouslyChecked = new Set(
-      Array.from(sphereCheckboxes.querySelectorAll('input[type="checkbox"]:checked'))
-        .map(cb => cb.getAttribute('data-sphere'))
-    );
+    // Preserve each sphere's ACCESS LEVEL across the rebuild, not merely whether
+    // it was selected -- carrying only a boolean here would silently downgrade
+    // every major sphere to whatever the default is on the next re-render.
+    const previousAccess = {};
+    Array.from(sphereCheckboxes.querySelectorAll('select[data-sphere]')).forEach(sel => {
+      previousAccess[sel.getAttribute('data-sphere')] = sel.value;
+    });
+
+    const onSphereChange = () => {
+      renderSphereAccessSummary(root);
+      renderSpellBrowser(root);
+      markUnsaved(document.querySelector('.tab.active'), true, root);
+    };
+
     sphereCheckboxes.innerHTML = '';
     sphereList.forEach(sphere => {
       const isSetting = extraSpheres.includes(sphere);
-      const label = document.createElement('label');
-      label.style.cssText = 'display:flex;align-items:center;font-size:12px;cursor:pointer;';
-      label.innerHTML =
-        `<input type="checkbox" data-sphere="${sphere}" style="margin-right:6px;width:auto;">` +
-        `<span>${sphere}${isSetting ? ' <em style="color:var(--muted);font-style:italic;">(setting)</em>' : ''}</span>`;
+      const row = document.createElement('label');
 
-      const checkbox = label.querySelector('input');
-      if (previouslyChecked.has(sphere)) checkbox.checked = true;
-      checkbox.addEventListener('change', () => {
-        renderSpellBrowser(root);
-        markUnsaved(document.querySelector('.tab.active'), true, root);
-      });
+      // Tags are informational only, never restrictions. '(setting)' marks a
+      // campaign-specific sphere; '(ToM)' marks one the PHB does not define, so a
+      // table running strict PHB can see at a glance which rows are not from the
+      // book without being prevented from using them.
+      let tag = '';
+      if (isSetting) {
+        tag = ' <em style="color:var(--muted);font-style:italic;">(setting)</em>';
+      } else if (typeof isPHBSphere === 'function' && !isPHBSphere(sphere)) {
+        tag = ' <em style="color:var(--muted);font-style:italic;">(ToM)</em>';
+      }
 
-      sphereCheckboxes.appendChild(label);
+      // PHB Ch.3: "All refers to spells usable by any priest, regardless of
+      // mythos. There are no Powers (deities) of the Sphere of All." No deity
+      // grants it, so it has no major/minor state and must not be switchable off.
+      // It also holds spells well above 3rd level, so capping it would be wrong.
+      if (typeof isSphereAll === 'function' && isSphereAll(sphere)) {
+        row.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:12px;cursor:default;';
+        row.innerHTML =
+          '<span style="flex:0 0 78px;font-size:11px;color:var(--accent);">Always</span>' +
+          '<span>' + escapeHtml(sphere) + tag + '</span>';
+        row.title = 'PHB Ch.3: usable by any priest regardless of mythos.\n' +
+                    'No deity grants it, so it has no major or minor access and\n' +
+                    'cannot be turned off.';
+        sphereCheckboxes.appendChild(row);
+        return;
+      }
+
+      row.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;';
+      row.innerHTML =
+        '<select data-sphere="' + escapeHtml(sphere) + '" ' +
+                'style="width:auto;flex:0 0 78px;font-size:11px;padding:2px 4px;">' +
+          '<option value="none">\u2014</option>' +
+          '<option value="major">Major</option>' +
+          '<option value="minor">Minor</option>' +
+        '</select>' +
+        '<span>' + escapeHtml(sphere) + tag + '</span>';
+
+      const sel  = row.querySelector('select');
+      const prev = previousAccess[sphere];
+      sel.value = (prev === 'major' || prev === 'minor') ? prev : 'none';
+      sel.title = 'Major: any spell in this sphere you are high enough level to cast.\n' +
+                  'Minor: spells of 3rd level and below only.\n' +
+                  '\u2014 : no access.';
+      sel.addEventListener('change', onSphereChange);
+
+      sphereCheckboxes.appendChild(row);
     });
+
+    // The PHB defines ONE Elemental sphere covering earth, air, fire and water;
+    // the spell data splits it into four. A DM who granted "Elemental, major"
+    // meant all four, so offer that in one action rather than making the player
+    // find four rows scattered through an alphabetical list.
+    if (sphereToolbar) {
+      sphereToolbar.innerHTML = '';
+
+      const elementalPresent = (typeof ELEMENTAL_SPHERES !== 'undefined') &&
+        sphereList.some(s => ELEMENTAL_SPHERES.includes(s));
+
+      if (elementalPresent) {
+        const wrap = document.createElement('label');
+        wrap.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);cursor:pointer;';
+        wrap.innerHTML =
+          '<span>Elemental (all four):</span>' +
+          '<select class="sphere-elemental-all" style="width:auto;font-size:11px;padding:2px 4px;">' +
+            '<option value="">\u2014 set \u2014</option>' +
+            '<option value="major">Major</option>' +
+            '<option value="minor">Minor</option>' +
+            '<option value="none">None</option>' +
+          '</select>';
+        wrap.title = 'The PHB has a single Elemental sphere covering earth, air, fire and\n' +
+                     'water. The spell data splits it into four, so this sets all four at once.';
+
+        const bulk = wrap.querySelector('select');
+        bulk.addEventListener('change', () => {
+          const v = bulk.value;
+          if (!v) return;
+          // Match by attribute rather than building a selector string -- sphere
+          // names are data-derived and must never be concatenated into a query.
+          Array.from(sphereCheckboxes.querySelectorAll('select[data-sphere]')).forEach(sel => {
+            if (ELEMENTAL_SPHERES.includes(sel.getAttribute('data-sphere'))) sel.value = v;
+          });
+          bulk.value = '';
+          onSphereChange();
+        });
+
+        sphereToolbar.appendChild(wrap);
+      }
+    }
+
+    renderSphereAccessSummary(root);
   } else {
     priestSpheresDiv.style.display = 'none';
   }
