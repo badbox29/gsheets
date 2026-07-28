@@ -662,7 +662,7 @@ function renderCombatQuickReference(root) {
       const showMissile = !cat || cat === 'ranged';
 
       html += '<div style="margin-bottom:6px;padding:4px;background:rgba(255,255,255,0.03);border-radius:4px;">';
-      html += '<div style="font-weight:600;color:var(--accent-light);">• ' + weapon.name;
+      html += '<div style="font-weight:600;color:var(--accent-light);">\u2022 ' + escapeHtml(weapon.name);
       if (weapon.category) {
         html += ' <span style="font-size:10px;color:var(--muted);font-weight:400;">' + weapon.category + '</span>';
       }
@@ -1504,7 +1504,7 @@ function renderThiefSkills(root) {
       const shown = armorAdj
         .map((v, i) => (v !== 0 && !(isBard && i >= 1 && i <= 4)) ? labels[i] + ' ' + sgn(v) + '%' : null)
         .filter(Boolean);
-      let html = '<strong>Armor: ' + armorInfo.name + '</strong> (PHB Table 29)';
+      let html = '<strong>Armor: ' + escapeHtml(armorInfo.name) + '</strong> (PHB Table 29)';
       if (shown.length) html += '<div style="margin-top:4px;">' + shown.join(' &middot; ') + '</div>';
       if (armorInfo.key === 'chain') {
         html += '<div style="margin-top:4px;">Includes the additional \u22125% bards suffer in non-elven chain mail.</div>';
