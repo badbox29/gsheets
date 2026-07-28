@@ -5060,7 +5060,11 @@ function getDeityLevelCap(root) {
     return { cap: Infinity, applied: false, status: null, label: null };
   }
 
-  const raw = (typeof val === 'function') ? (val(root, 'deity_status') || '') : '';
+  // Guard `root` as well as `val` -- val() dereferences root.querySelector, so a
+  // null root throws. No root means no answer recorded, which falls through to
+  // the default and no cap. Fail open: never let a missing sheet be the reason a
+  // priest loses spell levels.
+  const raw = (root && typeof val === 'function') ? (val(root, 'deity_status') || '') : '';
   const key = normalizeDeityPower(raw);
   const row = DEITY_POWER_LEVELS[key];
 
