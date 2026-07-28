@@ -4882,3 +4882,104 @@ function getSphereLevelCap(sphere, access) {
   if (access === SPHERE_ACCESS_MINOR) return MINOR_SPHERE_MAX_LEVEL;
   return 0;
 }
+
+// Every sphere a spell is listed in, as an array of names.
+//
+// Accepts all three shapes a spell arrives in, because the browser, the spellbook
+// and the memorized list each store it differently and unifying them here stops
+// the next caller getting it wrong:
+//   spells[] from SPELLS_DB  -> .sphere + .sphereSetting (comma-joined strings)
+//   raw cleaned data         -> .spheres[] + .spheresSetting[]
+//   saved character records  -> .schoolSphere (comma-joined string)
+//
+// Splits on commas ONLY, matching splitClassification() in spells.js: compound
+// sphere names contain spaces ("Elemental Air"), so splitting on whitespace would
+// shred them into tokens that match nothing.
+function getSpellSpheres(spell) {
+  if (!spell) return [];
+  const out = [];
+
+  const push = v => {
+    if (!v) return;
+    if (Array.isArray(v)) { v.forEach(x => push(x)); return; }
+    String(v).split(',').map(s => s.trim()).filter(Boolean).forEach(s => {
+      if (!out.some(e => e.toLowerCase() === s.toLowerCase())) out.push(s);
+    });
+  };
+
+  push(spell.spheres);
+  push(spell.sphere);
+  push(spell.spheresSetting);
+  push(spell.sphereSetting);
+  if (out.length === 0) push(spell.schoolSphere);
+
+  return out;
+}
+
+// Look up one sphere in an access map, case-insensitively.
+//
+// The map keys come from getAllSpheres() and the spell's own sphere string comes
+// from the same data, so they SHOULD match exactly -- but exact-match lookups on
+// class and school names have silently broken four systems at once on this project
+// before, so this one is defensive on purpose.
+function getSphereAccessFor(sphere, accessMap) {
+  const s = (sphere || '').trim().toLowerCase();
+  if (!s) return SPHERE_ACCESS_NONE;
+  const map = accessMap || {};
+  const key = Object.keys(map).find(k => k.trim().toLowerCase() === s);
+  return key ? (map[key] || SPHERE_ACCESS_NONE) : SPHERE_ACCESS_NONE;
+}
+
+// Can this priest take `spell`, and up to what spell level, on sphere access alone?
+//
+// A spell listed in MORE THAN ONE sphere qualifies on its BEST access. A spell
+// sitting in both a major and a minor sphere is reached through the major one and
+// the 3rd-level cap does not apply to it -- the priest has full access to that
+// sphere and the spell is in it.
+//
+// This answers ONLY the sphere question. It does not know the character's level,
+// his slot progression, or the deity power cap; those are separate limits applied
+// by the caller. Kept apart deliberately so the UI can say which rule is biting
+// rather than just refusing.
+//
+// Returns:
+//   allowed   -- is any level of this spell reachable at all
+//   cap       -- highest level reachable via the best sphere (Infinity = uncapped)
+//   withinCap -- is THIS spell's own level within that cap
+//   sphere    -- the sphere the cap came from
+//   access    -- that sphere's access ('all' for the Sphere of All)
+//   spheres   -- every sphere the spell is listed in, for tooltips
+function getSpellSphereAccess(spell, accessMap) {
+  const spheres = getSpellSpheres(spell);
+  const level = (typeof spell?.level === 'number')
+    ? spell.level
+    : (parseInt(spell?.level, 10) || 0);
+
+  const result = {
+    allowed:   false,
+    cap:       0,
+    withinCap: false,
+    sphere:    null,
+    access:    SPHERE_ACCESS_NONE,
+    spheres:   spheres,
+    level:     level
+  };
+
+  spheres.forEach(name => {
+    const all    = isSphereAll(name);
+    const access = all ? 'all' : getSphereAccessFor(name, accessMap);
+    const cap    = getSphereLevelCap(name, access);
+
+    // Strict > keeps the FIRST sphere that reached a given cap, so a spell in two
+    // major spheres reports the one listed first rather than the last.
+    if (cap > result.cap) {
+      result.cap    = cap;
+      result.sphere = name;
+      result.access = access;
+    }
+  });
+
+  result.allowed   = result.cap > 0;
+  result.withinCap = result.allowed && level <= result.cap;
+  return result;
+}
