@@ -3402,11 +3402,38 @@ async function renderSpellBrowser(root) {
     return;
   }
   
-  // Get selected spheres/schools
-  const selectedSpheres = Array.from(root.querySelectorAll('.sphere-checkboxes input[type="checkbox"]:checked'))
-    .map(cb => cb.getAttribute('data-sphere'));
+  // Get selected spheres/schools.
+  //
+  // Every GRANTED sphere goes into the pool regardless of major or minor. The
+  // 3rd-level cap on minor spheres gates the ADD buttons in the detail modal, not
+  // visibility -- matching how the Intelligence and character-level caps already
+  // behave here, and matching having the PSC open on the table for reference.
+  //
+  // The Sphere of All is appended unconditionally (PHB Ch.3: "usable by any
+  // priest, regardless of mythos"). No deity grants it, so it has no row in the
+  // access map and nothing else would ever put it in the pool.
+  //
+  // An EMPTY map deliberately yields an empty list, because filterSpells skips
+  // the sphere filter entirely when given one -- so an unconfigured priest keeps
+  // seeing every priest spell rather than being dropped into a browser holding
+  // nothing but the Sphere of All. The summary line under the sphere grid is
+  // where he's told no spheres are granted yet.
+  const sphereAccess = getSphereAccessMap(root);
+  const sphereKeys   = Object.keys(sphereAccess);
+  const selectedSpheres = sphereKeys.length
+    ? sphereKeys.concat(typeof SPHERE_ALL !== 'undefined' ? [SPHERE_ALL] : [])
+    : [];
+
   const selectedSchools = Array.from(root.querySelectorAll('.school-checkboxes input[type="checkbox"]:checked'))
     .map(cb => cb.getAttribute('data-school'));
+
+  // Stashed for showSpellDetails, which has to judge each spell individually --
+  // the minor-sphere cap is per spell, not a single number, so it cannot ride on
+  // root._spellLevelCap the way the Intelligence cap does.
+  //
+  // Unlike _spellLevelCap this is written on every browser render AND re-read
+  // live in the modal, so a stale value cannot outlive a change to the grid.
+  root._sphereAccess = sphereAccess;
   
   // Get search term and level filter
   const searchTerm = (root.querySelector('.spell-search')?.value || '').toLowerCase();
