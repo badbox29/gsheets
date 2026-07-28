@@ -79,7 +79,7 @@ function renderWisdomSaveAdjustments(root) {
     // both readings and rules it with his DM.
     const sign = adj >= 0 ? "+" : "";
     const modSign = manualMod >= 0 ? "+" : "";
-    mentalSaveEl.title = `Spell (Mental) Save\nBase Spell Save: ${base}\nWIS MDA: ${sign}${adj}${manualMod !== 0 ? `\nManual Mod: ${modSign}${manualMod}` : ""}\nFinal: ${total}\n\nScope: PHB Ch.7 says Wisdom adjustments apply to enchantment/charm spells.\nThe Ch.1 Wisdom entry describes it more broadly as mind-affecting magic and\nnames examples from other schools. Check with your DM which reading applies.`;
+    mentalSaveEl.title = `Spell (Mental) Save\nBase Spell Save: ${base}\nWIS MDA: ${sign}${adj}${manualMod !== 0 ? `\nManual Mod: ${modSign}${manualMod}` : ""}\nFinal: ${total}\n\nApplies to "magical spells that attack the mind: beguiling, charm, fear,\nhypnosis, illusions, possession, suggestion, etc." (PHB Ch.1, Wisdom).\nThe list is open-ended and is NOT limited to one school -- illusions and\npossession are named explicitly. Applied automatically, with no conscious\neffort from the character.`;
   }
 }
 
