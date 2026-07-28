@@ -2561,13 +2561,49 @@ async function renderSpellAccess(root) {
   }
   // Restore previously selected spheres/schools from root element data
   // (stored temporarily during load)
+  //
+  // TWO SHAPES ARE ACCEPTED, because every character saved before this change
+  // stored a flat array of sphere names with no access level at all:
+  //   legacy   ['Healing', 'Plant']
+  //   current  { Healing: 'major', Plant: 'minor' }
+  //
+  // MIGRATION POLICY: legacy entries are promoted to MAJOR, deliberately. Major
+  // is the permissive reading, so an existing priest cannot silently lose spells
+  // he has been casting for months -- the player downgrades the ones his DM only
+  // granted minor access to. Defaulting to minor would have quietly deleted every
+  // 4th-level-and-up spell from his browser with no warning and no explanation.
+  //
+  // A legacy record naming 'All' simply finds no select, since the Sphere of All
+  // is rendered as a fixed row. That is correct: it is always available anyway.
   if (root._pendingSpheres) {
-    root._pendingSpheres.forEach(sphere => {
-      const allCheckboxes = Array.from(root.querySelectorAll('.sphere-checkboxes input[type="checkbox"]'));
-      const checkbox = allCheckboxes.find(cb => cb.getAttribute('data-sphere') === sphere);
-      if (checkbox) checkbox.checked = true;
-    });
+    const pending = root._pendingSpheres;
+
+    const selects = Array.from(
+      root.querySelectorAll('.sphere-checkboxes select[data-sphere]')
+    );
+    // Case-insensitive match: the saved record, getAllSpheres() and the setting
+    // sphere lists are three separate sources and have disagreed on casing before.
+    const findSel = name => selects.find(s =>
+      s.getAttribute('data-sphere').trim().toLowerCase() ===
+      String(name).trim().toLowerCase()
+    );
+
+    if (Array.isArray(pending)) {
+      pending.forEach(sphere => {
+        const sel = findSel(sphere);
+        if (sel) sel.value = 'major';
+      });
+    } else if (pending && typeof pending === 'object') {
+      Object.keys(pending).forEach(sphere => {
+        const access = pending[sphere];
+        if (access !== 'major' && access !== 'minor') return;
+        const sel = findSel(sphere);
+        if (sel) sel.value = access;
+      });
+    }
+
     delete root._pendingSpheres;
+    renderSphereAccessSummary(root);
   }
   
   if (root._pendingSchools) {
