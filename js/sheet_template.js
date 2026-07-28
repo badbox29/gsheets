@@ -390,7 +390,7 @@ const SHEET_HTML = `
 				  <label class="mod-label">+/-</label>
 				</div>
 				<div class="inputs">
-				  <input data-field="save5_mental" class="save-input" type="text" readonly title="Spell save adjusted for Wisdom Magical Defense Adj. (mental/mind-affecting spells only)">
+				  <input data-field="save5_mental" class="save-input" type="text" readonly title="Spell save adjusted for Wisdom Magical Defense Adj.&#10;&#10;Scope: PHB Ch.7 says Wisdom adjustments apply to enchantment/charm spells. The Ch.1 Wisdom entry describes it more broadly as mind-affecting magic and names examples from other schools. Check with your DM which reading applies.">
 				  <input data-field="savemod5_mental" class="mod-input" type="number" step="1" value="0">
 				</div>
 			  </div>
