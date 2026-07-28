@@ -1907,6 +1907,9 @@ function renderArmorClass(root) {
   let cloakNames = [];
   let miscBonus = 0;
   let miscNames = [];
+  // Collected during the walk, turned into display lines after it.
+  let baseACWinner = null;
+  const acStackers = [];
   
   // Get all equipped armor/shields/accessories
   const armorItems = Array.from(root.querySelectorAll('.armor-list .item'));
@@ -1951,6 +1954,8 @@ function renderArmorClass(root) {
       if (!isNaN(baseACValue)) miscBonus += baseACValue;
       miscBonus -= magicBonus;
       miscNames.push(name);
+      acStackers.push({ label: 'Supplemental', name,
+        baseACValue: isNaN(baseACValue) ? 0 : baseACValue, magicBonus });
     }
     else if (type === "Armor" || type === "Bracers") {
       // GUARD: no armor in the book has a negative base AC. A negative here
@@ -1969,6 +1974,9 @@ function renderArmorClass(root) {
       if (!isNaN(baseACValue) && effectiveAC < baseAC) {
         baseAC = effectiveAC;
         baseACSource = magicBonus ? (name + ' ' + magicSign(magicBonus)) : name;
+        // Overwritten each time a better suit is found, so only the winner is
+        // reported -- the losers contribute nothing and would confuse the list.
+        baseACWinner = { name, baseACValue, magicBonus };
       }
     }
     // AC Bonus providers (all stack)
@@ -1979,6 +1987,8 @@ function renderArmorClass(root) {
       }
       shieldBonus -= magicBonus; // Magical shield bonus
       shieldNames.push(name);
+      acStackers.push({ label: 'Shield', name,
+        baseACValue: isNaN(baseACValue) ? 0 : baseACValue, magicBonus });
     }
     else if (type === "Ring") {
       // Rings provide bonus from both fields
@@ -1987,6 +1997,8 @@ function renderArmorClass(root) {
       }
       ringBonus -= magicBonus;
       ringNames.push(name);
+      acStackers.push({ label: 'Ring', name,
+        baseACValue: isNaN(baseACValue) ? 0 : baseACValue, magicBonus });
     }
     else if (type === "Cloak") {
       // Cloaks provide bonus from both fields
@@ -1995,6 +2007,8 @@ function renderArmorClass(root) {
       }
       cloakBonus -= magicBonus;
       cloakNames.push(name);
+      acStackers.push({ label: 'Cloak', name,
+        baseACValue: isNaN(baseACValue) ? 0 : baseACValue, magicBonus });
     }
     // Helmet, Gauntlets, Boots, Belt, Other = no AC effect
   });
@@ -2007,6 +2021,40 @@ function renderArmorClass(root) {
   
   // Calculate final AC (remember: lower is better in AD&D)
   let finalAC = baseAC + shieldBonus + ringBonus + cloakBonus + dexAdj + manualAdj + miscBonus;
+
+  // Structured breakdown for the Combat Quick Reference, built HERE rather than
+  // recomputed there -- two copies of AC arithmetic is exactly how the sign and
+  // slot bugs got in. Stashed on root because the Quick Reference is a separate
+  // renderer; recalculateAll runs this first, so it is fresh whenever armor
+  // changes, and the Quick Reference lazily calls this function if it is absent.
+  //
+  // Base armor SETS the number, so only the winner of the best-armor contest
+  // appears. Everything else ADDS, so each contributor gets its own line.
+  // A piece's own value and its enchantment are reported separately, because a
+  // helm with base 0 and +1 contributes only through its enchantment and saying
+  // "Supplemental -1" would misattribute where the point came from.
+  const acLines = [];
+  if (baseACWinner) {
+    acLines.push({ kind: 'base',
+      text: `${baseACWinner.name}: Base AC = ${baseACWinner.baseACValue}` });
+    if (baseACWinner.magicBonus) {
+      acLines.push({ kind: 'magic',
+        text: `Magical ${magicSign(-baseACWinner.magicBonus)}: ${baseACWinner.name} (included above)` });
+    }
+  }
+  acStackers.forEach(s => {
+    if (s.baseACValue) {
+      acLines.push({ kind: 'stack',
+        text: `${s.label} ${magicSign(s.baseACValue)}: ${s.name} (included above)` });
+    }
+    if (s.magicBonus) {
+      acLines.push({ kind: 'magic',
+        text: `Magical ${magicSign(-s.magicBonus)}: ${s.name} (included above)` });
+    }
+  });
+  if (dexAdj)    acLines.push({ kind: 'stack', text: `Dexterity ${magicSign(dexAdj)} (included above)` });
+  if (manualAdj) acLines.push({ kind: 'stack', text: `Manual adjustment ${magicSign(manualAdj)} (included above)` });
+  root._acBreakdown = acLines;
   
   // Set the normal AC field
   acField.value = finalAC;
