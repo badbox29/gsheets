@@ -1341,12 +1341,10 @@ function renderThiefSkills(root) {
   const dormantEl = root.querySelector('.thief-dormant-note');
   if (dormantEl) {
     if (rogue && rogue.dormant) {
-      const escD = s => String(s)
-        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       dormantEl.innerHTML =
         '<strong style="color:var(--warning, #e0a34a);">\u26A0 Dormant class</strong>' +
-        '<div style="margin-top:4px;">Your ' + escD(rogue.clazz) + ' levels are dormant until ' +
-        'your new class passes level ' + escD(String(rogue.level)) + '. These skills are shown ' +
+        '<div style="margin-top:4px;">Your ' + escapeHtml(rogue.clazz) + ' levels are dormant until ' +
+        'your new class passes level ' + escapeHtml(rogue.level) + '. These skills are shown ' +
         'for reference \u2014 using a former class\u2019s abilities costs you the experience for ' +
         'that adventure, so check with your DM before relying on them.</div>';
       dormantEl.style.display = '';
@@ -3849,8 +3847,7 @@ function renderLanguageProficiencies(root) {
     'padding:8px;margin-bottom:8px;background:var(--glass);border-radius:4px;' +
     'font-size:13px;border-left:3px solid var(--accent);';
   if (nativeLang) {
-    const escName = String(nativeLang.name || '')
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const escName = escapeHtml(nativeLang.name);
     nativeDiv.innerHTML =
       '<strong style="color:var(--accent-light);">Native Tongue:</strong> ' + escName +
       ' <span style="color:var(--muted);">&middot; free \u2014 costs no proficiency slot</span>';
