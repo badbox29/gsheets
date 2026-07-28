@@ -188,6 +188,9 @@ A systematic review of Player's Handbook Chapter 6, *Money and Equipment*, table
 * Fixed magical armor making you *worse*: enchantment bonuses were being added to Armor Class rather than subtracted, so a +2 suit of plate came out at AC 5 instead of AC 1.
 * Fixed the choice of best armor comparing an unenchanted value against an enchanted one, which meant the answer depended on the order items happened to sit in the list.
 * Added advisories for wearing more than one suit of body armor, and for wearing bracers together with armor — which don't stack, though rings of protection still stack with whichever wins.
+* Added a **Supplemental Armor** slot for pieces worn *over* armor rather than instead of it, such as armored vambraces. These add to Armor Class the way shields and rings do, where bracers of defense replace it.
+* Fixed armored vambraces granting AC −1 on their own — better than full plate and shield — because a bonus value was being read as though it were a base Armor Class.
+* Fixed the armor browser guessing which slot an item occupies from its name, with only three cases, instead of reading the armor type the data already carried.
 
 **Encumbrance**
 
