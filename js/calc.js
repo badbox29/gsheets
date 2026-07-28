@@ -69,14 +69,15 @@ function renderWisdomSaveAdjustments(root) {
 
     // Build tooltip.
     //
-    // SCOPE IS DISPUTED WITHIN THE PHB and the tooltip says so rather than
-    // picking a side. Ch.7 "Saving Throw" states it flatly: "Wisdom adjustments
-    // to saving throws apply to enchantment/charm spells." The Wisdom entry in
-    // Ch.1 describes the same adjustment against mind-affecting spells and lists
-    // examples that are not all one school -- magic jar is Necromancy, hypnotic
-    // pattern is Illusion. Narrowing this silently to Enchantment/Charm would
-    // strip the bonus from spells Ch.1 explicitly names, so the player is told
-    // both readings and rules it with his DM.
+    // SCOPE: settled from PHB Ch.1, Wisdom. The Magical Defense Adjustment
+    // "applies to saving throws against magical spells that attack the mind:
+    // beguiling, charm, fear, hypnosis, illusions, possession, suggestion, etc."
+    //
+    // The criterion is FUNCTIONAL, not school-based, and the list is open-ended.
+    // Illusions and possession are named explicitly, so this is not an
+    // Enchantment/Charm rule -- Ch.7's passing line to that effect is a
+    // simplification and the defining chapter wins. The field label "Spell
+    // (Mental)" is correct as it stands; do not narrow it to one school.
     const sign = adj >= 0 ? "+" : "";
     const modSign = manualMod >= 0 ? "+" : "";
     mentalSaveEl.title = `Spell (Mental) Save\nBase Spell Save: ${base}\nWIS MDA: ${sign}${adj}${manualMod !== 0 ? `\nManual Mod: ${modSign}${manualMod}` : ""}\nFinal: ${total}\n\nApplies to "magical spells that attack the mind: beguiling, charm, fear,\nhypnosis, illusions, possession, suggestion, etc." (PHB Ch.1, Wisdom).\nThe list is open-ended and is NOT limited to one school -- illusions and\npossession are named explicitly. Applied automatically, with no conscious\neffort from the character.`;
