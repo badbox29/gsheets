@@ -2143,6 +2143,48 @@ function renderArmorClass(root) {
     acVsMissilesEl.value = vsMissilesAC;
     acVsMissilesEl.title = "AC against ranged attacks\nCurrently same as normal AC";
   }
+
+  // While Casting AC -- PHB Ch.7: "During the round in which the spell is cast,
+  // the caster cannot move to dodge attacks. Therefore, no AC benefit from
+  // Dexterity is gained by spellcasters while casting spells."
+  //
+  // Derived by backing dexAdj OUT of finalAC rather than re-adding the parts, so
+  // it inherits shield, rings, cloaks, supplemental and manual adjustments for
+  // free and cannot drift from Normal AC when any of those change. dexAdj is
+  // negative for a good Dexterity, so subtracting it RAISES the number -- a worse
+  // AC, which is exactly the penalty the rule describes.
+  //
+  // Spellcaster test matches toggleSpellBrowser's: it reads the top-level clazz,
+  // so it inherits that function's behaviour on multi- and dual-class characters
+  // rather than inventing a second, differently-wrong answer.
+  const acCastingEl  = root.querySelector('[data-field="ac_while_casting"]');
+  const acCastingRow = root.querySelector('.ac-casting-row');
+
+  if (acCastingEl && acCastingRow) {
+    const castClazz = (val(root, "clazz") || "").trim().toLowerCase();
+    const castsSpells =
+      (typeof isPriestClass === 'function' && isPriestClass(castClazz)) ||
+      (typeof isWizardClass === 'function' && isWizardClass(castClazz));
+
+    if (!castsSpells) {
+      acCastingRow.style.display = 'none';
+    } else {
+      acCastingRow.style.display = '';
+
+      const castingAC = finalAC - dexAdj;
+      acCastingEl.value = castingAC;
+      acCastingEl.title =
+        'While Casting AC: ' + castingAC + '\n' +
+        'Normal AC: ' + finalAC + '\n' +
+        'Dexterity Defensive Adj. forfeited: ' + (dexAdj >= 0 ? '+' : '') + dexAdj + '\n\n' +
+        'PHB Ch.7: "During the round in which the spell is cast, the caster cannot\n' +
+        'move to dodge attacks. Therefore, no AC benefit from Dexterity is gained\n' +
+        'by spellcasters while casting spells."\n\n' +
+        'Armour, shield and magical bonuses all still apply -- only the Dexterity\n' +
+        'dodge is lost.\n' +
+        '(Lower is better)';
+    }
+  }
 }
 
 function renderEncumbrance(root) {
