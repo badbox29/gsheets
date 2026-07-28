@@ -1198,6 +1198,24 @@ function makeMemSpellNode(data={}, onChange){
           '<input class="components" placeholder="" value="'+escapeHtml(data.components||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Save</label>' +
           '<input class="save" placeholder="" value="'+escapeHtml(data.save||'')+'" style="width:100%;"></div>' +
+        // PHB Ch.7, reversible spells. A priest "must memorize the desired
+        // version" -- he petitions for cause light wounds rather than cure light
+        // wounds when praying. A wizard records both forms in his book but "must
+        // decide which version of the spell he desires to cast when memorizing
+        // the spell", and may memorize each version once or one version twice.
+        //
+        // Offered on EVERY row rather than only reversible ones: the spell data
+        // carries no reversible flag, only prose inside descriptions, so detecting
+        // it across 4,156 records would be guesswork. Defaulting to Normal makes
+        // the control harmless where it does not apply.
+        //
+        // Deliberately NOT carried back by returnMemSpellToSpellbook: the form is
+        // a memorization-time choice, and the spellbook holds both forms anyway.
+        '<div><label style="font-size:11px;color:var(--muted);">Form</label>' +
+          '<select class="spell-form" style="width:100%;" title="PHB Ch.7: reversible spells must be memorized in the form you intend to cast.&#10;A priest petitions for the reversed version when praying; a wizard chooses at memorization.&#10;Leave as Normal for spells that are not reversible.">' +
+            '<option value="normal"'+(data.form === 'reversed' ? '' : ' selected')+'>Normal</option>' +
+            '<option value="reversed"'+(data.form === 'reversed' ? ' selected' : '')+'>Reversed</option>' +
+          '</select></div>' +
       '</div>' +
       '<div style="margin-bottom:8px;">' +
         '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Description</label>' +
@@ -3732,6 +3750,9 @@ function collectSheet(root){
       save: n.querySelector('.save')?.value || '',
       description: n.querySelector('.description')?.value || '',
       notes: n.querySelector('.notes')?.value || '',
+      // PHB Ch.7: which version of a reversible spell was memorized. Absent on
+      // older records, where the row builder falls through to 'normal'.
+      form: n.querySelector('.spell-form')?.value || 'normal',
       cast: n.classList.contains('spell-cast')
     })),
     spellbooks: spellbooksData.spellbooks,
@@ -9380,6 +9401,47 @@ function bindDiceRollers(root) {
                 ? 'No equipped weapon -- no speed factor applied.'
                 : 'Weapon speed initiative is off (Settings > Optional Rules).');
               initLines.push('');
+            }
+
+            // Spell casting time is the caster's equivalent of weapon speed factor
+            // (PHB Ch.7, optional): "If only a number is given, the casting time is
+            // added to the caster's initiative die rolls."
+            //
+            // ONLY a bare number qualifies. Spells timed in rounds or turns resolve
+            // at the end of the stated round or turn and take no modifier at all --
+            // which is why this asks getSpellInitiativeModifier rather than reading
+            // the field directly. A "1 round" spell must never be mistaken for a
+            // "1" spell; they look nearly identical and mean opposite things.
+            const useCastTime = (typeof isOptionalRule === 'function') &&
+                                isOptionalRule('spellCastingTimeInitiative');
+
+            if (useCastTime) {
+              const castable = [];
+              root.querySelectorAll('.memspells-list .item').forEach(s => {
+                // A spell already marked Cast is spent and cannot be cast again
+                // this round, so listing it would only be noise.
+                if (s.classList.contains('spell-cast')) return;
+                const nm  = (s.querySelector('.title') || {}).value || 'Unnamed';
+                const ct  = (s.querySelector('.cast-time') || {}).value || '';
+                const mod = (typeof getSpellInitiativeModifier === 'function')
+                              ? getSpellInitiativeModifier(ct)
+                              : null;
+                if (mod !== null) castable.push({ name: nm, mod: mod });
+              });
+
+              if (castable.length) {
+                initLines.push('Spells memorized (casting time added):');
+                // Capped: a high-level caster can hold twenty spells and the roller
+                // is a tooltip, not a spell list.
+                castable.slice(0, 10).forEach(s => {
+                  initLines.push('  ' + s.name + ':  ' + (result.total + s.mod) +
+                                 '  [+' + s.mod + ']');
+                });
+                if (castable.length > 10) {
+                  initLines.push('  ...and ' + (castable.length - 10) + ' more.');
+                }
+                initLines.push('');
+              }
             }
 
             initLines.push('Other modifiers (PHB Table 55):');
