@@ -448,6 +448,24 @@ function renderCombatQuickReference(root) {
   if (initiativeEl) initiativeEl.textContent = initiativeStr;
   if (thac0El) thac0El.textContent = thac0;
   if (acEl) acEl.textContent = ac;
+
+  // AC breakdown, mirroring the per-weapon lines further down this panel.
+  // Built by renderArmorClass and stashed on root so there is only ONE copy of
+  // the AC arithmetic -- duplicating that walk here is how the sign and slot
+  // bugs got in. Called lazily if it has not run yet, which covers the Quick
+  // Reference rendering before a full recalculation on first load.
+  const acBreakEl = root.querySelector('.combat-ac-breakdown');
+  if (acBreakEl) {
+    if (!root._acBreakdown && typeof renderArmorClass === 'function') renderArmorClass(root);
+    const acLinesOut = root._acBreakdown || [];
+    acBreakEl.innerHTML = acLinesOut.map(l => {
+      // Violet for enchantment, matching the Magical row on weapon entries --
+      // one colour language across the whole panel.
+      const colour = (l.kind === 'magic') ? 'var(--magic, #a98fd0)' : 'var(--muted)';
+      return '<div style="color:' + colour + ';">' + escAmmo(l.text) + '</div>';
+    }).join('');
+  }
+
   if (moveEl) moveEl.textContent = moveRate;
   if (hpEl) {
     hpEl.textContent = hpDisplay;
