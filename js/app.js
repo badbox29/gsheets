@@ -2578,16 +2578,13 @@ function weaponTypeOptions(selected) {
   // sit under "Sword", which is still the value the related-weapon rules and
   // the Table 35 columns reason about.
   const sel = (selected || '').trim();
-  const esc = s => String(s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
   let out = '<option value="">--</option>';
 
   // tables.js may not have loaded, or an older copy may be cached. Degrade to
   // a bare dropdown rather than throwing and taking the whole card down.
   if (typeof WEAPON_TYPES === 'undefined' || typeof WEAPON_GROUP_ORDER === 'undefined') {
-    if (sel) out += '<option value="' + esc(sel) + '" selected>' + esc(sel) + '</option>';
+    if (sel) out += '<option value="' + escapeHtml(sel) + '" selected>' + escapeHtml(sel) + '</option>';
     return out;
   }
 
@@ -2596,16 +2593,16 @@ function weaponTypeOptions(selected) {
   // so it displays honestly and survives a save instead of being silently
   // dropped to blank. The migration in a later step clears these out.
   if (sel && !WEAPON_TYPES[sel]) {
-    out += '<option value="' + esc(sel) + '" selected>' + esc(sel) + ' (legacy)</option>';
+    out += '<option value="' + escapeHtml(sel) + '" selected>' + escapeHtml(sel) + ' (legacy)</option>';
   }
 
   WEAPON_GROUP_ORDER.forEach(group => {
     const keys = Object.keys(WEAPON_TYPES).filter(k => WEAPON_TYPES[k].group === group);
     if (!keys.length) return;
-    out += '<optgroup label="' + esc(group) + '">';
+    out += '<optgroup label="' + escapeHtml(group) + '">';
     keys.forEach(k => {
       out += '<option value="' + k + '"' + (k === sel ? ' selected' : '') + '>' +
-             esc(WEAPON_TYPES[k].label) + '</option>';
+             escapeHtml(WEAPON_TYPES[k].label) + '</option>';
     });
     out += '</optgroup>';
   });
@@ -4197,10 +4194,6 @@ function buildAlignmentOptions(mode, selectedKey) {
     return '<option value=""></option>';
   }
 
-  const esc = s => String(s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-
   // Marked as each option is built. Searching the finished string for the
   // right option afterwards would break on any value containing a quote.
   const sel = k => (selectedKey && k === selectedKey) ? ' selected' : '';
@@ -4212,13 +4205,13 @@ function buildAlignmentOptions(mode, selectedKey) {
     if (a.notAnAlignment && mode !== 'follower') return;
     const suffix = a.notAnAlignment ? '' : ' (' + a.abbr + ')';
     html += '<option value="' + key + '"' + sel(key) + '>' +
-            esc(a.label + suffix) + '</option>';
+            escapeHtml(a.label + suffix) + '</option>';
   });
 
   if (mode === 'follower' && typeof ALIGNMENT_NON_VALUES !== 'undefined') {
     Object.keys(ALIGNMENT_NON_VALUES).forEach(k => {
       html += '<option value="' + k + '"' + sel(k) + '>' +
-              esc(ALIGNMENT_NON_VALUES[k]) + '</option>';
+              escapeHtml(ALIGNMENT_NON_VALUES[k]) + '</option>';
     });
   }
 
@@ -4231,10 +4224,6 @@ function buildAlignmentOptions(mode, selectedKey) {
 // Unrecognised text is preserved as its own option exactly as on the
 // character's own menu, so a DM's note reading "chaotic-ish" survives.
 function alignmentSelectHTML(cls, value, style) {
-  const esc = s => String(s == null ? '' : s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-
   const text = String(value == null ? '' : value).trim();
 
   let target = (text && typeof normalizeAlignmentKey === 'function')
@@ -4246,12 +4235,12 @@ function alignmentSelectHTML(cls, value, style) {
 
   let opts = buildAlignmentOptions('follower', target);
   if (text && !target) {
-    opts += '<option value="' + esc(text) + '" selected>' +
-            esc(text) + '  (unrecognised)</option>';
+    opts += '<option value="' + escapeHtml(text) + '" selected>' +
+            escapeHtml(text) + '  (unrecognised)</option>';
   }
 
-  return '<select class="' + esc(cls) + '" style="' +
-         esc(style || 'width:100%;') + '">' + opts + '</select>';
+  return '<select class="' + escapeHtml(cls) + '" style="' +
+         escapeHtml(style || 'width:100%;') + '">' + opts + '</select>';
 }
 
 // Fills a <select> and selects `raw`, which may already be a key, may be
@@ -9190,15 +9179,12 @@ function addRollToHistory(root, result) {
   // No shared escape helper exists in this project -- every function that needs
   // one declares it locally. Following that convention rather than adding a
   // global here.
-  const esc = s => String(s == null ? '' : s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
   // Summary carries NO inline styles -- inline beats the stylesheet, and the
   // .roll-history details rules in style.css do the work.
   const detailBlock = result.modifierInfo ? `
     <details style="margin-top:4px;">
       <summary>details</summary>
-      <div style="white-space:pre-wrap;color:var(--text);font-size:11px;margin-top:4px;padding-left:4px;border-left:2px solid var(--border);">${esc(result.modifierInfo)}</div>
+      <div style="white-space:pre-wrap;color:var(--text);font-size:11px;margin-top:4px;padding-left:4px;border-left:2px solid var(--border);">${escapeHtml(result.modifierInfo)}</div>
     </details>` : '';
 
   entry.innerHTML = `
