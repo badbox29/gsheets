@@ -6219,15 +6219,39 @@ function showSpellDetails(root, spell) {
   modal.querySelector('.spell-modal-level').textContent = 
     `Level ${spell.level} | ${spellClassification(spell)}`;
   
-  // Stats grid
+  // Stats grid.
+  //
+  // All six fields are escaped. They come from the spell JSON rather than the
+  // player, but they are still arbitrary text going into innerHTML, and a single
+  // '<' in a components note would silently swallow the rest of the grid.
   const statsDiv = modal.querySelector('.spell-modal-stats');
+
+  // Casting time gains a plain-English reading when the optional rule is on.
+  // PHB Ch.7: a bare number is added to the initiative roll; "1 round" is NOT --
+  // it resolves at the end of the round. Those two look nearly identical in the
+  // data and mean opposite things at the table, so the modal says which it is
+  // rather than leaving the player to infer it from a missing word.
+  let castTimeHtml = escapeHtml(String(spell.castTime || ''));
+  if (typeof isOptionalRule === 'function' &&
+      isOptionalRule('spellCastingTimeInitiative') &&
+      typeof parseSpellCastingTime === 'function') {
+    const ct = parseSpellCastingTime(spell.castTime);
+    if (ct.kind !== 'none' && ct.text) {
+      // Accent only for a real initiative modifier -- that is the one the player
+      // has to act on when rolling. Everything else is muted context.
+      const colour = (ct.kind === 'initiative') ? 'var(--accent)' : 'var(--muted)';
+      castTimeHtml += ' <span style="color:' + colour + ';font-size:11px;">(' +
+                      escapeHtml(ct.text) + ')</span>';
+    }
+  }
+
   statsDiv.innerHTML = `
-    <div><strong>Range:</strong> ${spell.range}</div>
-    <div><strong>Duration:</strong> ${spell.duration}</div>
-    <div><strong>Area of Effect:</strong> ${spell.aoe}</div>
-    <div><strong>Casting Time:</strong> ${spell.castTime}</div>
-    <div><strong>Components:</strong> ${spell.components}</div>
-    <div><strong>Saving Throw:</strong> ${spell.save}</div>
+    <div><strong>Range:</strong> ${escapeHtml(String(spell.range || ''))}</div>
+    <div><strong>Duration:</strong> ${escapeHtml(String(spell.duration || ''))}</div>
+    <div><strong>Area of Effect:</strong> ${escapeHtml(String(spell.aoe || ''))}</div>
+    <div><strong>Casting Time:</strong> ${castTimeHtml}</div>
+    <div><strong>Components:</strong> ${escapeHtml(String(spell.components || ''))}</div>
+    <div><strong>Saving Throw:</strong> ${escapeHtml(String(spell.save || ''))}</div>
   `;
 
   // Source citation, e.g. "WSC Vol.1 p.22" (falls back to just the source book).
