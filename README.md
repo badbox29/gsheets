@@ -2,7 +2,7 @@
 
 A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and zero dependencies.
 
-**Version 10.0**
+**Version 10.1.0**
 
 ## Live Demo
 
@@ -76,7 +76,7 @@ You can also host the files on any static web server — GitHub Pages, IIS, Apac
 
 Second Edition marks a good deal of its content as optional, and different tables play with different pieces of it. The **⚙ Settings** panel carries a list of toggles, split into three groups:
 
-**Optional Rules** are things the Player's Handbook itself presents as additions to the base game — weapon specialization, weapon speed as an initiative modifier, encumbrance penalties. These ship switched **off**, so ticking one is always a deliberate departure from the base rules.
+**Optional Rules** are things the Player's Handbook itself presents as additions to the base game — weapon specialization, weapon speed and spell casting time as initiative modifiers, encumbrance penalties, limits on what a lesser deity can grant its priests. These ship switched **off**, so ticking one is always a deliberate departure from the base rules.
 
 **House Rules & Overrides** are checks the tool performs against rules the book states flatly — class ability minimums, legal class combinations, druid armor restrictions, non-proficiency attack penalties. These ship switched **on**, so unticking one is always the house rule. They exist so a DM who has already waived something doesn't have to look at a warning about it forever.
 
@@ -177,6 +177,33 @@ Follow these steps **in order** to avoid overwriting your data:
 * I am not a developer.
 
 ### Recent Updates
+
+#### v10.1.0
+
+A systematic review of Player's Handbook Chapter 7, *Magic*.
+
+**Priest spheres**
+
+* Implemented major and minor sphere access. Minor spheres are limited to spells of 3rd level and below — a rule the tool had never enforced, so any priest could take any spell in any sphere he had ticked.
+* Each sphere is now set individually to major access, minor access, or none. The Player's Handbook publishes no per-deity sphere lists — it leaves them to the DM — so these are recorded from whatever your DM granted rather than looked up.
+* The Sphere of All is always available and can't be switched off or capped, since no deity grants it and it holds spells well above 3rd level.
+* Spheres the Player's Handbook doesn't define are tagged, so a table running strict 2E can see at a glance which rows come from the Tome of Magic. They aren't blocked.
+* Added a control that sets all four elemental spheres at once, since the book has a single Elemental sphere and the spell data splits it into four.
+* Existing characters keep every sphere they had, promoted to major access, so nobody loses a spell they'd been casting.
+
+**Spellcasting**
+
+* Added a **While Casting** armor class. The book takes away your Dexterity bonus during the round you cast a spell, and nothing on the sheet had ever reflected it.
+* Added study and prayer time for memorized spells at ten minutes per spell level — shown both as the time to recover what you've cast and the time to memorize the whole list from scratch, after a full night's rest.
+* Added a **Form** setting on memorized spells, so a priest can record that he prayed for *cause light wounds* rather than *cure light wounds*, and a wizard can memorize both versions of a reversible spell separately.
+* Added a toggle for spell casting time as an initiative modifier. Only a bare number counts — a spell listed as "1 round" resolves at the end of the round rather than going off a point faster.
+* Added a toggle for deity power level: demi-gods grant spells up to 5th level, lesser deities up to 6th, greater deities all of them. An unset patron is unrestricted.
+* Spells that are out of reach now say which rule is stopping them — your level, your Intelligence, an opposition school, minor access to the sphere, or your patron — rather than simply refusing.
+
+**Fixes found along the way**
+
+* The spell detail panel didn't escape the text it displayed, so a stray angle bracket in a spell's entry could have swallowed the rest of the panel.
+* Clarified the Wisdom saving throw bonus, which Chapters 1 and 7 scope differently. The sheet now states both readings instead of silently picking one.
 
 #### v10.0
 
