@@ -4983,3 +4983,72 @@ function getSpellSphereAccess(spell, accessMap) {
   result.withinCap = result.allowed && level <= result.cap;
   return result;
 }
+
+// ===== Deity Power Level (PHB Ch.7 -- OPTIONAL) =====
+//
+// "Your DM may rule that not all deities are equal, so that those of lesser power
+// are unable to grant certain spells. If this optional rule is used, powers of
+// demi-god status can only grant spells up to the 5th spell level. Lesser deities
+// can grant 6th-level spells, while the greater deities have all spell levels
+// available to them."
+//
+// This is a ceiling on what the PATRON can grant, so it applies to priest spells
+// only and to every sphere alike -- it is not a sphere rule and does not interact
+// with major/minor access. A cleric/mage's wizard side is untouched by it. The
+// caller decides which spells it is applied to; this only reports the ceiling.
+
+const DEITY_POWER_LEVELS = {
+  greater: { label: 'Greater deity', maxSpellLevel: Infinity,
+             note: 'All spell levels available.' },
+  lesser:  { label: 'Lesser deity',  maxSpellLevel: 6,
+             note: 'Grants spells up to 6th level.' },
+  demigod: { label: 'Demi-god',      maxSpellLevel: 5,
+             note: 'Grants spells up to 5th level.' }
+};
+
+// Unset means unrestricted. A character sheet with no answer recorded must not
+// silently lose 6th and 7th level spells the moment the optional rule is ticked.
+const DEITY_POWER_DEFAULT = 'greater';
+
+// Normalize a stored status to a DEITY_POWER_LEVELS key. Strips everything but
+// letters, so 'Demi-god', 'demi god' and 'DEMIGOD' all resolve. Unrecognized
+// values fall back to the default rather than to a cap -- an unreadable value
+// must never be the reason a priest loses spells.
+function normalizeDeityPower(status) {
+  const key = (status || '').trim().toLowerCase().replace(/[^a-z]/g, '');
+  return DEITY_POWER_LEVELS[key] ? key : DEITY_POWER_DEFAULT;
+}
+
+// Pure lookup: highest spell level a patron of this status can grant.
+// Infinity for greater deities and for anything unrecognized.
+function getDeityPowerCap(status) {
+  return DEITY_POWER_LEVELS[normalizeDeityPower(status)].maxSpellLevel;
+}
+
+// The cap as it applies to THIS character, with the optional rule guard applied.
+//
+// Returns an object rather than a bare number so the UI can name the rule that is
+// biting. Three separate limits can hold a priest's spell level down -- his own
+// slot progression, minor sphere access, and this -- and "you cannot take that
+// spell" is a much worse answer than "your patron is a demi-god."
+//
+//   cap     -- highest grantable spell level (Infinity = no restriction)
+//   applied -- is a real restriction in force (false when the rule is off)
+//   status  -- normalized key, or null when the rule is off
+//   label   -- display name for the tooltip, or null
+function getDeityLevelCap(root) {
+  if (typeof isOptionalRule !== 'function' || !isOptionalRule('deityPowerLevel')) {
+    return { cap: Infinity, applied: false, status: null, label: null };
+  }
+
+  const raw = (typeof val === 'function') ? (val(root, 'deity_status') || '') : '';
+  const key = normalizeDeityPower(raw);
+  const row = DEITY_POWER_LEVELS[key];
+
+  return {
+    cap:     row.maxSpellLevel,
+    applied: row.maxSpellLevel !== Infinity,
+    status:  key,
+    label:   row.label
+  };
+}
