@@ -2311,14 +2311,31 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   );
 
   // === EXPERIENCE ===
-  // getXPTable (tables.js) resolves specialists, class-group aliases and
-  // multi-class strings to the right progression. The table is indexed from
-  // zero for level 1, so table[level] is the threshold for the NEXT level.
-  const xpTable = (typeof getXPTable === 'function') ? getXPTable(clazz) : null;
-  const levelNum = parseInt(level, 10);
-  const nextLevelXP = (Array.isArray(xpTable) && !isNaN(levelNum) && typeof xpTable[levelNum] === 'number')
-    ? xpTable[levelNum]
-    : null;
+  // Thresholds follow the character's TYPE, never the composite `clazz`
+  // string. getXPTable ends in a substring scan, so "Fighter 5 / Mage 3"
+  // matches "fighter" and returns the ORIGINAL class's table -- which was then
+  // indexed with the single-class `level` field, hidden and stale for these
+  // characters. The table is zero-indexed for level 1, so table[level] is the
+  // threshold for the NEXT level.
+  const printCharType = (val(root, 'char_type') || 'single').toLowerCase();
+
+  const xpThresholdFor = (className, lvl) => {
+    const t = (typeof getXPTable === 'function') ? getXPTable(className) : null;
+    const n = parseInt(lvl, 10);
+    return (Array.isArray(t) && !isNaN(n) && typeof t[n] === 'number') ? t[n] : null;
+  };
+
+  const nextLevelParts = [];
+  if (printCharType === 'multi') {
+    for (let i = 1; i <= 3; i++) {
+      const mcClass = (val(root, 'mc_class' + i) || '').trim();
+      if (mcClass) nextLevelParts.push(xpThresholdFor(mcClass, val(root, 'mc_level' + i)));
+    }
+  } else if (printCharType === 'dual') {
+    nextLevelParts.push(xpThresholdFor(val(root, 'dc_new_class'), val(root, 'dc_new_level')));
+  } else {
+    nextLevelParts.push(xpThresholdFor(clazz, level));
+  }
 
   const commafy = v => {
     const n = parseInt(String(v).replace(/[^0-9-]/g, ''), 10);
@@ -2326,7 +2343,9 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   };
 
   const xpDisplay = xp ? commafy(xp) : '\u2014';
-  const nextLevelDisplay = (nextLevelXP === null) ? '\u2014' : commafy(nextLevelXP);
+  const nextLevelDisplay = nextLevelParts.some(v => v !== null)
+    ? nextLevelParts.map(v => (v === null ? '\u2014' : commafy(v))).join(' / ')
+    : '\u2014';
 
   // === EXTRA APPENDED PAGES ===
   //
