@@ -1162,6 +1162,59 @@ function makeSpellNode(data={}, onChange){
   );
   return el;
 }
+// A memorized spell is in exactly one of three states.
+//
+// PHB Ch.7 separates a spell deliberately CAST from one LOST to a broken
+// casting: if the caster is struck by a weapon or fails a saving throw before
+// the spell goes off, his concentration is disrupted and the spell is lost from
+// memory. Both leave the slot spent and both must be re-studied at 10 minutes
+// per level -- but they are not the same event, and collapsing them meant a
+// disrupted spell had to be marked Cast, which made the study-time readout
+// describe something that never happened.
+//
+// The states are mutually exclusive. A spell cannot be both: disruption happens
+// INSTEAD of the casting, not after it, which is why each button disables the
+// other rather than letting the two stack.
+function getMemSpellState(el) {
+  if (el.classList.contains('spell-lost')) return 'lost';
+  if (el.classList.contains('spell-cast')) return 'cast';
+  return 'available';
+}
+
+function setMemSpellState(el, state) {
+  const nameEl  = el.querySelector('.spell-name, .title, .name');
+  const castBtn = el.querySelector('.cast-spell');
+  const lostBtn = el.querySelector('.lose-spell');
+
+  el.classList.remove('spell-cast', 'spell-lost');
+  if (state === 'cast') el.classList.add('spell-cast');
+  if (state === 'lost') el.classList.add('spell-lost');
+
+  // Both spent states dim and strike the NAME only, not the whole row -- the
+  // level and buttons must stay legible.
+  const spent = (state === 'cast' || state === 'lost');
+  el.style.opacity = spent ? '0.5' : '1';
+  if (nameEl) nameEl.style.textDecoration = spent ? 'line-through' : 'none';
+
+  if (castBtn) {
+    const on = (state === 'cast');
+    castBtn.textContent    = on ? 'Uncast' : 'Cast';
+    castBtn.style.background  = on ? 'rgba(100,255,100,0.3)' : 'rgba(100,150,255,0.3)';
+    castBtn.style.borderColor = on ? 'rgba(100,255,100,0.5)' : 'rgba(100,150,255,0.5)';
+    castBtn.disabled      = (state === 'lost');
+    castBtn.style.opacity = (state === 'lost') ? '0.4' : '1';
+  }
+
+  if (lostBtn) {
+    const on = (state === 'lost');
+    lostBtn.textContent    = on ? 'Restore' : 'Lost';
+    lostBtn.style.background  = on ? 'rgba(255,120,120,0.35)' : 'rgba(200,80,80,0.22)';
+    lostBtn.style.borderColor = on ? 'rgba(255,120,120,0.6)'  : 'rgba(200,80,80,0.45)';
+    lostBtn.disabled      = (state === 'cast');
+    lostBtn.style.opacity = (state === 'cast') ? '0.4' : '1';
+  }
+}
+
 function makeMemSpellNode(data={}, onChange){
   const el = document.createElement('div');
   el.className = 'item';
@@ -1175,13 +1228,15 @@ function makeMemSpellNode(data={}, onChange){
       '<div style="width:50px;text-align:center;">Level</div>' +
       '<div style="width:70px;"></div>' + // Space for Details button
       '<div style="width:55px;"></div>' + // Space for Cast button
+      '<div style="width:55px;"></div>' + // Space for Lost button
       '<div style="width:75px;"></div>' + // Space for Forget button
     '</div>' +
     '<div style="display:flex;gap:8px;align-items:stretch;">' +
       '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1;font-weight:bold;">' +
       '<input class="level" type="text" placeholder="" value="'+escapeHtml(data.level||'')+'" style="width:50px;text-align:center;" readonly>' +
       '<button class="toggle-spell-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
-      '<button class="cast-spell" style="padding:8px 12px;font-size:11px;background:rgba(100,150,255,0.3);border:1px solid rgba(100,150,255,0.5);">'+(data.cast ? 'Uncast' : 'Cast')+'</button>' +
+      '<button class="cast-spell" style="padding:8px 12px;font-size:11px;background:rgba(100,150,255,0.3);border:1px solid rgba(100,150,255,0.5);">Cast</button>' +
+      '<button class="lose-spell" style="padding:8px 12px;font-size:11px;background:rgba(200,80,80,0.22);border:1px solid rgba(200,80,80,0.45);" title="PHB Ch.7: struck by a weapon or failing a saving throw before the spell goes off breaks concentration and the spell is lost from memory.&#10;&#10;The slot is spent and the spell must be re-studied, but it was never actually cast.">Lost</button>' +
       '<button class="rm">Forget</button>' +
     '</div>' +
     '<div class="spell-details" style="display:none;margin-top:8px;">' +
@@ -1246,38 +1301,33 @@ function makeMemSpellNode(data={}, onChange){
     }
   };
   
-  // Cast button
+  // Cast / Lost buttons. Both toggle back to 'available', so either can be undone.
   const castBtn = el.querySelector('.cast-spell');
-  castBtn.onclick = () => {
+  const lostBtn = el.querySelector('.lose-spell');
+
+  const setState = (state) => {
     const root = el.closest('.sheet-container');
-    const isCast = el.classList.contains('spell-cast');
+    setMemSpellState(el, state);
+    onChange && onChange();
+    if (root) renderMemorizedSpellStatus(root);
+  };
 
-    // Find the spell name node (adjust selectors if yours differ)
-    const nameEl = el.querySelector('.spell-name, .title, .name');
+  if (castBtn) {
+    castBtn.onclick = () => {
+      setState(getMemSpellState(el) === 'cast' ? 'available' : 'cast');
+    };
+  }
 
-    if (isCast) {
-      // Uncast the spell
-      el.classList.remove('spell-cast');
-      el.style.opacity = '1';
+  if (lostBtn) {
+    lostBtn.onclick = () => {
+      setState(getMemSpellState(el) === 'lost' ? 'available' : 'lost');
+    };
+  }
 
-      // ⬇️ strike-through removed ONLY from the name (not the whole row)
-      if (nameEl) nameEl.style.textDecoration = 'none';
-
-      castBtn.textContent = 'Cast';
-      castBtn.style.background = 'rgba(100,150,255,0.3)';
-      castBtn.style.borderColor = 'rgba(100,150,255,0.5)';
-    } else {
-      // Cast the spell
-      el.classList.add('spell-cast');
-      el.style.opacity = '0.5';
-
-      // ⬇️ strike-through applied ONLY to the name
-      if (nameEl) nameEl.style.textDecoration = 'line-through';
-
-      castBtn.textContent = 'Uncast';
-      castBtn.style.background = 'rgba(100,255,100,0.3)';
-      castBtn.style.borderColor = 'rgba(100,255,100,0.5)';
-    }
+  // Restore saved state. `lost` is checked first: a record written before this
+  // change has no `lost` field at all and falls through to the old cast/available
+  // behaviour untouched.
+  setMemSpellState(el, data.lost ? 'lost' : (data.cast ? 'cast' : 'available'));
 
     onChange && onChange();
     if (root) renderMemorizedSpellStatus(root);
@@ -3791,7 +3841,10 @@ function collectSheet(root){
       // PHB Ch.7: which version of a reversible spell was memorized. Absent on
       // older records, where the row builder falls through to 'normal'.
       form: n.querySelector('.spell-form')?.value || 'normal',
-      cast: n.classList.contains('spell-cast')
+      cast: n.classList.contains('spell-cast'),
+      // PHB Ch.7: lost to disrupted concentration rather than cast. Mutually
+      // exclusive with `cast`; absent on older records, which read as false.
+      lost: n.classList.contains('spell-lost')
     })),
     spellbooks: spellbooksData.spellbooks,
     activeSpellbookId: spellbooksData.activeSpellbookId,
