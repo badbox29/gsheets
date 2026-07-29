@@ -150,8 +150,12 @@ const SHEET_HTML = `
                 </select>
               </div>
               <div class="col" style="flex:1">
-                <label>Level</label>
-                <input data-field="mc_level2" type="number" min="1" value="1">
+                <label>XP</label>
+                <input data-field="mc_xp2" type="text" readonly>
+              </div>
+              <div class="col" style="flex:2">
+                <label>XP for Next Level</label>
+                <input data-field="mc_xp_next2" type="text" readonly>
               </div>
               <div class="col" style="flex:1">
                 <label>XP</label>
@@ -176,6 +180,10 @@ const SHEET_HTML = `
               <div class="col" style="flex:1">
                 <label>XP</label>
                 <input data-field="mc_xp3" type="text" readonly>
+              </div>
+              <div class="col" style="flex:2">
+                <label>XP for Next Level</label>
+                <input data-field="mc_xp_next3" type="text" readonly>
               </div>
             </div>
             <div class="row" style="margin-top:8px;">
