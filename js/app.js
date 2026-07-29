@@ -8605,11 +8605,11 @@ function makeCharacterJournalEntry(data = {}, onChange) {
     el.innerHTML = `
       <div style="margin-bottom:8px;">
         <label style="font-size:11px;color:var(--muted);">Entry Title / Date</label>
-        <input class="entry-title" type="text" value="${data.title || ''}" style="width:100%;" placeholder="e.g., 'Reflections on our Quest' or 'Jan 15, 2025'">
+        <input class="entry-title" type="text" value="${escapeHtml(data.title || '')}" style="width:100%;" placeholder="e.g., 'Reflections on our Quest' or 'Jan 15, 2025'">
       </div>
       <div style="margin-bottom:8px;">
         <label style="font-size:11px;color:var(--muted);">Journal Entry</label>
-        <textarea class="entry-content" style="width:100%;min-height:80px;resize:vertical;" placeholder="Your character's thoughts, feelings, goals...">${data.content || ''}</textarea>
+        <textarea class="entry-content" style="width:100%;min-height:80px;resize:vertical;" placeholder="Your character's thoughts, feelings, goals...">${escapeHtml(data.content || '')}</textarea>
       </div>
       <div style="display:flex;gap:8px;justify-content:flex-end;">
         <button class="save-entry">Save</button>
@@ -8620,14 +8620,14 @@ function makeCharacterJournalEntry(data = {}, onChange) {
     el.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
         <div style="flex:1;">
-          <div style="font-weight:600;color:var(--accent-light);">${data.title || 'Untitled Entry'}</div>
+          <div style="font-weight:600;color:var(--accent-light);">${escapeHtml(data.title || 'Untitled Entry')}</div>
         </div>
         <div style="display:flex;gap:8px;">
           <button class="edit-entry" style="padding:4px 8px;font-size:11px;">Edit</button>
           <button class="delete-entry" style="padding:4px 8px;font-size:11px;">Delete</button>
         </div>
       </div>
-      <div style="white-space:pre-wrap;">${data.content || 'No content'}</div>
+      <div style="white-space:pre-wrap;">${escapeHtml(data.content || 'No content')}</div>
     `;
   }
   
