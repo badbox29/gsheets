@@ -8203,20 +8203,20 @@ function makeSessionLogEntry(data = {}, onChange) {
       <div style="display:flex;gap:8px;margin-bottom:8px;">
         <div style="flex:1;">
           <label style="font-size:11px;color:var(--muted);">Date</label>
-          <input class="entry-date" type="text" value="${data.date || ''}" style="width:100%;" placeholder="e.g., Jan 15, 2025">
+          <input class="entry-date" type="text" value="${escapeHtml(data.date || '')}" style="width:100%;" placeholder="e.g., Jan 15, 2025">
         </div>
         <div style="flex:1;">
           <label style="font-size:11px;color:var(--muted);">XP Gained</label>
-          <input class="entry-xp" type="text" value="${data.xp || ''}" style="width:100%;" placeholder="e.g., 1000">
+          <input class="entry-xp" type="text" value="${escapeHtml(data.xp || '')}" style="width:100%;" placeholder="e.g., 1000">
         </div>
       </div>
       <div style="margin-bottom:8px;">
         <label style="font-size:11px;color:var(--muted);">Events</label>
-        <textarea class="entry-events" style="width:100%;min-height:60px;resize:vertical;" placeholder="What happened this session?">${data.events || ''}</textarea>
+        <textarea class="entry-events" style="width:100%;min-height:60px;resize:vertical;" placeholder="What happened this session?">${escapeHtml(data.events || '')}</textarea>
       </div>
       <div style="margin-bottom:8px;">
         <label style="font-size:11px;color:var(--muted);">Loot</label>
-        <textarea class="entry-loot" style="width:100%;min-height:60px;resize:vertical;" placeholder="What treasure was found?">${data.loot || ''}</textarea>
+        <textarea class="entry-loot" style="width:100%;min-height:60px;resize:vertical;" placeholder="What treasure was found?">${escapeHtml(data.loot || '')}</textarea>
       </div>
       <div style="display:flex;gap:8px;justify-content:flex-end;">
         <button class="save-entry">Save</button>
@@ -8227,8 +8227,8 @@ function makeSessionLogEntry(data = {}, onChange) {
     el.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
         <div style="flex:1;">
-          <div style="font-weight:600;color:var(--accent-light);">${data.date || 'No Date'}</div>
-          <div style="font-size:11px;color:var(--muted);">XP: ${data.xp || 'N/A'}</div>
+          <div style="font-weight:600;color:var(--accent-light);">${escapeHtml(data.date || 'No Date')}</div>
+          <div style="font-size:11px;color:var(--muted);">XP: ${escapeHtml(data.xp || 'N/A')}</div>
         </div>
         <div style="display:flex;gap:8px;">
           <button class="edit-entry" style="padding:4px 8px;font-size:11px;">Edit</button>
@@ -8237,11 +8237,11 @@ function makeSessionLogEntry(data = {}, onChange) {
       </div>
       <div style="margin-bottom:4px;">
         <strong style="font-size:11px;color:var(--muted);">Events:</strong>
-        <div style="white-space:pre-wrap;">${data.events || 'None'}</div>
+        <div style="white-space:pre-wrap;">${escapeHtml(data.events || 'None')}</div>
       </div>
       <div>
         <strong style="font-size:11px;color:var(--muted);">Loot:</strong>
-        <div style="white-space:pre-wrap;">${data.loot || 'None'}</div>
+        <div style="white-space:pre-wrap;">${escapeHtml(data.loot || 'None')}</div>
       </div>
     `;
   }
