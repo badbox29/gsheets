@@ -3465,7 +3465,9 @@ function getClassDisplayName(clazz) {
 
   // Generic fallback: strip an "hb_" homebrew prefix, turn underscores and
   // hyphens into spaces, and title-case each word. Slashes are preserved so
-  // multi-class strings survive: "fighter/thief" -> "Fighter/Thief".
+  // multi-class strings survive, and are rejoined WITH spaces to match what
+  // formatMultiClassDisplay and formatDualClassDisplay put in the `clazz`
+  // field: "Ranger 5 / Necromancer 6" must print as it appears on screen.
   return raw
     .replace(/^hb[_-]/i, "")
     .replace(/[_]+/g, " ")
@@ -3477,7 +3479,7 @@ function getClassDisplayName(clazz) {
         .map(w => w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : w)
         .join(" ")
     )
-    .join("/");
+    .join(" / ");
 }
 
 // === Related Weapons (AD&D 2E, PHB Ch.5 "Related Weapons Bonus") ===
