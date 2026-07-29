@@ -11157,6 +11157,21 @@ function updateMultiClassCalculations(root) {
   if (class1) val(root, 'mc_xp1', xpPerClass.toLocaleString());
   if (class2) val(root, 'mc_xp2', xpPerClass.toLocaleString());
   if (class3) val(root, 'mc_xp3', xpPerClass.toLocaleString());
+
+  // Per-class next-level advisement. PHB Ch.8: reaching the threshold is not
+  // the same as advancing -- the DM may require training first, and may rule
+  // that circumstances do not permit it -- so this advises and never acts.
+  const mcNextFor = (className, lvl) => {
+    const t = (typeof getXPTable === 'function') ? getXPTable(className) : null;
+    const n = parseInt(lvl, 10);
+    if (!Array.isArray(t) || isNaN(n)) return '\u2014';
+    if (typeof t[n] !== 'number') return 'Max level';
+    const needed = t[n] - xpPerClass;
+    return needed <= 0 ? "Enough XP \u2014 DM's call" : needed.toLocaleString();
+  };
+  val(root, 'mc_xp_next1', class1 ? mcNextFor(class1, level1) : '');
+  val(root, 'mc_xp_next2', class2 ? mcNextFor(class2, level2) : '');
+  val(root, 'mc_xp_next3', class3 ? mcNextFor(class3, level3) : '');
   
   // Update the main "Class" field to show multi-class format
   const classDisplay = formatMultiClassDisplay(classes, [level1, level2, level3].slice(0, numClasses));
