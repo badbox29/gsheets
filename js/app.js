@@ -10793,16 +10793,23 @@ function renderTurnUndeadTable(root) {
   
   section.style.display = 'block';
   
-  // Paladins turn as clerics 2 levels lower
+  // PHB Ch.3, Paladin: "A paladin gains the power to turn undead and fiends
+  // when he reaches 3rd level. He affects these monsters the same as does a
+  // cleric two levels lower -- for example, at 3rd level he has the turning
+  // power of a 1st-level cleric." Below 3rd a paladin cannot turn AT ALL; the
+  // old Math.max(1, ...) floor quietly gave a 1st-level paladin the turning
+  // power of a 1st-level cleric, three levels early.
   if (isPaladin) {
-    effectiveLevel = Math.max(1, effectiveLevel - 2);
+    if (effectiveLevel < 3) {
+      section.style.display = 'none';
+      return;
+    }
+    effectiveLevel = effectiveLevel - 2;
   }
   
-  // Cap at level 20
-  effectiveLevel = Math.min(20, effectiveLevel);
-  
-  // Get the turn undead data for this level
-  const turnData = TURN_UNDEAD_TABLE[effectiveLevel];
+  // No level cap. Table 61's 14+ column IS the ceiling, and
+  // getTurnUndeadColumn() folds every level from 14 upward into it.
+  const turnData = getTurnUndeadColumn(effectiveLevel);
   if (!turnData) return;
   
   // Render the table rows
@@ -10824,8 +10831,8 @@ function renderTurnUndeadTable(root) {
     let requirementText = '';
     let requirementColor = '';
     
-    if (requirement === 'D') {
-      requirementText = '⚡ Destroy';
+    if (requirement === 'D' || requirement === 'D*') {
+      requirementText = requirement === 'D*' ? '⚡ Destroy +2d4' : '⚡ Destroy';
       requirementColor = '#fbbf24'; // gold
     } else if (requirement === 'T') {
       requirementText = '⚡ Auto Turn';
@@ -10835,14 +10842,20 @@ function renderTurnUndeadTable(root) {
       requirementColor = 'var(--text)';
     }
     
+    // Zombie, Ghast and Special carry no Hit Dice figure in Table 61 -- print
+    // nothing rather than a fabricated number (or the literal "null").
+    const hdLine = undeadType.hdLabel
+      ? `<div style="font-size:11px;color:var(--muted);">${undeadType.hdLabel}</div>`
+      : '';
+    
     row.innerHTML = `
       <div style="flex:1;">
         <div style="font-weight:600;font-size:13px;">${undeadType.name}</div>
-        <div style="font-size:11px;color:var(--muted);">HD: ${undeadType.hd}</div>
+        ${hdLine}
       </div>
       <div style="display:flex;gap:12px;align-items:center;margin-left:auto;">
         <div style="font-size:13px;font-weight:600;color:${requirementColor};min-width:110px;text-align:center;">${requirementText}</div>
-        <button class="turn-undead-btn" data-undead="${undeadType.key}" data-requirement="${requirement}" data-name="${undeadType.name}" data-hd="${undeadType.hd}" style="padding:6px 16px;">Turn</button>
+        <button class="turn-undead-btn" data-undead="${undeadType.key}" data-requirement="${requirement}" data-name="${undeadType.name}" style="padding:6px 16px;">Turn</button>
       </div>
     `;
     
@@ -10877,7 +10890,7 @@ function getSpellTableForClass(className) {
 // Bind Turn Undead events
 function bindTurnUndead(root) {
   // Function to add result to history
-  function addTurnUndeadToHistory(undeadName, requirement, roll, hdTurned, wasDestroyed) {
+  function addTurnUndeadToHistory(undeadName, requirement, roll, numTurned, wasDestroyed, bonusTurned) {
     const historyEl = root.querySelector('.turn-undead-history');
     if (!historyEl) return;
     
@@ -10891,13 +10904,14 @@ function bindTurnUndead(root) {
     let color = '';
     
     if (wasDestroyed) {
-      resultText = `DESTROYED ${hdTurned} HD`;
+      resultText = `DESTROYED ${numTurned}`;
+      if (bonusTurned) resultText += ` (+${bonusTurned} turned)`;
       color = '#fbbf24'; // gold
-    } else if (requirement === 'T' || requirement === 'D') {
-      resultText = `TURNED ${hdTurned} HD`;
+    } else if (requirement === 'T') {
+      resultText = `TURNED ${numTurned}`;
       color = '#4ade80'; // green
-    } else if (roll >= parseInt(requirement)) {
-      resultText = `SUCCESS - ${hdTurned} HD turned`;
+    } else if (roll >= parseInt(requirement, 10)) {
+      resultText = `SUCCESS - ${numTurned} turned`;
       color = '#4ade80'; // green
     } else {
       resultText = 'FAILED';
@@ -10929,30 +10943,31 @@ function bindTurnUndead(root) {
     const btn = e.target;
     const undeadName = btn.getAttribute('data-name');
     const requirement = btn.getAttribute('data-requirement');
-    const undeadHD = parseInt(btn.getAttribute('data-hd'));
     
+    // PHB Ch.9: "A successful turn or dispel affects 2d6 undead." That is a
+    // COUNT OF CREATURES, not a total of Hit Dice -- hence numTurned, not
+    // hdTurned. The old data-hd read was parsed and then never used.
     let roll = null;
-    let hdTurned = 0;
+    let numTurned = 0;
+    let bonusTurned = 0;
     let wasDestroyed = false;
     
-    if (requirement === 'D') {
-      // Automatic destruction
-      hdTurned = rollDice(2, 6);
+    if (requirement === 'D' || requirement === 'D*') {
+      numTurned = rollDice(2, 6);
       wasDestroyed = true;
+      // Table 61 footnote *: an additional 2d4 creatures of this type are
+      // turned, over and above the 2d6 destroyed.
+      if (requirement === 'D*') bonusTurned = rollDice(2, 4);
     } else if (requirement === 'T') {
-      // Automatic turn
-      hdTurned = rollDice(2, 6);
+      numTurned = rollDice(2, 6);
     } else {
-      // Need to roll d20
       roll = rollDice(1, 20);
-      if (roll >= parseInt(requirement)) {
-        // Success - roll 2d6 for HD
-        hdTurned = rollDice(2, 6);
+      if (roll >= parseInt(requirement, 10)) {
+        numTurned = rollDice(2, 6);
       }
     }
     
-    // Add to history
-    addTurnUndeadToHistory(undeadName, requirement, roll, hdTurned, wasDestroyed);
+    addTurnUndeadToHistory(undeadName, requirement, roll, numTurned, wasDestroyed, bonusTurned);
   });
   
   // Clear history button
