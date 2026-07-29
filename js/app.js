@@ -6077,6 +6077,42 @@ function bindSheet(root, tab){
   if (addSpellbookSpell) {
     addSpellbookSpell.onclick = () => {
       const spellbookList = qs(root, '.spellbook-list');
+      if (spellbookList) {
+        const node = makeSpellbookNode({}, () => {
+          markUnsaved(tab, true, root);
+          syncSpellbookToData(root);
+        });
+        spellbookList.appendChild(node);
+
+        // Sort, filter and reveal. Appending alone dropped the new blank row at
+        // the very bottom of the book -- off-screen in anything but a short list
+        // -- and left it there until the first level edit happened to trigger a
+        // sort, at which point it leapt to the top. Doing the work on ADD means
+        // the row arrives where it will stay.
+        sortSpellbook(root);
+
+        // A level filter would otherwise hide a blank-level row outright, so the
+        // player clicks Add and nothing appears at all.
+        const filter = root.querySelector('.spellbook-level-filter');
+        if (filter && filter.value !== '') {
+          filter.value = '';
+        }
+        if (filter) filterSpellbook(root, filter.value);
+
+        // Put the cursor in the name field -- it is the first thing to fill in,
+        // and focusing it scrolls the row into view as a side effect.
+        const nameInput = node.querySelector('.title');
+        if (nameInput) {
+          try { nameInput.focus(); } catch (e) { /* not yet laid out */ }
+        }
+        if (typeof node.scrollIntoView === 'function') {
+          try { node.scrollIntoView({ block: 'nearest' }); }
+          catch (e) { node.scrollIntoView(false); }
+        }
+
+        markUnsaved(tab, true, root);
+        syncSpellbookToData(root);
+      }
     };
   }
   
