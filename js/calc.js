@@ -6783,8 +6783,17 @@ function renderKnownSpellStatus(root) {
   const text = root.querySelector('.spellbook-known-text');
   if (!wrap || !text) return;
 
-  const comp = (typeof getWizardComponent === 'function') ? getWizardComponent(root) : null;
-  if (!comp) { wrap.style.display = 'none'; return; }
+  // The Table 4 material below -- spells known per level, the chance to learn,
+  // free specialist spells -- is WIZARD-ONLY and stays gated on the wizard
+  // component. Priests don't learn spells into books and have no per-level cap.
+  //
+  // The maximum spell LEVEL warning is NOT wizard-only, and returning early here
+  // hid it from every other casting class. A demi-paladin caps at 4th-level
+  // spells because of his slot progression, not his Intelligence. This section is
+  // used by them too -- "Spells you know (Wizards) or have learned (other casting
+  // classes)" -- so they were recording unlearnable spells with no feedback at all.
+  const comp  = (typeof getWizardComponent === 'function') ? getWizardComponent(root) : null;
+  const isWiz = !!comp;
 
   // Table 4 column 3 is a number below INT 19 and the string "All" from 19 up.
   const int = parseInt(val(root, 'int') || 0, 10);
@@ -6796,12 +6805,17 @@ function renderKnownSpellStatus(root) {
   const intMaxLevel = row ? (parseInt(row[4], 10) || 0) : 0;
   const maxSpellLevel = getMaxSpellLevel(root).max;
 
-  if (!uncapped && cap <= 0) {
+  if (isWiz && !uncapped && cap <= 0) {
     // INT below 9 -- cannot be a wizard at all. The spell browser already
     // explains this, so say nothing here rather than showing 0/0 nine times.
     wrap.style.display = 'none';
     return;
   }
+
+  // A non-wizard whose class yields no level cap (fighter, thief, or a paladin
+  // too low to cast) has nothing to report -- and must not be shown a cap of 0
+  // as though it were a restriction.
+  if (!isWiz && maxSpellLevel <= 0) { wrap.style.display = 'none'; return; }
 
   // Tally by level across every spellbook. Level 0 (cantrips) is deliberately
   // excluded -- Table 4 governs the nine wizard spell levels.
@@ -6826,7 +6840,10 @@ function renderKnownSpellStatus(root) {
   for (let lv = 1; lv <= 9; lv++) {
     const n = known[lv] || 0;
     if (n === 0) continue;                       // don't list levels with nothing recorded
-    const over = !uncapped && n > cap;
+    // The per-level ceiling is a Table 4 rule and applies to wizards only. A
+    // non-wizard is never "over" -- printing him a denominator would invent a
+    // limit the book doesn't give him.
+    const over = isWiz && !uncapped && n > cap;
     // Separate problem from the count: Table 4 also caps the highest spell
     // LEVEL a wizard may learn at all. An INT 9 wizard stops at 4th, so a
     // recorded 6th-level spell is not merely surplus -- it is unlearnable.
@@ -6834,17 +6851,20 @@ function renderKnownSpellStatus(root) {
     if (over) anyOver = true;
     if (beyond) beyondLevels.push(lv);
     const color = (over || beyond) ? '#f44336' : 'var(--text)';
-    parts.push('<span style="color:' + color + ';">Level ' + lv + ': ' + n + '/' +
-               (beyond ? '\u2014' : (uncapped ? 'All' : cap)) + '</span>');
+    const denom = !isWiz ? '' : ('/' + (beyond ? '\u2014' : (uncapped ? 'All' : cap)));
+    parts.push('<span style="color:' + color + ';">Level ' + lv + ': ' + n + denom + '</span>');
   }
 
   if (!parts.length) {
     text.innerHTML = '<span style="color:var(--muted);">No spells recorded' +
-      (uncapped ? '' : ' \u2014 Intelligence ' + int + ' allows ' + cap + ' per level') + '</span>';
+      ((isWiz && !uncapped) ? ' \u2014 Intelligence ' + int + ' allows ' + cap + ' per level' : '') +
+      '</span>';
   } else {
     text.innerHTML = parts.join(' <span style="color:var(--muted);">-</span> ');
     if (beyondLevels.length) {
-      const capReason = (maxSpellLevel === intMaxLevel && intMaxLevel > 0)
+      // Only a wizard's ceiling can come from Intelligence. For anyone else the
+      // limit is always the slot progression, so don't offer Table 4 as a reason.
+      const capReason = (isWiz && maxSpellLevel === intMaxLevel && intMaxLevel > 0)
         ? 'Intelligence ' + int + ' (PHB Table 4)'
         : 'your caster level';
       text.innerHTML += '<div style="margin-top:4px;color:#f44336;font-size:11px;">' +
