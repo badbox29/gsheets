@@ -127,7 +127,11 @@ const SHEET_HTML = `
               </div>
               <div class="col" style="flex:1">
                 <label>XP</label>
-                <input data-field="mc_xp1" type="text" readonly>
+                <input data-field="mc_xpi" type="text" readonly>
+              </div>
+              <div class="col" style="flex:2">
+                <label>XP for Next Level</label>
+                <input data-field="mc_xp_nexti" type="text" readonly>
               </div>
             </div>
             <div class="row" style="margin-top:4px;padding:8px;background:rgba(0,0,0,0.1);border-radius:4px;">
