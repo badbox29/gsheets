@@ -78,7 +78,7 @@ const SHEET_HTML = `
           <div class="row" style="margin-top:8px">
             <div class="col single-dual-field"><label>XP for Next Level</label><input data-field="xp_next" type="text" readonly></div>
             <div class="col single-dual-field">
-              <div style="display:flex;align-items:center;gap:6px;">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
                 <label style="margin:0;">Prime Req. XP Bonus</label>
                 <details class="disclosure info" style="font-size:11px;flex-shrink:0;">
                   <summary>how this works</summary>
