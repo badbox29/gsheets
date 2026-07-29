@@ -3145,20 +3145,30 @@ const TURN_UNDEAD_TABLE = {
   20: { skeleton: 'D', zombie: 'D', ghoul: 'D', shadow: 'D', wight: 'D', ghast: 'D', wraith: 'D', mummy: 'D', spectre: 'D', vampire: 'D', ghost: 'D', lich: 'D', special: 'D' }
 };
 
+// PHB Table 61 row labels, transcribed from the printed table. `hd` is the Hit
+// Dice the row covers -- it is how a DM resolves an undead the table does not
+// name by species. Five rows were previously off by one (Wight 4, Wraith 5,
+// Mummy 6, Spectre 7, Vampire 8), so a party facing a 5 HD undead was reading
+// the Shadow row instead of the Wight row.
+//
+// Zombie, Ghast and Special carry NO Hit Dice in the book. They are named
+// exceptions sitting between the numbered bands, so a 2 HD undead uses GHOUL
+// and a 4 HD undead uses SHADOW -- never Zombie or Ghast. Inventing a figure
+// for them makes an exception look like the general case.
 const TURN_UNDEAD_TYPES = [
-  { key: 'skeleton', name: 'Skeleton', hd: 1 },
-  { key: 'zombie', name: 'Zombie', hd: 2 },
-  { key: 'ghoul', name: 'Ghoul', hd: 2 },
-  { key: 'shadow', name: 'Shadow', hd: 3 },
-  { key: 'wight', name: 'Wight', hd: 4 },
-  { key: 'ghast', name: 'Ghast', hd: 4 },
-  { key: 'wraith', name: 'Wraith', hd: 5 },
-  { key: 'mummy', name: 'Mummy', hd: 6 },
-  { key: 'spectre', name: 'Spectre', hd: 7 },
-  { key: 'vampire', name: 'Vampire', hd: 8 },
-  { key: 'ghost', name: 'Ghost', hd: 10 },
-  { key: 'lich', name: 'Lich', hd: 11 },
-  { key: 'special', name: 'Special', hd: 12 }
+  { key: 'skeleton', name: 'Skeleton', hd: 1,    hdLabel: '1 HD' },
+  { key: 'zombie',   name: 'Zombie',   hd: null, hdLabel: '' },
+  { key: 'ghoul',    name: 'Ghoul',    hd: 2,    hdLabel: '2 HD' },
+  { key: 'shadow',   name: 'Shadow',   hd: 3,    hdLabel: '3-4 HD' },
+  { key: 'wight',    name: 'Wight',    hd: 5,    hdLabel: '5 HD' },
+  { key: 'ghast',    name: 'Ghast',    hd: null, hdLabel: '' },
+  { key: 'wraith',   name: 'Wraith',   hd: 6,    hdLabel: '6 HD' },
+  { key: 'mummy',    name: 'Mummy',    hd: 7,    hdLabel: '7 HD' },
+  { key: 'spectre',  name: 'Spectre',  hd: 8,    hdLabel: '8 HD' },
+  { key: 'vampire',  name: 'Vampire',  hd: 9,    hdLabel: '9 HD' },
+  { key: 'ghost',    name: 'Ghost',    hd: 10,   hdLabel: '10 HD' },
+  { key: 'lich',     name: 'Lich',     hd: 11,   hdLabel: '11+ HD' },
+  { key: 'special',  name: 'Special',  hd: null, hdLabel: '' }
 ];
 
 // === Weapon Strength Bonus (AD&D 2E, PHB Ch.6 "Bows" + Ch.9 "Ability Modifiers
