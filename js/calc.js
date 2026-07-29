@@ -1,4 +1,4 @@
-// ===== Utilities =====.
+// ===== Utilities =====
 function renderWisdomPriestEffects(root) {
   const clazz = (val(root,"clazz")||"").toLowerCase();
   const wis = parseInt(val(root,"wis")||0,10);
@@ -3599,7 +3599,7 @@ async function renderSpellBrowser(root) {
     spellDiv.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <div>
-          <strong>${spell.name}</strong>
+          <strong>${escapeHtml(spell.name)}</strong>
           <span style="margin-left:8px;font-size:11px;color:var(--muted);">Level ${spell.level}</span>
         </div>
         <div style="font-size:11px;color:var(--muted);">
@@ -4157,13 +4157,13 @@ function renderLanguageProficiencies(root) {
     langDiv.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
         <div style="flex:1;">
-          <strong>${lang.name}</strong>
+          <strong>${escapeHtml(lang.name)}</strong>
           <span style="margin-left:8px;font-size:11px;color:var(--muted);">${lang.rarity}</span>
           ${badges}
           <div style="font-size:11px;color:var(--muted);margin-top:2px;">
             ${lang.languageClass || ''}${lang.languageClass ? ' &middot; ' : ''}Cost: ${costText}
           </div>
-          ${lang.description ? `<div style="font-size:11px;color:var(--muted);margin-top:4px;font-style:italic;">${lang.description}</div>` : ''}
+          ${lang.description ? `<div style="font-size:11px;color:var(--muted);margin-top:4px;font-style:italic;">${escapeHtml(lang.description)}</div>` : ''}
         </div>
         <div style="display:flex;align-items:center;flex-shrink:0;">
           ${nativeBtn}
@@ -4901,7 +4901,7 @@ function renderWeaponProficiencies(root) {
 
     profDiv.innerHTML = `
       <div style="flex:1;">
-        <strong>${prof.name}</strong>
+        <strong>${escapeHtml(prof.name)}</strong>
         <span style="margin-left:8px;font-size:11px;color:var(--muted);">${profGroup || '\u2014'}</span>
         <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
           <label style="font-size:11px;color:var(--muted);margin:0;">Type</label>
@@ -5278,7 +5278,7 @@ function renderNWProficiencies(root) {
     nwpDiv.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px;">
         <div style="flex:1;">
-          <strong>${nwp.name}</strong>
+          <strong>${escapeHtml(nwp.name)}</strong>
           <span style="margin-left:8px;font-size:11px;color:var(--muted);">${groupLabel}</span>
           <div style="font-size:11px;color:var(--muted);margin-top:2px;">
             ${slotText} | ${checkText}
@@ -5292,7 +5292,7 @@ function renderNWProficiencies(root) {
                    title="Additional proficiency slots spent to improve this proficiency (PHB Ch.5). These come out of your nonweapon proficiency budget.">
             ${effectNote}
           </div>` : ''}
-          ${nwp.notes ? `<div style="font-size:11px;color:var(--muted);margin-top:4px;font-style:italic;">${nwp.notes}</div>` : ''}
+          ${nwp.notes ? `<div style="font-size:11px;color:var(--muted);margin-top:4px;font-style:italic;">${escapeHtml(nwp.notes)}</div>` : ''}
           ${situational.length ? `
           <details class="disclosure" style="font-size:11px;margin-top:4px;">
             <summary>situational</summary>
