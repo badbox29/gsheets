@@ -4279,7 +4279,7 @@ function showSpellMigrationBanner(root, changes) {
     }
   }
   const rows = changes.map(c =>
-    `<li><strong>${c.name}</strong>: level ${c.from} &rarr; ${c.to}` +
+    `<li><strong>${escapeHtml(c.name)}</strong>: level ${c.from} &rarr; ${c.to}` +
     (c.ref ? ` <span style="color:var(--muted)">(${c.ref})</span>` : '') + `</li>`
   ).join('');
   banner.innerHTML =
@@ -9177,7 +9177,7 @@ function moveSpellToAnotherSpellbook(spellNode, onChange) {
     '<h3 style="margin-top:0;">Move Spell To...</h3>' +
     '<p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Select the spellbook to move this spell to:</p>' +
     '<select id="target-spellbook" style="width:100%;margin-bottom:12px;padding:8px;border-radius:6px;background:#1a1d29;color:#fff;border:1px solid var(--border);font-size:14px;">' +
-      otherSpellbooks.map(sb => `<option value="${sb.id}">${sb.name}</option>`).join('') +
+      otherSpellbooks.map(sb => `<option value="${sb.id}">${escapeHtml(sb.name)}</option>`).join('') +
     '</select>' +
     '<div style="text-align:right;display:flex;gap:8px;justify-content:flex-end">' +
       '<button id="cancel-move" class="ghost">Cancel</button>' +
@@ -11116,7 +11116,7 @@ function updateMultiClassCalculations(root) {
   // Validate race can multi-class
   if (!canRaceMultiClass(race)) {
     if (validationMsg) {
-      validationMsg.innerHTML = `<span style="color:#d9534f;">⚠ ${race || 'This race'} cannot multi-class. Only demihumans can multi-class.</span>`;
+      validationMsg.innerHTML = `<span style="color:#d9534f;">⚠ ${escapeHtml(race || 'This race')} cannot multi-class. Only demihumans can multi-class.</span>`;
       validationMsg.style.background = 'rgba(217, 83, 79, 0.1)';
       validationMsg.style.border = '1px solid rgba(217, 83, 79, 0.3)';
     }
@@ -11135,7 +11135,7 @@ function updateMultiClassCalculations(root) {
   
   if (!isValidMultiClassCombo(race, classes)) {
     if (validationMsg) {
-      validationMsg.innerHTML = `<span style="color:#d9534f;">⚠ Invalid combination: ${classes.join('/')} is not allowed for ${race}.</span>`;
+      validationMsg.innerHTML = `<span style="color:#d9534f;">⚠ Invalid combination: ${classes.join('/')} is not allowed for ${escapeHtml(race)}.</span>`;
       validationMsg.style.background = 'rgba(217, 83, 79, 0.1)';
       validationMsg.style.border = '1px solid rgba(217, 83, 79, 0.3)';
     }
@@ -11144,7 +11144,7 @@ function updateMultiClassCalculations(root) {
   
   // Valid combination!
   if (validationMsg) {
-    validationMsg.innerHTML = `<span style="color:#5cb85c;">✓ Valid ${classes.join('/')} combination for ${race}.</span>`;
+    validationMsg.innerHTML = `<span style="color:#5cb85c;">✓ Valid ${classes.join('/')} combination for ${escapeHtml(race)}.</span>`;
     validationMsg.style.background = 'rgba(92, 184, 92, 0.1)';
     validationMsg.style.border = '1px solid rgba(92, 184, 92, 0.3)';
   }
