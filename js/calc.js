@@ -1237,51 +1237,19 @@ function renderPrimeRequisiteBonus(root) {
     return;
   }
   
-  // Get ability scores
-  const str = parseInt(val(root, "str") || 0, 10);
-  const dex = parseInt(val(root, "dex") || 0, 10);
-  const con = parseInt(val(root, "con") || 0, 10);
-  const int = parseInt(val(root, "int") || 0, 10);
-  const wis = parseInt(val(root, "wis") || 0, 10);
-  const cha = parseInt(val(root, "cha") || 0, 10);
-  
-  // Determine prime requisites based on class
-  let primeReqs = [];
-  let primeReqNames = [];
-  
-  if (clazz.includes("fighter") || clazz.includes("warrior")) {
-    primeReqs = [str];
-    primeReqNames = ["Strength"];
-  } else if (clazz.includes("ranger")) {
-    primeReqs = [str, dex, wis];
-    primeReqNames = ["Strength", "Dexterity", "Wisdom"];
-  } else if (clazz.includes("paladin")) {
-    primeReqs = [str, cha];
-    primeReqNames = ["Strength", "Charisma"];
-  } else if (clazz.includes("mage") || clazz.includes("wizard") || clazz.includes("illusionist") || 
-             clazz.includes("abjurer") || clazz.includes("conjurer") || clazz.includes("diviner") ||
-             clazz.includes("enchanter") || clazz.includes("invoker") || clazz.includes("necromancer") ||
-             clazz.includes("transmuter") || clazz.includes("evoker") || clazz.includes("specialist")) {
-    primeReqs = [int];
-    primeReqNames = ["Intelligence"];
-  } else if (clazz.includes("cleric") || clazz.includes("priest") || clazz.includes("druid")) {
-    primeReqs = [wis];
-    primeReqNames = ["Wisdom"];
-  } else if (clazz.includes("thief") || clazz.includes("rogue")) {
-    primeReqs = [dex];
-    primeReqNames = ["Dexterity"];
-  } else if (clazz.includes("bard")) {
-    primeReqs = [dex, cha];
-    primeReqNames = ["Dexterity", "Charisma"];
-  } else {
-    // Unknown class
-    xpBonusEl.value = "—";
+  // PHB Ch.3. Prime requisites come from the shared PRIME_REQUISITES table in
+  // tables.js -- never re-derive them here. A local second copy is exactly how
+  // the druid came to be missing Charisma in two files at once.
+  const info = getCharacterPrimeRequisites(root);
+
+  if (!info) {
+    xpBonusEl.value = "\u2014";
     xpBonusEl.removeAttribute("title");
     return;
   }
-  
-  // Check if all prime requisites are 16+
-  const allMeet16 = primeReqs.every(score => score >= 16);
+
+  const primeReqNames = info.abilities.map(a => ABILITY_LABELS[a] || a);
+  const allMeet16 = info.abilities.every(a => parseInt(val(root, a) || 0, 10) >= 16);
   
   if (allMeet16) {
     xpBonusEl.value = "+10%";
