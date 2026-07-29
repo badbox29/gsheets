@@ -13,35 +13,6 @@ function canDualClass(race) {
 }
 
 /**
- * Get prime requisites for a class
- * Returns array of ability names that are prime requisites
- */
-function getPrimeRequisites(className) {
-  const clazz = (className || '').trim().toLowerCase();
-  
-  if (clazz.includes('fighter') || clazz.includes('warrior')) {
-    return ['str'];
-  } else if (clazz.includes('ranger')) {
-    return ['str', 'dex', 'wis'];
-  } else if (clazz.includes('paladin')) {
-    return ['str', 'cha'];
-  } else if (clazz.includes('mage') || clazz.includes('wizard') || 
-             clazz.includes('illusionist') || clazz.includes('specialist')) {
-    return ['int'];
-  } else if (clazz.includes('cleric') || clazz.includes('priest')) {
-    return ['wis'];
-  } else if (clazz.includes('druid')) {
-    return ['wis'];
-  } else if (clazz.includes('thief') || clazz.includes('rogue')) {
-    return ['dex'];
-  } else if (clazz.includes('bard')) {
-    return ['dex', 'cha'];
-  }
-  
-  return [];
-}
-
-/**
  * Get ability score value by name
  */
 function getAbilityScore(root, abilityName) {
@@ -57,8 +28,8 @@ function validateDualClassRequirements(root, originalClass, newClass) {
   const errors = [];
   
   // Get prime requisites for both classes
-  const originalPrimes = getPrimeRequisites(originalClass);
-  const newPrimes = getPrimeRequisites(newClass);
+  const originalPrimes = getClassPrimeRequisites(originalClass);
+  const newPrimes = getClassPrimeRequisites(newClass);
   
   // Check original class prime requisites (need 15+)
   originalPrimes.forEach(ability => {
