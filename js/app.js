@@ -6077,15 +6077,6 @@ function bindSheet(root, tab){
   if (addSpellbookSpell) {
     addSpellbookSpell.onclick = () => {
       const spellbookList = qs(root, '.spellbook-list');
-      if (spellbookList) {
-        const node = makeSpellbookNode({}, () => {
-          markUnsaved(tab, true, root);
-          syncSpellbookToData(root);
-        });
-        spellbookList.appendChild(node);
-        markUnsaved(tab, true, root);
-        syncSpellbookToData(root);
-      }
     };
   }
   
