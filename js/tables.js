@@ -3120,8 +3120,12 @@ CLASS_ABILITIES.wizard = CLASS_ABILITIES.mage;
 CLASS_ABILITIES.rogue = CLASS_ABILITIES.thief;
 CLASS_ABILITIES.specialist = CLASS_ABILITIES.mage;
 
-// === Turn Undead Table (AD&D 2e) ===
-// Format: T = automatic turn, D = automatic destruction, number = d20 roll needed, - = cannot turn
+// === Turn Undead Table (AD&D 2e, PHB Table 61) ===
+// Format: number = d20 roll needed, T = automatic turn, D = automatic
+//   destruction, 'D*' = destruction AND an additional 2d4 creatures of this
+//   type are turned on top of the usual 2d6, '-' = cannot affect at all.
+// Keys are the book's TWELVE columns, not one per level. Use
+// getTurnUndeadColumn() (defined below the table) to map a level to a column.
 const TURN_UNDEAD_TABLE = {
   1: { skeleton: 10, zombie: 13, ghoul: 16, shadow: 19, wight: 20, ghast: '-', wraith: '-', mummy: '-', spectre: '-', vampire: '-', ghost: '-', lich: '-', special: '-' },
   2: { skeleton: 7, zombie: 10, ghoul: 13, shadow: 16, wight: 19, ghast: 20, wraith: '-', mummy: '-', spectre: '-', vampire: '-', ghost: '-', lich: '-', special: '-' },
@@ -3130,20 +3134,29 @@ const TURN_UNDEAD_TABLE = {
   5: { skeleton: 'T', zombie: 'T', ghoul: 4, shadow: 7, wight: 10, ghast: 13, wraith: 16, mummy: 19, spectre: 20, vampire: '-', ghost: '-', lich: '-', special: '-' },
   6: { skeleton: 'D', zombie: 'T', ghoul: 'T', shadow: 4, wight: 7, ghast: 10, wraith: 13, mummy: 16, spectre: 19, vampire: 20, ghost: '-', lich: '-', special: '-' },
   7: { skeleton: 'D', zombie: 'D', ghoul: 'T', shadow: 'T', wight: 4, ghast: 7, wraith: 10, mummy: 13, spectre: 16, vampire: 19, ghost: 20, lich: '-', special: '-' },
-  8: { skeleton: 'D', zombie: 'D', ghoul: 'D', shadow: 'T', wight: 'T', ghast: 4, wraith: 7, mummy: 10, spectre: 13, vampire: 16, ghost: 19, lich: 20, special: '-' },
-  9: { skeleton: 'D', zombie: 'D', ghoul: 'D', shadow: 'D', wight: 'T', ghast: 'T', wraith: 4, mummy: 7, spectre: 10, vampire: 13, ghost: 16, lich: 19, special: 20 },
-  10: { skeleton: 'D', zombie: 'D', ghoul: 'D', shadow: 'D', wight: 'D', ghast: 'T', wraith: 'T', mummy: 4, spectre: 7, vampire: 10, ghost: 13, lich: 16, special: 19 },
-  11: { skeleton: 'D', zombie: 'D', ghoul: 'D', shadow: 'D', wight: 'D', ghast: 'D', wraith: 'T', mummy: 'T', spectre: 4, vampire: 7, ghost: 10, lich: 13, special: 16 },
-  12: { skeleton: 'D', zombie: 'D', ghoul: 'D', shadow: 'D', wight: 'D', ghast: 'D', wraith: 'D', mummy: 'T', spectre: 'T', vampire: 4, ghost: 7, lich: 10, special: 13 },
-  13: { skeleton: 'D', zombie: 'D', ghoul: 'D', shadow: 'D', wight: 'D', ghast: 'D', wraith: 'D', mummy: 'D', spectre: 'T', vampire: 'T', ghost: 4, lich: 7, special: 10 },
-  14: { skeleton: 'D', zombie: 'D', ghoul: 'D', shadow: 'D', wight: 'D', ghast: 'D', wraith: 'D', mummy: 'D', spectre: 'D', vampire: 'T', ghost: 'T', lich: 4, special: 7 },
-  15: { skeleton: 'D', zombie: 'D', ghoul: 'D', shadow: 'D', wight: 'D', ghast: 'D', wraith: 'D', mummy: 'D', spectre: 'D', vampire: 'D', ghost: 'T', lich: 'T', special: 4 },
-  16: { skeleton: 'D', zombie: 'D', ghoul: 'D', shadow: 'D', wight: 'D', ghast: 'D', wraith: 'D', mummy: 'D', spectre: 'D', vampire: 'D', ghost: 'D', lich: 'T', special: 'T' },
-  17: { skeleton: 'D', zombie: 'D', ghoul: 'D', shadow: 'D', wight: 'D', ghast: 'D', wraith: 'D', mummy: 'D', spectre: 'D', vampire: 'D', ghost: 'D', lich: 'D', special: 'T' },
-  18: { skeleton: 'D', zombie: 'D', ghoul: 'D', shadow: 'D', wight: 'D', ghast: 'D', wraith: 'D', mummy: 'D', spectre: 'D', vampire: 'D', ghost: 'D', lich: 'D', special: 'D' },
-  19: { skeleton: 'D', zombie: 'D', ghoul: 'D', shadow: 'D', wight: 'D', ghast: 'D', wraith: 'D', mummy: 'D', spectre: 'D', vampire: 'D', ghost: 'D', lich: 'D', special: 'D' },
-  20: { skeleton: 'D', zombie: 'D', ghoul: 'D', shadow: 'D', wight: 'D', ghast: 'D', wraith: 'D', mummy: 'D', spectre: 'D', vampire: 'D', ghost: 'D', lich: 'D', special: 'D' }
+  8: { skeleton: 'D*', zombie: 'D', ghoul: 'D', shadow: 'T', wight: 'T', ghast: 4, wraith: 7, mummy: 10, spectre: 13, vampire: 16, ghost: 19, lich: 20, special: '-' },
+  9: { skeleton: 'D*', zombie: 'D*', ghoul: 'D', shadow: 'D', wight: 'T', ghast: 'T', wraith: 4, mummy: 7, spectre: 10, vampire: 13, ghost: 16, lich: 19, special: 20 },
+  '10-11': { skeleton: 'D*', zombie: 'D*', ghoul: 'D*', shadow: 'D', wight: 'D', ghast: 'T', wraith: 'T', mummy: 4, spectre: 7, vampire: 10, ghost: 13, lich: 16, special: 19 },
+  '12-13': { skeleton: 'D*', zombie: 'D*', ghoul: 'D*', shadow: 'D*', wight: 'D', ghast: 'D', wraith: 'T', mummy: 'T', spectre: 4, vampire: 7, ghost: 10, lich: 13, special: 16 },
+  '14+': { skeleton: 'D*', zombie: 'D*', ghoul: 'D*', shadow: 'D*', wight: 'D*', ghast: 'D', wraith: 'D', mummy: 'T', spectre: 'T', vampire: 4, ghost: 7, lich: 10, special: 13 }
 };
+
+// PHB Table 61 does NOT have twenty level columns. It has twelve:
+//   1  2  3  4  5  6  7  8  9  10-11  12-13  14+
+// The three highest are BANDS, and 14+ is the ceiling -- at any level from 14
+// upward a lich is turned on a 10 and a Special on a 13, forever. The old
+// one-column-per-level layout silently handed an 11th-level priest the 12-13
+// results and a 12th-level priest the 14+ results, then invented ever-better
+// columns above that until an 18th-level priest was auto-destroying liches,
+// which the book never grants at any level.
+function getTurnUndeadColumn(level) {
+  const l = parseInt(level, 10);
+  if (!l || l < 1) return null;
+  if (l <= 9)  return TURN_UNDEAD_TABLE[l] || null;
+  if (l <= 11) return TURN_UNDEAD_TABLE['10-11'] || null;
+  if (l <= 13) return TURN_UNDEAD_TABLE['12-13'] || null;
+  return TURN_UNDEAD_TABLE['14+'] || null;
+}
 
 // PHB Table 61 row labels, transcribed from the printed table. `hd` is the Hit
 // Dice the row covers -- it is how a DM resolves an undead the table does not
