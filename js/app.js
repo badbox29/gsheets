@@ -8418,7 +8418,7 @@ function makeNPCEntry(data = {}, onChange) {
       <div style="display:flex;gap:8px;margin-bottom:8px;">
         <div style="flex:2;">
           <label style="font-size:11px;color:var(--muted);">NPC Name</label>
-          <input class="entry-name" type="text" value="${data.name || ''}" style="width:100%;" placeholder="Character name">
+          <input class="entry-name" type="text" value="${escapeHtml(data.name || '')}" style="width:100%;" placeholder="Character name">
         </div>
         <div style="flex:1;">
           <label style="font-size:11px;color:var(--muted);">Type</label>
@@ -8431,7 +8431,7 @@ function makeNPCEntry(data = {}, onChange) {
       </div>
       <div style="margin-bottom:8px;">
         <label style="font-size:11px;color:var(--muted);">Relationship / Notes</label>
-        <textarea class="entry-relationship" style="width:100%;min-height:60px;resize:vertical;" placeholder="How do you know them? What's your relationship?">${data.relationship || ''}</textarea>
+        <textarea class="entry-relationship" style="width:100%;min-height:60px;resize:vertical;" placeholder="How do you know them? What's your relationship?">${escapeHtml(data.relationship || '')}</textarea>
       </div>
       <div style="display:flex;gap:8px;justify-content:flex-end;">
         <button class="save-entry">Save</button>
@@ -8448,15 +8448,15 @@ function makeNPCEntry(data = {}, onChange) {
     el.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
         <div style="flex:1;">
-          <div style="font-weight:600;color:var(--accent-light);">${data.name || 'Unnamed NPC'}</div>
-          <div style="font-size:11px;color:${typeColor};">[${data.type || 'Contact'}]</div>
+          <div style="font-weight:600;color:var(--accent-light);">${escapeHtml(data.name || 'Unnamed NPC')}</div>
+          <div style="font-size:11px;color:${typeColor};">[${escapeHtml(data.type || 'Contact')}]</div>
         </div>
         <div style="display:flex;gap:8px;">
           <button class="edit-entry" style="padding:4px 8px;font-size:11px;">Edit</button>
           <button class="delete-entry" style="padding:4px 8px;font-size:11px;">Delete</button>
         </div>
       </div>
-      <div style="white-space:pre-wrap;">${data.relationship || 'No notes'}</div>
+      <div style="white-space:pre-wrap;">${escapeHtml(data.relationship || 'No notes')}</div>
     `;
   }
   
@@ -8517,15 +8517,15 @@ function makeLocationEntry(data = {}, onChange) {
     el.innerHTML = `
       <div style="margin-bottom:8px;">
         <label style="font-size:11px;color:var(--muted);">Location Name</label>
-        <input class="entry-name" type="text" value="${data.name || ''}" style="width:100%;" placeholder="Place name">
+        <input class="entry-name" type="text" value="${escapeHtml(data.name || '')}" style="width:100%;" placeholder="Place name">
       </div>
       <div style="margin-bottom:8px;">
         <label style="font-size:11px;color:var(--muted);">Description</label>
-        <input class="entry-description" type="text" value="${data.description || ''}" style="width:100%;" placeholder="Brief description">
+        <input class="entry-description" type="text" value="${escapeHtml(data.description || '')}" style="width:100%;" placeholder="Brief description">
       </div>
       <div style="margin-bottom:8px;">
         <label style="font-size:11px;color:var(--muted);">Key Details</label>
-        <textarea class="entry-details" style="width:100%;min-height:60px;resize:vertical;" placeholder="Important information, NPCs, dangers, etc.">${data.details || ''}</textarea>
+        <textarea class="entry-details" style="width:100%;min-height:60px;resize:vertical;" placeholder="Important information, NPCs, dangers, etc.">${escapeHtml(data.details || '')}</textarea>
       </div>
       <div style="display:flex;gap:8px;justify-content:flex-end;">
         <button class="save-entry">Save</button>
@@ -8536,15 +8536,15 @@ function makeLocationEntry(data = {}, onChange) {
     el.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
         <div style="flex:1;">
-          <div style="font-weight:600;color:var(--accent-light);">${data.name || 'Unnamed Location'}</div>
-          <div style="font-size:11px;color:var(--muted);">${data.description || ''}</div>
+          <div style="font-weight:600;color:var(--accent-light);">${escapeHtml(data.name || 'Unnamed Location')}</div>
+          <div style="font-size:11px;color:var(--muted);">${escapeHtml(data.description || '')}</div>
         </div>
         <div style="display:flex;gap:8px;">
           <button class="edit-entry" style="padding:4px 8px;font-size:11px;">Edit</button>
           <button class="delete-entry" style="padding:4px 8px;font-size:11px;">Delete</button>
         </div>
       </div>
-      ${data.details ? `<div style="white-space:pre-wrap;">${data.details}</div>` : ''}
+      ${data.details ? `<div style="white-space:pre-wrap;">${escapeHtml(data.details)}</div>` : ''}
     `;
   }
   
