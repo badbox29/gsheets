@@ -11250,10 +11250,22 @@ function updateDualClassCalculations(root) {
   
   // Validate prime requisites
   const errors = validateDualClassRequirements(root, originalClass, newClass);
-  
+
+  // A class whose prime requisites cannot be resolved is reported ALONGSIDE the
+  // status, never in place of it. getClassPrimeRequisites returns [] for an
+  // unrecognised name, and an empty list runs zero checks inside
+  // validateDualClassRequirements -- so silence there means "not checked",
+  // never "passed". Homebrew class names are legitimate, so this must not
+  // suppress the dormancy banner the way a real failure does.
+  const unchecked = [originalClass, newClass].filter(
+    c => c && !getClassPrimeRequisites(c).length);
+  const uncheckedNote = unchecked.length
+    ? `<br><span style="color:#f0ad4e;">Prime requisites unknown for ${escapeHtml(unchecked.join(' and '))} \u2014 that requirement was not checked.</span>`
+    : '';
+
   if (errors.length > 0) {
     if (statusMsg) {
-      statusMsg.innerHTML = `<span style="color:#d9534f;">⚠ Prime Requisite Requirements Not Met:<br>${errors.join('<br>')}</span>`;
+      statusMsg.innerHTML = `<span style="color:#d9534f;">\u26A0 Prime Requisite Requirements Not Met:<br>${errors.map(escapeHtml).join('<br>')}</span>${uncheckedNote}`;
       statusMsg.style.background = 'rgba(217, 83, 79, 0.1)';
       statusMsg.style.border = '1px solid rgba(217, 83, 79, 0.3)';
     }
@@ -11265,7 +11277,7 @@ function updateDualClassCalculations(root) {
   
   if (statusMsg) {
     const color = status.type === 'success' ? '#5cb85c' : '#f0ad4e';
-    statusMsg.innerHTML = `<span style="color:${color};">${status.message}</span>`;
+    statusMsg.innerHTML = `<span style="color:${color};">${escapeHtml(status.message)}</span>${uncheckedNote}`;
     statusMsg.style.background = status.type === 'success' 
       ? 'rgba(92, 184, 92, 0.1)' 
       : 'rgba(240, 173, 78, 0.1)';
