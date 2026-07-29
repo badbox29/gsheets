@@ -1120,6 +1120,12 @@ function renderXPProgression(root) {
   
   const xpNextEl = root.querySelector('[data-field="xp_next"]');
   if (!xpNextEl) return;
+
+  // Rendered FIRST, not last. Every branch below returns early -- multi-class,
+  // dual-class, max level, unknown class -- so a call at the foot of this
+  // function never runs for those characters, leaving the bonus field blank on
+  // load until an ability score happens to be touched.
+  renderPrimeRequisiteBonus(root);
   
   // Handle multi-class characters
   if (charType === 'multi') {
@@ -1160,8 +1166,8 @@ function renderXPProgression(root) {
     const xpNeeded = xpForNextLevel - currentXP;
     
     if (xpNeeded <= 0) {
-      xpNextEl.value = "Ready to level!";
-      xpNextEl.title = `${newClass} has enough XP to advance to level ${newLevel + 1}`;
+      xpNextEl.value = "Enough XP \u2014 DM's call";
+      xpNextEl.title = `${newClass} has enough XP for level ${newLevel + 1}. PHB Ch.8: the DM may require training first, and may rule that circumstances do not permit advancement.`;
     } else {
       xpNextEl.value = xpNeeded.toLocaleString();
       xpNextEl.title = `${newClass} needs ${xpNeeded.toLocaleString()} more XP to reach level ${newLevel + 1} (total: ${xpForNextLevel.toLocaleString()})`;
@@ -1205,38 +1211,18 @@ function renderXPProgression(root) {
   const xpNeeded = xpForNextLevel - currentXP;
   
   if (xpNeeded <= 0) {
-    xpNextEl.value = "Ready to level!";
-    xpNextEl.title = `You have enough XP to advance to level ${level + 1}`;
+    xpNextEl.value = "Enough XP \u2014 DM's call";
+    xpNextEl.title = `Enough XP for level ${level + 1}. PHB Ch.8: the DM may require training first, and may rule that circumstances do not permit advancement.`;
   } else {
     xpNextEl.value = xpNeeded.toLocaleString();
     xpNextEl.title = `Need ${xpNeeded.toLocaleString()} more XP to reach level ${level + 1} (total: ${xpForNextLevel.toLocaleString()})`;
   }
-  
-  // Calculate Prime Requisite XP Bonus
-  renderPrimeRequisiteBonus(root);
 }
 
 function renderPrimeRequisiteBonus(root) {
-  let clazz = (val(root, "clazz") || "").trim().toLowerCase();
   const xpBonusEl = root.querySelector('[data-field="xp_bonus"]');
-  
   if (!xpBonusEl) return;
-  
-  // For dual-class, use NEW class for prime requisite bonus
-  const charType = (val(root, "char_type") || "single").toLowerCase();
-  if (charType === 'dual') {
-    const newClass = (val(root, 'dc_new_class') || '').trim().toLowerCase();
-    if (newClass) {
-      clazz = newClass;
-    }
-  }
-  
-  if (!clazz) {
-    xpBonusEl.value = "—";
-    xpBonusEl.removeAttribute("title");
-    return;
-  }
-  
+
   // PHB Ch.3. Prime requisites come from the shared PRIME_REQUISITES table in
   // tables.js -- never re-derive them here. A local second copy is exactly how
   // the druid came to be missing Charisma in two files at once.
