@@ -2282,6 +2282,62 @@ function getXPTable(clazz) {
   return null;
 }
 
+// === Prime Requisites (PHB Chapter 3) ===
+// Photo-verified class by class against the Chapter 3 entries.
+//
+// Ability Requirements and Prime Requisites are DIFFERENT LISTS and the book
+// keeps them apart deliberately: a paladin needs Con 9 and Wis 13, neither a
+// prime requisite; a ranger needs Con 14 and it is not one either; and the
+// illusionist's Dex 16 is a requirement despite matching the bonus threshold
+// exactly. NEVER rebuild this from a class's requirement block.
+const PRIME_REQUISITES = {
+  fighter: ["str"],
+  paladin: ["str", "cha"],
+  ranger:  ["str", "dex", "wis"],
+  mage:    ["int"],
+  cleric:  ["wis"],
+  druid:   ["wis", "cha"],
+  thief:   ["dex"],
+  bard:    ["dex", "cha"]
+};
+
+// Aliases, not copies -- same reason MULTICLASS_COMBOS.halfelf is an alias.
+PRIME_REQUISITES.warrior     = PRIME_REQUISITES.fighter;
+PRIME_REQUISITES.barbarian   = PRIME_REQUISITES.fighter;
+PRIME_REQUISITES.wizard      = PRIME_REQUISITES.mage;
+PRIME_REQUISITES.specialist  = PRIME_REQUISITES.mage;
+PRIME_REQUISITES.priest      = PRIME_REQUISITES.cleric;
+PRIME_REQUISITES.rogue       = PRIME_REQUISITES.thief;
+PRIME_REQUISITES.hb_dpaladin = PRIME_REQUISITES.paladin;
+PRIME_REQUISITES.demipaladin = PRIME_REQUISITES.paladin;
+
+// Resolve ONE class name to its prime requisites. Composite strings such as
+// "Fighter 5 / Mage 3" are NOT handled here -- the substring pass would match
+// "fighter" and silently drop the mage half. Step 2's character-level resolver
+// splits composites before calling this.
+//
+// Returns [] for anything unrecognised. Callers must treat empty as UNKNOWN,
+// never as "no requirements": an empty array passed to .every() passes
+// vacuously, which is exactly how the dual-class gate came to accept a
+// necromancer with Intelligence 3.
+function getClassPrimeRequisites(className) {
+  const c = (className || "").trim().toLowerCase();
+  if (!c) return [];
+  if (PRIME_REQUISITES[c]) return PRIME_REQUISITES[c].slice();
+
+  // Every specialist wizard takes the mage's Intelligence. Table 22's
+  // "Minimum Ability" column is ability requirements, not prime requisites.
+  if (typeof SPECIALIST_WIZARDS !== "undefined" &&
+      Object.keys(SPECIALIST_WIZARDS).some(k => c.includes(k))) {
+    return PRIME_REQUISITES.mage.slice();
+  }
+
+  for (const key in PRIME_REQUISITES) {
+    if (c.includes(key)) return PRIME_REQUISITES[key].slice();
+  }
+  return [];
+}
+
 // === Racial Abilities (AD&D 2E) ===
 // Common racial traits that can be auto-populated
 const RACIAL_ABILITIES = {
