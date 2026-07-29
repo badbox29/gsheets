@@ -1328,23 +1328,6 @@ function makeMemSpellNode(data={}, onChange){
   // change has no `lost` field at all and falls through to the old cast/available
   // behaviour untouched.
   setMemSpellState(el, data.lost ? 'lost' : (data.cast ? 'cast' : 'available'));
-
-    onChange && onChange();
-    if (root) renderMemorizedSpellStatus(root);
-  };
-  
-  // Apply cast styling if loaded as cast
-  if (data.cast) {
-    el.classList.add('spell-cast');
-    el.style.opacity = '0.5';
-
-    // ⬇️ strike-through only on the name
-    const nameEl = el.querySelector('.spell-name, .title, .name');
-    if (nameEl) nameEl.style.textDecoration = 'line-through';
-
-    castBtn.style.background = 'rgba(100,255,100,0.3)';
-    castBtn.style.borderColor = 'rgba(100,255,100,0.5)';
-  }
   
   // Forget button (renamed from Remove)
   el.querySelector('.rm').onclick=()=>{ 
