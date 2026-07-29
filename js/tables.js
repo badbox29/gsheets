@@ -3660,6 +3660,15 @@ const OPTIONAL_RULES = {
     category: 'phb',
     default: false
   },
+  spellComponents: {
+    label:   'Spell components (V/S/M) are required',
+    detail:  'PHB Ch.7. Without this rule every spell needs the caster to speak AND have ' +
+             'both arms free. With it, a spell needs only what it lists -- so a verbal-only ' +
+             'spell can be cast while bound, and a somatic-only spell inside a silence. ' +
+             'Adds the casting conditions to each spell\'s detail panel.',
+    category: 'phb',
+    default: false
+  },
   encumbrancePenalties: {
     label:   'Encumbrance affects movement and combat',
     detail:  'PHB "Effects of Encumbrance". Light x2/3 movement, Moderate x1/2 and -1 attack, ' +
@@ -5243,4 +5252,74 @@ function getSpellInitiativeModifier(castTime) {
 
   const parsed = parseSpellCastingTime(castTime);
   return parsed.kind === 'initiative' ? parsed.initiative : null;
+}
+
+// ===== Spell Components (PHB Ch.7 -- OPTIONAL) =====
+//
+// V / S / M. What makes this worth modelling is not the letters -- the sheet
+// already prints those -- but that the rule CHANGES the base casting conditions.
+//
+// Without it, every spell needs the caster to speak AND have both arms free.
+// With it, a spell needs only what it actually lists: a verbal-only spell can be
+// cast while bound hand and foot, and a somatic-only spell can be cast inside a
+// silence. That reverses which situations are survivable, which is exactly the
+// sort of thing a player needs told at the table rather than inferred.
+//
+// PARSING IS DEFENSIVE BY NECESSITY. Provenance text has bled into this field in
+// the source data -- 'V S Source: PHB page 171 WSC', 'V Source: The
+// Planewalker's Handbook', 'V S Source: Page 1135 Encyclopedia Magica'. Matching
+// letters anywhere would find the S in "Source" and the M in "Magica" and mark
+// most of the library somatic and material. So: cut the provenance tail, then
+// accept only whole tokens.
+function parseSpellComponents(components) {
+  const raw = String(components == null ? '' : components).trim();
+
+  // Everything from "Source:" onward is provenance, not components.
+  const head = raw.split(/\bSource\s*:/i)[0] || '';
+
+  // Split on anything that is not a letter, so 'V, S, M' and 'V S M' both work.
+  const tokens = head.split(/[^A-Za-z]+/).filter(Boolean);
+  const has = L => tokens.some(t => t.toUpperCase() === L);
+
+  const out = {
+    raw:      raw,
+    verbal:   has('V'),
+    somatic:  has('S'),
+    material: has('M')
+  };
+
+  // Distinguish "this spell has no components" from "we could not read the
+  // field". Only the first is a fact; the second must stay silent.
+  out.known = out.verbal || out.somatic || out.material;
+  return out;
+}
+
+// Plain-English conditions for casting a spell under the component rules.
+// Returns { known, needs[], prevented[], freedoms[] } -- `freedoms` being the
+// interesting part: what this spell does NOT require that the base rules would.
+function getSpellComponentNotes(components) {
+  const c = parseSpellComponents(components);
+  const out = { known: c.known, needs: [], prevented: [], freedoms: [] };
+  if (!c.known) return out;
+
+  if (c.verbal) {
+    out.needs.push('speak clearly');
+    out.prevented.push('silence, a gag, or anything else stopping speech');
+  } else {
+    out.freedoms.push('needs no speech \u2014 castable while gagged or silenced');
+  }
+
+  if (c.somatic) {
+    out.needs.push('gesture freely');
+    out.prevented.push('being bound or held, or too cramped to gesture');
+  } else {
+    out.freedoms.push('needs no gestures \u2014 castable while bound');
+  }
+
+  if (c.material) {
+    out.needs.push('have the material component to hand');
+    out.prevented.push('lacking or losing the component');
+  }
+
+  return out;
 }
