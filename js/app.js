@@ -1424,68 +1424,56 @@ el.innerHTML =
     onChange && onChange();
   };
   
-  // Wire up inputs
+  // Wire up inputs.
+  //
+  // The level field is handled in TWO phases on purpose.
+  //
+  // Re-sorting on every `input` event was wrong: each spinner click moved the row
+  // into a different level block, so stepping 1 -> 2 -> 3 threw it past every
+  // level-1 spell, then every level-2 spell, in a list that was jumping under the
+  // cursor. sortSpellbook() also clears the list's innerHTML and re-appends every
+  // row, which drops focus, so the field died after one click.
+  //
+  // Nothing about the ORDER needs to be right mid-edit. The row re-sorts once, on
+  // blur, when the player has settled on a level.
   el.querySelectorAll('input').forEach(inp =>{
     inp.addEventListener('input', ()=>{
       onChange && onChange();
-      // Update summary when name or level changes
-	  if (inp.classList.contains('level') || inp.classList.contains('title')) {
-        const root = inp.closest('.sheet-container');
-        if (root && inp.classList.contains('level')) {
-          // Editing a spell's level used to make it appear to DELETE ITSELF.
-          // Two causes, both fixed here:
-          //
-          //  1. sortSpellbook() clears the list's innerHTML and re-appends every
-          //     row. A focused input removed from the document loses focus, so
-          //     after one spinner click or one keystroke the field was dead and
-          //     the row had jumped to a new position.
-          //
-          //  2. With a level filter active, moving a spell to a level the filter
-          //     excludes hid the very row being edited. Indistinguishable from a
-          //     delete, which is the worst way for it to be wrong.
-          //
-          // The filter now FOLLOWS the spell rather than hiding it, and focus is
-          // restored after the re-sort.
-          const hadFocus = (document.activeElement === inp);
-
-          sortSpellbook(root);
-
-          const filter = root.querySelector('.spellbook-level-filter');
-          if (filter) {
-            // Only redirect a level-specific filter. 'All levels' ('') already
-            // shows the row, and an empty level field means the player is
-            // mid-edit -- retargeting to nothing would hide everything.
-            const newLevel = String(inp.value || '').trim();
-            if (filter.value !== '' && newLevel !== '' && filter.value !== newLevel) {
-              const hasOption = Array.from(filter.options)
-                .some(o => o.value === newLevel);
-              if (hasOption) filter.value = newLevel;
-            }
-            filterSpellbook(root, filter.value);
-          }
-
-          // Re-focus after the sort. Deliberately no setSelectionRange: a
-          // number input throws on it in several browsers, and the field is
-          // short enough that focus alone is enough.
-          if (hadFocus && document.activeElement !== inp) {
-            try { inp.focus(); } catch (e) { /* detached mid-render */ }
-          }
-
-          // The re-sort can move the row a long way -- a blank spell sorts to the
-          // end, so its first increment throws it to the top of the list, and any
-          // level change in a large book can send it off-screen. Follow it.
-          // 'nearest' scrolls only when the row is actually out of view, so a row
-          // that never moved doesn't twitch.
-          const movedRow = inp.closest('.item');
-          if (movedRow && typeof movedRow.scrollIntoView === 'function') {
-            try { movedRow.scrollIntoView({ block: 'nearest' }); } catch (e) {
-              movedRow.scrollIntoView(false);   // older browsers: no options arg
-            }
-          }
-        }
-      }
     });
   });
+
+  // Settle the row once editing finishes: sort it into place, make sure the
+  // active filter still shows it, and follow it if it has moved out of view.
+  const levelInput = el.querySelector('.level');
+  if (levelInput) {
+    levelInput.addEventListener('blur', ()=>{
+      const root = levelInput.closest('.sheet-container');
+      if (!root) return;
+
+      sortSpellbook(root);
+
+      const filter = root.querySelector('.spellbook-level-filter');
+      if (filter) {
+        // Redirect a level-specific filter to follow the spell rather than
+        // hiding it. 'All levels' ('') already shows everything, and a blank
+        // level field means there is nothing to follow.
+        const newLevel = String(levelInput.value || '').trim();
+        if (filter.value !== '' && newLevel !== '' && filter.value !== newLevel) {
+          const hasOption = Array.from(filter.options).some(o => o.value === newLevel);
+          if (hasOption) filter.value = newLevel;
+        }
+        filterSpellbook(root, filter.value);
+      }
+
+      // 'nearest' scrolls only when the row is genuinely off-screen, so a row
+      // that barely moved doesn't twitch the page under the player.
+      const movedRow = levelInput.closest('.item');
+      if (movedRow && typeof movedRow.scrollIntoView === 'function') {
+        try { movedRow.scrollIntoView({ block: 'nearest' }); }
+        catch (e) { movedRow.scrollIntoView(false); }
+      }
+    });
+  }
   
   return el;
 }
