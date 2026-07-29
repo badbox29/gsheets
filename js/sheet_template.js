@@ -77,7 +77,31 @@ const SHEET_HTML = `
           </div>
           <div class="row" style="margin-top:8px">
             <div class="col single-dual-field"><label>XP for Next Level</label><input data-field="xp_next" type="text" readonly></div>
-            <div class="col single-dual-field"><label>Prime Req. XP Bonus</label><input data-field="xp_bonus" type="text" readonly></div>
+            <div class="col single-dual-field">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <label style="margin:0;">Prime Req. XP Bonus</label>
+                <details class="disclosure info" style="font-size:11px;flex-shrink:0;">
+                  <summary>how this works</summary>
+                  <div class="info-body">
+                    <strong>16 or better in every prime requisite earns a 10% bonus.</strong><br>
+                    PHB Chapter 3. Four classes have more than one: paladin (Str, Cha),
+                    ranger (Str, Dex, Wis), druid (Wis, Cha) and bard (Dex, Cha). All of
+                    them must reach 16 &mdash; not just one.<br><br>
+                    <strong>The sheet does not apply it for you.</strong> The bonus is to
+                    experience <em>awards</em>, so it attaches to XP as you earn it, not to
+                    the total already banked. Add the 10% when your DM makes an award, then
+                    enter the result.<br><br>
+                    <strong>Multi-class</strong> characters need 16 in the prime requisites of
+                    every one of their classes. <strong>Dual-class</strong> reads the new class
+                    only, which is automatic in practice, since switching already demands 17 or
+                    better. The book addresses neither case directly.<br><br>
+                    Chapter 8 leaves awards entirely to the DM, who may also require training
+                    before a character can advance a level.
+                  </div>
+                </details>
+              </div>
+              <input data-field="xp_bonus" type="text" readonly>
+            </div>
           </div>
           
           <!-- Multi-Class Fields (hidden by default) -->
