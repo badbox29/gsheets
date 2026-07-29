@@ -8308,7 +8308,7 @@ function makeQuestJournalEntry(data = {}, onChange) {
       <div style="display:flex;gap:8px;margin-bottom:8px;">
         <div style="flex:2;">
           <label style="font-size:11px;color:var(--muted);">Quest Name</label>
-          <input class="entry-name" type="text" value="${data.name || ''}" style="width:100%;" placeholder="Quest title">
+          <input class="entry-name" type="text" value="${escapeHtml(data.name || '')}" style="width:100%;" placeholder="Quest title">
         </div>
         <div style="flex:1;">
           <label style="font-size:11px;color:var(--muted);">Status</label>
@@ -8320,15 +8320,15 @@ function makeQuestJournalEntry(data = {}, onChange) {
       </div>
       <div style="margin-bottom:8px;">
         <label style="font-size:11px;color:var(--muted);">Objective</label>
-        <input class="entry-objective" type="text" value="${data.objective || ''}" style="width:100%;" placeholder="What needs to be done?">
+        <input class="entry-objective" type="text" value="${escapeHtml(data.objective || '')}" style="width:100%;" placeholder="What needs to be done?">
       </div>
       <div style="margin-bottom:8px;">
         <label style="font-size:11px;color:var(--muted);">Reward</label>
-        <input class="entry-reward" type="text" value="${data.reward || ''}" style="width:100%;" placeholder="What's the reward?">
+        <input class="entry-reward" type="text" value="${escapeHtml(data.reward || '')}" style="width:100%;" placeholder="What's the reward?">
       </div>
       <div style="margin-bottom:8px;">
         <label style="font-size:11px;color:var(--muted);">Notes</label>
-        <textarea class="entry-notes" style="width:100%;min-height:60px;resize:vertical;" placeholder="Additional details...">${data.notes || ''}</textarea>
+        <textarea class="entry-notes" style="width:100%;min-height:60px;resize:vertical;" placeholder="Additional details...">${escapeHtml(data.notes || '')}</textarea>
       </div>
       <div style="display:flex;gap:8px;justify-content:flex-end;">
         <button class="save-entry">Save</button>
@@ -8340,8 +8340,8 @@ function makeQuestJournalEntry(data = {}, onChange) {
     el.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
         <div style="flex:1;">
-          <div style="font-weight:600;color:${statusColor};">${data.name || 'Unnamed Quest'}</div>
-          <div style="font-size:11px;color:var(--muted);">[${data.status || 'Active'}]</div>
+          <div style="font-weight:600;color:${statusColor};">${escapeHtml(data.name || 'Unnamed Quest')}</div>
+          <div style="font-size:11px;color:var(--muted);">[${escapeHtml(data.status || 'Active')}]</div>
         </div>
         <div style="display:flex;gap:8px;">
           <button class="edit-entry" style="padding:4px 8px;font-size:11px;">Edit</button>
@@ -8349,12 +8349,12 @@ function makeQuestJournalEntry(data = {}, onChange) {
         </div>
       </div>
       <div style="margin-bottom:4px;">
-        <strong style="font-size:11px;color:var(--muted);">Objective:</strong> ${data.objective || 'None'}
+        <strong style="font-size:11px;color:var(--muted);">Objective:</strong> ${escapeHtml(data.objective || 'None')}
       </div>
       <div style="margin-bottom:4px;">
-        <strong style="font-size:11px;color:var(--muted);">Reward:</strong> ${data.reward || 'None'}
+        <strong style="font-size:11px;color:var(--muted);">Reward:</strong> ${escapeHtml(data.reward || 'None')}
       </div>
-      ${data.notes ? `<div><strong style="font-size:11px;color:var(--muted);">Notes:</strong><div style="white-space:pre-wrap;">${data.notes}</div></div>` : ''}
+      ${data.notes ? `<div><strong style="font-size:11px;color:var(--muted);">Notes:</strong><div style="white-space:pre-wrap;">${escapeHtml(data.notes)}</div></div>` : ''}
     `;
   }
   
