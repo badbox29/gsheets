@@ -1292,6 +1292,42 @@ function renderPrimeRequisiteBonus(root) {
   }
 }
 
+// Collect the prime requisites governing THIS character, per PHB Ch.3.
+//   single -- the one class (legacy "Fighter/Mage" strings are split, so a
+//             composite left in `clazz` cannot silently drop its second half).
+//   dual   -- the NEW class only: "the character no longer earns experience
+//             points in his previous character class".
+//   multi  -- the UNION of every component class. The book gives multi-class
+//             characters no clause of their own, so the general rule governs
+//             as written: 16+ in ALL his prime requisites.
+// Returns { abilities, classes } or null. Callers must treat null as UNKNOWN,
+// never as "no requirements" -- see getClassPrimeRequisites in tables.js.
+function getCharacterPrimeRequisites(root) {
+  const charType = (val(root, 'char_type') || 'single').toLowerCase();
+  let names = [];
+
+  if (charType === 'multi') {
+    for (let i = 1; i <= 3; i++) names.push(val(root, 'mc_class' + i) || '');
+  } else if (charType === 'dual') {
+    names.push(val(root, 'dc_new_class') || '');
+  } else {
+    names = parseMultiClass(val(root, 'clazz') || '');
+  }
+
+  names = names.map(n => (n || '').trim()).filter(n => n && n.toLowerCase() !== 'none');
+
+  const abilities = [];
+  const classes = [];
+  names.forEach(n => {
+    const reqs = getClassPrimeRequisites(n);
+    if (!reqs.length) return;
+    classes.push(n);
+    reqs.forEach(a => { if (!abilities.includes(a)) abilities.push(a); });
+  });
+
+  return abilities.length ? { abilities, classes } : null;
+}
+
 // Resolve which sub-class is the rogue. PHB Ch.3 permits only one class per
 // group, so no legal character has two rogue-group classes and first-match is
 // safe. Dual-class checks the NEW class first -- that is the one being actively
