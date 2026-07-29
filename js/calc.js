@@ -6246,12 +6246,37 @@ function showSpellDetails(root, spell) {
     }
   }
 
+  // Components gain their casting conditions when the optional rule is on. The
+  // letters alone don't tell a player what he can still do while grappled; the
+  // point of the rule is that a V-only spell works while bound and an S-only one
+  // works inside a silence, and neither is obvious from "V" or "S".
+  let componentsHtml = escapeHtml(String(spell.components || ''));
+  if (typeof isOptionalRule === 'function' &&
+      isOptionalRule('spellComponents') &&
+      typeof getSpellComponentNotes === 'function') {
+    const cn = getSpellComponentNotes(spell.components);
+    if (cn.known) {
+      const bits = [];
+      if (cn.needs.length) {
+        bits.push('<div style="color:var(--muted);font-size:11px;margin-top:2px;">Must ' +
+                  escapeHtml(cn.needs.join(', ')) + '.</div>');
+      }
+      // Freedoms are accented: they are what the rule GIVES the caster, and the
+      // thing he is least likely to work out unprompted.
+      cn.freedoms.forEach(f => {
+        bits.push('<div style="color:var(--accent);font-size:11px;margin-top:2px;">' +
+                  escapeHtml(f) + '</div>');
+      });
+      componentsHtml += bits.join('');
+    }
+  }
+
   statsDiv.innerHTML = `
     <div><strong>Range:</strong> ${escapeHtml(String(spell.range || ''))}</div>
     <div><strong>Duration:</strong> ${escapeHtml(String(spell.duration || ''))}</div>
     <div><strong>Area of Effect:</strong> ${escapeHtml(String(spell.aoe || ''))}</div>
     <div><strong>Casting Time:</strong> ${castTimeHtml}</div>
-    <div><strong>Components:</strong> ${escapeHtml(String(spell.components || ''))}</div>
+    <div><strong>Components:</strong> ${componentsHtml}</div>
     <div><strong>Saving Throw:</strong> ${escapeHtml(String(spell.save || ''))}</div>
   `;
 
