@@ -6977,13 +6977,18 @@ function renderMemorizationTime(root) {
   // The cast flag lives on the row's own class list, which is exactly what
   // collectSheet persists (`cast: n.classList.contains('spell-cast')`), so the
   // display and the saved record can never disagree about what has been spent.
-  const all  = [];
-  const cast = [];
+  const all   = [];
+  const spent = [];
+  let castCount = 0, lostCount = 0;
   Array.from(root.querySelectorAll('.memspells-list .item')).forEach(item => {
     const lv = parseInt(item.querySelector('.level')?.value, 10);
     if (!isFinite(lv) || lv < 0) return;
     all.push(lv);
-    if (item.classList.contains('spell-cast')) cast.push(lv);
+    // Cast and lost both spend the slot and both cost the same to recover. The
+    // states are mutually exclusive, so else-if is enough -- a row carrying both
+    // classes would be a bug upstream, not something to total twice here.
+    if (item.classList.contains('spell-cast'))      { spent.push(lv); castCount++; }
+    else if (item.classList.contains('spell-lost')) { spent.push(lv); lostCount++; }
   });
 
   if (all.length === 0) { wrap.style.display = 'none'; return; }
@@ -6995,17 +7000,25 @@ function renderMemorizationTime(root) {
   // the more demanding of the two and the figure covers both.
   label.textContent = isWiz ? 'Study Time:' : 'Prayer Time:';
 
-  const fullTime = getMemorizationTime(all);
-  const castTime = getMemorizationTime(cast);
+  const fullTime  = getMemorizationTime(all);
+  const spentTime = getMemorizationTime(spent);
 
   const parts = [];
 
-  if (castTime.spellCount > 0) {
-    parts.push('<strong>' + escapeHtml(castTime.text) + '</strong> to recover ' +
-               castTime.spellCount + ' cast spell' +
-               (castTime.spellCount === 1 ? '' : 's'));
+  if (spentTime.spellCount > 0) {
+    // Break down the mix only when there IS one -- "(2 cast, 0 lost)" on an
+    // ordinary day is noise, and most days are ordinary.
+    let what;
+    if (castCount && lostCount) {
+      what = spentTime.spellCount + ' spells (' + castCount + ' cast, ' + lostCount + ' lost)';
+    } else if (lostCount) {
+      what = lostCount + ' lost spell' + (lostCount === 1 ? '' : 's');
+    } else {
+      what = castCount + ' cast spell' + (castCount === 1 ? '' : 's');
+    }
+    parts.push('<strong>' + escapeHtml(spentTime.text) + '</strong> to recover ' + what);
   } else {
-    parts.push('<span style="color:var(--muted);">nothing cast</span>');
+    parts.push('<span style="color:var(--muted);">nothing spent</span>');
   }
 
   parts.push('<span style="color:var(--muted);">' + escapeHtml(fullTime.text) +
