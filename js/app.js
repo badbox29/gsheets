@@ -1826,25 +1826,12 @@ function makeArmorNode(data={}, onChange){
 
   el.innerHTML =
     // --- Identity row: always visible, mirrors the weapon card ---
-    '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div style="width:60px;text-align:center;">Equipped</div>' +
-      '<div style="width:60px;text-align:center;">Off-hand</div>' +
-      '<div style="flex:1;">Weapon</div>' +
-      '<div style="width:148px;"></div>' + // Space for Details + Remove buttons
+    '<div style="width:60px;text-align:center;">Equipped</div>' +
+      '<div style="flex:1;">Armor</div>' +
+      '<div style="width:148px;"></div>' +
     '</div>' +
-   '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
+    '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
       '<input type="checkbox" class="equipped" '+(data.equipped?'checked':'')+' style="width:60px;margin:auto;">' +
-      // PHB Ch.9. Deliberately on the IDENTITY row, not in the collapsed
-      // Details section: this carries a -2/-4 attack penalty, and a penalty
-      // hidden behind a disclosure is a penalty players forget they are taking.
-      '<input type="checkbox" class="weapon-offhand" '+(data.offhand?'checked':'')+
-        ' title="Mark this weapon as the OFF-HAND weapon (PHB Ch.9, Attacking&#10;' +
-        'With Two Weapons). Grants ONE extra attack per round, no matter how&#10;' +
-        'many you already have. Applies -4 here and -2 to the main-hand weapon,&#10;' +
-        'both modified by your Dexterity Reaction Adjustment -- which can bring&#10;' +
-        'them to 0 but never to a bonus. Rangers in studded leather or lighter&#10;' +
-        'are exempt. You cannot use a shield while fighting with two weapons."' +
-        ' style="width:60px;margin:auto;">' +'<input type="checkbox" class="equipped" '+(data.equipped?'checked':'')+' style="width:60px;margin:auto;">' +
       // Name and badge share ONE flex:1 cell, matching the header's "Armor"
       // column. The badge sits at the right edge of that column without pushing
       // Notes out of alignment -- a wide badge squeezes the input instead of
@@ -2904,11 +2891,23 @@ function makeWeaponNode(data={}, onChange){
   el.innerHTML =
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
       '<div style="width:60px;text-align:center;">Equipped</div>' +
+      '<div style="width:60px;text-align:center;">Off-hand</div>' +
       '<div style="flex:1;">Weapon</div>' +
       '<div style="width:148px;"></div>' + // Space for Details + Remove buttons
     '</div>' +
    '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
       '<input type="checkbox" class="equipped" '+(data.equipped?'checked':'')+' style="width:60px;margin:auto;">' +
+      // PHB Ch.9. Deliberately on the IDENTITY row, not in the collapsed
+      // Details section: this carries a -2/-4 attack penalty, and a penalty
+      // hidden behind a disclosure is a penalty players forget they are taking.
+      '<input type="checkbox" class="weapon-offhand" '+(data.offhand?'checked':'')+
+        ' title="Mark this weapon as the OFF-HAND weapon (PHB Ch.9, Attacking&#10;' +
+        'With Two Weapons). Grants ONE extra attack per round, no matter how&#10;' +
+        'many you already have. Applies -4 here and -2 to the main-hand weapon,&#10;' +
+        'both modified by your Dexterity Reaction Adjustment -- which can bring&#10;' +
+        'them to 0 but never to a bonus. Rangers in studded leather or lighter&#10;' +
+        'are exempt. You cannot use a shield while fighting with two weapons."' +
+        ' style="width:60px;margin:auto;">' +
       // Name and badge share one flex:1 cell so a wide badge squeezes the input
       // instead of shifting the buttons. The input's width is driven from JS by
       // sizeWeaponName() -- an <input> cannot shrink-to-fit in CSS.
