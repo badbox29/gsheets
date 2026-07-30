@@ -1950,6 +1950,30 @@ function isWarriorClass(clazz) {
   return WARRIOR_CLASSES.some(c => clazz.includes(c));
 }
 
+// PHB Ch.3, Paladin: "A paladin receives a +2 bonus to all saving throws."
+// All five categories, no level requirement.
+//
+// SIGN: stored as -2, NOT +2. This codebase expresses save adjustments as a
+// delta to the TARGET NUMBER, and saving throws are roll-high -- see
+// CON_MAGIC_SAVE_BONUS, where a CON 18 dwarf's bonus is -5. A literal +2 here
+// would make paladins save WORSE.
+const PALADIN_SAVE_BONUS = -2;
+
+// HOUSE RULE (Chris, 2026-07 -- PROVISIONAL, revisit): the homebrew demi-
+// paladin does NOT get this bonus. If that turns out to be wrong, delete the
+// two exclusion lines below and nothing else changes.
+//
+// The exclusions are load-bearing, not defensive padding: "hb_dpaladin"
+// .includes("paladin") is TRUE, and so is "demipaladin".includes("paladin"),
+// so a plain substring test silently grants the bonus to both.
+function hasPaladinSaveBonus(clazz) {
+  const c = (clazz || "").trim().toLowerCase();
+  if (!c) return false;
+  if (c.includes('hb_dpaladin')) return false;
+  if (c.includes('demipaladin')) return false;
+  return c.includes('paladin');
+}
+
 // isPriestClass is defined once, below (next to isWizardClass). It matches every
 // class that CASTS priest spells -- cleric, druid, priest, shaman, paladin,
 // dpaladin, ranger -- so it is deliberately broad. Narrow "cleric/druid only"
