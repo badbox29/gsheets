@@ -3703,6 +3703,80 @@ function getWeaponAttackPenalty(status, fullPenalty) {
 }
 
 
+// === Attacking With Two Weapons (AD&D 2e, PHB Ch.9) ===
+//
+// "Attacks made with the main weapon suffer a -2 penalty, and attacks made with
+// the second weapon suffer a -4 penalty. The character's Reaction Adjustment
+// (based on his Dexterity, see Table 2) modifies this penalty. A low Dexterity
+// score will worsen the character's chance to hit with each attack. A high
+// Dexterity can negate this particular penalty, although it cannot result in a
+// positive modifier on the attack rolls for either weapon (i.e., the Reaction
+// Adjustment can, at best, raise the attack roll penalties to 0)."
+//
+// THE CAP IS ONE-SIDED. Math.min(0, ...) going up, nothing going down:
+// DEX 18 (+2) -> 0 / -2. DEX 24 (+5) -> 0 / 0, NOT +3 / +1.
+// DEX 3 (-3) -> -5 / -7, with no floor.
+//
+// DEX_TABLE index 0 is the REACTION Adjustment and this is its first consumer
+// anywhere in the codebase. Index 1 is the Missile Attack Adjustment, which
+// carries identical numbers in 2e -- they look like duplicates and are not, so
+// do not collapse the two lookups.
+const TWO_WEAPON_MAIN_PENALTY = -2;
+const TWO_WEAPON_OFF_PENALTY  = -4;
+
+// Ch.3 Ranger: "When wearing studded leather or lighter armor, a ranger can
+// fight two-handed with no penalty to his attack rolls" -- the book's own typo
+// for two-WEAPON, since its cross-reference points straight at Ch.9. And:
+// "A ranger can still fight with two weapons while wearing heavier armor than
+// studded leather, but he suffers the standard attack roll penalties."
+//
+// So the exemption is CONDITIONAL, and its condition is the same printed phrase
+// that gates ranger stealth. RANGER_STEALTH_MAX_ARMOR is reused deliberately
+// rather than duplicated -- a second list would drift from the first, and the
+// elven-chain ruling already recorded there would then apply to one rule and
+// not the other.
+function getTwoWeaponPenalties(root) {
+  const dex    = parseInt(val(root, 'dex') || 0, 10);
+  const dexRow = DEX_TABLE[dex];
+  const reactionAdj = dexRow ? dexRow[0] : 0;
+
+  const classes = (typeof getCharacterClassList === 'function')
+    ? getCharacterClassList(root) : [];
+  const isRanger = classes.some(c => (c || '').toLowerCase().includes('ranger'));
+
+  let armorName = '', armorOk = false;
+  if (isRanger) {
+    const armor = (typeof getThiefArmorCategory === 'function')
+      ? getThiefArmorCategory(root) : null;
+    const typeKey = armor ? (armor.typeKey || 'none') : 'none';
+    armorName = armor ? armor.name : '';
+    armorOk = (typeof RANGER_STEALTH_MAX_ARMOR !== 'undefined') &&
+              RANGER_STEALTH_MAX_ARMOR.indexOf(typeKey) !== -1;
+  }
+
+  if (isRanger && armorOk) {
+    return {
+      main: 0, off: 0, exempt: true, reactionAdj: reactionAdj, armorName: armorName,
+      reason: 'Ranger in ' + (armorName || 'light armour') +
+              ': no two-weapon penalty (PHB Ch.3).'
+    };
+  }
+
+  const cap = p => Math.min(0, p + reactionAdj);
+  return {
+    main: cap(TWO_WEAPON_MAIN_PENALTY),
+    off:  cap(TWO_WEAPON_OFF_PENALTY),
+    exempt: false,
+    reactionAdj: reactionAdj,
+    armorName: armorName,
+    reason: isRanger
+      ? 'Ranger in ' + (armorName || 'heavy armour') +
+        ': heavier than studded leather, so the standard penalties apply.'
+      : ''
+  };
+}
+
+
 // === Weapon Speed Factor & Initiative (AD&D 2E, PHB Table 56) ===
 //
 // Table 56 lists weapon speed factor as an initiative modifier. Initiative is
