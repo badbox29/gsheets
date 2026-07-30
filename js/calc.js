@@ -753,8 +753,17 @@ function renderCombatQuickReference(root) {
       // The character's Table 15 melee base, used when nothing more specific
       // applies. Missile weapons have their own rates of fire (Table 45) which
       // the app does not model, so this is a floor rather than an authority.
-      const baseRate = (typeof getBaseAttacksPerRound === 'function')
-        ? getBaseAttacksPerRound(root).rate : '1';
+      // The character's Table 15 melee base -- but the MANUAL OVERRIDE wins if
+      // one is set, exactly as it does on the character-level field. This used
+      // to read the base alone, so a character with an override got it on the
+      // Attacks/Round line and not on any weapon card, and print disagreed with
+      // the screen. Deliberately NOT the effective rate: that includes the
+      // two-weapon bonus, which belongs to the character rather than to any one
+      // weapon.
+      const baseRate =
+        ((root.querySelector('[data-field="attacks_per_round_manual"]') || {}).value || '').trim() ||
+        ((typeof getBaseAttacksPerRound === 'function')
+          ? getBaseAttacksPerRound(root).rate : '1');
       const cat = (weapon.category || '').toLowerCase();
       // PHB Table 34: attack penalty for wielding a weapon you are not
       // proficient with. Related weapons cost half, rounded up.
