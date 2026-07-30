@@ -8088,11 +8088,15 @@ function openRestDialog(root, tab) {
       '<div style="display:flex;flex-direction:column;gap:8px;">' +
         '<button class="rest-option" data-rest-type="night" style="padding:12px;text-align:left;background:var(--glass);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:background 0.2s;">' +
           '<div style="font-weight:600;color:var(--text);margin-bottom:4px;">8 Hours (Night\'s Rest)</div>' +
-          '<div style="font-size:11px;color:var(--muted);">Recover 1 HP, regain spells, clear temporary conditions</div>' +
+          '<div style="font-size:11px;color:var(--muted);">No HP recovered &mdash; 2e heals per <em>day</em> of rest. Clears temporary conditions and meets the rest requirement for Study / Pray.</div>' +
+        '</button>' +
+        '<button class="rest-option" data-rest-type="day_light" style="padding:12px;text-align:left;background:var(--glass);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:background 0.2s;">' +
+          '<div style="font-weight:600;color:var(--text);margin-bottom:4px;">1 Day (Light Activity)</div>' +
+          '<div style="font-size:11px;color:var(--muted);">Recover 1 HP. Travel and light work are fine; fighting is not.</div>' +
         '</button>' +
         '<button class="rest-option" data-rest-type="full_bed" style="padding:12px;text-align:left;background:var(--glass);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:background 0.2s;">' +
-          '<div style="font-weight:600;color:var(--text);margin-bottom:4px;">24 Hours (Full Bed Rest)</div>' +
-          '<div style="font-size:11px;color:var(--muted);">Recover 3 HP, regain spells, clear temporary conditions</div>' +
+          '<div style="font-weight:600;color:var(--text);margin-bottom:4px;">1 Day (Complete Bed Rest)</div>' +
+          '<div style="font-size:11px;color:var(--muted);">Recover 3 HP. Doing nothing for an entire day.</div>' +
         '</button>' +
         '<button class="rest-option" data-rest-type="week" style="padding:12px;text-align:left;background:var(--glass);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:background 0.2s;">' +
           '<div style="font-weight:600;color:var(--text);margin-bottom:4px;">7 Days (Week of Bed Rest)</div>' +
@@ -8174,9 +8178,23 @@ function performRest(root, tab, restType) {
   let removesDiseased = false;
   
   switch(restType) {
+    // PHB Ch.9 gives exactly TWO natural healing rates, and both are per DAY:
+    // "1 hit point per day of rest", where rest is low activity -- "nothing more
+    // strenuous than riding a horse or traveling from one place to another" --
+    // and 3 per day for "complete bed rest (doing nothing for an entire day)".
+    //
+    // There is no eight-hour healing rule in 2e. A night's sleep followed by a
+    // day of adventuring is not rest at all: "Fighting, running in fear... and
+    // any other strenuous activity prevents resting." So this tier heals
+    // NOTHING. It exists because eight hours is the PHB Ch.7 prerequisite for
+    // studying or praying, which is now a separate button.
     case 'night':
+      hpRecovered = 0;
+      rounds = 480; // 8 hours of 1-minute rounds
+      break;
+    case 'day_light':
       hpRecovered = 1;
-      rounds = 480; // 8 hours × 60 minutes/hour × 1 round/minute (assuming 1 minute rounds)
+      rounds = 1440; // 24 hours
       break;
     case 'full_bed':
       hpRecovered = 3;
@@ -8317,11 +8335,12 @@ function performRest(root, tab, restType) {
   const newHP = maxHP - newDamageTaken;
 
   const restTitles = {
-    night:    "Night's rest",
-    full_bed: 'Full bed rest',
-    week:     'Week of bed rest',
-    half:     'Rest to half HP',
-    full:     'Rest to full HP'
+    night:     "Night's rest",
+    day_light: 'Day of light activity',
+    full_bed:  'Day of complete bed rest',
+    week:      'Week of bed rest',
+    half:      'Rest to half HP',
+    full:      'Rest to full HP'
   };
 
   const rows = [];
