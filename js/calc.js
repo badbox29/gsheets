@@ -672,6 +672,35 @@ function renderCombatQuickReference(root) {
     const dmgSign = n => (n > 0 ? '+' + n : n < 0 ? String(n) : '');
 
     let html = '';
+
+    // PHB Ch.9 two-weapon advisories. WARN, never block -- these are the
+    // player's and the DM's call, and several are legitimate at some tables.
+    if (twoWeapon.active) {
+      const warn = [];
+      if (twoWeapon.noMainHand) {
+        warn.push('A weapon is marked off-hand but no other melee weapon is equipped. ' +
+                  'Two-weapon fighting needs a weapon in each hand.');
+      }
+      if (twoWeapon.shieldNames.length) {
+        warn.push('Shield equipped (' + escapeHtml(twoWeapon.shieldNames.join(', ')) +
+                  '). PHB Ch.9: you cannot use a shield while fighting with two weapons ' +
+                  'unless it is strapped on your back -- and your AC above is still ' +
+                  'counting it.');
+      }
+      if (twoWeapon.legality.legal === false) {
+        warn.push(escapeHtml(twoWeapon.legality.reason));
+      }
+      if (twoWeapon.ambiguousMain) {
+        warn.push('More than one main-hand melee weapon is equipped. The size and weight ' +
+                  'check was made against the first of them.');
+      }
+      if (warn.length) {
+        html += '<div style="margin-bottom:6px;padding:4px 6px;' +
+                'border-left:3px solid var(--warning, #e0a34a);' +
+                'background:rgba(224,163,74,0.08);font-size:10px;line-height:1.4;' +
+                'color:var(--warning, #e0a34a);">' + warn.join('<br>') + '</div>';
+      }
+    }
     equippedWeapons.forEach(weapon => {
       // magicBonus is the ENCHANTMENT LEVEL -- it drives the speed-factor
       // reduction and what the weapon can strike. It is also the default for
@@ -824,9 +853,16 @@ function renderCombatQuickReference(root) {
       // Attacks per round for this weapon. An explicit dropdown selection wins;
       // otherwise Table 35 for the specialized weapon, falling back to the
       // character's Table 15 base.
+      // PHB Ch.9: the second weapon makes ONE additional attack, so the off-hand
+      // weapon's own rate is 1 -- not the character's Table 15 rate, which
+      // belongs to the main hand. Showing the full rate here would double-count
+      // the bonus already added to Attacks/Round. An explicit per-weapon value
+      // still wins, since that field exists to override exactly this kind of
+      // derivation.
       const rateSrc = weapon.attacks ? 'set on the weapon card'
+                    : weapon.isOffhand ? 'PHB Ch.9: the off-hand weapon makes the one extra attack'
                     : (specRate ? 'PHB Table 35, specialist' : 'PHB Table 15');
-      const rate = weapon.attacks || specRate || baseRate;
+      const rate = weapon.attacks || (weapon.isOffhand ? '1' : (specRate || baseRate));
       if (rate) {
         html += '<span title="' + rateSrc + '">Attacks: ' + rate + '/round</span><br>';
       }
