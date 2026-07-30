@@ -800,10 +800,29 @@ function renderCombatQuickReference(root) {
       if (weapon.category) {
         html += ' <span style="font-size:10px;color:var(--muted);font-weight:400;">' + weapon.category + '</span>';
       }
-      if (twoWeapon.active && (weapon.isOffhand || twoPen)) {
-        html += ' <span style="font-size:10px;color:var(--muted);font-weight:400;">· Related ' + profPen + '</span>';
+      // The separator dot is painted MUTED and kept OUTSIDE the coloured span.
+      // It used to sit inside it, so a red -2 dragged its own separator red and
+      // the header read as a row of alarms instead of one item among several.
+      const sepBadge = (text, color, tip) =>
+        ' <span style="font-size:10px;color:var(--muted);font-weight:400;">\u00b7</span>' +
+        ' <span style="font-size:10px;color:' + (color || 'var(--muted)') + ';font-weight:400;"' +
+        (tip ? ' title="' + tip + '"' : '') + '>' + text + '</span>';
+
+      // THIS CONDITION IS PROFICIENCY, NOT STANCE. It was briefly overwritten
+      // with the two-weapon test, which made the Related branch fire whenever a
+      // weapon was in the stance -- so a Not Proficient -2 silently relabelled
+      // itself Related -2 the moment Off-hand was ticked, keeping the number and
+      // changing only the word. The two-weapon badge lives on its own line
+      // below; nothing about the stance belongs in this test.
+      if (weapon.profStatus === 'related') {
+        html += sepBadge('Related ' + profPen, 'var(--muted)',
+          'A related weapon costs HALF the non-proficiency penalty, rounded up&#10;' +
+          '(PHB Table 34). Separate from any two-weapon penalty; the two stack.');
       } else if (weapon.profStatus === 'none' && profPen) {
-        html += ' <span style="font-size:10px;color:var(--error, #ff6b6b);font-weight:400;">· Not Proficient ' + profPen + '</span>';
+        html += sepBadge('Not Proficient ' + profPen, 'var(--error, #ff6b6b)',
+          'Full non-proficiency attack penalty (PHB Table 34).&#10;' +
+          'Warrior -2, Wizard -5, Priest -3, Rogue -3.&#10;' +
+          'Separate from any two-weapon penalty; the two stack.');
       }
       // PHB Ch.9. On its OWN LINE, not in the header badge row. Sharing that row
       // with the proficiency badge made two unrelated penalties read as one --
