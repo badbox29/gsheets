@@ -578,6 +578,11 @@ function renderCombatQuickReference(root) {
   const weaponsList = root.querySelector('.combat-weapons-list');
   if (!weaponsList) return;
   
+  // PHB Ch.9 two-weapon fighting, resolved BEFORE the loop. The penalty a given
+  // weapon takes depends on which OTHER weapons are equipped, so it cannot be
+  // decided from inside a per-weapon iteration -- 5a below reads this.
+  const twoWeapon = getTwoWeaponState(root);
+
   const equippedWeapons = [];
   qsa(root, '.weapons-list .item').forEach(el => {
     // Paint EVERY row's proficiency badge, equipped or not. This call renders
@@ -636,6 +641,15 @@ function renderCombatQuickReference(root) {
         strMode: (strEl && strEl.value) || getDefaultWeaponStrMode(category, wGroup),
         profStatus: prof.status,
         profPenalty: prof.penalty,
+        // PHB Ch.9. -4 in the off hand, -2 in the main, both ALREADY modified
+        // by the Dexterity Reaction Adjustment and already capped at 0 by
+        // getTwoWeaponPenalties -- do not re-apply either here. A missile
+        // weapon is outside the stance entirely and keeps 0.
+        isOffhand: twoWeapon.active && el === twoWeapon.offRow,
+        twoWeaponPen: !twoWeapon.active ? 0
+          : (el === twoWeapon.offRow) ? twoWeapon.pen.off
+          : (twoWeapon.mainRows.indexOf(el) !== -1) ? twoWeapon.pen.main
+          : 0,
         // Ammunition this weapon fires, resolved here because `el` is the DOM
         // row and only exists in this loop.
         ammo: (typeof getWeaponAmmoBonus === 'function')
