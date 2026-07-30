@@ -5930,6 +5930,14 @@ function bindSheet(root, tab){
       renderHitDice(root);
       // Table 15 keys off the same class-and-level fields as Hit Dice.
       if (typeof renderAttacksPerRound === 'function') renderAttacksPerRound(root);
+      // renderAttacksPerRound only writes the two CHARACTER-level fields. The
+      // per-weapon "Attacks: N/round" lines are built by the quick reference,
+      // which reads the same base rate -- so setting a manual override moved the
+      // headline number and left every weapon card showing the old one until the
+      // character was saved and reloaded. Same drift recalculateAll's closing
+      // comment warns about: anything that recalculates WITHOUT touching a
+      // weapon row leaves the quick reference stale.
+      if (typeof renderCombatQuickReference === 'function') renderCombatQuickReference(root);
     }
   };
   root.addEventListener('input', onHpTrackingChange);
