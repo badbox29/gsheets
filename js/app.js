@@ -8227,32 +8227,17 @@ function performRest(root, tab, restType) {
   val(root, 'damage_taken', newDamageTaken);
   renderCurrentHP(root);
   
-  // Clear spell "cast" status
-  const memSpells = root.querySelectorAll('.memspells-list .item');
-  memSpells.forEach(spell => {
-    spell.classList.remove('spell-cast');
-    spell.style.opacity = '1';
-    
-    // Remove strike-through from spell name
-    const nameEl = spell.querySelector('.spell-name, .title, .name');
-    if (nameEl) nameEl.style.textDecoration = 'none';
-    
-    // Reset cast button appearance
-    const castBtn = spell.querySelector('.cast-spell');
-    if (castBtn) {
-      castBtn.textContent = 'Cast';
-      castBtn.style.background = 'rgba(100,150,255,0.3)';
-      castBtn.style.borderColor = 'rgba(100,150,255,0.5)';
-    }
-  });
-  
-  // Reset spell slot "used" counters to 0
-  for (let i = 1; i <= 9; i++) {
-    val(root, `used${i}`, '0');
-  }
-  
-  // Update spell status display
-  renderMemorizedSpellStatus(root);
+  // Spell recovery deliberately does NOT happen here -- it lives behind the
+  // Study / Pray button. PHB Ch.7: "The wizard must have a clear head gained
+  // from a restful night's sleep AND THEN has to spend time studying his spell
+  // books. The amount of study time needed is 10 minutes per level of the spell
+  // being memorized." Rest is the prerequisite, not the recovery.
+  //
+  // Two bugs went out with this block. It hand-rolled the DOM changes that
+  // setMemSpellState() already performs, so the two could drift; and it cleared
+  // only .spell-cast, never .spell-lost -- so a spell disrupted mid-casting
+  // stayed lost through any amount of rest, even though Ch.7 treats both as
+  // simply needing to be re-studied.
   
   // Remove temporary conditions
   if (conditionsList) {
@@ -8363,7 +8348,10 @@ function performRest(root, tab, restType) {
               tone: actualRecovered > 0 ? 'good' : undefined, strong: true });
   rows.push({ label: 'Hit points', value: currentHP + ' \u2192 ' + newHP, strong: true });
 
-  const restNotes = ['Spells regained', 'Temporary conditions cleared'];
+  // Spell recovery is NOT part of rest. PHB Ch.7 requires a restful night's
+  // sleep AND 10 minutes of study per spell level -- rest is only the
+  // prerequisite. Claiming "Spells regained" here skipped the study entirely.
+  const restNotes = ['Temporary conditions cleared'];
   if (removesDiseased) restNotes.push('Diseased condition removed');
 
   showRestSummary(restTitles[restType] || 'Rest complete', rows, restNotes);
