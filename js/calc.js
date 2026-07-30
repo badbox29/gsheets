@@ -646,6 +646,12 @@ function renderCombatQuickReference(root) {
         // getTwoWeaponPenalties -- do not re-apply either here. A missile
         // weapon is outside the stance entirely and keeps 0.
         isOffhand: twoWeapon.active && el === twoWeapon.offRow,
+        // Needed as its OWN flag rather than inferred from a non-zero penalty.
+        // A main-hand weapon whose penalty has been cancelled to 0 -- a ranger
+        // in studded leather or lighter, or anyone with a Dexterity Reaction
+        // Adjustment of +2 or better -- still has the stance in force, and
+        // "twoWeaponPen is truthy" cannot express that.
+        isMainHand: twoWeapon.active && twoWeapon.mainRows.indexOf(el) !== -1,
         twoWeaponPen: !twoWeapon.active ? 0
           : (el === twoWeapon.offRow) ? twoWeapon.pen.off
           : (twoWeapon.mainRows.indexOf(el) !== -1) ? twoWeapon.pen.main
@@ -803,8 +809,7 @@ function renderCombatQuickReference(root) {
       // with no number needs to see the stance is in force, and a high-Dexterity
       // fighter whose main-hand penalty has been cancelled to 0 needs to know it
       // was cancelled rather than never applied.
-      if (twoWeapon.active && (weapon.isOffhand || weapon.twoWeaponPen ||
-                               twoWeapon.mainRows.indexOf(weapon.rowEl) !== -1)) {
+      if (twoWeapon.active && (weapon.isOffhand || weapon.isMainHand)) {
         const twLabel = weapon.isOffhand ? 'Off-hand' : 'Main hand';
         const twColor = twoPen ? 'var(--error, #ff6b6b)' : 'var(--muted)';
         html += ' <span style="font-size:10px;color:' + twColor + ';font-weight:400;" ' +
