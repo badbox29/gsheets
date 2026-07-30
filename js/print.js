@@ -964,11 +964,19 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
 
     weapons.push({
       name: name,
-      attacks: wAttacks || specRate || attacksPerRound || '\u2014',
+      // PHB Ch.9: the off-hand weapon makes the ONE extra attack, so its own
+      // rate is 1 -- not the character-level figure, which already includes
+      // that extra attack and belongs to the main hand. Printing the character
+      // total against every weapon implied a dual-wielder got it twice. Mirrors
+      // the same rule in renderCombatQuickReference. An explicit per-weapon
+      // value still wins, since that field exists to override this derivation.
+      attacks: wAttacks ||
+               (twoWeaponPrint.active && node === twoWeaponPrint.offRow ? '1' : null) ||
+               specRate || attacksPerRound || '\u2014',
       size: wSize || ((ref && ref['Size']) ? ref['Size'] : '\u2014'),
       type: (node.querySelector('.damage-type')?.value || '').trim() || '\u2014',
       speed: (effSpeed === null) ? '\u2014' : String(effSpeed),
-      hitDmg: `${signed(hitTotal)} / ${signed(dmgTotal)}${profTag}`,
+      hitDmg: `${signed(hitTotal)} / ${signed(dmgTotal)}${profTag}${twoTag}`,
       damage: damage || '\u2014',
       profStatus: prof.status,
       // Bow and crossbow specialists get NO hit or damage bonus -- their
