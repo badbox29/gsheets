@@ -1065,7 +1065,11 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     // bare "1" for a target of exactly 1 -- and a natural 1 always misses, so
     // that cell claimed a hit that cannot happen. See PHB Ch.9, "Impossible
     // To-Hit Numbers". Needs a legend under the table; print has no tooltips.
-    thac0Matrix.push(rollNeeded > 20 ? '20\u2217' : (rollNeeded <= 1 ? '\u2217' : rollNeeded.toString()));
+    // PLAIN ASCII ASTERISK, deliberately. U+2217 ASTERISK OPERATOR renders as a
+    // missing-glyph box in the PDF -- pdfMake's default Roboto does not carry
+    // it. Anything outside basic Latin needs checking against the embedded font
+    // before it goes in a print string.
+    thac0Matrix.push(rollNeeded > 20 ? '20*' : (rollNeeded <= 1 ? '*' : rollNeeded.toString()));
   }
 
   // === ARMOR & AMMUNITION (optional) ===
@@ -3293,6 +3297,20 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
         layout: formLayout(1, 1),
         margin: [0, 0, 0, 5]
       },
+
+      // Legend for the matrix's two symbols. Printed ONLY when a symbol is
+      // actually present -- most characters never reach either extreme, and a
+      // legend for symbols that do not appear is noise on a page that is
+      // already dense. Print has no tooltips, so this is the only explanation
+      // a player at the table gets.
+      thac0Matrix.some(v => String(v).indexOf('*') !== -1)
+        ? {
+            text: '*  hits on anything but a natural 1     20*  needs a natural 20     (PHB Ch.9, "Impossible To-Hit Numbers")',
+            fontSize: 6,
+            italics: true,
+            margin: [0, 0, 0, 5]
+          }
+        : { text: '', margin: [0, 0, 0, 0] },
       
       // === COMBAT MODIFIERS ===
       printSection('COMBAT MODIFIERS',
