@@ -5421,6 +5421,20 @@ function bindSheet(root, tab){
 	  renderTurnUndeadTable(root);
 	  updateThiefPointsDisplay(root);
 	  renderCharacterBonuses(root);
+
+      // This listener maintains its own hand-written list of renderers, and
+      // that list had DRIFTED from recalculateAll(). It was missing
+      // renderProficiencySlots -- so weapon, nonweapon and language slots kept
+      // their old budget until the character was saved and reloaded -- and also
+      // renderAttacksPerRound and renderCombatQuickReference, so a warrior
+      // reaching 7th level kept 1 attack per round and a stale quick reference.
+      //
+      // recalculateAll() is the maintained list and already ends with the quick
+      // reference, which must run last because it reads THAC0, AC and Strength
+      // adjustments the earlier calls produce. Calling it here means any future
+      // addition to it is picked up on level-up for free, instead of this list
+      // drifting again. The overlapping calls above are idempotent renders.
+      if (typeof recalculateAll === 'function') recalculateAll(root);
     });
   });
   
@@ -10347,10 +10361,10 @@ function checkDwarvenAbilities(root) {
   // Show section if character is any type of dwarf
   const isDwarf = race.includes('dwarf') || race.includes('dwarven') || race.includes('duergar');
   dwarvenSection.style.display = isDwarf ? 'block' : 'none';
-  
-  if (isDwarf) {
-    updateDwarvenSaves(root);
-  }
+
+  // Nothing further to do: the saving throw bonus dwarves and gnomes get from
+  // Constitution is applied by renderSavingThrows via RACE_SAVE_BONUSES, and
+  // shows in the save tooltips as "Race -N".
 }
 
 // === Character Bonuses & Abilities Quick Reference ===
@@ -10699,48 +10713,19 @@ function addDetectionHistory(root, ability, roll, needed, success) {
   }
 }
 
-function updateDwarvenSaves(root) {
-  if (!root) return;
-  
-  const con = parseInt(val(root, 'con')) || 10;
-  
-  // Calculate Constitution save bonus based on AD&D 2e PHB
-  let saveBonus = 0;
-  if (con >= 4 && con <= 6) saveBonus = 1;
-  else if (con >= 7 && con <= 10) saveBonus = 2;
-  else if (con >= 11 && con <= 13) saveBonus = 3;
-  else if (con >= 14 && con <= 17) saveBonus = 4;
-  else if (con >= 18) saveBonus = 5;
-  
-  // Update display
-  const conDisplay = root.querySelector('.dwarf-con-score');
-  const bonusDisplay = root.querySelector('.dwarf-save-bonus');
-  
-  if (conDisplay) conDisplay.textContent = con;
-  if (bonusDisplay) bonusDisplay.textContent = `+${saveBonus}`;
-  
-  // Get current saves and apply bonus
-  const save1 = parseInt(val(root, 'save1')) || 20;  // Paralyzation/Poison/Death
-  const save2 = parseInt(val(root, 'save2')) || 20;  // Rod/Staff/Wand
-  const save3 = parseInt(val(root, 'save3')) || 20;  // Petrification/Polymorph
-  const save4 = parseInt(val(root, 'save4')) || 20;  // Breath Weapon
-  const save5 = parseInt(val(root, 'save5')) || 20;  // Spell
-  
-  // Update save displays (bonus applies to poison, rod/staff/wand, and spell)
-  const poisonDisplay = root.querySelector('.dwarf-save-poison');
-  const rswDisplay = root.querySelector('.dwarf-save-rsw');
-  const ppDisplay = root.querySelector('.dwarf-save-pp');
-  const breathDisplay = root.querySelector('.dwarf-save-breath');
-  const spellDisplay = root.querySelector('.dwarf-save-spell');
-  
-  if (poisonDisplay) poisonDisplay.textContent = `${save1 - saveBonus}`;
-  if (rswDisplay) rswDisplay.textContent = `${save2 - saveBonus}`;
-  if (ppDisplay) ppDisplay.textContent = `${save3}`;  // No bonus
-  if (breathDisplay) breathDisplay.textContent = `${save4}`;  // No bonus
-  if (spellDisplay) spellDisplay.textContent = `${save5 - saveBonus}`;
-}
-
-
+// updateDwarvenSaves() was deleted here. It queried .dwarf-con-score,
+// .dwarf-save-bonus and five .dwarf-save-* elements, none of which have ever
+// existed in sheet_template.js -- the Dwarven Abilities section holds the
+// detection suite and nothing else. So it computed a Constitution save bonus
+// on every call and wrote it nowhere.
+//
+// Deleted rather than left dormant because it was wrong in two ways that would
+// have surfaced the moment anyone added that markup: it re-applied the CON
+// bonus to save1-save5 values that ALREADY include it (renderSavingThrows
+// applies RACE_SAVE_BONUSES), and it applied the poison bonus unconditionally.
+// That last part is right for dwarves and halflings and WRONG for gnomes --
+// PHB Ch.2 gives gnomes the bonus against wands, staves, rods and spells only.
+// The live code gets that asymmetry right; this would have quietly undone it.
 
 function renderTurnUndeadTable(root) {
   const section = root.querySelector('.turn-undead-section');
