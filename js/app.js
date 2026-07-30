@@ -8175,8 +8175,7 @@ function performRest(root, tab, restType) {
   // Calculate HP recovery based on rest type
   let hpRecovered = 0;
   let rounds = 0;
-  let removesDiseased = false;
-  
+    
   switch(restType) {
     // PHB Ch.9 gives exactly TWO natural healing rates, and both are per DAY:
     // "1 hit point per day of rest", where rest is low activity -- "nothing more
@@ -8203,7 +8202,6 @@ function performRest(root, tab, restType) {
     case 'week':
       hpRecovered = 21 + conMod;
       rounds = 10080; // 7 days × 24 hours × 60 minutes
-      removesDiseased = true;
       break;
     case 'half':
       const missingHP = damageTaken;
@@ -8296,10 +8294,12 @@ function performRest(root, tab, restType) {
         item.remove();
       }
       
-      // Remove Diseased if week rest
-      if (removesDiseased && conditionName === 'Diseased') {
-        item.remove();
-      }
+      // A week of bed rest deliberately does NOT cure disease. That behaviour
+      // was here and was UNSOURCED: Chapter 9 mentions disease nowhere across
+      // all 25 pages, and disease is a DMG topic in 2e. The PHB touches it only
+      // via paladin immunity and the cure disease spell. Removed rather than
+      // left in place, because plausible-sounding invented mechanics are harder
+      // to catch later than obviously wrong ones.
     });
     
     updateConditionDisplay(root);
@@ -8394,7 +8394,7 @@ function performRest(root, tab, restType) {
   // sleep AND 10 minutes of study per spell level -- rest is only the
   // prerequisite. Claiming "Spells regained" here skipped the study entirely.
   const restNotes = ['Temporary conditions cleared'];
-  if (removesDiseased) restNotes.push('Diseased condition removed');
+  // Diseased is NOT removed by rest. See the removal block above -- unsourced.
 
   showRestSummary(restTitles[restType] || 'Rest complete', rows, restNotes);
 }
