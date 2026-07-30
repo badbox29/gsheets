@@ -8105,9 +8105,29 @@ function performRest(root, tab, restType) {
   const damageTaken = parseInt(val(root, 'damage_taken') || 0, 10);
   const currentHP = maxHP - damageTaken;
   
-  // Get CON modifier for week rest
+  // Constitution hit point bonus, added ONCE to the 21 recovered over a full
+  // week of bed rest -- PHB Ch.9: "For each complete week of bed rest, the
+  // character can add any Constitution hit point bonus he might have to the
+  // base of 21 points (3 points per day) he regained during that week."
+  //
+  // THIS WAS BROKEN AND SILENTLY SO. It read CON_TABLE, which does not exist
+  // anywhere in the codebase, behind a `typeof CON_TABLE !== 'undefined'` guard
+  // that was therefore always false -- so conMod was permanently 0 and the week
+  // option delivered a flat 21 while advertising "+ CON bonus". A bare
+  // CON_TABLE[con] would have thrown on the first click and been fixed years
+  // ago; the guard is what hid it. Do not "defensively" guard a constant whose
+  // absence is a bug rather than a possibility.
+  //
+  // CON_HP_BONUS is [non-warrior, warrior] and the columns diverge sharply --
+  // at CON 18 a fighter has +4 where a wizard has +2. isWarriorClass() matches
+  // on substring, so hb_dpaladin and demipaladin both resolve as warriors,
+  // agreeing with the HP-per-level calculation in calc.js.
   const con = parseInt(val(root, 'con') || 10, 10);
-  const conMod = (typeof CON_TABLE !== 'undefined' && CON_TABLE[con]) ? CON_TABLE[con][0] : 0;
+  const conIsWarrior = (typeof isWarriorClass === 'function')
+    ? isWarriorClass(val(root, 'clazz') || '')
+    : false;
+  const conRow = (typeof CON_HP_BONUS !== 'undefined') ? CON_HP_BONUS[con] : null;
+  const conMod = conRow ? (conIsWarrior ? conRow[1] : conRow[0]) : 0;
   
   // Calculate HP recovery based on rest type
   let hpRecovered = 0;
