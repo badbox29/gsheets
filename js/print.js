@@ -806,6 +806,17 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   const weapons = [];
   const weaponNodes = root.querySelectorAll('.weapons-list .item');
 
+  // PHB Ch.9 two-weapon fighting, resolved ONCE for the sheet exactly as
+  // renderCombatQuickReference does it. The penalty a given weapon takes depends
+  // on which OTHER weapons are equipped, so it cannot be decided per weapon.
+  //
+  // Without this the printed sheet gave a dual-wielder's to-hit 2-4 points
+  // BETTER than the app -- in the player's favour, which is the direction nobody
+  // queries at the table. Attacks/Round was already correct here, because it
+  // reads the .combat-attacks-per-round mirror rather than recomputing.
+  const twoWeaponPrint = (typeof getTwoWeaponState === 'function')
+    ? getTwoWeaponState(root) : { active: false };
+
   // Strength row for this character, resolved once. Exceptional STR is handled
   // inside getStrengthData, which only grants the 18/xx row to warriors.
   const strDataForWeapons = (typeof getStrengthData === 'function')
@@ -905,13 +916,29 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       ? getSpecialistCombatBonuses(wspec.wtype, wspec.category, wspec.group)
       : { hit: 0, damage: 0 };
 
-    const hitTotal = (adj.toHit || 0) + hitBase + (prof.penalty || 0) + (specBonus.hit || 0);
+    // PHB Ch.9. Its own term, never folded into prof.penalty -- profTag prints
+    // that value verbatim, so hiding a stance penalty inside it would make the
+    // printed sheet misreport the proficiency rules.
+    const twoPenPrint = !twoWeaponPrint.active ? 0
+      : (node === twoWeaponPrint.offRow) ? twoWeaponPrint.pen.off
+      : (twoWeaponPrint.mainRows.indexOf(node) !== -1) ? twoWeaponPrint.pen.main
+      : 0;
+
+    const hitTotal = (adj.toHit || 0) + hitBase + (prof.penalty || 0) + (specBonus.hit || 0) + twoPenPrint;
     const dmgTotal = (adj.damage || 0) + dmgBase + (specBonus.damage || 0);
 
     // A number with no visible cause is worse than no number. The tag is what
     // makes the reduced to-hit explicable at the table, and what tells a player
     // which line to scratch out when the DM grants proficiency mid-session.
     // Specialized REPLACES proficient, since proficiency is its prerequisite.
+    // PHB Ch.9 two-weapon marker, appended rather than substituted: a weapon can
+    // be both non-proficient AND off-hand, and the two penalties stack. Printing
+    // only one of them would leave part of the to-hit unexplained.
+    const twoTag = !twoWeaponPrint.active ? ''
+      : (node === twoWeaponPrint.offRow) ? ' (off-hand)'
+      : (twoWeaponPrint.mainRows.indexOf(node) !== -1) ? ' (main hand)'
+      : '';
+
     const profTag = prof.status === 'none' ? ' (no prof)'
       : prof.status === 'related' ? ' (related)'
       : (wspec && wspec.specialized) ? ' (spec)'
