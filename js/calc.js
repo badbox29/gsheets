@@ -1784,30 +1784,65 @@ function renderAttacksPerRound(root) {
     ? getBaseAttacksPerRound(root) : { rate: '1', isWarrior: false, clazz: '', level: 0 };
 
   const override = manEl ? (manEl.value || '').trim() : '';
-  const effective = override || base.rate;
+  const beforeTwoWeapon = override || base.rate;
+
+  // PHB Ch.9 two-weapon fighting. Applied ON TOP of whatever rate is already in
+  // force, INCLUDING a manual override -- haste plus two weapons is a real
+  // combination, and the override field exists to cover what the class tables
+  // do not, which is a different thing from what Chapter 9 grants.
+  const tw = (typeof getTwoWeaponState === 'function')
+    ? getTwoWeaponState(root) : { active: false };
+  const effective = (tw.active && typeof addOneAttackPerRound === 'function')
+    ? addOneAttackPerRound(beforeTwoWeapon)
+    : beforeTwoWeapon;
+
+  // Amber for a manual override, blue for a rules-derived change. An override
+  // outranks: it is the one the player set by hand and the one they can clear.
+  const rateColor = override ? 'var(--warning, #e0a34a)'
+                  : tw.active ? 'var(--info, #6fb3d2)' : '';
 
   if (autoEl) {
     autoEl.value = effective;
-    autoEl.style.color = override ? 'var(--warning, #e0a34a)' : '';
+    autoEl.style.color = rateColor;
   }
 
   if (quickEl) {
     // Mirror only. Editing lives on the Core tab now.
     quickEl.value = effective;
     quickEl.readOnly = true;
-    quickEl.style.color = override ? 'var(--warning, #e0a34a)' : '';
-    quickEl.title = 'Melee attacks per round. Edit on the Core tab under Combat.';
+    quickEl.style.color = rateColor;
+    quickEl.title = tw.active
+      ? 'Melee attacks per round: ' + beforeTwoWeapon + ' +1 for two-weapon fighting = ' +
+        effective + ' (PHB Ch.9). Edit the base on the Core tab under Combat.'
+      : 'Melee attacks per round. Edit on the Core tab under Combat.';
   }
 
   if (!noteEl) return;
 
   // The note earns its place only when there is something to explain: an
   // override in force, or a warrior who has actually risen above 1 per round.
+  // PHB Ch.9: "one additional attack each round... regardless of the number of
+  // attacks he may normally be allowed." Printed as arithmetic rather than a
+  // bare total so a player who already folded the extra attack into a manual
+  // override can SEE the double-count instead of meeting it mid-fight.
+  const twNote = tw.active
+    ? beforeTwoWeapon + ' +1 for fighting with two weapons = ' + effective +
+      ' (PHB Ch.9 grants one extra attack, and only one, however many you already have).'
+    : '';
+
   if (override) {
     noteEl.innerHTML =
       'Manual override in effect (' + String(override).replace(/[<>&]/g, '') + '). ' +
-      'Table 15 would give ' + base.rate + ' for this character. Clear the override to return to it.';
+      'Table 15 would give ' + base.rate + ' for this character. Clear the override to return to it.' +
+      (twNote ? ' ' + twNote : '');
     noteEl.style.color = 'var(--warning, #e0a34a)';
+    noteEl.style.display = '';
+  } else if (tw.active) {
+    noteEl.textContent = twNote +
+      (base.isWarrior && base.rate !== '1'
+        ? ' Base is ' + base.rate + ' at ' + base.clazz + ' level ' + base.level + ' (PHB Table 15).'
+        : '');
+    noteEl.style.color = 'var(--info, #6fb3d2)';
     noteEl.style.display = '';
   } else if (base.isWarrior && base.rate !== '1') {
     noteEl.textContent =
