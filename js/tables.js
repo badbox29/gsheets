@@ -1959,18 +1959,32 @@ function isWarriorClass(clazz) {
 // would make paladins save WORSE.
 const PALADIN_SAVE_BONUS = -2;
 
-// HOUSE RULE (Chris, 2026-07 -- PROVISIONAL, revisit): the homebrew demi-
-// paladin does NOT get this bonus. If that turns out to be wrong, delete the
-// two exclusion lines below and nothing else changes.
+// RULED (Chris, 2026-07): the homebrew demi-paladin variants DO get this, so
+// the broad substring match below is DELIBERATE -- it catches "paladin",
+// "demipaladin" and "hb_dpaladin" alike. This function briefly carried
+// exclusions for the two homebrews; they came out once we established that
+// the Abilities tab had been listing "Divine Protection: +2 bonus to all
+// saving throws" for hb_dpaladin all along (CLASS_ABILITIES resolves by
+// substring too), and that the player had been hand-entering -2 in the
+// savemod boxes to reconcile the two. Granting it here restores the status
+// quo and lets those manual entries be deleted -- it is not a buff.
 //
-// The exclusions are load-bearing, not defensive padding: "hb_dpaladin"
-// .includes("paladin") is TRUE, and so is "demipaladin".includes("paladin"),
-// so a plain substring test silently grants the bonus to both.
+// FUTURE HOOK -- FALLEN PALADIN, not yet modelled. PHB Ch.3 makes this
+// losable, in three grades: an alignment change costs "all his special
+// powers -- sometimes only temporarily and sometimes forever"; an evil act
+// while enchanted or controlled suspends paladinhood until atonement; a
+// knowing, willing evil act ends it "immediately and irrevocably ... He is
+// ever after a fighter." A fallen paladin keeps NONE of this, and functions
+// as a fighter of the same level without weapon specialization.
+//
+// Chris's own character is in the middle case right now -- fallen by
+// alignment change, on a redemption arc -- but is deliberately being played
+// with abilities ACTIVE, so nothing is gated. When status does get modelled,
+// THIS FUNCTION is the single place to test the flag. Do not scatter that
+// check across the save, turn-undead and ability-list call sites.
 function hasPaladinSaveBonus(clazz) {
   const c = (clazz || "").trim().toLowerCase();
   if (!c) return false;
-  if (c.includes('hb_dpaladin')) return false;
-  if (c.includes('demipaladin')) return false;
   return c.includes('paladin');
 }
 
