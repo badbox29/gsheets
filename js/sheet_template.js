@@ -2253,8 +2253,9 @@ const SHEET_HTML = `
 		  <span style="font-size:13px;font-weight:600;color:var(--text);">Rest & Recovery</span>
 		</div>
 	  </div>
-	  <p style="font-size:11px;color:var(--muted);margin:0 0 8px 0;">Take a rest to recover HP, regain spells, and remove temporary conditions.</p>
+	  <p style="font-size:11px;color:var(--muted);margin:0 0 8px 0;">Rest to recover hit points and clear temporary conditions. Spell recovery is separate &mdash; PHB Ch.7 requires eight hours' rest <em>and</em> study time.</p>
 	  <button class="rest-button" style="width:100%;padding:8px;font-size:13px;font-weight:600;background:rgba(150,100,255,0.2);border:1px solid rgba(150,100,255,0.4);color:var(--accent-light);border-radius:6px;cursor:pointer;">🛌 Rest</button>
+	  <button class="study-button" style="width:100%;margin-top:6px;padding:8px;font-size:13px;font-weight:600;background:rgba(100,150,255,0.2);border:1px solid rgba(100,150,255,0.4);color:var(--accent-light);border-radius:6px;cursor:pointer;display:none;" title="Recover spells that were cast or disrupted.&#10;PHB Ch.7: a restful night's sleep, then 10 minutes of study&#10;per spell level. Priests pray instead of studying, under&#10;identical conditions.">📖 Study / Pray</button>
 	</div>
 
 	<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
