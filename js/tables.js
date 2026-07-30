@@ -3777,6 +3777,92 @@ function getTwoWeaponPenalties(root) {
 }
 
 
+// Size and weight for the off-hand legality test. The ROW WINS: .weapon-size is
+// an explicit override and .weight is what the player actually carries.
+// core_wp.json is only the fallback for rows that never set either. Note the
+// JSON stores weight as a STRING ("10 lb"), stripped to a number the same way
+// app.js:3345 does it.
+function getWeaponSizeAndWeight(rowEl) {
+  if (!rowEl) return { name: '', size: '', weight: null };
+  const q = sel => rowEl.querySelector(sel);
+  const name = ((q('.title') && q('.title').value) || '').trim();
+
+  let size   = ((q('.weapon-size') && q('.weapon-size').value) || '').trim().toUpperCase();
+  let weight = parseFloat((q('.weight') && q('.weight').value) || '');
+
+  if (!size || isNaN(weight)) {
+    const ref = (typeof lookupWeaponData === 'function') ? lookupWeaponData(name) : null;
+    if (ref) {
+      if (!size) size = String(ref.Size || '').trim().toUpperCase();
+      if (isNaN(weight)) weight = parseFloat(String(ref.Weight || '').replace(/[^0-9.]/g, ''));
+    }
+  }
+  return { name: name, size: size, weight: isNaN(weight) ? null : weight };
+}
+
+// PHB Ch.9: "The second weapon must be smaller in size and weight than the
+// character's main weapon (though a dagger can always be used as a second
+// weapon, even if the primary weapon is also a dagger)."
+//
+// BOTH conditions, not either. The dagger clause exempts from both, which is
+// why it is tested first -- a dagger against a dagger is explicitly legal even
+// though it is neither smaller nor lighter.
+//
+// Returns legal:null when the data cannot support a judgement. Per the
+// advisory-not-blocking principle, an unrecognised weapon says NOTHING rather
+// than accusing the player of an illegal choice.
+const OFFHAND_SIZE_RANK = { S: 1, M: 2, L: 3 };
+
+function isLegalOffhandWeapon(main, off) {
+  if (!main || !off) return { legal: null, reason: '' };
+
+  if (/\bdagger\b/i.test(off.name)) {
+    return { legal: true, reason: 'A dagger is always legal in the off hand (PHB Ch.9).' };
+  }
+
+  const mR = OFFHAND_SIZE_RANK[main.size], oR = OFFHAND_SIZE_RANK[off.size];
+  if (!mR || !oR || main.weight === null || off.weight === null) {
+    return { legal: null, reason: '' };
+  }
+
+  const smaller = oR < mR;
+  const lighter = off.weight < main.weight;
+  if (smaller && lighter) return { legal: true, reason: '' };
+
+  const fails = [];
+  if (!smaller) fails.push('not smaller in size (' + off.size + ' vs ' + main.size + ')');
+  if (!lighter) fails.push('not lighter (' + off.weight + ' vs ' + main.weight + ' lb)');
+  return {
+    legal: false,
+    reason: (off.name || 'The off-hand weapon') + ' is ' + fails.join(' and ') +
+            ' than ' + (main.name || 'the main weapon') + '. PHB Ch.9 requires the ' +
+            'off-hand weapon to be smaller in size AND weight, unless it is a dagger.'
+  };
+}
+
+// PHB Ch.9: "The use of two weapons enables the character to make one additional
+// attack each combat round... The character gains only ONE additional attack
+// each round, regardless of the number of attacks he may normally be allowed.
+// Thus, a warrior able to attack 3/2 ... can attack 5/2."
+//
+// Rates are strings ("1", "3/2", "2"), so the arithmetic is done in HALVES and
+// reformatted: 3/2 -> 5/2, 1 -> 2, 2 -> 3. The book's own example is the test.
+function addOneAttackPerRound(rate) {
+  const s = String(rate == null ? '1' : rate).trim();
+  const frac = s.match(/^(\d+)\s*\/\s*2$/);
+  let halves;
+  if (frac) {
+    halves = parseInt(frac[1], 10);
+  } else {
+    const whole = parseFloat(s);
+    if (!isFinite(whole) || whole <= 0) return s;   // unparseable: leave it alone
+    halves = Math.round(whole * 2);
+  }
+  halves += 2;
+  return (halves % 2 === 0) ? String(halves / 2) : (halves + '/2');
+}
+
+
 // === Weapon Speed Factor & Initiative (AD&D 2E, PHB Table 56) ===
 //
 // Table 56 lists weapon speed factor as an initiative modifier. Initiative is
