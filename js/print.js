@@ -827,6 +827,20 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   const attacksPerRound =
     (root.querySelector('.combat-attacks-per-round')?.value || '').trim();
 
+  // PER-WEAPON rate, which is NOT the character-level figure above. With two
+  // weapons in use, .combat-attacks-per-round already includes the extra attack
+  // (PHB Ch.9). That total belongs to the CHARACTER; printing it against the
+  // main-hand weapon beside the off-hand's 1 implied four attacks for a
+  // character who has three. Start from the pre-stance rate instead -- the
+  // manual override if one is set, else the Table 15 base. With no stance
+  // active this resolves to exactly the character-level figure, so nothing
+  // changes for single-weapon characters.
+  const weaponBaseAttacks =
+    (root.querySelector('[data-field="attacks_per_round_manual"]')?.value || '').trim() ||
+    ((typeof getBaseAttacksPerRound === 'function')
+      ? getBaseAttacksPerRound(root).rate : '') ||
+    attacksPerRound;
+
   // Zero is signed too: "+0 / +0" reads as a computed adjustment of none,
   // where "0 / 0" reads like a field nobody filled in.
   const signed = n => (n >= 0 ? '+' + n : String(n));
@@ -972,7 +986,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       // value still wins, since that field exists to override this derivation.
       attacks: wAttacks ||
                (twoWeaponPrint.active && node === twoWeaponPrint.offRow ? '1' : null) ||
-               specRate || attacksPerRound || '\u2014',
+               specRate || weaponBaseAttacks || '\u2014',
       size: wSize || ((ref && ref['Size']) ? ref['Size'] : '\u2014'),
       type: (node.querySelector('.damage-type')?.value || '').trim() || '\u2014',
       speed: (effSpeed === null) ? '\u2014' : String(effSpeed),
