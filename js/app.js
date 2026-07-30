@@ -8285,6 +8285,59 @@ function performRest(root, tab, restType) {
   alert(message);
 }
 
+// Styled rest summary. Takes ROWS rather than a pre-baked string, deliberately:
+// the spell-recovery split will change what rest reports, and the conditions
+// work will add lines like "Malnourished -- no HP recovered". A helper that
+// takes data survives both; one that formats a message does not.
+//   rows:  { label, value, note?, tone?: 'good'|'bad', strong?: true }
+//   notes: plain strings, listed underneath with a tick
+function showRestSummary(title, rows, notes) {
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);' +
+    'display:flex;justify-content:center;align-items:center;z-index:10000;';
+
+  const tone = t => t === 'good' ? 'var(--success, #4ade80)'
+                  : t === 'bad'  ? 'var(--error, #ff6b6b)'
+                  : 'var(--text)';
+
+  const rowHtml = (rows || []).map(r =>
+    '<div style="display:flex;justify-content:space-between;align-items:baseline;' +
+      'gap:12px;padding:3px 0;' +
+      (r.strong ? 'border-top:1px solid var(--border);margin-top:4px;padding-top:6px;' : '') +
+    '">' +
+      '<span style="font-size:12px;color:' +
+        (r.strong ? 'var(--text);font-weight:600' : 'var(--muted)') + ';">' +
+        escapeHtml(r.label) +
+        (r.note ? ' <span style="font-size:10px;color:var(--muted);">(' +
+                  escapeHtml(r.note) + ')</span>' : '') +
+      '</span>' +
+      '<span style="font-size:13px;font-weight:600;white-space:nowrap;color:' +
+        tone(r.tone) + ';">' + escapeHtml(r.value) + '</span>' +
+    '</div>'
+  ).join('');
+
+  const noteHtml = (notes && notes.length)
+    ? '<div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);">' +
+        notes.map(n => '<div style="font-size:11px;color:var(--muted);padding:1px 0;">\u2713 ' +
+          escapeHtml(n) + '</div>').join('') +
+      '</div>'
+    : '';
+
+  modal.innerHTML =
+    '<div style="background:var(--panel);padding:20px;border-radius:8px;min-width:340px;' +
+      'max-width:440px;border:1px solid var(--border);">' +
+      '<h3 style="margin-top:0;color:var(--text);">\uD83D\uDCA4 ' + escapeHtml(title) + '</h3>' +
+      rowHtml + noteHtml +
+      '<div style="margin-top:16px;text-align:right;">' +
+        '<button id="close-rest-summary" class="ghost">Close</button>' +
+      '</div>' +
+    '</div>';
+
+  document.body.appendChild(modal);
+  modal.querySelector('#close-rest-summary').onclick = () => modal.remove();
+  modal.onclick = e => { if (e.target === modal) modal.remove(); };
+}
+
 // ===== NOTES TAB ENTRY MANAGEMENT =====
 
 // Create entry node for Session Log
