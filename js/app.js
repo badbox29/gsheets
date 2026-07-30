@@ -5739,13 +5739,15 @@ function bindSheet(root, tab){
         renderEncumbrance(root);
         renderMovementRate(root);
       }
-      // Off-hand is the only weapon control that moves a CHARACTER-level
-      // number: two weapons grant one extra attack per round (PHB Ch.9), and
-      // that lives on the Core tab, mirrored into the quick reference.
-      // Everything else in this list only moves per-weapon numbers, which
-      // renderCombatQuickReference already covers.
-      if (e.target.classList.contains('weapon-offhand') &&
-          typeof renderAttacksPerRound === 'function') {
+      // Two weapons grant one extra attack per round (PHB Ch.9), a
+      // CHARACTER-level number that lives on the Core tab and is mirrored into
+      // the quick reference. This used to fire only for .weapon-offhand, which
+      // was too narrow: the stance also depends on which weapons are EQUIPPED
+      // and on their category, so equipping a second melee weapon left
+      // Attacks/Round stale at its pre-stance value while the weapon cards
+      // below it correctly showed the stance in force. Unconditional now --
+      // the function is cheap and re-derives everything it needs.
+      if (typeof renderAttacksPerRound === 'function') {
         renderAttacksPerRound(root);
       }
       renderCombatQuickReference(root);
