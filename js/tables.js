@@ -3863,6 +3863,66 @@ function addOneAttackPerRound(rate) {
 }
 
 
+// === Parrying (AD&D 2e, PHB Ch.9, Optional Rule) ===
+//
+// "In order to make himself harder to hit, a character can parry -- FORFEIT ALL
+// ACTIONS FOR THE ROUND -- he can't attack, move, or cast spells. This frees the
+// character to concentrate solely on defense. At this point, all characters but
+// warriors gain an AC bonus equal to half their level. A 6th-level wizard would
+// have a +3 bonus to his AC. A warrior gets a bonus equal to half his level plus
+// one. A 6th-level fighter would gain a +4 AC bonus."
+//
+// THIS MUST NEVER BE ADDED TO THE AC FIELD. "Note that the benefit is not a
+// perfect all-around defense, and it's not effective against rear or missile
+// attacks. It applies only to those characters attacking the defender with
+// frontal melee attacks. This optional defense has no effect against magical
+// attacks, so it wouldn't do anything to protect a character from the force of a
+// lightning bolt or fireball." An AC that silently included this would protect
+// against arrows and fireballs, which the book rules out twice in one paragraph.
+//
+// ROUNDING IS UNSTATED. Both of the book's examples are 6th level, which divides
+// evenly. Floor is used here -- a 5th-level wizard parries at +2 -- because 2e
+// rounds down by default, and rounding up would make 5th level equal to 6th.
+//
+// MULTI- AND DUAL-CLASS ARE NOT ADDRESSED by the book either. Highest level is
+// used, and the warrior +1 applies if ANY class qualifies, on the reading that a
+// character parries with his best combat training.
+function getParryBonus(root) {
+  const charType = (val(root, 'char_type') || 'single').toLowerCase();
+  let entries;
+
+  if (charType === 'multi') {
+    entries = [1, 2, 3].map(i => ({
+      clazz: val(root, 'mc_class' + i) || '',
+      level: parseInt(val(root, 'mc_level' + i) || 0, 10)
+    }));
+  } else if (charType === 'dual') {
+    entries = [
+      { clazz: val(root, 'dc_original_class') || '',
+        level: parseInt(val(root, 'dc_original_level') || 0, 10) },
+      { clazz: val(root, 'dc_new_class') || '',
+        level: parseInt(val(root, 'dc_new_level') || 0, 10) }
+    ];
+  } else {
+    entries = [{ clazz: val(root, 'clazz') || '',
+                 level: parseInt(val(root, 'level') || 1, 10) }];
+  }
+
+  entries = entries.filter(e => e.clazz && e.level > 0);
+  if (!entries.length) return null;
+
+  const level = Math.max.apply(null, entries.map(e => e.level));
+  const isWarrior = entries.some(e =>
+    typeof isWarriorClass === 'function' && isWarriorClass(e.clazz));
+
+  return {
+    level: level,
+    isWarrior: isWarrior,
+    bonus: Math.floor(level / 2) + (isWarrior ? 1 : 0)
+  };
+}
+
+
 // === Weapon Speed Factor & Initiative (AD&D 2E, PHB Table 56) ===
 //
 // Table 56 lists weapon speed factor as an initiative modifier. Initiative is
@@ -3907,6 +3967,17 @@ function getEffectiveWeaponSpeed(speed, magicBonus) {
 //                 to silence a warning a DM has already waived.
 // Entries with no category are treated as 'phb'.
 const OPTIONAL_RULES = {
+  parrying: {
+    label:   'Parrying (forfeit the round for an AC bonus)',
+    detail:  'PHB Ch.9. A character may parry -- forfeiting ALL actions for the round, ' +
+             'no attack, no movement, no spells -- to gain an AC bonus of half his level, ' +
+             'or half his level plus one for warriors. The bonus applies ONLY against ' +
+             'frontal melee attacks: it does nothing against rear attacks, missiles, or ' +
+             'magic. Shown as a separate figure in the Combat Quick Reference and never ' +
+             'folded into Armor Class, because AC applies to everything.',
+    category: 'phb',
+    default: false
+  },
   weaponSpeedInitiative: {
     label:   'Weapon speed factor modifies initiative',
     detail:  'PHB Table 56. Weapon speed is added to the initiative roll (low roll wins). ' +
