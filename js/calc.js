@@ -805,20 +805,28 @@ function renderCombatQuickReference(root) {
       } else if (weapon.profStatus === 'none' && profPen) {
         html += ' <span style="font-size:10px;color:var(--error, #ff6b6b);font-weight:400;">· Not Proficient ' + profPen + '</span>';
       }
-      // PHB Ch.9. Shown even when the penalty is 0 -- a ranger reading "Off-hand"
-      // with no number needs to see the stance is in force, and a high-Dexterity
-      // fighter whose main-hand penalty has been cancelled to 0 needs to know it
-      // was cancelled rather than never applied.
+      // PHB Ch.9. On its OWN LINE, not in the header badge row. Sharing that row
+      // with the proficiency badge made two unrelated penalties read as one --
+      // a "Not Proficient -2" sitting beside an "Off-hand -3" invited the reader
+      // to merge them, and the two come from different rules that stack.
+      //
+      // Shown even when the penalty is 0: a ranger in light armour, or anyone
+      // whose Reaction Adjustment cancelled it, still HAS the stance in force
+      // and needs to see that it was cancelled rather than never applied.
+      let twLine = '';
       if (twoWeapon.active && (weapon.isOffhand || weapon.isMainHand)) {
         const twLabel = weapon.isOffhand ? 'Off-hand' : 'Main hand';
         const twColor = twoPen ? 'var(--error, #ff6b6b)' : 'var(--muted)';
-        html += ' <span style="font-size:10px;color:' + twColor + ';font-weight:400;" ' +
-                'title="Two-weapon fighting (PHB Ch.9).&#10;' +
-                'Base -2 main hand / -4 off hand, modified by your Dexterity&#10;' +
-                'Reaction Adjustment (' + (twoWeapon.pen.reactionAdj >= 0 ? '+' : '') +
-                twoWeapon.pen.reactionAdj + '), which can reach 0 but never a bonus.' +
-                (twoWeapon.pen.exempt ? '&#10;&#10;' + twoWeapon.pen.reason : '') + '">· ' +
-                twLabel + (twoPen ? ' ' + twoPen : '') + '</span>';
+        twLine = '<span style="font-size:11px;color:' + twColor + ';" ' +
+                 'title="Two-weapon fighting (PHB Ch.9).&#10;' +
+                 'Base -2 main hand / -4 off hand, modified by your Dexterity&#10;' +
+                 'Reaction Adjustment (' + (twoWeapon.pen.reactionAdj >= 0 ? '+' : '') +
+                 twoWeapon.pen.reactionAdj + '), which can reach 0 but never a bonus.&#10;' +
+                 'This is SEPARATE from any non-proficiency penalty and the two&#10;' +
+                 'stack -- Dexterity buys off the stance, never the proficiency.' +
+                 (twoWeapon.pen.exempt ? '&#10;&#10;' + twoWeapon.pen.reason : '') + '">' +
+                 'Two-weapon: ' + twLabel + (twoPen ? ' ' + twoPen : ' (no penalty)') +
+                 '</span><br>';
       }
       if (weapon.effSpeed !== null && weapon.effSpeed !== undefined &&
           (typeof isOptionalRule !== 'function' || isOptionalRule('weaponSpeedInitiative'))) {
@@ -826,6 +834,7 @@ function renderCombatQuickReference(root) {
       }
       html += '</div>';
       html += '<div style="margin-left:10px;color:var(--text);">';
+      html += twLine;
 
       if (showMelee) {
         const toHit = adj.toHit + hitBase + profPen + twoPen;
