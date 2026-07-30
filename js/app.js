@@ -8100,15 +8100,15 @@ function openRestDialog(root, tab) {
         '</button>' +
         '<button class="rest-option" data-rest-type="week" style="padding:12px;text-align:left;background:var(--glass);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:background 0.2s;">' +
           '<div style="font-weight:600;color:var(--text);margin-bottom:4px;">7 Days (Week of Bed Rest)</div>' +
-          '<div style="font-size:11px;color:var(--muted);">Recover 21 HP + CON bonus, regain spells, clear temporary conditions, remove Diseased</div>' +
+          '<div style="font-size:11px;color:var(--muted);">Recover 21 HP + CON bonus, clear temporary conditions, remove Diseased</div>' +
         '</button>' +
         '<button class="rest-option" data-rest-type="half" style="padding:12px;text-align:left;background:var(--glass);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:background 0.2s;">' +
           '<div style="font-weight:600;color:var(--text);margin-bottom:4px;">Rest to Half HP</div>' +
-          '<div style="font-size:11px;color:var(--muted);">Recover 50% of missing HP, regain spells, clear temporary conditions</div>' +
+          '<div style="font-size:11px;color:var(--muted);">Recover 50% of missing HP, clear temporary conditions</div>' +
         '</button>' +
         '<button class="rest-option" data-rest-type="full" style="padding:12px;text-align:left;background:var(--glass);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:background 0.2s;">' +
           '<div style="font-weight:600;color:var(--text);margin-bottom:4px;">Rest to Full HP</div>' +
-          '<div style="font-size:11px;color:var(--muted);">Recover all HP, regain spells, clear temporary conditions</div>' +
+          '<div style="font-size:11px;color:var(--muted);">Recover all HP, clear temporary conditions</div>' +
         '</button>' +
       '</div>' +
       '<div style="margin-top:16px;text-align:right;">' +
