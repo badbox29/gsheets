@@ -8335,6 +8335,18 @@ function performRest(root, tab, restType) {
     }
   }
 
+  // Named explicitly rather than leaving a bare "Recovered 0". A player who
+  // rests a week and gets nothing will assume the tool is broken unless it says
+  // which condition did it -- and the fix is one click away in the tracker.
+  if (healingBlocker) {
+    rows.push({
+      label: healingBlocker.name,
+      value: 'no HP recovered',
+      note: 'PHB Ch.9 -- natural healing only; magical healing still works',
+      tone: 'bad'
+    });
+  }
+
   if (totalHPLoss > 0) {
     rows.push({ label: 'Lost to conditions', value: '-' + totalHPLoss, tone: 'bad' });
   }
