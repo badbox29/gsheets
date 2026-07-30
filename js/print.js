@@ -1061,7 +1061,11 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   const thac0Matrix = [];
   for (let targetAC = 10; targetAC >= -10; targetAC--) {
     const rollNeeded = thac0Num - targetAC;
-    thac0Matrix.push(rollNeeded > 20 ? '20+' : (rollNeeded < 1 ? '1' : rollNeeded.toString()));
+    // Matches renderAttackMatrix. The old floor was `< 1`, which still printed a
+    // bare "1" for a target of exactly 1 -- and a natural 1 always misses, so
+    // that cell claimed a hit that cannot happen. See PHB Ch.9, "Impossible
+    // To-Hit Numbers". Needs a legend under the table; print has no tooltips.
+    thac0Matrix.push(rollNeeded > 20 ? '20\u2217' : (rollNeeded <= 1 ? '\u2217' : rollNeeded.toString()));
   }
 
   // === ARMOR & AMMUNITION (optional) ===
