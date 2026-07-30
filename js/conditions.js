@@ -49,6 +49,25 @@ const CONDITIONS_DB = [
     description: 'Character moves and attacks at double rate. Gains extra attack per round. Movement rate doubled. +2 to AC. (Beneficial condition)'
   },
   {
+    name: 'Malnourished and Sleep-Deprived',
+    // FIRST STRUCTURED FIELD IN THIS DATABASE. Everything else here is prose,
+    // which means real mechanics sit trapped in strings where nothing can read
+    // them -- Stunned's "attackers gain +4 to hit" and Held's "automatically
+    // hit in melee" are PHB Table 51 verbatim and are currently decoration.
+    // Add structured fields alongside the description, never replacing it.
+    //
+    // PHB Ch.9, natural healing: "In both cases above, the character is assumed
+    // to be getting adequate food, water, and sleep. If these are lacking, the
+    // character does not regain any hit points that day."
+    //
+    // SCOPE: NATURAL healing only. That clause sits under the 1-per-day and
+    // 3-per-day rest rates; magical healing is a separate section of the
+    // chapter and is unaffected. A cure light wounds works fine on a starving
+    // character, and this flag must never be read by potion or spell healing.
+    blocksNaturalHealing: true,
+    description: 'Lacking adequate food, water, or sleep. The character regains NO hit points from natural rest of any duration (PHB Ch.9). Magical healing is unaffected. Clear this once the character is properly fed, watered and rested.'
+  },
+  {
     name: 'Fatigued',
     description: 'Character is exhausted from overexertion or lack of rest. -2 penalty to attack rolls, damage rolls, and ability checks. Movement rate reduced by 1/3.'
   },
