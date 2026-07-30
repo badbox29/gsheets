@@ -554,6 +554,36 @@ function renderSavingThrows(root) {
     }
   }
 
+  // Class -- PHB Ch.3, Paladin: "A paladin receives a +2 bonus to all saving
+  // throws." All five categories, every level. hasPaladinSaveBonus() excludes
+  // hb_dpaladin and demipaladin on purpose; see the comment block in tables.js.
+  let saveClassNames;
+  if (charType === 'multi') {
+    // Defensive only -- paladins are human-only and multi-classing is
+    // demihuman-only, so no legal combination reaches this branch.
+    saveClassNames = ['mc_class1', 'mc_class2', 'mc_class3'].map(f => val(root, f));
+  } else if (charType === 'dual') {
+    // A dormant class grants none of its abilities, so it grants no bonus.
+    const dcDormant = (root._isDualClassDormant !== undefined)
+      ? root._isDualClassDormant
+      : (parseInt(val(root, 'dc_new_level') || 1, 10) <= parseInt(val(root, 'dc_original_level') || 0, 10));
+    saveClassNames = dcDormant
+      ? [val(root, 'dc_new_class')]
+      : [val(root, 'dc_original_class'), val(root, 'dc_new_class')];
+  } else {
+    saveClassNames = [clazz];
+  }
+
+  if (saveClassNames.some(c => hasPaladinSaveBonus(c))) {
+    for (let i = 0; i < 5; i++) {
+      totalAdj[i] += PALADIN_SAVE_BONUS;
+      // Note text carries BOTH numbers on purpose. The stored delta is -2
+      // because these adjust the target; the book's wording is +2 to the roll.
+      // Showing only one of the two reads as a bug from whichever side you look.
+      notes[i].push('Paladin -2 (+2 to roll)');
+    }
+  }
+
   // User mods
   for (let i=0; i<5; i++) {
     const modField = root.querySelector(`[data-field="savemod${i+1}"]`);
