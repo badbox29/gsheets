@@ -529,12 +529,40 @@ function renderCombatQuickReference(root) {
   if (acBreakEl) {
     if (!root._acBreakdown && typeof renderArmorClass === 'function') renderArmorClass(root);
     const acLinesOut = root._acBreakdown || [];
-    acBreakEl.innerHTML = acLinesOut.map(l => {
+    let acHtml = acLinesOut.map(l => {
       // Violet for enchantment, matching the Magical row on weapon entries --
       // one colour language across the whole panel.
       const colour = (l.kind === 'magic') ? 'var(--magic, #a98fd0)' : 'var(--muted)';
       return '<div style="color:' + colour + ';">' + escapeHtml(l.text) + '</div>';
     }).join('');
+
+    // Parrying (PHB Ch.9, optional rule). Printed BESIDE Armor Class, never
+    // added to it. The book rules the bonus out against rear attacks, missiles
+    // and magic in the same paragraph that grants it, so an AC carrying this
+    // silently would protect against arrows and fireballs.
+    //
+    // Shown as the resulting AC rather than a bare modifier: a player deciding
+    // whether to give up his whole round wants the number he would defend at,
+    // not arithmetic to do under pressure.
+    if (typeof isOptionalRule === 'function' && isOptionalRule('parrying')) {
+      const parry = (typeof getParryBonus === 'function') ? getParryBonus(root) : null;
+      if (parry && parry.bonus > 0) {
+        const parriedAC = (parseInt(ac, 10) || 10) - parry.bonus;
+        const tip = 'Parrying (PHB Ch.9, optional rule).&#10;' +
+          'Forfeits ALL actions for the round -- no attack, no movement,&#10;' +
+          'no spells. Bonus is half your level' +
+          (parry.isWarrior ? ' plus one for warriors' : '') +
+          ', so level ' + parry.level + ' gives ' + parry.bonus + '.&#10;&#10;' +
+          'Applies ONLY to frontal melee attacks. No effect against rear&#10;' +
+          'attacks, missile fire, or magic -- it will not help against a&#10;' +
+          'lightning bolt or fireball.';
+        acHtml += '<div style="color:var(--info, #6fb3d2);" title="' + tip + '">' +
+                  'Parrying: AC ' + parriedAC + ' (-' + parry.bonus +
+                  ') vs frontal melee only</div>';
+      }
+    }
+
+    acBreakEl.innerHTML = acHtml;
   }
 
   if (moveEl) moveEl.textContent = moveRate;
