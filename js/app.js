@@ -1828,11 +1828,23 @@ function makeArmorNode(data={}, onChange){
     // --- Identity row: always visible, mirrors the weapon card ---
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
       '<div style="width:60px;text-align:center;">Equipped</div>' +
-      '<div style="flex:1;">Armor</div>' +
-      '<div style="width:148px;"></div>' +
+      '<div style="width:60px;text-align:center;">Off-hand</div>' +
+      '<div style="flex:1;">Weapon</div>' +
+      '<div style="width:148px;"></div>' + // Space for Details + Remove buttons
     '</div>' +
-    '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
+   '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
       '<input type="checkbox" class="equipped" '+(data.equipped?'checked':'')+' style="width:60px;margin:auto;">' +
+      // PHB Ch.9. Deliberately on the IDENTITY row, not in the collapsed
+      // Details section: this carries a -2/-4 attack penalty, and a penalty
+      // hidden behind a disclosure is a penalty players forget they are taking.
+      '<input type="checkbox" class="weapon-offhand" '+(data.offhand?'checked':'')+
+        ' title="Mark this weapon as the OFF-HAND weapon (PHB Ch.9, Attacking&#10;' +
+        'With Two Weapons). Grants ONE extra attack per round, no matter how&#10;' +
+        'many you already have. Applies -4 here and -2 to the main-hand weapon,&#10;' +
+        'both modified by your Dexterity Reaction Adjustment -- which can bring&#10;' +
+        'them to 0 but never to a bonus. Rangers in studded leather or lighter&#10;' +
+        'are exempt. You cannot use a shield while fighting with two weapons."' +
+        ' style="width:60px;margin:auto;">' +'<input type="checkbox" class="equipped" '+(data.equipped?'checked':'')+' style="width:60px;margin:auto;">' +
       // Name and badge share ONE flex:1 cell, matching the header's "Armor"
       // column. The badge sits at the right edge of that column without pushing
       // Notes out of alignment -- a wide badge squeezes the input instead of
@@ -3965,6 +3977,10 @@ function collectSheet(root){
       dmgAdj: (n.querySelector('.weapon-dmg-adj') && n.querySelector('.weapon-dmg-adj').value) || '',
       attacks: (n.querySelector('.weapon-attacks') && n.querySelector('.weapon-attacks').value) || '',
       size: (n.querySelector('.weapon-size') && n.querySelector('.weapon-size').value) || '',
+      // PHB Ch.9 two-weapon fighting. Stored ON THE WEAPON rather than as one
+      // character-level "off-hand weapon" pointer, so renaming or reordering
+      // the list cannot orphan it.
+      offhand: !!(n.querySelector('.weapon-offhand') || {}).checked,
       range: (n.querySelector('.weapon-range') && n.querySelector('.weapon-range').value) || '',
       // The ammunition this weapon fires, stored BY NAME -- that is the identity
       // shown on the ammo card. A rename breaks the link, which the dropdown
@@ -5723,6 +5739,15 @@ function bindSheet(root, tab){
       if (e.target.classList.contains('weight')) {
         renderEncumbrance(root);
         renderMovementRate(root);
+      }
+      // Off-hand is the only weapon control that moves a CHARACTER-level
+      // number: two weapons grant one extra attack per round (PHB Ch.9), and
+      // that lives on the Core tab, mirrored into the quick reference.
+      // Everything else in this list only moves per-weapon numbers, which
+      // renderCombatQuickReference already covers.
+      if (e.target.classList.contains('weapon-offhand') &&
+          typeof renderAttacksPerRound === 'function') {
+        renderAttacksPerRound(root);
       }
       renderCombatQuickReference(root);
     });
