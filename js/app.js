@@ -983,8 +983,24 @@ function renderAttackMatrix(root) {
   const AC_MIN = -10;
   const AC_MAX = 10;
 
-  // Helper for displayed "needed" values (d20 space)
+  // PHB Ch.9, "Impossible To-Hit Numbers": "An attack may be so difficult it
+  // requires a roll greater than 20, or so ridiculously easy it can be made on a
+  // roll less than 1. In both cases, an attack roll is still required!" And:
+  // "a roll of 20 is always considered a hit and a roll of 1 is always a miss."
+  //
+  // So BOTH ends of the table are real states with real rules, not errors to be
+  // clamped away -- and a cell reading "1" was a lie, because a natural 1 never
+  // hits no matter what the target is.
+  //
+  // '*'   = hits on anything but a natural 1  (target 1 or lower)
+  // '20*' = needs a natural 20                (target above 20)
+  //
+  // The raw arithmetic is kept separate from the display: the base THAC0 stays
+  // negative because the whole matrix is computed FROM it. Flooring THAC0 at 1
+  // to make the AC 0 column agree would break AC -10, turning a correct 6 into
+  // an 11 -- tidying the trivial end of the table by breaking the useful end.
   const clampD20 = n => Math.max(1, Math.min(20, n));
+  const displayD20 = n => (n <= 1 ? '\u2217' : (n > 20 ? '20\u2217' : String(n)));
 
   // --- Determine base THAC0 (handles single / multi / dual) ---
   let thac0Base;
@@ -1092,12 +1108,21 @@ function renderAttackMatrix(root) {
     for (let ac = AC_MIN; ac <= AC_MAX; ac++) {
       const rawBase = thac0Base  - ac;
       const rawMode = thac0Mode  - ac;
-      const needed  = clampD20(rawMode);
+      const needed  = displayD20(rawMode);
+
+      // The tooltip carries the RAW number as well as the symbol. A player who
+      // sees '*' should still be able to find out that his true to-hit number
+      // against AC 0 is -4, which is the same figure the gold header shows.
+      const explain = rawMode <= 1
+        ? `Hits on anything but a natural 1 (true number ${rawMode})`
+        : (rawMode > 20
+            ? `Needs a natural 20 (true number ${rawMode})`
+            : `Need to roll: ${rawMode}`);
 
       const tooltip = `AC ${ac} — ${label}
-Need to roll: ${needed}
+${explain}
 THAC0 ${thac0Mode} (base ${thac0Base}, ${adjLabel} ${adjSign})
-Unmodified: ${clampD20(rawBase)} (raw ${rawBase})`;
+Unmodified: ${displayD20(rawBase)} (raw ${rawBase})`;
 
       row += `<td title="${tooltip}">${needed}</td>`;
     }
