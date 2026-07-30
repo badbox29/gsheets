@@ -1000,7 +1000,10 @@ function renderAttackMatrix(root) {
   // to make the AC 0 column agree would break AC -10, turning a correct 6 into
   // an 11 -- tidying the trivial end of the table by breaking the useful end.
   const clampD20 = n => Math.max(1, Math.min(20, n));
-  const displayD20 = n => (n <= 1 ? '\u2217' : (n > 20 ? '20\u2217' : String(n)));
+  // Plain ASCII asterisk to match print.js, where U+2217 renders as a missing
+  // glyph. Screen and printout showing different symbols for the same rule is
+  // worse than either symbol being slightly less pretty.
+  const displayD20 = n => (n <= 1 ? '*' : (n > 20 ? '20*' : String(n)));
 
   // --- Determine base THAC0 (handles single / multi / dual) ---
   let thac0Base;
