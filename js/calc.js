@@ -724,6 +724,11 @@ function renderCombatQuickReference(root) {
       // PHB Table 34: attack penalty for wielding a weapon you are not
       // proficient with. Related weapons cost half, rounded up.
       const profPen = weapon.profPenalty || 0;
+      // PHB Ch.9 two-weapon fighting, kept SEPARATE from profPen rather than
+      // folded into it -- profPen is printed verbatim in the Related and Not
+      // Proficient badges above, so adding a stance penalty to it would make
+      // those badges lie about the proficiency rules.
+      const twoPen = weapon.twoWeaponPen || 0;
 
       // How Strength applies to THIS weapon (PHB). Hurled weapons get the full
       // Strength row; ordinary bows are capped at plain 18; crossbows, slings
@@ -760,10 +765,26 @@ function renderCombatQuickReference(root) {
       if (weapon.category) {
         html += ' <span style="font-size:10px;color:var(--muted);font-weight:400;">' + weapon.category + '</span>';
       }
-      if (weapon.profStatus === 'related') {
+      if (twoWeapon.active && (weapon.isOffhand || twoPen)) {
         html += ' <span style="font-size:10px;color:var(--muted);font-weight:400;">· Related ' + profPen + '</span>';
       } else if (weapon.profStatus === 'none' && profPen) {
         html += ' <span style="font-size:10px;color:var(--error, #ff6b6b);font-weight:400;">· Not Proficient ' + profPen + '</span>';
+      }
+      // PHB Ch.9. Shown even when the penalty is 0 -- a ranger reading "Off-hand"
+      // with no number needs to see the stance is in force, and a high-Dexterity
+      // fighter whose main-hand penalty has been cancelled to 0 needs to know it
+      // was cancelled rather than never applied.
+      if (twoWeapon.active && (weapon.isOffhand || weapon.twoWeaponPen ||
+                               twoWeapon.mainRows.indexOf(weapon.rowEl) !== -1)) {
+        const twLabel = weapon.isOffhand ? 'Off-hand' : 'Main hand';
+        const twColor = twoPen ? 'var(--error, #ff6b6b)' : 'var(--muted)';
+        html += ' <span style="font-size:10px;color:' + twColor + ';font-weight:400;" ' +
+                'title="Two-weapon fighting (PHB Ch.9).&#10;' +
+                'Base -2 main hand / -4 off hand, modified by your Dexterity&#10;' +
+                'Reaction Adjustment (' + (twoWeapon.pen.reactionAdj >= 0 ? '+' : '') +
+                twoWeapon.pen.reactionAdj + '), which can reach 0 but never a bonus.' +
+                (twoWeapon.pen.exempt ? '&#10;&#10;' + twoWeapon.pen.reason : '') + '">· ' +
+                twLabel + (twoPen ? ' ' + twoPen : '') + '</span>';
       }
       if (weapon.effSpeed !== null && weapon.effSpeed !== undefined &&
           (typeof isOptionalRule !== 'function' || isOptionalRule('weaponSpeedInitiative'))) {
@@ -773,7 +794,7 @@ function renderCombatQuickReference(root) {
       html += '<div style="margin-left:10px;color:var(--text);">';
 
       if (showMelee) {
-        const toHit = adj.toHit + hitBase + profPen;
+        const toHit = adj.toHit + hitBase + profPen + twoPen;
         const dmg   = adj.damage + dmgBase;
         html += 'Melee: d20' + sign(toHit) + ' → ' + weapon.damageSM + dmgSign(dmg) +
                 ' / ' + weapon.damageL + dmgSign(dmg) + '<br>';
@@ -783,7 +804,7 @@ function renderCombatQuickReference(root) {
         // PHB: "Attack roll and damage modifiers for Strength are always used
         // when an attack is made with a hurled weapon." DEX missile adjustment
         // applies too -- they stack.
-        const toHit = dexMissile + adj.toHit + hitBase + profPen;
+        const toHit = dexMissile + adj.toHit + hitBase + profPen + twoPen;
         const dmg   = adj.damage + dmgBase;
         html += 'Thrown: d20' + sign(toHit) + ' → ' + weapon.damageSM + dmgSign(dmg) +
                 ' / ' + weapon.damageL + dmgSign(dmg) + '<br>';
