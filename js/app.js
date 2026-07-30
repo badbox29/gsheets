@@ -8268,21 +8268,61 @@ function performRest(root, tab, restType) {
   markUnsaved(tab, false, root);
   showSidebarAutosaved(root);
   
-  // Show success message
-  let message = `Rest complete!\n\n`;
-  message += `HP Change: ${currentHP} → ${currentHP + netHPChange}\n`;
+  // Report the CAPPED ACTUAL, not the raw arithmetic. newDamageTaken is already
+  // clamped with Math.max(0, ...), but the old message printed hpRecovered and
+  // currentHP + netHPChange unclamped -- so a week's rest that overhealed would
+  // claim "30 -> 55" on a character whose maximum is 49. Deriving both numbers
+  // from newDamageTaken means the summary cannot disagree with the sheet.
+  const actualRecovered = damageTaken - newDamageTaken;
+  const newHP = maxHP - newDamageTaken;
+
+  const restTitles = {
+    night:    "Night's rest",
+    full_bed: 'Full bed rest',
+    week:     'Week of bed rest',
+    half:     'Rest to half HP',
+    full:     'Rest to full HP'
+  };
+
+  const rows = [];
+
+  // PHB Ch.9: "For each complete week of bed rest, the character can add any
+  // Constitution hit point bonus he might have to the base of 21 points (3
+  // points per day)." Itemised so the Constitution column in use is visible --
+  // a warrior and a wizard at the same score get different numbers, and a
+  // silently wrong column is exactly what went unnoticed here for years.
+  if (restType === 'week') {
+    rows.push({ label: 'Base recovery', value: '21', note: '3 HP x 7 days' });
+    if (conMod) {
+      rows.push({
+        label: 'Constitution bonus',
+        value: (conMod > 0 ? '+' : '') + conMod,
+        note: (conIsWarrior ? 'warrior' : 'non-warrior') + ' column, CON ' + con,
+        tone: conMod > 0 ? 'good' : 'bad'
+      });
+    }
+  }
+
   if (totalHPLoss > 0) {
-    message += `(Recovered ${hpRecovered} HP, lost ${totalHPLoss} HP to conditions)\n`;
-  } else {
-    message += `(Recovered ${hpRecovered} HP)\n`;
+    rows.push({ label: 'Lost to conditions', value: '-' + totalHPLoss, tone: 'bad' });
   }
-  message += `Spells regained\n`;
-  message += `Temporary conditions cleared\n`;
-  if (removesDiseased) {
-    message += `Diseased condition removed`;
+
+  if (actualRecovered < netHPChange) {
+    rows.push({
+      label: 'Capped at maximum HP',
+      value: '-' + (netHPChange - actualRecovered),
+      tone: 'bad'
+    });
   }
-  
-  alert(message);
+
+  rows.push({ label: 'Recovered', value: String(actualRecovered),
+              tone: actualRecovered > 0 ? 'good' : undefined, strong: true });
+  rows.push({ label: 'Hit points', value: currentHP + ' \u2192 ' + newHP, strong: true });
+
+  const restNotes = ['Spells regained', 'Temporary conditions cleared'];
+  if (removesDiseased) restNotes.push('Diseased condition removed');
+
+  showRestSummary(restTitles[restType] || 'Rest complete', rows, restNotes);
 }
 
 // Styled rest summary. Takes ROWS rather than a pre-baked string, deliberately:
