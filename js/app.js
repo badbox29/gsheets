@@ -653,11 +653,36 @@ function renderSavingThrows(root) {
 // getClassCategory does exact-match first, then longest-key-first substring, so
 // homebrew and compound names resolve and "demipaladin" cannot be eaten by
 // "paladin". CLASS_CATEGORIES' four values map directly onto THAC0_TABLES' keys.
+// PHB Table 53 is printed for levels 1-20. Above that, Table 54 gives each
+// group's Improvement Rate and the progression simply continues -- Warrior 1
+// point per level, Rogue 1 per 2, Priest 2 per 3, Wizard 1 per 3.
+//
+// The old code clamped at 20, so a 25th-level fighter shared a 20th-level
+// fighter's THAC0. That is not a printed ceiling; it is where the table stopped
+// printing. THAC0 is allowed to go to 0 and negative -- a 21st-level warrior
+// hits AC 0 on a 0, which is correct and reachable with any attack bonus.
+const THAC0_IMPROVEMENT = {
+  warrior: { points: 1, perLevels: 1 },
+  rogue:   { points: 1, perLevels: 2 },
+  priest:  { points: 2, perLevels: 3 },
+  wizard:  { points: 1, perLevels: 3 }
+};
+
 function getThac0(clazz, level) {
-  level = Math.min(Math.max(parseInt(level, 10) || 1, 1), 20); // clamp 1-20
+  level = Math.max(parseInt(level, 10) || 1, 1);
   const cat = (typeof getClassCategory === 'function') ? getClassCategory(clazz) : null;
   const table = cat && THAC0_TABLES[cat];
-  return table ? table[level - 1] : 20;   // unrecognised class -> unmodified 20
+  if (!table) return 20;                    // unrecognised class -> unmodified 20
+
+  if (level <= table.length) return table[level - 1];
+
+  // Extend past the printed table using Table 54's rate. Floor division on the
+  // levels gained means a Rogue at 21 keeps 20th's value and improves at 22,
+  // matching how the printed table steps rather than averaging across it.
+  const rate = THAC0_IMPROVEMENT[cat];
+  if (!rate) return table[table.length - 1];
+  const gained = Math.floor((level - table.length) / rate.perLevels) * rate.points;
+  return table[table.length - 1] - gained;
 }
 
 // Visible companion to the per-slot tooltips: explains why a priest's 6th- or
@@ -9950,7 +9975,12 @@ function bindDiceRollers(root) {
             initLines.push('Other modifiers (PHB Table 55):');
             initLines.push('hasted -2, slowed +2, higher ground -1,');
             initLines.push('set vs charge -2, waiting +1,');
-            initLines.push('wading +2 / deep water +4, hindered +3.');
+            initLines.push('wading +2 / deep water +4, hindered +3,');
+            // Table 55's largest modifier, and the one most often forgotten:
+            // "situations in which the party is in a completely different
+            // environment (swimming underwater without the aid of a ring of
+            // free action, for example)".
+            initLines.push('foreign environment +6.');
 
             modifiers = initLines.join('\n');
           }
