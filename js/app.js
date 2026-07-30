@@ -8410,6 +8410,143 @@ function showRestSummary(title, rows, notes) {
   modal.onclick = e => { if (e.target === modal) modal.remove(); };
 }
 
+// === Spell Recovery (PHB Ch.7) ===
+//
+// Separate from rest by design. "The wizard must have a clear head gained from
+// a restful night's sleep AND THEN has to spend time studying his spell books.
+// The amount of study time needed is 10 minutes per level of the spell being
+// memorized." Rest is the prerequisite; study is the recovery.
+//
+// PARTIAL RECOVERY IS SUPPORTED, and that is the RAW reading. Study time is
+// stated PER SPELL -- "10 minutes per level of THE SPELL being memorized" -- and
+// the chapter's own advice that a wizard may "cast a spell just to cleanse his
+// mind for another spell" only works if slots are filled individually. The book
+// never requires an all-or-nothing session, so neither does this.
+//
+// Priests are identical: "The conditions for praying are identical to those
+// needed for the wizard's studying." Only the wording changes.
+//
+// Both 'cast' and 'lost' spells are recoverable -- each simply needs re-studying.
+// The old rest code cleared only 'cast', stranding disrupted spells forever.
+const STUDY_MINUTES_PER_LEVEL = 10;
+
+function formatStudyTime(mins) {
+  if (mins < 60) return mins + ' minute' + (mins === 1 ? '' : 's');
+  const h = Math.floor(mins / 60), r = mins % 60;
+  return h + ' hour' + (h === 1 ? '' : 's') + (r ? ' ' + r + ' min' : '');
+}
+
+function openStudyModal(root, tab) {
+  const items = Array.from(root.querySelectorAll('.memspells-list .item'));
+  const spent = items.filter(el =>
+    typeof getMemSpellState === 'function' && getMemSpellState(el) !== 'available');
+
+  const clazz = (val(root, 'clazz') || '').toLowerCase();
+  const isPriest = (typeof isPriestClass === 'function')
+    ? isPriestClass(clazz) : /cleric|druid|priest/.test(clazz);
+  const verb = isPriest ? 'Pray' : 'Study';
+  const icon = isPriest ? '\uD83D\uDE4F' : '\uD83D\uDCD6';
+
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);' +
+    'display:flex;justify-content:center;align-items:center;z-index:10000;';
+  const close = () => modal.remove();
+
+  if (!spent.length) {
+    modal.innerHTML =
+      '<div style="background:var(--panel);padding:20px;border-radius:8px;min-width:320px;' +
+        'max-width:420px;border:1px solid var(--border);">' +
+        '<h3 style="margin-top:0;color:var(--text);">' + icon + ' ' + verb + '</h3>' +
+        '<p style="font-size:12px;color:var(--muted);">Every memorized spell is still ' +
+        'available. Nothing to recover.</p>' +
+        '<div style="margin-top:16px;text-align:right;">' +
+          '<button id="study-close" class="ghost">Close</button></div></div>';
+    document.body.appendChild(modal);
+    modal.querySelector('#study-close').onclick = close;
+    modal.onclick = e => { if (e.target === modal) close(); };
+    return;
+  }
+
+  const rows = spent.map((el, i) => {
+    const name = (el.querySelector('.title') || {}).value || 'Unnamed spell';
+    const lvl = Math.max(1, parseInt((el.querySelector('.level') || {}).value, 10) || 1);
+    return { el: el, idx: i, name: name, lvl: lvl,
+             state: getMemSpellState(el), mins: lvl * STUDY_MINUTES_PER_LEVEL };
+  }).sort((a, b) => a.lvl - b.lvl || a.name.localeCompare(b.name));
+
+  const rowHtml = rows.map(r =>
+    '<label style="display:flex;align-items:center;gap:8px;padding:4px 0;cursor:pointer;">' +
+      '<input type="checkbox" class="study-pick" data-idx="' + r.idx + '" checked>' +
+      '<span style="flex:1;font-size:12px;color:var(--text);">' + escapeHtml(r.name) +
+        ' <span style="color:var(--muted);font-size:10px;">L' + r.lvl + '</span> ' +
+        (r.state === 'lost'
+          ? '<span style="color:var(--error, #ff6b6b);font-size:10px;">disrupted</span>'
+          : '<span style="color:var(--muted);font-size:10px;">cast</span>') +
+      '</span>' +
+      '<span style="font-size:11px;color:var(--muted);white-space:nowrap;">' + r.mins + ' min</span>' +
+    '</label>').join('');
+
+  modal.innerHTML =
+    '<div style="background:var(--panel);padding:20px;border-radius:8px;min-width:380px;' +
+      'max-width:480px;max-height:80vh;overflow:auto;border:1px solid var(--border);">' +
+      '<h3 style="margin-top:0;color:var(--text);">' + icon + ' ' + verb + '</h3>' +
+      '<p style="font-size:11px;color:var(--muted);margin:0 0 10px 0;">PHB Ch.7: after a ' +
+        'restful night\u2019s sleep, ' + (isPriest ? 'prayer' : 'study') + ' takes 10 minutes ' +
+        'per spell level. Recover as many or as few as you like.</p>' +
+      '<div style="border-top:1px solid var(--border);padding-top:6px;">' + rowHtml + '</div>' +
+      '<div id="study-total" style="margin-top:10px;padding-top:8px;' +
+        'border-top:1px solid var(--border);display:flex;justify-content:space-between;' +
+        'font-size:12px;font-weight:600;color:var(--text);"></div>' +
+      '<div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end;">' +
+        '<button id="study-cancel" class="ghost">Cancel</button>' +
+        '<button id="study-go">' + verb + '</button></div></div>';
+
+  document.body.appendChild(modal);
+
+  const picks = () => Array.from(modal.querySelectorAll('.study-pick'));
+  const chosenRows = () => picks().filter(c => c.checked)
+    .map(c => rows.filter(r => r.idx === parseInt(c.dataset.idx, 10))[0]);
+
+  const refresh = () => {
+    const chosen = chosenRows();
+    const mins = chosen.reduce((s, r) => s + r.mins, 0);
+    modal.querySelector('#study-total').innerHTML =
+      '<span>' + chosen.length + ' spell' + (chosen.length === 1 ? '' : 's') + '</span>' +
+      '<span>' + (mins ? formatStudyTime(mins) : '\u2014') + '</span>';
+    modal.querySelector('#study-go').disabled = (chosen.length === 0);
+  };
+  picks().forEach(c => { c.onchange = refresh; });
+  refresh();
+
+  modal.querySelector('#study-cancel').onclick = close;
+  modal.onclick = e => { if (e.target === modal) close(); };
+
+  modal.querySelector('#study-go').onclick = () => {
+    const chosen = chosenRows();
+    const mins = chosen.reduce((s, r) => s + r.mins, 0);
+    chosen.forEach(r => setMemSpellState(r.el, 'available'));
+    if (typeof renderMemorizedSpellStatus === 'function') renderMemorizedSpellStatus(root);
+    close();
+
+    // Autosave, matching performRest -- these modals commit immediately rather
+    // than leaving the sheet dirty, so a closed tab cannot lose the recovery.
+    const data = collectSheet(root);
+    const key = getTabSaveKey(tab) ||
+                ((data.meta.name && data.meta.name.trim()) || 'Unnamed');
+    const map = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
+    map[key] = data;
+    if (writeCharacterMap(map, 'auto-save after studying')) {
+      markUnsaved(tab, false, root);
+      showSidebarAutosaved(root);
+    }
+
+    showRestSummary(isPriest ? 'Prayer complete' : 'Study complete', [
+      { label: 'Spells recovered', value: String(chosen.length), tone: 'good', strong: true },
+      { label: 'Time spent', value: formatStudyTime(mins), strong: true }
+    ], ['Requires a restful night\u2019s sleep beforehand (PHB Ch.7)']);
+  };
+}
+
 // ===== NOTES TAB ENTRY MANAGEMENT =====
 
 // Create entry node for Session Log
