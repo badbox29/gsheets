@@ -403,6 +403,76 @@ function resolveWeaponProficiency(root, rowEl) {
   return { status, penalty };
 }
 
+// PHB Ch.9, Attacking With Two Weapons -- the character-level state, resolved
+// once per render.
+//
+// WHICH WEAPON IS WHICH: the off-hand is whichever EQUIPPED row has the
+// checkbox ticked; every other equipped MELEE row is a main-hand weapon.
+// Missile weapons are excluded deliberately -- you cannot draw a bow with a
+// weapon in each hand, and a melee stance penalty on a bow would be wrong twice
+// over.
+//
+// Returns { active: false } when the stance is not in force, so every caller
+// can bail on a single test.
+function getTwoWeaponState(root) {
+  const isEquipped = el => {
+    const c = el.querySelector('.equipped');
+    return !!(c && c.checked);
+  };
+  // A blank category is treated as melee: an un-migrated row is far more likely
+  // to be a sword than a bow, and the alternative silently drops the penalty.
+  const isMelee = el => {
+    const cat = ((el.querySelector('.weapon-category') || {}).value || '').toLowerCase();
+    return !cat || cat.indexOf('melee') !== -1;
+  };
+
+  const equipped = qsa(root, '.weapons-list .item').filter(isEquipped);
+  const offRow = equipped.filter(el => {
+    const c = el.querySelector('.weapon-offhand');
+    return !!(c && c.checked);
+  })[0] || null;
+
+  if (!offRow) return { active: false };
+
+  const mainRows = equipped.filter(el => el !== offRow && isMelee(el));
+
+  const pen = (typeof getTwoWeaponPenalties === 'function')
+    ? getTwoWeaponPenalties(root)
+    : { main: 0, off: 0, exempt: false, reactionAdj: 0, reason: '' };
+
+  // Legality is judged against the FIRST main-hand weapon. With more than one
+  // equipped the choice is arbitrary, which is worth saying out loud rather
+  // than silently picking one and pronouncing on it -- hence ambiguousMain.
+  const sizeOf = el => (typeof getWeaponSizeAndWeight === 'function')
+    ? getWeaponSizeAndWeight(el) : null;
+  const main = mainRows.length ? sizeOf(mainRows[0]) : null;
+  const off  = sizeOf(offRow);
+  const legality = (main && off && typeof isLegalOffhandWeapon === 'function')
+    ? isLegalOffhandWeapon(main, off)
+    : { legal: null, reason: '' };
+
+  // "Nor can the character use a shield, unless it is kept strapped onto his
+  // back" -- i.e. not in use. An EQUIPPED shield contradicts the stance.
+  // .armor-slot holds the wear location with .armor-type as the legacy
+  // fallback, matching how renderAC reads it.
+  const shieldNames = Array.from(root.querySelectorAll('.armor-list .item'))
+    .filter(isEquipped)
+    .filter(item => (((item.querySelector('.armor-slot') ||
+                       item.querySelector('.armor-type') || {}).value) || 'Armor') === 'Shield')
+    .map(item => (((item.querySelector('.title') || {}).value) || 'shield').trim());
+
+  return {
+    active: true,
+    pen: pen,
+    offRow: offRow,
+    mainRows: mainRows,
+    noMainHand: mainRows.length === 0,
+    ambiguousMain: mainRows.length > 1,
+    legality: legality,
+    shieldNames: shieldNames
+  };
+}
+
 // ===== Combat Quick Reference =====
 function renderCombatQuickReference(root) {
   // Get ability scores
