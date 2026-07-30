@@ -7755,6 +7755,22 @@ function setDefaultTabHandlers(defaultTab){
 
 // === Condition/Status Tracker Functions ===
 
+// Returns the active condition that blocks natural healing, or null.
+//
+// Reads the STRUCTURED flag off CONDITIONS_DB rather than matching on a name,
+// so adding another blocking condition later is a data change with no code
+// change -- the same shape the Table 51 work will need for attacker modifiers.
+// Returns the whole definition, not a boolean, so callers can quote its name
+// and description back to the player instead of failing silently.
+function getNaturalHealingBlocker(root) {
+  const list = root && root.querySelector('.conditions-list');
+  if (!list || typeof CONDITIONS_DB === 'undefined') return null;
+  const active = Array.from(list.querySelectorAll('.condition-item'))
+    .map(item => item.dataset.condition || '');
+  return CONDITIONS_DB.find(c =>
+    c.blocksNaturalHealing && active.indexOf(c.name) !== -1) || null;
+}
+
 function makeConditionNode(data = {}, onChange) {
   const el = document.createElement('div');
   el.className = 'condition-item';
@@ -8159,6 +8175,22 @@ function performRest(root, tab, restType) {
       break;
   }
   
+  // PHB Ch.9, natural healing: "the character is assumed to be getting adequate
+  // food, water, and sleep. If these are lacking, the character does not regain
+  // any hit points that day."
+  //
+  // Applies to EVERY tier including Rest to Half/Full -- those are natural rest
+  // compressed for convenience, not a different kind of recovery. Magical
+  // healing is a separate section of the chapter and must never consult this.
+  //
+  // Zeroed AFTER the switch rather than skipping it, so `rounds` still carries
+  // its value: a poisoned character bleeding 1 HP per round over a week loses
+  // that HP whether or not he is also starving. Being unable to heal does not
+  // make you immune to damage.
+  const healingBlocker = (typeof getNaturalHealingBlocker === 'function')
+    ? getNaturalHealingBlocker(root) : null;
+  if (healingBlocker) hpRecovered = 0;
+
   // Calculate HP loss from conditions during rest
   let totalHPLoss = 0;
   const conditionsList = root.querySelector('.conditions-list');
