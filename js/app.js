@@ -1670,6 +1670,20 @@ function toggleSpellbookSection(root) {
                         clazz.includes('evoker');
   
   spellbookSection.style.display = isSpellcaster ? 'block' : 'none';
+
+  // The sidebar Study / Pray button follows the same test. Kept here rather than
+  // given its own copy of that class list: two lists of caster classes WILL
+  // drift, and a fighter offered a Study button or a necromancer denied one are
+  // both silent failures nobody reports.
+  const studyBtn = root.querySelector('.study-button');
+  if (studyBtn) {
+    studyBtn.style.display = isSpellcaster ? 'block' : 'none';
+    // Priests pray; the conditions are identical (PHB Ch.7).
+    const isPriestCaster = clazz.includes('cleric') || clazz.includes('druid') ||
+                           clazz.includes('priest') || clazz.includes('shaman') ||
+                           clazz.includes('paladin');
+    studyBtn.textContent = isPriestCaster ? '\uD83D\uDE4F Pray' : '\uD83D\uDCD6 Study';
+  }
 }
 function makeItemNode(data={}, onChange){
   const el = document.createElement('div');
@@ -6836,6 +6850,15 @@ function bindSheet(root, tab){
   qs(root, '.rest-button').onclick = () => {
     openRestDialog(root, tab);
   };
+
+  // Study / Pray button. Visibility is owned by toggleSpellbookSection(), which
+  // already holds the spellcaster test -- do not re-derive it here.
+  const studyBtn = qs(root, '.study-button');
+  if (studyBtn) {
+    studyBtn.onclick = () => {
+      openStudyModal(root, tab);
+    };
+  }
 
   // Ensure sidebar hidden at init for a fresh sheet
   hideSidebarMessage(root);
