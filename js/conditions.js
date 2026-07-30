@@ -10,7 +10,7 @@ const CONDITIONS_DB = [
   },
   {
     name: 'Diseased',
-    description: 'Character is afflicted with disease. Typically causes ability score penalties, HP loss over time, and may be contagious. Requires cure disease spell or extended rest with proper care.'
+    description: 'Character is afflicted with disease. Typically causes ability score penalties, HP loss over time, and may be contagious. Removed by a cure disease spell, or by a paladin\u2019s laying on of hands. Duration and severity are the DM\u2019s call \u2014 2e handles disease in the DMG, not the PHB.'
   },
   {
     name: 'Cursed',
