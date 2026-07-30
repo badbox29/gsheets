@@ -697,8 +697,13 @@ function renderCombatQuickReference(root) {
         warn.push(escapeHtml(twoWeapon.legality.reason));
       }
       if (twoWeapon.ambiguousMain) {
-        warn.push('More than one main-hand melee weapon is equipped. The size and weight ' +
-                  'check was made against the first of them.');
+        // Worded to be true in BOTH cases. The old text claimed "the size and
+        // weight check was made against the first of them", which is a lie when
+        // the off-hand is a dagger -- isLegalOffhandWeapon() returns on the
+        // dagger clause before comparing anything.
+        warn.push('More than one main-hand melee weapon is equipped. Only one can be ' +
+                  'wielded alongside the off-hand weapon; any legality check above used ' +
+                  'the first of them.');
       }
       if (warn.length) {
         html += '<div style="margin-bottom:6px;padding:4px 6px;' +
