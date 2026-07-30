@@ -547,7 +547,11 @@ function renderCombatQuickReference(root) {
     if (typeof isOptionalRule === 'function' && isOptionalRule('parrying')) {
       const parry = (typeof getParryBonus === 'function') ? getParryBonus(root) : null;
       if (parry && parry.bonus > 0) {
-        const parriedAC = (parseInt(ac, 10) || 10) - parry.bonus;
+        // NaN check, NOT `|| 10`. AC 0 is falsy, so the old fallback replaced a
+        // legitimate AC of 0 with 10 -- and AC 0 is 2e's reference point, the
+        // single most likely value to hit. A blank field still falls back to 10.
+        const acNum = parseInt(ac, 10);
+        const parriedAC = (isNaN(acNum) ? 10 : acNum) - parry.bonus;
         const tip = 'Parrying (PHB Ch.9, optional rule).&#10;' +
           'Forfeits ALL actions for the round -- no attack, no movement,&#10;' +
           'no spells. Bonus is half your level' +
