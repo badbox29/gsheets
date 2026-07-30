@@ -984,6 +984,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       // total against every weapon implied a dual-wielder got it twice. Mirrors
       // the same rule in renderCombatQuickReference. An explicit per-weapon
       // value still wins, since that field exists to override this derivation.
+      equipped: !!(node.querySelector('.equipped') || {}).checked,
       attacks: wAttacks ||
                (twoWeaponPrint.active && node === twoWeaponPrint.offRow ? '1' : null) ||
                specRate || weaponBaseAttacks || '\u2014',
@@ -3381,9 +3382,16 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       {
         table: {
           headerRows: 1,
-          widths: ['25%', '6%', '6%', '8%', '8%', '12%', '17%', '18%'],
+          // Eq column added at 4%, taken from Weapon (25->23) and Range (18->16)
+          // so the row still totals 100%. This table prints EVERY weapon, not
+          // just equipped ones, and without this column a reader cannot tell
+          // which two of three listed weapons are actually in hand -- which
+          // matters now that two-weapon fighting makes equipped state carry
+          // mechanical weight in the #AT and Hit/Dmg columns.
+          widths: ['4%', '23%', '6%', '6%', '8%', '8%', '12%', '17%', '16%'],
           body: [
             [
+              { text: 'Eq', fontSize: 6, bold: true, alignment: 'center' },
               { text: 'Weapon', fontSize: 6, bold: true },
               { text: '#AT', fontSize: 6, bold: true, alignment: 'center' },
               { text: 'Size', fontSize: 6, bold: true, alignment: 'center' },
@@ -3394,6 +3402,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
               { text: 'Range/Special', fontSize: 6, bold: true }
             ],
             ...weapons.slice(0, 8).map(w => [
+              { text: w.equipped ? '\u2713' : '', fontSize: 8, alignment: 'center' },
               { text: w.name, fontSize: 7 },
               { text: w.attacks, fontSize: 7, alignment: 'center' },
               { text: w.size, fontSize: 7, alignment: 'center' },
@@ -3412,7 +3421,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
               { text: w.damage, fontSize: 7, alignment: 'center' },
               { text: w.range, fontSize: 6 }
             ]),
-            ...blankRows('weapons', 8)
+            ...blankRows('weapons', 9)
           ]
         },
         layout: gridLayout,
