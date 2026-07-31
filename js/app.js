@@ -7862,11 +7862,15 @@ function makeConditionNode(data = {}, onChange) {
   // Check if this condition can cause HP loss
   const canLoseHP = ['Poisoned', 'Diseased', 'Dying'].includes(conditionName);
   
-  // Only show +1/-1 buttons if there's a duration
-  const durationButtons = duration ?
-    '<button class="duration-dec" style="padding:2px 6px;font-size:11px;margin-left:4px;">-1</button>' +
-    '<button class="duration-inc" style="padding:2px 6px;font-size:11px;">+1</button>'
-    : '';
+  // Always shown. A condition with no duration is the common case at the table
+  // -- the DM says "you're stunned", then a round later says how long -- and
+  // gating these on an existing duration made that unreachable.
+  //
+  // -1 clamps at 0 and blanks the display, so 0 reads as "indefinite" rather
+  // than "expires now". The nag banner treats it the same way.
+  const durationButtons =
+    '<button class="duration-dec" title="Reduce duration by one round (stops at 0 = indefinite)" style="padding:2px 6px;font-size:11px;margin-left:4px;">-1</button>' +
+    '<button class="duration-inc" title="Add a round to this condition\'s duration" style="padding:2px 6px;font-size:11px;">+1</button>';
   
   // Show HP loss field for applicable conditions
   const hpLossField = canLoseHP ?
@@ -7952,8 +7956,16 @@ function makeConditionNode(data = {}, onChange) {
     };
   }
   
-  // Duration adjustment buttons
-  if (duration) {
+  // Duration adjustment buttons -- ALWAYS wired, not just when a duration was
+  // set at creation. Previously both the buttons and these handlers were gated
+  // on `duration`, so a condition added without one could never be given one:
+  // the round counter would tick past it forever. Combat is exactly when a DM
+  // says "make that three rounds".
+  const bumpNag = () => {
+    const r = el.closest('.sheet-container');
+    if (r && typeof updateConditionDisplay === 'function') updateConditionDisplay(r);
+  };
+  {
     el.querySelector('.duration-dec').onclick = (e) => {
       e.stopPropagation();
       let currentDuration = parseInt(el.dataset.duration, 10) || 0;
