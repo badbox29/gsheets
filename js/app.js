@@ -4756,7 +4756,15 @@ function loadSheet(root, data){
   }
   
   const magicItems = qs(root,'.magic-items-list'); magicItems.innerHTML='';
-  (data.magicItems||[]).forEach(m=>magicItems.appendChild(makeMagicItemNode(m)));
+  // The onChange was MISSING here. Every other list passes one, so on a
+  // character loaded from storage an edited magic item never marked the sheet
+  // unsaved -- the change was silently lost on the next load. It also has to
+  // re-run encumbrance and movement now that magic items carry weight.
+  (data.magicItems||[]).forEach(m=>magicItems.appendChild(makeMagicItemNode(m, ()=>{
+    if(tab) markUnsaved(tab,true,root);
+    renderEncumbrance(root);
+    renderMovementRate(root);
+  })));
   
   // Mounts
   const mounts = qs(root,'.mounts-list'); 
