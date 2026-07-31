@@ -4261,6 +4261,20 @@ async function renderEquipmentBrowser(root) {
     if (item.Weight && item.Weight !== 'N/A') details.push(`Weight: ${item.Weight}`);
     if (item.Cost && item.Cost !== 'N/A') details.push(`Cost: ${item.Cost}`);
     if (item.Capacity && item.Capacity !== 'N/A') details.push(`Capacity: ${item.Capacity}`);
+
+    // PHB Table 63, read LIVE from LIGHT_SOURCES. core_equipment.json
+    // deliberately does NOT restate radius or burning time -- one source of
+    // truth, per the anchor rule, so these can never drift apart.
+    //
+    // null for anything Table 63 omits (Lamp, Common and Tinder Box), and
+    // those correctly show no light line at all rather than an invented one.
+    const ls63 = (typeof lightSourceByName === 'function')
+      ? lightSourceByName(item['Item Name']) : null;
+    if (ls63) {
+      details.push(ls63.beamWidth
+        ? `Light: ${ls63.radius} ft. beam, ${ls63.beamWidth} ft. wide at far end, burns ${ls63.burn} (Table 63)`
+        : `Light: ${ls63.radius} ft. radius, burns ${ls63.burn} (Table 63)`);
+    }
     
     if (details.length > 0) {
       infoHTML += `<div style="font-size:11px;color:var(--muted);margin-top:2px;">${details.join(' | ')}</div>`;
@@ -8207,4 +8221,121 @@ function renderMovementRate(root) {
   if (!wearingArmor) {
     swimmingEl.style.color = movementColor;
   }
+}
+
+// ===========================================================================
+// VISION AND LIGHT (PHB Ch.13)
+//
+// PURE REFERENCE. These read nothing from the character and write nothing to
+// it. No data-field is touched, so collectSheet never sees the panel, nothing
+// is saved or loaded, and it does not print.
+//
+// Do NOT wire these into recalculateAll. The content is identical for every
+// character and does not change when a stat does; re-rendering two tables on
+// every keystroke would be pure waste. renderVisionLightPanel is called once
+// per sheet from bindSheet.
+// ===========================================================================
+
+function renderVisibilityRanges(root) {
+  const host = root.querySelector('.visibility-ranges-table');
+  if (!host || typeof VISIBILITY_RANGES === 'undefined') return;
+
+  const sel  = root.querySelector('.visibility-size');
+  const size = (sel && sel.value) || 'M';
+
+  const cols = [['movement','Movement'], ['spotted','Spotted'],
+                ['type','Type'], ['id','ID'], ['detail','Detail']];
+
+  const th = 'padding:4px 8px;border-bottom:1px solid var(--border);font-size:11px;';
+  const td = 'padding:3px 8px;text-align:right;font-variant-numeric:tabular-nums;';
+
+  let html = '<table style="width:100%;border-collapse:collapse;"><thead><tr>' +
+             '<th style="text-align:left;' + th + '">Condition</th>';
+  cols.forEach(c => {
+    html += '<th style="text-align:right;' + th + '">' + escapeHtml(c[1]) + '</th>';
+  });
+  html += '</tr></thead><tbody>';
+
+  VISIBILITY_RANGES.forEach(row => {
+    const r = (typeof visibilityRowForSize === 'function')
+      ? visibilityRowForSize(row, size) : row;
+    html += '<tr><td style="padding:3px 8px;">' + escapeHtml(r.condition) + '</td>';
+    // 'en-US' explicitly, not the browser's locale. This is a transcription of
+    // an English table and 1,500 must not render as 1.500 for anybody.
+    cols.forEach(c => {
+      html += '<td style="' + td + '">' + r[c[0]].toLocaleString('en-US') + '</td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+
+  // The column definitions. The chapter spells these out and a bare grid of
+  // numbers loses them entirely.
+  html += '<div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6;">' +
+    '<strong>Movement</strong> a moving figure &middot; ' +
+    '<strong>Spotted</strong> moving or still &middot; ' +
+    '<strong>Type</strong> species, race, weapons &middot; ' +
+    '<strong>ID</strong> the individual &middot; ' +
+    '<strong>Detail</strong> small actions</div>';
+
+  host.innerHTML = html;
+}
+
+function renderLightSources(root) {
+  const host = root.querySelector('.light-sources-table');
+  if (!host || typeof LIGHT_SOURCES === 'undefined') return;
+
+  const th = 'padding:4px 8px;border-bottom:1px solid var(--border);font-size:11px;';
+
+  let html = '<table style="width:100%;border-collapse:collapse;"><thead><tr>' +
+    '<th style="text-align:left;'  + th + '">Source</th>' +
+    '<th style="text-align:right;' + th + '">Radius</th>' +
+    '<th style="text-align:left;'  + th + '">Burning time</th>' +
+    '</tr></thead><tbody>';
+
+  LIGHT_SOURCES.forEach(s => {
+    // Table 63 italicises the two spells and marks the beams and the optional
+    // rule with its own asterisks. Both markers are derived from the flags, so
+    // adding a charged entry later cannot leave a footnote orphaned.
+    const nm   = s.magical ? '<em>' + escapeHtml(s.name) + '</em>' : escapeHtml(s.name);
+    const mark = s.beamWidth ? '*' : (s.optional ? '**' : '');
+    html += '<tr><td style="padding:3px 8px;">' + nm + mark + '</td>' +
+      '<td style="padding:3px 8px;text-align:right;font-variant-numeric:tabular-nums;">' +
+        s.radius + ' ft.</td>' +
+      '<td style="padding:3px 8px;">' + escapeHtml(s.burn) + '</td></tr>';
+  });
+  html += '</tbody></table>';
+
+  // Cone widths read from the data rather than retyped, so they cannot drift.
+  const beams = LIGHT_SOURCES.filter(s => s.beamWidth)
+    .map(s => escapeHtml(s.name.toLowerCase()) + ' ' + s.beamWidth + ' ft. wide')
+    .join(', ');
+
+  html += '<div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6;">' +
+    '<strong>*</strong> Not a radius but a cone-shaped beam, measured at its far end: ' +
+      beams + '.<br>' +
+    '<strong>**</strong> Magical weapons shed light only if your DM allows this optional rule.' +
+    '</div>';
+
+  host.innerHTML = html;
+}
+
+// Single entry point, so app.js needs exactly one call.
+function renderVisionLightPanel(root) {
+  const sel = root.querySelector('.visibility-size');
+
+  // Populate and bind ONCE. The guard flag matters: re-binding on every render
+  // stacks listeners, and every stacked listener re-renders -- the classic way
+  // one <select> change turns into eight.
+  if (sel && typeof VISIBILITY_SIZES !== 'undefined' && !sel._vlBound) {
+    sel.innerHTML = VISIBILITY_SIZES.map(s =>
+      '<option value="' + escapeHtml(s.key) + '">' + escapeHtml(s.label) + '</option>'
+    ).join('');
+    sel.value = 'M';
+    sel.addEventListener('change', () => renderVisibilityRanges(root));
+    sel._vlBound = true;
+  }
+
+  renderVisibilityRanges(root);
+  renderLightSources(root);
 }
