@@ -2596,10 +2596,23 @@ function renderArmorClass(root) {
   }
   
   if (acVsMissilesEl) {
-    // vs Missiles AC: same as normal for now (could add missile-specific modifiers later)
+    // NOT UNFINISHED. Nothing in the PHB makes missile AC differ from normal
+    // AC, and the old "same as normal for now" comment implied a calculation
+    // was still owed. Chapter 9's cover and concealment rules -- the obvious
+    // candidate -- penalise the ATTACKER'S ROLL and never touch the defender's
+    // Armor Class, so there is nothing here to compute. The field survives
+    // because the printed TSR record sheet has the column.
     const vsMissilesAC = finalAC;
     acVsMissilesEl.value = vsMissilesAC;
-    acVsMissilesEl.title = "AC against ranged attacks\nCurrently same as normal AC";
+    acVsMissilesEl.title =
+      'AC against missile attacks: ' + vsMissilesAC + '\n' +
+      'The same as your normal Armor Class, and that is correct.\n\n' +
+      'Cover and concealment (PHB Table 59) do NOT improve your AC -- they\n' +
+      'penalise the shooter\'s attack roll, which the DM applies to his own\n' +
+      'die. Cover also grants a bonus to YOUR saving throws against spells\n' +
+      'causing physical damage.\n\n' +
+      'The table is on the Tools tab under Cover & Concealment.\n' +
+      '(Lower is better)';
   }
 
   // While Casting AC -- PHB Ch.7: "During the round in which the spell is cast,
@@ -8354,4 +8367,28 @@ function renderVisionLightPanel(root) {
 
   renderVisibilityRanges(root);
   renderLightSources(root);
+}
+
+// Cover and concealment (PHB Table 59). Same shape as the vision panel: pure
+// reference, no character state, rendered once from bindSheet.
+function renderCoverReference(root) {
+  const host = root.querySelector('.cover-modifiers-table');
+  if (!host || typeof COVER_MODIFIERS === 'undefined') return;
+
+  const th = 'padding:4px 8px;border-bottom:1px solid var(--border);font-size:11px;';
+  const td = 'padding:3px 8px;text-align:right;font-variant-numeric:tabular-nums;';
+
+  let html = '<table style="width:100%;border-collapse:collapse;"><thead><tr>' +
+    '<th style="text-align:left;'  + th + '">Target is</th>' +
+    '<th style="text-align:right;' + th + '">Cover</th>' +
+    '<th style="text-align:right;' + th + '">Concealment</th>' +
+    '</tr></thead><tbody>';
+
+  COVER_MODIFIERS.forEach(r => {
+    html += '<tr><td style="padding:3px 8px;">' + r.hidden + '% hidden</td>' +
+      '<td style="' + td + '">' + r.cover + '</td>' +
+      '<td style="' + td + '">' + r.concealment + '</td></tr>';
+  });
+
+  host.innerHTML = html + '</tbody></table>';
 }
