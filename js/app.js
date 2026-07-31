@@ -7894,10 +7894,26 @@ function makeConditionNode(data = {}, onChange) {
       ';">' + condEffects.join(' \u00b7 ') + '</div>'
     : '';
 
+  // Beneficial conditions get a green card. Hasted and Invisible sitting in a
+  // red alarm-coloured panel actively miscommunicated -- the effects text was
+  // already green, which just made the card contradict itself.
+  const benef  = !!(condDef && condDef.beneficial);
+  const cardBg = benef ? 'rgba(110,220,150,0.08)' : 'rgba(255,100,100,0.1)';
+  const cardBd = benef ? 'rgba(110,220,150,0.30)' : 'rgba(255,100,100,0.3)';
+  const btnBg  = benef ? 'rgba(110,220,150,0.15)' : 'rgba(255,100,100,0.2)';
+  const btnBd  = benef ? 'rgba(110,220,150,0.35)' : 'rgba(255,100,100,0.4)';
+  const btnFg  = benef ? 'var(--success, #4ade80)' : '#ff6b6b';
+
   el.innerHTML = 
-    '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;background:rgba(255,100,100,0.1);border:1px solid rgba(255,100,100,0.3);border-radius:4px;margin-bottom:6px;cursor:pointer;">' +
-      '<div style="flex:1;">' +
-        '<div style="display:flex;align-items:center;gap:8px;">' +
+    // align-items:flex-start, NOT center -- with two lines of effects text a
+    // vertically centred button drifts away from the name it belongs to.
+    // The gap and the button's flex:0 0 auto stop the text crowding it.
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:6px 8px;background:' + cardBg + ';border:1px solid ' + cardBd + ';border-radius:4px;margin-bottom:6px;cursor:pointer;">' +
+      // min-width:0 is the actual fix. A flex item defaults to min-width:auto,
+      // so it refuses to shrink below its own text and overruns its neighbour
+      // instead of wrapping. Without this the effects line sat under the button.
+      '<div style="flex:1;min-width:0;">' +
+        '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
           '<strong class="condition-name" style="color:var(--text);">' + conditionName + '</strong>' +
           '<span class="condition-duration duration-display" style="font-size:11px;color:var(--muted);">' + durationText + '</span>' +
           durationButtons +
@@ -7905,7 +7921,7 @@ function makeConditionNode(data = {}, onChange) {
         effectsLine +
         hpLossField +
       '</div>' +
-      '<button class="condition-remove" style="padding:4px 8px;font-size:11px;background:rgba(255,100,100,0.2);border:1px solid rgba(255,100,100,0.4);color:#ff6b6b;border-radius:4px;cursor:pointer;">Remove</button>' +
+      '<button class="condition-remove" style="flex:0 0 auto;padding:4px 8px;font-size:11px;background:' + btnBg + ';border:1px solid ' + btnBd + ';color:' + btnFg + ';border-radius:4px;cursor:pointer;">Remove</button>' +
     '</div>' +
     '<div class="condition-description" style="display:none;padding:8px;background:var(--glass);border:1px solid var(--border);border-radius:4px;margin-top:-6px;margin-bottom:6px;font-size:12px;color:var(--muted);line-height:1.4;"></div>';
   
