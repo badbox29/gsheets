@@ -1641,7 +1641,7 @@ const SHEET_HTML = `
           <h3>Follower Capacity</h3>
           <div class="row">
             <div class="col"><label>Reaction Adj.</label><input data-field="reaction_adj" type="text" readonly></div>
-            <div class="col"><label>Max Followers</label><input data-field="henchmen_max" type="number" readonly></div>
+            <div class="col"><label>Max Henchmen</label><input data-field="henchmen_max" type="number" readonly title="PHB Table 6. Charisma sets the maximum number of HENCHMEN, not followers &mdash; followers come from class level and a stronghold (PHB Ch.3). Chapter 12 makes this a LIFETIME limit: retired, deceased and missing henchmen all count against it."></div>
             <div class="col"><label>Loyalty Base</label><input data-field="loyalty_base" type="number" readonly></div>
           </div>
         </section>
@@ -1708,9 +1708,14 @@ const SHEET_HTML = `
 			</div>
 		  </div>
 		  <p style="font-size:12px;color:var(--muted);margin-bottom:8px;">
-			Loyal companions who adventure with you
+			Loyal companions who adventure with you. Charisma caps how many you may have
+			in a <em>lifetime</em> &mdash; retired, deceased and missing all still count
+			(PHB Ch.12).
 		  </p>
+		  <div class="henchman-limit-message" style="display:none;margin-bottom:8px;padding:8px;border-radius:4px;font-size:12px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
 		  <div class="list henchmen-list"></div>
+		  <label style="font-size:11px;color:var(--muted);display:block;margin:10px 0 2px;">Henchmen Notes</label>
+		  <textarea data-field="henchmen_notes" placeholder="Obligations owed, ransom terms, who answers to whom..." style="width:100%;min-height:60px;resize:vertical;"></textarea>
 		</section>
 
         <hr style="margin:24px 0;border:none;border-top:1px solid #555;opacity:0.4;">
@@ -1728,7 +1733,12 @@ const SHEET_HTML = `
 			</div>
 		  </div>
 		  <p style="font-size:12px;color:var(--muted);margin-bottom:8px;">
-			Mercenaries, specialists, staff, and temporary help
+			Mercenaries, specialists, staff, and temporary help. Set each card's
+			<strong>Category</strong>: a <strong>hireling</strong> serves a stated term or a named task
+			and is loyal only as far as pay and good treatment carry him, while a
+			<strong>follower</strong> serves no term at all, requires a stronghold to attract, arrives
+			once with no replacements for the fallen, and advances a level as a whole unit.
+			Neither goes adventuring with the party (PHB Ch.12).
 		  </p>
 		  <div class="list hirelings-list"></div>
 		</section>
@@ -1907,7 +1917,7 @@ const SHEET_HTML = `
                 </button>
                 <button class="game-roll" data-roll="reaction" style="padding:6px 10px;text-align:left;display:flex;flex-direction:column;">
                   <span style="font-weight:600;font-size:12px;">Reaction (2d10)</span>
-                  <span style="font-size:10px;opacity:0.6;">2-7 neg, 8-14 neutral, 15+ pos</span>
+                  <span style="font-size:10px;opacity:0.6;">Adjusted by Charisma; DM reads it</span>
                 </button>
                 <button class="game-roll" data-roll="open-doors" style="padding:6px 10px;text-align:left;display:flex;flex-direction:column;">
                   <span style="font-weight:600;font-size:12px;">Open Doors (d20)</span>
