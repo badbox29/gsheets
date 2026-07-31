@@ -2581,19 +2581,34 @@ function makeHenchmanNode(h, onChange){
     toggleBtn.textContent = isOpen ? 'Details' : 'Hide';
   };
   
+  // PHB Ch.12. The lifetime count and the level check both read this card, so
+  // the banner must refresh whenever one changes. Doing it HERE is one hook
+  // instead of one per call site -- loadSheet and the +Add button pass
+  // different onChange handlers -- and matches the idiom the archive filter
+  // below already uses.
+  //
+  // The remove path captures root BEFORE el.remove(); afterwards closest()
+  // returns null and the count would never drop back under the limit.
+  const refreshLimits = (rootEl)=>{
+    const r = rootEl || el.closest('.sheet-container');
+    if(r && typeof renderHenchmanLimits === 'function') renderHenchmanLimits(r);
+  };
+
   // Remove button with confirmation
   el.querySelector('.rm').onclick = ()=>{
     const name = el.querySelector('.henchman-name').value || 'this henchman';
     if(confirm(`Remove ${name}?`)){
+      const rootBefore = el.closest('.sheet-container');
       el.remove();
       onChange && onChange();
+      refreshLimits(rootBefore);
     }
   };
   
   // All inputs trigger onChange
   el.querySelectorAll('input, textarea, select').forEach(inp => {
-    inp.addEventListener('input', ()=>onChange && onChange());
-    inp.addEventListener('change', ()=>onChange && onChange());
+    inp.addEventListener('input', ()=>{ onChange && onChange(); refreshLimits(); });
+    inp.addEventListener('change', ()=>{ onChange && onChange(); refreshLimits(); });
   });
   
   // Status change should trigger archive filter
@@ -2638,7 +2653,19 @@ function makeHirelingNode(h, onChange){
     '</div>' +
     '<div class="hireling-details" style="display:none;margin-top:8px;">' +
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">' +
-        '<div><label style="font-size:11px;color:var(--muted);">Type</label>' +
+        // PHB Ch.12 separates hirelings from followers by the shape of the
+        // agreement. FIRST field on the card, because it governs how every
+        // other one reads: Duration is a contract term for a hireling and
+        // means nothing for a follower, who serves no term at all.
+        '<div><label style="font-size:11px;color:var(--muted);">Category</label>' +
+          '<select class="hireling-category" style="width:100%;" title="PHB Ch.12.&#10;&#10;HIRELING -- employed for a stated term of service or a specific task. Bound by regular pay and good treatment only; the chapter says flatly that hirelings do not serve out of any great loyalty. Freely replaced.&#10;&#10;FOLLOWER -- serves no term of contract at all. A stronghold is required to attract any. Followers appear only once and no replacements arrive for the fallen; all followers in a unit gain a level at the same time; and they do not accompany the party on adventures.&#10;&#10;Leave unset if you are not sure which a record is.">' +
+            (typeof NPC_CATEGORIES !== 'undefined' ? NPC_CATEGORIES.map(c =>
+              '<option value="'+escapeHtml(c.key)+'"'+((h.category||'')===c.key?' selected':'')+'>'+
+              escapeHtml(c.label)+'</option>').join('') : '') +
+          '</select></div>' +
+        // Relabelled from "Type": this is the OCCUPATION, the thing Chapter 12
+        // lists as archer, armorer, sage, spy. The stored key stays `type`.
+        '<div><label style="font-size:11px;color:var(--muted);">Occupation</label>' +
           '<input class="hireling-type" placeholder="e.g., Men-at-Arms, Torchbearer" value="'+escapeHtml(h.type||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Quantity</label>' +
           '<input class="hireling-quantity" type="number" placeholder="1" value="'+escapeHtml(h.quantity||'')+'" style="width:100%;"></div>' +
