@@ -2405,22 +2405,34 @@ function visibilityRowForSize(row, sizeKey) {
 //   optional   Magical weapons shed light only "if your DM allows this
 //              optional rule". PHB optional rules ship OFF in this project,
 //              so nothing may display this row as active by default.
+//   equipment  The name core_equipment.json uses for the same object, present
+//              only where it differs. Table 63's wording is authoritative and
+//              is never renamed to match the equipment file.
 const LIGHT_SOURCES = [
-  { name: 'Beacon lantern',   radius: 240, burn: '30 hrs./pint',        beamWidth: 90 },
+  { name: 'Beacon lantern',   radius: 240, burn: '30 hrs./pint',        beamWidth: 90, equipment: 'Lantern, Beacon' },
   { name: 'Bonfire',          radius:  50, burn: '\u00BD hr./armload' },
-  { name: 'Bullseye lantern', radius:  60, burn: '2 hrs./pint',         beamWidth: 20 },
+  { name: 'Bullseye lantern', radius:  60, burn: '2 hrs./pint',         beamWidth: 20, equipment: 'Lantern, Bullseye' },
   { name: 'Campfire',         radius:  35, burn: '1 hr./armload' },
   { name: 'Candle',           radius:   5, burn: '10 min./inch' },
   { name: 'Continual light',  radius:  60, burn: 'Indefinite',          magical: true },
-  { name: 'Hooded lantern',   radius:  30, burn: '2 hrs./pint' },
+  { name: 'Hooded lantern',   radius:  30, burn: '2 hrs./pint',                        equipment: 'Lantern, Hooded' },
   { name: 'Light spell',      radius:  20, burn: 'Variable',            magical: true },
   { name: 'Torch',            radius:  15, burn: '30 min.' },
   { name: 'Weapon',           radius:   5, burn: 'As desired',          optional: true }
 ];
 
+// Matches on either the Table 63 name or the equipment file's name for the same
+// object. Returns null for anything the chapter does not list -- which is the
+// CORRECT answer for Lamp, Common and Tinder Box, not a failure to be papered
+// over. If a caller wants to show numbers for those, the numbers have to come
+// from a source first.
 function lightSourceByName(name) {
   const n = (name || '').trim().toLowerCase();
-  return LIGHT_SOURCES.find(s => s.name.toLowerCase() === n) || null;
+  if (!n) return null;
+  return LIGHT_SOURCES.find(s =>
+    s.name.toLowerCase() === n ||
+    (s.equipment && s.equipment.toLowerCase() === n)
+  ) || null;
 }
 
 // === Dexterity Table (AD&D 2E) ===
