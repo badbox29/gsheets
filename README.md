@@ -2,7 +2,7 @@
 
 A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and zero dependencies.
 
-**Version 10.2.0**
+**Version 10.3.0**
 
 ## Live Demo
 
@@ -29,6 +29,7 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 * Enchanted items marked on the card and carried through to armor class, attack rolls, weapon speed, and encumbrance
 * Magic item records carrying type, charges, command word, and whether the item has been identified
 * Treasure valued in gold from the Player's Handbook exchange rates, with weight and worth totalled separately for coin and valuables
+* Henchmen, followers and hirelings tracked as the separate things the book makes them, with the lifetime limit Charisma places on henchmen
 * Optional-rules framework with live toggles for Player's Handbook options and house-rule overrides
 * Multi-page printable character sheet with configurable sections, blank write-in lines, and color schemes
 * Import / export character data
@@ -179,6 +180,43 @@ Follow these steps **in order** to avoid overwriting your data:
 * I am not a developer.
 
 ### Recent Updates
+
+#### v10.3.0
+
+A systematic review of Player's Handbook Chapter 12, *NPCs*.
+
+Three pages of prose with no tables in them at all, and it still produced a working feature where there had only been a decorative number.
+
+**Henchmen**
+
+* Charisma has always displayed a maximum number of henchmen. Nothing in the tool had ever counted them against it. It does now, and it counts the way the book says: the limit is a **lifetime** total, so retired, deceased and missing henchmen all still count against it. The chapter's own example is a character whose seven henchmen have all died and who will never attract another.
+* Added a warning for any henchman who has reached your own level. The book has him leave forever at that point, on the reasoning that a student who has learned as much as his teacher is finished being a student.
+* Both checks are advisory and can be switched off under House Rules & Overrides. Nothing is blocked and no henchman is ever removed for you.
+* New henchmen now default to a half share of treasure, which the chapter describes as the usual arrangement. Existing records keep whatever they already had.
+* Added a **Henchmen Notes** field. The printed sheet had been reserving a section for it since the day it was written, but there was nowhere in the tool to type one.
+
+**Followers and hirelings**
+
+* Followers and hirelings shared a single list and a single card, though the book treats them as different things. Each entry now carries a **Category**. A hireling serves a stated term or a named task and is loyal only as far as pay and good treatment carry him; a follower serves no term at all, requires a stronghold to attract, arrives once with no replacements for the fallen, and gains levels as an entire unit. Neither goes adventuring with the party.
+* Existing entries are left uncategorized rather than assumed to be hirelings — the old card could honestly have held either, so the tool doesn't guess.
+* Added a **Level** field. The book says followers can advance and that a whole unit advances together, and there had been nowhere to record it.
+* **Duration** dims for a follower, since a follower serves no contract term — but it is only dimmed, never hidden and never cleared. A duration already recorded stays fully legible, because it still prints.
+* The old "Type" field is now labelled **Occupation**, which is what it always held.
+
+**Charisma**
+
+* Fixed Charisma 1 showing nothing at all. The table covers it, the tool skipped it, and the boxes kept the previous character's numbers instead.
+* Fixed the Charisma boxes holding stale values when the score was cleared or set out of range, rather than emptying.
+* Max Henchmen on the Followers tab had been labelled "Max Followers". Charisma governs henchmen; followers come from your class level and your stronghold.
+
+**Dice roller**
+
+* The Reaction roll advertised result bands — "2-7 negative, 8-14 neutral, 15+ positive" — that appear in no Player's Handbook table. Removed. The roll now reports the raw dice, your Charisma adjustment and the adjusted figure, and says plainly that reading the result is the DM's call.
+* Rolling a reaction with no Charisma recorded used to print nothing at all beneath the dice.
+
+**Printing**
+
+* The section is now headed **Followers & Hirelings** and shows each entry's category, occupation and level. Henchmen notes print for the first time.
 
 #### v10.2.0
 
