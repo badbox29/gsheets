@@ -2239,6 +2239,47 @@ const SHEET_HTML = `
             </div>
           </div>
         </section>
+
+        <hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
+
+        <!--
+          COVER AND CONCEALMENT (PHB Ch.9, Table 59)
+
+          Reference only. No data-field, never collected, never printed. The
+          NUMBERS come from COVER_MODIFIERS in tables.js -- do not hardcode a
+          table into this markup, which is the mistake the racial checks panel
+          was built to undo.
+        -->
+        <section class="section cover-reference-section">
+          <h3>Cover &amp; Concealment</h3>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
+            Reference only &mdash; nothing here is saved with the character.
+          </p>
+
+          <div class="cover-modifiers-table" style="font-size:12px;overflow-x:auto;margin-bottom:12px;"></div>
+
+          <div style="font-size:11px;color:var(--muted);line-height:1.6;">
+            <div style="margin-bottom:8px;">
+              <strong style="color:var(--text);">Cover is hard, concealment is soft.</strong>
+              Cover is a stone wall, a door, a table, a tree trunk, an earth embankment,
+              a <em>wall of force</em> &mdash; something that will stop a missile. Concealment
+              is bushes, curtains, tapestries, smoke, fog or brambles: it cannot stop an
+              arrow, it just makes you harder to place.
+            </div>
+            <div style="margin-bottom:8px;">
+              <strong style="color:var(--text);">These are penalties to the ATTACKER's roll.</strong>
+              They do not change anyone's Armor Class. Two of these rolls are yours:
+              subtract the modifier from <em>your</em> attack roll when shooting at
+              something in cover, and apply it as a <em>bonus to your saving throw</em>
+              against spells causing physical damage while you are behind cover. When a
+              monster shoots at you, the modifier goes on the DM's roll, not your sheet.
+            </div>
+            <div>
+              <strong style="color:var(--text);">Cover works poorly in melee</strong> &mdash; it
+              hampers attacker and defender equally. It is a missile-fire tactic.
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   </div>
