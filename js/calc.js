@@ -494,7 +494,19 @@ function renderCombatQuickReference(root) {
   const hpDisplay = currentHP + '/' + maxHP;
   
   // PHB Ch.9: Dexterity does NOT modify initiative in 2e. Low roll wins.
-  const initiativeStr = 'd10 (low wins)';
+  //
+  // Condition modifiers ARE shown here, because unlike the Table 55 situational
+  // list they are states the character is already in -- a hasted character has
+  // his -2 whether or not he remembers it. Sign is stated in words: initiative
+  // is low-roll-wins, so a negative modifier means acting SOONER, which reads
+  // backwards to anyone expecting bigger-is-better.
+  const initFx = (typeof getActiveConditionEffects === 'function')
+    ? getActiveConditionEffects(root) : { initiativeMod: 0, sources: {} };
+  const initMod = initFx.initiativeMod || 0;
+  const initiativeStr = initMod
+    ? 'd10' + (initMod > 0 ? '+' : '') + initMod + ' (low wins, ' +
+      (initMod < 0 ? 'sooner' : 'later') + ')'
+    : 'd10 (low wins)';
   
   // Calculate STR bonuses — shared helper handles exceptional 18/xx (warriors only)
   let strToHit = 0;
@@ -540,7 +552,17 @@ function renderCombatQuickReference(root) {
   const acBase = parseInt(ac, 10);
   const acShown = (!isNaN(acBase) && condAcPenalty) ? acBase + condAcPenalty : ac;
 
-  if (initiativeEl) initiativeEl.textContent = initiativeStr;
+  if (initiativeEl) {
+    initiativeEl.textContent = initiativeStr;
+    initiativeEl.style.color = initMod
+      ? (initMod < 0 ? 'var(--success, #4ade80)' : 'var(--error, #ff6b6b)')
+      : '';
+    initiativeEl.title = initMod
+      ? 'Active conditions modify initiative by ' + (initMod > 0 ? '+' : '') + initMod +
+        ': ' + (initFx.sources.initiativeMod || []).join(', ') +
+        '.\nInitiative is low-roll-wins, so a negative modifier means acting sooner.'
+      : '';
+  }
   if (thac0El) thac0El.textContent = thac0;
   if (acEl) {
     acEl.textContent = acShown;
