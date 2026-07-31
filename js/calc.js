@@ -616,7 +616,12 @@ function renderCombatQuickReference(root) {
         // NaN check, NOT `|| 10`. AC 0 is falsy, so the old fallback replaced a
         // legitimate AC of 0 with 10 -- and AC 0 is 2e's reference point, the
         // single most likely value to hit. A blank field still falls back to 10.
-        const acNum = parseInt(ac, 10);
+        // Parry from the AC the character is ACTUALLY at, conditions included.
+        // The headline figure above already accounts for them; reading the raw
+        // field here made the two lines of the same panel disagree whenever a
+        // condition was active. acShown is a number when a condition applies and
+        // the raw string otherwise, and parseInt takes both.
+        const acNum = parseInt(acShown, 10);
         const parriedAC = (isNaN(acNum) ? 10 : acNum) - parry.bonus;
         const tip = 'Parrying (PHB Ch.9, optional rule).&#10;' +
           'Forfeits ALL actions for the round -- no attack, no movement,&#10;' +
