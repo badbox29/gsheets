@@ -2321,6 +2321,108 @@ function npcCategoryHasTerm(key) {
   return !!(c && c.term);
 }
 
+// === Vision and Light (PHB Ch.13) ===
+//
+// TABLE 62 VERBATIM. ALL RANGES ARE IN YARDS -- the chapter states this
+// outright, and every other distance in this codebase is in feet. Do not
+// "correct" these to feet on a later pass.
+//
+// The five columns are not five degrees of one thing; each answers a
+// different question, and the chapter defines them:
+//   movement  Max distance a MOVING figure can be seen. A stationary figure
+//             usually cannot be seen at all at this range, and even a moving
+//             one reads only as "something is moving".
+//   spotted   Max distance a moving OR STATIONARY figure can be seen. General
+//             size and shape only.
+//   type      General details -- species or race, weapons carried.
+//   id        Exact, or reasonably exact, identification of the individual.
+//   detail    Small actions seen clearly (the chapter's own example is
+//             noticing a pick-pocketing attempt).
+//
+// Row order is the book's own, the same way COIN_UNITS keeps Table 42's.
+const VISIBILITY_RANGES = [
+  { condition: 'Clear sky',              movement: 1500, spotted: 1000, type: 500, id: 100, detail: 10 },
+  { condition: 'Fog, dense or blizzard', movement:   10, spotted:   10, type:   5, id:   5, detail:  3 },
+  { condition: 'Fog, light or snow',     movement:  500, spotted:  200, type: 100, id:  30, detail: 10 },
+  { condition: 'Fog, moderate',          movement:  100, spotted:   50, type:  25, id:  15, detail: 10 },
+  { condition: 'Mist or light rain',     movement: 1000, spotted:  500, type: 250, id:  30, detail: 10 },
+  { condition: 'Night, full moon',       movement:  100, spotted:   50, type:  30, id:  10, detail:  5 },
+  { condition: 'Night, no moon',         movement:   50, spotted:   20, type:  10, id:   5, detail:  3 },
+  { condition: 'Twilight',               movement:  500, spotted:  300, type: 150, id:  30, detail: 10 }
+];
+
+const VISIBILITY_SIZES = [
+  { key: 'S', label: 'Small (size S)' },
+  { key: 'M', label: 'Man-sized (size M)' },
+  { key: 'L', label: 'Large (size L or larger)' }
+];
+
+// Apply the size adjustment to one Table 62 row. Never mutates the row.
+//
+// SMALL IS A COLUMN SHIFT, NOT A HALVING. The chapter says "all categories are
+// reduced to the next lower category (except the 'detail' range, which remains
+// unchanged)", and then prints its own worked example: a small creature under
+// clear conditions is movement 1,000, spotted 500, type 100, ID and detail 10.
+// Shifting clear sky's own row one column left reproduces that exactly, and no
+// halving does. If anyone ever "simplifies" this to a multiplier, that example
+// is the test it will fail.
+//
+// LARGE DOUBLES THREE COLUMNS, NOT FIVE. The chapter names movement, spotting
+// and type. ID and detail are not mentioned and are not touched. The line about
+// exceptionally large creatures being visible even further carries no number,
+// so nothing here models it.
+function visibilityRowForSize(row, sizeKey) {
+  const out = {
+    condition: row.condition,
+    movement:  row.movement,
+    spotted:   row.spotted,
+    type:      row.type,
+    id:        row.id,
+    detail:    row.detail
+  };
+  if (sizeKey === 'S') {
+    out.movement = row.spotted;
+    out.spotted  = row.type;
+    out.type     = row.id;
+    out.id       = row.detail;
+    // detail deliberately unchanged
+  } else if (sizeKey === 'L') {
+    out.movement = row.movement * 2;
+    out.spotted  = row.spotted  * 2;
+    out.type     = row.type     * 2;
+  }
+  return out;
+}
+
+// TABLE 63 VERBATIM. Radii are in FEET here, unlike Table 62 above -- that
+// switch is the book's, not a transcription error.
+//
+//   beamWidth  Present only for the two sources the table footnotes: their
+//              light is "not cast in a radius, but rather in a cone-shaped
+//              beam", and the value is the cone's width at its far end. A
+//              renderer that prints these two as radii is printing a lie.
+//   magical    Comes from a spell rather than from carried, burnable gear.
+//   optional   Magical weapons shed light only "if your DM allows this
+//              optional rule". PHB optional rules ship OFF in this project,
+//              so nothing may display this row as active by default.
+const LIGHT_SOURCES = [
+  { name: 'Beacon lantern',   radius: 240, burn: '30 hrs./pint',        beamWidth: 90 },
+  { name: 'Bonfire',          radius:  50, burn: '\u00BD hr./armload' },
+  { name: 'Bullseye lantern', radius:  60, burn: '2 hrs./pint',         beamWidth: 20 },
+  { name: 'Campfire',         radius:  35, burn: '1 hr./armload' },
+  { name: 'Candle',           radius:   5, burn: '10 min./inch' },
+  { name: 'Continual light',  radius:  60, burn: 'Indefinite',          magical: true },
+  { name: 'Hooded lantern',   radius:  30, burn: '2 hrs./pint' },
+  { name: 'Light spell',      radius:  20, burn: 'Variable',            magical: true },
+  { name: 'Torch',            radius:  15, burn: '30 min.' },
+  { name: 'Weapon',           radius:   5, burn: 'As desired',          optional: true }
+];
+
+function lightSourceByName(name) {
+  const n = (name || '').trim().toLowerCase();
+  return LIGHT_SOURCES.find(s => s.name.toLowerCase() === n) || null;
+}
+
 // === Dexterity Table (AD&D 2E) ===
 // Format: [reaction adjustment, missile attack adjustment, defensive adjustment (AC)]
 const DEX_TABLE = {
