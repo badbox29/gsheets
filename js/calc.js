@@ -1317,12 +1317,21 @@ function renderDexterityEffects(root) {
   const reactionEl = root.querySelector('[data-field="dex_reaction"]');
   const missileEl = root.querySelector('[data-field="dex_missile"]');
   const acEl = root.querySelector('[data-field="dex_ac"]');
+
+  // PHB Ch.1: "Reaction Adjustment modifies the die roll to see if a character
+  // is surprised when he unexpectedly encounters NPCs." The Combat tab shows
+  // that same Table 2 figure under the book's FUNCTION for it, which is why the
+  // printed sheet has always labelled the column "Surprise Adj". The field
+  // existed in the template and was written by nothing anywhere -- it has been
+  // blank since the day it was added. MIRRORED here, never separately computed.
+  const reactionCombatEl = root.querySelector('[data-field="reaction_adj_combat"]');
   
   if (!reactionEl || !missileEl || !acEl) return;
   
   // Clear if invalid DEX
   if (!dex || dex < 1 || dex > 25) {
     reactionEl.value = "";
+    if (reactionCombatEl) reactionCombatEl.value = "";
     missileEl.value = "";
     acEl.value = "";
     return;
@@ -1335,6 +1344,7 @@ function renderDexterityEffects(root) {
     const [reaction, missile, defensive] = dexData;
     
     reactionEl.value = (reaction >= 0 ? "+" : "") + reaction;
+    if (reactionCombatEl) reactionCombatEl.value = reactionEl.value;
     missileEl.value = (missile >= 0 ? "+" : "") + missile;
     acEl.value = (defensive >= 0 ? "+" : "") + defensive;
     
@@ -2506,23 +2516,47 @@ function renderArmorClass(root) {
   const acUnarmoredEl = root.querySelector('[data-field="ac_unarmored"]');
   const acVsMissilesEl = root.querySelector('[data-field="ac_vs_missiles"]');
   
+  // PHB Ch.1, Defensive Adjustment: "(In some situations, beneficial Dexterity
+  // modifiers to Armor Class do not apply. Usually this occurs when a character
+  // is attacked from behind or when his movement is restricted -- attacked
+  // while prone, tied up, on a ledge, climbing a rope, etc.)"
+  //
+  // BENEFICIAL is the whole of it. dexAdj is negative for a good Dexterity, so
+  // only a negative value is ever surrendered; a character whose Dexterity is
+  // poor enough to carry a PENALTY keeps that penalty in every one of these
+  // situations. The Quick Reference has guarded on this since the conditions
+  // work went in (`dexDefAdj < 0`); these variants never did.
+  //
+  // Every variant below is now derived by backing ONE term out of finalAC
+  // rather than re-adding the parts. Re-adding silently dropped miscBonus, so
+  // supplemental magical AC was in Normal AC and in none of the variants.
+  const dexForfeit = (dexAdj < 0) ? dexAdj : 0;
+
   if (acRearEl) {
-    // Rear AC: loses shield bonus
-    const rearAC = baseAC + ringBonus + cloakBonus + dexAdj + manualAdj;
+    // Loses the shield AND the Dexterity bonus. PHB Ch.1 names being attacked
+    // from behind as the first case where beneficial Dexterity AC modifiers
+    // stop applying; this kept the Dexterity bonus, so it was wrong in the
+    // opposite direction from Surprised AC.
+    const rearAC = finalAC - shieldBonus - dexForfeit;
     acRearEl.value = rearAC;
-    acRearEl.title = "Attacked from behind\nNo shield bonus";
+    acRearEl.title = "Attacked from behind\nNo shield bonus, no Dexterity AC bonus (PHB Ch.1)";
   }
   
   if (acSurprisedEl) {
-    // Surprised AC: loses shield and DEX bonuses
-    const surprisedAC = baseAC + ringBonus + cloakBonus + manualAdj;
+   // PHB Ch.11: "the surprised characters lose all AC bonuses for high
+    // Dexterity during that instant of surprise." That is the WHOLE cost.
+    // Nothing in the chapter takes the shield away -- a surprised man is still
+    // holding it -- and this used to drop it anyway.
+    const surprisedAC = finalAC - dexForfeit;
     acSurprisedEl.value = surprisedAC;
-    acSurprisedEl.title = "Caught off-guard\nNo shield or DEX bonus";
+    acSurprisedEl.title = "Caught off-guard (PHB Ch.11)\n" +
+      "Loses the Dexterity AC bonus only.\nShield and all magical bonuses still apply.";
   }
   
   if (acNoShieldEl) {
-    // No Shield AC: same as rear but clearer label
-    const noShieldAC = baseAC + ringBonus + cloakBonus + dexAdj + manualAdj;
+    // No Shield AC. No longer "same as rear" -- a rear attack costs the
+    // Dexterity bonus too, and this does not.
+    const noShieldAC = finalAC - shieldBonus;
     acNoShieldEl.value = noShieldAC;
     acNoShieldEl.title = "Without shield\nAll other bonuses apply";
   }
@@ -2568,12 +2602,16 @@ function renderArmorClass(root) {
     } else {
       acCastingRow.style.display = '';
 
-      const castingAC = finalAC - dexAdj;
+      // dexForfeit, NOT dexAdj. Ch.7 forfeits the BENEFIT of Dexterity; a bare
+      // subtraction handed a poor-Dexterity caster a BETTER AC while casting by
+      // shedding his penalty. See the note by the AC variants above.
+      const castingAC = finalAC - dexForfeit;
       acCastingEl.value = castingAC;
       acCastingEl.title =
         'While Casting AC: ' + castingAC + '\n' +
         'Normal AC: ' + finalAC + '\n' +
-        'Dexterity Defensive Adj. forfeited: ' + (dexAdj >= 0 ? '+' : '') + dexAdj + '\n\n' +
+        'Dexterity Defensive Adj. forfeited: ' +
+          (dexForfeit ? (dexForfeit > 0 ? '+' : '') + dexForfeit : 'none') + '\n\n' +
         'PHB Ch.7: "During the round in which the spell is cast, the caster cannot\n' +
         'move to dodge attacks. Therefore, no AC benefit from Dexterity is gained\n' +
         'by spellcasters while casting spells."\n\n' +
