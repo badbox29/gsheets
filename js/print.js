@@ -2164,11 +2164,17 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   const showHirelings = !!opts.hirelings && hasContent(hirelingRows, 'hirelings');
 
   const HIRE_ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha', 'per', 'com'];
+  // Level rides in the DETAIL row rather than taking a ninth column. PHB Ch.12
+  // gives it to followers -- who advance as a whole unit -- and to almost no
+  // hireling, so it is blank on most records, and followerDetail already omits
+  // empty pieces instead of printing a bare label. A ninth column would also
+  // mean rebalancing widths, colSpan and blankRows in lockstep again.
   const HIRE_EXTRAS = [
+    ['Level', 'level'],
     ['Alignment', 'alignment'],
     ['THAC0', 'thac0'],
     ['Notes', 'notes']
-  ];
+  ];;
 
   const hirelingBlocks = [];
 
