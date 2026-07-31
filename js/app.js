@@ -4067,7 +4067,14 @@ function collectSheet(root){
 
   const magicItems = qsa(root,'.magic-items-list .item')
     .map(n=>({
-      name: n.querySelector('.title').value,
+      name:        n.querySelector('.title').value,
+      type:        (n.querySelector('.magic-item-type') || {}).value   || '',
+      qty:         (n.querySelector('.qty')             || {}).value   || '',
+      weight:      (n.querySelector('.weight')          || {}).value   || '',
+      charges:     (n.querySelector('.charges')         || {}).value   || '',
+      chargesMax:  (n.querySelector('.charges-max')     || {}).value   || '',
+      commandWord: (n.querySelector('.command-word')    || {}).value   || '',
+      identified:  !!(n.querySelector('.is-identified') || {}).checked,
       notes: (n.querySelector('.notes') && n.querySelector('.notes').value) || ''
     }));
 	
