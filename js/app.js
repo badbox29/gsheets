@@ -2500,7 +2500,15 @@ function makeHenchmanNode(h, onChange){
   el.style.flexDirection = 'column';
   el.style.alignItems = 'stretch';
   el.style.padding = '12px';
-  
+
+  // PHB Ch.12: henchmen "commonly receive a portion (half a normal share) of
+  // all treasure and magic found on adventures", so a NEW card opens on Half
+  // share. A LOADED record is left exactly as saved -- an h.share of '' is a
+  // player who deliberately picked "--", and ONLY an absent key means a card
+  // that has never been filled in. Do not simplify this to (h.share || ...),
+  // which would silently overwrite every deliberate "--" on the next load.
+  const sh = (h.share === undefined || h.share === null) ? 'Half share' : h.share;
+
   el.innerHTML =
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
       '<div style="flex:1;">Henchman Name</div>' +
@@ -2544,17 +2552,21 @@ function makeHenchmanNode(h, onChange){
           '<input class="henchman-com" type="number" placeholder="--" value="'+escapeHtml(h.com||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Alignment</label>' +
           alignmentSelectHTML('henchman-alignment', h.alignment) + '</div>' +
+        // The placeholder read "e.g., 2d6" on a type="number" input, so the
+        // example it gave could never be entered. Morale beside it has always
+        // said "--"; this now matches. PHB Ch.12 refers the loyalty and morale
+        // checks themselves to the DMG, so no scale is asserted here.
         '<div><label style="font-size:11px;color:var(--muted);">Loyalty Score</label>' +
-          '<input class="henchman-loyalty" type="number" placeholder="e.g., 2d6" value="'+escapeHtml(h.loyalty||'')+'" style="width:100%;"></div>' +
+          '<input class="henchman-loyalty" type="number" placeholder="--" title="Your Loyalty Base from PHB Table 6 modifies this. The loyalty and morale checks themselves are the DM\'s -- PHB Ch.12 refers them to the DMG." value="'+escapeHtml(h.loyalty||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Morale</label>' +
           '<input class="henchman-morale" type="number" placeholder="--" value="'+escapeHtml(h.morale||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Share</label>' +
           '<select class="henchman-share" style="width:100%;">' +
-            '<option value=""'+(h.share===''?' selected':'')+'>--</option>' +
-            '<option value="Half share"'+((h.share||'')==='Half share'?' selected':'')+'>Half share</option>' +
-            '<option value="Full share"'+((h.share||'')==='Full share'?' selected':'')+'>Full share</option>' +
-            '<option value="Wage only"'+((h.share||'')==='Wage only'?' selected':'')+'>Wage only</option>' +
-            '<option value="Custom"'+((h.share||'')==='Custom'?' selected':'')+'>Custom</option>' +
+            '<option value=""'+(sh===''?' selected':'')+'>--</option>' +
+            '<option value="Half share"'+(sh==='Half share'?' selected':'')+'>Half share</option>' +
+            '<option value="Full share"'+(sh==='Full share'?' selected':'')+'>Full share</option>' +
+            '<option value="Wage only"'+(sh==='Wage only'?' selected':'')+'>Wage only</option>' +
+            '<option value="Custom"'+(sh==='Custom'?' selected':'')+'>Custom</option>' +
           '</select></div>' +
       '</div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">' +
@@ -4367,6 +4379,10 @@ function collectSheet(root){
   qsa(root,'.hirelings-list .item').forEach(el=>{
     hirelings.push({
       name: el.querySelector('.hireling-name').value,
+      // PHB Ch.12 hireling/follower split. `type` is the OCCUPATION and keeps
+      // its original key; `category` is the new one. Read defensively so a card
+      // rendered before this field existed cannot throw and break the save.
+      category: (el.querySelector('.hireling-category') || {}).value || '',
       type: el.querySelector('.hireling-type').value,
       quantity: el.querySelector('.hireling-quantity').value,
       wage: el.querySelector('.hireling-wage').value,
@@ -4450,8 +4466,8 @@ function collectSheet(root){
     eyes: val(root,'eyes'),
     appearanceNotes: val(root,'appearance_notes'),
     alliances: val(root,'alliances'),
-    henchmenMax: val(root,'henchmen_max'),
-    loyaltyBase: val(root,'loyalty_base'),
+    // henchmenMax and loyaltyBase deliberately absent -- see loadSheet.
+    // Charisma is already saved; these are read back out of CHA_TABLE.
     henchmenNotes: val(root,'henchmen_notes'),
     backgroundHistory: val(root,'background_history')
   };
@@ -5194,8 +5210,11 @@ function loadSheet(root, data){
   val(root,'eyes', d.eyes || '');
   val(root,'appearance_notes', d.appearanceNotes || '');
   val(root,'alliances', d.alliances || '');
-  val(root,'henchmen_max', d.henchmenMax || '');
-  val(root,'loyalty_base', d.loyaltyBase || '');
+  // henchmen_max and loyalty_base are NOT restored here. Both are pure
+  // functions of Charisma, and renderCharismaEffects further down this same
+  // function writes them from CHA_TABLE. Restoring a saved copy first meant an
+  // old sheet briefly showed a stale number, and would have kept showing it
+  // outright if the table were ever corrected. Derived values are never stored.
   val(root,'henchmen_notes', d.henchmenNotes || '');
   val(root,'background_history', d.backgroundHistory || '');
 
