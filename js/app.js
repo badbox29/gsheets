@@ -7831,6 +7831,58 @@ function setDefaultTabHandlers(defaultTab){
 
 // === Condition/Status Tracker Functions ===
 
+// Aggregate the mechanical effects of every ACTIVE condition into one object.
+//
+// Additive fields SUM; multiplicative fields MULTIPLY -- a character both Slowed
+// and Stunned moves at 1/2 x 1/3 = 1/6, not at whichever is worse. Each effect
+// records which conditions produced it so the quick reference can name them
+// rather than showing an unexplained number.
+//
+// DELIBERATELY OMITS attackerToHit and autoHit. Those are the ATTACKER'S
+// numbers, rolled by the DM -- there is nothing for this sheet to compute from
+// them, and folding them in would imply the character's own AC had changed.
+// They stay on the condition card where the player can read them out.
+function getActiveConditionEffects(root) {
+  const out = {
+    ownAttack: 0, acPenalty: 0, initiativeMod: 0,
+    moveMult: 1, attackRateMult: 1, negatesDexCombat: false,
+    sources: { ownAttack: [], acPenalty: [], initiativeMod: [],
+               moveMult: [], attackRateMult: [], negatesDexCombat: [] },
+    any: false
+  };
+
+  const list = root && root.querySelector('.conditions-list');
+  if (!list || typeof CONDITIONS_DB === 'undefined') return out;
+
+  Array.from(list.querySelectorAll('.condition-item')).forEach(item => {
+    const name = item.dataset.condition || '';
+    const def = CONDITIONS_DB.find(c => c.name === name);
+    if (!def) return;
+
+    const add = (key, val) => {
+      if (val === undefined || val === null || val === 0) return;
+      out[key] += val; out.sources[key].push(name); out.any = true;
+    };
+    const mul = (key, val) => {
+      if (val === undefined || val === null || val === 1) return;
+      out[key] *= val; out.sources[key].push(name); out.any = true;
+    };
+
+    add('ownAttack',     def.ownAttack);
+    add('acPenalty',     def.acPenalty);
+    add('initiativeMod', def.initiativeMod);
+    mul('moveMult',      def.moveMult);
+    mul('attackRateMult', def.attackRateMult);
+    if (def.negatesDexCombat) {
+      out.negatesDexCombat = true;
+      out.sources.negatesDexCombat.push(name);
+      out.any = true;
+    }
+  });
+
+  return out;
+}
+
 // Returns the active condition that blocks natural healing, or null.
 //
 // Reads the STRUCTURED flag off CONDITIONS_DB rather than matching on a name,
