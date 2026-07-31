@@ -2630,20 +2630,14 @@ function renderEncumbrance(root) {
   // that being the chapter describing magic items as things a character finds
   // and carries.
   //
-  // An item whose TYPE is armor gets the same exclusion the armor list gets --
-  // PHB Ch.6: the weight of magical armor "applies only toward the weight limit
-  // of the character. It does not apply when determining the effects of
-  // encumbrance on movement and combat." Everything in this list is magical by
-  // definition, so the type field alone decides it; there is no is-magical tick
-  // to read here.
+  // No magical-armor exclusion is applied here, because armor is not a magic
+  // item type -- magical armor lives on the Armor tab, where the Ch.6 exclusion
+  // is already handled against the armor list. See MAGIC_ITEM_TYPES.
   const magicItemEls = Array.from(root.querySelectorAll('.magic-items-list .item'));
   magicItemEls.forEach(item => {
     const qty = parseFloat(item.querySelector('.qty')?.value) || 1;
     const weight = parseFloat(item.querySelector('.weight')?.value) || 0;
-    const lbs = qty * weight;
-    totalWeight += lbs;
-    const miType = (item.querySelector('.magic-item-type')?.value) || '';
-    if (miType === 'armor') magicArmorWeight += lbs;
+    totalWeight += qty * weight;
   });
 
   // Set current load
