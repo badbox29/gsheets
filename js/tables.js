@@ -157,7 +157,7 @@ const RACIAL_COMBAT_BONUSES = {
       // character's class have a 20% chance to malfunction when used by a
       // dwarf." Note the exclusion list runs the OPPOSITE way from intuition --
       // rods, wands and potions DO malfunction; weapons and armor do not.
-      { name: "Magic Item Malfunction", notes: "20% chance of malfunction each time you use a magical item not suited to your class -- rods, staves, wands, rings, amulets, potions, horns, jewels and the like. Weapons, shields, armor, gauntlets and girdles are exempt, as are priest items used by a dwarven cleric. Affects only that use; a cursed item that malfunctions reveals itself" }
+      { name: "Magic Item Malfunction", notes: "20% chance of malfunction each time you use a magical item not suited to your class -- rods, staves, wands, rings, amulets, potions, horns, jewels and the like. Weapons, shields, armor, gauntlets and girdles are exempt, as are priest items used by a dwarven cleric. A device that operates CONTINUALLY is checked only the first time it is used in an encounter; pass, and it works until it is turned off -- a robe of blending is checked when donned and not again until it is removed and put back on. Affects only that use; a cursed item that malfunctions reveals itself" }
     ]
   },
   gnome: {
@@ -171,7 +171,7 @@ const RACIAL_COMBAT_BONUSES = {
       // PHB Ch.2. The gnome exclusion list is NOT the dwarf's -- gnomes exempt
       // illusionist items and thief-duplicating items, dwarves exempt gauntlets
       // and girdles. Transcribed separately for that reason.
-      { name: "Magic Item Failure", notes: "20% chance of failure each time you use a magical item. Weapons, armor, shields, illusionist items, and (for gnome thieves) items that duplicate thieving abilities are exempt. A device that fails reveals a cursed item" }
+      { name: "Magic Item Failure", notes: "20% chance of failure each time you attempt to use a magical item, and for a CONTINUOUS-USE device each time it is activated -- NOT once per encounter, which is the dwarf's rule and not the gnome's. Weapons, armor, shields, illusionist items, and (for gnome thieves) items that duplicate thieving abilities are exempt. A device that fails reveals a cursed item" }
     ]
   },
   halfling: {
@@ -183,7 +183,7 @@ const RACIAL_COMBAT_BONUSES = {
     // GNOMES only; the halfling entry has no such ability.
     defensive: [],
     special: [
-      { name: "Surprise Bonus", notes: "Opponents take -4 on their surprise rolls, or -2 if you must open a door or screen to attack. Requires that you are not in metal armor AND are either alone, with a party of only halflings and elves likewise out of metal armor, or 90+ feet ahead of your party" }
+      { name: "Surprise Bonus", notes: "Opponents take -4 on their surprise rolls, or -2 if you must open a door or screen to attack. Requires that you are not in metal armor AND are either alone, with a party of only halflings and elves likewise out of metal armor, or 90 feet or more away from your party" }
     ]
   },
   elf: {
@@ -196,7 +196,7 @@ const RACIAL_COMBAT_BONUSES = {
     defensive: [],
     special: [
       { name: "Sleep/Charm Resistance", notes: "90% resistant to sleep and all charm-related spells (in addition to any normal saving throw)" },
-      { name: "Surprise Bonus", notes: "Opponents take -4 on their surprise rolls, or -2 if you must open a door or screen to attack. Requires that you are not in metal armor AND are either alone, with a party of only elves and halflings likewise out of metal armor, or 90+ feet ahead of your party" }
+      { name: "Surprise Bonus", notes: "Opponents take -4 on their surprise rolls, or -2 if you must open a door or screen to attack. Requires that you are not in metal armor AND are either alone, with a party of only elves and halflings likewise out of metal armor, or 90 feet or more away from your party" }
     ]
   },
   "half-elf": {
@@ -2682,7 +2682,7 @@ const RACIAL_ABILITIES = {
     // applies to CONCEALED doors only.
     { name: "Notice Concealed Doors", notes: "Merely passing within 10 feet of a concealed door: 1 in 6 (roll a 1 on 1d6), no searching required" },
     { name: "Search for Doors", notes: "When actively searching: 1 in 3 (roll 1-2 on 1d6) to find a secret door, 1 in 2 (roll 1-3 on 1d6) to discover a concealed portal" },
-    { name: "Surprise Bonus", notes: "Opponents take -4 on their surprise rolls, reduced to -2 if you must open a door or screen to attack. Requires that you are not in metal armor AND are either alone, with a party of only elves and halflings likewise out of metal armor, or 90+ feet ahead of your party" },
+    { name: "Surprise Bonus", notes: "Opponents take -4 on their surprise rolls, reduced to -2 if you must open a door or screen to attack. Requires that you are not in metal armor AND are either alone, with a party of only elves and halflings likewise out of metal armor, or 90 feet or more away from your party" },
     { name: "Bow/Sword Bonus", notes: "+1 to hit with any bow other than a crossbow, and with short and long swords" }
   ],
   "half-elf": [
@@ -2701,9 +2701,9 @@ const RACIAL_ABILITIES = {
     { name: "Detect Stonework", notes: "Within 10 feet, and only when deliberately trying: grade or slope in passage 1-5 on 1d6; new tunnel or passage construction 1-5 on 1d6; sliding or shifting walls or rooms 1-4 on 1d6; stonework traps, pits and deadfalls 1-3 on 1d6" },
     { name: "Determine Depth", notes: "Approximate depth below the surface, 1-3 on 1d6. May be attempted at any time, not only within 10 feet" },
     { name: "Attack Bonus vs. Orcs/Goblins", notes: "+1 to hit orcs, half-orcs, goblins, hobgoblins" },
-    { name: "AC Bonus vs. Giants", notes: "-4 AC bonus vs. giants, ogres, trolls, ogre magi, titans" },
+    { name: "AC Bonus vs. Giants", notes: "Giants, ogres, trolls, ogre magi and titans get -4 to hit you. An attack penalty on them, not a bonus to your AC -- it does not apply against anything else" },
     { name: "Nonmagical Nature", notes: "Dwarves never use magical (wizard) spells. Priest spells are allowed" },
-    { name: "Magic Item Malfunction", notes: "20% chance of malfunction each time you use a magical item not suited to your class -- rods, staves, wands, rings, amulets, potions, horns, jewels and the like. Weapons, shields, armor, gauntlets and girdles are exempt, as are priest items used by a dwarven cleric. Affects only that use; a cursed item that malfunctions reveals itself" }
+    { name: "Magic Item Malfunction", notes: "20% chance of malfunction each time you use a magical item not suited to your class -- rods, staves, wands, rings, amulets, potions, horns, jewels and the like. Weapons, shields, armor, gauntlets and girdles are exempt, as are priest items used by a dwarven cleric. A device that operates CONTINUALLY is checked only the first time it is used in an encounter; pass, and it works until it is turned off -- a robe of blending is checked when donned and not again until it is removed and put back on. Affects only that use; a cursed item that malfunctions reveals itself" }
   ],
   halfling: [
     // NOT automatic. PHB Ch.2: 15% chance of normal infravision (pure Stout),
@@ -2711,7 +2711,7 @@ const RACIAL_ABILITIES = {
     { name: "Infravision (chance-based)", notes: "15% chance of normal infravision to 60 ft (pure Stout lineage). Failing that, a 25% chance of limited infravision to 30 ft (mixed Stout/Tallfellow or Stout/Hairfeet). Otherwise none" },
     { name: "Constitution Save Bonuses", notes: "+1 per 3 1/2 points of Constitution against wands, staves, rods and spells, and the same bonus against poison (PHB Table 9). Already applied to your saving throws" },
     { name: "Sling/Thrown Bonus", notes: "+1 to hit with slings and thrown weapons" },
-    { name: "Surprise Bonus", notes: "Opponents take -4 on their surprise rolls, reduced to -2 if you must open a door or screen to attack. Requires that you are not in metal armor AND are either alone, with a party of only halflings and elves likewise out of metal armor, or 90+ feet ahead of your party" },
+    { name: "Surprise Bonus", notes: "Opponents take -4 on their surprise rolls, reduced to -2 if you must open a door or screen to attack. Requires that you are not in metal armor AND are either alone, with a party of only halflings and elves likewise out of metal armor, or 90 feet or more away from your party" },
     { name: "Stoutish Senses", notes: "Only for pure or partially Stout halflings, and only while concentrating to the exclusion of all else: note an up or down grade 75% of the time (roll 1-3 on 1d4); determine direction half the time (roll 1-3 on 1d6)" }
     // REMOVED: "AC Bonus vs. Large" -- PHB Ch.2 grants that -4 to dwarves and
     // gnomes only, never halflings. Also removed "Hide in Shadows", which is
@@ -2724,8 +2724,8 @@ const RACIAL_ABILITIES = {
     { name: "Detect Stonework", notes: "Within 10 feet, after stopping and concentrating for one round: grade or slope in passage 1-5 on 1d6; unsafe walls, ceiling and floors 1-7 on 1d10" },
     { name: "Determine Depth/Direction", notes: "Approximate depth underground 1-4 on 1d6; approximate direction underground 1-3 on 1d6. These two may be attempted at any time" },
     { name: "Attack Bonus vs. Kobolds/Goblins", notes: "+1 to hit kobolds and goblins" },
-    { name: "AC Bonus vs. Giants", notes: "-4 AC bonus vs. gnolls, bugbears, ogres, trolls, ogre magi, giants, titans" },
-    { name: "Magic Item Failure", notes: "20% chance of failure each time you use a magical item. Weapons, armor, shields, illusionist items, and (for gnome thieves) items that duplicate thieving abilities are exempt. A device that fails reveals a cursed item" }
+    { name: "AC Bonus vs. Giants", notes: "Gnolls, bugbears, ogres, trolls, ogre magi, giants and titans get -4 to hit you. An attack penalty on them, not a bonus to your AC -- it does not apply against anything else" },
+    { name: "Magic Item Failure", notes: "20% chance of failure each time you attempt to use a magical item, and for a CONTINUOUS-USE device each time it is activated -- NOT once per encounter, which is the dwarf's rule and not the gnome's. Weapons, armor, shields, illusionist items, and (for gnome thieves) items that duplicate thieving abilities are exempt. A device that fails reveals a cursed item" }
     // REMOVED: "Illusion Resistance +1 vs. illusions" -- not a 2e PHB gnome
     // ability; it appears nowhere in Chapter 2.
   ]
