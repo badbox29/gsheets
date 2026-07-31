@@ -2712,6 +2712,98 @@ const RACIAL_ABILITIES = {
 // Alias, not a copy -- see the note on RACIAL_COMBAT_BONUSES.
 RACIAL_ABILITIES.halfelf = RACIAL_ABILITIES["half-elf"];
 
+// === RACIAL CHECKS (PHB Ch.2) ===
+// Every racial ability that is ROLLED. Five races, four die sizes.
+//
+// THIS DATA USED TO LIVE IN HTML ATTRIBUTES -- six hardcoded cards in
+// sheet_template.js carrying data-success="5", with a roller hardwired to
+// Math.random() * 6. That is why one of the six went unnoticed for so long
+// despite being a GNOME ability: anyone auditing racial rules reads
+// RACIAL_ABILITIES, where the dwarf correctly has five. Game data lives here.
+//
+//   die        4, 6, 10 or 100. The old roller could only do 6, which is why
+//              the gnome's 1d10 and the halfling's 1d4 could not be expressed.
+//   threshold  Roll THIS OR LOWER to trigger the named outcome.
+//   inverted   true = hitting the threshold is BAD (magic item malfunction).
+//              Flips the wording only; the arithmetic is unchanged.
+//   anyTime    true = exempt from the race's proximity/concentration condition.
+const RACIAL_CHECKS = {
+  dwarf: {
+    label: 'Dwarven Abilities',
+    condition: 'Within 10 feet, and only when deliberately trying \u2014 "the information does not simply spring to mind unbidden."',
+    checks: [
+      { name: 'Grade or slope in passage',          die: 6,   threshold: 5 },
+      { name: 'New tunnel or passage construction', die: 6,   threshold: 5 },
+      { name: 'Sliding or shifting walls or rooms', die: 6,   threshold: 4 },
+      { name: 'Stonework traps, pits and deadfalls', die: 6,  threshold: 3 },
+      { name: 'Approximate depth underground',      die: 6,   threshold: 3, anyTime: true },
+      // NO direction check. That is the gnome's, and it was on this panel by
+      // mistake until the Ch.13 session. Do not add it back.
+      { name: 'Magic item malfunction',             die: 100, threshold: 20, inverted: true,
+        note: 'Items not suited to your class. A CONTINUALLY operating item is checked only the first time it is used in an encounter.' }
+    ]
+  },
+  gnome: {
+    label: 'Gnomish Abilities',
+    condition: 'Within 10 feet, after stopping and concentrating for one round.',
+    checks: [
+      { name: 'Grade or slope in passage',           die: 6,   threshold: 5 },
+      // 1d10, not 1d6. The gnome list is not the dwarf's.
+      { name: 'Unsafe walls, ceiling and floors',    die: 10,  threshold: 7 },
+      { name: 'Approximate depth underground',       die: 6,   threshold: 4, anyTime: true },
+      { name: 'Approximate direction underground',   die: 6,   threshold: 3, anyTime: true },
+      { name: 'Magic item failure',                  die: 100, threshold: 20, inverted: true,
+        note: 'Weapons, armor, shields, illusionist items and thief-duplicating items are exempt. A CONTINUOUS-USE device is checked each time it is activated -- not once per encounter, which is the dwarf\u2019s rule.' }
+    ]
+  },
+  halfling: {
+    label: 'Halfling Abilities',
+    condition: 'Only while concentrating to the exclusion of all else, and ONLY for a pure or partially Stout halfling. The sheet does not record lineage \u2014 settle it with your DM.',
+    checks: [
+      { name: 'Note an up or down grade', die: 4, threshold: 3, note: '75% of the time.' },
+      { name: 'Determine direction',      die: 6, threshold: 3, note: 'Half the time.' }
+    ]
+  },
+  elf: {
+    label: 'Elven Abilities',
+    condition: 'A SECRET door is built to be hard to notice; a CONCEALED door is hidden behind a screen, a curtain or the like.',
+    checks: [
+      { name: 'Notice a concealed door in passing', die: 6,   threshold: 1, anyTime: true,
+        note: 'Merely passing within 10 feet. No searching required.' },
+      { name: 'Search: find a secret door',         die: 6,   threshold: 2, note: 'Actively searching.' },
+      { name: 'Search: find a concealed door',      die: 6,   threshold: 3, note: 'Actively searching.' },
+      { name: 'Resist sleep or charm',              die: 100, threshold: 90,
+        note: '90% resistance, IN ADDITION to any normal saving throw allowed.' }
+    ]
+  },
+  'half-elf': {
+    label: 'Half-Elven Abilities',
+    condition: 'Secret and concealed doors are as hard to hide from a half-elf as from an elf.',
+    checks: [
+      { name: 'Notice a concealed door in passing', die: 6,   threshold: 1, anyTime: true,
+        note: 'Merely passing within 10 feet. No searching required.' },
+      { name: 'Search: find a secret door',         die: 6,   threshold: 2, note: 'Actively searching.' },
+      { name: 'Search: find a concealed door',      die: 6,   threshold: 3, note: 'Actively searching.' },
+      { name: 'Resist sleep or charm',              die: 100, threshold: 30,
+        note: '30% resistance, IN ADDITION to any normal saving throw allowed.' }
+    ]
+  }
+};
+RACIAL_CHECKS.halfelf = RACIAL_CHECKS['half-elf'];
+
+// Humans have no entry and never will -- their only racial ability is unlimited
+// advancement, which is not a roll.
+function racialChecksFor(race) {
+  const r = (race || '').toLowerCase();
+  if (!r) return null;
+  // Duergar were matched explicitly by the old dwarven gate. Preserved HERE
+  // rather than added to getRaceKey, which drives Table 7 validation and class
+  // legality and must not silently start judging a race it was never given.
+  if (r.indexOf('duergar') !== -1) return RACIAL_CHECKS.dwarf;
+  const key = (typeof getRaceKey === 'function') ? getRaceKey(race) : null;
+  return (key && RACIAL_CHECKS[key]) || null;
+}
+
 // === Class Abilities by Level (AD&D 2E) ===
 // Format: { level: [{ name, notes }] }
 const CLASS_ABILITIES = {
