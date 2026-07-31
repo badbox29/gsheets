@@ -2625,7 +2625,7 @@ RACIAL_ABILITIES.halfelf = RACIAL_ABILITIES["half-elf"];
 const CLASS_ABILITIES = {
   fighter: {
     1: [{ name: "Weapon Specialization", notes: "May specialize in weapons (if using optional rule)" }],
-    9: [{ name: "Followers", notes: "Attracts 10-100 followers and may build a stronghold" }]
+    9: [{ name: "Followers", notes: "Attracts 10-100 followers and may build a stronghold; they arrive once and are never replaced" }]
   },
   paladin: {
     1: [
@@ -2638,7 +2638,7 @@ const CLASS_ABILITIES = {
     3: [{ name: "Turn Undead", notes: "As cleric of 2 levels lower" }],
     9: [
       { name: "Cast Priest Spells", notes: "Can cast priest spells from specific spheres" },
-      { name: "Followers", notes: "Attracts followers and may build stronghold" }
+      { name: "Followers", notes: "Attracts followers and may build stronghold; they arrive once and are never replaced" }
     ]
   },
   ranger: {
@@ -2648,14 +2648,14 @@ const CLASS_ABILITIES = {
       { name: "Two-Weapon Fighting", notes: "Fight with weapon in each hand with reduced penalties" }
     ],
     8: [{ name: "Cast Priest Spells", notes: "Can cast druid/ranger spells" }],
-    10: [{ name: "Followers", notes: "Attracts 2d6 followers" }]
+    10: [{ name: "Followers", notes: "Attracts 2d6 followers; they arrive once and are never replaced" }]
   },
   cleric: {
     1: [
       { name: "Turn Undead", notes: "Can turn or destroy undead creatures" },
       { name: "Spell Casting", notes: "Can cast priest spells" }
     ],
-    8: [{ name: "Followers", notes: "Attracts followers and may build stronghold" }]
+    8: [{ name: "Followers", notes: "Attracts followers and may build stronghold; they arrive once and are never replaced" }]
   },
   druid: {
     1: [
@@ -4345,6 +4345,18 @@ const OPTIONAL_RULES = {
              'that stops enchanted ammunition being worthless to anyone holding a magic bow. ' +
              'Neither is more correct than the other -- ask your DM.',
     category: 'table',
+    default: true
+  },
+  henchmanLimits: {
+    label:   'Warn on Charisma henchman limits',
+    detail:  'PHB Chapter 12. Charisma sets the maximum number of henchmen a character may ' +
+             'have, and the chapter is explicit that this is a LIFETIME limit -- its own ' +
+             'example is a Charisma 15 character whose seven henchmen have all died, and no ' +
+             'more come. Retired, deceased and missing henchmen therefore all count. The ' +
+             'check also reports any active henchman who has reached the character\'s own ' +
+             'level, since Chapter 12 says such a henchman "leaves forever." Advisory only; ' +
+             'nothing is blocked and no henchman is ever removed for you.',
+    category: 'override',
     default: true
   }
 };
