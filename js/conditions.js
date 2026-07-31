@@ -11,6 +11,40 @@
 // so. Whether ordinary blindness or deafness carries the spell's numbers is the
 // DM's call; the tool states what is printed and does not generalise silently.
 //
+// ===========================================================================
+// STRUCTURED FIELDS -- SIGN CONVENTIONS. Read before adding or reading one.
+//
+// Getting a sign backwards here produces a plausible number that is wrong in
+// the worst direction, and this project has been bitten by exactly that three
+// times. Each field name states its own direction; none is "a bonus".
+//
+//   attackerToHit   Modifier to the ATTACKER'S roll against this character.
+//                   POSITIVE = easier to hit him. Table 51 values go in as
+//                   printed: prone +4, off-balance +2, surprised +1,
+//                   invisible -4.
+//   autoHit         true = melee attacks hit AUTOMATICALLY. Supersedes
+//                   attackerToHit entirely; do not also set a modifier.
+//   ownAttack       Modifier to THIS character's attack rolls. NEGATIVE = worse.
+//   acPenalty       Points ADDED to Armor Class. In 2e higher AC is WORSE, so
+//                   POSITIVE = worse. A "-4 penalty to AC" is a contradiction
+//                   in terms and was the exact bug found in Blinded.
+//   initiativeMod   Added to the initiative roll. Initiative is LOW-ROLL-WINS,
+//                   so NEGATIVE = acts sooner. Hasted is -2.
+//   moveMult        Multiplier on movement rate. 0.5 = half.
+//   attackRateMult  Multiplier on attacks per round. 0.5 = half, 2 = double.
+//   surpriseMod     Modifier to surprise rolls. NEGATIVE = worse.
+//   verbalSpellFailPct  Percent chance to miscast a spell with a verbal
+//                   component.
+//   negatesDexCombat    true = all Dexterity combat bonuses are cancelled.
+//   blocksNaturalHealing  true = no hit points from natural rest. NEVER read
+//                   this from a magical healing path.
+//   beneficial      true = this condition helps the character.
+//
+// A FIELD IS PRESENT ONLY IF ITS VALUE IS SOURCED. Conditions whose effects
+// vary (Poisoned, Cursed, Frightened, Confused) carry no numeric fields --
+// their mechanics are situational or table-driven and belong in the prose.
+// ===========================================================================
+//
 // PHB Table 51 is the authority for what attackers gain against a condition.
 // Its three relevant rows: "Defender sleeping or held -- Automatic",
 // "Defender stunned or prone -- +4", "Defender invisible -- -4",
@@ -39,6 +73,7 @@ const CONDITIONS_DB = [
   },
   {
     name: 'Held',
+    autoHit: true,
     // Table 51: "Defender sleeping or held -- Automatic". NOT an AC penalty --
     // the attack simply hits. The old entry claimed "AC worsens significantly",
     // which is both weaker and wrong.
@@ -46,17 +81,22 @@ const CONDITIONS_DB = [
   },
   {
     name: 'Stunned',
+    attackerToHit: 4,
+    moveMult: 1/3,
     // Description from power word, stun; effects list from symbol (stunning).
     description: 'Reeling and unable to think coherently or act (power word, stun). Drops whatever is held. Cannot communicate, cast spells, use magical items, initiate psionics, use spell-like powers, fight, or move freely; movement is limited to one-third normal rate (symbol). ATTACKERS GAIN +4 TO HIT (PHB Table 51). Duration by power word, stun is 4d4 rounds at 1\u201330 hp, 2d4 at 31\u201360, 1d4 at 61\u201390; creatures over 90 hp are unaffected.'
   },
   {
     name: 'Unconscious',
+    autoHit: true,
     // "May be coup de graced" removed -- coup de grace is not a 2e PHB concept
     // and appears nowhere in Chapter 9.
     description: 'Helpless and unaware of surroundings. Cannot take actions. ATTACKS IN MELEE HIT AUTOMATICALLY, as for a sleeping or held defender (PHB Table 51). If no other fighting is going on, the defender can be slain automatically.'
   },
   {
     name: 'Blinded',
+    attackerToHit: 4,
+    ownAttack: -4,
     // SIGN CORRECTED. The old entry read "-4 penalty to AC", which in 2e IMPROVES
     // Armor Class -- it made a blinded character harder to hit. The blindness
     // spell states the rule the other way round, and Blind-fighting (PHB Ch.5)
@@ -65,12 +105,19 @@ const CONDITIONS_DB = [
   },
   {
     name: 'Deafened',
+    surpriseMod: -1,
+    verbalSpellFailPct: 20,
     // Sourced to the deafness spell, which supplies BOTH effects. The 20%
     // miscast chance was missing entirely and is the more consequential half.
     description: 'Totally deaf and unable to hear any sounds. Suffers a \u22121 penalty to surprise rolls unless its other senses are unusually keen. DEAFENED SPELLCASTERS HAVE A 20% CHANCE TO MISCAST any spell with a verbal component (deafness). The deafness spell is removed only by dispel magic or by the caster.'
   },
   {
     name: 'Slowed',
+    ownAttack: -4,
+    acPenalty: 4,
+    moveMult: 0.5,
+    attackRateMult: 0.5,
+    negatesDexCombat: true,
     // CORRECTED from the slow spell. The old entry had -2 AC (wrong sign AND
     // wrong number), omitted the attack penalty and the Dexterity clause
     // entirely, and added a casting-time effect that does not exist.
@@ -78,6 +125,10 @@ const CONDITIONS_DB = [
   },
   {
     name: 'Hasted',
+    initiativeMod: -2,
+    moveMult: 2,
+    attackRateMult: 2,
+    beneficial: true,
     // CORRECTED from the haste spell. The old entry claimed "+2 to AC", which
     // the spell does not grant -- it gives a -2 INITIATIVE bonus. The ageing
     // clause was missing and is the most consequential part of the spell.
@@ -123,6 +174,7 @@ const CONDITIONS_DB = [
   },
   {
     name: 'Paralyzed',
+    autoHit: true,
     // RECONCILED WITH HELD. The old entry gave attackers +4; Table 51 puts
     // "sleeping or held" in the Automatic row and only "stunned or prone" at +4.
     // The hold person spell describes exactly this state -- "cannot move or
@@ -148,6 +200,8 @@ const CONDITIONS_DB = [
   },
   {
     name: 'Invisible',
+    attackerToHit: -4,
+    beneficial: true,
     // The attacker's -4 is Table 51 and is real. The old entry ALSO claimed the
     // invisible character gains +4 to attack; the invisibility spell says only
     // that invisibility "enables him to attack first". Claim removed.
@@ -155,16 +209,20 @@ const CONDITIONS_DB = [
   },
   {
     name: 'Prone',
+    attackerToHit: 4,
     // Table 51, same row as Stunned. Was missing entirely.
     description: 'Knocked down or lying flat. ATTACKERS GAIN +4 TO HIT (PHB Table 51, "Defender stunned or prone"). Regaining your feet is the DM\u2019s call on cost.'
   },
   {
     name: 'Off-balance',
+    attackerToHit: 2,
     // Table 51. Was missing entirely.
     description: 'Caught mid-movement, on poor footing, or otherwise unable to set for defence. ATTACKERS GAIN +2 TO HIT (PHB Table 51).'
   },
   {
     name: 'Surprised',
+    attackerToHit: 1,
+    surpriseMod: null,   // "decreased chance" -- no number printed
     // Table 51 plus PHB Ch.9's surprise text, which adds the saving throw part.
     description: 'Taken unawares and unable to react until wits are gathered. Unsurprised opponents get a BONUS ROUND of action. ATTACKERS GAIN +1 TO HIT (PHB Table 51), and a surprised character also has a DECREASED CHANCE OF ROLLING A SUCCESSFUL SAVING THROW (PHB Ch.9).'
   }
