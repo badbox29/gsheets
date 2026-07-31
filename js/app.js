@@ -11681,8 +11681,10 @@ function setupDwarvenDetection(root) {
         'new-construction': 'New Construction',
         'sliding-walls': 'Sliding Walls',
         'stonework-traps': 'Stonework Traps',
-        'depth': 'Depth Underground',
-        'direction': 'Direction Underground'
+        // No 'direction' entry. Determining direction underground is a GNOME
+        // ability (PHB Ch.2, 1-3 on 1d6); dwarves get depth only. The roller
+        // card was removed for the same reason -- do not add it back.
+        'depth': 'Depth Underground'
       };
       
       const abilityName = abilityNames[ability] || ability;
