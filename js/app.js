@@ -6133,8 +6133,16 @@ function bindSheet(root, tab){
   const addMagicItem = qs(root,'.add-magic-item');
   if(addMagicItem){
     addMagicItem.onclick = ()=>{
-      qs(root,'.magic-items-list').appendChild(makeMagicItemNode({}, ()=>markUnsaved(tab,true,root)));
+      // Magic items now carry a weight, so editing one has to re-run
+      // encumbrance and movement the way every other carried-gear list does.
+      qs(root,'.magic-items-list').appendChild(makeMagicItemNode({}, ()=>{
+        markUnsaved(tab,true,root);
+        renderEncumbrance(root);
+        renderMovementRate(root);
+      }));
       markUnsaved(tab,true,root);
+      renderEncumbrance(root);
+      renderMovementRate(root);
     };
   }
   
