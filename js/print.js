@@ -2205,12 +2205,12 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       }
     });
 
-    body.push(...blankRows('hirelings', 7));
+    body.push(...blankRows('hirelings', 8));
 
     hirelingBlocks.push({
       table: {
         headerRows: 1,
-        widths: ['17%', '20%', '5%', '9%', '10%', '25%', '14%'],
+        widths: ['16%', '9%', '16%', '4%', '9%', '10%', '22%', '14%'],
         body: body
       },
       layout: gridLayout,
