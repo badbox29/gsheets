@@ -516,9 +516,40 @@ function renderCombatQuickReference(root) {
   const moveEl = root.querySelector('.combat-move');
   const hpEl = root.querySelector('.combat-hp');
   
+  // PHB Ch.9 conditions. The quick reference shows what the character is
+  // ACTUALLY operating at right now; the main sheet keeps his own numbers.
+  // Conditions are transient and the sheet autosaves, so writing +4 AC into the
+  // field would leave a player who saved while Slowed permanently wrong. This is
+  // derived every render and cannot persist a mistake.
+  //
+  // Unlike parrying, which is a CHOSEN action and shows "what you would defend
+  // at if you spent the round", a condition is an ACTUAL state -- so it changes
+  // the headline figure rather than sitting beside it.
+  const condFx = (typeof getActiveConditionEffects === 'function')
+    ? getActiveConditionEffects(root)
+    : { any: false, acPenalty: 0, sources: {} };
+
+  // Negating Dexterity combat bonuses costs the character his defensive
+  // adjustment, which is a NEGATIVE number improving AC -- so removing it is a
+  // positive AC penalty. DEX_TABLE index 2 is the Defensive Adjustment.
+  let condAcPenalty = condFx.acPenalty || 0;
+  const dexDefAdj = (typeof DEX_TABLE !== 'undefined' && DEX_TABLE[dex])
+    ? DEX_TABLE[dex][2] : 0;
+  if (condFx.negatesDexCombat && dexDefAdj < 0) condAcPenalty += -dexDefAdj;
+
+  const acBase = parseInt(ac, 10);
+  const acShown = (!isNaN(acBase) && condAcPenalty) ? acBase + condAcPenalty : ac;
+
   if (initiativeEl) initiativeEl.textContent = initiativeStr;
   if (thac0El) thac0El.textContent = thac0;
-  if (acEl) acEl.textContent = ac;
+  if (acEl) {
+    acEl.textContent = acShown;
+    acEl.style.color = condAcPenalty ? 'var(--error, #ff6b6b)' : '';
+    acEl.title = condAcPenalty
+      ? 'Base AC ' + acBase + ', worsened by ' + condAcPenalty +
+        ' from active conditions. The character sheet\'s own AC field is unchanged.'
+      : '';
+  }
 
   // AC breakdown, mirroring the per-weapon lines further down this panel.
   // Built by renderArmorClass and stashed on root so there is only ONE copy of
@@ -535,6 +566,19 @@ function renderCombatQuickReference(root) {
       const colour = (l.kind === 'magic') ? 'var(--magic, #a98fd0)' : 'var(--muted)';
       return '<div style="color:' + colour + ';">' + escapeHtml(l.text) + '</div>';
     }).join('');
+
+    // Condition lines, above parrying. A changed headline number with no stated
+    // cause is worse than no change at all -- the player has to be able to tell
+    // a DM where the +4 came from.
+    if (condAcPenalty) {
+      const who = (condFx.sources.acPenalty || []).slice();
+      if (condFx.negatesDexCombat && dexDefAdj < 0) {
+        who.push('DEX bonus negated');
+      }
+      acHtml += '<div style="color:var(--error, #ff6b6b);">' +
+                'Conditions +' + condAcPenalty + ' AC (worse): ' +
+                escapeHtml(who.join(', ')) + '</div>';
+    }
 
     // Parrying (PHB Ch.9, optional rule). Printed BESIDE Armor Class, never
     // added to it. The book rules the bonus out against rear attacks, missiles
