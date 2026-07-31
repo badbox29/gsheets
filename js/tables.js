@@ -2133,6 +2133,43 @@ const COINS_PER_POUND_1E = 10;
 function getCoinsPerPound() {
   return isOptionalRule('coinWeight2e') ? COINS_PER_POUND_2E : COINS_PER_POUND_1E;
 }
+
+// === Table 42: Standard Exchange Rates (PHB Chapter 6) ===
+// Table 42 prints all twenty-five pairings, but it reduces without loss to one
+// row: the worth of each coin in COPPER. Every other cell divides out of these
+// five numbers, so this IS the table, not a summary of it.
+// Transcribed from a photograph of Chris's printed page and checked in both
+// directions, July 2026.
+//
+// Copper is the base because it is the only one that makes all five whole.
+// Display is in GOLD, 2e's unit of account -- Table 44 prices the entire
+// equipment list in gp.
+//
+// Distinct from COINS_PER_POUND above: that is weight and the PHB never states
+// it, this is value and the PHB prints it. Do not conflate them -- 500 cp and
+// 500 pp weigh the same and are a thousandfold apart in worth.
+const COIN_VALUES_CP = { cp: 1, sp: 10, ep: 50, gp: 100, pp: 500 };
+const COINS_PER_GP   = COIN_VALUES_CP.gp;          // 100
+const COIN_UNITS     = ['cp', 'sp', 'ep', 'gp', 'pp'];  // Table 42's own row order
+
+// Worth of `count` coins of `unit`, in gp. Deliberately returns a float: one
+// copper is 0.01 gp and rounding here would erase it.
+function coinsToGp(count, unit) {
+  const n = parseFloat(count);
+  if (!isFinite(n)) return 0;
+  const cp = COIN_VALUES_CP[String(unit || 'gp').toLowerCase()];
+  return cp ? (n * cp) / COINS_PER_GP : 0;
+}
+
+// One formatter, so the coin total and the valuables total cannot drift into
+// different rounding. Whole numbers print clean; two decimal places is exactly
+// enough to hold copper.
+function formatGp(gp) {
+  const n = Number(gp) || 0;
+  return (Math.round(n * 100) / 100)
+    .toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+}
+
 // === Optional Rule toggle: encumbrance combat/movement effects ===
 // The PHB labels encumbrance an OPTIONAL RULE, so ignoring it entirely is RAW.
 // When false, encumbrance is purely INFORMATIONAL -- the category, weight
@@ -2192,6 +2229,57 @@ function magicItemTypeHasCharges(key) {
 function magicItemTypeLabel(key) {
   const t = MAGIC_ITEM_TYPES.find(x => x.key === (key || ''));
   return t ? t.label : '\u2014';
+}
+
+// === Valuable types (PHB Chapter 10) ===
+// Chapter 10's own enumeration of what fills a horde besides coin: gems cut and
+// uncut, jewelry, objects of artistic value, objects of valuable metal (which
+// "must be melted down for their metal" when no buyer can be found), coinage no
+// longer current that "can be sold only by their weight", and the unusual goods
+// -- furs, exotic animals, spices, rare spell components, trade goods.
+//
+// METADATA ONLY. Nothing keys arithmetic off this; the valuables total sums
+// every row whatever its type. It exists so a horde reads at a glance and so
+// the printed sheet can say what a line is. `misc` is the catch-all.
+const VALUABLE_TYPES = [
+  { key: '',          label: '\u2014' },
+  { key: 'gem',       label: 'Gem' },
+  { key: 'jewelry',   label: 'Jewelry' },
+  { key: 'art',       label: 'Art Object' },
+  { key: 'metal',     label: 'Valuable Metal' },
+  { key: 'currency',  label: 'Alt. Currency' },
+  { key: 'trade',     label: 'Trade Goods' },
+  { key: 'fur',       label: 'Furs' },
+  { key: 'spice',     label: 'Spices' },
+  { key: 'component', label: 'Spell Components' },
+  { key: 'animal',    label: 'Exotic Animal' },
+  { key: 'misc',      label: 'Miscellaneous' }
+];
+
+function valuableTypeLabel(key) {
+  const t = VALUABLE_TYPES.find(x => x.key === (key || ''));
+  return t ? t.label : '\u2014';
+}
+
+// === Legacy migration: the old free-text "Value (ea)" ===
+// Value (ea) was a text box, so existing records hold "500 gp", "1,000",
+// "~200 each", "12gp" and anything else a player typed. This pulls a number and
+// a unit out of whatever is there. Called ONLY when the structured `value`
+// field is absent, so it runs once per record and can never overwrite real
+// data.
+//   - commas are stripped first, or "1,000" would parse as 1
+//   - the first number wins, so "~200 each" gives 200
+//   - a cp/sp/ep/gp/pp token anywhere sets the unit; note there is no leading
+//     word boundary, because "12gp" has none and is a normal thing to type
+//   - no token means gp, 2e's unit of account
+function parseLegacyValueEach(raw) {
+  const s = String(raw == null ? '' : raw);
+  const num  = s.replace(/,/g, '').match(/-?\d+(?:\.\d+)?/);
+  const unit = s.toLowerCase().match(/(cp|sp|ep|gp|pp)\b/);
+  return {
+    value: num ? num[0] : '',
+    unit:  unit ? unit[1] : 'gp'
+  };
 }
 
 // === Dexterity Table (AD&D 2E) ===
