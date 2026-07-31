@@ -8157,6 +8157,14 @@ function buildSurpriseModifierLines(root, dex, total) {
                '   [' + (fx.sources.surpriseMod || []).join(', ') + ']');
   }
 
+  // The number that actually decides it. The threshold used to sit beside the
+  // RAW roll at the top of the tooltip, which is the one figure it must never
+  // be read against -- 1-3 is tested after modifiers, which is the entire point
+  // of having a modifier. Stated here, on the adjusted figure, instead.
+  const adjusted = total + dexAdj + (fx.surpriseMod || 0);
+  lines.push('');
+  lines.push('SURPRISED ON 1-3 AFTER MODIFIERS.  Yours: ' + adjusted + '.');
+
   // Racial bonus -- reported, not applied. See the note above.
   const raceKey = (typeof getRaceKey === 'function') ? getRaceKey(val(root, 'race')) : null;
   const racial = (raceKey && typeof RACIAL_ABILITIES !== 'undefined' &&
@@ -10493,7 +10501,7 @@ function bindDiceRollers(root) {
 		  result.formula = 'Surprise (d10)';
 		  // PHB Ch.11: "determined by rolling 1d10 for each side ... If the die
           // roll is a 1, 2, or 3, that group or character is surprised."
-          modifiers = ['Rolled: ' + result.total + '   (1-3 = surprised)', '']
+          modifiers = ['Rolled: ' + result.total + '   (raw d10)', '']
             .concat(buildSurpriseModifierLines(root, dex, result.total))
             .join('\n');
           break;
