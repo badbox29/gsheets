@@ -243,6 +243,23 @@ const CONDITIONS_DB = [
     // that instant of surprise." BONUSES -- Ch.1 confirms only BENEFICIAL
     // Dexterity modifiers are suspended, so a poor-Dexterity penalty is not shed.
     description: 'Taken unawares and unable to react until wits are gathered. The unsurprised side gets ONE BONUS ROUND of melee, missile or magical item attacks at its full attacks per round, but CANNOT CAST SPELLS during it (PHB Ch.11). ALL DEXTERITY ARMOR CLASS BONUSES ARE LOST for that instant (PHB Ch.11); a Dexterity AC penalty is not shed. ATTACKERS GAIN +1 TO HIT (PHB Table 51), and a surprised character also has a DECREASED CHANCE OF ROLLING A SUCCESSFUL SAVING THROW (PHB Ch.9). If both groups surprise each other, the effects of surprise are cancelled (PHB Ch.11).'
+  },
+  {
+    name: 'Fighting via Mirror',
+    ownAttack: -2,
+    negatesDexCombat: true,
+    // PHB Ch.13, "Using Mirrors". The chapter gives two effects with DIFFERENT
+    // SCOPES and this entry's name is deliberately the narrower of them. The
+    // -2 covers "all actions requiring an ability or proficiency check or an
+    // attack roll" -- lock-picking by reflection costs it too. The Dexterity
+    // clause applies ONLY "if fighting an opponent seen only in a mirror", so
+    // tagging a man merely peering round a corner would strip his AC for no
+    // printed reason. negatesDexCombat is read by calc.js as AC-only and
+    // guarded on dexDefAdj < 0, which is exactly right: the chapter forfeits
+    // BONUSES, so a poor Dexterity keeps its penalty. The ability- and
+    // proficiency-check half has no structured field and lives in the prose,
+    // as Poisoned's does.
+    description: 'Fighting an opponent seen only by reflection. Suffers \u22122 ON ATTACK ROLLS and LOSES ALL DEXTERITY BONUSES TO ARMOR CLASS. The same \u22122 applies to ANY action directed by a mirror, in or out of combat -- every ability check and every proficiency check -- because acting on a reflected view is disorienting. A MIRROR IS ALSO USELESS WITHOUT A LIGHT SOURCE. Mirrors are the standard answer to creatures so hideous that gazing directly upon them might turn the viewer to stone, such as a medusa (PHB Ch.13).'
   }
 ];
 
