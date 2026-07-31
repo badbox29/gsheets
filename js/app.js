@@ -6315,6 +6315,7 @@ function bindSheet(root, tab){
   // This is the one exception to the "repeat it in both lists" rule, and the
   // reason is that there is no character state to keep in step.
   if (typeof renderVisionLightPanel === 'function') renderVisionLightPanel(root);
+  if (typeof renderCoverReference === 'function') renderCoverReference(root);
 
   // Ranger stealth depends on class, level, race and Dexterity across all three
   // character types. One delegated listener rather than patching each of the
