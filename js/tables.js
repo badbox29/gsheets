@@ -2144,6 +2144,50 @@ function getCoinsPerPound() {
 // change takes effect without a reload. The old ENCUMBRANCE_RULES_ENABLED const
 // has been removed.
 
+// === Magic item types (PHB Chapter 10) ===
+// Chapter 10 enumerates the categories of magical item a character can find:
+// Magical Weapons, Magical Armor, Potions and Oils, Scrolls, Rings, Wands/
+// Staves/Rods, Miscellaneous Magic, and Artifacts and Relics.
+//
+// Wands, staves and rods share one heading in the book but are described as
+// three separate things -- wands are "commonly used by wizards", staves "can be
+// used by either a wizard or a priest", rods are "the rarest of all" -- so they
+// are kept as three keys rather than collapsed into one.
+//
+// `charges` marks the types the chapter states are expendable: "Wands, staves,
+// and rods are not limitless in their power. Each use drains them slightly,
+// using up a charge." Chapter 10 gives charges to NOTHING else, so nothing else
+// carries the flag. If your table runs charged miscellaneous items (a chime of
+// opening and similar), set `charges: true` on `misc` -- that one edit is the
+// whole change, because the card reads this registry rather than a hardcoded
+// list.
+//
+// Keys are what character records store and must never be renamed; relabel
+// instead. The empty key is the unset state and is deliberately first.
+const MAGIC_ITEM_TYPES = [
+  { key: '',         label: '\u2014',           charges: false },
+  { key: 'weapon',   label: 'Weapon',           charges: false },
+  { key: 'armor',    label: 'Armor',            charges: false },
+  { key: 'potion',   label: 'Potion / Oil',     charges: false },
+  { key: 'scroll',   label: 'Scroll',           charges: false },
+  { key: 'ring',     label: 'Ring',             charges: false },
+  { key: 'wand',     label: 'Wand',             charges: true  },
+  { key: 'staff',    label: 'Staff',            charges: true  },
+  { key: 'rod',      label: 'Rod',              charges: true  },
+  { key: 'misc',     label: 'Miscellaneous',    charges: false },
+  { key: 'artifact', label: 'Artifact / Relic', charges: false }
+];
+
+function magicItemTypeHasCharges(key) {
+  const t = MAGIC_ITEM_TYPES.find(x => x.key === (key || ''));
+  return !!(t && t.charges);
+}
+
+function magicItemTypeLabel(key) {
+  const t = MAGIC_ITEM_TYPES.find(x => x.key === (key || ''));
+  return t ? t.label : '\u2014';
+}
+
 // === Dexterity Table (AD&D 2E) ===
 // Format: [reaction adjustment, missile attack adjustment, defensive adjustment (AC)]
 const DEX_TABLE = {
