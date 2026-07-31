@@ -1529,6 +1529,11 @@ const SHEET_HTML = `
 		<!-- Magic Items -->
 		<section class="section">
 		  <h3>Magic Items <button class="add-magic-item">+ Add</button></h3>
+		  <p style="font-size:12px;line-height:1.4;background:var(--glass);border-radius:4px;padding:8px;margin:0 0 12px;">
+			Magical <strong>weapons</strong> and <strong>armor</strong> go on the Weapons and Armor tabs — tick
+			<em>Enchanted?</em> there so the bonuses reach THAC0, damage, weapon speed and Armor Class.
+			An enchanted weapon or suit recorded on this tab is a note only and changes no calculation.
+		  </p>
 		  <div class="list magic-items-list"></div>
 		</section>
 	  </main>
