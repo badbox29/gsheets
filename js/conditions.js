@@ -269,9 +269,20 @@ function getConditionDescription(conditionName) {
   return condition ? condition.description : 'No description available.';
 }
 
-// Get all condition names for dropdown
+// Get all condition names for the dropdown, ALPHABETIZED. Twenty-four entries
+// in insertion order were unscannable.
+//
+// Sorting here rather than at the call site is safe because this function has
+// exactly one caller and its whole purpose is that dropdown. CONDITIONS_DB's
+// own order is untouched and stays meaningful: .map() returns a NEW array and
+// .sort() mutates only that copy. Every other consumer reaches the array
+// through .find(), which does not care about order at all.
+//
+// Do NOT "simplify" this by sorting CONDITIONS_DB itself. The array is grouped
+// by where its entries came from -- the Table 51 combat states sit together at
+// the end -- and that grouping is what makes the file readable.
 function getAllConditionNames() {
-  return CONDITIONS_DB.map(c => c.name);
+  return CONDITIONS_DB.map(c => c.name).sort((a, b) => a.localeCompare(b));
 }
 
 // Short mechanical summary of a condition, built from the STRUCTURED fields
