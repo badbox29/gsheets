@@ -12018,6 +12018,8 @@ function recalculateAll(root) {
   // toggle recalculates encumbrance from the previous divisor's number, and the
   // change appears not to work until the player happens to edit a coin field.
   if (typeof renderCoinWeight === 'function') renderCoinWeight(root);
+  // Value, not weight -- no ordering dependency, unlike the pair around it.
+  if (typeof renderValuablesValue === 'function') renderValuablesValue(root);
   if (typeof renderEncumbrance === 'function') renderEncumbrance(root);
   if (typeof renderProficiencySlots === 'function') renderProficiencySlots(root);
   if (typeof renderMovementRate === 'function') renderMovementRate(root);
