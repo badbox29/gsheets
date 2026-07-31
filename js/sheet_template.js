@@ -1331,7 +1331,7 @@ const SHEET_HTML = `
 		
 		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
 
-        <!-- Treasure & Money -->
+        <!-- Money & Treasure -->
         <section class="section">
           <h3>Treasure & Money</h3>
           
@@ -1349,16 +1349,22 @@ const SHEET_HTML = `
             <div class="col"><label>Coin Value (gp)</label><input data-field="coin_value" type="text" readonly></div>
           </div>
           
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;margin-bottom:8px;">
-            <h4 style="font-size:14px;margin:0;">Other Valuables</h4>
+          <h4 style="font-size:14px;margin:16px 0 8px;">Other Valuables</h4>
+          <!-- This summary sits directly under the coin summary and ABOVE the
+               list, so the two weight fields and the two value fields stay
+               adjacent and vertically aligned however long the list grows.
+               The empty column is FIRST on purpose: it pushes weight into
+               column 2 and value into column 3, under Coin Weight and Coin
+               Value. Putting it last is what shifted them left. -->
+          <div class="row">
+            <div class="col"><!-- empty: aligns with Coin Count above --></div>
+            <div class="col"><label>Valuables Weight (lbs)</label><input data-field="valuables_weight" type="text" readonly></div>
+            <div class="col"><label>Valuables Value (gp)</label><input data-field="valuables_value" type="text" readonly></div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-top:12px;margin-bottom:8px;">
             <button class="add-valuable">+ Add Item</button>
           </div>
           <div class="list valuables-list"></div>
-          <div class="row" style="margin-top:8px">
-            <div class="col"><label>Valuables Weight (lbs)</label><input data-field="valuables_weight" type="text" readonly></div>
-            <div class="col"><label>Valuables Value (gp)</label><input data-field="valuables_value" type="text" readonly></div>
-            <div class="col"><!-- empty for layout --></div>
-          </div>
         </section>
 		
 		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
