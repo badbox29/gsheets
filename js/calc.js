@@ -84,39 +84,45 @@ function renderWisdomSaveAdjustments(root) {
   }
 }
 
+// PHB Table 6. Charisma writes six read-only fields across three tabs.
+//
+// SCORE 1 IS VALID and was being excluded. CHA_TABLE defines it -- reaction -7,
+// no henchmen at all, loyalty -8 -- but the old guard began at 2, so a
+// Charisma 1 character kept whatever the last valid score had left in the boxes.
+//
+// The invalid branch now CLEARS instead of returning early. That is the same
+// defect fixed on the Dexterity branch during the Chapter 11 pass: an early
+// return leaves stale numbers on screen where they read as current.
+//
+// ONE WRITER PER FIELD. henchmen_max and loyalty_base were each written twice,
+// once through val() and again through a querySelector block below it. Both
+// wrote the same value so nothing looked wrong -- but two writers for one field
+// is exactly how the AC variants drifted. Do not reintroduce the second block.
 function renderCharismaEffects(root) {
-  const cha = parseInt(val(root,"cha")||0,10);
-  if (!cha || cha < 2 || cha > 25) return;
+  const FIELDS = ['henchmen_max', 'loyalty_base', 'cha_reaction_core',
+                  'cha_max_henchmen_core', 'cha_loyalty_core', 'reaction_adj'];
 
-  const effects = CHA_TABLE[cha];
-  if (!effects) return;
+  const cha = parseInt(val(root, "cha") || 0, 10);
+  const effects = (cha >= 1 && cha <= 25) ? CHA_TABLE[cha] : null;
 
-  // Populate Details tab fields (original)
-  val(root,"henchmen_max", effects.henchmen);
-  val(root,"loyalty_base", effects.loyalty);
+  if (!effects) {
+    FIELDS.forEach(f => val(root, f, ''));
+    return;
+  }
 
-  // Reaction adj visible in two places on Details tab
   const adjStr = (effects.reaction >= 0 ? "+" : "") + effects.reaction;
-  val(root,"cha_reaction_core", adjStr);
-  
-  // Populate Core tab Charisma fields
-  val(root,"cha_max_henchmen_core", effects.henchmen);
-  val(root,"cha_loyalty_core", effects.loyalty);
-  
-  // Also populate Followers tab fields (new)
-  val(root,"reaction_adj", adjStr);
-  
-  // Update follower capacity fields in Followers tab
-  const followersMaxEl = root.querySelector('[data-field="henchmen_max"]');
-  const loyaltyBaseEl = root.querySelector('[data-field="loyalty_base"]');
-  
-  if (followersMaxEl) {
-    followersMaxEl.value = effects.henchmen;
-  }
-  
-  if (loyaltyBaseEl) {
-    loyaltyBaseEl.value = effects.loyalty;
-  }
+
+  // Details tab
+  val(root, "henchmen_max", effects.henchmen);
+  val(root, "loyalty_base", effects.loyalty);
+
+  // Core tab
+  val(root, "cha_reaction_core",     adjStr);
+  val(root, "cha_max_henchmen_core", effects.henchmen);
+  val(root, "cha_loyalty_core",      effects.loyalty);
+
+  // Followers tab
+  val(root, "reaction_adj", adjStr);
 }
 
 function renderCurrentHP(root) {
@@ -7602,6 +7608,33 @@ function renderClassGroupValidation(root) {
     '<div style="margin-top:6px;color:var(--muted);font-size:11px;">' +
       'Advisory only \u2014 nothing is blocked. Switch this check off under ' +
       'House Rules &amp; Overrides in Settings if your DM has approved it.</div>';
+  el.style.display = '';
+}
+
+// PHB Chapter 12, henchmen. Two rules, one banner -- validateHenchmen() in
+// tables.js holds the reasoning and returns the problem strings. Amber like the
+// other rule warnings, because both findings are departures from a printed rule
+// rather than neutral information.
+//
+// Henchman NAMES arrive here from a free-text input, so every string is escaped
+// before it is injected.
+function renderHenchmanLimits(root) {
+  const el = root.querySelector('.henchman-limit-message');
+  if (!el) return;
+
+  const problems = (typeof validateHenchmen === 'function') ? validateHenchmen(root) : [];
+  if (!problems || problems.length === 0) {
+    el.style.display = 'none';
+    el.innerHTML = '';
+    return;
+  }
+
+  el.innerHTML =
+    '<strong style="color:var(--warning, #e0a34a);">\u26A0 Henchmen (PHB Ch.12)</strong>' +
+    problems.map(p => '<div style="margin-top:4px;">\u2022 ' + escapeHtml(p) + '</div>').join('') +
+    '<div style="margin-top:6px;color:var(--muted);font-size:11px;">' +
+      'Advisory only \u2014 nothing is blocked and no henchman is ever removed. Switch ' +
+      'this check off under House Rules &amp; Overrides in Settings.</div>';
   el.style.display = '';
 }
 
