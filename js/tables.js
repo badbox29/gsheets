@@ -141,77 +141,55 @@ const RACE_SAVE_BONUSES = {
 };
 
 // === Combat & Exploration Bonuses ===
-// Quick reference for abilities players might forget in combat/exploration
-// Excludes: save bonuses (calculated elsewhere), detection abilities (separate section)
+// A CURATED VIEW of RACIAL_ABILITIES, not a second copy of it. Each string is
+// the NAME of an entry in RACIAL_ABILITIES; the prose lives there and only
+// there. This deliberately excludes save bonuses (calculated elsewhere) and the
+// detection abilities (their own section), which is why it cannot simply render
+// the whole racial list.
+//
+// It used to restate the prose, and the two copies HAD ALREADY DRIFTED: the
+// surprise entry read "reduced to -2" here and "or -2" there, and the
+// sleep/charm wording differed as well. Names are now the RACIAL_ABILITIES
+// names, so panel labels match the ability cards on the Abilities tab.
 
 const RACIAL_COMBAT_BONUSES = {
-  dwarf: {
-    combat: [
-      { name: "Attack Bonus", notes: "+1 to hit orcs, half-orcs, goblins, hobgoblins" }
-    ],
-    defensive: [
-      { name: "AC Bonus vs Giants", notes: "Giants, ogres, trolls, ogre magi, titans get -4 to hit you" }
-    ],
-    special: [
-      // PHB Ch.2: "All magical items that are not specifically suited to the
-      // character's class have a 20% chance to malfunction when used by a
-      // dwarf." Note the exclusion list runs the OPPOSITE way from intuition --
-      // rods, wands and potions DO malfunction; weapons and armor do not.
-      { name: "Magic Item Malfunction", notes: "20% chance of malfunction each time you use a magical item not suited to your class -- rods, staves, wands, rings, amulets, potions, horns, jewels and the like. Weapons, shields, armor, gauntlets and girdles are exempt, as are priest items used by a dwarven cleric. A device that operates CONTINUALLY is checked only the first time it is used in an encounter; pass, and it works until it is turned off -- a robe of blending is checked when donned and not again until it is removed and put back on. Affects only that use; a cursed item that malfunctions reveals itself" }
-    ]
-  },
-  gnome: {
-    combat: [
-      { name: "Attack Bonus", notes: "+1 to hit kobolds and goblins" }
-    ],
-    defensive: [
-      { name: "AC Bonus vs Giants", notes: "Gnolls, bugbears, ogres, trolls, ogre magi, giants, titans get -4 to hit you" }
-    ],
-    special: [
-      // PHB Ch.2. The gnome exclusion list is NOT the dwarf's -- gnomes exempt
-      // illusionist items and thief-duplicating items, dwarves exempt gauntlets
-      // and girdles. Transcribed separately for that reason.
-      { name: "Magic Item Failure", notes: "20% chance of failure each time you attempt to use a magical item, and for a CONTINUOUS-USE device each time it is activated -- NOT once per encounter, which is the dwarf's rule and not the gnome's. Weapons, armor, shields, illusionist items, and (for gnome thieves) items that duplicate thieving abilities are exempt. A device that fails reveals a cursed item" }
-    ]
-  },
-  halfling: {
-    combat: [
-      { name: "Ranged Attack Bonus", notes: "+1 to hit with slings and thrown weapons" }
-    ],
-    // DELIBERATELY EMPTY. This slot previously held "creatures larger than
-    // man-sized get -4 to hit you". PHB Ch.2 grants that -4 to DWARVES and
-    // GNOMES only; the halfling entry has no such ability.
-    defensive: [],
-    special: [
-      { name: "Surprise Bonus", notes: "Opponents take -4 on their surprise rolls, or -2 if you must open a door or screen to attack. Requires that you are not in metal armor AND are either alone, with a party of only halflings and elves likewise out of metal armor, or 90 feet or more away from your party" }
-    ]
-  },
-  elf: {
-    combat: [
-      // PHB Ch.2: "When employing a bow of any sort other than a crossbow, or
-      // when using a short or long sword". Any bow qualifies -- composite and
-      // flight bows included -- not just the long and short bow.
-      { name: "Weapon Bonus", notes: "+1 to hit with any bow other than a crossbow, and with short and long swords" }
-    ],
-    defensive: [],
-    special: [
-      { name: "Sleep/Charm Resistance", notes: "90% resistant to sleep and all charm-related spells (in addition to any normal saving throw)" },
-      { name: "Surprise Bonus", notes: "Opponents take -4 on their surprise rolls, or -2 if you must open a door or screen to attack. Requires that you are not in metal armor AND are either alone, with a party of only elves and halflings likewise out of metal armor, or 90 feet or more away from your party" }
-    ]
-  },
-  "half-elf": {
-    combat: [],
-    defensive: [],
-    special: [
-      { name: "Sleep/Charm Resistance", notes: "30% resistant to sleep and all charm-related spells (in addition to any normal saving throw)" }
-    ]
-  },
-  human: {
-    combat: [],
-    defensive: [],
-    special: []
-  }
+  dwarf:      { combat: ["Attack Bonus vs. Orcs/Goblins"],
+                defensive: ["AC Bonus vs. Giants"],
+                special: ["Magic Item Malfunction"] },
+  gnome:      { combat: ["Attack Bonus vs. Kobolds/Goblins"],
+                defensive: ["AC Bonus vs. Giants"],
+                special: ["Magic Item Failure"] },
+  // DELIBERATELY EMPTY defensive, for halfling and elf both. This slot once
+  // held "creatures larger than man-sized get -4 to hit you". PHB Ch.2 grants
+  // that -4 to DWARVES and GNOMES only.
+  halfling:   { combat: ["Sling/Thrown Bonus"],
+                defensive: [],
+                special: ["Surprise Bonus"] },
+  elf:        { combat: ["Bow/Sword Bonus"],
+                defensive: [],
+                special: ["Resistance to Sleep/Charm", "Surprise Bonus"] },
+  "half-elf": { combat: [], defensive: [],
+                special: ["Resistance to Sleep/Charm"] },
+  human:      { combat: [], defensive: [], special: [] }
 };
+
+// Resolve one category to {name, notes} objects pulled live from
+// RACIAL_ABILITIES. A name that does not resolve is DROPPED and warned about
+// rather than rendered blank -- a silent gap in the panel is exactly the sort
+// of thing that goes unnoticed for months.
+function racialBonusEntries(race, category) {
+  const refs = RACIAL_COMBAT_BONUSES[race];
+  if (!refs || !Array.isArray(refs[category])) return [];
+  const list = (typeof RACIAL_ABILITIES !== 'undefined' && RACIAL_ABILITIES[race]) || [];
+  const out = [];
+  refs[category].forEach(nm => {
+    const hit = list.find(a => a.name === nm);
+    if (hit) out.push({ name: hit.name, notes: hit.notes });
+    else console.warn('racialBonusEntries: no RACIAL_ABILITIES entry named "' +
+                      nm + '" for race "' + race + '"');
+  });
+  return out;
+}
 // Alias, not a copy -- duplicated blocks drifting apart is how the old
 // multi-class table accumulated three combinations the PHB does not allow.
 RACIAL_COMBAT_BONUSES.halfelf = RACIAL_COMBAT_BONUSES["half-elf"];
