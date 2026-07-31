@@ -1853,25 +1853,55 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   const magicItemRows = named(sheet && sheet.magicItems);
   const showMagicItems = !!opts.magicItems && hasContent(magicItemRows, 'magicItems');
 
+  // This sheet used to head one column "Notes / Charges" because charges had no
+  // field of their own and players typed them into the notes. They are
+  // structured now, so the column is real. PHB Ch.10: "Wands, staves, and rods
+  // are not limitless in their power. Each use drains them slightly, using up a
+  // charge."
+  const miTypeText = (m) => (typeof magicItemTypeLabel === 'function')
+    ? magicItemTypeLabel(m.type) : '\u2014';
+  const miChargesText = (m) => {
+    const cur = String(m.charges || '').trim();
+    const max = String(m.chargesMax || '').trim();
+    if (cur && max) return cur + ' / ' + max;
+    return cur || max || '\u2014';
+  };
+  // Unidentified is marked on the NAME rather than given a column. Ch.10 treats
+  // not knowing what you hold as the normal state of a fresh find, so it has to
+  // be visible, but it does not earn width of its own.
+  const miName = (m) => String(m.name || '').trim() +
+    (m.identified === false ? ' (unidentified)' : '');
+  const miNotesText = (m) => {
+    const cw = String(m.commandWord || '').trim();
+    const notes = String(m.notes || '').trim();
+    return cw ? (notes ? notes + '\n' : '') + 'Command word: ' + cw : notes;
+  };
+
   const magicItemBlocks = [];
 
   if (showMagicItems) {
     magicItemBlocks.push({
       table: {
         headerRows: 1,
-        widths: opts.tallyBoxes ? ['26%', '46%', '28%'] : ['32%', '68%'],
+        widths: opts.tallyBoxes
+          ? ['20%', '12%', '10%', '36%', '22%']
+          : ['24%', '14%', '12%', '50%'],
         body: [
           [
             cell('Magic Item', 6, { bold: true }),
-            cell('Notes / Charges', 6, { bold: true }),
+            cell('Type', 6, { bold: true }),
+            cell('Charges', 6, { bold: true }),
+            cell('Notes', 6, { bold: true }),
             ...(opts.tallyBoxes ? [cell('Charges Used', 6, { bold: true })] : [])
           ],
           ...magicItemRows.map(m => [
-            cell(m.name, 6, { bold: true }),
-            cell(String(m.notes || '').trim()),
+            cell(miName(m), 6, { bold: true }),
+            cell(miTypeText(m), 6, { alignment: 'center' }),
+            cell(miChargesText(m), 6, { alignment: 'center' }),
+            cell(miNotesText(m)),
             ...(opts.tallyBoxes ? [tallyBoxes()] : [])
           ]),
-          ...blankRows('magicItems', opts.tallyBoxes ? 3 : 2)
+          ...blankRows('magicItems', opts.tallyBoxes ? 5 : 4)
         ]
       },
       layout: gridLayout,
