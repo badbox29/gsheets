@@ -1987,14 +1987,37 @@ function renderAttacksPerRound(root) {
   }
 
   if (quickEl) {
-    // Mirror only. Editing lives on the Core tab now.
-    quickEl.value = effective;
+    // THE MIRROR NO LONGER MIRRORS EXACTLY, AND THAT IS DELIBERATE. Conditions
+    // are applied HERE and not to autoEl above: the Core tab states what the
+    // character IS, the quick reference states what he can do RIGHT NOW. The
+    // sheet autosaves, so writing a transient half-rate into the Core field
+    // would persist it. Everything except conditions is still identical.
+    const condRate = (typeof getActiveConditionEffects === 'function')
+      ? getActiveConditionEffects(root) : { attackRateMult: 1, sources: {} };
+    const rateMult = condRate.attackRateMult !== undefined ? condRate.attackRateMult : 1;
+
+    let quickVal = effective;
+    if (rateMult !== 1 && typeof scaleAttackRate === 'function') {
+      quickVal = scaleAttackRate(effective, rateMult);
+    }
+
+    quickEl.value = quickVal;
     quickEl.readOnly = true;
-    quickEl.style.color = rateColor;
-    quickEl.title = tw.active
+    quickEl.style.color = (rateMult !== 1)
+      ? (rateMult < 1 ? 'var(--error, #ff6b6b)' : 'var(--success, #4ade80)')
+      : rateColor;
+
+    const twNote = tw.active
       ? 'Melee attacks per round: ' + beforeTwoWeapon + ' +1 for two-weapon fighting = ' +
-        effective + ' (PHB Ch.9). Edit the base on the Core tab under Combat.'
-      : 'Melee attacks per round. Edit on the Core tab under Combat.';
+        effective + ' (PHB Ch.9).'
+      : 'Melee attacks per round.';
+    quickEl.title = twNote +
+      (rateMult !== 1
+        ? '\nActive conditions change this to ' + quickVal + ': ' +
+          (condRate.sources.attackRateMult || []).join(', ') +
+          '. The Core tab still shows ' + effective + '.'
+        : '') +
+      '\nEdit the base on the Core tab under Combat.';
   }
 
   if (!noteEl) return;
