@@ -30,6 +30,7 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 * Magic item records carrying type, charges, command word, and whether the item has been identified
 * Treasure valued in gold from the Player's Handbook exchange rates, with weight and worth totalled separately for coin and valuables
 * Henchmen, followers and hirelings tracked as the separate things the book makes them, with the lifetime limit Charisma places on henchmen
+* A vision and light reference giving the book's sighting distances by weather and target size, and the radius and burning time of every light source
 * Optional-rules framework with live toggles for Player's Handbook options and house-rule overrides
 * Multi-page printable character sheet with configurable sections, blank write-in lines, and color schemes
 * Import / export character data
@@ -180,6 +181,32 @@ Follow these steps **in order** to avoid overwriting your data:
 * I am not a developer.
 
 ### Recent Updates
+
+#### Unreleased
+
+A systematic review of Player's Handbook Chapter 13, *Vision and Light*.
+
+Three pages, two tables, and the first release in a while to find shipping data that flatly contradicts the book.
+
+**Light sources**
+
+* The equipment list's light sources carried figures the book does not support. A torch was listed at a 30-foot radius burning for an hour; the book gives **15 feet** and **30 minutes**. Every lantern's burning time was inflated threefold, and a candle's sixfold. All corrected.
+* Radius and burning time are now read from the book's light source table and shown live in the equipment browser. They are no longer written down a second time in the equipment data, so the two can never drift apart again.
+* Beacon and bullseye lanterns are described as cones rather than radii, with the width of the beam at its far end — the book footnotes this and the tool had never said it.
+* The common lamp appears in the equipment list but in no light table in the book. It now says so plainly instead of showing figures from nowhere.
+* **Existing characters keep the old text.** Item cards store their note at the moment you add them, and nothing rewrites them afterwards. Re-add a light source, or edit its note by hand, to pick up the corrections.
+
+**Vision**
+
+* Added a **Vision & Light** reference to the Tools tab, covering the book's sighting distances for eight weather and light conditions across the five ranges it distinguishes: seeing that something moved, spotting a figure that is standing still, making out what it is, identifying who it is, and seeing small actions clearly.
+* The ranges adjust for the size of what you are looking at. A small target shifts every category down one; a large one doubles the first three and leaves the last two alone. Both are the book's own rules and both are easy to get wrong in your head.
+* Included the caveats the book attaches and a bare table loses: terrain changes your chance of noticing a creature but not the distances themselves, and the whole table assumes an Earthlike world.
+* Noted that infravision reaches 60 feet at most, and that the book offers two versions of it and leaves the choice to the DM — who owes his players an answer on which one he is using.
+
+**Conditions**
+
+* Added **Fighting via Mirror**. Fighting something you can see only by reflection costs −2 on attack rolls and forfeits your Dexterity bonus to armor class entirely. The same −2 applies to any action you direct by looking in a mirror, in or out of combat, and a mirror is useless without a light source. The small metal mirror in the equipment list now carries the rule too, having previously said only that it was useful against medusas.
+* **The conditions list is now alphabetized.** Twenty-four entries in the order they happened to be written was hard to search.
 
 #### v10.3.0
 
