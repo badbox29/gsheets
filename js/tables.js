@@ -2282,6 +2282,45 @@ function parseLegacyValueEach(raw) {
   };
 }
 
+// === NPC categories (PHB Chapter 12) ===
+// Chapter 12 names three groups of NPC -- hirelings, followers and henchmen --
+// and separates them by the SHAPE OF THE AGREEMENT, not by occupation. Henchmen
+// have their own list on the Followers tab, so only the two that share the
+// Followers & Hirelings card are enumerated here.
+//
+//   HIRELING: "always employed for a stated term of service or for the
+//   performance of a specific task." Bound by regular pay and good treatment
+//   and nothing else -- the chapter says flatly that hirelings "do not serve a
+//   PC out of any great loyalty" -- and freely replaceable.
+//
+//   FOLLOWER: no term of contract at all. A stronghold is required to attract
+//   any. They "appear only once" and no replacements arrive to fill the ranks
+//   of the fallen; all followers in a unit advance to the next level at the
+//   same time; and they do not accompany the player characters on adventures.
+//
+// `term` is the one field a caller keys off: a Duration is meaningful for a
+// hireling and meaningless for a follower.
+//
+// THE UNSET ENTRY IS DELIBERATE and is where every pre-existing record lands.
+// The card is named "hireling" in the markup but "Followers & Hirelings" on
+// screen, so an old row could honestly be either. Unset says so, rather than
+// declaring a player's followers to be hirelings on his behalf.
+const NPC_CATEGORIES = [
+  { key: '',         label: '\u2014',   term: null  },
+  { key: 'hireling', label: 'Hireling', term: true  },
+  { key: 'follower', label: 'Follower', term: false }
+];
+
+function npcCategoryLabel(key) {
+  const c = NPC_CATEGORIES.find(x => x.key === (key || ''));
+  return c ? c.label : '\u2014';
+}
+
+function npcCategoryHasTerm(key) {
+  const c = NPC_CATEGORIES.find(x => x.key === (key || ''));
+  return !!(c && c.term);
+}
+
 // === Dexterity Table (AD&D 2E) ===
 // Format: [reaction adjustment, missile attack adjustment, defensive adjustment (AC)]
 const DEX_TABLE = {
@@ -4432,6 +4471,72 @@ function validateClassGroups(root) {
         '(warrior, wizard, priest, rogue).');
     }
   });
+
+  return problems;
+}
+
+// === Henchman limits (PHB Chapter 12) ===
+// Two rules, and they deliberately count DIFFERENT SETS of henchmen.
+//
+// 1. THE LIFETIME LIMIT. Chapter 12: "A PC's Charisma determines the maximum
+//    number of henchmen he can have. This is a lifetime limit, not just a
+//    maximum possible at any given time." The chapter's worked example is
+//    Rupert, Charisma 15, whose seven henchmen have all died -- and no more
+//    come. So EVERY status counts. Retired, deceased and missing are all spent
+//    against the total, which is why this reads every card in the list and
+//    ignores the archive filter -- that only hides rows on screen.
+//
+// 2. LEVEL PARITY. "A henchman is always of lower level than the PC. Should he
+//    ever equal or surpass the PC's level, the henchman leaves forever." Only
+//    ACTIVE henchmen are checked. A man who has already died or parted ways
+//    cannot leave again, and flagging him would be noise.
+//
+// The PC's level is the highest of his class components -- the same derivation
+// paLevel() makes in calc.js. Chapter 12 says nothing about multi- and
+// dual-class patrons, so the most generous reading is used: a 7th/5th
+// fighter/thief counts as 7th, not 5th.
+//
+// Blank names and blank levels are skipped, so a freshly added empty card never
+// trips either check. Advisory only; nothing is ever blocked.
+function validateHenchmen(root) {
+  const problems = [];
+  if (typeof isOptionalRule === 'function' && !isOptionalRule('henchmanLimits')) return problems;
+  if (!root) return problems;
+
+  const cards = Array.from(root.querySelectorAll('.henchmen-list .item')).filter(el => {
+    const n = el.querySelector('.henchman-name');
+    return n && String(n.value || '').trim();
+  });
+
+  const cha = parseInt(val(root, 'cha') || 0, 10);
+  const row = (typeof CHA_TABLE !== 'undefined' && CHA_TABLE[cha]) ? CHA_TABLE[cha] : null;
+  if (row && cards.length > row.henchmen) {
+    problems.push('Charisma ' + cha + ' allows ' +
+      (row.henchmen === 0 ? 'no henchmen at all' : row.henchmen + ' henchmen in a lifetime') +
+      ' (PHB Table 6), and ' + cards.length + ' are recorded. Retired, deceased and missing ' +
+      'henchmen still count against the lifetime total.');
+  }
+
+  const comps  = (typeof getAllClassComponents === 'function') ? getAllClassComponents(root) : [];
+  const levels = comps.map(c => parseInt(c.level, 10) || 0).filter(Boolean);
+  const pcLevel = levels.length ? Math.max.apply(null, levels)
+                                : (parseInt(val(root, 'level'), 10) || 0);
+  if (pcLevel > 0) {
+    cards.forEach(el => {
+      const statusEl = el.querySelector('.henchman-status');
+      if (statusEl && statusEl.value !== 'Active') return;
+
+      const lvEl = el.querySelector('.henchman-level');
+      const lv   = lvEl ? parseInt(lvEl.value, 10) : NaN;
+      if (!lv || lv < pcLevel) return;
+
+      const nameEl = el.querySelector('.henchman-name');
+      const name   = nameEl ? String(nameEl.value).trim() : 'A henchman';
+      problems.push(name + ' is level ' + lv + ', ' +
+        (lv === pcLevel ? 'equal to' : 'above') + ' the character\'s level of ' + pcLevel +
+        '. A henchman who equals or surpasses his patron leaves forever.');
+    });
+  }
 
   return problems;
 }
