@@ -238,3 +238,52 @@ function getConditionDescription(conditionName) {
 function getAllConditionNames() {
   return CONDITIONS_DB.map(c => c.name);
 }
+
+// Short mechanical summary of a condition, built from the STRUCTURED fields
+// only -- never parsed out of the description. Returns [] for conditions whose
+// effects are situational (Poisoned, Cursed, Frightened, Confused), which is
+// correct: they have no single modifier to state.
+//
+// Phrasing states DIRECTION IN WORDS, not just sign. "+4 AC (worse)" rather
+// than "+4 AC", because a player glancing at a card should not have to
+// remember which way 2e's AC runs.
+function summarizeConditionEffects(nameOrDef) {
+  const c = (typeof nameOrDef === 'string')
+    ? CONDITIONS_DB.find(x => x.name === nameOrDef)
+    : nameOrDef;
+  if (!c) return [];
+
+  const out = [];
+  const sign = n => (n > 0 ? '+' : '') + n;
+
+  // autoHit supersedes attackerToHit -- it is a different rule, not a big bonus.
+  if (c.autoHit) out.push('melee hits automatically');
+  else if (c.attackerToHit !== undefined && c.attackerToHit !== 0) {
+    out.push('attackers ' + sign(c.attackerToHit) +
+             (c.attackerToHit > 0 ? ' to hit' : ' to hit (harder)'));
+  }
+
+  if (c.ownAttack) out.push(sign(c.ownAttack) + ' your attacks');
+  if (c.acPenalty) out.push(sign(c.acPenalty) + ' AC (worse)');
+  if (c.initiativeMod) {
+    out.push(sign(c.initiativeMod) + ' initiative' +
+             (c.initiativeMod < 0 ? ' (sooner)' : ' (later)'));
+  }
+  if (c.moveMult !== undefined && c.moveMult !== 1) {
+    out.push(c.moveMult === 0.5 ? 'half move'
+           : c.moveMult === 2   ? 'double move'
+           : Math.round(c.moveMult * 100) + '% move');
+  }
+  if (c.attackRateMult !== undefined && c.attackRateMult !== 1) {
+    out.push(c.attackRateMult === 0.5 ? 'half attacks'
+           : c.attackRateMult === 2   ? 'double attacks'
+           : Math.round(c.attackRateMult * 100) + '% attacks');
+  }
+  if (c.negatesDexCombat)    out.push('no DEX combat bonuses');
+  if (c.surpriseMod)         out.push(sign(c.surpriseMod) + ' surprise');
+  else if (c.surpriseMod === null) out.push('saves worse (amount unstated)');
+  if (c.verbalSpellFailPct)  out.push(c.verbalSpellFailPct + '% verbal miscast');
+  if (c.blocksNaturalHealing) out.push('no natural healing');
+
+  return out;
+}
