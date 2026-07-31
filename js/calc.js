@@ -2623,7 +2623,29 @@ function renderEncumbrance(root) {
     const wtPerUnit = parseFloat(item.querySelector('.weight-per-unit')?.value) || 0;
     totalWeight += qty * wtPerUnit;
   });
-  
+
+  // Magic items weight. These were invisible to encumbrance entirely -- a staff
+  // or a suit of magical plate on the Magic Items tab weighed nothing, while
+  // every other carried-gear list counted. Surfaced by the PHB Ch.10 audit,
+  // that being the chapter describing magic items as things a character finds
+  // and carries.
+  //
+  // An item whose TYPE is armor gets the same exclusion the armor list gets --
+  // PHB Ch.6: the weight of magical armor "applies only toward the weight limit
+  // of the character. It does not apply when determining the effects of
+  // encumbrance on movement and combat." Everything in this list is magical by
+  // definition, so the type field alone decides it; there is no is-magical tick
+  // to read here.
+  const magicItemEls = Array.from(root.querySelectorAll('.magic-items-list .item'));
+  magicItemEls.forEach(item => {
+    const qty = parseFloat(item.querySelector('.qty')?.value) || 1;
+    const weight = parseFloat(item.querySelector('.weight')?.value) || 0;
+    const lbs = qty * weight;
+    totalWeight += lbs;
+    const miType = (item.querySelector('.magic-item-type')?.value) || '';
+    if (miType === 'armor') magicArmorWeight += lbs;
+  });
+
   // Set current load
   currentLoadEl.value = totalWeight.toFixed(1);
   
