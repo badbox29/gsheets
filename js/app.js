@@ -3480,21 +3480,71 @@ function makeMagicItemNode(data={}, onChange){
   el.className = 'item';
   el.style.flexDirection = 'column';
   el.style.alignItems = 'stretch';
+
+  // Records saved before this field existed carry no `identified` flag. A
+  // missing flag reads as IDENTIFIED -- otherwise every magic item on every
+  // existing character would suddenly claim to be a mystery. Same treatment
+  // isMagical already gets on legacy armor and weapon cards.
+  const miIdentified = (data.identified !== undefined) ? !!data.identified : true;
+  const miType = data.type || '';
+  const miTypeOptions = (typeof MAGIC_ITEM_TYPES !== 'undefined' ? MAGIC_ITEM_TYPES : [])
+    .map(t => '<option value="'+escapeHtml(t.key)+'"'+(t.key===miType?' selected':'')+'>'+
+              escapeHtml(t.label)+'</option>').join('');
+
   el.innerHTML =
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
+      '<div style="width:120px;">Type</div>' +
       '<div style="flex:1;">Magic Item</div>' +
+      '<div style="width:60px;text-align:center;">Qty</div>' +
+      '<div style="width:80px;text-align:center;">Weight (ea)</div>' +
       '<div style="width:70px;"></div>' + // Space for Remove button
     '</div>' +
     '<div style="display:flex;align-items:stretch;gap:8px;">' +
+      '<select class="magic-item-type" style="width:120px;">'+miTypeOptions+'</select>' +
       '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1">' +
+      '<input class="qty" type="number" placeholder="" value="'+escapeHtml(data.qty||'')+'" style="width:60px;text-align:center;">' +
+      '<input class="weight" type="number" step="0.1" placeholder="" value="'+escapeHtml(data.weight||'')+'" style="width:80px;text-align:center;">' +
       '<button class="rm">Remove</button>' +
+    '</div>' +
+    '<div style="display:flex;gap:8px;margin-top:8px;align-items:flex-end;">' +
+      '<div class="magic-item-charges-group" style="display:none;gap:6px;">' +
+        '<div style="display:flex;flex-direction:column;width:70px;">' +
+          '<label style="font-size:11px;color:var(--muted);margin-bottom:2px;">Charges</label>' +
+          '<input class="charges" type="number" value="'+escapeHtml(data.charges||'')+'" style="width:100%;text-align:center;">' +
+        '</div>' +
+        '<div style="display:flex;flex-direction:column;width:70px;">' +
+          '<label style="font-size:11px;color:var(--muted);margin-bottom:2px;">Max</label>' +
+          '<input class="charges-max" type="number" value="'+escapeHtml(data.chargesMax||'')+'" style="width:100%;text-align:center;">' +
+        '</div>' +
+      '</div>' +
+      '<div style="display:flex;flex-direction:column;flex:1;">' +
+        '<label style="font-size:11px;color:var(--muted);margin-bottom:2px;">Command Word</label>' +
+        '<input class="command-word" value="'+escapeHtml(data.commandWord||'')+'" style="width:100%;">' +
+      '</div>' +
+      '<label style="font-size:12px;display:flex;align-items:center;gap:4px;white-space:nowrap;padding-bottom:6px;">' +
+        '<input type="checkbox" class="is-identified"'+(miIdentified?' checked':'')+'>Identified' +
+      '</label>' +
     '</div>' +
     '<div style="margin-top:6px;">' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Description / Powers</label>' +
       '<textarea class="notes" placeholder="" style="width:100%;min-height:60px;resize:vertical;">'+escapeHtml(data.notes||'')+'</textarea>' +
     '</div>';
+  // Charges show only for the types Chapter 10 states are expendable -- wands,
+  // staves and rods. Read from MAGIC_ITEM_TYPES so that registry stays the one
+  // place the rule lives; charging another type is a tables.js edit, not a
+  // change here.
+  const miTypeSel   = el.querySelector('.magic-item-type');
+  const miChargeGrp = el.querySelector('.magic-item-charges-group');
+  const syncMagicItemCharges = ()=>{
+    const show = (typeof magicItemTypeHasCharges === 'function') &&
+                 magicItemTypeHasCharges(miTypeSel.value);
+    miChargeGrp.style.display = show ? 'flex' : 'none';
+  };
+  syncMagicItemCharges();
+  miTypeSel.addEventListener('change', ()=>{ syncMagicItemCharges(); onChange && onChange(); });
+
   el.querySelector('.rm').onclick = ()=>{ el.remove(); onChange && onChange(); };
-  el.querySelectorAll('input,textarea').forEach(inp =>
+  el.querySelectorAll('input,select,textarea').forEach(inp =>
     inp.addEventListener('input', ()=>onChange && onChange())
   );
   return el;
