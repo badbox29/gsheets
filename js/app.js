@@ -636,6 +636,7 @@ function renderSavingThrows(root) {
     el.title = tip;
  });
 
+  renderDexteritySaveNote(root);
   renderMagicalArmorSaveNote(root);
   renderWisdomSaveAdjustments(root);;
   renderWisdomPriestEffects(root); 
@@ -696,6 +697,57 @@ function renderMagicalArmorSaveNote(root) {
     '<br><span style="color:var(--muted);">Situational, so it is NOT included in ' +
     'the figures above. It applies only against attacks the armor would ' +
     'physically turn, which is your DM\'s call. Use the +/- box to apply it.</span>';
+  noteEl.style.display = 'block';
+}
+
+// PHB Ch.1, Dexterity: "Defensive Adjustment applies to a character's saving
+// throws (see Glossary) against attacks that can be dodged -- lightning bolts,
+// boulders, etc. It also modifies the character's Armor Class."
+//
+// The Armor Class half has always been applied. The SAVING THROW half was not
+// applied anywhere, and is the older omission of the two.
+//
+// DISPLAY ONLY, and deliberately not added to save1-save5, for exactly the
+// reason the magical armor note is not: the criterion is FUNCTIONAL -- "can be
+// dodged" -- and is not one of the five printed categories. A dodgeable attack
+// can arrive as a breath weapon, a spell or a falling rock, and plenty of
+// things in every one of those columns cannot be dodged at all. This is the
+// same shape as the Ch.1 Wisdom scope resolution: state the criterion, let the
+// DM apply it.
+//
+// SIGN: no conversion needed. Saves here are TARGET numbers where lower is
+// better, and Table 2 prints the Defensive Adjustment negative for a good
+// Dexterity -- so the printed figure already runs the right way when typed into
+// the +/- box. Same agreement the paladin bonus has.
+function renderDexteritySaveNote(root) {
+  const noteEl = root.querySelector('.dex-save-note');
+  if (!noteEl) return;
+
+  const dexScore = parseInt(val(root, 'dex') || 0, 10);
+  const dexRow = (typeof DEX_TABLE !== 'undefined' && DEX_TABLE[dexScore])
+    ? DEX_TABLE[dexScore] : null;
+  const adj = dexRow ? dexRow[2] : 0;
+
+  // Nothing to say from Dexterity 7 to 14, where the adjustment is 0.
+  if (!dexRow || !adj) {
+    noteEl.style.display = 'none';
+    noteEl.innerHTML = '';
+    return;
+  }
+
+  // No player-entered text reaches innerHTML here -- every value is derived
+  // from DEX_TABLE. If that ever changes, escape it.
+  const shown = (adj > 0 ? '+' : '') + adj;
+  noteEl.innerHTML =
+    '<strong>Dexterity Defensive Adj. ' + shown +
+    ' may apply to saving throws:</strong> ' +
+    'PHB Ch.1 extends the Defensive Adjustment to saves against attacks that ' +
+    'can be dodged, its examples being lightning bolts and boulders.' +
+    '<br><span style="color:var(--muted);">Situational, so it is NOT included ' +
+    'in the figures above. The test is whether the attack could be dodged, not ' +
+    'which of the five categories it falls under, so it is your DM\'s call. ' +
+    'Enter ' + shown + ' in the +/- box for the relevant save when it applies.' +
+    '</span>';
   noteEl.style.display = 'block';
 }
 
@@ -8023,9 +8075,9 @@ function setDefaultTabHandlers(defaultTab){
 // They stay on the condition card where the player can read them out.
 function getActiveConditionEffects(root) {
   const out = {
-    ownAttack: 0, acPenalty: 0, initiativeMod: 0,
+    ownAttack: 0, acPenalty: 0, initiativeMod: 0, surpriseMod: 0,
     moveMult: 1, attackRateMult: 1, negatesDexCombat: false,
-    sources: { ownAttack: [], acPenalty: [], initiativeMod: [],
+    sources: { ownAttack: [], acPenalty: [], initiativeMod: [], surpriseMod: [],
                moveMult: [], attackRateMult: [], negatesDexCombat: [] },
     any: false
   };
@@ -8050,6 +8102,9 @@ function getActiveConditionEffects(root) {
     add('ownAttack',     def.ownAttack);
     add('acPenalty',     def.acPenalty);
     add('initiativeMod', def.initiativeMod);
+    // The character's OWN surprise roll (PHB Ch.11). Safe to sum: add() skips
+    // null and undefined, so a condition without one contributes nothing.
+    add('surpriseMod',   def.surpriseMod);
     mul('moveMult',      def.moveMult);
     mul('attackRateMult', def.attackRateMult);
     if (def.negatesDexCombat) {
@@ -8060,6 +8115,64 @@ function getActiveConditionEffects(root) {
   });
 
   return out;
+}
+
+// PHB Ch.11 surprise modifiers, gathered from what the sheet already knows.
+//
+// The roller used to say "No standard modifier applies", which Ch.11 denies
+// outright: "The surprise roll can also be modified by Dexterity, race, class,
+// cleverness, and situation." Most of that is the DM's, but two pieces are the
+// character's own and were already sitting on this sheet unread.
+//
+// DIRECTION is spelled out in words because surprise runs opposite to most
+// rolls and both chapters bother to say so. Ch.11: "A plus to your die roll
+// reduces the odds that you are surprised." Ch.1: "The more positive the
+// modifier, the less likely the character is to be surprised."
+//
+// The racial Surprise Bonus is REPORTED AND NEVER ADDED. Elves and halflings
+// penalise their opponents' rolls, not their own; folding it in here would be
+// the right modifier applied to the wrong side of the table.
+function buildSurpriseModifierLines(root, dex, total) {
+  const lines = [];
+
+  // Dexterity Reaction Adjustment. PHB Ch.1 defines this column BY this
+  // function, which is why the printed sheet labels it "Surprise Adj".
+  // DEX_TABLE index 0.
+  const dexRow = (typeof DEX_TABLE !== 'undefined' && DEX_TABLE[dex]) ? DEX_TABLE[dex] : null;
+  const dexAdj = dexRow ? dexRow[0] : 0;
+  if (dexAdj) {
+    lines.push('Dexterity Reaction Adj. ' + (dexAdj > 0 ? '+' : '') + dexAdj +
+               ':   ' + (total + dexAdj));
+  } else {
+    lines.push('Dexterity Reaction Adj.: none at this score.');
+  }
+
+  // Conditions carrying a SOURCED surpriseMod. Deafened, at -1, is the only one
+  // in the book today.
+  const fx = (typeof getActiveConditionEffects === 'function')
+    ? getActiveConditionEffects(root) : { surpriseMod: 0, sources: {} };
+  if (fx.surpriseMod) {
+    lines.push('Conditions ' + (fx.surpriseMod > 0 ? '+' : '') + fx.surpriseMod +
+               ':   ' + (total + dexAdj + fx.surpriseMod) +
+               '   [' + (fx.sources.surpriseMod || []).join(', ') + ']');
+  }
+
+  // Racial bonus -- reported, not applied. See the note above.
+  const raceKey = (typeof getRaceKey === 'function') ? getRaceKey(val(root, 'race')) : null;
+  const racial = (raceKey && typeof RACIAL_ABILITIES !== 'undefined' &&
+                  RACIAL_ABILITIES[raceKey]) || [];
+  if (racial.some(a => a && a.name === 'Surprise Bonus')) {
+    lines.push('');
+    lines.push('Racial Surprise Bonus: applies to the OPPOSING side roll,');
+    lines.push('not to this one. See Racial Abilities for its conditions.');
+  }
+
+  lines.push('');
+  lines.push('A PLUS reduces the odds you are surprised; a MINUS');
+  lines.push('increases them (PHB Ch.11). Your DM may add further');
+  lines.push('modifiers for race, class, cleverness and situation.');
+
+  return lines;
 }
 
 // Returns the active condition that blocks natural healing, or null.
@@ -10378,7 +10491,11 @@ function bindDiceRollers(root) {
         case 'surprise':
           result = rollDiceFormula('1d10');
 		  result.formula = 'Surprise (d10)';
-		  modifiers = 'Roll 1-3 = surprised\nNo standard modifier applies';
+		  // PHB Ch.11: "determined by rolling 1d10 for each side ... If the die
+          // roll is a 1, 2, or 3, that group or character is surprised."
+          modifiers = ['Rolled: ' + result.total + '   (1-3 = surprised)', '']
+            .concat(buildSurpriseModifierLines(root, dex, result.total))
+            .join('\n');
           break;
           
         case 'to-hit':
