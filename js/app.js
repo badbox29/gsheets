@@ -6274,6 +6274,13 @@ function bindSheet(root, tab){
   if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
   if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
   if (typeof renderDruidRole === 'function') renderDruidRole(root);
+  // Vision & Light (PHB Ch.13). bindSheet ONLY -- deliberately NOT added to
+  // loadSheet or recalculateAll, unlike everything above it. The panel reads
+  // nothing from the character, so it cannot go stale when one changes, and
+  // re-rendering two static tables on every recalculation would be waste.
+  // This is the one exception to the "repeat it in both lists" rule, and the
+  // reason is that there is no character state to keep in step.
+  if (typeof renderVisionLightPanel === 'function') renderVisionLightPanel(root);
 
   // Ranger stealth depends on class, level, race and Dexterity across all three
   // character types. One delegated listener rather than patching each of the
@@ -8561,9 +8568,13 @@ function addConditionDialog(root, tab) {
   const modal = document.createElement('div');
   modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10000;';
   
+  // escapeHtml on both the attribute and the text. Condition names are ours and
+  // contain no quotes today, so this fixes no live bug -- but an unescaped value
+  // in an attribute is the exact pattern that silently truncated 130-odd fields
+  // before the escapeHtml sweep, and this was the last one left in this path.
   const conditionOptions = getAllConditionNames()
     .filter(name => name !== 'Healthy')
-    .map(name => '<option value="' + name + '">' + name + '</option>')
+    .map(name => '<option value="' + escapeHtml(name) + '">' + escapeHtml(name) + '</option>')
     .join('');
   
   modal.innerHTML = 
