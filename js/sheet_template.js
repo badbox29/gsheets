@@ -2141,64 +2141,25 @@ const SHEET_HTML = `
 		
 		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
         
-        <!-- Dwarven Abilities (only shown for dwarves) -->
-        <section class="section dwarven-abilities-section" style="display:none;">
-          <h3>Dwarven Abilities</h3>
-          
-          <!-- Detection Suite -->
+        <!--
+          RACIAL CHECKS (PHB Ch.2)
+
+          Was ".dwarven-abilities-section" with six hardcoded cards. Every card
+          is now rendered from RACIAL_CHECKS in tables.js -- there is no game
+          data in this markup and none should ever be added back.
+        -->
+        <section class="section racial-checks-section" style="display:none;">
+          <h3 class="racial-checks-title">Racial Abilities</h3>
+
           <div style="margin-bottom:24px;">
-            <h4 style="font-size:14px;margin-bottom:8px;">Detection Suite</h4>
-            <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
-              PHB Ch.2: the dwarf must be WITHIN 10 FEET of what he is checking, and must deliberately try &mdash; &ldquo;the information does not simply spring to mind unbidden.&rdquo; DEPTH IS THE EXCEPTION and may be attempted at any time. Roll d6 for each:
-            </p>
-            
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-              <!-- Grade or Slope -->
-              <div class="detection-ability" style="padding:8px;border:1px solid var(--border);border-radius:4px;">
-                <div style="font-weight:600;font-size:12px;">Grade or Slope</div>
-                <div style="font-size:11px;color:var(--muted);">Success: 1-5 on d6</div>
-                <button class="roll-detection" data-ability="grade" data-success="5" style="margin-top:4px;padding:4px 8px;font-size:11px;">Roll d6</button>
-                <div class="detection-result" style="margin-top:4px;font-size:11px;font-weight:600;"></div>
-              </div>
-              
-              <!-- New Construction -->
-              <div class="detection-ability" style="padding:8px;border:1px solid var(--border);border-radius:4px;">
-                <div style="font-weight:600;font-size:12px;">New Construction</div>
-                <div style="font-size:11px;color:var(--muted);">Success: 1-5 on d6</div>
-                <button class="roll-detection" data-ability="new-construction" data-success="5" style="margin-top:4px;padding:4px 8px;font-size:11px;">Roll d6</button>
-                <div class="detection-result" style="margin-top:4px;font-size:11px;font-weight:600;"></div>
-              </div>
-              
-              <!-- Sliding/Shifting Walls -->
-              <div class="detection-ability" style="padding:8px;border:1px solid var(--border);border-radius:4px;">
-                <div style="font-weight:600;font-size:12px;">Sliding/Shifting Walls</div>
-                <div style="font-size:11px;color:var(--muted);">Success: 1-4 on d6</div>
-                <button class="roll-detection" data-ability="sliding-walls" data-success="4" style="margin-top:4px;padding:4px 8px;font-size:11px;">Roll d6</button>
-                <div class="detection-result" style="margin-top:4px;font-size:11px;font-weight:600;"></div>
-              </div>
-              
-              <!-- Stonework Traps -->
-              <div class="detection-ability" style="padding:8px;border:1px solid var(--border);border-radius:4px;">
-                <div style="font-weight:600;font-size:12px;">Stonework Traps</div>
-                <div style="font-size:11px;color:var(--muted);">Success: 1-3 on d6</div>
-                <button class="roll-detection" data-ability="stonework-traps" data-success="3" style="margin-top:4px;padding:4px 8px;font-size:11px;">Roll d6</button>
-                <div class="detection-result" style="margin-top:4px;font-size:11px;font-weight:600;"></div>
-              </div>
-              
-              <!-- Depth Underground -->
-              <div class="detection-ability" style="padding:8px;border:1px solid var(--border);border-radius:4px;">
-                <div style="font-weight:600;font-size:12px;">Depth Underground</div>
-                <div style="font-size:11px;color:var(--muted);">Success: 1-3 on d6</div>
-                <button class="roll-detection" data-ability="depth" data-success="3" style="margin-top:4px;padding:4px 8px;font-size:11px;">Roll d6</button>
-                <div class="detection-result" style="margin-top:4px;font-size:11px;font-weight:600;"></div>
-              </div>
-            </div>
-            
-            <!-- Detection History -->
+            <p class="racial-checks-note" style="font-size:12px;color:var(--muted);margin-bottom:12px;"></p>
+
+            <div class="racial-checks-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"></div>
+
             <div style="margin-top:12px;">
-              <div style="font-size:12px;font-weight:600;margin-bottom:4px;">Detection History</div>
+              <div style="font-size:12px;font-weight:600;margin-bottom:4px;">Roll History</div>
               <div class="detection-history" style="height:120px;overflow-y:auto;padding:6px;background:rgba(255,255,255,0.03);border-radius:4px;font-family:monospace;font-size:11px;border:1px solid var(--border);">
-                <div style="color:var(--muted);font-style:italic;">Detection rolls will appear here...</div>
+                <div style="color:var(--muted);font-style:italic;">Rolls will appear here...</div>
               </div>
               <button class="clear-detection-history" style="margin-top:4px;padding:4px 8px;font-size:11px;">Clear History</button>
             </div>
