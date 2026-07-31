@@ -2166,8 +2166,14 @@ function getCoinsPerPound() {
 // instead. The empty key is the unset state and is deliberately first.
 const MAGIC_ITEM_TYPES = [
   { key: '',         label: '\u2014',           charges: false },
-  { key: 'weapon',   label: 'Weapon',           charges: false },
-  { key: 'armor',    label: 'Armor',            charges: false },
+  // Weapons and armor are deliberately absent. Chapter 10 does list them as
+  // categories of magical treasure, but where the BOOK files a thing and where
+  // the SHEET should hold it are different questions. On the Weapons and Armor
+  // tabs the Enchanted? tick and its bonus fields actually drive THAC0, attack
+  // and damage adjustments, the weapon speed-factor rule, AC, and the Ch.6
+  // magical-armor encumbrance exclusion. The same sword filed here would be
+  // inert -- a line of text computing nothing. Do not "restore" these on a
+  // later audit; their absence is the decision.
   { key: 'potion',   label: 'Potion / Oil',     charges: false },
   { key: 'scroll',   label: 'Scroll',           charges: false },
   { key: 'ring',     label: 'Ring',             charges: false },
