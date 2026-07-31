@@ -1,4 +1,20 @@
 // AD&D 2e Condition/Status Effects Database
+//
+// SOURCING RULE FOR THIS FILE: every mechanical claim below traces to printed
+// text, and the source is named in the description. An audit found six entries
+// carrying invented mechanics -- including a Blinded penalty with the sign
+// reversed, a Hasted AC bonus that does not exist, and a Confusion table whose
+// probabilities were wrong -- all of which read as plausible rules. Anything
+// that cannot be sourced says so in the text and leaves the number out.
+//
+// Where an effect comes from a SPELL rather than a general rule, the entry says
+// so. Whether ordinary blindness or deafness carries the spell's numbers is the
+// DM's call; the tool states what is printed and does not generalise silently.
+//
+// PHB Table 51 is the authority for what attackers gain against a condition.
+// Its three relevant rows: "Defender sleeping or held -- Automatic",
+// "Defender stunned or prone -- +4", "Defender invisible -- -4",
+// plus "Defender off-balance -- +2" and "Defender surprised -- +1".
 const CONDITIONS_DB = [
   {
     name: 'Healthy',
@@ -6,7 +22,8 @@ const CONDITIONS_DB = [
   },
   {
     name: 'Poisoned',
-    description: 'Character has been poisoned. Effects vary by poison type but typically include ability score penalties, HP damage over time, or death. Requires save vs. poison or neutralize poison spell to cure.'
+    // PHB Ch.9, "Poison". The two named categories and their exact effects.
+    description: 'Effects depend on the poison. PARALYTIC: unable to move for 2d6 hours, body limp, no other ill effects. DEBILITATING: 1d3 days with ALL ability scores reduced by half (apply every resulting adjustment to attack rolls, damage, Armor Class and so on), movement at half rate, and the character CANNOT HEAL by normal or magical means until the poison is neutralized or the duration elapses. Cure spells (including heal) do not halt a poison, and neutralize poison does not restore hit points already lost. Herbalism proficiency can reduce the danger (PHB Ch.9).'
   },
   {
     name: 'Diseased',
@@ -14,47 +31,72 @@ const CONDITIONS_DB = [
   },
   {
     name: 'Cursed',
-    description: 'Character is under a magical curse. Effects vary widely depending on the curse. Requires remove curse spell or fulfilling curse conditions.'
+    description: 'Character is under a magical curse. Effects vary widely depending on the curse. Requires remove curse spell or fulfilling the curse\u2019s conditions.'
   },
   {
     name: 'Charmed',
-    description: 'Character regards the caster as a trusted friend and ally. Will not attack the charmer and will defend them. Can be ordered to perform reasonable actions. Duration varies by spell.'
+    description: 'Character regards the caster as a trusted friend and ally, will not attack the charmer, and can be ordered to perform reasonable actions. Exact effects and duration depend on the spell used.'
   },
   {
     name: 'Held',
-    description: 'Character is paralyzed and cannot move or speak, though remains aware of surroundings. AC worsens significantly. Cannot cast spells or use items. Automatically hit in melee.'
+    // Table 51: "Defender sleeping or held -- Automatic". NOT an AC penalty --
+    // the attack simply hits. The old entry claimed "AC worsens significantly",
+    // which is both weaker and wrong.
+    description: 'Rigidly immobile. Cannot move or speak, but remains aware of events and can use abilities requiring neither motion nor speech. Being held does NOT prevent a condition worsening from wounds, disease or poison (hold person). ATTACKS IN MELEE HIT AUTOMATICALLY (PHB Table 51). If no other fighting is going on, the defender can be slain automatically.'
   },
   {
     name: 'Stunned',
-    description: 'Character is reeling and unable to think coherently or act. Maximum movement is 1/3 normal rate (minimum 3). Cannot communicate, cast spells, use items, fight effectively, or use psionics. Attackers gain +4 to hit.'
+    // Description from power word, stun; effects list from symbol (stunning).
+    description: 'Reeling and unable to think coherently or act (power word, stun). Drops whatever is held. Cannot communicate, cast spells, use magical items, initiate psionics, use spell-like powers, fight, or move freely; movement is limited to one-third normal rate (symbol). ATTACKERS GAIN +4 TO HIT (PHB Table 51). Duration by power word, stun is 4d4 rounds at 1\u201330 hp, 2d4 at 31\u201360, 1d4 at 61\u201390; creatures over 90 hp are unaffected.'
   },
   {
     name: 'Unconscious',
-    description: 'Character is helpless and unaware of surroundings. Cannot take actions. Automatically hit in melee combat. May be coup de graced.'
+    // "May be coup de graced" removed -- coup de grace is not a 2e PHB concept
+    // and appears nowhere in Chapter 9.
+    description: 'Helpless and unaware of surroundings. Cannot take actions. ATTACKS IN MELEE HIT AUTOMATICALLY, as for a sleeping or held defender (PHB Table 51). If no other fighting is going on, the defender can be slain automatically.'
   },
   {
     name: 'Blinded',
-    description: 'Character cannot see. -4 penalty to AC and attack rolls. Cannot cast spells requiring line of sight. Movement rate halved. Automatically fails checks requiring sight.'
+    // SIGN CORRECTED. The old entry read "-4 penalty to AC", which in 2e IMPROVES
+    // Armor Class -- it made a blinded character harder to hit. The blindness
+    // spell states the rule the other way round, and Blind-fighting (PHB Ch.5)
+    // independently confirms the -4 attack figure.
+    description: 'Able to see only a grayness. Suffers \u22124 to its own attack rolls, and its OPPONENTS GAIN +4 to their attack rolls (blindness). Blind-fighting proficiency reduces the character\u2019s own penalty to \u22122 in total darkness and \u22121 under starlight or moonlight, removes AC penalties from darkness, and halves the movement penalty \u2014 but grants no protection against missile fire. Cure spells do not remove the blindness spell; only dispel magic or the caster can.'
   },
   {
     name: 'Deafened',
-    description: 'Character cannot hear. -1 penalty to surprise rolls. Cannot hear verbal commands or warnings. Spells with verbal components may require concentration checks (DM discretion).'
+    // Sourced to the deafness spell, which supplies BOTH effects. The 20%
+    // miscast chance was missing entirely and is the more consequential half.
+    description: 'Totally deaf and unable to hear any sounds. Suffers a \u22121 penalty to surprise rolls unless its other senses are unusually keen. DEAFENED SPELLCASTERS HAVE A 20% CHANCE TO MISCAST any spell with a verbal component (deafness). The deafness spell is removed only by dispel magic or by the caster.'
   },
   {
     name: 'Slowed',
-    description: 'Character moves and attacks at half normal rate. Can only make one attack per round regardless of normal number of attacks. Casting time doubled. -2 to AC.'
+    // CORRECTED from the slow spell. The old entry had -2 AC (wrong sign AND
+    // wrong number), omitted the attack penalty and the Dexterity clause
+    // entirely, and added a casting-time effect that does not exist.
+    description: 'Moves and attacks at half normal rate. ARMOR CLASS PENALTY OF +4 (worse), ATTACK PENALTY OF \u22124, and ALL DEXTERITY COMBAT BONUSES ARE NEGATED (slow). Negates a haste spell or equivalent. Saving throws against the slow spell itself suffer \u22124.'
   },
   {
     name: 'Hasted',
-    description: 'Character moves and attacks at double rate. Gains extra attack per round. Movement rate doubled. +2 to AC. (Beneficial condition)'
+    // CORRECTED from the haste spell. The old entry claimed "+2 to AC", which
+    // the spell does not grant -- it gives a -2 INITIATIVE bonus. The ageing
+    // clause was missing and is the most consequential part of the spell.
+    description: 'Functions at double normal movement and attack rates, and gains a \u22122 INITIATIVE BONUS. Spellcasting and spell effects are NOT sped up. Grants no Armor Class benefit. AGES THE RECIPIENT BY ONE YEAR through sped-up metabolism. Not cumulative with itself or similar magic; negates a slow spell. (Beneficial condition, with a cost.)'
+  },
+  {
+    name: 'Fatigued',
+    // UNSOURCED NUMBERS REMOVED. The old entry gave -2 to attack, damage and
+    // ability checks plus a movement reduction. None of that appears in Ch.9,
+    // no spell produces it, and Ch.14's forced-march rule is -1 per day
+    // cumulative, which does not match. Fatigue is a DMG concept; the marker is
+    // useful, the invented penalties were not.
+    description: 'Exhausted from overexertion or lack of rest. EFFECTS ARE THE DM\u2019S CALL \u2014 the PHB does not define a general fatigue condition. For reference, PHB Ch.14 gives forced marching a cumulative \u22121 to attack rolls per day of march, and running requires Constitution checks to sustain.'
   },
   {
     name: 'Malnourished and Sleep-Deprived',
     // FIRST STRUCTURED FIELD IN THIS DATABASE. Everything else here is prose,
     // which means real mechanics sit trapped in strings where nothing can read
-    // them -- Stunned's "attackers gain +4 to hit" and Held's "automatically
-    // hit in melee" are PHB Table 51 verbatim and are currently decoration.
-    // Add structured fields alongside the description, never replacing it.
+    // them. Add structured fields alongside the description, never replacing it.
     //
     // PHB Ch.9, natural healing: "In both cases above, the character is assumed
     // to be getting adequate food, water, and sleep. If these are lacking, the
@@ -68,36 +110,63 @@ const CONDITIONS_DB = [
     description: 'Lacking adequate food, water, or sleep. The character regains NO hit points from natural rest of any duration (PHB Ch.9). Magical healing is unaffected. Clear this once the character is properly fed, watered and rested.'
   },
   {
-    name: 'Fatigued',
-    description: 'Character is exhausted from overexertion or lack of rest. -2 penalty to attack rolls, damage rolls, and ability checks. Movement rate reduced by 1/3.'
-  },
-  {
     name: 'Dying',
-    description: 'Character is at 0 to -9 hit points. Unconscious and losing 1 HP per round until stabilized. Requires immediate aid (binding wounds) or healing magic. Dies at -10 HP.'
+    description: 'At 0 to \u22129 hit points. Unconscious and losing 1 hit point per round until stabilized. Requires binding of wounds or healing magic. Dies at \u221210 (PHB Ch.9).'
   },
   {
     name: 'Dead',
-    description: 'Character has reached -10 hit points or suffered instant death effect. Requires raise dead, resurrection, or wish spell to restore to life.'
+    description: 'Reached \u221210 hit points or suffered an instant-death effect. Requires raise dead, resurrection, or wish to restore to life.'
   },
   {
     name: 'Petrified',
-    description: 'Character has been turned to stone. Unaware of surroundings and passage of time. Can be shattered if struck with sufficient force. Requires stone to flesh spell to restore.'
+    description: 'Turned to stone. Unaware of surroundings and of the passage of time. Can be shattered if struck with sufficient force. Requires stone to flesh to restore.'
   },
   {
     name: 'Paralyzed',
-    description: 'Character cannot move but remains conscious and aware. Can still speak, think, and perceive surroundings. Cannot cast spells requiring gestures. Attackers gain +4 to hit.'
+    // RECONCILED WITH HELD. The old entry gave attackers +4; Table 51 puts
+    // "sleeping or held" in the Automatic row and only "stunned or prone" at +4.
+    // The hold person spell describes exactly this state -- "cannot move or
+    // speak, but they remain aware of events around them" -- so paralysis is
+    // held for Table 51 purposes and the attack is automatic, not merely easier.
+    description: 'Cannot move, but remains conscious and aware. Cannot cast spells requiring gestures. ATTACKS IN MELEE HIT AUTOMATICALLY, as for a sleeping or held defender (PHB Table 51) \u2014 this is the same state hold person produces, not the lesser +4 that applies to a stunned or prone defender.'
   },
   {
     name: 'Frightened',
-    description: 'Character must flee from source of fear for duration. If unable to flee, cowers and fights at -2 penalty. May drop items. Requires successful save to overcome.'
+    // CORRECTED from the fear spell. The old "-2 penalty if unable to flee" is
+    // not in the spell; the drop-item chance, which is, was missing.
+    description: 'Turns away from the source and flees in panic at its fastest rate, for a number of rounds equal to the caster\u2019s level. LIKELY TO DROP WHATEVER IS HELD: 60% at 1st level or 1 Hit Die, reduced 5% per level above that, so 15% at 10th and no chance at 13th (fear). Undead are unaffected, and a successful save negates. What happens to a frightened character who cannot flee is the DM\u2019s call.'
   },
   {
     name: 'Confused',
-    description: 'Character acts randomly each round. Roll 1d10: 1-2 wander away, 3-5 stand confused, 6-8 attack nearest creature, 9-10 act normally. Cannot cast spells reliably.'
+    // TABLE CORRECTED. The old spread (1-2 / 3-5 / 6-8 / 9-10) doubled the
+    // chance of wandering away and nearly halved "stand confused". The printed
+    // table is below, and CHAOS USES THE IDENTICAL TABLE.
+    //
+    // Note the asymmetry the old entry lost: wandering away lasts the WHOLE
+    // duration, every other result is one round and then re-roll.
+    description: 'Indecisive and unable to take effective action. Roll 1d10 at the start of each round \u2014 1: wander away (unless prevented) FOR THE WHOLE DURATION; 2\u20136: stand confused for one round, then roll again; 7\u20139: attack nearest creature for one round, then roll again; 10: act normally for one round, then roll again. Any confused creature that is attacked perceives the attacker as an enemy. (confusion and chaos share this table.)'
   },
   {
     name: 'Invisible',
-    description: 'Character cannot be seen. Attackers suffer -4 to hit. Character gains +4 to attack rolls. Ends if character attacks. (Beneficial condition)'
+    // The attacker's -4 is Table 51 and is real. The old entry ALSO claimed the
+    // invisible character gains +4 to attack; the invisibility spell says only
+    // that invisibility "enables him to attack first". Claim removed.
+    description: 'Cannot be seen by normal vision or infravision. ATTACKERS SUFFER \u22124 TO HIT (PHB Table 51); Blind-fighting proficiency reduces that penalty to \u22122. Invisibility ends the moment the character attacks, though it lets him attack first; bless, chant and prayer do not count as attacks. Dropped items become visible. Highly intelligent creatures of 10+ Hit Dice may notice an invisible object with a save vs. spell. (Beneficial condition.)'
+  },
+  {
+    name: 'Prone',
+    // Table 51, same row as Stunned. Was missing entirely.
+    description: 'Knocked down or lying flat. ATTACKERS GAIN +4 TO HIT (PHB Table 51, "Defender stunned or prone"). Regaining your feet is the DM\u2019s call on cost.'
+  },
+  {
+    name: 'Off-balance',
+    // Table 51. Was missing entirely.
+    description: 'Caught mid-movement, on poor footing, or otherwise unable to set for defence. ATTACKERS GAIN +2 TO HIT (PHB Table 51).'
+  },
+  {
+    name: 'Surprised',
+    // Table 51 plus PHB Ch.9's surprise text, which adds the saving throw part.
+    description: 'Taken unawares and unable to react until wits are gathered. Unsurprised opponents get a BONUS ROUND of action. ATTACKERS GAIN +1 TO HIT (PHB Table 51), and a surprised character also has a DECREASED CHANCE OF ROLLING A SUCCESSFUL SAVING THROW (PHB Ch.9).'
   }
 ];
 
