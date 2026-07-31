@@ -2149,7 +2149,7 @@ const SHEET_HTML = `
           <div style="margin-bottom:24px;">
             <h4 style="font-size:14px;margin-bottom:8px;">Detection Suite</h4>
             <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
-              All detection abilities require 10' movement rate and concentration. Roll d6 for each:
+              PHB Ch.2: the dwarf must be WITHIN 10 FEET of what he is checking, and must deliberately try &mdash; &ldquo;the information does not simply spring to mind unbidden.&rdquo; DEPTH IS THE EXCEPTION and may be attempted at any time. Roll d6 for each:
             </p>
             
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
@@ -2190,14 +2190,6 @@ const SHEET_HTML = `
                 <div style="font-weight:600;font-size:12px;">Depth Underground</div>
                 <div style="font-size:11px;color:var(--muted);">Success: 1-3 on d6</div>
                 <button class="roll-detection" data-ability="depth" data-success="3" style="margin-top:4px;padding:4px 8px;font-size:11px;">Roll d6</button>
-                <div class="detection-result" style="margin-top:4px;font-size:11px;font-weight:600;"></div>
-              </div>
-              
-              <!-- Direction Underground -->
-              <div class="detection-ability" style="padding:8px;border:1px solid var(--border);border-radius:4px;">
-                <div style="font-weight:600;font-size:12px;">Direction Underground</div>
-                <div style="font-size:11px;color:var(--muted);">Success: 1-3 on d6</div>
-                <button class="roll-detection" data-ability="direction" data-success="3" style="margin-top:4px;padding:4px 8px;font-size:11px;">Roll d6</button>
                 <div class="detection-result" style="margin-top:4px;font-size:11px;font-weight:600;"></div>
               </div>
             </div>
