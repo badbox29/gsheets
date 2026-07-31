@@ -2211,7 +2211,81 @@ const SHEET_HTML = `
               <button class="clear-detection-history" style="margin-top:4px;padding:4px 8px;font-size:11px;">Clear History</button>
             </div>
           </div>
-        </section>		
+        </section>
+
+        <hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
+
+        <!--
+          VISION & LIGHT (PHB Ch.13)
+
+          NOT GATED. The Thief, Turn Undead and Dwarven sections above all ship
+          display:none and are revealed by a renderer. This one applies to every
+          character, so it has neither.
+
+          NOTHING HERE IS CHARACTER STATE. There is no data-field anywhere in
+          this section, so collectSheet never sees it, nothing is saved or
+          loaded, and it deliberately does not print. The size selector carries
+          .ephemeral for the same reason the proficiency cooperation toggle
+          does -- it describes a moment, not the character, and must never
+          restamp _updatedAt.
+        -->
+        <section class="section vision-light-section">
+          <h3>Vision &amp; Light</h3>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
+            Reference only &mdash; nothing on this panel is saved with the character.
+          </p>
+
+          <!-- Table 62 -->
+          <div style="margin-bottom:24px;">
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px;">
+              <h4 style="font-size:14px;margin:0;">Visibility Ranges (Table 62)</h4>
+              <label style="font-size:11px;color:var(--muted);">Target size</label>
+              <select class="visibility-size ephemeral" style="width:auto;padding:4px 8px;font-size:12px;"></select>
+            </div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">
+              All ranges in <strong>yards</strong>.
+            </div>
+            <div class="visibility-ranges-table" style="font-size:12px;overflow-x:auto;"></div>
+            <div style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6;">
+              <strong>Terrain does not change these numbers.</strong> Hills, tall grass and dense
+              woods reduce the chance of noticing a creature, not the range at which it could be
+              seen. A bear hidden until 30 yards is still a clear day for visibility.<br>
+              The table assumes Earthlike conditions; another world or plane may differ entirely.
+            </div>
+          </div>
+
+          <!-- Table 63 -->
+          <div style="margin-bottom:24px;">
+            <h4 style="font-size:14px;margin-bottom:8px;">Light Sources (Table 63)</h4>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">
+              Radii in <strong>feet</strong> &mdash; the book switches units between the two tables.
+            </div>
+            <div class="light-sources-table" style="font-size:12px;overflow-x:auto;"></div>
+          </div>
+
+          <!-- Prose rules from the same chapter that have no table -->
+          <div style="font-size:11px;color:var(--muted);line-height:1.6;">
+            <div style="margin-bottom:8px;">
+              <strong style="color:var(--text);">Infravision.</strong>
+              Range is at most 60 ft unless otherwise noted. The chapter gives two versions,
+              standard and optional, and leaves the choice to the DM &mdash; who must tell the
+              players which one he is using. The mechanics are in the DMG.
+            </div>
+            <div style="margin-bottom:8px;">
+              <strong style="color:var(--text);">Mirrors.</strong>
+              Acting on a reflected view costs &minus;2 on attack rolls, ability checks and
+              proficiency checks, and a mirror is useless without a light source. Fighting an
+              opponent seen only by reflection also forfeits all Dexterity bonuses to Armor
+              Class &mdash; add the <em>Fighting via Mirror</em> condition for that case.
+            </div>
+            <div>
+              <strong style="color:var(--text);">Carrying a light.</strong>
+              A light source is seen far further than it lets you see. Creatures outside the
+              lit area can see into it while you cannot see out, so they generally spot you
+              first, and sneaking with the only torch in the dungeon is close to impossible.
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   </div>
