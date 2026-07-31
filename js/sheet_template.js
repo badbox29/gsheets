@@ -432,6 +432,8 @@ const SHEET_HTML = `
 			  </div>
 			</div>
 		  </div>
+
+		  <div class="armor-save-note" style="display:none;margin-top:12px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
 		</section>
 		
 		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
