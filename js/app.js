@@ -5280,6 +5280,10 @@ function loadSheet(root, data){
   // === Force recalculation of dependent fields ===
   if (typeof renderSpecialistValidation === 'function') renderSpecialistValidation(root);
   if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(root);
+  // loadSheet and bindSheet each keep their OWN hand-picked render list instead
+  // of calling recalculateAll, so anything added to that function must be
+  // repeated in both or it never fires on load.
+  if (typeof renderHenchmanLimits === 'function') renderHenchmanLimits(root);
   if (typeof renderExceptionalStrengthLock === 'function') renderExceptionalStrengthLock(root);
   if (typeof renderAgingEffects === 'function') renderAgingEffects(root);
   renderSavingThrows(root);
@@ -6140,6 +6144,10 @@ function bindSheet(root, tab){
   populateAlignmentDropdown(root);
   if (typeof renderSpecialistValidation === 'function') renderSpecialistValidation(root);
   if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(root);
+  // loadSheet and bindSheet each keep their OWN hand-picked render list instead
+  // of calling recalculateAll, so anything added to that function must be
+  // repeated in both or it never fires on load.
+  if (typeof renderHenchmanLimits === 'function') renderHenchmanLimits(root);
   if (typeof renderExceptionalStrengthLock === 'function') renderExceptionalStrengthLock(root);
   if (typeof renderAgingEffects === 'function') renderAgingEffects(root);
   renderAttackMatrix(root);
@@ -7365,7 +7373,9 @@ function renderOneOptionalRule(listEl, key) {
       // Recalculate every open tab -- these rules affect movement, combat, etc.
       document.querySelectorAll('.sheet-container').forEach(sheet => {
         if (typeof recalculateAll === 'function') recalculateAll(sheet);
-        // Advisory banners are not part of recalculateAll, so refresh them too.
+        // renderArmorRestrictions and renderHenchmanLimits ARE inside
+        // recalculateAll and need no line here. renderClassGroupValidation is
+        // not, so it still does.
         if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(sheet);
         if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(sheet);
       });
@@ -10582,11 +10592,27 @@ function bindDiceRollers(root) {
         case 'reaction':
           result = rollDiceFormula('2d10');
           result.formula = 'Reaction (2d10)';
-          // CHA reaction adjustment
+          // PHB Table 6's Charisma Reaction Adjustment. REPORTED, NOT FOLDED IN
+          // -- the headline stays the raw 2d10, as it does for every other roll
+          // type, and the adjusted figure is spelled out beneath it. Chapter 11
+          // taught this the hard way: a bare number parked beside a threshold
+          // reads as a rules question when the two do not agree.
+          //
+          // NO RESULT BANDS ARE SHOWN, and their absence is deliberate. The PHB
+          // prints no reaction result table anywhere -- Chapter 12 defines an
+          // NPC as one the DM controls, and the interpretation is his.
           const chaData = (typeof CHA_TABLE !== 'undefined' && CHA_TABLE[cha]) ? CHA_TABLE[cha] : null;
           if (chaData) {
             const chaAdj = chaData.reaction;
-            modifiers = `CHA modifier: ${chaAdj >= 0 ? '+' : ''}${chaAdj}\nModified roll: ${result.total + chaAdj}`;
+            modifiers = `Raw roll: ${result.total} (2d10)\n` +
+                        `Charisma Reaction Adj.: ${chaAdj >= 0 ? '+' : ''}${chaAdj}\n` +
+                        `ADJUSTED REACTION: ${result.total + chaAdj}\n\n` +
+                        `The PHB prints no result bands for this roll. NPCs are ` +
+                        `DM-controlled (Ch.12), so the adjusted figure is his to read.`;
+          } else {
+            modifiers = `No Charisma recorded, so no Reaction Adjustment applies.\n\n` +
+                        `The PHB prints no result bands for this roll. NPCs are ` +
+                        `DM-controlled (Ch.12), so the figure is his to read.`;
           }
           break;
           
@@ -12151,6 +12177,13 @@ function recalculateAll(root) {
   if (typeof renderArmorClass === 'function') renderArmorClass(root);
   if (typeof renderClassAbilities === 'function') renderClassAbilities(root);
   if (typeof renderCharacterBonuses === 'function') renderCharacterBonuses(root);
+  // PHB Ch.12 henchman limits. IN recalculateAll rather than bolted onto the
+  // handful of sites that refresh advisories by hand, because the lifetime
+  // count moves with CHARISMA and the level check moves with the character's
+  // LEVEL -- neither of which touches a henchman card, and both of which land
+  // here. renderArmorRestrictions is already in this list for the same reason.
+  // The henchman list gets its own hook as well; see the add-henchman wiring.
+  if (typeof renderHenchmanLimits === 'function') renderHenchmanLimits(root);
   // LAST, and it was missing entirely. The Quick Reference reads THAC0, AC and
   // Strength adjustments that the calls above produce, so it has to run after
   // them -- but it was never in recalculateAll at all, only on the seventeen
