@@ -634,10 +634,69 @@ function renderSavingThrows(root) {
     }
 
     el.title = tip;
-  });
+ });
 
-  renderWisdomSaveAdjustments(root);
+  renderMagicalArmorSaveNote(root);
+  renderWisdomSaveAdjustments(root);;
   renderWisdomPriestEffects(root); 
+}
+
+// PHB Chapter 10, Magical Armor: enchanted armor grants "some measure of
+// protection against attacks that normal armors would not stop", the book's
+// example being chain mail +1 improving a save against a dragon's fiery breath
+// by 1.
+//
+// DISPLAY ONLY -- deliberately NOT added to save1-save5. The bonus is
+// situational: it applies against attacks the armor would physically turn, and
+// the book gives one example rather than a category list. Baking it into a
+// printed target would overstate the character on every save where it does not
+// apply -- the same reasoning that keeps circumstantial bonuses out of
+// getNWPCheckTarget.
+//
+// Body armor only, the 'Armor' slot. Chapter 10's statement and its example are
+// both about armor proper; shields, helms and cloaks are not covered by it, so
+// they are not claimed here. Do not widen without a citation.
+//
+// This keys off the AC BONUS, not the Enchanted? tick, and that difference from
+// the encumbrance code is deliberate. Encumbrance excludes any magical armor,
+// so it must read the tick to see elven chain. Here the bonus IS the rule --
+// the book ties the save improvement to the +N -- so armor enchanted to +0
+// grants nothing to report.
+function renderMagicalArmorSaveNote(root) {
+  const noteEl = root.querySelector('.armor-save-note');
+  if (!noteEl) return;
+
+  const pieces = Array.from(root.querySelectorAll('.armor-list .item'))
+    .filter(item => {
+      const slot = (item.querySelector('.armor-slot') || {}).value || '';
+      const eq   = item.querySelector('.equipped');
+      const mag  = item.querySelector('.is-magical');
+      const bon  = parseInt((item.querySelector('.ac-bonus') || {}).value, 10) || 0;
+      return slot === 'Armor' && eq && eq.checked && mag && mag.checked && bon > 0;
+    })
+    .map(item => ({
+      name: (((item.querySelector('.title') || {}).value) || 'Magical armor').trim(),
+      bonus: parseInt((item.querySelector('.ac-bonus') || {}).value, 10) || 0
+    }));
+
+  if (!pieces.length) {
+    noteEl.style.display = 'none';
+    noteEl.innerHTML = '';
+    return;
+  }
+
+  // Armor names are PLAYER-ENTERED and go into innerHTML -- must be escaped.
+  const list = pieces.map(p => escapeHtml(p.name) + ' (+' + p.bonus + ')').join(', ');
+
+  noteEl.innerHTML =
+    '<strong>Magical armor may improve saving throws:</strong> ' + list + '. ' +
+    'PHB Ch.10 gives enchanted armor protection against attacks ordinary armor ' +
+    'would not stop -- its example is chain mail +1 improving a save against ' +
+    'dragon breath by 1.' +
+    '<br><span style="color:var(--muted);">Situational, so it is NOT included in ' +
+    'the figures above. It applies only against attacks the armor would ' +
+    'physically turn, which is your DM\'s call. Use the +/- box to apply it.</span>';
+  noteEl.style.display = 'block';
 }
 
 // === THAC0 rules (AD&D 2e) ===
