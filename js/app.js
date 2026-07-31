@@ -8150,6 +8150,19 @@ function updateConditionDisplay(root) {
   if (addButton) {
     addButton.style.display = 'inline-block';
   }
+
+  // Conditions now change AC, movement and attack rate in the Combat Quick
+  // Reference, so every mutation has to refresh it. Placed HERE rather than at
+  // the five call sites -- load, add, remove, next round, reset -- because a
+  // sixth will be added eventually and would be missed. That is exactly the
+  // drift that left proficiency slots stale on level-up and per-weapon attack
+  // rates stale on a manual override.
+  //
+  // Neither of these calls back into updateConditionDisplay, so there is no
+  // recursion. recalculateAll() is deliberately NOT used: it runs two dozen
+  // renderers, and this fires on every duration tick.
+  if (typeof renderAttacksPerRound === 'function') renderAttacksPerRound(root);
+  if (typeof renderCombatQuickReference === 'function') renderCombatQuickReference(root);
 }
 
 function addConditionDialog(root, tab) {
