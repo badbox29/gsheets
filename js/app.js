@@ -7986,14 +7986,82 @@ function updateConditionDisplay(root) {
   
   const conditions = conditionsList.querySelectorAll('.condition-item');
   
+  // Nag banner. Created lazily rather than added to sheet_template.js, so an
+  // older saved layout picks it up without a template migration.
+  let nag = root.querySelector('.condition-nag');
+  if (!nag) {
+    nag = document.createElement('div');
+    nag.className = 'condition-nag';
+    conditionsList.parentNode.insertBefore(nag, conditionsList);
+  }
+
   if (conditions.length === 0) {
     // Show healthy indicator
     healthyIndicator.style.display = 'block';
     conditionsList.style.display = 'none';
+    nag.style.display = 'none';
+    nag.innerHTML = '';
   } else {
     // Show conditions list
     healthyIndicator.style.display = 'none';
     conditionsList.style.display = 'block';
+
+    // Grouped by WHAT THE PLAYER CAN DO ABOUT IT, which is the only grouping
+    // that changes behaviour. A banner that says "you have 3 conditions" gets
+    // ignored; one that says "resting will heal you nothing" does not.
+    const rows = Array.from(conditions).map(item => {
+      const name = item.dataset.condition || '';
+      const dur  = parseInt(item.dataset.duration, 10);
+      return {
+        name: name,
+        def: (typeof CONDITIONS_DB !== 'undefined')
+          ? CONDITIONS_DB.find(c => c.name === name) : null,
+        dur: isNaN(dur) ? null : dur
+      };
+    });
+
+    const lines = [];
+
+    // Most urgent first: a state where attacks simply hit.
+    const auto = rows.filter(r => r.def && r.def.autoHit).map(r => r.name);
+    if (auto.length) {
+      lines.push({ tone: 'bad', text: auto.join(', ') +
+        ' \u2014 melee attacks against you hit AUTOMATICALLY' });
+    }
+
+    const blocked = rows.filter(r => r.def && r.def.blocksNaturalHealing).map(r => r.name);
+    if (blocked.length) {
+      lines.push({ tone: 'bad', text: blocked.join(', ') +
+        ' \u2014 resting will restore 0 hit points' });
+    }
+
+    const ticking = rows.filter(r => r.dur !== null && r.dur > 0);
+    if (ticking.length) {
+      const soon = ticking.filter(r => r.dur <= 1).map(r => r.name);
+      lines.push({ tone: 'warn',
+        text: ticking.length + ' expiring \u2014 advance the round to tick ' +
+              (ticking.length === 1 ? 'it' : 'them') + ' down' +
+              (soon.length ? ' (' + soon.join(', ') + ' ends next round)' : '') });
+    }
+
+    // No duration and not beneficial: nothing the round counter will ever clear.
+    const manual = rows.filter(r => (r.dur === null || r.dur <= 0) &&
+                                    !(r.def && r.def.beneficial)).map(r => r.name);
+    if (manual.length) {
+      lines.push({ tone: 'muted', text: manual.join(', ') +
+        ' \u2014 will not expire on their own; clear when resolved' });
+    }
+
+    const colour = t => t === 'bad'  ? 'var(--error, #ff6b6b)'
+                      : t === 'warn' ? 'var(--warning, #e0a34a)'
+                      : 'var(--muted)';
+    nag.innerHTML = lines.map(l =>
+      '<div style="font-size:10px;line-height:1.35;color:' + colour(l.tone) + ';">' +
+      escapeHtml(l.text) + '</div>').join('');
+    nag.style.cssText = 'margin-bottom:6px;padding:5px 7px;border-radius:4px;' +
+      'border-left:3px solid ' + colour(lines.length ? lines[0].tone : 'muted') + ';' +
+      'background:rgba(255,255,255,0.03);';
+    nag.style.display = lines.length ? 'block' : 'none';
   }
   
   // Always show the add button if it exists
