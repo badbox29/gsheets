@@ -2,7 +2,7 @@
 
 A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and zero dependencies.
 
-**Version 10.1.0**
+**Version 10.2.0**
 
 ## Live Demo
 
@@ -27,6 +27,8 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 * A goods and services price reference covering clothing, provisions, lodging, and hirelings
 * Interactive panels for proficiencies whose rules need working out at the table
 * Enchanted items marked on the card and carried through to armor class, attack rolls, weapon speed, and encumbrance
+* Magic item records carrying type, charges, command word, and whether the item has been identified
+* Treasure valued in gold from the Player's Handbook exchange rates, with weight and worth totalled separately for coin and valuables
 * Optional-rules framework with live toggles for Player's Handbook options and house-rule overrides
 * Multi-page printable character sheet with configurable sections, blank write-in lines, and color schemes
 * Import / export character data
@@ -177,6 +179,33 @@ Follow these steps **in order** to avoid overwriting your data:
 * I am not a developer.
 
 ### Recent Updates
+
+#### v10.2.0
+
+A systematic review of Player's Handbook Chapter 10, *Treasure*.
+
+The chapter is three pages of prose and contains exactly one rule with a number in it, so this release is less about corrections than about building out the two parts of the sheet the chapter actually describes.
+
+**Magic items**
+
+* Magic items were a name and a description box and nothing else. They now carry a type, quantity, weight, charges, a command word, and whether the item has been identified.
+* Added charge tracking for wands, staves, and rods — the only items the book calls expendable. The fields appear for those three types and stay out of the way otherwise.
+* Magic items now count toward encumbrance. A staff or a rod previously weighed nothing, while every other kind of carried gear was counted.
+* Magical weapons and armor are deliberately *not* magic item types. They belong on the Weapons and Armor tabs, where marking a piece enchanted actually feeds armor class, attack rolls, damage, and weapon speed — the same sword recorded on the magic items list would look right and calculate nothing. A note on the tab points you to the right place.
+* The printed sheet gained real Type and Charges columns. It had been printing a column headed "Notes / Charges" against a sheet that had nowhere to record charges.
+* Fixed magic items on a saved character not marking the sheet as unsaved when edited, so changes to them could be lost.
+
+**Treasure**
+
+* Added **Coin Value**, converting all five denominations to gold using the book's exchange rates. The existing figure was a count of coins, which treats a copper piece and a platinum piece as the same thing — both are now shown, since one drives weight and the other drives worth.
+* Reworked **Other Valuables**: value per item is a number with its own currency selector rather than free text, and each entry can be tagged as a gem, jewelry, an art object, trade goods, alternate currency, and so on.
+* Added **Valuables Weight** and **Valuables Value** totals, placed directly under the coin figures so a purse and a pack of gems can be compared at a glance.
+* Existing free-text values are migrated automatically — "500 gp" and "1,000" are read into the new fields when the character loads, with nothing to retype.
+* The printed sheet now shows each valuable's type and its value with the currency, and reports coin and valuables worth alongside the weight carried.
+
+**Saving throws**
+
+* Noted the book's rule that magical armor improves saving throws — a +1 suit improves a save against a dragon's breath by 1. It is shown as a note rather than added to the numbers, because it applies only against attacks the armor would physically stop, which is a call for your DM rather than something the sheet can make.
 
 #### v10.1.0
 
