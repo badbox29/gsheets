@@ -5439,7 +5439,7 @@ function loadSheet(root, data){
   updateThiefPointsDisplay(root);
   renderCharacterBonuses(root);
   // Check dwarven abilities on load
-  checkDwarvenAbilities(root);
+  renderRacialChecks(root);
   renderCharacterBonuses(root);
   // Auto-expand all textareas on load (with slight delay to ensure content is rendered)
   setTimeout(() => {
@@ -5843,7 +5843,7 @@ function bindSheet(root, tab){
     conInput.addEventListener("input", () => {
       renderConstitutionEffects(root);
       renderSavingThrows(root); // Re-render to update poison save tooltip
-	  checkDwarvenAbilities(root);  // Update dwarven save bonuses
+	  renderRacialChecks(root);  // Update dwarven save bonuses
 	  renderCharacterBonuses(root);
       markUnsaved(tab, true, root);
     });
@@ -6208,7 +6208,7 @@ function bindSheet(root, tab){
 	  renderThiefSkillsSection(root);
 	  renderThiefPointsSection(root);
 	  renderTurnUndeadTable(root);
-	  checkDwarvenAbilities(root);
+	  renderRacialChecks(root);
 	  renderCharacterBonuses(root);
       markUnsaved(tab, true, root);
 	  renderNWProficiencies(root);
@@ -6297,9 +6297,9 @@ function bindSheet(root, tab){
   bindThiefPointsAllocation(root);
   bindTurnUndead(root);
   // Initialize dwarven abilities
-  checkDwarvenAbilities(root);
+  renderRacialChecks(root);
   renderCharacterBonuses(root);
-  setupDwarvenDetection(root);
+  bindRacialChecks(root);
   renderCombatQuickReference(root);
   renderCurrentHP(root);
   renderHitDice(root);
@@ -11368,7 +11368,7 @@ function bindThiefSkillRoller(root) {
     toolsTab.addEventListener('click', () => {
       renderThiefSkillsSection(root);
       updateThiefSkillRoller(root);
-	  checkDwarvenAbilities(root);  // Check dwarven abilities when tools tab opens
+	  renderRacialChecks(root);  // Check dwarven abilities when tools tab opens
 	  renderCharacterBonuses(root);
     });
   }
@@ -11378,17 +11378,45 @@ function bindThiefSkillRoller(root) {
 }
 
 // ===== DWARVEN ABILITIES =====
-function checkDwarvenAbilities(root) {
+function renderRacialChecks(root) {
   if (!root) return;
-  
-  const race = (val(root, 'race') || '').toLowerCase();
-  const dwarvenSection = root.querySelector('.dwarven-abilities-section');
-  
-  if (!dwarvenSection) return;
-  
-  // Show section if character is any type of dwarf
-  const isDwarf = race.includes('dwarf') || race.includes('dwarven') || race.includes('duergar');
-  dwarvenSection.style.display = isDwarf ? 'block' : 'none';
+
+  const section = root.querySelector('.racial-checks-section');
+  if (!section) return;
+
+  const data = (typeof racialChecksFor === 'function')
+    ? racialChecksFor(val(root, 'race') || '') : null;
+
+  if (!data) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+
+  const titleEl = section.querySelector('.racial-checks-title');
+  const noteEl  = section.querySelector('.racial-checks-note');
+  const grid    = section.querySelector('.racial-checks-grid');
+  if (titleEl) titleEl.textContent = data.label;
+  if (noteEl)  noteEl.textContent  = data.condition || '';
+  if (!grid) return;
+
+  grid.innerHTML = data.checks.map(c => {
+    const range = (c.threshold === 1) ? '1' : ('1-' + c.threshold);
+    const line  = (c.inverted ? 'Fails on ' : 'Success: ') + range + ' on 1d' + c.die;
+    const bits  = [];
+    if (c.anyTime) bits.push('May be attempted at any time.');
+    if (c.note)    bits.push(c.note);
+    return '<div class="detection-ability" style="padding:8px;border:1px solid var(--border);border-radius:4px;">' +
+      '<div style="font-weight:600;font-size:12px;">' + escapeHtml(c.name) + '</div>' +
+      '<div style="font-size:11px;color:var(--muted);">' + escapeHtml(line) + '</div>' +
+      (bits.length
+        ? '<div style="font-size:10px;color:var(--muted);font-style:italic;margin-top:2px;">' +
+          escapeHtml(bits.join(' ')) + '</div>'
+        : '') +
+      '<button class="roll-detection" data-name="' + escapeHtml(c.name) + '"' +
+        ' data-die="' + c.die + '" data-success="' + c.threshold + '"' +
+        (c.inverted ? ' data-inverted="1"' : '') +
+        ' style="margin-top:4px;padding:4px 8px;font-size:11px;">Roll d' + c.die + '</button>' +
+      '<div class="detection-result" style="margin-top:4px;font-size:11px;font-weight:600;"></div>' +
+      '</div>';
+  }).join('');
 
   // Nothing further to do: the saving throw bonus dwarves and gnomes get from
   // Constitution is applied by renderSavingThrows via RACE_SAVE_BONUSES, and
@@ -11664,83 +11692,70 @@ function renderCharacterBonuses(root) {
   }
 }
 
-function setupDwarvenDetection(root) {
-  if (!root) return;
-  
-  // Setup detection roll buttons
-  root.querySelectorAll('.roll-detection').forEach(btn => {
-    btn.onclick = () => {
-      const ability = btn.dataset.ability;
-      const successMax = parseInt(btn.dataset.success);
-      const roll = Math.floor(Math.random() * 6) + 1;
-      const success = roll <= successMax;
-      
-      // Get ability display name
-      const abilityNames = {
-        'grade': 'Grade/Slope',
-        'new-construction': 'New Construction',
-        'sliding-walls': 'Sliding Walls',
-        'stonework-traps': 'Stonework Traps',
-        // No 'direction' entry. Determining direction underground is a GNOME
-        // ability (PHB Ch.2, 1-3 on 1d6); dwarves get depth only. The roller
-        // card was removed for the same reason -- do not add it back.
-        'depth': 'Depth Underground'
-      };
-      
-      const abilityName = abilityNames[ability] || ability;
-      
-      // Display result next to button
+// Delegated, and bound ONCE. The cards are rebuilt whenever the race changes,
+// so per-button handlers would be lost on every re-render; the old code got
+// away with it only because the six cards were static markup.
+function bindRacialChecks(root) {
+  const section = root && root.querySelector('.racial-checks-section');
+  if (!section || section._rcBound) return;
+
+  section.addEventListener('click', (e) => {
+    const btn = e.target.closest('.roll-detection');
+    if (btn) {
+      const die       = parseInt(btn.dataset.die, 10) || 6;
+      const threshold = parseInt(btn.dataset.success, 10) || 0;
+      const inverted  = btn.dataset.inverted === '1';
+      const name      = btn.dataset.name || 'Check';
+
+      const roll = Math.floor(Math.random() * die) + 1;
+      const hit  = roll <= threshold;
+
+      // "hit" means the threshold was met. For an INVERTED check that is the
+      // BAD outcome, so the wording and the colour flip -- the arithmetic does
+      // not. Getting this backwards would colour a malfunction green.
+      const good = inverted ? !hit : hit;
+      const word = inverted ? (hit ? 'MALFUNCTION' : 'Works')
+                            : (hit ? 'SUCCESS!'    : 'Failed');
+
       const resultDiv = btn.parentElement.querySelector('.detection-result');
       if (resultDiv) {
-        resultDiv.innerHTML = `<span style="color: ${success ? '#10b981' : '#ef4444'}">
-          d6: ${roll} - ${success ? 'SUCCESS!' : 'Failed'}
-        </span>`;
+        resultDiv.innerHTML = '<span style="color:' + (good ? '#10b981' : '#ef4444') + '">' +
+          'd' + die + ': ' + roll + ' \u2014 ' + word + '</span>';
       }
-      
-      // Add to history
-      addDetectionHistory(root, abilityName, roll, successMax, success);
-    };
-  });
-  
-  // Setup clear history button
-  const clearBtn = root.querySelector('.clear-detection-history');
-  if (clearBtn) {
-    clearBtn.onclick = () => {
+      addDetectionHistory(root, name, roll, die, threshold, good, word);
+      return;
+    }
+
+    if (e.target.closest('.clear-detection-history')) {
       const history = root.querySelector('.detection-history');
       if (history) {
-        history.innerHTML = '<div style="color:var(--muted);font-style:italic;">Detection rolls will appear here...</div>';
+        history.innerHTML = '<div style="color:var(--muted);font-style:italic;">Rolls will appear here...</div>';
       }
-    };
-  }
+    }
+  });
+
+  section._rcBound = true;
 }
 
-function addDetectionHistory(root, ability, roll, needed, success) {
+function addDetectionHistory(root, ability, roll, die, needed, good, word) {
   const history = root.querySelector('.detection-history');
   if (!history) return;
-  
-  // Clear placeholder text if present
-  if (history.querySelector('div[style*="italic"]')) {
-    history.innerHTML = '';
-  }
-  
-  const time = new Date().toLocaleTimeString('en-US', { 
-    hour: '2-digit', 
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false 
+
+  if (history.querySelector('div[style*="italic"]')) history.innerHTML = '';
+
+  const time = new Date().toLocaleTimeString('en-US', {
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
   });
-  
+
   const entry = document.createElement('div');
-  entry.style.cssText = `margin-bottom:2px;color:${success ? '#10b981' : '#ef4444'}`;
-  entry.innerHTML = `[${time}] ${ability}: d6=${roll} (need ≤${needed}) ${success ? 'SUCCESS' : 'FAIL'}`;
-  
-  // Add to top of history
+  entry.style.cssText = 'margin-bottom:2px;color:' + (good ? '#10b981' : '#ef4444');
+  // textContent, not innerHTML -- ability names come from data but this is a
+  // log line with no markup in it and no reason to parse any.
+  entry.textContent = '[' + time + '] ' + ability + ': d' + die + '=' + roll +
+                      ' (need \u2264' + needed + ') ' + word;
+
   history.insertBefore(entry, history.firstChild);
-  
-  // Limit history to 20 entries
-  while (history.children.length > 20) {
-    history.removeChild(history.lastChild);
-  }
+  while (history.children.length > 20) history.removeChild(history.lastChild);
 }
 
 // updateDwarvenSaves() was deleted here. It queried .dwarf-con-score,
