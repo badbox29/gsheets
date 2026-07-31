@@ -1832,14 +1832,39 @@ function makeValuableNode(data={}, onChange){
   el.style.alignItems = 'stretch';
   el.style.padding = '12px';
   
+  // MIGRATION -- Value (ea) used to be a free-text box, so existing records
+  // hold strings like "500 gp" or "1,000". A record with no structured `value`
+  // gets one parsed out of the old string exactly once (parseLegacyValueEach in
+  // tables.js). A record that already HAS `value` is never touched, so this can
+  // never overwrite real data. `valueEach` is read here and written nowhere --
+  // once a migrated character is saved, the legacy field is gone for good.
+  let vValue = (data.value !== undefined) ? data.value : '';
+  let vUnit  = data.unit || 'gp';
+  if (data.value === undefined && data.valueEach && typeof parseLegacyValueEach === 'function') {
+    const migrated = parseLegacyValueEach(data.valueEach);
+    vValue = migrated.value;
+    vUnit  = migrated.unit;
+  }
+
+  // Type is metadata -- no arithmetic reads it. See VALUABLE_TYPES in tables.js.
+  const vType = data.type || '';
+  const vTypeOptions = (typeof VALUABLE_TYPES !== 'undefined' ? VALUABLE_TYPES : [])
+    .map(t => '<option value="'+escapeHtml(t.key)+'"'+(t.key===vType?' selected':'')+'>'+
+              escapeHtml(t.label)+'</option>').join('');
+  const vUnitOptions = (typeof COIN_UNITS !== 'undefined' ? COIN_UNITS : ['gp'])
+    .map(u => '<option value="'+u+'"'+(u===vUnit?' selected':'')+'>'+u.toUpperCase()+
+              '</option>').join('');
+
   el.innerHTML =
     '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
+      '<div style="width:120px;">Type</div>' +
       '<div style="flex:1;">Item Name</div>' +
       '<div style="width:60px;text-align:center;">Qty</div>' +
       '<div style="width:80px;text-align:center;">Weight (ea)</div>' +
       '<div style="width:70px;"></div>' + // Remove button space
     '</div>' +
     '<div style="display:flex;gap:8px;align-items:stretch;margin-bottom:8px;">' +
+      '<select class="valuable-type" style="width:120px;">'+vTypeOptions+'</select>' +
       '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1;">' +
       '<input class="qty" type="number" placeholder="" value="'+escapeHtml(data.qty||'')+'" style="width:60px;text-align:center;">' +
       '<input class="weight" type="number" step="0.1" placeholder="" value="'+escapeHtml(data.weight||'')+'" style="width:80px;text-align:center;">' +
@@ -1847,11 +1872,15 @@ function makeValuableNode(data={}, onChange){
     '</div>' +
     '<div style="margin-top:6px;">' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Notes</label>' +
-      '<div style="display:flex;gap:6px;">' +
+      '<div style="display:flex;gap:6px;align-items:flex-end;">' +
         '<input class="notes" placeholder="" value="'+escapeHtml(data.notes||'')+'" style="flex:1">' +
-        '<div style="display:flex;flex-direction:column;width:100px;">' +
+        '<div style="display:flex;flex-direction:column;width:90px;">' +
           '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Value (ea)</label>' +
-          '<input class="value-each" type="text" placeholder="" value="'+escapeHtml(data.valueEach||'')+'" style="width:100%">' +
+          '<input class="value-each" type="number" step="0.01" min="0" placeholder="" value="'+escapeHtml(vValue||'')+'" style="width:100%;text-align:right;">' +
+        '</div>' +
+        '<div style="display:flex;flex-direction:column;width:70px;">' +
+          '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Unit</label>' +
+          '<select class="value-unit" style="width:100%;">'+vUnitOptions+'</select>' +
         '</div>' +
       '</div>' +
     '</div>';
@@ -1862,9 +1891,15 @@ function makeValuableNode(data={}, onChange){
     onChange && onChange(); 
   };
   
-  // ALL inputs trigger onChange (which includes renderEncumbrance)
+  // Text and number inputs report on 'input'; dropdowns report on 'change' and
+  // would otherwise mark nothing at all. Both paths reach the same onChange.
   el.querySelectorAll('input').forEach(inp => {
     inp.addEventListener('input', () => {
+      onChange && onChange();
+    });
+  });
+  el.querySelectorAll('select').forEach(sel => {
+    sel.addEventListener('change', () => {
       onChange && onChange();
     });
   });
@@ -4087,7 +4122,9 @@ function collectSheet(root){
       qty: n.querySelector('.qty').value,
       weight: (n.querySelector('.weight') && n.querySelector('.weight').value) || '',
       notes: (n.querySelector('.notes') && n.querySelector('.notes').value) || '',
-      valueEach: (n.querySelector('.value-each') && n.querySelector('.value-each').value) || ''
+      type:  (n.querySelector('.valuable-type') || {}).value || '',
+      value: (n.querySelector('.value-each')    || {}).value || '',
+      unit:  (n.querySelector('.value-unit')    || {}).value || 'gp'
     }));
   const armor = qsa(root,'.armor-list .item')
     .map(n=>({
@@ -5854,16 +5891,26 @@ function bindSheet(root, tab){
     };
   }
 
-  // Add event delegation for valuables list to trigger encumbrance
+  // Event delegation for the valuables list. Delegation rather than per-node
+  // wiring because it covers rows created by loadSheet too, whose onChange only
+  // marks the sheet unsaved.
   const valuablesList = qs(root, '.valuables-list');
   if (valuablesList) {
-    valuablesList.addEventListener('input', (e) => {
-      // Only trigger if the changed element is qty or weight
-      if (e.target.classList.contains('qty') || e.target.classList.contains('weight')) {
+    const valuablesChanged = (e) => {
+      const c = e.target.classList;
+      if (c.contains('qty') || c.contains('weight')) {
         renderEncumbrance(root);
         renderMovementRate(root);
       }
-    });
+      // Quantity moves BOTH totals, so it is deliberately in both branches.
+      if (c.contains('qty') || c.contains('value-each') || c.contains('value-unit')) {
+        if (typeof renderValuablesValue === 'function') renderValuablesValue(root);
+      }
+    };
+    valuablesList.addEventListener('input', valuablesChanged);
+    // Dropdowns are read on 'change' -- the convention the rest of this file
+    // follows. Without this the Unit selector would move nothing.
+    valuablesList.addEventListener('change', valuablesChanged);
   }
 
   // Add event delegation for items list to trigger encumbrance
