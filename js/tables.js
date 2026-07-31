@@ -3525,6 +3525,44 @@ CLASS_ABILITIES.specialist = CLASS_ABILITIES.mage;
 //   type are turned on top of the usual 2d6, '-' = cannot affect at all.
 // Keys are the book's TWELVE columns, not one per level. Use
 // getTurnUndeadColumn() (defined below the table) to map a level to a column.
+// === COVER AND CONCEALMENT (PHB Table 59, Ch.9) ===
+//
+// TWO COLUMNS, NOT ONE SCALE. COVER is hard -- stone walls, doors, tables, tree
+// trunks, earth embankments, walls of force: something that will stop a missile.
+// CONCEALMENT is soft -- bushes, curtains, tapestries, smoke, fog, brambles:
+// "The bushes cannot stop an arrow, but they do make it less likely that the
+// character is hit." Players conflate the two constantly.
+//
+// THE COVER COLUMN IS NOT LINEAR: -2, -4, -7, -10. Not -2/-4/-6/-8. Do not
+// "regularise" it.
+//
+// WHAT THE NUMBER DOES -- and why most of this is not the sheet's business:
+//   * It is a penalty to the ATTACKER'S ATTACK ROLL. It does NOT change the
+//     defender's Armor Class. When a monster shoots at a PC in cover, the DM
+//     applies it to his own roll and the character sheet is not involved.
+//   * The same figure is a BONUS to the covered character's SAVING THROWS
+//     against spells that cause physical damage (fireball, lightning bolt).
+//
+// So only two rolls here belong to the player: his own attack against a covered
+// target, and his own saving throw while behind cover. Both are situational and
+// applied by hand -- same treatment as the racial Surprise Bonus, which is
+// reported and never added.
+//
+// SIGN: stored exactly as printed, which is correct in BOTH directions. A -2
+// subtracts from the attacker's d20; and saves here are TARGET numbers where
+// lower is better, so -2 improves a save too. Same agreement the Dexterity
+// Defensive Adjustment has -- see §4, Chapter 11.
+//
+// NOT MODELLED: the 90%-cover damage rule (half damage on a failed save, none
+// on a success, and only if the blast actually struck the cover). That is the
+// DM deciding where a fireball went off, not character state.
+const COVER_MODIFIERS = [
+  { hidden: 25, cover: -2,  concealment: -1 },
+  { hidden: 50, cover: -4,  concealment: -2 },
+  { hidden: 75, cover: -7,  concealment: -3 },
+  { hidden: 90, cover: -10, concealment: -4 }
+];
+
 const TURN_UNDEAD_TABLE = {
   1: { skeleton: 10, zombie: 13, ghoul: 16, shadow: 19, wight: 20, ghast: '-', wraith: '-', mummy: '-', spectre: '-', vampire: '-', ghost: '-', lich: '-', special: '-' },
   2: { skeleton: 7, zombie: 10, ghoul: 13, shadow: 16, wight: 19, ghast: 20, wraith: '-', mummy: '-', spectre: '-', vampire: '-', ghost: '-', lich: '-', special: '-' },
