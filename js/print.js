@@ -1721,6 +1721,39 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   const valuableRows = named(sheet && sheet.valuables);
   const coins = (sheet && sheet.coins) || {};
   const enc = (sheet && sheet.encumbrance) || {};
+
+  const valuableTypeText = (r) => (typeof valuableTypeLabel === 'function')
+    ? valuableTypeLabel(r.type) : '\u2014';
+
+  // "500 GP". Falls back to the legacy free-text field, because print reads
+  // SAVED JSON and a character that has not been opened since the migration
+  // still carries valueEach and no structured value.
+  const valueEachText = (r) => {
+    const v = String(r.value == null ? '' : r.value).trim();
+    if (v) return v + ' ' + String(r.unit || 'gp').toUpperCase();
+    return String(r.valueEach || '').trim() || '\u2014';
+  };
+
+  // Worth in gp, PHB Table 42. Recomputed here rather than read off the screen
+  // fields, so a printout cannot disagree with the sheet if a render never ran.
+  // The helpers are tables.js globals and it loads long before this file;
+  // guarded regardless, and an absent helper prints an em dash rather than a
+  // wrong number.
+  const canValue = (typeof coinsToGp === 'function' && typeof formatGp === 'function');
+  const coinValueGp = canValue
+    ? ['cp','sp','ep','gp','pp'].reduce((sum, u) => sum + coinsToGp(coins[u] || 0, u), 0)
+    : null;
+  const valuablesValueGp = canValue
+    ? valuableRows.reduce((sum, r) => {
+        let v = r.value, u = r.unit || 'gp';
+        if ((v === undefined || v === '') && r.valueEach &&
+            typeof parseLegacyValueEach === 'function') {
+          const m = parseLegacyValueEach(r.valueEach);
+          v = m.value; u = m.unit;
+        }
+        return sum + coinsToGp(v || 0, u) * (parseFloat(r.qty) || 1);
+      }, 0)
+    : null;
   const hasCoins = ['cp', 'sp', 'ep', 'gp', 'pp'].some(k => (parseFloat(coins[k]) || 0) > 0);
 
   const showEquipment = !!opts.equipment &&
@@ -1771,10 +1804,11 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       equipmentBlocks.push({
         table: {
           headerRows: 1,
-          widths: ['30%', '7%', '13%', '9%', '9%', '32%'],
+          widths: ['24%', '12%', '6%', '13%', '8%', '9%', '28%'],
           body: [
             [
               cell('Valuable', 6, { bold: true }),
+              cell('Type', 6, { bold: true }),
               cell('Qty', 6, { bold: true, alignment: 'center' }),
               cell('Value ea', 6, { bold: true, alignment: 'center' }),
               cell('Wt ea', 6, { bold: true, alignment: 'center' }),
@@ -1783,13 +1817,14 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
             ],
             ...valuableRows.map(r => [
               cell(r.name),
+              cell(valuableTypeText(r), 6, { alignment: 'center' }),
               cell(r.qty, 6, { alignment: 'center' }),
-              cell(r.valueEach || '\u2014', 6, { alignment: 'center' }),
+              cell(valueEachText(r), 6, { alignment: 'center' }),
               cell(r.weight, 6, { alignment: 'center' }),
               cell(stackWeight(r), 6, { alignment: 'center' }),
               cell(r.notes)
             ]),
-            ...blankRows('valuables', 6)
+            ...blankRows('valuables', 7)
           ]
         },
         layout: gridLayout,
@@ -1836,6 +1871,17 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
               [
                 cell(enc.current || '\u2014', 8, { alignment: 'center' }),
                 cell(enc.max || '\u2014', 8, { alignment: 'center' })
+              ],
+              // Worth, not weight. Stacked under the carrying figures rather
+              // than given a table of its own -- all four answer "what have I
+              // got", and a second table here would crowd the coin grid.
+              [
+                cell('Coin (gp)', 6, { bold: true, alignment: 'center' }),
+                cell('Valuables (gp)', 6, { bold: true, alignment: 'center' })
+              ],
+              [
+                cell(coinValueGp === null ? '\u2014' : formatGp(coinValueGp), 8, { alignment: 'center' }),
+                cell(valuablesValueGp === null ? '\u2014' : formatGp(valuablesValueGp), 8, { alignment: 'center' })
               ]
             ]
           },
