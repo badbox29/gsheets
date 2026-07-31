@@ -32,10 +32,19 @@
 //                   so NEGATIVE = acts sooner. Hasted is -2.
 //   moveMult        Multiplier on movement rate. 0.5 = half.
 //   attackRateMult  Multiplier on attacks per round. 0.5 = half, 2 = double.
-//   surpriseMod     Modifier to surprise rolls. NEGATIVE = worse.
+//   surpriseMod     Modifier to surprise rolls. NEGATIVE = worse. This is the
+//                   character's OWN roll; a racial ability that penalises the
+//                   OPPONENT'S roll is a different thing and does not go here.
+//   savesWorseUnstated  true = saving throws suffer, with no number printed.
+//                   A SAVING THROW field. It exists because this claim was once
+//                   smuggled in as surpriseMod: null, which made a surprise
+//                   field announce a saving throw effect.
 //   verbalSpellFailPct  Percent chance to miscast a spell with a verbal
 //                   component.
-//   negatesDexCombat    true = all Dexterity combat bonuses are cancelled.
+//   negatesDexCombat    true = all Dexterity combat BONUSES are cancelled.
+//                   Bonuses only (PHB Ch.1): a character whose Defensive
+//                   Adjustment is a PENALTY keeps it. Every reader must guard
+//                   on dexAdj < 0 before backing the adjustment out.
 //   blocksNaturalHealing  true = no hit points from natural rest. NEVER read
 //                   this from a magical healing path.
 //   beneficial      true = this condition helps the character.
@@ -210,7 +219,11 @@ const CONDITIONS_DB = [
   {
     name: 'Prone',
     attackerToHit: 4,
+    negatesDexCombat: true,
     // Table 51, same row as Stunned. Was missing entirely.
+    // negatesDexCombat is PHB Ch.1, Defensive Adjustment: beneficial Dexterity
+    // modifiers to Armor Class do not apply when movement is restricted, and
+    // "attacked while prone" is the first case the book names.
     description: 'Knocked down or lying flat. ATTACKERS GAIN +4 TO HIT (PHB Table 51, "Defender stunned or prone"). Regaining your feet is the DM\u2019s call on cost.'
   },
   {
@@ -222,9 +235,14 @@ const CONDITIONS_DB = [
   {
     name: 'Surprised',
     attackerToHit: 1,
-    surpriseMod: null,   // "decreased chance" -- no number printed
-    // Table 51 plus PHB Ch.9's surprise text, which adds the saving throw part.
-    description: 'Taken unawares and unable to react until wits are gathered. Unsurprised opponents get a BONUS ROUND of action. ATTACKERS GAIN +1 TO HIT (PHB Table 51), and a surprised character also has a DECREASED CHANCE OF ROLLING A SUCCESSFUL SAVING THROW (PHB Ch.9).'
+    negatesDexCombat: true,
+    savesWorseUnstated: true,
+    // Table 51 and PHB Ch.9 for the +1 and the saving throw clause. Everything
+    // else is PHB Ch.11, which is the authority on what surprise COSTS you:
+    // "the surprised characters lose all AC bonuses for high Dexterity during
+    // that instant of surprise." BONUSES -- Ch.1 confirms only BENEFICIAL
+    // Dexterity modifiers are suspended, so a poor-Dexterity penalty is not shed.
+    description: 'Taken unawares and unable to react until wits are gathered. The unsurprised side gets ONE BONUS ROUND of melee, missile or magical item attacks at its full attacks per round, but CANNOT CAST SPELLS during it (PHB Ch.11). ALL DEXTERITY ARMOR CLASS BONUSES ARE LOST for that instant (PHB Ch.11); a Dexterity AC penalty is not shed. ATTACKERS GAIN +1 TO HIT (PHB Table 51), and a surprised character also has a DECREASED CHANCE OF ROLLING A SUCCESSFUL SAVING THROW (PHB Ch.9). If both groups surprise each other, the effects of surprise are cancelled (PHB Ch.11).'
   }
 ];
 
@@ -281,7 +299,7 @@ function summarizeConditionEffects(nameOrDef) {
   }
   if (c.negatesDexCombat)    out.push('no DEX combat bonuses');
   if (c.surpriseMod)         out.push(sign(c.surpriseMod) + ' surprise');
-  else if (c.surpriseMod === null) out.push('saves worse (amount unstated)');
+  if (c.savesWorseUnstated)  out.push('saves worse (amount unstated)');
   if (c.verbalSpellFailPct)  out.push(c.verbalSpellFailPct + '% verbal miscast');
   if (c.blocksNaturalHealing) out.push('no natural healing');
 
