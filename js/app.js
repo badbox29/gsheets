@@ -11429,17 +11429,17 @@ function renderCharacterBonuses(root) {
   let allSpecial = [];
   
   // Add racial bonuses
-  if (race && RACIAL_COMBAT_BONUSES[race]) {
-    const racial = RACIAL_COMBAT_BONUSES[race];
-    racial.combat.forEach(bonus => {
-      allCombat.push({ ...bonus, source: "Race" });
-    });
-    racial.defensive.forEach(bonus => {
-      allDefensive.push({ ...bonus, source: "Race" });
-    });
-    racial.special.forEach(bonus => {
-      allSpecial.push({ ...bonus, source: "Race" });
-    });
+  // RACIAL_COMBAT_BONUSES holds ability NAMES now, not prose. racialBonusEntries
+  // pulls the wording live from RACIAL_ABILITIES, so this panel and the ability
+  // cards can no longer say different things about the same rule -- which they
+  // already did, for surprise and for sleep/charm resistance.
+  if (race && typeof racialBonusEntries === 'function') {
+    racialBonusEntries(race, 'combat')
+      .forEach(b => allCombat.push({ ...b, source: "Race" }));
+    racialBonusEntries(race, 'defensive')
+      .forEach(b => allDefensive.push({ ...b, source: "Race" }));
+    racialBonusEntries(race, 'special')
+      .forEach(b => allSpecial.push({ ...b, source: "Race" }));
   }
   
   // Get classes and levels
