@@ -1344,9 +1344,9 @@ const SHEET_HTML = `
             <div class="col"><label>PP</label><input data-field="pp" type="number"></div>
           </div>
           <div class="row" style="margin-top:8px">
-            <div class="col"><label>Total Coins</label><input data-field="coin_total" type="text" readonly></div>
+            <div class="col"><label>Coin Count</label><input data-field="coin_total" type="text" readonly></div>
             <div class="col"><label>Coin Weight (lbs)</label><input data-field="coin_weight" type="text" readonly></div>
-            <div class="col"><!-- empty for layout --></div>
+            <div class="col"><label>Coin Value (gp)</label><input data-field="coin_value" type="text" readonly></div>
           </div>
           
           <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;margin-bottom:8px;">
@@ -1354,6 +1354,11 @@ const SHEET_HTML = `
             <button class="add-valuable">+ Add Item</button>
           </div>
           <div class="list valuables-list"></div>
+          <div class="row" style="margin-top:8px">
+            <div class="col"><label>Valuables Weight (lbs)</label><input data-field="valuables_weight" type="text" readonly></div>
+            <div class="col"><label>Valuables Value (gp)</label><input data-field="valuables_value" type="text" readonly></div>
+            <div class="col"><!-- empty for layout --></div>
+          </div>
         </section>
 		
 		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
