@@ -3847,6 +3847,28 @@ function isLegalOffhandWeapon(main, off) {
 //
 // Rates are strings ("1", "3/2", "2"), so the arithmetic is done in HALVES and
 // reformatted: 3/2 -> 5/2, 1 -> 2, 2 -> 3. The book's own example is the test.
+// Multiply an attack rate by a factor, in HALVES, so "3/2" survives the trip.
+// Slowed halves and Hasted doubles; both compound, so slowed-and-hasted returns
+// to the original rate on its own without a special case.
+//
+// FLOOR AT ONE HALF, not zero: PHB Ch.9's slow spell halves the rate, and a
+// character reduced to no attacks at all would be a stronger effect than any
+// printed rule grants. 1/2 reads as "one attack every two rounds".
+function scaleAttackRate(rate, mult) {
+  const s = String(rate == null ? '1' : rate).trim();
+  const frac = s.match(/^(\d+)\s*\/\s*2$/);
+  let halves;
+  if (frac) {
+    halves = parseInt(frac[1], 10);
+  } else {
+    const whole = parseFloat(s);
+    if (!isFinite(whole) || whole <= 0) return s;   // unparseable: leave alone
+    halves = Math.round(whole * 2);
+  }
+  halves = Math.max(1, Math.round(halves * mult));
+  return (halves % 2 === 0) ? String(halves / 2) : (halves + '/2');
+}
+
 function addOneAttackPerRound(rate) {
   const s = String(rate == null ? '1' : rate).trim();
   const frac = s.match(/^(\d+)\s*\/\s*2$/);
