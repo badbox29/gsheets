@@ -2090,6 +2090,9 @@ function renderCoinWeight(root) {
   
   const coinTotalEl = root.querySelector('[data-field="coin_total"]');
   const coinWeightEl = root.querySelector('[data-field="coin_weight"]');
+  // Not added to the guard below on purpose -- coin count and weight are the
+  // function's reason to exist, coin value is an extra it can do without.
+  const coinValueEl = root.querySelector('[data-field="coin_value"]');
   
   if (!coinTotalEl || !coinWeightEl) return;
   
@@ -2112,6 +2115,44 @@ function renderCoinWeight(root) {
   } else {
     coinWeightEl.removeAttribute("title");
   }
+
+  // Coin VALUE, PHB Table 42. A different question from the count above, which
+  // is why both are shown: 500 cp and 500 pp are the same count and the same
+  // weight, and a thousandfold apart in worth. Displayed in gp because Table 44
+  // prices the equipment list in gp.
+  if (coinValueEl && typeof coinsToGp === 'function') {
+    const valueGp =
+      coinsToGp(cp, 'cp') + coinsToGp(sp, 'sp') + coinsToGp(ep, 'ep') +
+      coinsToGp(gp, 'gp') + coinsToGp(pp, 'pp');
+    coinValueEl.value = formatGp(valueGp);
+    if (valueGp > 0) {
+      coinValueEl.title = 'PHB Table 42, worth in gp: ' +
+        'cp 1/100, sp 1/10, ep 1/2, gp 1, pp 5';
+    } else {
+      coinValueEl.removeAttribute('title');
+    }
+  }
+}
+
+// Total worth of the Other Valuables list, in gp. Deliberately NOT folded into
+// renderEncumbrance: that function answers a weight question and this one
+// answers a value question. They iterate the same list and share nothing else.
+//
+// Every row counts, whatever its type -- VALUABLE_TYPES is metadata and no
+// arithmetic reads it. A blank Qty counts as one, matching the weight loop.
+function renderValuablesValue(root) {
+  const el = root.querySelector('[data-field="valuables_value"]');
+  if (!el || typeof coinsToGp !== 'function') return;
+
+  let totalGp = 0;
+  Array.from(root.querySelectorAll('.valuables-list .item')).forEach(item => {
+    const qty  = parseFloat(item.querySelector('.qty')?.value) || 1;
+    const each = parseFloat(item.querySelector('.value-each')?.value) || 0;
+    const unit = (item.querySelector('.value-unit')?.value) || 'gp';
+    totalGp += coinsToGp(each, unit) * qty;
+  });
+
+  el.value = formatGp(totalGp);
 }
 
 function renderRacialAbilities(root) {
@@ -2571,13 +2612,22 @@ function renderEncumbrance(root) {
   const coinWeight = parseFloat(val(root, "coin_weight")) || 0;
   totalWeight += coinWeight;
   
-  // Valuables weight (quantity * weight per item) - NEW
+  // Valuables weight (quantity * weight per item). Accumulated on its own as
+  // well as into the running total, because the Treasure & Money panel shows it
+  // beside coin weight -- a pack of gems and a purse are worth telling apart.
+  // Written from HERE rather than by a second function, so exactly one place
+  // computes this number and the two displays cannot drift.
   const valuables = Array.from(root.querySelectorAll('.valuables-list .item'));
+  let valuablesWeight = 0;
   valuables.forEach(item => {
     const qty = parseFloat(item.querySelector('.qty')?.value) || 1;
     const weight = parseFloat(item.querySelector('.weight')?.value) || 0;
-    totalWeight += qty * weight;
+    valuablesWeight += qty * weight;
   });
+  totalWeight += valuablesWeight;
+
+  const valuablesWeightEl = root.querySelector('[data-field="valuables_weight"]');
+  if (valuablesWeightEl) valuablesWeightEl.value = valuablesWeight.toFixed(1);
   
   // Items weight (quantity * weight per item)
   const items = Array.from(root.querySelectorAll('.items-list .item'));
