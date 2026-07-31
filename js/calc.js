@@ -613,7 +613,28 @@ function renderCombatQuickReference(root) {
     acBreakEl.innerHTML = acHtml;
   }
 
-  if (moveEl) moveEl.textContent = moveRate;
+  if (moveEl) {
+    // Conditions multiply movement, and they COMPOUND -- Slowed and Stunned
+    // together give 1/2 x 1/3 = 1/6, not whichever is worse. haste and slow
+    // cancelling falls out of the same multiplication for free.
+    const baseMove = (root._currentMovement !== undefined)
+      ? root._currentMovement
+      : parseInt(moveRate, 10);
+    const mult = condFx.moveMult !== undefined ? condFx.moveMult : 1;
+
+    if (!isNaN(baseMove) && mult !== 1) {
+      const adjusted = Math.floor(baseMove * mult);
+      moveEl.textContent = adjusted + '" (' + (adjusted * 10) + ' ft/turn)';
+      moveEl.style.color = mult < 1 ? 'var(--error, #ff6b6b)' : 'var(--success, #4ade80)';
+      moveEl.title = 'Base ' + baseMove + '" adjusted by active conditions: ' +
+                     (condFx.sources.moveMult || []).join(', ') +
+                     '. The character sheet\'s own movement is unchanged.';
+    } else {
+      moveEl.textContent = moveRate;
+      moveEl.style.color = '';
+      moveEl.title = '';
+    }
+  }
   if (hpEl) {
     hpEl.textContent = hpDisplay;
     // Color code HP display
@@ -7956,6 +7977,10 @@ function renderMovementRate(root) {
   baseMovementEl.value = `${baseMovement}" (${baseMovement * 10} ft/turn) - ${raceName}`;
   baseMovementEl.title = `Base movement for ${raceName}\n1" = 10 feet per turn\n1 round = 1 minute`;
   
+  // Stashed for the quick reference, which needs the NUMBER to apply condition
+  // multipliers -- the field itself holds a formatted string. Same pattern as
+  // root._acBreakdown: one copy of the arithmetic, read by whoever needs it.
+  root._currentMovement = currentMovement;
   currentMovementEl.value = `${currentMovement}" (${currentMovement * 10} ft/turn)${encumbranceNote}`;
   currentMovementEl.title = `Current movement with encumbrance\nBase: ${baseMovement}" × ${movementMultiplier.toFixed(2)} = ${currentMovement}"`;
   
