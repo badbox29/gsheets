@@ -297,7 +297,7 @@ const SHEET_HTML = `
 		  </div>
 		  <div class="row" style="margin-top:8px">
 			<div class="col"><label>Manual AC Adj.</label><input data-field="ac_manual" type="number" placeholder="0"></div>
-			<div class="col"><label>Reaction Adj.</label><input data-field="reaction_adj_combat" type="text" readonly></div>
+			<div class="col"><label>Surprise Adj.</label><input data-field="reaction_adj_combat" type="text" readonly title="Dexterity Reaction Adjustment (PHB Table 2).&#10;&#10;PHB Ch.1: &quot;Reaction Adjustment modifies the die roll to see if a character is surprised when he unexpectedly encounters NPCs. The more positive the modifier, the less likely the character is to be surprised.&quot;&#10;&#10;Surprise is 1d10 per side, and a 1, 2 or 3 means surprised (PHB Ch.11). A plus to your roll reduces the odds you are surprised; a minus increases them.&#10;&#10;Your DM may apply further modifiers for race, class, cleverness and situation. Your racial Surprise Bonus, if you have one, penalises your OPPONENTS' rolls instead and is listed with your racial abilities."></div>
 			<div class="col"></div>
 		  </div>
 		  <div class="row" style="margin-top:12px">
@@ -433,6 +433,7 @@ const SHEET_HTML = `
 			</div>
 		  </div>
 
+		  <div class="dex-save-note" style="display:none;margin-top:12px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
 		  <div class="armor-save-note" style="display:none;margin-top:12px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
 		</section>
 		
