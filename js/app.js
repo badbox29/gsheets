@@ -2679,11 +2679,17 @@ function makeHirelingNode(h, onChange){
         // lists as archer, armorer, sage, spy. The stored key stays `type`.
         '<div><label style="font-size:11px;color:var(--muted);">Occupation</label>' +
           '<input class="hireling-type" placeholder="e.g., Men-at-Arms, Torchbearer" value="'+escapeHtml(h.type||'')+'" style="width:100%;"></div>' +
+        // PHB Ch.12 gives followers the one thing most hirelings lack: they
+        // "can increase in level", and every follower in a unit advances at the
+        // same time. The card had THAC0 and a full ability spread but nowhere
+        // to record the level itself, so the rule had no home.
+        '<div><label style="font-size:11px;color:var(--muted);">Level</label>' +
+          '<input class="hireling-level" type="number" placeholder="--" title="PHB Ch.12. Followers can gain levels, and ALL followers in a unit advance together -- one figure covers the whole unit. Most hirelings never advance at all." value="'+escapeHtml(h.level||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Quantity</label>' +
           '<input class="hireling-quantity" type="number" placeholder="1" value="'+escapeHtml(h.quantity||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Wage</label>' +
           '<input class="hireling-wage" placeholder="e.g., 2 gp/month" value="'+escapeHtml(h.wage||'')+'" style="width:100%;"></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">Duration</label>' +
+        '<div><label class="hireling-duration-label" style="font-size:11px;color:var(--muted);">Duration</label>' +
           '<input class="hireling-duration" placeholder="e.g., 6 months" value="'+escapeHtml(h.duration||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Purpose/Task</label>' +
           '<input class="hireling-purpose" placeholder="e.g., Guard the stronghold" value="'+escapeHtml(h.purpose||'')+'" style="width:100%;"></div>' +
@@ -2727,6 +2733,33 @@ function makeHirelingNode(h, onChange){
     detailsDiv.style.display = isOpen ? 'none' : 'block';
     toggleBtn.textContent = isOpen ? 'Details' : 'Hide';
   };
+
+  // PHB Ch.12: followers "do not serve for a specific term of contract", so
+  // Duration means nothing for one. DIMMED, NEVER HIDDEN AND NEVER CLEARED --
+  // the same rule the fallen paladin's spellbooks follow. The value goes on
+  // being collected, saved and PRINTED whatever the screen shows, so a field
+  // that vanished would quietly contradict the PDF.
+  //
+  // A Duration already filled in stays fully legible; only an EMPTY one dims.
+  // Dimming text someone deliberately entered would hide the very mismatch
+  // this is meant to surface.
+  const durationEl  = el.querySelector('.hireling-duration');
+  const durationLab = el.querySelector('.hireling-duration-label');
+  const categoryEl  = el.querySelector('.hireling-category');
+  const syncDuration = ()=>{
+    if(!durationEl || !categoryEl) return;
+    const isFollower = categoryEl.value === 'follower';
+    const hasValue   = String(durationEl.value || '').trim() !== '';
+    durationEl.placeholder = isFollower
+      ? 'No term \u2014 followers serve no contract'
+      : 'e.g., 6 months';
+    const dim = isFollower && !hasValue;
+    durationEl.style.opacity = dim ? '0.45' : '';
+    if(durationLab) durationLab.style.opacity = dim ? '0.45' : '';
+  };
+  if(categoryEl) categoryEl.addEventListener('change', syncDuration);
+  if(durationEl) durationEl.addEventListener('input', syncDuration);
+  syncDuration();
   
   // Remove button with confirmation
   el.querySelector('.rm').onclick = ()=>{
@@ -4384,6 +4417,8 @@ function collectSheet(root){
       // rendered before this field existed cannot throw and break the save.
       category: (el.querySelector('.hireling-category') || {}).value || '',
       type: el.querySelector('.hireling-type').value,
+      // Defensive for the same reason as `category` above.
+      level: (el.querySelector('.hireling-level') || {}).value || '',
       quantity: el.querySelector('.hireling-quantity').value,
       wage: el.querySelector('.hireling-wage').value,
       duration: el.querySelector('.hireling-duration').value,
