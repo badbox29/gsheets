@@ -7876,6 +7876,24 @@ function makeConditionNode(data = {}, onChange) {
     '</div>'
     : '';
   
+  // Mechanical summary, straight from the structured fields. Shown on the card
+  // face rather than inside the collapsed description: a player who has to
+  // expand a panel to find out that attacks against him hit automatically will
+  // not do it mid-combat.
+  //
+  // Beneficial conditions are tinted differently -- Hasted and Invisible sitting
+  // in a red-bordered "condition" card already reads as bad news, and the effect
+  // line is the place to correct that impression.
+  const condDef = (typeof CONDITIONS_DB !== 'undefined')
+    ? CONDITIONS_DB.find(c => c.name === conditionName) : null;
+  const condEffects = (typeof summarizeConditionEffects === 'function')
+    ? summarizeConditionEffects(condDef || conditionName) : [];
+  const effectsLine = condEffects.length
+    ? '<div class="condition-effects" style="margin-top:3px;font-size:10px;line-height:1.3;color:' +
+      (condDef && condDef.beneficial ? 'var(--success, #4ade80)' : 'var(--error, #ff6b6b)') +
+      ';">' + condEffects.join(' \u00b7 ') + '</div>'
+    : '';
+
   el.innerHTML = 
     '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;background:rgba(255,100,100,0.1);border:1px solid rgba(255,100,100,0.3);border-radius:4px;margin-bottom:6px;cursor:pointer;">' +
       '<div style="flex:1;">' +
@@ -7884,6 +7902,7 @@ function makeConditionNode(data = {}, onChange) {
           '<span class="condition-duration duration-display" style="font-size:11px;color:var(--muted);">' + durationText + '</span>' +
           durationButtons +
         '</div>' +
+        effectsLine +
         hpLossField +
       '</div>' +
       '<button class="condition-remove" style="padding:4px 8px;font-size:11px;background:rgba(255,100,100,0.2);border:1px solid rgba(255,100,100,0.4);color:#ff6b6b;border-radius:4px;cursor:pointer;">Remove</button>' +
