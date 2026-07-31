@@ -3745,7 +3745,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
 
       // === HIRELINGS (optional) ===
       ...optional(showHirelings,
-        printSection('HIRELINGS', ...hirelingBlocks)
+        printSection('FOLLOWERS & HIRELINGS', ...hirelingBlocks)
       ),
 
       // === COMPANIONS (optional) ===
