@@ -7979,6 +7979,7 @@ function makeConditionNode(data = {}, onChange) {
           durationSpan.textContent = '';
         }
         onChange && onChange();
+        bumpNag();
       }
     };
     
@@ -7990,6 +7991,7 @@ function makeConditionNode(data = {}, onChange) {
       const durationSpan = el.querySelector('.condition-duration');
       durationSpan.textContent = `(${currentDuration} rnds)`;
       onChange && onChange();
+      bumpNag();
     };
   }
   
