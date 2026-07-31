@@ -2150,9 +2150,14 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     henchmenBlocks.push({ text: henchmenNotes, fontSize: 6, margin: [0, 0, 0, 4] });
   }
 
-  // === HIRELINGS (optional) ===
-  // Hirelings are hired for a job, not sworn to the character, so the columns
-  // are contractual -- type, quantity, wage, duration, purpose -- rather than
+  // === FOLLOWERS & HIRELINGS (optional) ===
+  // Hired for a job rather than sworn to the character, so the columns are
+  // contractual -- occupation, quantity, wage, duration, purpose -- rather than
+  //
+  // CATEGORY leads them because PHB Ch.12 makes it govern how the rest read:
+  // Duration is a term of service for a hireling and means nothing for a
+  // follower, who serves no term at all. Printed through npcCategoryLabel so
+  // the sheet shows "Follower" rather than the stored key.
   // the loyalty and morale a henchman carries. Ability scores are recorded but
   // rarely filled in, so they drop into the detail row.
   const hirelingRows = named(sheet && sheet.hirelings);
@@ -2169,8 +2174,9 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
 
   if (showHirelings) {
     const body = [[
-      cell('Hireling', 6, { bold: true }),
-      cell('Type', 6, { bold: true }),
+      cell('Name', 6, { bold: true }),
+      cell('Category', 6, { bold: true }),
+      cell('Occupation', 6, { bold: true }),
       cell('Qty', 6, { bold: true, alignment: 'center' }),
       cell('Wage', 6, { bold: true, alignment: 'center' }),
       cell('Duration', 6, { bold: true, alignment: 'center' }),
@@ -2181,6 +2187,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     hirelingRows.forEach(h => {
       body.push([
         cell(h.name, 6, { bold: true }),
+        cell(typeof npcCategoryLabel === 'function' ? npcCategoryLabel(h.category) : (h.category || '')),
         cell(h.type),
         cell(h.quantity, 6, { alignment: 'center' }),
         cell(h.wage || '\u2014', 6, { alignment: 'center' }),
@@ -2192,8 +2199,8 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       const detail = followerDetail(h, HIRE_ABILITIES, HIRE_EXTRAS);
       if (detail.length) {
         body.push([
-          { text: detail, fontSize: 6, colSpan: 7, margin: [0, 1, 0, 1] },
-          {}, {}, {}, {}, {}, {}
+          { text: detail, fontSize: 6, colSpan: 8, margin: [0, 1, 0, 1] },
+          {}, {}, {}, {}, {}, {}, {}
         ]);
       }
     });
