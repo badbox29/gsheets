@@ -4741,6 +4741,39 @@ function getDivingSurfacing(root, steps, heightFeet, hasRun) {
   };
 }
 
+// PHB Ch.14, "Cross-Country Movement". A normal day's march is 10 hours
+// including reasonable stops for rest and meals, covering twice the movement
+// rate in MILES -- an unencumbered human walks 24 miles across clear terrain.
+// Force marching covers 2 1/2 times the rate, so that same man makes 30.
+//
+// `days` counts consecutive days of FORCE marching only. Ordinary marching
+// costs nothing, needs no check, and carries no penalty.
+//
+// THE PENALTY COUNTS THE CURRENT DAY: one day of force marching is -1, not 0.
+// The chapter settles this twice over -- Ragnar takes a -1 Constitution check
+// after his FIRST round at triple speed, and the book's own eight-day force
+// march figure is -8 rather than -7.
+function getOverlandMovement(root, currentMovement, days) {
+  const cur = parseInt(currentMovement, 10) || 0;
+  const d   = Math.max(0, parseInt(days, 10) || 0);
+  const con = parseInt(val(root, 'con'), 10) || 0;
+
+  return {
+    days:          d,
+    normalMiles:   cur * 2,
+    forceMiles:    cur * 2.5,
+    // Large parties check against the party's AVERAGE Constitution, and
+    // creatures with no Constitution score save vs. death instead. Both are
+    // DM-side, so the sheet reports only this character's own number.
+    conCheck:      con - d,
+    // Cumulative, and it applies to ALL attack rolls -- not just melee.
+    attackPenalty: -d,
+    // Half a day's rest clears one day's attack penalty. The same half-day-per-
+    // day figure is what allows force marching to resume after a failed check.
+    restDays:      d / 2
+  };
+}
+
 // === Optional Rules Registry ===
 //
 // AD&D 2e flags a great many rules as optional, and different tables use
