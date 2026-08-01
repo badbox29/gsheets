@@ -419,6 +419,44 @@
       color: #000;
       font-weight: 700;
     }
+    /* Tools tab sub-tabs.
+       Horizontal counterpart to .vtab, deliberately quieter: the vertical bar
+       is primary navigation and this is navigation within one of its tabs, so
+       it borrows the accent for the active state without the solid fill. */
+    .subtab-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .subtab {
+      padding: 6px 12px;
+      background: var(--glass);
+      border: 1px solid transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .subtab:hover {
+      border-color: var(--accent);
+    }
+    .subtab.active {
+      background: var(--accent);
+      color: #000;
+      font-weight: 700;
+    }
+    /* Hiding by CLASS, never by inline style. Inline display on a Tools panel
+       means "this does not apply to your character" and is owned by the panel's
+       own renderer; this class means "not the tab you are on". Two mechanisms,
+       two meanings. !important so it wins over an inline display:block that a
+       gating renderer has written. */
+    .subtab-panel-hidden {
+      display: none !important;
+    }
 	/* Combat Round Tracker */
     .next-round-btn {
       background: var(--accent);
