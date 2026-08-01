@@ -12318,6 +12318,13 @@ function recalculateAll(root) {
   if (typeof renderEncumbrance === 'function') renderEncumbrance(root);
   if (typeof renderProficiencySlots === 'function') renderProficiencySlots(root);
   if (typeof renderMovementRate === 'function') renderMovementRate(root);
+  // AFTER renderMovementRate, always. Both panels multiply against
+  // root._currentMovement, which that function is what stashes -- run either one
+  // ahead of it and every rate silently reads zero, which is exactly what the
+  // climb rate did while the movement section was blanked.
+  // renderCombatQuickReference stays last in this list regardless; see below.
+  if (typeof renderClimbingPanel === 'function') renderClimbingPanel(root);
+  if (typeof renderOverlandPanel === 'function') renderOverlandPanel(root);
   if (typeof renderArmorClass === 'function') renderArmorClass(root);
   if (typeof renderClassAbilities === 'function') renderClassAbilities(root);
   if (typeof renderCharacterBonuses === 'function') renderCharacterBonuses(root);
