@@ -1918,7 +1918,7 @@ const SHEET_HTML = `
           </div>
           
 		  <!-- Common Game Rolls + Roll History (side by side) -->
-          <div style="display:grid;grid-template-columns:30% 70%;gap:16px;margin-bottom:16px;">
+          <div style="display:grid;grid-template-columns:30fr 70fr;gap:16px;margin-bottom:16px;">
             <!-- Common Game Rolls (left side) -->
             <div>
               <h4 style="font-size:14px;margin-bottom:8px;">Common Game Rolls</h4>
@@ -1992,7 +1992,7 @@ const SHEET_HTML = `
             Quick rolling for thief abilities. Click Roll to test against your current skill percentages.
           </p>
           
-          <div style="display:grid;grid-template-columns:55% 45%;gap:16px;">
+          <div style="display:grid;grid-template-columns:55fr 45fr;gap:16px;">
             <!-- Thief Skills (left side) -->
             <div class="thief-skills-roller">
 			<h4 style="font-size:14px;margin-bottom:8px;">Thief Rolls</h4>
@@ -2143,7 +2143,7 @@ const SHEET_HTML = `
             Attempt to turn undead creatures. Auto-updates based on your character level.
           </p>
           
-          <div style="display:grid;grid-template-columns:65% 35%;gap:16px;">
+          <div style="display:grid;grid-template-columns:65fr 35fr;gap:16px;">
             <!-- Turn Undead Table (left side) -->
             <div class="turn-undead-table">
               <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;padding:8px;background:rgba(255,255,255,0.05);border-radius:4px;margin-bottom:8px;font-weight:600;font-size:11px;">
