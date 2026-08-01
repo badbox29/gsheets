@@ -1867,7 +1867,7 @@ const SHEET_HTML = `
           this markup. Adding a panel is a registry entry plus a <section> with
           a matching class, and nothing here changes.
 
-          `ephemeral` because the strip and the selected tab are UI state, not
+          "ephemeral" because the strip and the selected tab are UI state, not
           character data: collectSheet must never see it and clicking a tab must
           never mark the sheet unsaved or restamp _updatedAt.
         -->
