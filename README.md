@@ -2,7 +2,7 @@
 
 A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and zero dependencies.
 
-**Version 10.3.0**
+**Version 10.5.0**
 
 ## Live Demo
 
@@ -33,6 +33,9 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 * A vision and light reference giving the book's sighting distances by weather and target size, and the radius and burning time of every light source
 * Dice rollers for every racial ability that is rolled — dwarven and gnomish stonework detection, elven and half-elven door finding, halfling grade sense, sleep and charm resistance
 * A cover and concealment reference for missile fire, covering both the attack penalty and the saving throw bonus
+* A climbing panel giving your chance of success and your rate of climb for any surface and condition, with the armor, race and encumbrance penalties itemized
+* An overland travel and endurance panel covering marching, force marching and its cumulative attack penalty, diving depth, and surfacing rate
+* Movement worked out in the units the book actually uses — feet per round underground, yards per round outdoors — with swimming, walking the bottom, and how long you can hold your breath
 * Optional-rules framework with live toggles for Player's Handbook options and house-rule overrides
 * Multi-page printable character sheet with configurable sections, blank write-in lines, and color schemes
 * Import / export character data
@@ -184,7 +187,52 @@ Follow these steps **in order** to avoid overwriting your data:
 
 ### Recent Updates
 
-#### Unreleased
+#### v10.5.0
+
+A systematic review of Player's Handbook Chapter 14, *Time and Movement* — which completes the pass. **All fourteen chapters of the Player's Handbook have now been audited against the book, table by table.**
+
+Movement turned out to be one of the least trustworthy parts of the sheet. Three of its five figures were wrong, and one of them was a rule that does not exist.
+
+**Movement was labelled in the wrong unit**
+
+* Every movement figure read *feet per turn*. A turn is ten minutes. The book gives movement in tens of feet per **round**, which is roughly a minute — so the sheet was describing your speed as ten times slower than it is. Base movement, current movement and the Combat Quick Reference were all affected.
+* Outdoors, the same rate is measured in tens of **yards** per round rather than feet. Both readings are now given.
+
+**Swimming was wrong three separate ways**
+
+* The rate was a third of your movement. The book gives **half**.
+* *Any* armor at all stopped you swimming. The book stops only **metal** armor — leather, padded and hide have never prevented anyone swimming, and no longer do here.
+* The result was shown in feet. The book gives yards.
+* That stray one-third turns out to be the rate for **walking along the bottom**, which is what you do when you cannot swim at all. It has its own field now, where it belongs.
+* Added the rule that gear heavy enough to cut your movement to a third or less pulls you under regardless of what you are wearing.
+* Characters without the Swimming proficiency are flagged rather than quietly given a rate. The book divides everyone into trained and untrained swimmers, and an untrained swimmer manages a dog-paddle in calm water and makes no noticeable progress. Whether your character can swim at all is your DM's call, so the sheet shows the figure without asserting you are entitled to it.
+
+**Climbing was a number from nowhere**
+
+* The sheet showed a climbing rate of half your movement. **There is no such rule.** The book makes the rate depend on the surface and its condition — anywhere from a quarter of your movement to four times it — and doubles it for thieves. No single number could be right, so the field is gone.
+* In its place, a **Climbing** panel on the Tools tab. Pick a surface and a condition and it gives both your percentage chance of success and your rate of climb in feet per round.
+* **Non-thief climbing is modelled for the first time.** Every character can climb to some degree; the book grades climbers as thief, mountaineer or unskilled, and the Mountaineering proficiency has always improved the chance without the tool doing anything with it.
+* The chance of success itemizes what is moving it — your armor, your race, your load, the state of the surface, whether you have a rope and something to brace against. A low number explains itself instead of just looking broken.
+* Thieves are deliberately not penalized twice for race, which the book warns about explicitly: a thief's Climb Walls score already has the racial adjustment folded in.
+* Surfaces an unskilled climber simply cannot attempt are called out, along with the equipment a mountaineer needs for them.
+* The penalties for fighting or casting while on a wall are spelled out on the panel — you lose your Dexterity and shield bonuses to armor class, take −2 on your own attacks, damage and saves, and cannot use a two-handed weapon.
+
+**Running is an optional rule, and it is not a flat multiplier**
+
+* Running at triple speed was presented as a plain derived statistic. The book prints jogging and running in a box headed *(Optional Rule)*, and triple speed requires a successful Strength check — quadruple at −4, quintuple at −8.
+* Jogging and running now appear only when that rule is switched on, with the Constitution checks, the duration limits and the rest each pace demands.
+
+**New: Overland & Endurance**
+
+* Added a panel for travel over distance: a normal day's march of ten hours at twice your movement rate in miles, and force marching at two and a half times.
+* Force marching carries a Constitution check at the end of each day, worsening for every consecutive day, and a **cumulative −1 to all attack rolls per day** that half a day's rest clears. Eight days of it is a −8 and four days of rest.
+* Added diving and surfacing, both twenty feet per round before your load is counted, with the depth a run and a drop add to a dive.
+
+**Holding your breath**
+
+* Added the figure to the movement section: a third of your Constitution in rounds, halved while exerting yourself, halved again without a good gulp of air — and never less than one round, whatever the circumstances.
+
+#### v10.4.0
 
 A systematic review of Player's Handbook Chapter 13, *Vision and Light*, a full re-audit of Chapter 2, *Player Character Races*, a reopening of Chapter 9 for cover and concealment, and two bugs that had been quietly damaging saved characters.
 
