@@ -395,12 +395,16 @@
     /* === Vertical tabs (new) === */
     .sheet-body {
       display: flex;
-      align-items: flex-start;
+      align-items: stretch;
     }
     .vtab-bar {
       display: flex;
       flex-direction: column;
       margin-right: 12px;
+      /* The rail keeps sizing to its tabs -- only the CARD is meant to fill the
+         column. Without this, stretch applies here too and the bar grows a long
+         empty tail below the last tab. */
+      align-self: flex-start;
     }
     .vtab {
       writing-mode: vertical-rl;
@@ -541,7 +545,14 @@
     }
   
     .vtab-content { display: none; flex: 1; }
-    .vtab-content.active { display: block; }
+    /* The active panel becomes a flex column purely so main.card can be told to
+       grow. Each .vtab-content holds exactly one <main class="card">, so this
+       changes nothing about the content's own layout.
+       WHY: the vertical tab rail runs the full height of the page, and when the
+       card stopped at its content the rail terminated against nothing and read
+       as detached from the thing it controls. */
+    .vtab-content.active { display: flex; flex-direction: column; }
+    .vtab-content > main.card { flex: 1 1 auto; }
 	textarea {
 	  overflow-y: hidden;
 	  resize: none; /* optional: prevent manual resize handles */
