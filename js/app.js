@@ -12345,6 +12345,13 @@ function recalculateAll(root) {
   // It also repaints the proficiency badges and stripes as a side effect, so
   // those were going stale in exactly the same cases.
   if (typeof renderCombatQuickReference === 'function') renderCombatQuickReference(root);
+  // DEAD LAST, and deliberately after the Quick Reference. This does not break
+  // the "Quick Reference stays last" rule -- that rule is about reading THAC0,
+  // AC and Strength adjustments the calls above produce, and the sub-tab strip
+  // produces and reads none of them. It only needs to run after everything that
+  // can change whether a Tools panel APPLIES, and last is the one position that
+  // guarantees it without having to keep track of which renderers those are.
+  if (typeof renderToolsSubtabs === 'function') renderToolsSubtabs(root);
 }
 
 /**
