@@ -1860,8 +1860,21 @@ const SHEET_HTML = `
     </div>
 	  <div class="vtab-content" data-vtab="tools">
       <main class="card">
+        <!--
+          TOOLS SUB-TAB STRIP
+
+          Rendered from TOOLS_SUBTABS in tables.js -- never hand-write a tab in
+          this markup. Adding a panel is a registry entry plus a <section> with
+          a matching class, and nothing here changes.
+
+          `ephemeral` because the strip and the selected tab are UI state, not
+          character data: collectSheet must never see it and clicking a tab must
+          never mark the sheet unsaved or restamp _updatedAt.
+        -->
+        <div class="subtab-bar ephemeral"></div>
+
         <!-- Dice Rollers -->
-        <section class="section">
+        <section class="section dice-rollers-section">
           <h3>Dice Rollers</h3>
           <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
             Quick dice rolling utilities for gameplay.
