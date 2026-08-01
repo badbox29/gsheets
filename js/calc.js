@@ -8094,10 +8094,16 @@ function renderMovementRate(root) {
   const baseMovementEl = root.querySelector('[data-field="movement_base"]');
   const currentMovementEl = root.querySelector('[data-field="movement_current"]');
   const runningEl = root.querySelector('[data-field="movement_running"]');
-  const climbingEl = root.querySelector('[data-field="movement_climbing"]');
+  const jogEl = root.querySelector('[data-field="movement_jog"]');
   const swimmingEl = root.querySelector('[data-field="movement_swimming"]');
-  
-  if (!baseMovementEl || !currentMovementEl || !runningEl || !climbingEl || !swimmingEl) return;
+  const bottomEl = root.querySelector('[data-field="movement_bottom"]');
+  const breathEl = root.querySelector('[data-field="movement_breath"]');
+
+  // THE GUARD NAMES ONLY WHAT THIS FUNCTION CANNOT WORK WITHOUT. It used to
+  // require all five fields including movement_climbing, so deleting that field
+  // silently blanked the entire section. Optional fields are guarded at their
+  // own write instead.
+  if (!baseMovementEl || !currentMovementEl || !swimmingEl) return;
   
   // Get race to determine base movement
   const race = (val(root, "race") || "").trim().toLowerCase();
@@ -8171,65 +8177,102 @@ function renderMovementRate(root) {
   // With encumbrance rules off this is always 1.0, so movement renders normally.
   const movementMultiplier = baseMovement > 0 ? currentMovement / baseMovement : 1;
 
-  // Calculate derived movements
-  const running = Math.round(currentMovement * 3 * 10) / 10;
-  const climbing = Math.round(currentMovement / 2 * 10) / 10;
+  // Jogging and running are an OPTIONAL RULE (Ch.14 prints both in a box headed
+  // "(Optional Rule)"), and running is not a flat multiplier -- x3 needs a
+  // successful Strength check, x4 at -4, x5 at -8. Both are given in YARDS.
+  const runRule = (typeof isOptionalRule === 'function') &&
+                  isOptionalRule('joggingAndRunning');
+
+  // Swimming. The old code used 1/3 and blocked on ANY equipped armor; the book
+  // gives HALF, in yards, and blocks on METAL armor or a load that has cut
+  // movement to a third or less. getSwimmingState owns all of it.
+  const swim = (typeof getSwimmingState === 'function')
+    ? getSwimmingState(root, baseMovement, currentMovement)
+    : null;
   
-  // Swimming calculation - check if wearing armor
-  const armorList = root.querySelectorAll('.armor-list .item');
-  let wearingArmor = false;
-  let armorNames = [];
-  
-  armorList.forEach(item => {
-    const equipped = item.querySelector('.equipped')?.checked;
-    const type = item.querySelector('.armor-type')?.value || "Armor";
-    const name = item.querySelector('.title')?.value || "";
-    
-    // Only "Armor" type prevents swimming when equipped
-    if (equipped && type === "Armor" && name.trim() !== '') {
-      wearingArmor = true;
-      armorNames.push(name);
-    }
-  });
-  
-  // Build armor name string (in case multiple armors equipped)
-  const armorName = armorNames.join(", ");
-  
-  let swimming = 0;
-  let swimmingNote = "";
-  
-  if (wearingArmor) {
-    swimming = 0;
-    swimmingNote = `Cannot swim (${armorName})`;
-  } else {
-    swimming = Math.round(currentMovement / 3 * 10) / 10;
-    swimmingNote = `${swimming}" (${swimming * 10} ft/turn)`;
-  }
-  
-  // Format output
-  baseMovementEl.value = `${baseMovement}" (${baseMovement * 10} ft/turn) - ${raceName}`;
-  baseMovementEl.title = `Base movement for ${raceName}\n1" = 10 feet per turn\n1 round = 1 minute`;
+  // Format output.
+  //
+  // FEET PER ROUND, NOT PER TURN. Ch.14: "his movement rate corresponds to tens
+  // of feet per round." A turn is ten minutes, so the old label overstated every
+  // movement figure on the sheet by a factor of ten. Outdoors the same rate is
+  // tens of YARDS per round, which is why both are named in the tooltip.
+  baseMovementEl.value = `${baseMovement}" (${baseMovement * 10} ft/round) - ${raceName}`;
+  baseMovementEl.title = `Base movement for ${raceName}\n` +
+    `1" = 10 feet per round in a dungeon, or 10 yards per round outdoors\n` +
+    `1 round = 1 minute; 1 turn = 10 rounds`;
   
   // Stashed for the quick reference, which needs the NUMBER to apply condition
   // multipliers -- the field itself holds a formatted string. Same pattern as
   // root._acBreakdown: one copy of the arithmetic, read by whoever needs it.
   root._currentMovement = currentMovement;
-  currentMovementEl.value = `${currentMovement}" (${currentMovement * 10} ft/turn)${encumbranceNote}`;
+  // Stashed alongside it because Table 66's encumbrance modifier counts movement
+  // POINTS LOST, which needs both figures. Same one-copy-of-the-arithmetic
+  // reasoning as _currentMovement itself.
+  root._baseMovement = baseMovement;
+  currentMovementEl.value = `${currentMovement}" (${currentMovement * 10} ft/round)${encumbranceNote}`;
   currentMovementEl.title = `Current movement with encumbrance\nBase: ${baseMovement}" × ${movementMultiplier.toFixed(2)} = ${currentMovement}"`;
   
-  runningEl.value = `${running}" (${running * 10} ft/turn)`;
-  runningEl.title = `Short sprint (3× current movement)\nCan only maintain for a few rounds`;
-  
-  climbingEl.value = `${climbing}" (${climbing * 10} ft/turn)`;
-  climbingEl.title = `Climbing speed (1/2 current movement)\nMay require ability checks`;
-  
-  swimmingEl.value = swimmingNote;
-  if (wearingArmor) {
-    swimmingEl.title = `Swimming impossible while wearing armor\nRemove armor to swim at 1/3 current movement`;
-    swimmingEl.style.color = "#ff5252";
-  } else {
-    swimmingEl.title = `Swimming speed (1/3 current movement)\nUnarmored only`;
-    swimmingEl.style.color = "inherit";
+  const optRow = root.querySelector('.movement-optional-row');
+  if (optRow) optRow.style.display = runRule ? '' : 'none';
+
+  if (runRule && jogEl) {
+    jogEl.value = `${currentMovement * 20} yards/round`;
+    jogEl.title = `Jogging is double the movement rate, in yards.\n` +
+      `Sustained for ${val(root, 'con') || '?'} rounds (your Constitution), then a\n` +
+      `Constitution check each further round. A failed check means resting for as\n` +
+      `many rounds as you jogged.`;
+  }
+  if (runRule && runningEl) {
+    runningEl.value = `${currentMovement * 30} yards/round`;
+    runningEl.title = `Running is TRIPLE the rate on a successful Strength check.\n` +
+      `x4 on a Strength check at -4, x5 at -8. Failing only means you cannot\n` +
+      `reach that speed, and you may not try for it again this run.\n` +
+      `Constitution check every round thereafter: -1 per round at x3,\n` +
+      `-2 at x4, -3 at x5, cumulative. Fail and you must stop and rest a turn.`;
+  }
+
+  if (swim) {
+    if (swim.blocked) {
+      swimmingEl.value = swim.metalArmor
+        ? `Cannot swim (${swim.armorLabel})`
+        : `Cannot swim (load)`;
+      swimmingEl.title = swim.metalArmor
+        ? `Ch.14: a character in METAL armor cannot swim -- the weight pulls him under.\n` +
+          `Non-metal armor does not stop you swimming.`
+        : `Ch.14: movement cut to a third or less of normal by gear. He sinks.`;
+      swimmingEl.style.color = "#ff5252";
+    } else {
+      swimmingEl.value = `${swim.swimYards} yards/round`;
+      swimmingEl.title = `Half your current movement rate, times 10, in yards.\n` +
+        `Double it to ${swim.sprintYards} on a Strength check against ${swim.sprintCheck}\n` +
+        `(half your Strength score).\n\n` +
+        (swim.proficient
+          ? `You have the Swimming proficiency.`
+          : `NO SWIMMING PROFICIENCY. Ch.14 divides characters into untrained and\n` +
+            `proficient swimmers, and an untrained swimmer manages a dog-paddle in\n` +
+            `calm water and "in no way" makes noticeable progress. Whether your\n` +
+            `character can swim at all is your DM's call.`);
+      swimmingEl.style.color = swim.proficient ? "inherit" : "#ff9800";
+    }
+
+    if (bottomEl) {
+      bottomEl.value = `${swim.bottomYards} yards/round`;
+      bottomEl.title = `A character who cannot swim -- in metal armor, or crushed to a\n` +
+        `third of his movement by gear -- can still WALK ALONG THE BOTTOM at a\n` +
+        `third of his current movement rate. Drowning still applies.`;
+    }
+  }
+
+  if (breathEl && typeof getBreathHolding === 'function') {
+    const br = getBreathHolding(root);
+    breathEl.value = `${br.normal} rounds`;
+    breathEl.title = `A third of your Constitution in rounds, rounded up.\n` +
+      `Halved to ${br.exerting} while exerting yourself -- and gear that cuts you to a\n` +
+      `third of normal movement counts as exerting, always.\n` +
+      `Halved again with no good gulp of air: ${br.noGulp} normally, ${br.noGulpExerting} exerting.\n\n` +
+      `Beyond that, a Constitution check every round -- the first unmodified,\n` +
+      `then a cumulative -2. Fail it and you must breathe.\n` +
+      `Everyone gets at least one round, whatever the circumstances.`;
   }
   
   // Color coding for current movement and derived speeds
@@ -8245,14 +8288,12 @@ function renderMovementRate(root) {
   }
   
   currentMovementEl.style.color = movementColor;
-  runningEl.style.color = movementColor;
-  climbingEl.style.color = movementColor;
-  
-  // Swimming color was already set above (don't override it)
-  // It stays red for armored, or inherits movementColor for unarmored
-  if (!wearingArmor) {
-    swimmingEl.style.color = movementColor;
-  }
+  if (runningEl) runningEl.style.color = movementColor;
+  if (jogEl)     jogEl.style.color = movementColor;
+
+  // Swimming keeps whatever colour was set alongside its value above. It goes
+  // red when the character cannot swim AT ALL -- metal armor or a crushing
+  // load -- and movementColor knows nothing about either.
 }
 
 // ===========================================================================
