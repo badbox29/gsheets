@@ -4563,7 +4563,86 @@ function getClimbingBase(root, dmMountaineer) {
   }
 
   return { key: key, label: cat.label, note: cat.note, percent: pct,
+           return { key: key, label: cat.label, note: cat.note, percent: pct,
            fromClimbWalls: !!cat.fromClimbWalls };
+}
+
+const CLIMBING_ENCUMBRANCE_ORDER =
+  ['Unencumbered', 'Light', 'Moderate', 'Heavy', 'Severe', 'Overloaded!'];
+
+// How many -5% steps the character's load costs him.
+//
+// Table 66's dagger footnote gives TWO readings -- per encumbrance category
+// above unencumbered, OR per movement rate point lost off normal -- and which
+// one is live follows the encumbrance optional rule. With it ON the character's
+// movement really has been reduced, so points lost is the true figure. With it
+// OFF nothing has moved and the category name is all there is to count.
+function getClimbingEncumbranceSteps(root) {
+  const usingPenalties = (typeof isOptionalRule === 'function') &&
+                         isOptionalRule('encumbrancePenalties');
+
+  if (usingPenalties &&
+      root._baseMovement !== undefined && root._currentMovement !== undefined) {
+    return Math.max(0, root._baseMovement - root._currentMovement);
+  }
+
+  const cat = String(val(root, 'encumbrance_category') || '').trim();
+  const idx = CLIMBING_ENCUMBRANCE_ORDER.indexOf(cat);
+  return idx > 0 ? idx : 0;
+}
+
+// Table 65 base with every Table 66 modifier applied. Returns the percentage
+// plus an itemised breakdown, so the panel can show its working rather than a
+// bare number the player has to trust.
+//
+// RACE IS SKIPPED FOR THIEVES, ARMOR IS NOT, and that asymmetry is deliberate.
+// Table 66's footnote names race and only race: a thief's Climb Walls score
+// already carries the Table 27 racial adjustment, so applying it again would
+// penalise him twice. The book says nothing of the kind about armor, so armor
+// applies to everyone as printed. Do not "even this up" in either direction.
+function getClimbingSuccess(root, opts) {
+  opts = opts || {};
+  const base  = getClimbingBase(root, opts.dmMountaineer);
+  const parts = [];
+
+  ['handholds', 'ropeWall', 'slopedIn', 'wounded'].forEach(k => {
+    if (opts[k] && CLIMBING_MODIFIERS[k]) {
+      parts.push({ label: CLIMBING_MODIFIERS[k].label, mod: CLIMBING_MODIFIERS[k].mod });
+    }
+  });
+
+  const armorKey = getEquippedArmorTypeKey(root);
+  const armorMod = CLIMBING_ARMOR_MODIFIERS[armorKey] || 0;
+  if (armorMod) {
+    const lbl = (typeof ARMOR_TYPES !== 'undefined' && ARMOR_TYPES[armorKey])
+      ? ARMOR_TYPES[armorKey].label : armorKey;
+    parts.push({ label: 'Armor: ' + lbl, mod: armorMod });
+  }
+
+  if (!base.fromClimbWalls) {
+    const race = String(val(root, 'race') || '').trim().toLowerCase();
+    Object.keys(CLIMBING_RACE_MODIFIERS).forEach(r => {
+      if (race.indexOf(r) !== -1) {
+        parts.push({ label: r.charAt(0).toUpperCase() + r.slice(1), mod: CLIMBING_RACE_MODIFIERS[r] });
+      }
+    });
+  }
+
+  const steps = getClimbingEncumbranceSteps(root);
+  if (steps > 0) {
+    parts.push({ label: 'Encumbrance (' + steps + ')', mod: CLIMBING_ENCUMBRANCE_MOD * steps });
+  }
+
+  const condMod = CLIMBING_CONDITION_MODIFIERS[opts.condition] || 0;
+  if (condMod) {
+    const c = CLIMBING_CONDITIONS.filter(x => x.key === opts.condition)[0];
+    parts.push({ label: 'Surface: ' + ((c && c.label) || opts.condition), mod: condMod });
+  }
+
+  let total = base.percent;
+  parts.forEach(p => { total += p.mod; });
+
+  return { base: base, parts: parts, percent: Math.max(0, total) };
 }
 
 // === Optional Rules Registry ===
