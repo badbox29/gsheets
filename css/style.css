@@ -552,23 +552,33 @@
        card stopped at its content the rail terminated against nothing and read
        as detached from the thing it controls. */
     .vtab-content.active { display: flex; flex-direction: column; }
-    .vtab-content > main.card { flex: 1 1 auto; }
-    /* End-of-content rule. A pseudo-element rather than markup, so it lands
-       after the last section on all eleven tabs with no template changes and
-       nothing to keep in sync.
+    .vtab-content > main.card { flex: 1 1 auto; display: flex; flex-direction: column; }
+    /* End-of-content flourish.
+    
+       IT HIDES ITSELF, and geometry is what does it -- there is no JS and no
+       detection. As a flex item with `flex:1 1 0; min-height:0` this absorbs
+       whatever space the content left over. On a short tab it is tall and the
+       ornament paints inside it; on a tab whose content fills or exceeds the
+       card it collapses to zero height, the backgrounds are clipped away, and
+       nothing renders at all -- not even stray margin.
 
-       DELIBERATELY NOT GOLD. A gold rule inside a tab means "another section
-       follows"; this one means "nothing follows". Opposite messages, so they
-       must not share a treatment -- reusing the accent here sends the reader
-       looking for a section that is not there. Muted, and given more space
-       above than the gold rules get, so it reads as containment rather than
-       division. */
+       DELIBERATELY NOT GOLD FOR THE LINE. A gold rule inside a tab means
+       "another section follows"; this means "nothing follows". Opposite
+       messages, so they must not share a treatment. The accent appears only in
+       the centre mark, which reads as an ornament rather than a divider.
+
+       Layer order is paint order: the mark is listed first so it sits ON TOP of
+       the line rather than being crossed by it. */
     .vtab-content > main.card::after {
       content: "";
-      display: block;
-      height: 1px;
-      background: var(--border);
-      margin-top: 28px;
+      flex: 1 1 0;
+      min-height: 0;
+      background-repeat: no-repeat, no-repeat;
+      background-image:
+        radial-gradient(circle at center, var(--accent) 0 2.5px, transparent 3px),
+        linear-gradient(to right, transparent, var(--border) 22%, var(--border) 78%, transparent);
+      background-size: 100% 7px, 100% 1px;
+      background-position: center 13px, center 16px;
     }
 	textarea {
 	  overflow-y: hidden;
