@@ -657,7 +657,7 @@ function renderCombatQuickReference(root) {
 
     if (!isNaN(baseMove) && mult !== 1) {
       const adjusted = Math.floor(baseMove * mult);
-      moveEl.textContent = adjusted + '" (' + (adjusted * 10) + ' ft/turn)';
+      moveEl.textContent = adjusted + '" (' + (adjusted * 10) + ' ft/round)';
       moveEl.style.color = mult < 1 ? 'var(--error, #ff6b6b)' : 'var(--success, #4ade80)';
       moveEl.title = 'Base ' + baseMove + '" adjusted by active conditions: ' +
                      (condFx.sources.moveMult || []).join(', ') +
@@ -8432,6 +8432,71 @@ function renderClimbingPanel(root) {
     'braced position.</div>';
 
   notesEl.innerHTML = html;
+}
+
+// ===========================================================================
+// OVERLAND & ENDURANCE PANEL (PHB Ch.14)
+// ===========================================================================
+
+function renderOverlandPanel(root) {
+  const section = root.querySelector('.overland-section');
+  if (!section || typeof getOverlandMovement !== 'function') return;
+
+  const move   = parseInt(root._currentMovement, 10) || 0;
+  const days   = parseInt((section.querySelector('.overland-days')   || {}).value, 10) || 0;
+  const height = parseInt((section.querySelector('.overland-height') || {}).value, 10) || 0;
+
+  const ol    = getOverlandMovement(root, move, days);
+  const steps = (typeof getClimbingEncumbranceSteps === 'function')
+    ? getClimbingEncumbranceSteps(root) : 0;
+  const dv = getDivingSurfacing(root, steps, height, height > 0);
+
+  const row = (k, v) =>
+    '<div style="display:flex;justify-content:space-between;gap:16px;padding:3px 0;">' +
+    '<span style="color:var(--muted);">' + k + '</span><span>' + v + '</span></div>';
+
+  let html = '<div style="font-size:13px;">' +
+    row('Normal march (10 hrs)', ol.normalMiles + ' miles/day') +
+    row('Force march', ol.forceMiles + ' miles/day');
+
+  if (days > 0) {
+    html += row('Constitution check', ol.conCheck + ' or less, at day ' + days) +
+            row('Attack penalty', ol.attackPenalty) +
+            row('Rest to clear it', ol.restDays + ' days');
+  }
+
+  html += row('Dive, first round', dv.diveFirst + ' feet') +
+          row('Surfacing', dv.cannotSurface
+            ? '<span style="color:var(--error, #ff6b6b);">cannot reach the surface</span>'
+            : dv.surfaceRate + ' ft/round') +
+          row('Floating up (unconscious)', dv.floatRate + ' ft/round') +
+          '</div>';
+
+  const resEl = section.querySelector('.overland-result');
+  if (resEl) resEl.innerHTML = html;
+
+  const notesEl = section.querySelector('.overland-notes');
+  if (!notesEl) return;
+
+  let nHtml =
+    '<div style="margin-bottom:8px;"><strong style="color:var(--text);">A day\'s march is ' +
+    '10 hours</strong>, stops for rest and meals included, covering twice your movement ' +
+    'rate in miles. Force marching pushes that to two and a half times, at the cost of a ' +
+    'Constitution check at the end of each day &mdash; at &minus;1 per consecutive day. ' +
+    'Fail it and no further force marching is possible until you have fully recovered, ' +
+    'though you can still march at the normal rate.</div>' +
+    '<div style="margin-bottom:8px;"><strong style="color:var(--text);">The attack penalty ' +
+    'is cumulative and applies whether the check passes or fails.</strong> Half a day\'s ' +
+    'rest clears one day\'s worth. Large parties check against the party\'s average ' +
+    'Constitution; creatures with no Constitution score save vs. death instead. Terrain, ' +
+    'weather and short rations all modify the pace &mdash; those are DMG territory.</div>' +
+    '<div><strong style="color:var(--text);">Diving adds 10 feet for a run</strong> or a ' +
+    'few feet of height, plus 5 feet per 10 feet of height, capped at +20. Both diving and ' +
+    'surfacing lose 2 feet per encumbrance step. Swimming for hours costs Constitution ' +
+    'and stacks attack penalties; a day\'s rest restores 1d6 ability points and clears ' +
+    '2d6 of attack penalty.</div>';
+
+  notesEl.innerHTML = nHtml;
 }
 
 // ===========================================================================
