@@ -1975,9 +1975,9 @@ const SHEET_HTML = `
             </div>
             
             <!-- Roll History (right side) -->
-            <div style="display:flex;flex-direction:column;">
+            <div style="display:flex;flex-direction:column;min-height:0;">
               <h4 style="font-size:14px;margin-bottom:8px;">Roll History (most recent on top)</h4>
-              <div class="roll-history" style="flex:1 1 auto;min-height:310px;overflow-y:auto;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px;font-family:monospace;font-size:12px;margin-bottom:8px;">
+              <div class="roll-history" style="flex:1 1 0;min-height:0;overflow-y:auto;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px;font-family:monospace;font-size:12px;margin-bottom:8px;">
                 <div style="color:var(--muted);font-style:italic;">Roll results will appear here...</div>
               </div>
               <button class="clear-roll-history" style="padding:6px 12px;font-size:12px;">Clear History</button>
