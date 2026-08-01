@@ -4522,6 +4522,50 @@ function getClimbingRate(root, surfaceKey, conditionKey, currentMovement) {
   };
 }
 
+// Total slots invested in Mountaineering, including any spent to improve it.
+// 0 means the character does not have the proficiency.
+function getMountaineeringSlots(root) {
+  const p = ((root && root._nwps) || []).filter(n =>
+    String((n && n.name) || '').trim().toLowerCase() === 'mountaineering')[0];
+  if (!p) return 0;
+  return (parseInt(p.slots, 10) || 1) + (parseInt(p.bonusSlots, 10) || 0);
+}
+
+// Which Table 65 row applies. dmMountaineer is the player's tickbox for the
+// "Mountaineer (decided by DM)" row, which has no mechanical trigger to detect.
+function getClimbingCategory(root, dmMountaineer) {
+  const hasClimbWalls = getClimbWallsScore(root) > 0;
+  const slots = getMountaineeringSlots(root);
+  if (hasClimbWalls && slots > 0) return 'thief_mountaineer';
+  if (hasClimbWalls)              return 'thief';
+  if (slots > 0)                  return 'mountaineering';
+  if (dmMountaineer)              return 'mountaineer';
+  return 'unskilled';
+}
+
+// Table 65. Returns the base percentage before any Table 66 modifier.
+//
+// "40% + 10% per proficiency slot" is read as PER SLOT HELD, not per extra slot:
+// one slot gives 50%, which is what makes the chapter's own claim true that a
+// mountaineer climbs better than an unskilled character. The other reading puts
+// him at 40%, level with unskilled, and the prose contradicts it.
+function getClimbingBase(root, dmMountaineer) {
+  const key = getClimbingCategory(root, dmMountaineer);
+  const cat = CLIMBING_CATEGORIES[key];
+  let pct;
+
+  if (cat.fromClimbWalls) {
+    pct = getClimbWallsScore(root) + (cat.bonus || 0);
+  } else if (cat.perSlot) {
+    pct = cat.base + cat.perSlot * getMountaineeringSlots(root);
+  } else {
+    pct = cat.base;
+  }
+
+  return { key: key, label: cat.label, note: cat.note, percent: pct,
+           fromClimbWalls: !!cat.fromClimbWalls };
+}
+
 // === Optional Rules Registry ===
 //
 // AD&D 2e flags a great many rules as optional, and different tables use
