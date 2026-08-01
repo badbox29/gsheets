@@ -31,6 +31,8 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 * Treasure valued in gold from the Player's Handbook exchange rates, with weight and worth totalled separately for coin and valuables
 * Henchmen, followers and hirelings tracked as the separate things the book makes them, with the lifetime limit Charisma places on henchmen
 * A vision and light reference giving the book's sighting distances by weather and target size, and the radius and burning time of every light source
+* Dice rollers for every racial ability that is rolled — dwarven and gnomish stonework detection, elven and half-elven door finding, halfling grade sense, sleep and charm resistance
+* A cover and concealment reference for missile fire, covering both the attack penalty and the saving throw bonus
 * Optional-rules framework with live toggles for Player's Handbook options and house-rule overrides
 * Multi-page printable character sheet with configurable sections, blank write-in lines, and color schemes
 * Import / export character data
@@ -184,29 +186,46 @@ Follow these steps **in order** to avoid overwriting your data:
 
 #### Unreleased
 
-A systematic review of Player's Handbook Chapter 13, *Vision and Light*.
+A systematic review of Player's Handbook Chapter 13, *Vision and Light*, a full re-audit of Chapter 2, *Player Character Races*, a reopening of Chapter 9 for cover and concealment, and two bugs that had been quietly damaging saved characters.
 
-Three pages, two tables, and the first release in a while to find shipping data that flatly contradicts the book.
+**Two bugs worth knowing about**
+
+* **Racial abilities never updated.** Every character's racial abilities were frozen at the moment the character was created. No correction to the underlying rules could ever reach an existing character, so characters have been carrying entries that were renamed or removed from the game data long ago — including one that isn't a 2nd Edition ability at all. They now regenerate, and old entries are cleaned up automatically the first time a character is opened.
+* **Kit abilities were duplicating on every load, and kits were being silently lost.** The Kit dropdown was being set before its options existed, which fails silently — so every character came up reading "Standard Class" no matter what kit they had. Re-selecting the kit then appended a second full set of abilities, and saving stored the duplicates. Both are fixed and existing duplicates clear themselves on the next load. **If a character's kit still shows blank, it was saved with an empty kit and needs picking once more by hand.**
+
+**Vision and light**
+
+* Added a **Vision & Light** reference to the Tools tab, covering the book's sighting distances for eight weather and light conditions across the five ranges it distinguishes: seeing that something moved, spotting a figure standing still, making out what it is, identifying who it is, and seeing small actions clearly.
+* The ranges adjust for the size of what you are looking at. A small target shifts every category down one; a large one doubles the first three and leaves the last two alone.
+* Included the caveats the book attaches and a bare table loses: terrain changes your chance of noticing a creature but not the distances themselves, and the whole table assumes an Earthlike world.
 
 **Light sources**
 
 * The equipment list's light sources carried figures the book does not support. A torch was listed at a 30-foot radius burning for an hour; the book gives **15 feet** and **30 minutes**. Every lantern's burning time was inflated threefold, and a candle's sixfold. All corrected.
-* Radius and burning time are now read from the book's light source table and shown live in the equipment browser. They are no longer written down a second time in the equipment data, so the two can never drift apart again.
-* Beacon and bullseye lanterns are described as cones rather than radii, with the width of the beam at its far end — the book footnotes this and the tool had never said it.
+* Radius and burning time are now read from the book's light source table and shown live in the equipment browser, rather than written down a second time in the equipment data where the two could drift apart.
+* Beacon and bullseye lanterns are described as cones rather than radii, with the width of the beam at its far end.
 * The common lamp appears in the equipment list but in no light table in the book. It now says so plainly instead of showing figures from nowhere.
-* **Existing characters keep the old text.** Item cards store their note at the moment you add them, and nothing rewrites them afterwards. Re-add a light source, or edit its note by hand, to pick up the corrections.
+* **Existing characters keep the old text.** Item cards store their note when you add them and nothing rewrites them afterwards. Re-add a light source to pick up the corrections.
 
-**Vision**
+**Racial abilities**
 
-* Added a **Vision & Light** reference to the Tools tab, covering the book's sighting distances for eight weather and light conditions across the five ranges it distinguishes: seeing that something moved, spotting a figure that is standing still, making out what it is, identifying who it is, and seeing small actions clearly.
-* The ranges adjust for the size of what you are looking at. A small target shifts every category down one; a large one doubles the first three and leaves the last two alone. Both are the book's own rules and both are easy to get wrong in your head.
-* Included the caveats the book attaches and a bare table loses: terrain changes your chance of noticing a creature but not the distances themselves, and the whole table assumes an Earthlike world.
-* Noted that infravision reaches 60 feet at most, and that the book offers two versions of it and leaves the choice to the DM — who owes his players an answer on which one he is using.
+* Added **dice rollers for every racial ability that is rolled**, replacing a dwarves-only panel that could only roll a d6. Gnomes detect unsafe walls on a d10 and halflings note a grade on a d4, so neither race could previously be represented at all. Elves and half-elves gained their three door-finding chances and their resistance to sleep and charm; dwarves and gnomes gained their magic item malfunction check.
+* Removed an ability dwarves do not have. The dwarven panel offered a check for determining direction underground, which belongs to gnomes. The panel also claimed these abilities require a "10-foot movement rate", which is not a rule — the book requires the dwarf to be *within 10 feet* of what he is checking — and said all of them do, when depth is explicitly exempt.
+* Corrected the magic item rules for dwarves and gnomes, which are **different rules** and had been given the same wording. A dwarf checks a continually worn item only the first time it is used in an encounter; a gnome checks a continuous-use device every time it is activated.
+* The bonus against giants is an attack penalty on the monsters, not a bonus to your armor class, and now says so — it would otherwise read as applying against everything.
+* Corrected the elven and halfling surprise bonus, which required being 90 feet *ahead* of your party. The book says 90 feet or more *away*.
+* The Character Bonuses panel now reads its wording from the same place the ability cards do. The two had already drifted apart and described the same rules differently.
 
 **Conditions**
 
-* Added **Fighting via Mirror**. Fighting something you can see only by reflection costs −2 on attack rolls and forfeits your Dexterity bonus to armor class entirely. The same −2 applies to any action you direct by looking in a mirror, in or out of combat, and a mirror is useless without a light source. The small metal mirror in the equipment list now carries the rule too, having previously said only that it was useful against medusas.
+* Added **Fighting via Mirror**. Fighting something you can see only by reflection costs −2 on attack rolls and forfeits your Dexterity bonus to armor class entirely. The same −2 applies to any action you direct by looking in a mirror, and a mirror is useless without a light source.
 * **The conditions list is now alphabetized.** Twenty-four entries in the order they happened to be written was hard to search.
+
+**Cover and concealment**
+
+* Added a **Cover & Concealment** reference for missile fire. Cover is hard — a wall, a door, a tree trunk — and concealment is soft, like bushes or smoke, which cannot stop an arrow but make you harder to place.
+* These are penalties to the attacker's roll rather than improvements to your armor class, so two of the rolls are yours: your own attack against something in cover, and the bonus to your own saving throw against spells causing physical damage while you are behind something.
+* **vs Missiles AC** has always shown the same number as your normal armor class, and that turns out to be correct rather than unfinished — nothing in the Player's Handbook makes the two differ. Its explanation now says so instead of implying a calculation was still owed.
 
 #### v10.3.0
 
