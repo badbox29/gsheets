@@ -8256,6 +8256,51 @@ function renderMovementRate(root) {
 }
 
 // ===========================================================================
+// CLIMBING PANEL (PHB Ch.14, Tables 65-67)
+// ===========================================================================
+
+// Populates the panel's controls, ONCE. Split out from the renderer on purpose:
+// the renderer runs on every recalculation, and rebuilding a <select> throws
+// away whatever the player had chosen. Build here, read there.
+//
+// Rope and wall is NOT offered as a checkbox even though Table 66 lists it at
+// +55%. It is already a Table 67 surface, and the two describe one situation --
+// a player who picked the surface and then had to remember a matching tickbox
+// would be one forgotten click away from a wrong number. The renderer sets it
+// from the surface instead.
+function buildClimbingControls(root) {
+  const section = root.querySelector('.climbing-section');
+  if (!section || typeof CLIMBING_SURFACES === 'undefined') return;
+
+  const surfSel = section.querySelector('.climbing-surface');
+  const condSel = section.querySelector('.climbing-condition');
+
+  if (surfSel && !surfSel.options.length) {
+    CLIMBING_SURFACES.forEach(s => surfSel.appendChild(new Option(s.label, s.key)));
+    surfSel.value = 'rough';
+  }
+  if (condSel && !condSel.options.length) {
+    CLIMBING_CONDITIONS.forEach(c => condSel.appendChild(new Option(c.label, c.key)));
+    condSel.value = 'dry';
+  }
+
+  const optHost = section.querySelector('.climbing-options');
+  if (optHost && !optHost.children.length) {
+    [['handholds',     CLIMBING_MODIFIERS.handholds.label],
+     ['slopedIn',      CLIMBING_MODIFIERS.slopedIn.label],
+     ['wounded',       CLIMBING_MODIFIERS.wounded.label],
+     ['dmMountaineer', 'DM rules this character a mountaineer']
+    ].forEach(b => {
+      const lab = document.createElement('label');
+      lab.style.cssText = 'display:flex;align-items:center;gap:6px;cursor:pointer;';
+      lab.innerHTML = '<input type="checkbox" class="ephemeral climbing-opt" data-opt="' +
+                      escapeHtml(b[0]) + '"><span>' + escapeHtml(b[1]) + '</span>';
+      optHost.appendChild(lab);
+    });
+  }
+}
+
+// ===========================================================================
 // VISION AND LIGHT (PHB Ch.13)
 //
 // PURE REFERENCE. These read nothing from the character and write nothing to
