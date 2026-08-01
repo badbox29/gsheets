@@ -2387,7 +2387,16 @@ function visibilityRowForSize(row, sizeKey) {
 //              only where it differs. Table 63's wording is authoritative and
 //              is never renamed to match the equipment file.
 const LIGHT_SOURCES = [
-  { name: 'Beacon lantern',   radius: 240, burn: '30 hrs./pint',        beamWidth: 90, equipment: 'Lantern, Beacon' },
+  // burnNote: THE BOOK DISAGREES WITH ITSELF and the printed Table 63 value is
+  // kept regardless. Ch.6's prose says the beacon "operates like the bullseye
+  // lantern" and burns a flask every two hours; a flask is a pint, and the
+  // bullseye is 2 hrs./pint here, so the prose is internally consistent and the
+  // table's 30 is almost certainly a typo. It is NOT corrected: this block is a
+  // verbatim transcription, and a number quietly changed here would make every
+  // other number in it untrustworthy. Reported, never folded in -- the same
+  // rule as the racial Surprise Bonus.
+  { name: 'Beacon lantern',   radius: 240, burn: '30 hrs./pint',        beamWidth: 90, equipment: 'Lantern, Beacon',
+    burnNote: 'PHB Ch.6 prose gives 2 hrs. per flask and calls it a larger bullseye lantern (2 hrs./pint). The book disagrees with itself \u2014 ask your DM.' },
   { name: 'Bonfire',          radius:  50, burn: '\u00BD hr./armload' },
   { name: 'Bullseye lantern', radius:  60, burn: '2 hrs./pint',         beamWidth: 20, equipment: 'Lantern, Bullseye' },
   { name: 'Campfire',         radius:  35, burn: '1 hr./armload' },
