@@ -6317,6 +6317,16 @@ function bindSheet(root, tab){
   if (typeof renderVisionLightPanel === 'function') renderVisionLightPanel(root);
   if (typeof renderCoverReference === 'function') renderCoverReference(root);
 
+  // The strip, on first paint. In BOTH lists -- unlike the two panels above it,
+  // which are pure reference and so are bindSheet-only. This one genuinely can
+  // go stale: whether a tab exists depends on class and race, so it belongs in
+  // recalculateAll as well. Here it just means a character opens with one panel
+  // showing rather than a stack that collapses on the first keystroke.
+  //
+  // Runs after renderRacialChecks and renderThiefSkills above, which is what it
+  // reads to decide the strip's contents.
+  if (typeof renderToolsSubtabs === 'function') renderToolsSubtabs(root);
+
   // Ranger stealth depends on class, level, race and Dexterity across all three
   // character types. One delegated listener rather than patching each of the
   // existing class/level/ability handlers separately.
