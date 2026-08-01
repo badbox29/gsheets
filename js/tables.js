@@ -4774,6 +4774,57 @@ function getOverlandMovement(root, currentMovement, days) {
   };
 }
 
+// === Tools tab sub-tabs ===
+//
+// One entry per panel on the Tools tab. The strip renders from this list, so
+// adding a panel later is an entry here and nothing else -- same bargain as
+// OPTIONAL_RULES.
+//
+// ORDER IS BY PERMANENCE, and that is the whole rule. Universal first, then race
+// (fixed at creation), then class (can change on a dual-class), then kit (most
+// mutable, most likely homebrewed), then the universal reference panels. The
+// strip is therefore most stable on the left and never moves at all on the right.
+// A new panel does not need a discussion, only an answer to "what gates it?"
+//
+// `section` is the class on the panel's <section>.
+// `band`    is the ordering group above; entries are rendered in array order.
+// `gated`   false means the tab is always present.
+// `label`   is the tab text. `labelFrom` overrides it by reading an element
+//           inside the panel, for a heading the panel computes for itself.
+//
+// APPLICABILITY IS THE PANEL'S INLINE display, NOT A SECOND COPY OF ITS RULE.
+// renderThiefSkills, renderTurnUndead and renderRacialChecks already decide
+// whether their section applies and write section.style.display. Re-deriving
+// "is this character a thief" here would give the app two answers that can
+// drift, and a drifted gate means either a tab with an empty panel behind it or
+// a panel with no tab to reach it. The strip reads their answer instead.
+const TOOLS_SUBTABS = [
+  { key: 'dice',     label: 'Dice',              section: 'dice-rollers-section',   band: 'universal', gated: false },
+  { key: 'racial',   label: 'Racial Abilities',  section: 'racial-checks-section',  band: 'race',      gated: true,
+    labelFrom: '.racial-checks-title' },
+  { key: 'thief',    label: 'Thief Skills',      section: 'thief-skills-section',   band: 'class',     gated: true },
+  { key: 'turning',  label: 'Turn Undead',       section: 'turn-undead-section',    band: 'class',     gated: true },
+  { key: 'climbing', label: 'Climbing',          section: 'climbing-section',       band: 'reference', gated: false },
+  { key: 'vision',   label: 'Vision & Light',    section: 'vision-light-section',   band: 'reference', gated: false },
+  { key: 'cover',    label: 'Cover',             section: 'cover-reference-section',band: 'reference', gated: false },
+  { key: 'overland', label: 'Overland',          section: 'overland-section',       band: 'reference', gated: false }
+];
+
+// The fallback tab. Always present, so it is always a valid destination -- which
+// is what makes it the right landing spot when the active tab stops applying
+// mid-session (dual-classing out of thief while Thief Skills is open).
+const TOOLS_SUBTAB_DEFAULT = 'dice';
+
+// Is a panel applicable to this character? Reads the INLINE display property
+// only, which is what the three gating renderers write. The tab layer hides
+// non-active panels with a CSS class instead, so the two never collide.
+function toolsSubtabApplies(root, tab) {
+  if (!tab.gated) return true;
+  const el = root.querySelector('.' + tab.section);
+  if (!el) return false;
+  return el.style.display !== 'none';
+}
+
 // === Optional Rules Registry ===
 //
 // AD&D 2e flags a great many rules as optional, and different tables use
