@@ -8300,6 +8300,99 @@ function buildClimbingControls(root) {
   }
 }
 
+// Reads the panel's controls and the character, and paints the result. Safe to
+// call on any sheet -- a character with no Climb Walls score is an unskilled
+// climber, which is a valid Table 65 row, not a missing case.
+function renderClimbingPanel(root) {
+  const section = root.querySelector('.climbing-section');
+  if (!section || typeof getClimbingSuccess !== 'function') return;
+
+  buildClimbingControls(root);
+
+  const surfEl  = section.querySelector('.climbing-surface');
+  const condEl  = section.querySelector('.climbing-condition');
+  const surfKey = (surfEl && surfEl.value) || 'rough';
+  const condKey = (condEl && condEl.value) || 'dry';
+
+  // Rope and wall is a SURFACE, so Table 66's +55% follows from the dropdown
+  // rather than from a tickbox the player could forget while the rope is
+  // plainly in his hands.
+  const opts = { condition: condKey, ropeWall: surfKey === 'rope_wall' };
+  section.querySelectorAll('.climbing-opt').forEach(cb => {
+    opts[cb.dataset.opt] = cb.checked;
+  });
+
+  const move = parseInt(root._currentMovement, 10) || 0;
+  const succ = getClimbingSuccess(root, opts);
+  const rate = getClimbingRate(root, surfKey, condKey, move);
+
+  const resEl = section.querySelector('.climbing-result');
+  if (resEl) {
+    let rateTxt;
+    if (!rate || rate.blocked) {
+      rateTxt = '<span style="color:var(--error, #ff6b6b);">' +
+                'cannot be climbed under this condition</span>';
+    } else {
+      rateTxt = rate.feetPerRound + ' ft/round <span style="color:var(--muted);">(' +
+                escapeHtml(rate.label) + ' \u00d7 ' + move +
+                (rate.isThief ? ', doubled for a thief' : '') + ')</span>';
+    }
+    resEl.innerHTML =
+      '<div style="font-size:20px;font-weight:600;">' + succ.percent + '%</div>' +
+      '<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">' +
+        escapeHtml(succ.base.label) +
+        ' \u2014 roll percentile equal or under to succeed</div>' +
+      '<div style="font-size:13px;">Climb rate: ' + rateTxt + '</div>';
+  }
+
+  const brkEl = section.querySelector('.climbing-breakdown');
+  if (brkEl) {
+    let html = '<div>Base ' + succ.base.percent + '% (' +
+               escapeHtml(succ.base.note) + ')</div>';
+    succ.parts.forEach(p => {
+      html += '<div>' + (p.mod > 0 ? '+' : '') + p.mod + '% &mdash; ' +
+              escapeHtml(p.label) + '</div>';
+    });
+    brkEl.innerHTML = html;
+  }
+
+  const notesEl = section.querySelector('.climbing-notes');
+  if (!notesEl) return;
+
+  const key  = succ.base.key;
+  const surf = rate && rate.surface;
+  let html   = '';
+
+  // Table 67's asterisk. ADVISORY, never blocking -- a DM may rule a character
+  // has picked up enough rope work. Amber is reserved for real problems, and an
+  // unskilled climber staring at a sheer wall is one.
+  if (surf && surf.toolsOnly && key === 'unskilled') {
+    html += '<div style="color:var(--warning, #ff9800);margin-bottom:8px;">' +
+            '<strong>An unskilled climber cannot attempt this surface.</strong> ' +
+            'Table 67: nonthief characters must be mountaineers and have appropriate ' +
+            'tools (pitons, rope and the like) to climb very smooth, smooth or rough faces.' +
+            '</div>';
+  } else if (surf && surf.toolsOnly && (key === 'mountaineering' || key === 'mountaineer')) {
+    html += '<div style="margin-bottom:8px;">A mountaineer needs <strong>proper ' +
+            'equipment</strong> for this surface. Thieves alone climb it bare-handed.</div>';
+  }
+
+  html +=
+    '<div style="margin-bottom:8px;"><strong style="color:var(--text);">The check comes ' +
+    'before the first 10 feet</strong> of any climb of 10 feet or more. Fail it and the ' +
+    'character can find no route and may not try that climb again until something changes ' +
+    '&mdash; half a mile along the cliff face, or a better chance of success. Long climbs, ' +
+    'over 100 feet or more than one turn, may need further checks; an ice wall needs one ' +
+    'every round without tools.</div>' +
+    '<div><strong style="color:var(--text);">Climbing costs you your Dexterity and shield ' +
+    'AC bonuses</strong>, and rear attack modifiers usually apply. Your own attack, damage ' +
+    'and saving throws take &minus;2. Attackers above you gain +2; those below take a ' +
+    'further &minus;2. You cannot use a two-handed weapon, and spells need a steady, ' +
+    'braced position.</div>';
+
+  notesEl.innerHTML = html;
+}
+
 // ===========================================================================
 // VISION AND LIGHT (PHB Ch.13)
 //
