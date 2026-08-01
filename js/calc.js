@@ -8339,6 +8339,19 @@ function buildClimbingControls(root) {
       optHost.appendChild(lab);
     });
   }
+
+  // Bind ONCE, flagged on the section -- same reasoning as the vision panel's
+  // _vlBound flag, and it matters more here: this renderer runs from
+  // recalculateAll, so an unguarded addEventListener would stack a new listener
+  // on every keystroke anywhere on the sheet.
+  //
+  // THIS HANDLER MUST NOT CALL markUnsaved. Every control in the panel is
+  // ephemeral. Choosing a surface is a lookup, not an edit to the character, and
+  // restamping _updatedAt for it would push a cloud sync over nothing.
+  if (!section._climbBound) {
+    section.addEventListener('change', () => renderClimbingPanel(root));
+    section._climbBound = true;
+  }
 }
 
 // Reads the panel's controls and the character, and paints the result. Safe to
@@ -8441,6 +8454,14 @@ function renderClimbingPanel(root) {
 function renderOverlandPanel(root) {
   const section = root.querySelector('.overland-section');
   if (!section || typeof getOverlandMovement !== 'function') return;
+
+  // Bind once, flagged on the section -- see the note in buildClimbingControls.
+  // 'input' rather than 'change' so the figures follow a typed number as it is
+  // entered; both boxes are ephemeral and neither marks the sheet unsaved.
+  if (!section._overlandBound) {
+    section.addEventListener('input', () => renderOverlandPanel(root));
+    section._overlandBound = true;
+  }
 
   const move   = parseInt(root._currentMovement, 10) || 0;
   const days   = parseInt((section.querySelector('.overland-days')   || {}).value, 10) || 0;
