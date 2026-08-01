@@ -1381,18 +1381,37 @@ const SHEET_HTML = `
 		  <div class="encumbrance-magic-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
 		</section>
 
-		<!-- Movement Rate -->
+		<!--
+		  Movement Rate (PHB Ch.14)
+
+		  CLIMBING IS DELIBERATELY ABSENT. It used to sit here as "Climbing (/2)",
+		  which is not a rule from anywhere -- Table 67 makes the climb rate depend
+		  on the surface and its condition, from 1/4 to 4 times movement, doubled
+		  for thieves. No single number can be right, so climbing owns a panel on
+		  the Tools tab instead of a box that quietly lies.
+
+		  The jog and run row is hidden unless the joggingAndRunning optional rule
+		  is on; the chapter prints both in a box headed "(Optional Rule)".
+		-->
 		<section class="section">
 		  <h3>Movement Rate</h3>
 		  <div class="row">
 			<div class="col"><label>Base Movement</label><input data-field="movement_base" type="text" readonly></div>
 			<div class="col"><label>Current Movement</label><input data-field="movement_current" type="text" readonly></div>
-			<div class="col"><label>Running (×3)</label><input data-field="movement_running" type="text" readonly></div>
+			<div class="col"><label>Flying (if applicable)</label><input data-field="movement_flying" type="number" min="0" placeholder="0"></div>
 		  </div>
 		  <div class="row" style="margin-top:8px">
-			<div class="col"><label>Climbing (÷2)</label><input data-field="movement_climbing" type="text" readonly></div>
 			<div class="col"><label>Swimming</label><input data-field="movement_swimming" type="text" readonly></div>
-			<div class="col"><label>Flying (if applicable)</label><input data-field="movement_flying" type="number" min="0" placeholder="0"></div>
+			<div class="col"><label>Walk the Bottom</label><input data-field="movement_bottom" type="text" readonly></div>
+			<div class="col"><label>Hold Breath</label><input data-field="movement_breath" type="text" readonly></div>
+		  </div>
+		  <div class="row movement-optional-row" style="margin-top:8px;display:none">
+			<div class="col"><label>Jog (×2)</label><input data-field="movement_jog" type="text" readonly></div>
+			<div class="col"><label>Run (×3)</label><input data-field="movement_running" type="text" readonly></div>
+			<div class="col"></div>
+		  </div>
+		  <div style="margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;">
+			<strong>Climbing rate depends on the surface</strong> &mdash; see Tools &gt; Climbing.
 		  </div>
 		</section>
 	  </main>
@@ -2279,6 +2298,86 @@ const SHEET_HTML = `
               hampers attacker and defender equally. It is a missile-fire tactic.
             </div>
           </div>
+        </section>
+
+        <hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
+
+        <!--
+          CLIMBING (PHB Ch.14, Tables 65-67)
+
+          NOT a pure reference panel, and that makes it different from Vision &
+          Light and Cover above. This one READS THE CHARACTER -- Climb Walls
+          score, race, armor, encumbrance and current movement all feed the
+          result -- so it must re-render when those change, unlike the two
+          panels that are identical for everyone.
+
+          It still writes NOTHING back. Every control carries `ephemeral`, so
+          collectSheet never sees it and ticking a box cannot restamp _updatedAt.
+
+          Numbers come from the CLIMBING_* tables in tables.js. Never hardcode
+          a table into this markup.
+        -->
+        <section class="section climbing-section">
+          <h3>Climbing</h3>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
+            Nothing on this panel is saved with the character.
+          </p>
+
+          <div class="row">
+            <div class="col">
+              <label>Type of surface</label>
+              <select class="climbing-surface ephemeral"></select>
+            </div>
+            <div class="col">
+              <label>Surface condition</label>
+              <select class="climbing-condition ephemeral"></select>
+            </div>
+          </div>
+
+          <div class="climbing-options ephemeral"
+               style="margin-top:12px;display:flex;flex-wrap:wrap;gap:14px;font-size:12px;"></div>
+
+          <div class="climbing-result" style="margin-top:16px;"></div>
+          <div class="climbing-breakdown"
+               style="margin-top:8px;font-size:11px;color:var(--muted);line-height:1.6;"></div>
+          <div class="climbing-notes"
+               style="margin-top:16px;font-size:11px;color:var(--muted);line-height:1.6;"></div>
+        </section>
+
+        <hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
+
+        <!--
+          OVERLAND & ENDURANCE (PHB Ch.14)
+
+          Same kind of panel as Climbing: reads the character, writes nothing,
+          all controls `ephemeral`. Covers cross-country marching, force
+          marching, and the water rules that need a chosen state rather than a
+          derived one -- diving depth and surfacing rate both depend on height
+          and load, which no field on the sheet holds.
+
+          Breath-holding lives on the Core tab instead, because 1/3 Constitution
+          is a flat derived number with nothing to choose.
+        -->
+        <section class="section overland-section">
+          <h3>Overland &amp; Endurance</h3>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
+            Nothing on this panel is saved with the character.
+          </p>
+
+          <div class="row">
+            <div class="col">
+              <label>Consecutive days force marching</label>
+              <input class="overland-days ephemeral" type="number" min="0" value="0">
+            </div>
+            <div class="col">
+              <label>Dive from height (feet)</label>
+              <input class="overland-height ephemeral" type="number" min="0" value="0">
+            </div>
+          </div>
+
+          <div class="overland-result" style="margin-top:16px;"></div>
+          <div class="overland-notes"
+               style="margin-top:16px;font-size:11px;color:var(--muted);line-height:1.6;"></div>
         </section>
       </main>
     </div>
