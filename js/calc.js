@@ -8521,6 +8521,79 @@ function renderOverlandPanel(root) {
 }
 
 // ===========================================================================
+// TOOLS TAB SUB-TABS
+// ===========================================================================
+
+// Builds the strip from TOOLS_SUBTABS, hides every panel but the active one.
+//
+// MUST RUN AFTER the three gating renderers -- renderThiefSkills,
+// renderTurnUndeadTable and renderRacialChecks. It reads the inline display
+// they write to decide which tabs exist, so running it first shows a strip
+// built from last recalculation's answer.
+//
+// The strip is rebuilt in full every call. That is safe ONLY because the
+// selection lives in root._toolsSubtab rather than in the DOM -- the opposite
+// of the vision panel's <select>, which had to be built once precisely because
+// it holds the choice itself.
+function renderToolsSubtabs(root) {
+  const bar = root.querySelector('.subtab-bar');
+  if (!bar || typeof TOOLS_SUBTABS === 'undefined') return;
+
+  // A registry entry with no matching section is skipped rather than rendered
+  // as a tab onto nothing -- the state a kit entry would sit in before its
+  // panel is written.
+  const available = TOOLS_SUBTABS.filter(t =>
+    root.querySelector('.' + t.section) && toolsSubtabApplies(root, t));
+  if (!available.length) return;
+
+  // Fall back to Dice when the active tab has stopped applying -- dual-classing
+  // out of thief with Thief Skills open. Then to the first available tab, in
+  // case a future gate ever hides Dice itself.
+  let active = root._toolsSubtab;
+  if (!available.some(t => t.key === active)) active = TOOLS_SUBTAB_DEFAULT;
+  if (!available.some(t => t.key === active)) active = available[0].key;
+  root._toolsSubtab = active;
+
+  bar.innerHTML = '';
+  available.forEach(t => {
+    // labelFrom lets a panel that computes its own heading name its own tab --
+    // "Dwarven Abilities" vs "Elven Abilities". Falls back to the static label
+    // for the moment before that panel has first rendered.
+    let label = t.label;
+    if (t.labelFrom) {
+      const el = root.querySelector('.' + t.section + ' ' + t.labelFrom);
+      const txt = el ? el.textContent.trim() : '';
+      if (txt) label = txt;
+    }
+    const btn = document.createElement('div');
+    btn.className = 'subtab ephemeral' + (t.key === active ? ' active' : '');
+    btn.dataset.subtab = t.key;
+    btn.textContent = label;
+    bar.appendChild(btn);
+  });
+
+  // Hide by CLASS. Inline display belongs to the gating renderers and means
+  // something different; see the note on .subtab-panel-hidden in style.css.
+  TOOLS_SUBTABS.forEach(t => {
+    const el = root.querySelector('.' + t.section);
+    if (el) el.classList.toggle('subtab-panel-hidden', t.key !== active);
+  });
+
+  // Delegated to the BAR, not the buttons, so it survives the rebuild above.
+  // Bound once, flagged on the element. Never calls markUnsaved: choosing a
+  // tab is not an edit to the character.
+  if (!bar._subtabBound) {
+    bar.addEventListener('click', (e) => {
+      const btn = e.target.closest('.subtab');
+      if (!btn) return;
+      root._toolsSubtab = btn.dataset.subtab;
+      renderToolsSubtabs(root);
+    });
+    bar._subtabBound = true;
+  }
+}
+
+// ===========================================================================
 // VISION AND LIGHT (PHB Ch.13)
 //
 // PURE REFERENCE. These read nothing from the character and write nothing to
