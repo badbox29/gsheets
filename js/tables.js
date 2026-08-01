@@ -4563,9 +4563,7 @@ function getClimbingBase(root, dmMountaineer) {
   }
 
   return { key: key, label: cat.label, note: cat.note, percent: pct,
-           return { key: key, label: cat.label, note: cat.note, percent: pct,
            fromClimbWalls: !!cat.fromClimbWalls };
-  }
 }
 
 const CLIMBING_ENCUMBRANCE_ORDER =
