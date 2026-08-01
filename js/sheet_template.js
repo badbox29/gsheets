@@ -2311,9 +2311,9 @@ const SHEET_HTML = `
           result -- so it must re-render when those change, unlike the two
           panels that are identical for everyone.
 
-          It still writes NOTHING back. Every control carries `ephemeral`, so
-          collectSheet never sees it and ticking a box cannot restamp _updatedAt.
-
+          It still writes NOTHING back. Every control carries the "ephemeral"
+          class, so collectSheet never sees it and ticking a box cannot restamp
+          the record's _updatedAt.
           Numbers come from the CLIMBING_* tables in tables.js. Never hardcode
           a table into this markup.
         -->
@@ -2350,7 +2350,7 @@ const SHEET_HTML = `
           OVERLAND & ENDURANCE (PHB Ch.14)
 
           Same kind of panel as Climbing: reads the character, writes nothing,
-          all controls `ephemeral`. Covers cross-country marching, force
+          all controls "ephemeral". Covers cross-country marching, force
           marching, and the water rules that need a chosen state rather than a
           derived one -- diving depth and surfacing rate both depend on height
           and load, which no field on the sheet holds.
