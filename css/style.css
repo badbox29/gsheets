@@ -553,6 +553,23 @@
        as detached from the thing it controls. */
     .vtab-content.active { display: flex; flex-direction: column; }
     .vtab-content > main.card { flex: 1 1 auto; }
+    /* End-of-content rule. A pseudo-element rather than markup, so it lands
+       after the last section on all eleven tabs with no template changes and
+       nothing to keep in sync.
+
+       DELIBERATELY NOT GOLD. A gold rule inside a tab means "another section
+       follows"; this one means "nothing follows". Opposite messages, so they
+       must not share a treatment -- reusing the accent here sends the reader
+       looking for a section that is not there. Muted, and given more space
+       above than the gold rules get, so it reads as containment rather than
+       division. */
+    .vtab-content > main.card::after {
+      content: "";
+      display: block;
+      height: 1px;
+      background: var(--border);
+      margin-top: 28px;
+    }
 	textarea {
 	  overflow-y: hidden;
 	  resize: none; /* optional: prevent manual resize handles */
