@@ -2126,9 +2126,9 @@ const SHEET_HTML = `
 			</div>
             
             <!-- Thief Roll History (right side) -->
-            <div>
+            <div style="display:flex;flex-direction:column;min-height:0;">
               <h4 style="font-size:14px;margin-bottom:8px;">Thief Roll History (most recent on top)</h4>
-              <div class="thief-roll-history" style="height:400px;overflow-y:auto;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px;font-family:monospace;font-size:12px;border:1px solid var(--border);margin-bottom:8px;">
+              <div class="thief-roll-history" style="flex:1 1 0;min-height:0;overflow-y:auto;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px;font-family:monospace;font-size:12px;border:1px solid var(--border);margin-bottom:8px;">
                 <div style="color:var(--muted);font-style:italic;">Thief skill roll results will appear here...</div>
               </div>
               <button class="clear-thief-roll-history" style="padding:6px 12px;font-size:12px;">Clear History</button>
@@ -2157,9 +2157,9 @@ const SHEET_HTML = `
             </div>
             
             <!-- Turn History (right side) -->
-            <div>
+            <div style="display:flex;flex-direction:column;min-height:0;">
               <h4 style="font-size:14px;margin-bottom:8px;">Turn History</h4>
-              <div class="turn-undead-history" style="height:400px;overflow-y:auto;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px;font-family:monospace;font-size:12px;border:1px solid var(--border);margin-bottom:8px;">
+              <div class="turn-undead-history" style="flex:1 1 0;min-height:0;overflow-y:auto;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px;font-family:monospace;font-size:12px;border:1px solid var(--border);margin-bottom:8px;">
                 <div style="color:var(--muted);font-style:italic;">Turn undead results will appear here...</div>
               </div>
               <button class="clear-turn-undead-history" style="padding:6px 12px;font-size:12px;">Clear History</button>
