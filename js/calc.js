@@ -4303,6 +4303,9 @@ async function renderEquipmentBrowser(root) {
       details.push(ls63.beamWidth
         ? `Light: ${ls63.radius} ft. beam, ${ls63.beamWidth} ft. wide at far end, burns ${ls63.burn} (Table 63)`
         : `Light: ${ls63.radius} ft. radius, burns ${ls63.burn} (Table 63)`);
+      // Reads burnNote from LIGHT_SOURCES rather than restating the conflict in
+      // core_equipment.json -- one source of truth, same as the numbers above.
+      if (ls63.burnNote) details.push(ls63.burnNote);
     }
     
     if (details.length > 0) {
@@ -8327,7 +8330,11 @@ function renderLightSources(root) {
     // rule with its own asterisks. Both markers are derived from the flags, so
     // adding a charged entry later cannot leave a footnote orphaned.
     const nm   = s.magical ? '<em>' + escapeHtml(s.name) + '</em>' : escapeHtml(s.name);
-    const mark = s.beamWidth ? '*' : (s.optional ? '**' : '');
+    // Markers ACCUMULATE. The beacon lantern carries both a cone footnote and a
+    // burn-time conflict, so a ternary chain would silently drop one.
+    const marks = (s.beamWidth ? '*' : '') + (s.optional ? '**' : '') +
+                  (s.burnNote ? '\u2020' : '');
+    const mark = marks;
     html += '<tr><td style="padding:3px 8px;">' + nm + mark + '</td>' +
       '<td style="padding:3px 8px;text-align:right;font-variant-numeric:tabular-nums;">' +
         s.radius + ' ft.</td>' +
@@ -8340,10 +8347,17 @@ function renderLightSources(root) {
     .map(s => escapeHtml(s.name.toLowerCase()) + ' ' + s.beamWidth + ' ft. wide')
     .join(', ');
 
+  // Derived from the data, like the beam widths above, so a second conflicting
+  // entry cannot leave an orphaned dagger.
+  const burnNotes = LIGHT_SOURCES.filter(s => s.burnNote)
+    .map(s => escapeHtml(s.name) + ' \u2014 ' + escapeHtml(s.burnNote))
+    .join('<br>');
+
   html += '<div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6;">' +
     '<strong>*</strong> Not a radius but a cone-shaped beam, measured at its far end: ' +
       beams + '.<br>' +
     '<strong>**</strong> Magical weapons shed light only if your DM allows this optional rule.' +
+    (burnNotes ? '<br><strong>\u2020</strong> ' + burnNotes : '') +
     '</div>';
 
   host.innerHTML = html;
