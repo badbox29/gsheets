@@ -4644,6 +4644,103 @@ function getClimbingSuccess(root, opts) {
   return { base: base, parts: parts, percent: Math.max(0, total) };
 }
 
+// PHB Ch.14 swimming. THREE CORRECTIONS to what the sheet did before:
+// the rate is HALF current movement (not a third), the gate is METAL armor
+// (not any armor at all), and the figure is YARDS per round (not feet). The old
+// 1/3 was the walking-on-the-bottom rate, lifted from the very next sentence.
+//
+// Verified against the book's example: movement 12 swims 60 yards (180 feet)
+// in a round. Half the rate is NOT floored to whole inches first -- 9 gives
+// 45 yards, not 40 -- because nothing in the chapter rounds the rate itself.
+function getSwimmingState(root, baseMovement, currentMovement) {
+  const base = parseInt(baseMovement, 10) || 0;
+  const cur  = parseInt(currentMovement, 10) || 0;
+
+  const armorKey  = getEquippedArmorTypeKey(root);
+  const armorData = (typeof ARMOR_TYPES !== 'undefined') ? ARMOR_TYPES[armorKey] : null;
+  const metal     = !!(armorData && armorData.metal);
+
+  // "reduced to 1/3 or less of normal (due to gear)" -- the second sink clause.
+  const crushed = base > 0 && cur <= base / 3;
+  const blocked = metal || crushed;
+
+  // Ch.14 opens by dividing everyone into untrained and proficient swimmers.
+  // Untrained characters get a dog-paddle in calm water and "in no way do they
+  // make any noticeable progress", so they are given NO rate -- the DM decides
+  // whether a character can swim at all, and the proficiency is the one signal
+  // the sheet actually holds.
+  const proficient = ((root && root._nwps) || []).some(n =>
+    String((n && n.name) || '').trim().toLowerCase() === 'swimming');
+
+  // Double speed on a Strength check "vs. half the character's normal Strength
+  // score". Halving is floored; the book does not say, and floor is the harder
+  // reading -- same choice as the parry bonus.
+  const str = parseInt(val(root, 'str'), 10) || 0;
+
+  return {
+    proficient: proficient,
+    metalArmor: metal,
+    armorLabel: (armorData && armorData.label) || '',
+    crushed:    crushed,
+    blocked:    blocked,
+    swimYards:   blocked ? 0 : cur * 5,
+    sprintYards: blocked ? 0 : cur * 10,
+    sprintCheck: Math.floor(str / 2),
+    bottomYards: Math.round((cur / 3) * 10)
+  };
+}
+
+// PHB Ch.14, "Holding Your Breath". 1/3 Constitution in rounds, rounded up;
+// halved (again rounded up) while exerting; halved again with no good gulp of
+// air. THE FLOOR OF ONE ROUND IS ABSOLUTE -- "All characters are able to hold
+// their breath for one round, regardless of circumstances" -- so a Constitution
+// 3 character caught mid-exertion still gets his round.
+//
+// A character reduced to 1/3 or less of normal movement by encumbrance is
+// ALWAYS considered to be exerting himself; that test is the caller's, because
+// it needs both movement figures.
+function getBreathHolding(root) {
+  const con      = parseInt(val(root, 'con'), 10) || 0;
+  const normal   = Math.max(1, Math.ceil(con / 3));
+  const exerting = Math.max(1, Math.ceil(normal / 2));
+  return {
+    con: con,
+    normal:         normal,
+    exerting:       exerting,
+    noGulp:         Math.max(1, Math.ceil(normal / 2)),
+    noGulpExerting: Math.max(1, Math.ceil(exerting / 2))
+  };
+}
+
+// Diving and surfacing, both 20 feet per round before load. `steps` is the same
+// count getClimbingEncumbranceSteps returns -- categories above unencumbered, or
+// movement points lost, depending on the encumbrance rule.
+//
+// The height bonus caps at +20, and the cap covers the HEIGHT component only,
+// not the run. The book's own example is the proof: a run from 40 feet dives 50
+// feet, which is 20 base + 10 run + 20 capped height.
+function getDivingSurfacing(root, steps, heightFeet, hasRun) {
+  const n    = Math.max(0, parseInt(steps, 10) || 0);
+  const rate = Math.max(0, 20 - 2 * n);
+  const h    = Math.max(0, parseInt(heightFeet, 10) || 0);
+
+  const runBonus    = (hasRun || h > 0) ? 10 : 0;
+  const heightBonus = Math.min(20, Math.floor(h / 10) * 5);
+
+  return {
+    steps:       n,
+    diveFirst:   rate + runBonus + heightBonus,
+    diveBase:    rate,
+    runBonus:    runBonus,
+    heightBonus: heightBonus,
+    surfaceRate: rate,
+    // "heavily loaded characters (those who have lost 10 or more points off
+    // their normal movement rate) cannot even swim to the surface."
+    cannotSurface: n >= 10,
+    floatRate:     Math.max(0, rate - 5)
+  };
+}
+
 // === Optional Rules Registry ===
 //
 // AD&D 2e flags a great many rules as optional, and different tables use
