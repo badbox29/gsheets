@@ -1050,7 +1050,7 @@ function getNWPCheckAdjustments(root, profName) {
 // the check target cannot express. The slots are still spent and still charged;
 // they simply do not move the number, so the card shows this text instead.
 const NWP_BONUS_SLOT_EFFECTS = {
-  "mountaineering":     "+10% to climb chances per extra slot",
+  "mountaineering":     "+10% to climb chances per extra slot (Table 65 base 50%)",
   "tightrope walking":  "reduces the width penalties by 1 per extra slot",
   "musical instrument": "one additional instrument per extra slot",
   // "...train other types of creatures OR improve his skill with an already
