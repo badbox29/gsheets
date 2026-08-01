@@ -1972,8 +1972,6 @@ const SHEET_HTML = `
           </div>
         </section>
 		
-		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
-		
 		<!-- Thief Skill Roller -->
         <section class="section thief-skills-section" style="display:none;">
           <h3>Thief Skill Roller</h3>
@@ -2125,8 +2123,6 @@ const SHEET_HTML = `
           </div>
         </section>
 		
-		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
-		
 		<!-- Turn Undead Calculator -->
         <section class="section turn-undead-section" style="display:none;">
           <h3>Turn Undead</h3>
@@ -2158,9 +2154,7 @@ const SHEET_HTML = `
           </div>
         </section>
 		
-		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
-        
-        <!--
+		<!--
           RACIAL CHECKS (PHB Ch.2)
 
           Was ".dwarven-abilities-section" with six hardcoded cards. Every card
@@ -2184,8 +2178,6 @@ const SHEET_HTML = `
             </div>
           </div>
         </section>
-
-        <hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
 
         <!--
           VISION & LIGHT (PHB Ch.13)
@@ -2259,8 +2251,6 @@ const SHEET_HTML = `
           </div>
         </section>
 
-        <hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
-
         <!--
           COVER AND CONCEALMENT (PHB Ch.9, Table 59)
 
@@ -2299,8 +2289,6 @@ const SHEET_HTML = `
             </div>
           </div>
         </section>
-
-        <hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
 
         <!--
           CLIMBING (PHB Ch.14, Tables 65-67)
@@ -2343,8 +2331,6 @@ const SHEET_HTML = `
           <div class="climbing-notes"
                style="margin-top:16px;font-size:11px;color:var(--muted);line-height:1.6;"></div>
         </section>
-
-        <hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
 
         <!--
           OVERLAND & ENDURANCE (PHB Ch.14)
