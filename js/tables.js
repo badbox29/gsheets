@@ -4376,6 +4376,152 @@ function getEffectiveWeaponSpeed(speed, magicBonus) {
   return Math.max(0, base - reduction);
 }
 
+// ===========================================================================
+// CLIMBING (PHB Ch.14, Tables 65-67)
+// ===========================================================================
+
+// Table 67: Rates of Climbing. Multiply by the character's CURRENT movement
+// rate for feet per round, in any direction -- up, down or sideways.
+//
+// Stored as [numerator, denominator] rather than decimals so the panel prints an
+// exact fraction and never shows 0.3333333333.
+//
+// null means the surface cannot be climbed under that condition AT ALL. The Ice
+// wall row is blank on Dry and Slightly Slippery because an ice wall is slippery
+// BY DEFINITION -- those columns do not exist. Very smooth is blank once wet
+// because nobody can climb it. DO NOT FILL EITHER IN.
+//
+// Smooth-cracked and Rough share 1/3 and 1/4 despite differing when dry. The
+// rows genuinely converge in the wet; that is the book, not a transcription slip.
+//
+// thiefRates carries the ** footnote: thieves alone have a very smooth /
+// slightly slippery cell. It is a TABLE VALUE, so it doubles for thieves like
+// every other cell -- the Ragnar worked example doubles 1/2 into 1. Even a thief
+// cannot climb very smooth and slippery.
+const CLIMBING_SURFACES = [
+  { key: 'very_smooth',  label: 'Very smooth',     toolsOnly: true,
+    rates:      { dry: [1,4], slight: null,  slippery: null },
+    thiefRates: { dry: [1,4], slight: [1,4], slippery: null } },
+  { key: 'smooth',       label: 'Smooth, cracked', toolsOnly: true,
+    rates: { dry: [1,2], slight: [1,3], slippery: [1,4] } },
+  { key: 'rough',        label: 'Rough',           toolsOnly: true,
+    rates: { dry: [1,1], slight: [1,3], slippery: [1,4] } },
+  { key: 'rough_ledges', label: 'Rough w/ledges',  toolsOnly: false,
+    rates: { dry: [1,1], slight: [1,2], slippery: [1,3] } },
+  { key: 'ice',          label: 'Ice wall',        toolsOnly: false,
+    rates: { dry: null,  slight: null,  slippery: [1,4] } },
+  { key: 'tree',         label: 'Tree',            toolsOnly: false,
+    rates: { dry: [4,1], slight: [3,1], slippery: [2,1] } },
+  { key: 'sloping',      label: 'Sloping wall',    toolsOnly: false,
+    rates: { dry: [3,1], slight: [2,1], slippery: [1,1] } },
+  { key: 'rope_wall',    label: 'Rope and wall',   toolsOnly: false,
+    rates: { dry: [2,1], slight: [1,1], slippery: [1,2] } }
+];
+
+const CLIMBING_CONDITIONS = [
+  { key: 'dry',      label: 'Dry' },
+  { key: 'slight',   label: 'Slightly Slippery' },
+  { key: 'slippery', label: 'Slippery' }
+];
+
+// Table 65: Base Climbing Success Rates. The two thief rows resolve against the
+// character's own Climb Walls score rather than a printed number, so they carry
+// no `base` -- getClimbingBase() supplies it.
+const CLIMBING_CATEGORIES = {
+  thief_mountaineer: { label: 'Thief with mountaineering proficiency',
+                       fromClimbWalls: true, bonus: 10, note: 'Climb Walls % + 10%' },
+  thief:             { label: 'Thief',
+                       fromClimbWalls: true, bonus: 0,  note: 'Climb Walls %' },
+  mountaineering:    { label: 'Mountaineering proficiency',
+                       base: 40, perSlot: 10,           note: '40% + 10% per proficiency slot' },
+  mountaineer:       { label: 'Mountaineer (DM ruling)',
+                       base: 50,                        note: '50%' },
+  unskilled:         { label: 'Unskilled climber',
+                       base: 40,                        note: '40%' }
+};
+
+// Table 66: Climbing Modifiers -- the situational rows the player chooses.
+const CLIMBING_MODIFIERS = {
+  handholds:  { label: 'Abundant handholds (brush, trees, ledges)', mod:  40 },
+  ropeWall:   { label: 'Rope and wall',                             mod:  55 },
+  slopedIn:   { label: 'Sloped inward',                             mod:  25 },
+  wounded:    { label: 'Climber wounded below half hit points',     mod: -10 }
+};
+
+// Table 66's surface-condition rows, keyed to CLIMBING_CONDITIONS so ONE
+// dropdown drives both the Table 67 rate and this success modifier.
+const CLIMBING_CONDITION_MODIFIERS = { dry: 0, slight: -25, slippery: -40 };
+
+// Table 66 armor rows, keyed to ARMOR_TYPES so the stored construction type is
+// what's read -- never the armor's name.
+//
+// THE TABLE DOES NOT LIST ring, hide OR brigandine. They are 0 here because the
+// book omits them, not because they are weightless. Do not "complete" the list.
+// Elven chain IS chain mail, so it takes the chain row as written.
+const CLIMBING_ARMOR_MODIFIERS = {
+  none: 0, leather: 0, ring: 0, hide: 0, brigandine: 0,
+  padded: -5,  studded: -5,
+  scale: -15,  chain: -15,  elven_chain: -15,
+  banded: -25, splint: -25,
+  bronze_plate: -50, plate: -50, field_plate: -50, full_plate: -50
+};
+
+// Table 66 race rows. The footnote warns these duplicate Table 27, so a THIEF
+// must not take them -- his Climb Walls score already carries the racial
+// adjustment. getClimbingBase() is where that exclusion lives.
+const CLIMBING_RACE_MODIFIERS = { dwarf: -10, gnome: -15, halfling: -15 };
+
+// -5% per encumbrance category above unencumbered, OR per movement rate point
+// lost off normal -- the two readings the dagger footnote offers.
+const CLIMBING_ENCUMBRANCE_MOD = -5;
+
+// The ARMOR_TYPES key of the equipped body armor, or 'none'. This is the same
+// walk getThiefArmorCategory does, exposed under a name that isn't thief-specific
+// -- climbing and swimming both need the construction type, and neither has
+// anything to do with Table 29.
+function getEquippedArmorTypeKey(root) {
+  const cat = (typeof getThiefArmorCategory === 'function')
+    ? getThiefArmorCategory(root) : null;
+  return (cat && cat.typeKey) ? cat.typeKey : 'none';
+}
+
+// [1,4] -> '1/4'.  [4,1] -> '4'.  Table 67 prints exact fractions, so this
+// formats rather than decimalising.
+function climbFractionLabel(pair) {
+  if (!pair) return '\u2014';
+  return pair[1] === 1 ? String(pair[0]) : pair[0] + '/' + pair[1];
+}
+
+// THE THIEF TEST IS THE SCORE, NOT THE CLASS NAME. Any character with a Climb
+// Walls percentage climbs as a thief -- which correctly picks up bards and any
+// homebrew rogue without a list of class names to keep in sync.
+function getClimbWallsScore(root) {
+  return parseInt(val(root, 'thief_climb'), 10) || 0;
+}
+
+// Table 67. Returns feet per round, or blocked:true where the cell is empty.
+// Verified against the chapter's worked example: Ragnar (thief, move 12) on
+// rough w/ledges slightly slippery is 12 x 1/2 x 2 = 12 ft/round, and Rupert
+// (nonthief, move 8) is 8 x 1/2 = 4. Rounding down is UNSTATED in the book;
+// floor is chosen for the same reason as the parry bonus.
+function getClimbingRate(root, surfaceKey, conditionKey, currentMovement) {
+  const surf = CLIMBING_SURFACES.filter(s => s.key === surfaceKey)[0];
+  if (!surf) return null;
+
+  const isThief = getClimbWallsScore(root) > 0;
+  const table   = (isThief && surf.thiefRates) ? surf.thiefRates : surf.rates;
+  const pair    = table[conditionKey];
+
+  if (!pair) return { blocked: true, surface: surf, isThief: isThief };
+
+  const mult = (pair[0] / pair[1]) * (isThief ? 2 : 1);
+  return {
+    blocked: false, surface: surf, isThief: isThief, pair: pair,
+    label: climbFractionLabel(pair),
+    feetPerRound: Math.floor((parseInt(currentMovement, 10) || 0) * mult)
+  };
+}
+
 // === Optional Rules Registry ===
 //
 // AD&D 2e flags a great many rules as optional, and different tables use
@@ -4589,6 +4735,17 @@ const OPTIONAL_RULES = {
              'nothing is blocked and no henchman is ever removed for you.',
     category: 'override',
     default: true
+  },
+  joggingAndRunning: {
+    label:   'Jogging and running (exact chase speeds)',
+    detail:  'PHB Ch.14, printed in a box headed "(Optional Rule)". A character can always ' +
+             'jog at double his movement rate in yards, sustained for a number of rounds equal ' +
+             'to his Constitution. Running is triple rate on a successful Strength check, ' +
+             'quadruple at -4 and quintuple at -8, with a cumulative Constitution check every ' +
+             'round after that. Without this rule the chapter settles a chase by comparing ' +
+             'initiative dice instead, so the sheet shows no running figure at all.',
+    category: 'phb',
+    default: false
   }
 };
 const OPTIONAL_RULES_CATEGORIES = {
