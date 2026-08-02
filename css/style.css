@@ -1081,3 +1081,220 @@
 	  font-weight: 600;
 	  white-space: nowrap;
 	}
+
+	/* ===== Gear card grammar (armor, weapons, ammunition, equipment,
+	   valuables, magic items) =====================================
+	   Applied as .item.gear so the base .item used by every other list --
+	   proficiencies, spells, henchmen, conditions -- is untouched.
+
+	   ONE CHANNEL PER AXIS, and this is the whole design:
+	     rail  = how well the item suits this character (status)
+	     chip  = whether it is in use (state)
+	     badge = enchantment
+	     fill  = state, restated so a list scans without reading words
+	   Two axes on one channel is what made the first three drafts wrong. */
+	.item.gear {
+	  display: grid;
+	  grid-template-columns: 3px 1fr;
+	  gap: 0 10px;
+	  align-items: center;
+	}
+	/* Row 1 carries controls and figures; row 2 carries the name alone, so a
+	   long name never truncates and no control is left unlabelled for width. */
+	.item.gear .row1 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+	.item.gear .row2 { display: flex; align-items: baseline; gap: 8px; min-width: 0; margin-top: 5px; }
+	.item.gear .row1 .spacer { flex: 1; }
+
+	/* The status rail. A grid CHILD, not a border-left: a single-sided border
+	   fights the card's border-radius, and the old inline
+	   `borderLeft + paddingLeft` in resolveWeaponProficiency shifted the whole
+	   card's padding to make room. Spanning both rows makes it read as a spine.
+	   Colours are resolveWeaponProficiency's, unchanged. Related stays MUTED
+	   rather than amber: amber and --accent-light are near-identical in hue, so
+	   an amber rail reads as "Proficient" at a glance -- and identically so to
+	   anyone with a red-green deficiency. */
+	.item.gear .rail {
+	  grid-row: 1 / span 2;
+	  align-self: stretch;
+	  border-radius: 2px;
+	  background: var(--border);
+	}
+	.item.gear .rail.specialized              { background: var(--info); }
+	.item.gear .rail.proficient,
+	.item.gear .rail.allowed                  { background: var(--accent-light); }
+	.item.gear .rail.related,
+	.item.gear .rail.advisory                 { background: var(--muted); }
+	.item.gear .rail.notprof,
+	.item.gear .rail.restricted               { background: var(--error); }
+	.item.gear .rail.enchanted                { background: var(--magic); }
+
+	/* State chip. A <label> wrapping the REAL checkbox -- .equipped keeps
+	   working, collectSheet is untouched, and keyboard and screen readers get a
+	   genuine form control. The label makes the whole pill a hit target, which
+	   matters far more on a phone than a 13px box did. Two sibling spans swap
+	   on :checked; no JS anywhere. */
+	.chip {
+	  display: inline-flex;
+	  justify-content: center;
+	  align-items: center;
+	  border-radius: 20px;
+	  padding: 3px 14px;
+	  cursor: pointer;
+	  font-size: 11px;
+	  user-select: none;
+	  white-space: nowrap;
+	  flex-shrink: 0;
+	  border: 1px solid var(--accent);
+	  background: var(--accent);
+	  color: var(--badge-fg);
+	}
+	.chip input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+	.chip .off { display: none; }
+	.chip:has(input:not(:checked)) {
+	  background: transparent;
+	  border-color: var(--border);
+	  color: var(--muted);
+	}
+	.chip:has(input:not(:checked)) .on  { display: none; }
+	.chip:has(input:not(:checked)) .off { display: inline; }
+	.chip:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+	/* Hand chip (weapons only). Outlined gold in BOTH states -- only the wording
+	   changes between "Main hand" and "Off-hand". The solid fill belongs to the
+	   state chip alone, so two pills on one row are never confused, and greying
+	   "Main hand" would wrongly imply that weapon is less in use.
+
+	   SPECIFICITY -- READ BEFORE EDITING. `:has()` contributes its ARGUMENT's
+	   specificity, so `.chip:has(input:not(:checked))` above scores 0,2,1. A
+	   plain `.chip.hand` is 0,2,0, LOSES, and source order does not save it.
+	   That is what greyed "Main hand" on an equipped weapon. The unchecked case
+	   is therefore restated at 0,3,1 rather than reaching for !important. */
+	.chip.hand,
+	.chip.hand:has(input:not(:checked)) {
+	  background: transparent;
+	  border-color: var(--accent);
+	  color: var(--accent-light);
+	  font-weight: 600;
+	}
+	/* Off-hand means nothing until the weapon is in hand, so it greys with the
+	   row. calc.js filters to EQUIPPED weapons before looking for the off-hand,
+	   so an unequipped one is already inert in the rules -- this just says so.
+	   0,6,1: beats both rules above. */
+	.item.gear:has(.chip.state input:not(:checked)) .chip.hand {
+	  background: transparent;
+	  border-color: var(--border);
+	  color: var(--muted);
+	  opacity: .65;
+	  font-weight: 400;
+	}
+
+	/* Unequipped restates the state chip's answer in the card itself: worn reads
+	   raised, stowed reads recessed. Redundant with the chip ON PURPOSE -- the
+	   eye reads fill before it reads words when scanning eight rows. This is one
+	   axis on two channels, which is fine; two axes on one channel is not. */
+	.item.gear:has(.chip.state input:not(:checked)) {
+	  background: transparent;
+	  border: 1px solid var(--border);
+	  padding: 7px 9px;
+	}
+	.item.gear:has(.chip.state input:not(:checked)) .txt { color: var(--muted); }
+
+	/* Row 2: the name gets the full card width, so it never truncates. */
+	.item.gear .txt {
+	  font-size: 15px;
+	  overflow: hidden;
+	  text-overflow: ellipsis;
+	  white-space: nowrap;
+	  min-width: 0;
+	}
+	/* Status word beside the rail colour. The rail alone is a code you must
+	   learn and is invisible to anyone who cannot separate those hues, so the
+	   word carries the meaning and the rail accelerates it. */
+	.item.gear .status { font-size: 10px; letter-spacing: .5px; flex-shrink: 0; white-space: nowrap; }
+	.item.gear .status.specialized             { color: var(--info); }
+	.item.gear .status.proficient,
+	.item.gear .status.allowed                 { color: var(--accent-light); }
+	.item.gear .status.related,
+	.item.gear .status.advisory                { color: var(--muted); }
+	.item.gear .status.notprof,
+	.item.gear .status.restricted              { color: var(--error); }
+
+	/* Figures on row 1. `.line` is the DERIVED total (qty x each) and is never
+	   stored -- it is recomputed on every render from the fields on the card,
+	   the same rule that governs every other derived value in this codebase. */
+	.item.gear .stat {
+	  text-align: right;
+	  flex-shrink: 0;
+	  font-size: 11px;
+	  color: var(--muted);
+	  white-space: nowrap;
+	}
+	.item.gear .stat b,
+	.item.gear .stat .line {
+	  color: var(--accent-light);
+	  font-weight: 600;
+	  font-size: 15px;
+	  margin-left: 4px;
+	}
+	.item.gear .stat .line { margin: 0; }
+	.item.gear .stat .none { color: var(--muted); font-size: 13px; font-weight: 400; }
+
+	.item.gear .btns { display: flex; gap: 6px; flex-shrink: 0; }
+	.item.gear .btns button {
+	  background: transparent;
+	  color: var(--muted);
+	  border: 1px solid var(--border);
+	  border-radius: var(--radius);
+	  padding: 5px 11px;
+	  font-size: 11px;
+	  cursor: pointer;
+	}
+	.item.gear .btns button:hover { color: var(--text); border-color: var(--accent); }
+
+	/* Quantity with its own spinner. The native arrows are suppressed so there
+	   are never two sets fighting for the same space; the field stays editable
+	   and takes digits only. The buttons must dispatch a real 'input' event, not
+	   just set .value -- encumbrance, the line total and the unsaved marker all
+	   hang off that event, and a silent assignment fires none of them. */
+	.item.gear .qtybox {
+	  flex-shrink: 0;
+	  display: flex;
+	  align-items: center;
+	  gap: 5px;
+	  font-size: 11px;
+	  color: var(--muted);
+	}
+	.item.gear .qtybox input {
+	  width: 52px;
+	  text-align: center;
+	  background: transparent;
+	  color: var(--text);
+	  border: none;
+	  border-bottom: 1px solid var(--border);
+	  font-weight: 600;
+	  font-size: 14px;
+	  padding: 2px;
+	  outline: none;
+	}
+	.item.gear .qtybox input:focus { border-bottom-color: var(--accent); }
+	.item.gear .qtybox input::-webkit-outer-spin-button,
+	.item.gear .qtybox input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+	.item.gear .spin { display: flex; flex-direction: column; gap: 1px; flex-shrink: 0; }
+	.item.gear .spin button {
+	  background: transparent;
+	  color: var(--muted);
+	  border: 1px solid var(--border);
+	  border-radius: 2px;
+	  padding: 0;
+	  width: 18px;
+	  height: 13px;
+	  font-size: 8px;
+	  line-height: 1;
+	  cursor: pointer;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	}
+	.item.gear .spin button:hover { color: var(--accent-light); border-color: var(--accent); }
+	.item.gear .spin button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+	.item.gear .qlab { font-size: 10px; letter-spacing: .5px; color: var(--muted); }
