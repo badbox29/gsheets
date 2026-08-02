@@ -1387,3 +1387,101 @@
 	  color: inherit;
 	  cursor: default;
 	}
+
+	/* ===== Enchantment and identification panel =======================
+	   Replaces the inline-flex .magic-group strip, which could not grow to hold
+	   the Effects textarea. Header strip carries the two toggles; the body below
+	   holds everything that is only known once the item has been identified.
+
+	   The gating is pure CSS. Identified is a state marker, not a permissions
+	   system: the fields are EMPTY until the player learns what the item does
+	   and writes it down, which is why the caption reads "unknown" rather than
+	   "hidden" -- nothing is being withheld. */
+	.ench-panel {
+	  border: 1px solid var(--magic);
+	  border-radius: var(--radius);
+	  margin: 4px 0 10px;
+	}
+	.ench-panel .ench-head {
+	  display: flex;
+	  align-items: center;
+	  gap: 14px;
+	  flex-wrap: wrap;
+	  padding: 6px 10px;
+	}
+	.ench-panel .ench-head label {
+	  display: inline-flex;
+	  align-items: center;
+	  gap: 6px;
+	  color: var(--magic);
+	  font-weight: 600;
+	  font-size: 12px;
+	  margin: 0;
+	  white-space: nowrap;
+	  cursor: pointer;
+	  user-select: none;
+	}
+	/* The global input{width:100%} would stretch these across the row. */
+	.ench-panel .ench-head input[type="checkbox"] {
+	  width: auto;
+	  flex-shrink: 0;
+	  margin: 0;
+	  accent-color: var(--magic);
+	}
+	.ench-panel .ench-veil {
+	  font-size: 11px;
+	  color: var(--muted);
+	  font-style: italic;
+	  margin-left: auto;
+	}
+	.ench-panel .ench-body {
+	  border-top: 1px solid var(--magic);
+	  padding: 11px 10px 4px;
+	  background: color-mix(in srgb, var(--magic) 6%, transparent);
+	}
+	.ench-panel .ench-fields {
+	  display: flex;
+	  align-items: flex-end;
+	  gap: 11px;
+	  flex-wrap: wrap;
+	  margin-bottom: 10px;
+	}
+	/* Captions sit BESIDE their input, not above -- stacking them is what made
+	   the old .magic-group box tall. The global label{display:block} has to be
+	   overridden here. */
+	.ench-panel .ench-fields label {
+	  display: inline-flex;
+	  align-items: center;
+	  gap: 5px;
+	  font-size: 11px;
+	  color: var(--muted);
+	  margin: 0;
+	  white-space: nowrap;
+	}
+	.ench-panel .ench-fields input[type="number"] { width: 62px; text-align: center; }
+	.ench-panel .ench-name { flex: 1; min-width: 150px; }
+	.ench-panel .ench-name input { width: 100%; }
+	.ench-panel .ench-effects { display: block; }
+	.ench-panel .ench-effects textarea {
+	  width: 100%;
+	  min-height: 68px;
+	  resize: vertical;
+	  border: 1px solid var(--border);
+	  border-radius: var(--radius);
+	  padding: 8px;
+	  line-height: 1.45;
+	}
+	.ench-panel .ench-effects textarea:focus { border-color: var(--magic); }
+
+	/* Gating. SPECIFICITY: :has() contributes its ARGUMENT's specificity, so
+	   these score 0,3,1 -- see the .chip.hand note above for what happens when
+	   an override is written at the obvious weight instead. */
+	.ench-panel:has(.is-magical:not(:checked)) .ench-ident,
+	.ench-panel:has(.is-magical:not(:checked)) .ench-veil,
+	.ench-panel:has(.is-magical:not(:checked)) .ench-body { display: none; }
+	.ench-panel:has(.is-identified:not(:checked)) .ench-body { display: none; }
+	.ench-panel:has(.is-magical:checked):has(.is-identified:checked) .ench-veil { display: none; }
+	/* Magic items are magical by definition, so that card's panel has no
+	   Enchanted toggle and gates on Identified alone. */
+	.ench-panel.always:has(.is-identified:checked) .ench-veil { display: none; }
+	.ench-panel.always:has(.is-identified:not(:checked)) .ench-body { display: none; }
