@@ -388,13 +388,17 @@ function resolveWeaponProficiency(root, rowEl) {
   // is invisible to anyone who cannot separate those hues, so the text carries
   // the meaning and the rail only accelerates it. Penalties are shown because a
   // penalty you cannot see is one you forget you are taking.
-  const statusEl = rowEl.querySelector('.status');
-  if (statusEl) {
-    statusEl.className = 'status ' + statusKey;
-    statusEl.textContent = isSpecialized           ? 'SPECIALIZED'
-                         : status === 'proficient' ? 'PROFICIENT'
-                         : status === 'related'    ? 'RELATED (' + penalty + ')'
-                         : 'NOT PROF. (' + penalty + ')';
+  // NOT `statusEl` -- that name is taken at the top of this function by the
+  // .weapon-prof-status DROPDOWN, whose value is read as the manual override.
+  // Two different things called status live in this scope: the override the
+  // player chose, and the resolved answer shown on the card.
+  const statusWordEl = rowEl.querySelector('.status');
+  if (statusWordEl) {
+    statusWordEl.className = 'status ' + statusKey;
+    statusWordEl.textContent = isSpecialized           ? 'SPECIALIZED'
+                             : status === 'proficient' ? 'PROFICIENT'
+                             : status === 'related'    ? 'RELATED (' + penalty + ')'
+                             : 'NOT PROF. (' + penalty + ')';
   }
 
   if (badgeEl) {
