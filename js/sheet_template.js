@@ -1190,6 +1190,15 @@ const SHEET_HTML = `
 			</select>
 		  </div>
 		  
+		  <!-- Rail key. Green is AVAILABLE rather than cast so it carries its
+		       natural meaning, and lost is amber rather than red: green-vs-red is
+		       the pair one man in twelve cannot separate, and it was the pair
+		       that mattered most -- castable now versus gone. -->
+		  <div class="spell-listbar">
+			<span class="key"><i style="background:var(--success)"></i>available</span>
+			<span class="key"><i style="background:var(--muted)"></i>cast</span>
+			<span class="key"><i style="background:var(--warning)"></i>lost</span>
+		  </div>
 		  <div class="list memspells-list"></div>
 		</section>
 
@@ -1476,6 +1485,17 @@ const SHEET_HTML = `
 		<!-- Weapons -->
 		<section class="section">
 		  <h3>Weapons <button class="add-weapon">+ Add Custom Weapon</button></h3>
+		  <!-- Rail key. The proficiency rail has existed since before the card
+		       pass and has never had one. Colours are resolveWeaponProficiency's:
+		       related is MUTED rather than amber because amber sits too close to
+		       --accent-light to be told apart at 3px, identically so to anyone
+		       with a red-green deficiency. -->
+		  <div class="spell-listbar">
+			<span class="key"><i style="background:var(--info)"></i>specialized</span>
+			<span class="key"><i style="background:var(--accent-light)"></i>proficient</span>
+			<span class="key"><i style="background:var(--muted)"></i>related</span>
+			<span class="key"><i style="background:var(--error)"></i>not proficient</span>
+		  </div>
 		  <div class="list weapons-list"></div>
 		</section>
 
@@ -1570,6 +1590,13 @@ const SHEET_HTML = `
 		  <h3>Armor &amp; Shields <button class="add-armor">+ Add Custom Armor</button></h3>
 		  <!-- Class armor restrictions (advisory; never blocks) -->
 		  <div class="armor-restriction-note" style="display:none;margin-bottom:10px;padding:8px;border-radius:4px;font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
+		  <!-- Rail key. Hidden until resolveArmorLegality exists to paint the
+		       rails: a key for colours nothing produces is worse than none. -->
+		  <div class="spell-listbar armor-rail-key" style="display:none;">
+			<span class="key"><i style="background:var(--accent-light)"></i>allowed</span>
+			<span class="key"><i style="background:var(--muted)"></i>advisory</span>
+			<span class="key"><i style="background:var(--error)"></i>class restricted</span>
+		  </div>
 		  <div class="list armor-list"></div>
 		</section>
 	  </main>
