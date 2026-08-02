@@ -1485,3 +1485,136 @@
 	   Enchanted toggle and gates on Identified alone. */
 	.ench-panel.always:has(.is-identified:checked) .ench-veil { display: none; }
 	.ench-panel.always:has(.is-identified:not(:checked)) .ench-body { display: none; }
+
+	/* ===== Spell cards ================================================
+	   Rides on .item.gear for the shell -- grid, rail, row1/row2, spacer -- and
+	   adds only what spells need. Markup is class="item gear spell".
+
+	   RAIL, MEMORIZED LIST: state. Green available, grey cast, amber lost.
+	   Green carries its natural meaning; lost is amber rather than red because
+	   green-vs-red is the pair one man in twelve cannot separate and it was the
+	   pair that mattered most -- castable now versus gone. Amber also suits a
+	   disrupted casting: a mishap, not an error, and --error is already spoken
+	   for by "not proficient" and "class restricted" on the gear cards.
+	   Own-school gold is deliberately NOT applied in the memorized list; it
+	   silently overrode state on every spell of the specialist's own school. */
+	.item.spell .rail { background: var(--success); }
+	.item.spell.cast .rail { background: var(--muted); }
+	.item.spell.lost .rail { background: var(--warning); }
+	/* RAIL, SPELLBOOK: no state to carry, so it marks the specialist's own
+	   school and, once wired to isOppositionSpell, the schools he may never
+	   learn from. Neutral throughout for a non-specialist or a priest. */
+	.item.spell .rail.own        { background: var(--accent-light); }
+	.item.spell .rail.opposition { background: var(--error); }
+	.item.spell .rail.neutral    { background: var(--border); }
+
+	.item.spell .lvl {
+	  display: inline-flex; align-items: center; justify-content: center;
+	  flex-shrink: 0; min-width: 24px; height: 24px; border-radius: 50%;
+	  border: 1px solid var(--border);
+	  font-size: 11px; font-weight: 600; color: var(--accent-light);
+	}
+	.item.spell .school {
+	  font-size: 10px; letter-spacing: .8px; color: var(--muted);
+	  white-space: nowrap; flex-shrink: 0;
+	}
+	.item.spell .spell-name { font-size: 15px; font-weight: 600; }
+	.item.spell.cast .spell-name,
+	.item.spell.lost .spell-name { color: var(--muted); text-decoration: line-through; }
+	.item.spell.lost .spell-name { text-decoration-color: var(--warning); }
+	.item.spell.cast, .item.spell.lost { background: transparent; }
+
+	/* Reversed chip. ASYMMETRIC, unlike the weapon card's hand chip it borrows
+	   from: main hand and off-hand are two equally ordinary choices, but normal
+	   is what nearly every spell is and reversed CHANGES WHAT THE SPELL DOES.
+	   Quiet at rest, loud when set -- which also stops a dozen Normal chips
+	   competing for attention. The sheet never renames the spell: the reverse is
+	   named in the description prose, and no rule derives one name from the
+	   other (light/darkness, bless/curse, purify/putrefy). */
+	.item.spell .revchip {
+	  background: transparent; border: 1px solid var(--border); color: var(--muted);
+	  border-radius: 20px; padding: 2px 11px; font-size: 10px; letter-spacing: .4px;
+	  font-weight: 400; font-family: inherit; cursor: pointer; flex-shrink: 0;
+	  white-space: nowrap;
+	}
+	.item.spell .revchip:hover { border-color: var(--accent); color: var(--accent-light); }
+	.item.spell .revchip.on {
+	  background: var(--accent); border-color: var(--accent);
+	  color: var(--badge-fg); font-weight: 600;
+	}
+	.item.spell .revchip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+	.item.spell.cast .revchip, .item.spell.lost .revchip,
+	.item.spell.cast .revchip.on, .item.spell.lost .revchip.on {
+	  background: transparent; border-color: var(--border); color: var(--muted);
+	  font-weight: 400; opacity: .65;
+	}
+	.item.spell .freetag {
+	  font-size: 10px; letter-spacing: .6px; color: var(--accent-light);
+	  border: 1px solid var(--accent); border-radius: 3px; padding: 1px 6px; flex-shrink: 0;
+	}
+
+	/* Button BANK, not four loose buttons: joined into one strip so the group
+	   reads as a single committed control. min-width is sized to the longest
+	   label a slot can ever hold -- Cast becomes Uncast, Lost becomes Restore --
+	   so the strip never reflows and the button you pressed stays under your
+	   finger. Colours are TOKENS; the hardcoded rgba in setMemSpellState cannot
+	   survive the theme switcher. */
+	.item.spell .btns {
+	  display: flex; gap: 0; flex-shrink: 0; margin-left: auto;
+	  border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+	}
+	.item.spell .btns button {
+	  background: transparent; color: var(--muted);
+	  border: none; border-right: 1px solid var(--border); border-radius: 0;
+	  padding: 5px 10px; font-size: 11px; font-weight: 600; cursor: pointer;
+	  white-space: nowrap; min-width: 76px;
+	  display: inline-flex; align-items: center; justify-content: center;
+	}
+	.item.spell .btns button:last-child { border-right: none; }
+	.item.spell .btns button:hover:not(:disabled) { color: var(--text); }
+	.item.spell .btns button:disabled { opacity: .3; cursor: not-allowed; }
+	.item.spell .btns .act-details,
+	.item.spell .btns .act-forget,
+	.item.spell .btns .act-remove { background: color-mix(in srgb, var(--accent) 26%, transparent); color: var(--text); }
+	.item.spell .btns .act-cast    { background: color-mix(in srgb, var(--success) 30%, transparent); color: var(--text); }
+	.item.spell .btns .act-cast.on { background: color-mix(in srgb, var(--muted) 34%, transparent); }
+	.item.spell .btns .act-lost    { background: color-mix(in srgb, var(--warning) 20%, transparent); color: var(--text); }
+	.item.spell .btns .act-lost.on { background: color-mix(in srgb, var(--warning) 42%, transparent); }
+	.item.spell .btns .primary     { background: var(--accent); color: var(--badge-fg); }
+	.item.spell .btns .primary:hover { background: var(--accent-light); }
+
+	/* Level group header with a live availability count -- the question you
+	   actually ask mid-combat, previously answerable only by counting
+	   strike-throughs by eye. */
+	.spell-lvlhead {
+	  font-size: 11px; letter-spacing: 1px; color: var(--muted);
+	  margin: 16px 0 6px; padding-bottom: 4px; border-bottom: 1px solid var(--border);
+	}
+	.spell-lvlhead b { color: var(--accent-light); font-weight: 600; }
+
+	/* Bar above each list: legend left, level filter right. */
+	.spell-listbar {
+	  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+	  margin: 0 0 10px; padding: 8px 11px;
+	  background: var(--glass); border-radius: var(--radius);
+	}
+	.spell-listbar .key { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
+	.spell-listbar .key i { width: 3px; height: 12px; border-radius: 2px; display: inline-block; }
+	.spell-listbar .grow { flex: 1; }
+	.spell-listbar label { font-size: 11px; letter-spacing: .5px; color: var(--muted); margin: 0; }
+	.spell-listbar select {
+	  background: transparent; color: var(--text); border: 1px solid var(--border);
+	  border-radius: var(--radius); padding: 4px 8px; font: 12px inherit;
+	  outline: none; cursor: pointer; width: auto;
+	}
+	.spell-listbar select:focus { border-color: var(--accent); }
+
+	/* Reference figures in the panel: a read-only strip, not a row of inputs. */
+	.spell-statline {
+	  display: flex; flex-wrap: wrap; margin-bottom: 12px;
+	  border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+	}
+	.spell-statline div { flex: 1; min-width: 100px; padding: 7px 10px; border-right: 1px solid var(--border); }
+	.spell-statline div:last-child { border-right: none; }
+	.spell-statline span { display: block; font-size: 9px; letter-spacing: .7px; color: var(--muted); margin-bottom: 2px; }
+	.spell-statline b { font-size: 12px; font-weight: 600; }
