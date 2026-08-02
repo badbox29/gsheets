@@ -1936,7 +1936,69 @@ function makeValuableNode(data={}, onChange){
         '</div>' +
       '</div>' +
     '</div>';
-  
+
+  // Details toggle. This card had NONE -- every valuable rendered fully
+  // expanded, three rows deep, however many you were carrying.
+  const vToggleBtn = el.querySelector('.toggle-details');
+  const vDetails   = el.querySelector('.valuable-details');
+  if (vToggleBtn && vDetails) {
+    vToggleBtn.onclick = () => {
+      const open = vDetails.style.display !== 'none';
+      vDetails.style.display = open ? 'none' : 'block';
+      vToggleBtn.textContent = open ? 'Details' : 'Hide';
+    };
+  }
+
+  // Collapsed-row figures. The hero number is the LINE value -- qty x each --
+  // because four sapphires at 1,000 gp is a 4,000 gp line, and that is the
+  // figure anyone scanning the list is actually after. The unit price sits
+  // muted beside it. Derived live; never stored.
+  const syncValuableLine = () => {
+    const num = sel => parseFloat((el.querySelector(sel) || {}).value);
+    const unit = ((el.querySelector('.value-unit') || {}).value || 'gp').toUpperCase();
+    const each = num('.value-each');
+    const qty  = parseInt((el.querySelector('.qty') || {}).value || 0, 10) || 0;
+    const eachEl = el.querySelector('.val-each');
+    const lineEl = el.querySelector('.val-line');
+    const fmt = n => n.toLocaleString(undefined, { maximumFractionDigits: 2 });
+    if (eachEl) eachEl.textContent = isNaN(each) ? '' : fmt(each) + ' ' + unit + ' ea';
+    if (lineEl) {
+      lineEl.innerHTML = isNaN(each)
+        ? ''
+        : '<b>' + escapeHtml(fmt(each * qty)) + '</b> ' + escapeHtml(unit);
+    }
+    const tagEl = el.querySelector('.tag');
+    const sel   = el.querySelector('.valuable-type');
+    if (tagEl && sel) {
+      tagEl.textContent = sel.value ? sel.options[sel.selectedIndex].text.toUpperCase() : '';
+    }
+  };
+  syncValuableLine();
+  ['.qty', '.value-each'].forEach(s => {
+    const f = el.querySelector(s);
+    if (f) f.addEventListener('input', syncValuableLine);
+  });
+  ['.value-unit', '.valuable-type'].forEach(s => {
+    const f = el.querySelector(s);
+    if (f) f.addEventListener('change', syncValuableLine);
+  });
+
+  // Quantity spinner. Dispatches a real 'input' event rather than assigning
+  // .value silently, so the blanket listener below still fires.
+  const vQty = el.querySelector('.qty');
+  const vStep = (delta) => {
+    const n = parseInt(vQty.value || 0, 10);
+    vQty.value = Math.max(0, (isNaN(n) ? 0 : n) + delta);
+    vQty.dispatchEvent(new Event('input', { bubbles: true }));
+  };
+  const vUp = el.querySelector('.qty-up'), vDown = el.querySelector('.qty-down');
+  if (vUp)   vUp.onclick   = () => vStep(1);
+  if (vDown) vDown.onclick = () => vStep(-1);
+  vQty.addEventListener('input', () => {
+    const clean = String(vQty.value).replace(/[^0-9]/g, '');
+    if (clean !== vQty.value) vQty.value = clean;
+  });
+
   // Remove button triggers onChange
   el.querySelector('.rm').onclick = ()=>{ 
     el.remove(); 
