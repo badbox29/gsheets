@@ -3774,10 +3774,14 @@ function makeMagicItemNode(data={}, onChange){
 }
 
 function makeAmmunitionNode(data={}, onChange){
-  const el = document.createElement('div');
-  el.className = 'item';
-  el.style.flexDirection = 'column';
-  el.style.alignItems = 'stretch';
+  cconst el = document.createElement('div');
+  // 'gear' opts this card into the shared gear-card grammar in style.css --
+  // two-row grid, status rail, chips, spinner. The base 'item' class is left
+  // alone because every other list in the app uses it.
+  el.className = 'item gear';
+  // The old inline flexDirection/alignItems are GONE, not just unused: an
+  // inline style beats the stylesheet, and alignItems:stretch would override
+  // the grid's align-items:center on every row.
   
   // Calculate total weight
   const quantity = parseInt(data.quantity || 0, 10);
@@ -3801,22 +3805,38 @@ function makeAmmunitionNode(data={}, onChange){
   })();
   
   el.innerHTML =
-    '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div style="flex:1;">Ammo Type</div>' +
-      '<div style="width:70px;text-align:center;">Qty</div>' +
-      '<div style="width:148px;"></div>' +
-    '</div>' +
-    '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
-      '<div style="display:flex;align-items:center;gap:4px;flex:1;min-width:0;">' +
-        '<input class="title" placeholder="e.g., Arrows, Bolts" value="'+escapeHtml(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
-        magicBadgeHtml(ammoIsMagical, ammoInitialBadge) +
-      '</div>' +
+    // Three GRID CHILDREN, not a wrapper: the rail spans both rows via
+    // grid-row:1/span 2, which needs row1 and row2 to be real grid rows.
+    // Ammunition has no worn state, so the rail stays neutral -- an honest
+    // blank rather than a colour that means nothing.
+    '<div class="rail"></div>' +
+    '<div class="row1">' +
       // THE ONLY .quantity input on this card. The +/- buttons in the details
-      // panel drive THIS one, so there is never a second copy to drift out of
-      // sync -- collectSheet reads .quantity and must find exactly one.
-      '<input class="quantity" type="number" min="0" value="'+escapeHtml(data.quantity||0)+'" style="width:70px;text-align:center;">' +
-      '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
-      '<button class="rm">Remove</button>' +
+      // panel and the spinner here both drive THIS one, so there is never a
+      // second copy to drift out of sync -- collectSheet reads .quantity and
+      // must find exactly one.
+      '<div class="qtybox">' +
+        '<input class="quantity" type="number" min="0" step="1" inputmode="numeric" value="'+escapeHtml(data.quantity||0)+'">' +
+        '<span class="spin">' +
+          '<button type="button" class="qty-up" aria-label="Add one">&#9650;</button>' +
+          '<button type="button" class="qty-down" aria-label="Remove one">&#9660;</button>' +
+        '</span>' +
+        '<span class="qlab">qty</span>' +
+      '</div>' +
+      '<div class="spacer"></div>' +
+      // A SEPARATE class from .ammo-total-weight in the details panel:
+      // updateAmmoItemWeight uses querySelector, which returns the FIRST match
+      // only, so two elements sharing that class would leave the panel stale.
+      '<div class="stat"><b class="ammo-line-weight">' + totalWeight + '</b> lb total</div>' +
+      '<div class="btns">' +
+        '<button class="toggle-details">Details</button>' +
+        '<button class="rm">Remove</button>' +
+      '</div>' +
+    '</div>' +
+    // Row 2: the name alone, full card width, so it never truncates.
+    '<div class="row2">' +
+      '<input class="title" placeholder="e.g., Arrows, Bolts" value="'+escapeHtml(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
+      magicBadgeHtml(ammoIsMagical, ammoInitialBadge) +
     '</div>' +
     '<div class="ammo-details" style="display:none;">' +
       '<div style="display:flex;gap:8px;margin-bottom:8px;">' +
@@ -3877,6 +3897,32 @@ function makeAmmunitionNode(data={}, onChange){
   
   // Quantity adjustment buttons
   const quantityInput = el.querySelector('.quantity');
+
+  // Collapsed-row spinner. Deliberately reuses the SAME path as the panel's
+  // +/- buttons rather than setting .value directly: encumbrance, the line
+  // total and the unsaved marker all hang off that work, and a silent
+  // assignment fires none of them. Floors at zero -- a stack cannot go negative.
+  const ammoStep = (delta) => {
+    const current = parseInt(quantityInput.value || 0, 10);
+    quantityInput.value = Math.max(0, current + delta);
+    updateAmmoItemWeight(el);
+    onChange && onChange();
+    const r = el.closest('.sheet-container');
+    if (r) {
+      updateTotalAmmoWeight(r);
+      if (typeof renderEncumbrance === 'function')  renderEncumbrance(r);
+      if (typeof renderMovementRate === 'function') renderMovementRate(r);
+    }
+  };
+  const ammoUp = el.querySelector('.qty-up');
+  const ammoDown = el.querySelector('.qty-down');
+  if (ammoUp)   ammoUp.onclick   = () => ammoStep(1);
+  if (ammoDown) ammoDown.onclick = () => ammoStep(-1);
+  // Digits only, and never below zero, however the field is typed into.
+  quantityInput.addEventListener('input', () => {
+    const clean = String(quantityInput.value).replace(/[^0-9]/g, '');
+    if (clean !== quantityInput.value) quantityInput.value = clean;
+  });
   
 el.querySelector('.ammo-minus-10').onclick = ()=>{
     const current = parseInt(quantityInput.value || 0, 10);
@@ -4022,6 +4068,13 @@ function updateAmmoItemWeight(ammoNode) {
   const weightDisplay = ammoNode.querySelector('.ammo-total-weight');
   if (weightDisplay) {
     weightDisplay.textContent = totalWeight + ' lbs';
+  }
+  // The collapsed row carries the same figure in its own class -- see the
+  // comment in makeAmmunitionNode for why it cannot share .ammo-total-weight.
+  // Bare number here; the row supplies the "lb total" caption.
+  const lineWeight = ammoNode.querySelector('.ammo-line-weight');
+  if (lineWeight) {
+    lineWeight.textContent = totalWeight;
   }
 }
 
