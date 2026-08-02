@@ -1991,9 +1991,11 @@ function magicSign(n) { return (n >= 0 ? '+' : '') + n; }
 
 function makeArmorNode(data={}, onChange){
   const el = document.createElement('div');
-  el.className = 'item';
-  el.style.flexDirection = 'column';
-  el.style.alignItems = 'stretch';
+  // See makeAmmunitionNode for what 'gear' opts into. The inline
+  // flexDirection/alignItems are removed rather than left dead: an inline style
+  // beats the stylesheet, and alignItems:stretch would override the grid's
+  // align-items:center on every row.
+  el.className = 'item gear';
 
   // Build the construction dropdown from ARMOR_TYPES / SHIELD_TYPES /
   // WEARABLE_TYPES. THE POINT OF THIS FIELD: it is the anchor that ties a
@@ -2038,35 +2040,33 @@ function makeArmorNode(data={}, onChange){
     : (parseFloat(data.acBonus) || 0) !== 0;
 
   el.innerHTML =
-    // --- Identity row: always visible, mirrors the weapon card ---
-    // The opening tag of this header row was MISSING. The parser discarded the
-    // orphaned '</div>' three lines down, so "Equipped" and "Armor" rendered as
-    // full-width block divs in body colour instead of a muted aligned strip --
-    // which is why the armor list header never lined up with the weapon list.
-    '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div style="width:60px;text-align:center;">Equipped</div>' +
-      '<div style="flex:1;">Armor</div>' +
-      '<div style="width:148px;"></div>' +
-    '</div>' +
-    '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
-      '<input type="checkbox" class="equipped" '+(data.equipped?'checked':'')+' style="width:60px;margin:auto;">' +
-      // Name and badge share ONE flex:1 cell, matching the header's "Armor"
-      // column. The badge sits at the right edge of that column without pushing
-      // Notes out of alignment -- a wide badge squeezes the input instead of
-      // shifting the row. This is what keeps the header honest on the weapon
-      // card, whose badge can read "(+5: +1/+0)".
-      // min-width:0 on both is required, or a flex item refuses to shrink below
-      // its intrinsic width and the badge gets pushed out anyway.
-      '<div style="display:flex;align-items:center;gap:4px;flex:1;min-width:0;">' +
-        // flex:0 0 auto, not flex:1 -- the width is driven by sizeArmorName()
-        // below. The wrapper is still flex:1, so its leftover space simply sits
-        // empty to the right of the badge and Notes stays where it is.
-        '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
-        magicBadgeHtml(armorIsMagical,
-          (parseFloat(data.acBonus) || 0) !== 0 ? '(' + magicSign(parseFloat(data.acBonus)) + ')' : '') +
+    // The header strip this used to open is GONE, not fixed: the column labels
+    // it carried are now per-field labels in the expanded panel, and the chip
+    // labels itself. That is also what retires the missing-opening-tag bug.
+    // The rail will carry LEGALITY -- class restriction, ranger stealth -- once
+    // a resolver exists. Left classless until then rather than given a colour
+    // that would claim an answer nothing has computed.
+    '<div class="rail"></div>' +
+    '<div class="row1">' +
+      '<label class="chip state">' +
+        '<input type="checkbox" class="equipped" '+(data.equipped?'checked':'')+'>' +
+        '<span class="on">Worn</span><span class="off">Stowed</span>' +
+      '</label>' +
+      '<span class="status"></span>' +
+      '<div class="spacer"></div>' +
+      '<div class="stat arm-ac"></div>' +
+      '<div class="stat arm-weight"></div>' +
+      '<div class="btns">' +
+        '<button class="toggle-details">Details</button>' +
+        '<button class="rm">Remove</button>' +
       '</div>' +
-      '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
-      '<button class="rm">Remove</button>' +
+    '</div>' +
+    // Row 2: the name alone at full card width. sizeArmorName() still sizes the
+    // input to its contents so the badge sits against the text.
+    '<div class="row2">' +
+      '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
+      magicBadgeHtml(armorIsMagical,
+        (parseFloat(data.acBonus) || 0) !== 0 ? '(' + magicSign(parseFloat(data.acBonus)) + ')' : '') +
     '</div>' +
 
     '<div class="armor-details" style="display:none;">' +
@@ -2115,6 +2115,38 @@ function makeArmorNode(data={}, onChange){
       armorToggleBtn.textContent = open ? 'Details' : 'Hide';
     };
   }
+
+  // Collapsed-row figures. Read LIVE from the detail inputs -- derived values
+  // are never stored separately, and a stored copy is a copy that drifts.
+  // Base AC shows an em dash when the field is empty rather than a blank,
+  // because SHIELD_TYPES deliberately carry no `ac`: applyTypeDefaults clears
+  // the field when a shield is chosen, since a shield's bonus is not a base AC.
+  // A dash says "not applicable here"; a blank says "you forgot to fill it in".
+  const syncArmorLine = () => {
+    const val = sel => ((el.querySelector(sel) || {}).value || '').trim();
+    const acEl = el.querySelector('.arm-ac');
+    const wtEl = el.querySelector('.arm-weight');
+    if (acEl) {
+      const ac = val('.base-ac');
+      acEl.innerHTML = ac === ''
+        ? 'AC <span class="none">&mdash;</span>'
+        : 'AC <b>' + escapeHtml(ac) + '</b>';
+    }
+    if (wtEl) {
+      const w = val('.weight');
+      wtEl.textContent = w === '' ? '' : w + ' lb';
+    }
+  };
+  syncArmorLine();
+  ['.base-ac', '.weight'].forEach(sel => {
+    const f = el.querySelector(sel);
+    if (f) f.addEventListener('input', syncArmorLine);
+  });
+  // Picking a type PREFILLS both fields, and that happens on 'change' rather
+  // than 'input', so the row would otherwise show the old numbers until the
+  // next keystroke.
+  const armorTypeSelEl = el.querySelector('.armor-type');
+  if (armorTypeSelEl) armorTypeSelEl.addEventListener('change', syncArmorLine);
 
   // Enchanted toggle. HIDES, NEVER CLEARS -- unticking must not destroy a bonus
   // the player recorded. What makes an unticked item mundane is the calculation
