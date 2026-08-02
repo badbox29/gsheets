@@ -1917,6 +1917,9 @@ function makeItemNode(data={}, onChange){
   // beats the stylesheet, and alignItems:stretch would override the grid's
   // align-items:center on every row.
   el.className = 'item gear';
+  // Held on the node rather than in a hidden input: it is never edited, only
+  // carried, and a hidden input would show up in the blanket input listener.
+  if (data.category) el.dataset.category = data.category;
   el.innerHTML =
     // No state axis on plain equipment, so quantity takes the control slot and
     // the rail stays neutral. The hero figure is LINE WEIGHT -- qty x each --
@@ -1933,6 +1936,9 @@ function makeItemNode(data={}, onChange){
         '</span>' +
         '<span class="qlab">qty</span>' +
       '</div>' +
+      // Conditional, so it comes AFTER the core fields -- a badge only some
+      // rows carry must never shift the fields every row carries.
+      (data.category ? '<span class="tag">' + escapeHtml(String(data.category).toUpperCase()) + '</span>' : '') +
       '<div class="spacer"></div>' +
       '<div class="stat each eq-each"></div>' +
       '<div class="stat eq-line"></div>' +
@@ -4767,6 +4773,10 @@ function collectSheet(root){
       name: n.querySelector('.title').value, 
       qty: n.querySelector('.qty').value,
       weight: (n.querySelector('.weight') && n.querySelector('.weight').value) || '',
+      // Stored, not derived. The category comes from core_equipment.json when
+      // the browser adds the item and is read back on load; nothing infers it
+      // from the name, because inference is what the anchor rule exists to stop.
+      category: n.dataset.category || '',
       notes: (n.querySelector('.notes') && n.querySelector('.notes').value) || ''
     }));
   const valuables = qsa(root,'.valuables-list .item')
