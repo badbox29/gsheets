@@ -458,10 +458,18 @@ function getTwoWeaponState(root) {
   };
 
   const equipped = qsa(root, '.weapons-list .item').filter(isEquipped);
-  const offRow = equipped.filter(el => {
+  // [0] takes the FIRST equipped weapon with the box ticked. The UI lets you
+  // tick as many as you like and every one after the first is silently ignored
+  // -- the same ambiguity ambiguousMain already warns about, one step earlier.
+  // PHB Ch.9 assumes exactly one main and one off-hand: the -2/-4 pair and the
+  // single extra attack are both written for that case. Advisory, never
+  // blocking -- the tool warns but does not prevent.
+  const offRows = equipped.filter(el => {
     const c = el.querySelector('.weapon-offhand');
     return !!(c && c.checked);
-  })[0] || null;
+  });
+  const offRow = offRows[0] || null;
+  const ambiguousOff = offRows.length > 1;
 
   if (!offRow) return { active: false };
 
@@ -499,6 +507,7 @@ function getTwoWeaponState(root) {
     mainRows: mainRows,
     noMainHand: mainRows.length === 0,
     ambiguousMain: mainRows.length > 1,
+    ambiguousOff: ambiguousOff,
     legality: legality,
     shieldNames: shieldNames
   };
@@ -859,6 +868,18 @@ function renderCombatQuickReference(root) {
         warn.push('More than one main-hand melee weapon is equipped. Only one can be ' +
                   'wielded alongside the off-hand weapon; any legality check above used ' +
                   'the first of them.');
+      }
+      if (twoWeapon.ambiguousOff) {
+        // The mirror of ambiguousMain, and previously silent: offRow takes the
+        // first ticked weapon and every other one is ignored with no indication
+        // which won. PHB Ch.9 is written for exactly one off-hand weapon -- the
+        // -4 lands on it, the -2 on the main hand, and ONE extra attack results
+        // regardless. Ticking three does not grant three.
+        warn.push('More than one weapon is marked as off-hand. PHB Ch.9 assumes a ' +
+                  'single off-hand weapon: the penalties and the one extra attack ' +
+                  'above were figured from the first of them, and the others are ' +
+                  'being ignored.');
+      }
       }
       if (warn.length) {
         html += '<div style="margin-bottom:6px;padding:4px 6px;' +
@@ -7854,11 +7875,16 @@ function renderSpecialistSpellNotes(root) {
   const component = (typeof getWizardComponent === 'function') ? getWizardComponent(root) : null;
   const school = (component && typeof getSpecialistSchool === 'function') ? getSpecialistSchool(component.clazz) : null;
 
-  // Not a specialist -> clear/hide both notes and hide every free-spell checkbox.
+  // Not a specialist -> clear/hide both notes, hide every free-spell checkbox
+  // and every FREE SPELL tag, and reset every rail to neutral. A generalist
+  // mage and a priest both land here: getSpecialistSchool returns nothing for
+  // them, so no separate branch is needed.
   if (!school) {
     if (slotNote) { slotNote.innerHTML = ''; slotNote.style.display = 'none'; }
     if (freeNote) { freeNote.innerHTML = ''; freeNote.style.display = 'none'; }
     root.querySelectorAll('.spellbook-list .item .free-spell-row').forEach(r => { r.style.display = 'none'; });
+    root.querySelectorAll('.spellbook-list .item .freetag').forEach(t => { t.style.display = 'none'; });
+    root.querySelectorAll('.spellbook-list .item .rail').forEach(r => { r.className = 'rail neutral'; });
     return;
   }
 
@@ -7886,13 +7912,29 @@ function renderSpecialistSpellNotes(root) {
     if (Array.isArray(row)) earned = row.filter(n => n > 0).length;
   }
 
-  // Show a "Free [school] spell" checkbox on OWN-SCHOOL spellbook entries only.
+  // Paint each spellbook row: the rail carries school standing, the FREE SPELL
+  // tag reports a claimed free spell, and the claim checkbox is offered only on
+  // own-school entries.
+  //
+  // OPPOSITION is a real prohibition -- a specialist may browse those spells but
+  // never learn them (PHB Table 22) -- so it takes --error, the same colour that
+  // means "not allowed to this class" on the armor rail. isOppositionSpell
+  // already handles the diviner wrinkle, where Greater Divination bans only
+  // Divination of 5th level and above.
   root.querySelectorAll('.spellbook-list .item').forEach(item => {
+    const sd = item._spellData || {};
+    const probe = { school: sd.schoolSphere || '', level: sd.level };
+    const own = (typeof isSpecialtySpell === 'function') && isSpecialtySpell(probe, component.clazz);
+    const opp = (typeof isOppositionSpell === 'function') && isOppositionSpell(probe, component.clazz);
+
+    const railEl = item.querySelector('.rail');
+    if (railEl) railEl.className = 'rail ' + (own ? 'own' : opp ? 'opposition' : 'neutral');
+
+    const tagEl = item.querySelector('.freetag');
+    if (tagEl) tagEl.style.display = (own && sd.freeSpell) ? '' : 'none';
+
     const rowEl = item.querySelector('.free-spell-row');
     if (!rowEl) return;
-    const sd = item._spellData || {};
-    const own = (typeof isSpecialtySpell === 'function') &&
-      isSpecialtySpell({ school: sd.schoolSphere || '', level: sd.level }, component.clazz);
     if (own) {
       const labelEl = rowEl.querySelector('.free-spell-label');
       if (labelEl) labelEl.textContent = 'Free ' + school + ' spell';
