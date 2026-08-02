@@ -3367,8 +3367,12 @@ return problems;
 // reports, it does not prevent.
 function getArmorLegality(item, root) {
   if (typeof ARMOR_TYPES === 'undefined') return 'allowed';
-  const cb = item.querySelector('.equipped');
-  if (!cb || !cb.checked) return 'allowed';   // stowed armor breaks no rule
+  // Judged whether worn or not. A stowed piece breaks no rule right now, but
+  // the rail is answering "what would this do for me", and that is a question
+  // worth answering BEFORE it goes on -- a wizard should see the plate is
+  // useless to him while it is still in the cart. The chip says whether it is
+  // in use; the rail says how well it suits the character. Two channels, two
+  // questions, which is why neither has to borrow the other's answer.
 
   const slotEl = item.querySelector('.armor-slot') || item.querySelector('.armor-type');
   const slot   = (slotEl || {}).value || 'Armor';
