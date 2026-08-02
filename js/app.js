@@ -2177,6 +2177,8 @@ function makeArmorNode(data={}, onChange){
   // acBonus is therefore read as enchanted.
   // Once the flag exists it always wins, so a player who unticks a +1 item and
   // saves gets that respected on the next load.
+  // See makeAmmunitionNode: a missing flag reads as IDENTIFIED.
+  const armorIdentified = (data.identified !== undefined) ? !!data.identified : true;
   const armorIsMagical = (data.isMagical !== undefined)
     ? !!data.isMagical
     : (parseFloat(data.acBonus) || 0) !== 0;
@@ -2226,13 +2228,30 @@ function makeArmorNode(data={}, onChange){
       '</div>' +
       // The old "Magic" column is now a labelled AC Bonus inside the enchanted
       // group, so the number and the fact of being magical are separate things.
-      '<div class="magic-group">' +
-        '<label class="magic-toggle">' +
-          '<input type="checkbox" class="is-magical"' + (armorIsMagical ? ' checked' : '') + '>' +
-          'Enchanted?' +
-        '</label>' +
-        '<div class="magic-fields"' + (armorIsMagical ? '' : ' style="display:none;"') + '>' +
-          '<label>AC Bonus<input class="ac-bonus" type="number" value="'+escapeHtml(data.acBonus||'')+'"></label>' +
+      '<div class="ench-panel">' +
+        '<div class="ench-head">' +
+          '<label>' +
+            '<input type="checkbox" class="is-magical"' + (armorIsMagical ? ' checked' : '') + '>' +
+            'Enchanted?' +
+          '</label>' +
+          '<label class="ench-ident">' +
+            '<input type="checkbox" class="is-identified"' + (armorIdentified ? ' checked' : '') + '>' +
+            'Identified?' +
+          '</label>' +
+          '<span class="ench-veil">Effects unknown until identified</span>' +
+        '</div>' +
+        '<div class="ench-body">' +
+          '<div class="ench-fields">' +
+            '<div class="ench-name">' +
+              '<label style="display:block;margin-bottom:3px;">True name</label>' +
+              '<input class="true-name" value="'+escapeHtml(data.trueName||'')+'">' +
+            '</div>' +
+            '<label>AC Bonus<input class="ac-bonus" type="number" value="'+escapeHtml(data.acBonus||'')+'"></label>' +
+          '</div>' +
+          '<div class="ench-effects">' +
+            '<label style="display:block;margin-bottom:3px;">Effects</label>' +
+            '<textarea class="ench-effects-text">'+escapeHtml(data.effects||'')+'</textarea>' +
+          '</div>' +
         '</div>' +
       '</div>' +
       '<div class="armor-type-note" style="display:none;font-size:11px;line-height:1.4;padding:6px 8px;background:var(--glass);border-radius:4px;"></div>' +
@@ -3332,6 +3351,8 @@ function makeWeaponNode(data={}, onChange){
   // three counts as enchanted, or every magic weapon on every saved character
   // would load unticked with its numbers hidden. Once the flag exists it wins,
   // so unticking a +1 weapon and saving is respected on the next load.
+  // See makeAmmunitionNode: a missing flag reads as IDENTIFIED.
+  const weaponIdentified = (data.identified !== undefined) ? !!data.identified : true;
   const weaponIsMagical = (data.isMagical !== undefined)
     ? !!data.isMagical
     : ((parseFloat(data.magicBonus) || 0) !== 0 ||
@@ -3441,34 +3462,51 @@ function makeWeaponNode(data={}, onChange){
     // Magic is the ENCHANTMENT LEVEL -- what the weapon can strike, and its
     // speed-factor reduction. The two adjustments are its EFFECTS, which can
     // diverge from it. Keeping them adjacent is what makes that legible.
-    '<div class="magic-group">' +
-      '<label class="magic-toggle">' +
-        '<input type="checkbox" class="is-magical"' + (weaponIsMagical ? ' checked' : '') + '>' +
-        'Enchanted?' +
-      '</label>' +
-      '<div class="magic-fields"' + (weaponIsMagical ? '' : ' style="display:none;"') + '>' +
-        '<label title="' +
-          'Enchantment level -- 5 for a +5 weapon.&#10;' +
-          'This is what lets the weapon harm a creature injured only by magical&#10;' +
-          '  weapons, and it lowers the speed factor by 1 per plus.&#10;' +
-          'Hit and damage fall back to this when left blank.">Magic' +
-          '<input class="magic-bonus" type="number" placeholder="0" value="'+escapeHtml(data.magicBonus||'')+'">' +
+    '<div class="ench-panel">' +
+      '<div class="ench-head">' +
+        '<label>' +
+          '<input type="checkbox" class="is-magical"' + (weaponIsMagical ? ' checked' : '') + '>' +
+          'Enchanted?' +
         '</label>' +
-        '<label title="' +
-          'To-hit bonus granted by this weapon.&#10;' +
-          'Leave blank to use the Magic value -- correct for an ordinary +N weapon.&#10;' +
-          'Set it when the enchantment is not uniform: a +5 weapon that only grants&#10;' +
-          '  +1 to hit takes Magic 5 and Hit Adj 1.&#10;' +
-          'Strength and any non-proficiency penalty are added on top of this.">Hit Adj' +
-          '<input class="weapon-hit-adj" type="number" value="'+escapeHtml(data.hitAdj!==undefined&&data.hitAdj!==null?data.hitAdj:'')+'">' +
+        '<label class="ench-ident">' +
+          '<input type="checkbox" class="is-identified"' + (weaponIdentified ? ' checked' : '') + '>' +
+          'Identified?' +
         '</label>' +
-        '<label title="' +
-          'Damage bonus granted by this weapon.&#10;' +
-          'Leave blank to use the Magic value.&#10;' +
-          'Set to 0 for a weapon that helps you hit but not hurt.&#10;' +
-          'Non-proficiency never reduces damage (PHB Table 34).">Dmg Adj' +
-          '<input class="weapon-dmg-adj" type="number" value="'+escapeHtml(data.dmgAdj!==undefined&&data.dmgAdj!==null?data.dmgAdj:'')+'">' +
-        '</label>' +
+        '<span class="ench-veil">Effects unknown until identified</span>' +
+      '</div>' +
+      '<div class="ench-body">' +
+        '<div class="ench-fields">' +
+          '<div class="ench-name">' +
+            '<label style="display:block;margin-bottom:3px;">True name</label>' +
+            '<input class="true-name" value="'+escapeHtml(data.trueName||'')+'">' +
+          '</div>' +
+          '<label title="' +
+            'Enchantment level -- 5 for a +5 weapon.&#10;' +
+            'This is what lets the weapon harm a creature injured only by magical&#10;' +
+            '  weapons, and it lowers the speed factor by 1 per plus.&#10;' +
+            'Hit and damage fall back to this when left blank.">Magic' +
+            '<input class="magic-bonus" type="number" placeholder="0" value="'+escapeHtml(data.magicBonus||'')+'">' +
+          '</label>' +
+          '<label title="' +
+            'To-hit bonus granted by this weapon.&#10;' +
+            'Leave blank to use the Magic value -- correct for an ordinary +N weapon.&#10;' +
+            'Set it when the enchantment is not uniform: a +5 weapon that only grants&#10;' +
+            '  +1 to hit takes Magic 5 and Hit Adj 1.&#10;' +
+            'Strength and any non-proficiency penalty are added on top of this.">Hit Adj' +
+            '<input class="weapon-hit-adj" type="number" value="'+escapeHtml(data.hitAdj!==undefined&&data.hitAdj!==null?data.hitAdj:'')+'">' +
+          '</label>' +
+          '<label title="' +
+            'Damage bonus granted by this weapon.&#10;' +
+            'Leave blank to use the Magic value.&#10;' +
+            'Set to 0 for a weapon that helps you hit but not hurt.&#10;' +
+            'Non-proficiency never reduces damage (PHB Table 34).">Dmg Adj' +
+            '<input class="weapon-dmg-adj" type="number" value="'+escapeHtml(data.dmgAdj!==undefined&&data.dmgAdj!==null?data.dmgAdj:'')+'">' +
+          '</label>' +
+        '</div>' +
+        '<div class="ench-effects">' +
+          '<label style="display:block;margin-bottom:3px;">Effects</label>' +
+          '<textarea class="ench-effects-text">'+escapeHtml(data.effects||'')+'</textarea>' +
+        '</div>' +
       '</div>' +
     '</div>' +
     '<div class="weapon-missile-head" style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
@@ -4087,6 +4125,11 @@ function makeAmmunitionNode(data={}, onChange){
   // magic fields, so there is no prior value to infer an enchantment from -- an
   // existing record simply loads unticked, which is correct rather than lossy.
   const ammoIsMagical = !!data.isMagical;
+  // A missing flag reads as IDENTIFIED. Anything magical already on a character
+  // has been identified by definition -- it was recorded with its numbers -- and
+  // the alternative would turn every existing enchanted item into a mystery and
+  // blank the badge numbers on sheets that have always shown them.
+  const ammoIdentified = (data.identified !== undefined) ? !!data.identified : true;
 
   // Badge text at build time; the live version is ammoBadgeText() in the wiring.
   const ammoInitialBadge = (() => {
@@ -4149,33 +4192,50 @@ function makeAmmunitionNode(data={}, onChange){
           '<input class="weight-per-unit" type="number" step="0.01" min="0" value="'+escapeHtml(data.weightPerUnit||0.1)+'" style="width:100%;">' +
         '</div>' +
       '</div>' +
-    '<div class="magic-group">' +
-      '<label class="magic-toggle">' +
-        '<input type="checkbox" class="is-magical"' + (ammoIsMagical ? ' checked' : '') + '>' +
-        'Enchanted?' +
-      '</label>' +
-      '<div class="magic-fields"' + (ammoIsMagical ? '' : ' style="display:none;"') + '>' +
-        '<label title="' +
-          'Enchantment level of the ammunition itself -- 1 for a +1 arrow.&#10;' +
-          'This applies to the WHOLE stack; a quiver of twenty +1 arrows is one&#10;' +
-          '  record, and the quantity does not change the bonus.&#10;' +
-          'The PHB does not say whether an enchanted arrow and an enchanted bow&#10;' +
-          '  stack. That is a table ruling, so the sheet reports this bonus and&#10;' +
-          '  leaves the combination to you and your DM.">Magic' +
-          '<input class="ammo-magic-bonus" type="number" placeholder="0" value="'+escapeHtml(data.magicBonus||'')+'">' +
+    '<div class="ench-panel">' +
+      '<div class="ench-head">' +
+        '<label>' +
+          '<input type="checkbox" class="is-magical"' + (ammoIsMagical ? ' checked' : '') + '>' +
+          'Enchanted?' +
         '</label>' +
-        '<label title="' +
-          'To-hit bonus granted by this ammunition.&#10;' +
-          'Leave blank to use the Magic value -- correct for an ordinary +N arrow.&#10;' +
-          'Set it when the enchantment is not uniform.">Hit Adj' +
-          '<input class="ammo-hit-adj" type="number" value="'+escapeHtml(data.hitAdj!==undefined&&data.hitAdj!==null?data.hitAdj:'')+'">' +
+        '<label class="ench-ident">' +
+          '<input type="checkbox" class="is-identified"' + (ammoIdentified ? ' checked' : '') + '>' +
+          'Identified?' +
         '</label>' +
-        '<label title="' +
-          'Damage bonus granted by this ammunition.&#10;' +
-          'Leave blank to use the Magic value.&#10;' +
-          'Set to 0 for ammunition that helps you hit but not hurt.">Dmg Adj' +
-          '<input class="ammo-dmg-adj" type="number" value="'+escapeHtml(data.dmgAdj!==undefined&&data.dmgAdj!==null?data.dmgAdj:'')+'">' +
-        '</label>' +
+        '<span class="ench-veil">Effects unknown until identified</span>' +
+      '</div>' +
+      '<div class="ench-body">' +
+        '<div class="ench-fields">' +
+          '<div class="ench-name">' +
+            '<label style="display:block;margin-bottom:3px;">True name</label>' +
+            '<input class="true-name" value="'+escapeHtml(data.trueName||'')+'">' +
+          '</div>' +
+          '<label title="' +
+            'Enchantment level of the ammunition itself -- 1 for a +1 arrow.&#10;' +
+            'This applies to the WHOLE stack; a quiver of twenty +1 arrows is one&#10;' +
+            '  record, and the quantity does not change the bonus.&#10;' +
+            'The PHB does not say whether an enchanted arrow and an enchanted bow&#10;' +
+            '  stack. That is a table ruling, so the sheet reports this bonus and&#10;' +
+            '  leaves the combination to you and your DM.">Magic' +
+            '<input class="ammo-magic-bonus" type="number" placeholder="0" value="'+escapeHtml(data.magicBonus||'')+'">' +
+          '</label>' +
+          '<label title="' +
+            'To-hit bonus granted by this ammunition.&#10;' +
+            'Leave blank to use the Magic value -- correct for an ordinary +N arrow.&#10;' +
+            'Set it when the enchantment is not uniform.">Hit Adj' +
+            '<input class="ammo-hit-adj" type="number" value="'+escapeHtml(data.hitAdj!==undefined&&data.hitAdj!==null?data.hitAdj:'')+'">' +
+          '</label>' +
+          '<label title="' +
+            'Damage bonus granted by this ammunition.&#10;' +
+            'Leave blank to use the Magic value.&#10;' +
+            'Set to 0 for ammunition that helps you hit but not hurt.">Dmg Adj' +
+            '<input class="ammo-dmg-adj" type="number" value="'+escapeHtml(data.dmgAdj!==undefined&&data.dmgAdj!==null?data.dmgAdj:'')+'">' +
+          '</label>' +
+        '</div>' +
+        '<div class="ench-effects">' +
+          '<label style="display:block;margin-bottom:3px;">Effects</label>' +
+          '<textarea class="ench-effects-text">'+escapeHtml(data.effects||'')+'</textarea>' +
+        '</div>' +
       '</div>' +
     '</div>' +
     '<div style="font-size:11px;color:var(--muted);margin-top:6px;">' +
@@ -4641,6 +4701,9 @@ function collectSheet(root){
       // off instead of "acBonus is non-zero", which cannot see a magical item
       // that grants no AC -- elven chain being the live example.
       isMagical: !!(n.querySelector('.is-magical') || {}).checked,
+      identified: !!(n.querySelector('.is-identified') || {}).checked,
+      trueName: (n.querySelector('.true-name') || {}).value || '',
+      effects: (n.querySelector('.ench-effects-text') || {}).value || '',
       equipped: n.querySelector('.equipped').checked,
       weight: (n.querySelector('.weight') && n.querySelector('.weight').value) || '',
       notes: n.querySelector('.notes').value
@@ -4653,6 +4716,9 @@ function collectSheet(root){
       damageL: (n.querySelector('.damage-l') && n.querySelector('.damage-l').value) || '',
       magicBonus: (n.querySelector('.magic-bonus') && n.querySelector('.magic-bonus').value) || '',
       isMagical: !!(n.querySelector('.is-magical') || {}).checked,
+      identified: !!(n.querySelector('.is-identified') || {}).checked,
+      trueName: (n.querySelector('.true-name') || {}).value || '',
+      effects: (n.querySelector('.ench-effects-text') || {}).value || '',
       weight: (n.querySelector('.weight') && n.querySelector('.weight').value) || '',
       speed: (n.querySelector('.speed') && n.querySelector('.speed').value) || '',
       damageType: (n.querySelector('.damage-type') && n.querySelector('.damage-type').value) || '',
@@ -4705,6 +4771,9 @@ function collectSheet(root){
       quantity: n.querySelector('.quantity').value,
       weightPerUnit: n.querySelector('.weight-per-unit').value,
       isMagical:  !!(n.querySelector('.is-magical') || {}).checked,
+      identified: !!(n.querySelector('.is-identified') || {}).checked,
+      trueName:   (n.querySelector('.true-name') || {}).value || '',
+      effects:    (n.querySelector('.ench-effects-text') || {}).value || '',
       magicBonus: (n.querySelector('.ammo-magic-bonus') || {}).value || '',
       hitAdj:     (n.querySelector('.ammo-hit-adj')     || {}).value || '',
       dmgAdj:     (n.querySelector('.ammo-dmg-adj')     || {}).value || ''
