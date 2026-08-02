@@ -4008,41 +4008,49 @@ function makeMagicItemNode(data={}, onChange){
     '<div class="row2">' +
       '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1;min-width:0;">' +
     '</div>' +
-    // Everything below is collapsed by default. Type and Weight move in here:
-    // they are set once when the item is recorded and rarely revisited.
+    // Everything below is collapsed by default. Type and Weight sit OUTSIDE the
+    // enchantment panel because both are known on pickup: you can see it is a
+    // ring and you can weigh it. Only what an identification reveals is gated.
     '<div class="magic-item-details" style="display:none;">' +
       '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
         '<div style="width:120px;">Type</div>' +
         '<div style="width:80px;text-align:center;">Weight (ea)</div>' +
       '</div>' +
-      '<div style="display:flex;align-items:stretch;gap:8px;">' +
+      '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:10px;">' +
         '<select class="magic-item-type" style="width:120px;">'+miTypeOptions+'</select>' +
         '<input class="weight" type="number" step="0.1" placeholder="" value="'+escapeHtml(data.weight||'')+'" style="width:80px;text-align:center;">' +
       '</div>' +
-    '<div style="display:flex;gap:8px;margin-top:8px;align-items:flex-end;">' +
-      '<div class="magic-item-charges-group" style="display:none;gap:6px;">' +
-        '<div style="display:flex;flex-direction:column;width:70px;">' +
-          '<label style="font-size:11px;color:var(--muted);margin-bottom:2px;">Charges</label>' +
-          '<input class="charges" type="number" value="'+escapeHtml(data.charges||'')+'" style="width:100%;text-align:center;">' +
+      // 'always' variant: a magic item is magical by definition, so this panel
+      // has NO Enchanted toggle and gates on Identified alone. Until now the
+      // Identified box rendered but gated nothing -- the card claimed a state it
+      // did not enforce.
+      '<div class="ench-panel always">' +
+        '<div class="ench-head">' +
+          '<label class="ench-ident">' +
+            '<input type="checkbox" class="is-identified"'+(miIdentified?' checked':'')+'>' +
+            'Identified?' +
+          '</label>' +
+          '<span class="ench-veil">Effects unknown until identified</span>' +
         '</div>' +
-        '<div style="display:flex;flex-direction:column;width:70px;">' +
-          '<label style="font-size:11px;color:var(--muted);margin-bottom:2px;">Max</label>' +
-          '<input class="charges-max" type="number" value="'+escapeHtml(data.chargesMax||'')+'" style="width:100%;text-align:center;">' +
+        '<div class="ench-body">' +
+          '<div class="ench-fields">' +
+            '<div class="ench-name">' +
+              '<label style="display:block;margin-bottom:3px;">True name</label>' +
+              '<input class="true-name" value="'+escapeHtml(data.trueName||'')+'">' +
+            '</div>' +
+            '<div class="magic-item-charges-group" style="display:none;gap:11px;">' +
+              '<label>Charges<input class="charges" type="number" value="'+escapeHtml(data.charges||'')+'"></label>' +
+              '<label>Max<input class="charges-max" type="number" value="'+escapeHtml(data.chargesMax||'')+'"></label>' +
+            '</div>' +
+            '<label>Command word<input class="command-word" value="'+escapeHtml(data.commandWord||'')+'" style="width:150px;text-align:left;"></label>' +
+          '</div>' +
+          '<div class="ench-effects">' +
+            '<label style="display:block;margin-bottom:3px;">Description / Powers</label>' +
+            '<textarea class="notes" placeholder="">'+escapeHtml(data.notes||'')+'</textarea>' +
+          '</div>' +
         '</div>' +
       '</div>' +
-      '<div style="display:flex;flex-direction:column;flex:1;">' +
-        '<label style="font-size:11px;color:var(--muted);margin-bottom:2px;">Command Word</label>' +
-        '<input class="command-word" value="'+escapeHtml(data.commandWord||'')+'" style="width:100%;">' +
-      '</div>' +
-      '<label style="font-size:12px;display:flex;align-items:center;gap:4px;white-space:nowrap;padding-bottom:6px;">' +
-        '<input type="checkbox" class="is-identified"'+(miIdentified?' checked':'')+'>Identified' +
-      '</label>' +
-    '</div>' +
-    '<div style="margin-top:6px;">' +
-      '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Description / Powers</label>' +
-      '<textarea class="notes" placeholder="" style="width:100%;min-height:60px;resize:vertical;">'+escapeHtml(data.notes||'')+'</textarea>' +
-    '</div>' +
-    // Closes .magic-item-details, opened in the identity-row block above.
+    // Closes .magic-item-details, opened above.
     '</div>';
   // Charges show only for the types Chapter 10 states are expendable -- wands,
   // staves and rods. Read from MAGIC_ITEM_TYPES so that registry stays the one
@@ -4814,6 +4822,7 @@ function collectSheet(root){
       chargesMax:  (n.querySelector('.charges-max')     || {}).value   || '',
       commandWord: (n.querySelector('.command-word')    || {}).value   || '',
       identified:  !!(n.querySelector('.is-identified') || {}).checked,
+      trueName:    (n.querySelector('.true-name')       || {}).value   || '',
       notes: (n.querySelector('.notes') && n.querySelector('.notes').value) || ''
     }));
 	
