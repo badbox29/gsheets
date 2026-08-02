@@ -2112,14 +2112,19 @@ function makeValuableNode(data={}, onChange){
 //                              is exactly that case: magical, AC 5, no plus.
 //   mundane                 -> an EMPTY slot, still emitted, so every row in a
 //                              list keeps the same geometry
+// AN UNIDENTIFIED ITEM SHOWS THE DOT, NEVER THE NUMBER. The bonus is recorded
+// on the card but the character does not know it yet, and the collapsed row is
+// the one surface that would otherwise announce it without being opened.
+// Callers pass '' for text when the item is enchanted but not identified.
 function magicBadgeHtml(isMagical, text) {
   if (!isMagical) return '<span class="magic-badge"></span>';
   return '<span class="magic-badge" title="Enchanted">' +
          (text ? text : '<span class="magic-dot"></span>') + '</span>';
 }
 
-// Refresh a badge in place. Called from the Enchanted tick AND from every bonus
-// field, so the collapsed view can never lag behind the expanded one.
+// Refresh a badge in place. Called from the Enchanted tick, the Identified tick
+// AND every bonus field, so the collapsed view can never lag behind the
+// expanded one.
 function updateMagicBadge(el, isMagical, text) {
   const b = el.querySelector('.magic-badge');
   if (!b) return;
@@ -2313,20 +2318,23 @@ function makeArmorNode(data={}, onChange){
   // the player recorded. What makes an unticked item mundane is the calculation
   // side ignoring the value, not the value being gone.
   const armorMagicChk    = el.querySelector('.is-magical');
-  const armorMagicFields = el.querySelector('.magic-fields');
-
+  
   // The badge tracks BOTH the tick and the bonus value, so it is refreshed from
   // one place that every relevant control calls.
   const armorBadgeText = () => {
     const n = parseFloat((el.querySelector('.ac-bonus') || {}).value);
     return (!isNaN(n) && n !== 0) ? '(' + magicSign(n) + ')' : '';
   };
+  // See makeAmmunitionNode: the CSS gates the panel body, not this function.
+  const armorIdentChk = el.querySelector('.is-identified');
   const refreshArmorMagic = () => {
     const on = !!(armorMagicChk && armorMagicChk.checked);
-    // 'inline-flex' so the revealed fields stay on the same line as the label.
-    if (armorMagicFields) armorMagicFields.style.display = on ? 'inline-flex' : 'none';
-    updateMagicBadge(el, on, armorBadgeText());
+    const known = !armorIdentChk || armorIdentChk.checked;
+    updateMagicBadge(el, on, known ? armorBadgeText() : '');
   };
+  if (armorIdentChk) armorIdentChk.addEventListener('change', () => {
+    refreshArmorMagic(); onChange && onChange();
+  });
 
   if (armorMagicChk) {
     armorMagicChk.addEventListener('change', () => {
@@ -3648,8 +3656,7 @@ function makeWeaponNode(data={}, onChange){
   // three recorded values. What makes an unticked weapon mundane is the
   // calculation side ignoring them, not the values being gone.
   const wpnMagicChk    = el.querySelector('.is-magical');
-  const wpnMagicFields = el.querySelector('.magic-fields');
-
+  
   // Live badge text. Mirrors weaponInitialBadge above -- keep the two in step.
   const weaponBadgeText = () => {
     const num = sel => {
@@ -3664,12 +3671,17 @@ function makeWeaponNode(data={}, onChange){
     return '(' + magicSign(m) + ': ' + magicSign(eh) + '/' + magicSign(ed) + ')';
   };
 
+  // See makeAmmunitionNode: the CSS gates the panel body, not this function.
+  const wpnIdentChk = el.querySelector('.is-identified');
   const refreshWeaponMagic = () => {
     const on = !!(wpnMagicChk && wpnMagicChk.checked);
-    if (wpnMagicFields) wpnMagicFields.style.display = on ? 'inline-flex' : 'none';
-    updateMagicBadge(el, on, weaponBadgeText());
+    const known = !wpnIdentChk || wpnIdentChk.checked;
+    updateMagicBadge(el, on, known ? weaponBadgeText() : '');
     sizeWeaponName();
   };
+  if (wpnIdentChk) wpnIdentChk.addEventListener('change', () => {
+    refreshWeaponMagic(); onChange && onChange();
+  });
 
   if (wpnMagicChk) {
     wpnMagicChk.addEventListener('change', () => {
@@ -4372,8 +4384,7 @@ el.querySelector('.ammo-minus-10').onclick = ()=>{
 
   // Enchanted toggle. HIDES, NEVER CLEARS.
   const ammoMagicChk    = el.querySelector('.is-magical');
-  const ammoMagicFields = el.querySelector('.magic-fields');
-
+  
   const ammoBadgeText = () => {
     const num = sel => {
       const v = parseFloat((el.querySelector(sel) || {}).value);
@@ -4387,12 +4398,19 @@ el.querySelector('.ammo-minus-10').onclick = ()=>{
     return '(' + magicSign(m) + ': ' + magicSign(eh) + '/' + magicSign(ed) + ')';
   };
 
+  // The .magic-fields show/hide is GONE: the CSS gates the panel body on the
+  // two checkboxes now, so doing it here as well would be two mechanisms
+  // deciding one thing. The badge still has to be refreshed in JS.
+  const ammoIdentChk = el.querySelector('.is-identified');
   const refreshAmmoMagic = () => {
     const on = !!(ammoMagicChk && ammoMagicChk.checked);
-    if (ammoMagicFields) ammoMagicFields.style.display = on ? 'inline-flex' : 'none';
-    updateMagicBadge(el, on, ammoBadgeText());
+    const known = !ammoIdentChk || ammoIdentChk.checked;
+    updateMagicBadge(el, on, known ? ammoBadgeText() : '');
     sizeAmmoName();
   };
+  if (ammoIdentChk) ammoIdentChk.addEventListener('change', () => {
+    refreshAmmoMagic(); onChange && onChange();
+  });
 
   if (ammoMagicChk) {
     ammoMagicChk.addEventListener('change', () => {
