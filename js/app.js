@@ -8655,6 +8655,12 @@ function filterMemorizedSpells(root, selectedLevel) {
       item.style.display = 'none';
     }
   });
+
+  // Headers count only VISIBLE rows, so they have to be recomputed after the
+  // filter has run -- otherwise a filtered list reports spells that are not on
+  // screen, and headers whose whole group was hidden sit there labelling
+  // nothing.
+  if (typeof updateMemLevelHeaders === 'function') updateMemLevelHeaders(root);
 }
 
 // Filter spellbook by level
