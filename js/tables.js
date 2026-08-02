@@ -3346,7 +3346,70 @@ function getArmorRestrictionProblems(root) {
       'still stack with whichever one wins.');
   }
 
-  return problems;
+return problems;
+}
+
+// Per-item legality for the armor card rail. Three states, and the split is
+// deliberate:
+//
+//   'restricted' -- the PHB forbids it outright. Same meaning, and the same
+//                   --error, as "not proficient" on the weapon rail.
+//   'advisory'   -- an ABILITY is suspended rather than a rule broken. A ranger
+//                   in chain mail is doing nothing illegal; he simply cannot
+//                   hide.
+//   'allowed'    -- everything else.
+//
+// Judges ONE item at a time, unlike getArmorRestrictionProblems above, whose
+// second pass looks at the equipped set as a whole. Whole-set problems have no
+// single card to point at, so they stay in the banner where they already are.
+//
+// ADVISORY, NEVER BLOCKING, like every other class limit in this file: the rail
+// reports, it does not prevent.
+function getArmorLegality(item, root) {
+  if (typeof ARMOR_TYPES === 'undefined') return 'allowed';
+  const cb = item.querySelector('.equipped');
+  if (!cb || !cb.checked) return 'allowed';   // stowed armor breaks no rule
+
+  const slotEl = item.querySelector('.armor-slot') || item.querySelector('.armor-type');
+  const slot   = (slotEl || {}).value || 'Armor';
+  const typeKey = item.querySelector('.armor-slot')
+    ? ((item.querySelector('.armor-type') || {}).value || '')
+    : '';
+  const name = ((item.querySelector('.title') || {}).value || '').trim();
+
+  const comps = (typeof getAllClassComponents === 'function') ? getAllClassComponents(root) : [];
+  if (!comps.length) return 'allowed';
+
+  if (slot === 'Shield') {
+    // The PHB distinguishes wooden from metal shields ONLY for druids.
+    const sh = (typeof SHIELD_TYPES !== 'undefined') ? SHIELD_TYPES[typeKey] : null;
+    if (sh && !sh.wooden &&
+        comps.some(cp => (cp.clazz || '').toLowerCase().includes('druid'))) {
+      return 'restricted';
+    }
+    return 'allowed';
+  }
+  if (slot !== 'Armor') return 'allowed';     // helmets, boots and the rest carry no class rule
+
+  const key = typeKey || (typeof inferArmorTypeKey === 'function' ? inferArmorTypeKey(name) : '');
+  if (!key || key === 'none') return 'allowed';
+
+  // Hard prohibition first: a class limit outranks a suspended ability.
+  const barred = comps.some(cp => {
+    const allowed = getArmorAllowedList(cp.clazz);
+    return allowed && allowed.indexOf(key) === -1;
+  });
+  if (barred) return 'restricted';
+
+  // Ranger stealth. RANGER_STEALTH_MAX_ARMOR is reused rather than restated so
+  // the rail and the stealth panel can never disagree about elven chain.
+  const isRanger = comps.some(cp => (cp.clazz || '').toLowerCase().includes('ranger'));
+  if (isRanger && typeof RANGER_STEALTH_MAX_ARMOR !== 'undefined' &&
+      RANGER_STEALTH_MAX_ARMOR.indexOf(key) === -1) {
+    return 'advisory';
+  }
+
+  return 'allowed';
 }
 
 // PHB Ch.3, Multi-Class Benefits and Restrictions:
@@ -5945,9 +6008,9 @@ function getBaseAttacksPerRound(root) {
 // minAbility: the additional ability requirement beyond the wizard's INT 9
 // opposition: schools the specialist may NEVER learn from
 //
-// NOTE: opposition schools are not yet ENFORCED -- spells.json's School field
-// is inconsistent and mostly unparseable, so the browser cannot reliably tell
-// what school a spell belongs to. Data captured here for when it is cleaned up.
+// Opposition IS enforced -- see isOppositionSpell below, which tokenises the
+// comma-joined School field and handles the Greater Divination wrinkle. An
+// earlier note here claimed the opposite; it outlived the code it described.
 //
 // "Greater Divination" = divination spells of 5th level or HIGHER. Lesser
 // divination (4th and below) is available to ALL wizards, so the Conjurer and
