@@ -880,7 +880,6 @@ function renderCombatQuickReference(root) {
                   'above were figured from the first of them, and the others are ' +
                   'being ignored.');
       }
-      }
       if (warn.length) {
         html += '<div style="margin-bottom:6px;padding:4px 6px;' +
                 'border-left:3px solid var(--warning, #e0a34a);' +
@@ -7874,6 +7873,28 @@ function renderSpecialistSpellNotes(root) {
 
   const component = (typeof getWizardComponent === 'function') ? getWizardComponent(root) : null;
   const school = (component && typeof getSpecialistSchool === 'function') ? getSpecialistSchool(component.clazz) : null;
+
+  // The spellbook rail key is BUILT HERE rather than baked into the template
+  // because it is conditional: own/opposition/other only means anything to a
+  // specialist. A priest or a generalist mage has neutral rails throughout, and
+  // a key explaining three colours none of which appear is worse than no key.
+  // Created once per list and reused, so repeated calls do not stack copies.
+  const ensureBookKey = (listEl) => {
+    let key = listEl.previousElementSibling;
+    if (!key || !key.classList.contains('spellbook-rail-key')) {
+      key = document.createElement('div');
+      key.className = 'spell-listbar spellbook-rail-key';
+      key.innerHTML =
+        '<span class="key"><i style="background:var(--accent-light)"></i>own school</span>' +
+        '<span class="key"><i style="background:var(--error)"></i>opposition &mdash; may never be learned</span>' +
+        '<span class="key"><i style="background:var(--border)"></i>other school</span>';
+      listEl.parentNode.insertBefore(key, listEl);
+    }
+    return key;
+  };
+  root.querySelectorAll('.spellbook-list').forEach(listEl => {
+    ensureBookKey(listEl).style.display = school ? '' : 'none';
+  });
 
   // Not a specialist -> clear/hide both notes, hide every free-spell checkbox
   // and every FREE SPELL tag, and reset every rail to neutral. A generalist
