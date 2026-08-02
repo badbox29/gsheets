@@ -1614,7 +1614,8 @@
 	.spell-listbar label { font-size: 11px; letter-spacing: .5px; color: var(--muted); margin: 0; }
 	.spell-listbar select {
 	  background: transparent; color: var(--text); border: 1px solid var(--border);
-	  border-radius: var(--radius); padding: 4px 8px; font: 12px inherit;
+	  border-radius: var(--radius); padding: 4px 8px;
+	  font-size: 12px; font-family: inherit;
 	  outline: none; cursor: pointer; width: auto;
 	}
 	.spell-listbar select:focus { border-color: var(--accent); }
