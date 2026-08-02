@@ -1376,64 +1376,89 @@ function getMemSpellState(el) {
 }
 
 function setMemSpellState(el, state) {
-  const nameEl  = el.querySelector('.spell-name, .title, .name');
   const castBtn = el.querySelector('.cast-spell');
   const lostBtn = el.querySelector('.lose-spell');
 
-  el.classList.remove('spell-cast', 'spell-lost');
-  if (state === 'cast') el.classList.add('spell-cast');
-  if (state === 'lost') el.classList.add('spell-lost');
+  // TWO SETS OF CLASS NAMES, deliberately. getMemSpellState reads
+  // spell-cast/spell-lost and other callers may too, so those stay; the plain
+  // cast/lost pair is what the stylesheet hooks. Renaming one without the other
+  // is the kind of silent breakage that is hard to trace later.
+  el.classList.remove('spell-cast', 'spell-lost', 'cast', 'lost');
+  if (state === 'cast') el.classList.add('spell-cast', 'cast');
+  if (state === 'lost') el.classList.add('spell-lost', 'lost');
 
-  // Both spent states dim and strike the NAME only, not the whole row -- the
-  // level and buttons must stay legible.
-  const spent = (state === 'cast' || state === 'lost');
-  el.style.opacity = spent ? '0.5' : '1';
-  if (nameEl) nameEl.style.textDecoration = spent ? 'line-through' : 'none';
+  // The row-wide opacity and the inline strike-through are GONE: the stylesheet
+  // strikes the name and dims the row from those classes. Dimming the whole row
+  // in JS also dimmed the buttons, which have to stay legible to be pressed.
+  el.style.opacity = '';
+  const nameEl = el.querySelector('.spell-name, .title, .name');
+  if (nameEl) nameEl.style.textDecoration = '';
 
+  // Colours moved to TOKENS in style.css. The hardcoded rgba here could not
+  // survive the theme switcher -- it would stay dark-mode blue on a light card.
+  // Green now means AVAILABLE rather than cast, and lost is amber rather than
+  // red: green-vs-red is the pair one man in twelve cannot separate, and it was
+  // the pair that mattered most -- castable now versus gone.
   if (castBtn) {
     const on = (state === 'cast');
-    castBtn.textContent    = on ? 'Uncast' : 'Cast';
-    castBtn.style.background  = on ? 'rgba(100,255,100,0.3)' : 'rgba(100,150,255,0.3)';
-    castBtn.style.borderColor = on ? 'rgba(100,255,100,0.5)' : 'rgba(100,150,255,0.5)';
-    castBtn.disabled      = (state === 'lost');
-    castBtn.style.opacity = (state === 'lost') ? '0.4' : '1';
+    castBtn.textContent = on ? 'Uncast' : 'Cast';
+    castBtn.classList.toggle('on', on);
+    castBtn.disabled = (state === 'lost');
   }
 
   if (lostBtn) {
     const on = (state === 'lost');
-    lostBtn.textContent    = on ? 'Restore' : 'Lost';
-    lostBtn.style.background  = on ? 'rgba(255,120,120,0.35)' : 'rgba(200,80,80,0.22)';
-    lostBtn.style.borderColor = on ? 'rgba(255,120,120,0.6)'  : 'rgba(200,80,80,0.45)';
-    lostBtn.disabled      = (state === 'cast');
-    lostBtn.style.opacity = (state === 'cast') ? '0.4' : '1';
+    lostBtn.textContent = on ? 'Restore' : 'Lost';
+    lostBtn.classList.toggle('on', on);
+    lostBtn.disabled = (state === 'cast');
   }
 }
 
 function makeMemSpellNode(data={}, onChange){
   const el = document.createElement('div');
-  el.className = 'item';
-  el.style.flexDirection = 'column';
-  el.style.alignItems = 'stretch';
-  el.style.padding = '12px';
+  // 'gear' brings the shared card shell -- grid, rail, row1/row2, spacer --
+  // and 'spell' adds what only spells need. The inline styles are removed
+  // rather than left dead: an inline style beats the stylesheet, so
+  // alignItems:stretch would override the grid's align-items:center.
+  el.className = 'item gear spell';
   
   el.innerHTML =
-    '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div style="flex:1;">Spell Name</div>' +
-      '<div style="width:50px;text-align:center;">Level</div>' +
-      '<div style="width:70px;"></div>' + // Space for Details button
-      '<div style="width:55px;"></div>' + // Space for Cast button
-      '<div style="width:55px;"></div>' + // Space for Lost button
-      '<div style="width:75px;"></div>' + // Space for Forget button
+    // Rail carries STATE here -- green available, grey cast, amber lost. Own-
+    // school gold is deliberately NOT applied in this list: it would silently
+    // override state on every spell of a specialist's own school, which for an
+    // invoker is most of the list.
+    '<div class="rail"></div>' +
+    '<div class="row1">' +
+      // Level is readonly -- inherited from the spellbook entry, never typed --
+      // so it renders as a rank rather than a field inviting an edit that does
+      // nothing. The input is kept so collectSheet still finds .level.
+      '<span class="lvl">'+escapeHtml(data.level||'')+'</span>' +
+      '<input class="level" type="hidden" value="'+escapeHtml(data.level||'')+'">' +
+      '<span class="school">'+escapeHtml((data.schoolSphere||'').toUpperCase())+'</span>' +
+      '<span class="meta" style="font-size:11px;color:var(--muted);">'+
+        escapeHtml(data.castTime||'')+(data.range?' &middot; '+escapeHtml(data.range):'')+'</span>' +
+      '<div class="spacer"></div>' +
+      '<div class="btns">' +
+        '<button class="toggle-spell-details act-details">Details</button>' +
+        '<button class="cast-spell act-cast">Cast</button>' +
+        '<button class="lose-spell act-lost" title="PHB Ch.7: struck by a weapon or failing a saving throw before the spell goes off breaks concentration and the spell is lost from memory.&#10;&#10;The slot is spent and the spell must be re-studied, but it was never actually cast.">Lost</button>' +
+        '<button class="rm act-forget">Forget</button>' +
+      '</div>' +
     '</div>' +
-    '<div style="display:flex;gap:8px;align-items:stretch;">' +
-      '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1;font-weight:bold;">' +
-      '<input class="level" type="text" placeholder="" value="'+escapeHtml(data.level||'')+'" style="width:50px;text-align:center;" readonly>' +
-      '<button class="toggle-spell-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
-      '<button class="cast-spell" style="padding:8px 12px;font-size:11px;background:rgba(100,150,255,0.3);border:1px solid rgba(100,150,255,0.5);">Cast</button>' +
-      '<button class="lose-spell" style="padding:8px 12px;font-size:11px;background:rgba(200,80,80,0.22);border:1px solid rgba(200,80,80,0.45);" title="PHB Ch.7: struck by a weapon or failing a saving throw before the spell goes off breaks concentration and the spell is lost from memory.&#10;&#10;The slot is spent and the spell must be re-studied, but it was never actually cast.">Lost</button>' +
-      '<button class="rm">Forget</button>' +
+    '<div class="row2">' +
+      '<input class="title spell-name" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
+      // Quiet at rest, gold when set: normal is what nearly every spell is, and
+      // reversed CHANGES WHAT THE SPELL DOES.
+      '<button type="button" class="revchip" aria-pressed="false" title="PHB Ch.7: a reversible spell must be memorized in the form you intend to cast.&#10;A priest petitions for the reversed version when praying; a wizard chooses at memorization.&#10;The reversed spell is named in the description -- the sheet does not rename it for you.">Normal</button>' +
     '</div>' +
     '<div class="spell-details" style="display:none;margin-top:8px;">' +
+      // Reference figures, read from the spell data. The Form select is kept as
+      // a HIDDEN input: collectSheet reads .spell-form, and the chip above is
+      // now the control. Removing it would drop the field from save and load.
+      '<select class="spell-form" style="display:none;">' +
+        '<option value="normal"'+(data.form === 'reversed' ? '' : ' selected')+'>Normal</option>' +
+        '<option value="reversed"'+(data.form === 'reversed' ? ' selected' : '')+'>Reversed</option>' +
+      '</select>' +
       '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:8px;">' +
         '<div><label style="font-size:11px;color:var(--muted);">School/Sphere</label>' +
           '<input class="school-sphere" placeholder="" value="'+escapeHtml(data.schoolSphere||'')+'" style="width:100%;"></div>' +
@@ -1447,24 +1472,6 @@ function makeMemSpellNode(data={}, onChange){
           '<input class="components" placeholder="" value="'+escapeHtml(data.components||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Save</label>' +
           '<input class="save" placeholder="" value="'+escapeHtml(data.save||'')+'" style="width:100%;"></div>' +
-        // PHB Ch.7, reversible spells. A priest "must memorize the desired
-        // version" -- he petitions for cause light wounds rather than cure light
-        // wounds when praying. A wizard records both forms in his book but "must
-        // decide which version of the spell he desires to cast when memorizing
-        // the spell", and may memorize each version once or one version twice.
-        //
-        // Offered on EVERY row rather than only reversible ones: the spell data
-        // carries no reversible flag, only prose inside descriptions, so detecting
-        // it across 4,156 records would be guesswork. Defaulting to Normal makes
-        // the control harmless where it does not apply.
-        //
-        // Deliberately NOT carried back by returnMemSpellToSpellbook: the form is
-        // a memorization-time choice, and the spellbook holds both forms anyway.
-        '<div><label style="font-size:11px;color:var(--muted);">Form</label>' +
-          '<select class="spell-form" style="width:100%;" title="PHB Ch.7: reversible spells must be memorized in the form you intend to cast.&#10;A priest petitions for the reversed version when praying; a wizard chooses at memorization.&#10;Leave as Normal for spells that are not reversible.">' +
-            '<option value="normal"'+(data.form === 'reversed' ? '' : ' selected')+'>Normal</option>' +
-            '<option value="reversed"'+(data.form === 'reversed' ? ' selected' : '')+'>Reversed</option>' +
-          '</select></div>' +
       '</div>' +
       '<div style="margin-bottom:8px;">' +
         '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Description</label>' +
@@ -1515,6 +1522,29 @@ function makeMemSpellNode(data={}, onChange){
   if (lostBtn) {
     lostBtn.onclick = () => {
       setState(getMemSpellState(el) === 'lost' ? 'available' : 'lost');
+    };
+  }
+
+  // Reversed chip. Replaces the Form dropdown that used to sit in the panel:
+  // the state is read on the collapsed row, so the control belongs there too.
+  // It sits beside the NAME because that is what it qualifies -- which spell
+  // you are actually casting. The sheet never renames the spell; the reverse is
+  // named in the description prose, and no rule derives one name from the other
+  // (light/darkness, bless/curse, purify/putrefy food & drink).
+  const revChip  = el.querySelector('.revchip');
+  const formHold = el.querySelector('.spell-form');
+  if (revChip && formHold) {
+    const syncRev = () => {
+      const on = formHold.value === 'reversed';
+      revChip.classList.toggle('on', on);
+      revChip.textContent = on ? 'Reversed' : 'Normal';
+      revChip.setAttribute('aria-pressed', String(on));
+    };
+    syncRev();
+    revChip.onclick = () => {
+      formHold.value = (formHold.value === 'reversed') ? 'normal' : 'reversed';
+      syncRev();
+      onChange && onChange();
     };
   }
 
