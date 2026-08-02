@@ -373,8 +373,29 @@ function resolveWeaponProficiency(root, rowEl) {
                     : status === 'proficient' ? 'var(--accent-light)'
                     : status === 'related'    ? 'var(--muted)'
                     : 'var(--error, #ff6b6b)';
-  rowEl.style.borderLeft = '3px solid ' + statusColor;
-  rowEl.style.paddingLeft = '8px';
+  // The rail is a GRID CHILD now, not a border-left. A single-sided border
+  // fights the card's border-radius, and the old inline borderLeft plus
+  // paddingLeft:8px shifted the whole card's padding to make room for itself.
+  // The colour still lives here -- one resolver, one answer -- but it is
+  // expressed as a class so the stylesheet owns the paint.
+  const statusKey = isSpecialized           ? 'specialized'
+                  : status === 'proficient' ? 'proficient'
+                  : status === 'related'    ? 'related'
+                  : 'notprof';
+  const railEl = rowEl.querySelector('.rail');
+  if (railEl) railEl.className = 'rail ' + statusKey;
+  // The word beside the rail. Colour alone is a code the reader must learn and
+  // is invisible to anyone who cannot separate those hues, so the text carries
+  // the meaning and the rail only accelerates it. Penalties are shown because a
+  // penalty you cannot see is one you forget you are taking.
+  const statusEl = rowEl.querySelector('.status');
+  if (statusEl) {
+    statusEl.className = 'status ' + statusKey;
+    statusEl.textContent = isSpecialized           ? 'SPECIALIZED'
+                         : status === 'proficient' ? 'PROFICIENT'
+                         : status === 'related'    ? 'RELATED (' + penalty + ')'
+                         : 'NOT PROF. (' + penalty + ')';
+  }
 
   if (badgeEl) {
     let text, color, tip;
