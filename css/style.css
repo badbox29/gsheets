@@ -1322,3 +1322,16 @@
 	  border-top-color: color-mix(in srgb, var(--accent) 40%, transparent);
 	  margin-top: 8px;
 	}
+
+	/* The type label on a valuable or an equipment item. A plain letterspaced
+	   caption, NOT a pill -- a pill on these rows would read as clickable, and
+	   the chip is the only thing on a gear card that is. */
+	.item.gear .tag {
+	  font-size: 10px;
+	  letter-spacing: .8px;
+	  color: var(--muted);
+	  white-space: nowrap;
+	  flex-shrink: 0;
+	}
+	/* Unit figure beside the line total: "1,000 gp ea" against "4,000 gp". */
+	.item.gear .stat.each { font-size: 11px; color: var(--muted); }
