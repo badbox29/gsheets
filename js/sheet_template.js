@@ -1344,24 +1344,42 @@ const SHEET_HTML = `
             <div class="col"><label>GP</label><input data-field="gp" type="number"></div>
             <div class="col"><label>PP</label><input data-field="pp" type="number"></div>
           </div>
-          <div class="row" style="margin-top:8px">
-            <div class="col"><label>Coin Count</label><input data-field="coin_total" type="text" readonly></div>
-            <div class="col"><label>Coin Weight (lbs)</label><input data-field="coin_weight" type="text" readonly></div>
-            <div class="col"><label>Coin Value (gp)</label><input data-field="coin_value" type="text" readonly></div>
+          <h4 style="font-size:14px;margin:18px 0 0;">Coin &amp; Treasure &mdash; Value</h4>
+          <!-- Three rows, four columns. The readonly inputs are kept as INPUTS
+               rather than becoming spans: collectSheet, loadSheet, print.js and
+               the KV sync all address these by data-field, and turning them into
+               plain text would silently drop them from every one of those paths.
+               They are simply styled to read as figures.
+               Valuables has no count: four sapphires plus six pelts is ten
+               things, which is not a number anyone wants. -->
+          <div class="treasure-ledger">
+            <div class="lhead"></div>
+            <div class="lhead">Count</div>
+            <div class="lhead">Weight (lbs)</div>
+            <div class="lhead">Value (gp)</div>
+
+            <div class="lrow">Coins</div>
+            <input class="lval q" data-field="coin_total" type="text" readonly>
+            <input class="lval q" data-field="coin_weight" type="text" readonly>
+            <input class="lval" data-field="coin_value" type="text" readonly>
+
+            <div class="lrow">Valuables</div>
+            <div class="lval q none">&mdash;</div>
+            <input class="lval q" data-field="valuables_weight" type="text" readonly>
+            <input class="lval" data-field="valuables_value" type="text" readonly>
+
+            <div class="lrow ltotal">Total</div>
+            <div class="lval q none ltotal">&mdash;</div>
+            <input class="lval q ltotal" data-field="treasure_weight" type="text" readonly>
+            <input class="lval ltotal" data-field="treasure_value" type="text" readonly>
           </div>
           
           <h4 style="font-size:14px;margin:16px 0 8px;">Other Valuables</h4>
-          <!-- This summary sits directly under the coin summary and ABOVE the
-               list, so the two weight fields and the two value fields stay
-               adjacent and vertically aligned however long the list grows.
-               The empty column is FIRST on purpose: it pushes weight into
-               column 2 and value into column 3, under Coin Weight and Coin
-               Value. Putting it last is what shifted them left. -->
-          <div class="row">
-            <div class="col"><!-- empty: aligns with Coin Count above --></div>
-            <div class="col"><label>Valuables Weight (lbs)</label><input data-field="valuables_weight" type="text" readonly></div>
-            <div class="col"><label>Valuables Value (gp)</label><input data-field="valuables_value" type="text" readonly></div>
-          </div>
+          <!-- The two summary fields that used to sit here have moved into the
+               Coin and Treasure ledger above. They were aligned to the coin row
+               by an EMPTY LEADING COLUMN, which worked but had to be maintained
+               by hand; a grid aligns them structurally instead. The fields keep
+               their data-field names, so every reader of them is unaffected. -->
           <div style="display:flex;justify-content:flex-end;margin-top:12px;margin-bottom:8px;">
             <button class="add-valuable">+ Add Item</button>
           </div>
