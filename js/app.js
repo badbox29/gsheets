@@ -2363,9 +2363,20 @@ function makeArmorNode(data={}, onChange){
     const wtEl = el.querySelector('.arm-weight');
     if (acEl) {
       const ac = val('.base-ac');
+      // TWO DIFFERENT QUANTITIES share this column, so they cannot share a
+      // caption. Body armor's 5 is a RESULTING Armor Class; a buckler's -1 is a
+      // MODIFIER to it. AC descends in AD&D, so -1 is an improvement -- but
+      // printed as "AC -1" beside "AC 5" it reads as the worst armor on the
+      // sheet. The slot decides the wording.
+      const slot = val('.armor-slot') || 'Armor';
+      const isMod = (slot === 'Shield');
+      const label = isMod ? 'AC mod' : 'AC';
+      // A leading + on a positive modifier, so the sign is always explicit.
+      const shown = (isMod && ac !== '' && !/^[+-]/.test(ac) && parseFloat(ac) > 0)
+        ? '+' + ac : ac;
       acEl.innerHTML = ac === ''
-        ? 'AC <span class="none">&mdash;</span>'
-        : 'AC <b>' + escapeHtml(ac) + '</b>';
+        ? label + ' <span class="none">&mdash;</span>'
+        : label + ' <b>' + escapeHtml(shown) + '</b>';
     }
     if (wtEl) {
       const w = val('.weight');
