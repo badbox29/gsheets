@@ -3148,9 +3148,11 @@ function makeWeaponNode(data={}, onChange){
   const wTypeKey = resolveWeaponTypeKey(data);
 
   const el = document.createElement('div');
-  el.className = 'item';
-  el.style.flexDirection = 'column';
-  el.style.alignItems = 'stretch';
+  // See makeAmmunitionNode for what 'gear' opts into. The inline
+  // flexDirection/alignItems are removed rather than left dead: an inline style
+  // beats the stylesheet, and alignItems:stretch would override the grid's
+  // align-items:center on every row.
+  el.className = 'item gear';
   // MIGRATION -- NOT OPTIONAL. Records written before the Enchanted checkbox
   // existed carry bonuses but no isMagical flag. Any non-zero value among the
   // three counts as enchanted, or every magic weapon on every saved character
@@ -3179,34 +3181,48 @@ function makeWeaponNode(data={}, onChange){
   })();
 
   el.innerHTML =
-    '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div style="width:60px;text-align:center;">Equipped</div>' +
-      '<div style="width:60px;text-align:center;">Off-hand</div>' +
-      '<div style="flex:1;">Weapon</div>' +
-      '<div style="width:148px;"></div>' + // Space for Details + Remove buttons
-    '</div>' +
-   '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;">' +
-      '<input type="checkbox" class="equipped" '+(data.equipped?'checked':'')+' style="width:60px;margin:auto;">' +
-      // PHB Ch.9. Deliberately on the IDENTITY row, not in the collapsed
-      // Details section: this carries a -2/-4 attack penalty, and a penalty
-      // hidden behind a disclosure is a penalty players forget they are taking.
-      '<input type="checkbox" class="weapon-offhand" '+(data.offhand?'checked':'')+
+    // The rail carries PROFICIENCY, painted by resolveWeaponProficiency in
+    // calc.js. Left classless here: the resolver owns it, and giving it a
+    // starting colour would mean two places deciding the same thing.
+    '<div class="rail"></div>' +
+    '<div class="row1">' +
+      // Both chips are <label>s wrapping the REAL checkboxes, so .equipped and
+      // .weapon-offhand keep working and collectSheet is untouched. The label
+      // makes the whole pill a hit target, which matters far more on a phone.
+      '<label class="chip state">' +
+        '<input type="checkbox" class="equipped" '+(data.equipped?'checked':'')+'>' +
+        '<span class="on">Equipped</span><span class="off">Unequipped</span>' +
+      '</label>' +
+      // PHB Ch.9. Deliberately on the IDENTITY row, not behind the disclosure:
+      // this carries a -2/-4 attack penalty, and a penalty hidden behind a
+      // disclosure is a penalty players forget they are taking.
+      '<label class="chip hand"' +
         ' title="Mark this weapon as the OFF-HAND weapon (PHB Ch.9, Attacking&#10;' +
         'With Two Weapons). Grants ONE extra attack per round, no matter how&#10;' +
         'many you already have. Applies -4 here and -2 to the main-hand weapon,&#10;' +
         'both modified by your Dexterity Reaction Adjustment -- which can bring&#10;' +
         'them to 0 but never to a bonus. Rangers in studded leather or lighter&#10;' +
-        'are exempt. You cannot use a shield while fighting with two weapons."' +
-        ' style="width:60px;margin:auto;">' +
-      // Name and badge share one flex:1 cell so a wide badge squeezes the input
-      // instead of shifting the buttons. The input's width is driven from JS by
-      // sizeWeaponName() -- an <input> cannot shrink-to-fit in CSS.
-      '<div style="display:flex;align-items:center;gap:4px;flex:1;min-width:0;">' +
-        '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
-        magicBadgeHtml(weaponIsMagical, weaponInitialBadge) +
+        'are exempt. You cannot use a shield while fighting with two weapons.">' +
+        '<input type="checkbox" class="weapon-offhand" '+(data.offhand?'checked':'')+'>' +
+        '<span class="on">Off-hand</span><span class="off">Main hand</span>' +
+      '</label>' +
+      // Filled by resolveWeaponProficiency alongside the rail. The word carries
+      // the meaning; the rail only accelerates it.
+      '<span class="status"></span>' +
+      '<div class="spacer"></div>' +
+      '<div class="stat wpn-damage"></div>' +
+      '<div class="stat wpn-weight"></div>' +
+      '<div class="btns">' +
+        '<button class="toggle-details">Details</button>' +
+        '<button class="rm">Remove</button>' +
       '</div>' +
-      '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
-      '<button class="rm">Remove</button>' +
+    '</div>' +
+    // Row 2: the name alone at full card width, so a long name never truncates.
+    // sizeWeaponName() still sizes the input to its contents so the badge sits
+    // against the text rather than at the far edge.
+    '<div class="row2">' +
+      '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
+      magicBadgeHtml(weaponIsMagical, weaponInitialBadge) +
     '</div>' +
     // Everything below the identity row is collapsed by default. The stats a
     // player needs mid-combat are already surfaced on the Combat Quick
@@ -3838,11 +3854,14 @@ function makeMagicItemNode(data={}, onChange){
     if (!out) return;
     const charged = (typeof magicItemTypeHasCharges === 'function') &&
                     magicItemTypeHasCharges(miTypeSel.value);
-    if (!charged) { out.innerHTML = '<span class="none">&mdash;</span>'; return; }
+    // EMPTY, not a dash. An em dash earns its place in a column where sibling
+    // rows show numbers -- a shield's Base AC beside armour that has one. Alone
+    // on a card it just reads as a broken control.
+    if (!charged) { out.textContent = ''; return; }
     const cur = el.querySelector('.charges').value;
     const max = el.querySelector('.charges-max').value;
-    out.innerHTML = cur === '' && max === ''
-      ? '<span class="none">&mdash;</span>'
+    out.innerHTML = (cur === '' && max === '')
+      ? ''
       : '<b>' + escapeHtml(cur || '0') + '</b>' + (max ? ' / ' + escapeHtml(max) : '');
   };
   syncMiCollapsed();
