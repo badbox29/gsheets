@@ -1307,11 +1307,14 @@
 	   auto-places into column 1 -- the rail's column -- and renders squeezed to
 	   3px. Pinning it to column 2 keeps it aligned under the rows it belongs to,
 	   and lets the rail read as a spine down the whole open card. */
-	.item.gear > .ammo-details,
-	.item.gear > .magic-item-details,
-	.item.gear > .armor-details,
-	.item.gear > .weapon-details,
-	.item.gear > .gear-details {
+	/* Every expanded panel is a grid CHILD, so without an explicit column it
+	   auto-places into column 1 -- the rail's 3px column -- and renders one
+	   character per line. Listing panels by name is what let the two spell
+	   panels slip through, so this matches on the suffix every panel shares.
+	   The :not() keeps it from also catching a nested element that happens to
+	   end in -details. */
+	.item.gear > [class$="-details"],
+	.item.gear > .free-spell-row {
 	  grid-column: 2;
 	  padding-top: 10px;
 	}
@@ -1322,6 +1325,10 @@
 	  border-top-color: color-mix(in srgb, var(--accent) 40%, transparent);
 	  margin-top: 8px;
 	}
+	/* Spell panels use plain block layout inside, and their description blocks
+	   need a width to wrap against. */
+	.item.gear.spell > [class$="-details"] { min-width: 0; }
+	.item.gear.spell > [class$="-details"] > div { max-width: 100%; }
 
 	/* The type label on a valuable or an equipment item. A plain letterspaced
 	   caption, NOT a pill -- a pill on these rows would read as clickable, and
