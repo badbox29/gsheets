@@ -1851,38 +1851,106 @@ function toggleSpellbookSection(root) {
 }
 function makeItemNode(data={}, onChange){
   const el = document.createElement('div');
-  el.className = 'item';
-  el.style.flexDirection = 'column';
-  el.style.alignItems = 'stretch';
+  // See makeAmmunitionNode for what 'gear' opts into. The inline
+  // flexDirection/alignItems are removed rather than left dead: an inline style
+  // beats the stylesheet, and alignItems:stretch would override the grid's
+  // align-items:center on every row.
+  el.className = 'item gear';
   el.innerHTML =
-    '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div style="flex:1;">Item</div>' +
-      '<div style="width:80px;text-align:center;">Quantity</div>' +
-      '<div style="width:80px;text-align:center;">Weight (lbs)</div>' +
-      '<div style="width:70px;"></div>' + // Space for Remove button
+    // No state axis on plain equipment, so quantity takes the control slot and
+    // the rail stays neutral. The hero figure is LINE WEIGHT -- qty x each --
+    // because that is the number encumbrance reads, and until now it appeared
+    // nowhere on screen. Twelve torches reading "12 lb" answers the question
+    // people are actually asking when they scan the list.
+    '<div class="rail"></div>' +
+    '<div class="row1">' +
+      '<div class="qtybox">' +
+        '<input class="qty" type="number" min="0" step="1" inputmode="numeric" value="'+escapeHtml(data.qty||'')+'">' +
+        '<span class="spin">' +
+          '<button type="button" class="qty-up" aria-label="Add one">&#9650;</button>' +
+          '<button type="button" class="qty-down" aria-label="Remove one">&#9660;</button>' +
+        '</span>' +
+        '<span class="qlab">qty</span>' +
+      '</div>' +
+      '<div class="spacer"></div>' +
+      '<div class="stat each eq-each"></div>' +
+      '<div class="stat eq-line"></div>' +
+      '<div class="btns">' +
+        '<button class="toggle-details">Details</button>' +
+        '<button class="rm">Remove</button>' +
+      '</div>' +
     '</div>' +
-    '<div style="display:flex;align-items:stretch;gap:8px;">' +
-      '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1">' +
-      '<input class="qty" type="number" placeholder="" value="'+escapeHtml(data.qty||'')+'" style="width:80px;text-align:center;">' +
-      '<input class="weight" type="number" step="0.1" placeholder="" value="'+escapeHtml(data.weight||'')+'" style="width:80px;text-align:center;">' +
-      '<button class="rm">Remove</button>' +
+    '<div class="row2">' +
+      '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1;min-width:0;">' +
     '</div>' +
-    '<div style="margin-top:6px;">' +
+    '<div class="gear-details" style="display:none;">' +
+      '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
+        '<div style="width:100px;text-align:center;">Weight (lbs, ea)</div>' +
+      '</div>' +
+      '<div style="display:flex;align-items:stretch;gap:8px;margin-bottom:8px;">' +
+        '<input class="weight" type="number" step="0.1" placeholder="" value="'+escapeHtml(data.weight||'')+'" style="width:100px;text-align:center;">' +
+      '</div>' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Notes</label>' +
       '<input class="notes" placeholder="" value="'+escapeHtml(data.notes||'')+'" style="width:100%">' +
     '</div>';
+
+  const eqToggleBtn = el.querySelector('.toggle-details');
+  const eqDetails   = el.querySelector('.gear-details');
+  if (eqToggleBtn && eqDetails) {
+    eqToggleBtn.onclick = () => {
+      const open = eqDetails.style.display !== 'none';
+      eqDetails.style.display = open ? 'none' : 'block';
+      eqToggleBtn.textContent = open ? 'Details' : 'Hide';
+    };
+  }
+
+  // Derived live from the two fields on the card; never stored.
+  const syncEquipLine = () => {
+    const each = parseFloat((el.querySelector('.weight') || {}).value);
+    const qty  = parseInt((el.querySelector('.qty') || {}).value || 0, 10) || 0;
+    const eachEl = el.querySelector('.eq-each');
+    const lineEl = el.querySelector('.eq-line');
+    if (eachEl) eachEl.textContent = isNaN(each) ? '' : each + ' lb ea';
+    if (lineEl) {
+      lineEl.innerHTML = isNaN(each)
+        ? ''
+        : '<b>' + escapeHtml(String(+(each * qty).toFixed(2))) + '</b> lb total';
+    }
+  };
+  syncEquipLine();
+  ['.qty', '.weight'].forEach(s => {
+    const f = el.querySelector(s);
+    if (f) f.addEventListener('input', syncEquipLine);
+  });
+
+  const eqQty = el.querySelector('.qty');
+  const eqStep = (delta) => {
+    const n = parseInt(eqQty.value || 0, 10);
+    eqQty.value = Math.max(0, (isNaN(n) ? 0 : n) + delta);
+    eqQty.dispatchEvent(new Event('input', { bubbles: true }));
+  };
+  const eqUp = el.querySelector('.qty-up'), eqDown = el.querySelector('.qty-down');
+  if (eqUp)   eqUp.onclick   = () => eqStep(1);
+  if (eqDown) eqDown.onclick = () => eqStep(-1);
+  eqQty.addEventListener('input', () => {
+    const clean = String(eqQty.value).replace(/[^0-9]/g, '');
+    if (clean !== eqQty.value) eqQty.value = clean;
+  });
+
   el.querySelector('.rm').onclick = ()=>{ el.remove(); onChange && onChange(); };
   el.querySelectorAll('input').forEach(inp =>
     inp.addEventListener('input', ()=>onChange && onChange())
   );
   return el;
 }
+
 function makeValuableNode(data={}, onChange){
   const el = document.createElement('div');
-  el.className = 'item';
-  el.style.flexDirection = 'column';
-  el.style.alignItems = 'stretch';
-  el.style.padding = '12px';
+  // See makeAmmunitionNode for what 'gear' opts into. All three inline styles
+  // are removed rather than left dead: an inline style beats the stylesheet, so
+  // alignItems:stretch would override the grid's align-items:center, and the
+  // 12px padding would fight the padding change that marks an unequipped card.
+  el.className = 'item gear';
   
   // MIGRATION -- Value (ea) used to be a free-text box, so existing records
   // hold strings like "500 gp" or "1,000". A record with no structured `value`
@@ -1908,33 +1976,45 @@ function makeValuableNode(data={}, onChange){
               '</option>').join('');
 
   el.innerHTML =
-    '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div style="width:120px;">Type</div>' +
-      '<div style="flex:1;">Item Name</div>' +
-      '<div style="width:60px;text-align:center;">Qty</div>' +
-      '<div style="width:80px;text-align:center;">Weight (ea)</div>' +
-      '<div style="width:70px;"></div>' + // Remove button space
-    '</div>' +
-    '<div style="display:flex;gap:8px;align-items:stretch;margin-bottom:8px;">' +
-      '<select class="valuable-type" style="width:120px;">'+vTypeOptions+'</select>' +
-      '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1;">' +
-      '<input class="qty" type="number" placeholder="" value="'+escapeHtml(data.qty||'')+'" style="width:60px;text-align:center;">' +
-      '<input class="weight" type="number" step="0.1" placeholder="" value="'+escapeHtml(data.weight||'')+'" style="width:80px;text-align:center;">' +
-      '<button class="rm">Remove</button>' +
-    '</div>' +
-    '<div style="margin-top:6px;">' +
-      '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Notes</label>' +
-      '<div style="display:flex;gap:6px;align-items:flex-end;">' +
-        '<input class="notes" placeholder="" value="'+escapeHtml(data.notes||'')+'" style="flex:1">' +
-        '<div style="display:flex;flex-direction:column;width:90px;">' +
-          '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Value (ea)</label>' +
-          '<input class="value-each" type="number" step="0.01" min="0" placeholder="" value="'+escapeHtml(vValue||'')+'" style="width:100%;text-align:right;">' +
-        '</div>' +
-        '<div style="display:flex;flex-direction:column;width:70px;">' +
-          '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Unit</label>' +
-          '<select class="value-unit" style="width:100%;">'+vUnitOptions+'</select>' +
-        '</div>' +
+    // No state axis on a valuable -- nothing is equipped or worn -- so quantity
+    // takes the control slot and the rail stays neutral.
+    '<div class="rail"></div>' +
+    '<div class="row1">' +
+      '<div class="qtybox">' +
+        '<input class="qty" type="number" min="0" step="1" inputmode="numeric" value="'+escapeHtml(data.qty||'')+'">' +
+        '<span class="spin">' +
+          '<button type="button" class="qty-up" aria-label="Add one">&#9650;</button>' +
+          '<button type="button" class="qty-down" aria-label="Remove one">&#9660;</button>' +
+        '</span>' +
+        '<span class="qlab">qty</span>' +
       '</div>' +
+      '<span class="tag"></span>' +
+      '<div class="spacer"></div>' +
+      '<div class="stat each val-each"></div>' +
+      '<div class="stat val-line"></div>' +
+      '<div class="btns">' +
+        '<button class="toggle-details">Details</button>' +
+        '<button class="rm">Remove</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="row2">' +
+      '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1;min-width:0;">' +
+    '</div>' +
+    '<div class="valuable-details" style="display:none;">' +
+      '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
+        '<div style="width:120px;">Type</div>' +
+        '<div style="width:90px;text-align:center;">Value (ea)</div>' +
+        '<div style="width:70px;text-align:center;">Unit</div>' +
+        '<div style="width:80px;text-align:center;">Weight (ea)</div>' +
+      '</div>' +
+      '<div style="display:flex;gap:8px;align-items:stretch;margin-bottom:8px;">' +
+        '<select class="valuable-type" style="width:120px;">'+vTypeOptions+'</select>' +
+        '<input class="value-each" type="number" step="0.01" min="0" placeholder="" value="'+escapeHtml(vValue||'')+'" style="width:90px;text-align:right;">' +
+        '<select class="value-unit" style="width:70px;">'+vUnitOptions+'</select>' +
+        '<input class="weight" type="number" step="0.1" placeholder="" value="'+escapeHtml(data.weight||'')+'" style="width:80px;text-align:center;">' +
+      '</div>' +
+      '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Notes</label>' +
+      '<input class="notes" placeholder="" value="'+escapeHtml(data.notes||'')+'" style="width:100%;">' +
     '</div>';
 
   // Details toggle. This card had NONE -- every valuable rendered fully
