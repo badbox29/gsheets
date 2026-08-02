@@ -2178,6 +2178,9 @@ function renderCoinWeight(root) {
       coinValueEl.removeAttribute('title');
     }
   }
+  // Whichever of the two renderers runs last leaves the totals correct, so both
+  // call it rather than relying on an ordering in recalculateAll.
+  if (typeof renderTreasureTotals === 'function') renderTreasureTotals(root);
 }
 
 // Total worth of the Other Valuables list, in gp. Deliberately NOT folded into
@@ -2199,6 +2202,32 @@ function renderValuablesValue(root) {
   });
 
   el.value = formatGp(totalGp);
+  renderTreasureTotals(root);
+}
+
+// Combined weight and worth of coins plus valuables. Both halves are already
+// computed -- renderCoinWeight and the encumbrance pass -- so this only adds
+// them up, and it reads the rendered fields rather than recomputing, so it can
+// never disagree with the two rows above it.
+//
+// Commas have to come out before parsing: both figures go through
+// toLocaleString on the way in, and parseFloat stops at the first comma, which
+// would silently turn 4,180 into 4.
+//
+// There is deliberately NO total count. Four sapphires plus six pelts is ten
+// things, and that is not a number anyone wants.
+function renderTreasureTotals(root) {
+  const wtEl = root.querySelector('[data-field="treasure_weight"]');
+  const vlEl = root.querySelector('[data-field="treasure_value"]');
+  if (!wtEl && !vlEl) return;
+  const read = name => {
+    const f = root.querySelector('[data-field="' + name + '"]');
+    return parseFloat(String(f ? f.value : '').replace(/,/g, '')) || 0;
+  };
+  if (wtEl) wtEl.value = (read('coin_weight') + read('valuables_weight')).toFixed(1);
+  if (vlEl && typeof formatGp === 'function') {
+    vlEl.value = formatGp(read('coin_value') + read('valuables_value'));
+  }
 }
 
 function renderRacialAbilities(root) {
