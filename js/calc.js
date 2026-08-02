@@ -8013,9 +8013,55 @@ function sortMemorizedSpells(root) {
     return nameA.localeCompare(nameB);
   });
   
-  // Clear and re-append in sorted order
+  // Clear and re-append in sorted order, inserting a header whenever the level
+  // changes. Headers are built HERE rather than kept in the DOM because this
+  // function already wipes the list -- anywhere else they would accumulate.
   memList.innerHTML = '';
-  items.forEach(item => memList.appendChild(item));
+  let lastLevel = null;
+  items.forEach(item => {
+    const raw = (item.querySelector('.level') || {}).value || '';
+    const lvl = raw === '' ? '\u2014' : raw;
+    if (lvl !== lastLevel) {
+      const head = document.createElement('div');
+      head.className = 'spell-lvlhead';
+      head.dataset.level = lvl;
+      memList.appendChild(head);
+      lastLevel = lvl;
+    }
+    memList.appendChild(item);
+  });
+  updateMemLevelHeaders(root);
+}
+
+// Availability counts on the level headers -- the question actually asked
+// mid-combat, previously answerable only by counting strike-throughs by eye.
+//
+// Counts only VISIBLE rows, so it agrees with the level filter rather than
+// reporting spells that are not on screen. A header whose whole group is
+// filtered out hides itself; a header with nothing under it would otherwise sit
+// there labelling empty space.
+function updateMemLevelHeaders(root) {
+  const memList = root.querySelector('.memspells-list');
+  if (!memList) return;
+  const heads = Array.from(memList.querySelectorAll('.spell-lvlhead'));
+  heads.forEach(head => {
+    let total = 0, left = 0;
+    let node = head.nextElementSibling;
+    while (node && !node.classList.contains('spell-lvlhead')) {
+      if (node.classList.contains('item') && node.style.display !== 'none') {
+        total++;
+        // 'spell-cast' and 'spell-lost' are what setMemSpellState writes; a row
+        // carrying neither is still available.
+        if (!node.classList.contains('spell-cast') &&
+            !node.classList.contains('spell-lost')) left++;
+      }
+      node = node.nextElementSibling;
+    }
+    if (!total) { head.style.display = 'none'; return; }
+    head.style.display = '';
+    head.innerHTML = 'LEVEL ' + escapeHtml(head.dataset.level || '') +
+                     ' &mdash; <b>' + left + '</b> of ' + total + ' still available';
+  });
 }
 
 function renderClassAbilities(root) {
