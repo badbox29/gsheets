@@ -3700,9 +3700,11 @@ function makeWeaponNode(data={}, onChange){
 
 function makeMagicItemNode(data={}, onChange){
   const el = document.createElement('div');
-  el.className = 'item';
-  el.style.flexDirection = 'column';
-  el.style.alignItems = 'stretch';
+  // See makeAmmunitionNode for what 'gear' opts into. The inline
+  // flexDirection/alignItems are removed rather than left dead: an inline
+  // style beats the stylesheet, and alignItems:stretch would override the
+  // grid's align-items:center.
+  el.className = 'item gear';
 
   // Records saved before this field existed carry no `identified` flag. A
   // missing flag reads as IDENTIFIED -- otherwise every magic item on every
@@ -3715,20 +3717,40 @@ function makeMagicItemNode(data={}, onChange){
               escapeHtml(t.label)+'</option>').join('');
 
   el.innerHTML =
-    '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div style="width:120px;">Type</div>' +
-      '<div style="flex:1;">Magic Item</div>' +
-      '<div style="width:60px;text-align:center;">Qty</div>' +
-      '<div style="width:80px;text-align:center;">Weight (ea)</div>' +
-      '<div style="width:70px;"></div>' + // Space for Remove button
+    // Three grid children: rail, row1, row2. A magic item is magical by
+    // definition, so the rail is always --magic -- it is the one card type
+    // where the rail states a fact rather than a status.
+    '<div class="rail enchanted"></div>' +
+    '<div class="row1">' +
+      '<div class="qtybox">' +
+        '<input class="qty" type="number" min="0" step="1" inputmode="numeric" value="'+escapeHtml(data.qty||'')+'">' +
+        '<span class="spin">' +
+          '<button type="button" class="qty-up" aria-label="Add one">&#9650;</button>' +
+          '<button type="button" class="qty-down" aria-label="Remove one">&#9660;</button>' +
+        '</span>' +
+        '<span class="qlab">qty</span>' +
+      '</div>' +
+      '<div class="spacer"></div>' +
+      '<div class="stat mi-charges"></div>' +
+      '<div class="btns">' +
+        '<button class="toggle-details">Details</button>' +
+        '<button class="rm">Remove</button>' +
+      '</div>' +
     '</div>' +
-    '<div style="display:flex;align-items:stretch;gap:8px;">' +
-      '<select class="magic-item-type" style="width:120px;">'+miTypeOptions+'</select>' +
-      '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1">' +
-      '<input class="qty" type="number" placeholder="" value="'+escapeHtml(data.qty||'')+'" style="width:60px;text-align:center;">' +
-      '<input class="weight" type="number" step="0.1" placeholder="" value="'+escapeHtml(data.weight||'')+'" style="width:80px;text-align:center;">' +
-      '<button class="rm">Remove</button>' +
+    '<div class="row2">' +
+      '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1;min-width:0;">' +
     '</div>' +
+    // Everything below is collapsed by default. Type and Weight move in here:
+    // they are set once when the item is recorded and rarely revisited.
+    '<div class="magic-item-details" style="display:none;">' +
+      '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
+        '<div style="width:120px;">Type</div>' +
+        '<div style="width:80px;text-align:center;">Weight (ea)</div>' +
+      '</div>' +
+      '<div style="display:flex;align-items:stretch;gap:8px;">' +
+        '<select class="magic-item-type" style="width:120px;">'+miTypeOptions+'</select>' +
+        '<input class="weight" type="number" step="0.1" placeholder="" value="'+escapeHtml(data.weight||'')+'" style="width:80px;text-align:center;">' +
+      '</div>' +
     '<div style="display:flex;gap:8px;margin-top:8px;align-items:flex-end;">' +
       '<div class="magic-item-charges-group" style="display:none;gap:6px;">' +
         '<div style="display:flex;flex-direction:column;width:70px;">' +
@@ -3751,6 +3773,8 @@ function makeMagicItemNode(data={}, onChange){
     '<div style="margin-top:6px;">' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Description / Powers</label>' +
       '<textarea class="notes" placeholder="" style="width:100%;min-height:60px;resize:vertical;">'+escapeHtml(data.notes||'')+'</textarea>' +
+    '</div>' +
+    // Closes .magic-item-details, opened in the identity-row block above.
     '</div>';
   // Charges show only for the types Chapter 10 states are expendable -- wands,
   // staves and rods. Read from MAGIC_ITEM_TYPES so that registry stays the one
@@ -3764,7 +3788,60 @@ function makeMagicItemNode(data={}, onChange){
     miChargeGrp.style.display = show ? 'flex' : 'none';
   };
   syncMagicItemCharges();
-  miTypeSel.addEventListener('change', ()=>{ syncMagicItemCharges(); onChange && onChange(); });
+  miTypeSel.addEventListener('change', ()=>{
+    syncMagicItemCharges(); syncMiCollapsed(); onChange && onChange();
+  });
+
+  // Details toggle. This card had NONE -- every magic item rendered fully
+  // expanded, so eight items was eight four-row blocks. Same pattern as the
+  // armor, weapon and ammunition cards.
+  const miToggleBtn = el.querySelector('.toggle-details');
+  const miDetails   = el.querySelector('.magic-item-details');
+  if (miToggleBtn && miDetails) {
+    miToggleBtn.onclick = () => {
+      const open = miDetails.style.display !== 'none';
+      miDetails.style.display = open ? 'none' : 'block';
+      miToggleBtn.textContent = open ? 'Details' : 'Hide';
+    };
+  }
+
+  // Collapsed-row readouts. Charges are shown only for the types
+  // MAGIC_ITEM_TYPES marks as charged; everything else gets an em dash, which
+  // says "not applicable" where a blank would say "you forgot to fill this in".
+  const syncMiCollapsed = () => {
+    const out = el.querySelector('.mi-charges');
+    if (!out) return;
+    const charged = (typeof magicItemTypeHasCharges === 'function') &&
+                    magicItemTypeHasCharges(miTypeSel.value);
+    if (!charged) { out.innerHTML = '<span class="none">&mdash;</span>'; return; }
+    const cur = el.querySelector('.charges').value;
+    const max = el.querySelector('.charges-max').value;
+    out.innerHTML = cur === '' && max === ''
+      ? '<span class="none">&mdash;</span>'
+      : '<b>' + escapeHtml(cur || '0') + '</b>' + (max ? ' / ' + escapeHtml(max) : '');
+  };
+  syncMiCollapsed();
+  ['.charges', '.charges-max'].forEach(sel => {
+    const f = el.querySelector(sel);
+    if (f) f.addEventListener('input', syncMiCollapsed);
+  });
+
+  // Quantity spinner. Dispatches a real 'input' event rather than assigning
+  // .value silently, so the blanket listener below still fires and the sheet
+  // marks unsaved. Floors at zero.
+  const miQty = el.querySelector('.qty');
+  const miStep = (delta) => {
+    const n = parseInt(miQty.value || 0, 10);
+    miQty.value = Math.max(0, (isNaN(n) ? 0 : n) + delta);
+    miQty.dispatchEvent(new Event('input', { bubbles: true }));
+  };
+  const miUp = el.querySelector('.qty-up'), miDown = el.querySelector('.qty-down');
+  if (miUp)   miUp.onclick   = () => miStep(1);
+  if (miDown) miDown.onclick = () => miStep(-1);
+  miQty.addEventListener('input', () => {
+    const clean = String(miQty.value).replace(/[^0-9]/g, '');
+    if (clean !== miQty.value) miQty.value = clean;
+  });
 
   el.querySelector('.rm').onclick = ()=>{ el.remove(); onChange && onChange(); };
   el.querySelectorAll('input,select,textarea').forEach(inp =>
