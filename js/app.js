@@ -2039,7 +2039,12 @@ function makeArmorNode(data={}, onChange){
 
   el.innerHTML =
     // --- Identity row: always visible, mirrors the weapon card ---
-    '<div style="width:60px;text-align:center;">Equipped</div>' +
+    // The opening tag of this header row was MISSING. The parser discarded the
+    // orphaned '</div>' three lines down, so "Equipped" and "Armor" rendered as
+    // full-width block divs in body colour instead of a muted aligned strip --
+    // which is why the armor list header never lined up with the weapon list.
+    '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
+      '<div style="width:60px;text-align:center;">Equipped</div>' +
       '<div style="flex:1;">Armor</div>' +
       '<div style="width:148px;"></div>' +
     '</div>' +
