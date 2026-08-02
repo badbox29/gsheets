@@ -1279,6 +1279,10 @@
 	.item.gear .qtybox input:focus { border-bottom-color: var(--accent); }
 	.item.gear .qtybox input::-webkit-outer-spin-button,
 	.item.gear .qtybox input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+	/* Firefox ignores the pseudo-elements above and needs the field itself told.
+	   Without this the browser's own arrows sit beside ours -- two spinners on
+	   one input, and only one of them floors at zero. */
+	.item.gear .qtybox input { -moz-appearance: textfield; appearance: textfield; }
 	.item.gear .spin { display: flex; flex-direction: column; gap: 1px; flex-shrink: 0; }
 	.item.gear .spin button {
 	  background: transparent;
