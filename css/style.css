@@ -1335,3 +1335,41 @@
 	}
 	/* Unit figure beside the line total: "1,000 gp ea" against "4,000 gp". */
 	.item.gear .stat.each { font-size: 11px; color: var(--muted); }
+
+	/* ===== Coin & Treasure ledger =====================================
+	   Replaces two .row summaries that used an EMPTY LEADING COLUMN to force
+	   Valuables Weight under Coin Weight. A grid aligns them structurally, so
+	   the columns cannot drift and the alignment hack is no longer needed. */
+	.treasure-ledger {
+	  display: grid;
+	  grid-template-columns: 1fr auto auto auto;
+	  gap: 7px 18px;
+	  align-items: baseline;
+	  border-top: 1px solid var(--border);
+	  padding-top: 11px;
+	  margin-top: 12px;
+	}
+	.treasure-ledger .lhead {
+	  font-size: 10px;
+	  letter-spacing: .7px;
+	  color: var(--muted);
+	  text-align: right;
+	}
+	.treasure-ledger .lhead:first-child { text-align: left; }
+	.treasure-ledger .lrow { font-size: 12px; color: var(--muted); }
+	.treasure-ledger .lval {
+	  text-align: right;
+	  font-size: 16px;
+	  font-weight: 600;
+	  color: var(--accent-light);
+	  white-space: nowrap;
+	}
+	/* Count and weight are supporting figures; VALUE is the one that answers
+	   "can I afford this", so it keeps the larger accent treatment. */
+	.treasure-ledger .lval.q { font-size: 13px; font-weight: 400; color: var(--text); }
+	.treasure-ledger .ltotal {
+	  border-top: 1px solid var(--border);
+	  padding-top: 7px;
+	}
+	.treasure-ledger .lrow.ltotal { color: var(--text); }
+	.treasure-ledger .none { color: var(--muted); font-weight: 400; }
