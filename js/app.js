@@ -3379,6 +3379,31 @@ function makeWeaponNode(data={}, onChange){
     };
   }
 
+  // Collapsed-row damage and weight. Read LIVE from the detail inputs rather
+  // than stored -- derived values are never kept separately anywhere in this
+  // codebase, and a stored copy is a copy that drifts. S-M and L are both shown
+  // because which one applies is decided by the target, not by the weapon.
+  const syncWeaponLine = () => {
+    const val = sel => ((el.querySelector(sel) || {}).value || '').trim();
+    const dmgEl = el.querySelector('.wpn-damage');
+    const wtEl  = el.querySelector('.wpn-weight');
+    if (dmgEl) {
+      const sm = val('.damage-sm'), l = val('.damage-l');
+      dmgEl.textContent = (sm || l)
+        ? (sm || '\u2014') + ' / ' + (l || '\u2014')
+        : '';
+    }
+    if (wtEl) {
+      const w = val('.weight');
+      wtEl.textContent = w === '' ? '' : w + ' lb';
+    }
+  };
+  syncWeaponLine();
+  ['.damage-sm', '.damage-l', '.weight'].forEach(sel => {
+    const f = el.querySelector(sel);
+    if (f) f.addEventListener('input', syncWeaponLine);
+  });
+
   // The name field grows with its contents so the badge sits right against the
   // text. An <input> cannot shrink-to-fit in CSS, so the width is set here in ch
   // units. Clamped so an empty field stays clickable and a long name cannot push
