@@ -1298,3 +1298,23 @@
 	.item.gear .spin button:hover { color: var(--accent-light); border-color: var(--accent); }
 	.item.gear .spin button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 	.item.gear .qlab { font-size: 10px; letter-spacing: .5px; color: var(--muted); }
+
+	/* The expanded panel is a grid child like row1 and row2, so without this it
+	   auto-places into column 1 -- the rail's column -- and renders squeezed to
+	   3px. Pinning it to column 2 keeps it aligned under the rows it belongs to,
+	   and lets the rail read as a spine down the whole open card. */
+	.item.gear > .ammo-details,
+	.item.gear > .magic-item-details,
+	.item.gear > .armor-details,
+	.item.gear > .weapon-details,
+	.item.gear > .gear-details {
+	  grid-column: 2;
+	  padding-top: 10px;
+	}
+	/* A gold hairline separating the collapsed rows from the panel. Matches the
+	   section rule already used between sections in sheet_template.js. */
+	.item.gear > [class$="-details"] {
+	  border-top: 1px solid var(--accent);
+	  border-top-color: color-mix(in srgb, var(--accent) 40%, transparent);
+	  margin-top: 8px;
+	}
