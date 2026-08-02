@@ -1593,43 +1593,61 @@ function makeMemSpellNode(data={}, onChange){
 }
 function makeSpellbookNode(data={}, onChange){
   const el = document.createElement('div');
-  el.className = 'item';
-  el.style.flexDirection = 'column';
-  el.style.alignItems = 'stretch';
-  el.style.padding = '12px';
+  // See makeMemSpellNode: 'gear' brings the shared shell, 'spell' adds what
+  // only spells need. Inline styles removed rather than left dead -- an inline
+  // style beats the stylesheet.
+  el.className = 'item gear spell';
   
 el.innerHTML =
-    '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div style="flex:1;">Spell Name</div>' +
-      '<div style="width:50px;text-align:center;">Level</div>' +
-      '<div style="width:70px;"></div>' + // Space for Details button
-      '<div style="width:80px;"></div>' + // Space for Memorize button
-      '<div style="width:75px;"></div>' + // Space for Move to... button
-      '<div style="width:70px;"></div>' + // Space for Remove button
+    // Rail marks the specialist's OWN school, and once wired to
+    // isOppositionSpell the schools he may never learn from. Neutral throughout
+    // for a non-specialist or a priest -- getSpecialistSchool returns nothing,
+    // so no branch is needed for them.
+    '<div class="rail neutral"></div>' +
+    '<div class="row1">' +
+      // CORE FIELDS FIRST, ALWAYS IN THE SAME ORDER: level, school. Anything
+      // conditional comes AFTER, so a badge only some rows carry can never
+      // shift the fields every row carries and make the eye re-find them.
+      '<span class="lvl"></span>' +
+      '<span class="school">'+escapeHtml((data.schoolSphere||'').toUpperCase())+'</span>' +
+      '<span class="freetag" style="display:none;">FREE SPELL</span>' +
+      '<div class="spacer"></div>' +
+      '<div class="btns">' +
+        '<button class="toggle-spellbook-details act-details">Details</button>' +
+        '<button class="memorize-spell primary">Memorize</button>' +
+        '<button class="move-to-spellbook act-details">Move to&hellip;</button>' +
+        '<button class="rm act-remove">Remove</button>' +
+      '</div>' +
     '</div>' +
-	'<div style="display:flex;gap:8px;align-items:stretch;">' +
-	  '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1;font-weight:bold;">' +
-	  '<input class="level" type="number" placeholder="" value="'+escapeHtml(data.level||'')+'" style="width:50px;text-align:center;">' +
-	  '<button class="toggle-spellbook-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
-	  '<button class="memorize-spell" style="padding:8px 12px;font-size:11px;background:var(--accent);border:none;border-radius:4px;cursor:pointer;">Memorize</button>' +
-	  '<button class="move-to-spellbook" style="padding:8px 12px;font-size:11px;">Move to...</button>' +
-	  '<button class="rm">Remove</button>' +
-	'</div>' +
-	'<div class="free-spell-row" style="display:none;margin-top:6px;font-size:12px;">' +
-	  '<label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;">' +
-	    '<input type="checkbox" class="free-spell-check">' +
-	    '<span class="free-spell-label" style="color:var(--muted);"></span>' +
-	  '</label>' +
-	'</div>' +
-	'<div class="spellbook-details" style="display:none;margin-top:8px;">' +
-      '<div style="font-size:11px;color:var(--muted);margin-bottom:4px;">' +
-        (data.schoolSphere ? data.schoolSphere + ' | ' : '') +
-        (data.castTime || '') + ' | ' +
-        (data.range || '') + ' | ' +
-        (data.duration || '') +
+    '<div class="row2">' +
+      '<input class="title spell-name" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:1;min-width:0;">' +
+    '</div>' +
+    '<div class="spellbook-details" style="display:none;">' +
+      // Level is EDITABLE here, unlike the memorized card where it is inherited.
+      // The circle on the collapsed row mirrors this field.
+      '<div style="display:flex;align-items:flex-end;gap:10px;margin-bottom:10px;">' +
+        '<div style="display:flex;flex-direction:column;">' +
+          '<label style="font-size:11px;color:var(--muted);margin-bottom:2px;">Level</label>' +
+          '<input class="level" type="number" placeholder="" value="'+escapeHtml(data.level||'')+'" style="width:70px;text-align:center;">' +
+        '</div>' +
+        // The free-spell claim moved in here from a row under the card. It is a
+        // once-per-level decision, not something read at a glance -- the FREE
+        // SPELL tag on the collapsed row is what reports it.
+        '<div class="free-spell-row" style="display:none;">' +
+          '<label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;">' +
+            '<input type="checkbox" class="free-spell-check" style="width:auto;">' +
+            '<span class="free-spell-label" style="color:var(--muted);"></span>' +
+          '</label>' +
+        '</div>' +
+      '</div>' +
+      '<div class="spell-statline">' +
+        '<div><span>SCHOOL/SPHERE</span><b>'+escapeHtml(data.schoolSphere||'\u2014')+'</b></div>' +
+        '<div><span>CASTING TIME</span><b>'+escapeHtml(data.castTime||'\u2014')+'</b></div>' +
+        '<div><span>RANGE</span><b>'+escapeHtml(data.range||'\u2014')+'</b></div>' +
+        '<div><span>DURATION</span><b>'+escapeHtml(data.duration||'\u2014')+'</b></div>' +
       '</div>' +
       '<div style="font-size:12px;white-space:pre-wrap;max-height:200px;overflow-y:auto;">' +
-        (data.description || 'No description available.') +
+        escapeHtml(data.description || 'No description available.') +
       '</div>' +
     '</div>';
   
@@ -1646,8 +1664,21 @@ el.innerHTML =
       const r = el.closest('.sheet-container');
       onChange && onChange();
       if (r && typeof syncSpellbookToData === 'function') syncSpellbookToData(r);
+      syncBookLevel();
     });
   }
+
+  // The level circle on the collapsed row mirrors the editable field in the
+  // panel. The INPUT stays the source of truth -- sortSpellbook and every other
+  // reader address .level -- and the circle is display only, so there is never
+  // a second stored copy to drift.
+  const bookLvlInput = el.querySelector('.level');
+  const bookLvlDot   = el.querySelector('.lvl');
+  const syncBookLevel = () => {
+    if (bookLvlDot && bookLvlInput) bookLvlDot.textContent = bookLvlInput.value || '\u2013';
+  };
+  syncBookLevel();
+  if (bookLvlInput) bookLvlInput.addEventListener('input', syncBookLevel);
   
   // Toggle details button
   const toggleDetailsBtn = el.querySelector('.toggle-spellbook-details');
