@@ -3774,7 +3774,7 @@ function makeMagicItemNode(data={}, onChange){
 }
 
 function makeAmmunitionNode(data={}, onChange){
-  cconst el = document.createElement('div');
+  const el = document.createElement('div');
   // 'gear' opts this card into the shared gear-card grammar in style.css --
   // two-row grid, status rail, chips, spinner. The base 'item' class is left
   // alone because every other list in the app uses it.
