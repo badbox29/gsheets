@@ -2214,8 +2214,10 @@ function makeArmorNode(data={}, onChange){
     // input to its contents so the badge sits against the text.
     '<div class="row2">' +
       '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
+      // See makeAmmunitionNode: unidentified shows the dot, never the number.
       magicBadgeHtml(armorIsMagical,
-        (parseFloat(data.acBonus) || 0) !== 0 ? '(' + magicSign(parseFloat(data.acBonus)) + ')' : '') +
+        (armorIdentified && (parseFloat(data.acBonus) || 0) !== 0)
+          ? '(' + magicSign(parseFloat(data.acBonus)) + ')' : '') +
     '</div>' +
 
     '<div class="armor-details" style="display:none;">' +
@@ -3425,7 +3427,8 @@ function makeWeaponNode(data={}, onChange){
     // against the text rather than at the far edge.
     '<div class="row2">' +
       '<input class="title" placeholder="" value="'+escapeHtml(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
-      magicBadgeHtml(weaponIsMagical, weaponInitialBadge) +
+      // See makeAmmunitionNode: unidentified shows the dot, never the number.
+      magicBadgeHtml(weaponIsMagical, weaponIdentified ? weaponInitialBadge : '') +
     '</div>' +
     // Everything below the identity row is collapsed by default. The stats a
     // player needs mid-combat are already surfaced on the Combat Quick
@@ -4186,7 +4189,11 @@ function makeAmmunitionNode(data={}, onChange){
     // Row 2: the name alone, full card width, so it never truncates.
     '<div class="row2">' +
       '<input class="title" placeholder="e.g., Arrows, Bolts" value="'+escapeHtml(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
-      magicBadgeHtml(ammoIsMagical, ammoInitialBadge) +
+      // Unidentified falls back to the dot: the bonus is recorded, but the
+      // character does not know it, and the collapsed row must not announce a
+      // number nobody has learned yet. refreshAmmoMagic applies the same rule
+      // live; this is the initial render.
+      magicBadgeHtml(ammoIsMagical, ammoIdentified ? ammoInitialBadge : '') +
     '</div>' +
     '<div class="ammo-details" style="display:none;">' +
       '<div style="display:flex;gap:8px;margin-bottom:8px;">' +
