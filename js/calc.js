@@ -1899,6 +1899,11 @@ function renderThiefSkills(root) {
 // Class armor restrictions (PHB Ch.3). Advisory only -- a DM may have granted
 // an exception, and the specialist suite's no-blocking philosophy applies.
 function renderArmorRestrictions(root) {
+  // BEFORE the early return below: rails must be repainted even when there are
+  // no problems to report, or a piece of armor that has just become legal keeps
+  // its red rail until something else triggers a redraw.
+  if (typeof resolveArmorLegality === 'function') resolveArmorLegality(root);
+
   const el = root.querySelector('.armor-restriction-note');
   if (!el) return;
 
@@ -1918,6 +1923,37 @@ function renderArmorRestrictions(root) {
       'Advisory only \u2014 nothing is blocked. Druid and other class limits can be adjusted ' +
       'under House Rules &amp; Overrides in Settings.</div>';
   el.style.display = '';
+}
+
+// Paints the armor rail and its status word, and reveals the rail key. Called
+// from renderArmorRestrictions so the banner and the per-card rails are always
+// computed in the same pass and cannot disagree.
+//
+// The KEY ships hidden in the template and is unhidden here: a legend for
+// colours nothing produces is worse than no legend at all.
+function resolveArmorLegality(root) {
+  const items = Array.from(root.querySelectorAll('.armor-list .item'));
+  const key = root.querySelector('.armor-rail-key');
+  if (key) key.style.display = items.length ? '' : 'none';
+
+  items.forEach(item => {
+    const state = (typeof getArmorLegality === 'function')
+      ? getArmorLegality(item, root) : 'allowed';
+
+    const railEl = item.querySelector('.rail');
+    if (railEl) railEl.className = 'rail ' + state;
+
+    // The word carries the meaning; the rail only accelerates it. Colour alone
+    // is a code the reader must learn, and is invisible to anyone who cannot
+    // separate those hues.
+    const wordEl = item.querySelector('.status');
+    if (wordEl) {
+      wordEl.className = 'status ' + state;
+      wordEl.textContent = state === 'restricted' ? 'NOT ALLOWED TO THIS CLASS'
+                         : state === 'advisory'   ? 'STEALTH UNAVAILABLE'
+                         : '';
+    }
+  });
 }
 
 function renderRangerStealth(root) {
@@ -5022,6 +5058,11 @@ function addEquipmentFromBrowser(root, item) {
     name: item['Item Name'],
     qty: 1,
     weight: weightValue,
+    // THE ANCHOR RULE: the browser knows the category, so it is stored on the
+    // record. Without this the card's type caption has no backing data and
+    // would have to be guessed from the name -- the same problem ammoKey was
+    // added to solve. A hand-added item simply has none, and shows none.
+    category: item.Category || '',
     notes: item.Notes || ''
   }, () => {
     const activeTab = document.querySelector('.tab.active');
