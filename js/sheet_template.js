@@ -2767,13 +2767,7 @@ const SHEET_HTML = `
 	<div class="print-modal-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:10000;justify-content:center;align-items:center;">
 	  <div style="background:var(--panel);border-radius:8px;max-width:660px;width:94%;max-height:85vh;overflow-y:auto;padding:20px 24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
 	    <h2 style="margin:0 0 4px 0;font-size:16px;">🖨 Print Character Sheet</h2>
-	    <p style="font-size:12px;color:var(--muted);margin:0 0 12px;">Core pages (ability scores, saving throws, combat, weapons and proficiencies) always print. Choose which optional sections to include below. Empty sections are skipped automatically.</p>
-
-	    <div style="display:flex;gap:8px;margin-bottom:14px;">
-	      <button class="print-select-all" style="font-size:11px;padding:5px 10px;">Select All</button>
-	      <button class="print-select-none" style="font-size:11px;padding:5px 10px;">Select None</button>
-	      <button class="print-select-core" style="font-size:11px;padding:5px 10px;">Defaults</button>
-	    </div>
+	    <p style="font-size:12px;color:var(--muted);margin:0 0 12px;">Choose how the sheet should look, then pick a tab below.</p>
 
 	    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:8px 10px;background:var(--glass);border-radius:4px;">
 	      <label style="font-size:12px;color:var(--text);margin:0;white-space:nowrap;">Colour scheme</label>
@@ -2807,6 +2801,26 @@ const SHEET_HTML = `
 	        <option value="Roboto">Roboto &mdash; original</option>
 	      </select>
 	      <span style="font-size:10px;color:var(--muted);">Everything except section headings. Condensed buys room in dense tables.</span>
+	    </div>
+
+	    <!-- Reuses the Tools and Settings tab strip: .subtab, .subtab-panel-hidden.
+	         The look-and-feel controls deliberately sit ABOVE this, so it is
+	         visible without being told that both tabs share them. -->
+	    <div class="subtab-bar print-subtab-bar">
+	      <div class="subtab active" data-print-tab="character">This Character</div>
+	      <div class="subtab" data-print-tab="blank">Blank Sheet</div>
+	    </div>
+
+	    <div class="print-panel" data-panel="character">
+
+	    <p style="font-size:11px;color:var(--muted);margin:0 0 12px;">Core pages (ability scores, saving throws, combat, weapons and proficiencies) always print. Choose which optional sections to include below. Empty sections are skipped automatically.</p>
+
+	    <!-- These act ONLY on the checkboxes below, so they belong inside this
+	         tab. Above the strip they would appear to act on both. -->
+	    <div style="display:flex;gap:8px;margin-bottom:14px;">
+	      <button class="print-select-all" style="font-size:11px;padding:5px 10px;">Select All</button>
+	      <button class="print-select-none" style="font-size:11px;padding:5px 10px;">Select None</button>
+	      <button class="print-select-core" style="font-size:11px;padding:5px 10px;">Defaults</button>
 	    </div>
 
 	    <!-- Character -->
@@ -2903,13 +2917,31 @@ const SHEET_HTML = `
 
 	    <p style="font-size:10px;color:var(--muted);margin:0 0 14px;">Your selections are remembered in this browser and are not stored with the character.</p>
 
-	    <hr style="border:none;border-top:1px solid var(--border);margin:0 0 16px;">
 	    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
 	      <span class="print-page-estimate" style="font-size:11px;color:var(--muted);"></span>
-	      <div style="display:flex;gap:8px;">
-	        <button class="print-modal-close" style="padding:8px 20px;">Cancel</button>
-	        <button class="print-modal-generate" style="padding:8px 20px;">Generate PDF</button>
+	      <button class="print-modal-generate" style="padding:8px 20px;">Generate PDF</button>
+	    </div>
+	    </div><!-- /panel: character -->
+
+	    <!-- Nothing to configure. The look-and-feel controls above the tabs are
+	         shared, which is why they sit OUTSIDE the strip -- a blank sheet
+	         prints in whatever colour scheme and fonts you have chosen. What it
+	         does NOT take is the section choices or the blank-row counts: those
+	         describe a character's sheet, and a blank one is not that. -->
+	    <div class="print-panel subtab-panel-hidden" data-panel="blank">
+	      <p style="font-size:12px;color:var(--muted);margin:0 0 14px;line-height:1.5;">
+	        Prints an empty sheet with every field blank and generous room to write &mdash;
+	        for handing paper to a player at the table, or for rolling a character up longhand.
+	        It uses the colour scheme and fonts chosen above; everything else is set for you.
+	      </p>
+	      <div style="display:flex;justify-content:flex-end;">
+	        <button class="print-blank-generate" style="padding:8px 20px;">Print Blank Sheet</button>
 	      </div>
+	    </div>
+
+	    <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;">
+	    <div style="display:flex;justify-content:flex-end;">
+	      <button class="print-modal-close" style="padding:8px 20px;">Close</button>
 	    </div>
 	  </div>
 	</div>
