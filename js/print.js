@@ -272,7 +272,19 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // it is tested. Every NEW section reads from `sheet` instead, because the
   // arrays -- spellbooks, henchmen, equipment, journal entries -- are not
   // reachable through val() at all.
-  const sheet = (typeof collectSheet === 'function') ? collectSheet(root) : null;
+  const _blank = !!(opts && opts.blankSheet);
+  const sheet = _blank ? {} :
+    ((typeof collectSheet === 'function') ? collectSheet(root) : null);
+
+  // Shadows the global val() for the duration of this build. Derived figures --
+  // THAC0, AC, saves, encumbrance -- are not stored fields; they are rendered
+  // into the DOM by calc.js, so they can only be blanked by intercepting the
+  // read, not by clearing data.
+  //
+  // Shadowing applies to the WHOLE function scope, so any val() call above this
+  // line would throw rather than reach the global. Verified: the first is at
+  // line 638, well below.
+  const val = _blank ? (() => '') : window.val;
 
   // Wraps a section heading together with its content so pdfMake treats the
   // pair as one indivisible block. If the whole thing will not fit in the
