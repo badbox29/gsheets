@@ -1789,3 +1789,13 @@
 	.coin-inputs input[type="number"]::-webkit-outer-spin-button,
 	.coin-inputs input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 	.coin-inputs input[type="number"]:focus { border-color: var(--accent); }
+    /* The only scrolling region in the settings modal. flex:1 takes the space
+	   left by the heading, tab strip and Close button; min-height:0 is required
+	   or a flex child refuses to shrink below its content and scrolls the whole
+	   modal instead. */
+	.settings-scroll {
+	  flex: 1;
+	  min-height: 0;
+	  overflow-y: auto;
+	  margin-bottom: 16px;
+	}
