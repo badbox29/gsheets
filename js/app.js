@@ -8205,11 +8205,16 @@ const PRINT_OPTION_DEFAULTS = {
 // session's acquisitions -- a blank sheet with three weapon rows is no use to
 // anyone rolling a character up longhand.
 const PRINT_BLANK_SHEET_ROWS = {
-  weapons: 8, equipment: 24, valuables: 10, magicItems: 8,
+  // 60 equipment rows is roughly two pages. There is no appendix page type for
+  // equipment, so the section's own blank rows are what fill the space.
+  weapons: 8, equipment: 60, valuables: 10, magicItems: 8,
   armor: 6, ammo: 6, weaponProfs: 8, nwps: 12, languages: 6,
   memorized: 20, spellbook: 30, conditions: 6,
   henchmen: 4, hirelings: 4, companions: 3, mounts: 3,
-  extraSpellbookPages: 0, extraMemorizationPages: 0, extraBlankPages: 0
+  // Two of each appendix page. A blank sheet is for rolling a character up on
+  // paper, so the spell pages are not "extra" here -- they are the only ones
+  // there will be. Each prints APPENDIX_ROWS (32) ruled rows.
+  extraSpellbookPages: 2, extraMemorizationPages: 2, extraBlankPages: 2
 };
 
 // Builds the options for a blank sheet: the caller's LOOK, every section on,
