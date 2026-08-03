@@ -1280,7 +1280,9 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     String(thief[scoreKey] || '').trim() !== '' ||
     (parseInt(thief[pointsKey], 10) || 0) > 0
   );
-  const showThief = !!opts.thiefSkills && hasThiefData;
+  // A fixed eight-row table needing no blank-row count, so it prints on a blank
+  // sheet regardless -- it is exactly the page someone rolling up a rogue wants.
+  const showThief = !!opts.thiefSkills && (hasThiefData || _blank);
 
   const thiefBlocks = [];
 
@@ -1300,8 +1302,12 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
             const score = String(thief[scoreKey] || '').trim();
             return [
               cell(label),
-              cell(score ? `${score}%` : '\u2014', 6, { alignment: 'center' }),
-              cell(thief[pointsKey] || '0', 6, { alignment: 'center' }),
+              // Blank sheet: a space, not an em dash or a zero. The dash means
+              // "does not apply" and the zero is a recorded value; both sit in
+              // the cell the player wants to write in. A space keeps the row
+              // height, which an empty string would collapse.
+              cell(score ? `${score}%` : (_blank ? ' ' : '\u2014'), 6, { alignment: 'center' }),
+              cell(_blank ? ' ' : (thief[pointsKey] || '0'), 6, { alignment: 'center' }),
               cell('d100', 6, { alignment: 'center' })
             ];
           })
