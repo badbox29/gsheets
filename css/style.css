@@ -1689,12 +1689,20 @@
 	  color: inherit;
 	  cursor: default;
 	}
+	/* An <input> with width:auto is sized by its `size` attribute, which
+	   defaults to 20 CHARACTERS -- so three of these plus their captions
+	   overflowed the row and wrapped. Sized to content instead: 6ch fits
+	   "220.6", and the category gets its own width because "Overloaded!" is
+	   the longest string it can hold. field-sizing:content would do this
+	   properly but is too new to rely on. */
 	.stat-strip input[readonly] {
 	  font-size: 13px;
 	  font-weight: 600;
 	  color: var(--accent-light);
 	  text-align: left;
+	  width: 6ch;
 	}
+	.stat-strip .encumbrance-category-pair input[readonly] { width: 12ch; }
 	.stat-strip .pair.over input[readonly] { color: var(--error); }
 
 	/* Manual adj. stays INSIDE the strip, pushed right the same way the card
