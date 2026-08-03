@@ -1629,3 +1629,135 @@
 	.spell-statline div:last-child { border-right: none; }
 	.spell-statline span { display: block; font-size: 9px; letter-spacing: .7px; color: var(--muted); margin-bottom: 2px; }
 	.spell-statline b { font-size: 12px; font-weight: 600; }
+
+	/* ===== Stat strips ================================================
+	   One container style for every readout bar on the sheet: spells memorized,
+	   specialist slots, study/prayer time, spells known, weapon and nonweapon
+	   slots, languages, encumbrance.
+
+	   Matches the LEGEND container from the card pass -- same glass, radius and
+	   padding -- but the values stay louder than a legend's swatches. A legend
+	   is a KEY; these are live READOUTS, and blurring the two loses the cue that
+	   one of them changes as you play.
+
+	   A pill treatment was rejected: a pill means CLICKABLE everywhere else on
+	   this sheet, and these are not.
+
+	   NOTHING IS DROPPED OR RENAMED by this restyle. */
+	.stat-strip {
+	  display: flex;
+	  align-items: baseline;
+	  gap: 14px;
+	  flex-wrap: wrap;
+	  padding: 9px 11px;
+	  margin-bottom: 8px;
+	  background: var(--glass);
+	  border-radius: var(--radius);
+	}
+	.stat-strip .lab {
+	  font-size: 10px;
+	  letter-spacing: 1px;
+	  color: var(--muted);
+	  flex-shrink: 0;
+	}
+	.stat-strip .pair { font-size: 11px; color: var(--muted); white-space: nowrap; }
+	.stat-strip .pair b {
+	  font-size: 13px;
+	  font-weight: 600;
+	  color: var(--accent-light);
+	  margin-left: 4px;
+	}
+	/* At or over a limit: the language INT cap, an overloaded encumbrance
+	   category. --error means "wrong or forbidden" on every other surface too. */
+	.stat-strip .pair.over b { color: var(--error); }
+	.stat-strip .pair.spent b { color: var(--muted); }
+	/* For strips that are a sentence rather than pairs. */
+	.stat-strip .prose { font-size: 11px; color: var(--muted); }
+	.stat-strip .prose b { color: var(--text); font-weight: 600; }
+
+	/* Readonly figures that must stay <input> elements, because collectSheet,
+	   loadSheet, print.js and KV sync all address them by data-field. Turning
+	   them into spans would drop them from those paths silently. */
+	.stat-strip input[readonly],
+	.treasure-ledger input[readonly] {
+	  background: transparent;
+	  border: none;
+	  padding: 0;
+	  width: auto;
+	  min-width: 0;
+	  font: inherit;
+	  color: inherit;
+	  cursor: default;
+	}
+	.stat-strip input[readonly] {
+	  font-size: 13px;
+	  font-weight: 600;
+	  color: var(--accent-light);
+	  text-align: left;
+	}
+	.stat-strip .pair.over input[readonly] { color: var(--error); }
+
+	/* Manual adj. stays INSIDE the strip, pushed right the same way the card
+	   button banks are. */
+	.stat-strip .strip-adj {
+	  display: inline-flex;
+	  align-items: center;
+	  gap: 6px;
+	  margin-left: auto;
+	  flex-shrink: 0;
+	}
+	.stat-strip .strip-adj label {
+	  font-size: 11px;
+	  color: var(--muted);
+	  margin: 0;
+	  white-space: nowrap;
+	}
+	.stat-strip .strip-adj input {
+	  width: 58px;
+	  text-align: center;
+	  padding: 3px 4px;
+	  font-size: 13px;
+	  -moz-appearance: textfield;
+	  appearance: textfield;
+	}
+	.stat-strip .strip-adj input::-webkit-outer-spin-button,
+	.stat-strip .strip-adj input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+	/* ===== Coin & Treasure ============================================
+	   The ledger keeps its GRID: it is genuinely tabular, two rows against three
+	   columns, and flattening it would lose the alignment that puts weight under
+	   weight and value under value. It takes the strip's container and type
+	   hierarchy, not its layout. */
+	.treasure-ledger {
+	  background: var(--glass);
+	  border-radius: var(--radius);
+	  padding: 11px 13px;
+	  border-top: none;
+	  gap: 8px 22px;
+	}
+	.treasure-ledger .lrow { font-size: 11px; letter-spacing: 1px; color: var(--muted); }
+	.treasure-ledger .lhead { letter-spacing: 1px; }
+	/* A border-top on each cell renders as four DISCONNECTED segments, because
+	   the column gap shows through between them. One divider spanning every
+	   column draws a continuous rule instead. */
+	.treasure-ledger .ldivider {
+	  grid-column: 1 / -1;
+	  height: 1px;
+	  background: var(--border);
+	  margin-top: 3px;
+	}
+	.treasure-ledger .ltotal { border-top: none; padding-top: 2px; }
+	.treasure-ledger .lval.ltotal { font-size: 18px; }
+	/* The denomination boxes: figures you can edit, not form fields. */
+	.coin-inputs input[type="number"] {
+	  background: transparent;
+	  text-align: center;
+	  font-weight: 600;
+	  font-size: 16px;
+	  padding: 7px 8px;
+	  -moz-appearance: textfield;
+	  appearance: textfield;
+	}
+	.coin-inputs input[type="number"]::-webkit-outer-spin-button,
+	.coin-inputs input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+	.coin-inputs input[type="number"]:focus { border-color: var(--accent); }
