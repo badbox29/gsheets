@@ -1703,6 +1703,19 @@
 	  width: 6ch;
 	}
 	.stat-strip .encumbrance-category-pair input[readonly] { width: 12ch; }
+	/* Encumbrance reads as a scale -- what you carry, what you can carry, and
+	   the verdict -- so it is laid out as one: load left, max centred, verdict
+	   hard right. A grid rather than space-between, because space-between only
+	   centres the middle item when the outer two happen to be the same width,
+	   and "current load 220.6" is nothing like "category Overloaded!".
+	   Targeted with :has() so the template needs no extra class. */
+	.stat-strip:has(.encumbrance-category-pair) {
+	  display: grid;
+	  grid-template-columns: 1fr auto 1fr;
+	  align-items: baseline;
+	}
+	.stat-strip:has(.encumbrance-category-pair) .pair:nth-child(2) { justify-self: center; }
+	.stat-strip:has(.encumbrance-category-pair) .encumbrance-category-pair { justify-self: end; }
 	.stat-strip .pair.over input[readonly] { color: var(--error); }
 
 	/* Manual adj. stays INSIDE the strip, pushed right the same way the card
