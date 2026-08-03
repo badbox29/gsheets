@@ -8210,8 +8210,8 @@ const PRINT_BLANK_SHEET_ROWS = {
   // to the next page rather than flowing. 60 equipment rows pushed the section
   // past a page and stranded the coins on their own. These three are sized to
   // fit together on one page: a page holds roughly 36 blank rows at 6pt.
-  weapons: 8, equipment: 30, valuables: 8, magicItems: 10,
-  armor: 12, ammo: 12, weaponProfs: 8, nwps: 12, languages: 15,
+  weapons: 14, equipment: 30, valuables: 8, magicItems: 10,
+  armor: 14, ammo: 20, weaponProfs: 14, nwps: 14, languages: 15,
   memorized: 60, spellbook: 30, conditions: 18,
   henchmen: 16, hirelings: 16, companions: 8, mounts: 8,
   // Two of each appendix page. A blank sheet is for rolling a character up on
