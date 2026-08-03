@@ -1729,12 +1729,19 @@
 	   weight and value under value. It takes the strip's container and type
 	   hierarchy, not its layout. */
 	.treasure-ledger {
-	  background: var(--glass);
-	  border-radius: var(--radius);
-	  padding: 11px 13px;
-	  border-top: none;
-	  gap: 8px 22px;
-	}
+      background: var(--glass);
+      /* Gold outline. This is the one readout on the sheet answering a question
+         with money in it, so it earns a frame the plain strips do not -- and the
+         colour is the accent already used for section rules, not a new one.
+         Muted with color-mix so it frames rather than shouts; 55% is the dial.
+         The shorthand also clears the border-top:1px solid var(--border) set by
+         the base rule at line 1353, which would otherwise show through as a
+         heavier top edge. */
+      border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+      border-radius: 6px;
+      padding: 12px 14px;
+      gap: 8px 22px;
+    }
 	.treasure-ledger .lrow { font-size: 11px; letter-spacing: 1px; color: var(--muted); }
 	.treasure-ledger .lhead { letter-spacing: 1px; }
 	/* A border-top on each cell renders as four DISCONNECTED segments, because
