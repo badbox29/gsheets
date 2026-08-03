@@ -2101,7 +2101,13 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // === HENCHMEN (optional) ===
   const henchmenRows = named(sheet && sheet.henchmen);
   const henchmenNotes = String(details.henchmenNotes || '').trim();
-  const showHenchmen = !!opts.henchmen && (henchmenRows.length > 0 || henchmenNotes !== '');
+  // hasContent, not rows.length: the section must open when blank rows were
+  // ASKED FOR as well as when there is data, which is what every other
+  // follower section does. Testing rows.length directly meant a character with
+  // no henchmen yet could never get somewhere to write the ones he hires --
+  // and it hid the section entirely from the blank sheet.
+  const showHenchmen = !!opts.henchmen &&
+    (hasContent(henchmenRows, 'henchmen') || henchmenNotes !== '');
 
   // Twenty-plus fields per henchman is far too many for one table row, so the
   // combat-relevant ones get columns and everything else is composed into a
