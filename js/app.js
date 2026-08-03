@@ -8205,9 +8205,12 @@ const PRINT_OPTION_DEFAULTS = {
 // session's acquisitions -- a blank sheet with three weapon rows is no use to
 // anyone rolling a character up longhand.
 const PRINT_BLANK_SHEET_ROWS = {
-  // 60 equipment rows is roughly two pages. There is no appendix page type for
-  // equipment, so the section's own blank rows are what fill the space.
-  weapons: 8, equipment: 60, valuables: 10, magicItems: 8,
+  // Equipment, Valuables and the coin block share ONE section, and the coin
+  // block is a columns: node -- pdfMake cannot split those, so it moves whole
+  // to the next page rather than flowing. 60 equipment rows pushed the section
+  // past a page and stranded the coins on their own. These three are sized to
+  // fit together on one page: a page holds roughly 36 blank rows at 6pt.
+  weapons: 8, equipment: 22, valuables: 8, magicItems: 8,
   armor: 6, ammo: 6, weaponProfs: 8, nwps: 12, languages: 6,
   memorized: 20, spellbook: 30, conditions: 6,
   henchmen: 4, hirelings: 4, companions: 3, mounts: 3,
