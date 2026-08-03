@@ -7965,17 +7965,62 @@ function openKvSettingsModal(root) {
   qs(root, '.kv-token-status').textContent      = '';
   updateKvSyncStatus(root, cfg);
   renderOptionalRules(root);
+  // Bound once (guarded internally), reset every open so the modal always
+  // lands on Sync Settings rather than wherever it was last left.
+  bindSettingsTabs(root);
+  resetSettingsTabs(root);
   qs(root, '.kv-modal-overlay').style.display = 'flex';
+}
+
+// Settings modal sub-tabs. Deliberately the SAME classes as the Tools tab strip
+// -- .subtab, .subtab-panel-hidden -- rather than a parallel set, so there is
+// one tab mechanism in the codebase instead of two that drift.
+//
+// No existence/visibility split here, unlike Tools. Every settings section shows
+// for everyone and the modal opens with no character loaded, so a hidden panel
+// only ever means "not the tab you are on". Building the second mechanism would
+// be machinery for a case that cannot arise.
+//
+// Always opens on Sync Settings; the tab is not remembered between openings.
+function bindSettingsTabs(scope) {
+  const bar = scope.querySelector('.settings-subtab-bar');
+  if (!bar || bar._bound) return;
+  bar._bound = true;
+
+  const modal = bar.closest('.kv-modal-overlay') || scope;
+  bar.addEventListener('click', (e) => {
+    const tab = e.target.closest('.subtab');
+    if (!tab) return;
+    const want = tab.dataset.settingsTab;
+
+    bar.querySelectorAll('.subtab').forEach(t => {
+      t.classList.toggle('active', t === tab);
+    });
+    modal.querySelectorAll('.settings-panel').forEach(p => {
+      p.classList.toggle('subtab-panel-hidden', p.dataset.panel !== want);
+    });
+  });
+}
+
+// Reset to the first tab every time the modal opens, so it is predictable
+// rather than wherever it was left.
+function resetSettingsTabs(scope) {
+  const bar = scope.querySelector('.settings-subtab-bar');
+  if (!bar) return;
+  const modal = bar.closest('.kv-modal-overlay') || scope;
+  bar.querySelectorAll('.subtab').forEach(t => {
+    t.classList.toggle('active', t.dataset.settingsTab === 'sync');
+  });
+  modal.querySelectorAll('.settings-panel').forEach(p => {
+    p.classList.toggle('subtab-panel-hidden', p.dataset.panel !== 'sync');
+  });
 }
 
 // Render one checkbox per entry in the OPTIONAL_RULES registry (tables.js).
 // Adding a new optional rule means adding a registry entry and one
 // isOptionalRule() guard at the call site -- no UI work required here.
 function renderOptionalRules(root) {
-  const listEl = qs(root, '.optional-rules-list');
-  if (!listEl || typeof OPTIONAL_RULES === 'undefined') return;
-
-  listEl.innerHTML = '';
+  if (typeof OPTIONAL_RULES === 'undefined') return;
 
   // Group by category so PHB-optional rules and house-rule overrides read as
   // different things. Entries with no category fall back to 'phb'.
@@ -7987,24 +8032,26 @@ function renderOptionalRules(root) {
     (grouped[c] = grouped[c] || []).push(k);
   });
 
+  // Each category renders into its OWN panel now, one per settings tab, rather
+  // than all three stacked in a single list. The category heading the old code
+  // emitted is gone: the tab is the heading, and printing both says it twice.
+  // The blurb moves into the panel, which is what makes the explanatory text
+  // swap with the tab.
+  //
+  // Driven off OPTIONAL_RULES_CATEGORIES, so a fourth rule category added to
+  // tables.js needs only a matching panel and tab in sheet_template.js -- the
+  // renderer needs no change at all.
   order.forEach(cat => {
-    const keys = grouped[cat];
-    if (!keys || !keys.length) return;
-    const meta = cats[cat] || {};
-    // Only label the sections when there is more than one, or a lone group
-    // gets a redundant heading directly under the modal's own.
-    if (order.filter(c => grouped[c] && grouped[c].length).length > 1) {
-      const head = document.createElement('div');
-      head.style.cssText = 'margin:12px 0 6px;font-size:12px;font-weight:bold;color:var(--accent-light);';
-      head.textContent = meta.label || cat;
-      listEl.appendChild(head);
-      if (meta.blurb) {
-        const blurb = document.createElement('div');
-        blurb.style.cssText = 'font-size:10px;color:var(--muted);margin-bottom:8px;line-height:1.4;';
-        blurb.textContent = meta.blurb;
-        listEl.appendChild(blurb);
-      }
-    }
+    const listEl = root.querySelector('.optional-rules-list[data-cat="' + cat + '"]');
+    if (!listEl) return;
+    listEl.innerHTML = '';
+
+    const panel = listEl.closest('.settings-panel');
+    const meta  = cats[cat] || {};
+    const blurbEl = panel ? panel.querySelector('.settings-blurb') : null;
+    if (blurbEl) blurbEl.textContent = meta.blurb || '';
+
+    const keys = grouped[cat] || [];
     keys.forEach(key => renderOneOptionalRule(listEl, key));
   });
 }
