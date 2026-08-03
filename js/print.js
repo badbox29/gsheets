@@ -10,7 +10,7 @@
 // in a dense table gets muddy, which is the whole reason for the split.
 //
 // Files must be STATIC ttf/otf -- pdfkit cannot read variable fonts or
-// woff/woff2. Paths are case-sensitive on GitHub Pages.
+// woff/woff2. Paths are case-sensitive on GitHub Pages..
 const PRINT_TITLE_FONTS = {
   Cinzel:    'fonts/cinzel-regular.ttf',
   Marcellus: 'fonts/MarcellusSC-Regular.ttf'
