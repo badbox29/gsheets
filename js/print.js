@@ -746,10 +746,11 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   const chaReaction = orDash(val(root, 'cha_reaction_core'));
   
   // === COMBAT STATS ===
-  const hp = val(root, 'hp') || '';
-  // No '0' fallback on a blank sheet: the point of the form is that nothing is
-  // filled in, and a printed zero reads as a recorded value rather than a gap.
-  const damageTaken = val(root, 'damage_taken') || (_blank ? '' : '0');
+  // A single space, not an empty string: pdfMake collapses the line box of ''
+  // and the row loses its height, which is what flattened the Hit Points and
+  // Movement blocks. Same rule as blankCell() further down.
+  const hp = val(root, 'hp') || (_blank ? ' ' : '');
+  const damageTaken = val(root, 'damage_taken') || (_blank ? ' ' : '0');
   const currentHP = val(root, 'current_hp') || hp;
   // These three are DOM scrapes like the rest of page 1. hit_dice and
   // revivals_remaining are the derived readonly fields, so they already hold
@@ -779,10 +780,10 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   const thac0 = q('.combat-thac0')?.textContent.trim() || '';
   
   // === MOVEMENT ===
-  const baseMovement = val(root, 'movement_base') || '';
+  const baseMovement = val(root, 'movement_base') || (_blank ? ' ' : '');
   
   // === ENCUMBRANCE ===
-  const encumbranceMax = val(root, 'encumbrance_max') || '';
+  const encumbranceMax = val(root, 'encumbrance_max') || (_blank ? ' ' : '');
   
   // === SAVING THROWS ===
   //
