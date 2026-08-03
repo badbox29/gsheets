@@ -689,12 +689,13 @@ const SHEET_HTML = `
             <h3 style="margin:0;">Weapon Proficiencies</h3>
             <button class="add-custom-weapon-prof">+ Add Custom Weapon Proficiency</button>
           </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px;margin-bottom:8px;background:var(--glass);border-radius:4px;font-size:13px;">
-            <div class="wp-slot-counter">Weapon Slots: <span class="wp-slot-text">—</span></div>
-            <div style="display:flex;align-items:center;gap:6px;">
-              <label style="font-size:12px;color:var(--muted);margin:0;">Manual adj.</label>
-              <input data-field="prof_wp_adj" type="number" value="0" style="width:60px;text-align:center;">
-            </div>
+          <div class="stat-strip">
+            <span class="lab">WEAPON SLOTS</span>
+            <span class="prose wp-slot-counter"><span class="wp-slot-text">&mdash;</span></span>
+            <span class="strip-adj">
+              <label>Manual adj.</label>
+              <input data-field="prof_wp_adj" type="number" value="0">
+            </span>
           </div>
           <div class="list weapon-profs-list"></div>
         </section>
@@ -759,12 +760,13 @@ const SHEET_HTML = `
             <h3 style="margin:0;">Non-Weapon Proficiencies</h3>
             <button class="add-custom-nwp">+ Add Custom Non-Weapon Proficiency</button>
           </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px;margin-bottom:8px;background:var(--glass);border-radius:4px;font-size:13px;">
-            <div class="nwp-slot-counter">Nonweapon Slots: <span class="nwp-slot-text">—</span></div>
-            <div style="display:flex;align-items:center;gap:6px;">
-              <label style="font-size:12px;color:var(--muted);margin:0;">Manual adj.</label>
-              <input data-field="prof_nwp_adj" type="number" value="0" style="width:60px;text-align:center;">
-            </div>
+          <div class="stat-strip">
+            <span class="lab">NONWEAPON SLOTS</span>
+            <span class="prose nwp-slot-counter"><span class="nwp-slot-text">&mdash;</span></span>
+            <span class="strip-adj">
+              <label>Manual adj.</label>
+              <input data-field="prof_nwp_adj" type="number" value="0">
+            </span>
           </div>
           <div class="list nwp-list"></div>
         </section>
@@ -1161,15 +1163,18 @@ const SHEET_HTML = `
 		  <h3>Memorized Spells</h3>
 		  
 		  <!-- Spell slot status display -->
-		  <div class="spell-slot-status" style="margin-bottom:12px;padding:8px;background:var(--glass);border-radius:4px;font-size:13px;">
-			<strong>Spells Memorized:</strong> <span class="spell-status-text" style="margin-left:8px;">—</span>
+		  <div class="spell-slot-status stat-strip">
+			<span class="lab">SPELLS MEMORIZED</span>
+			<span class="prose spell-status-text">&mdash;</span>
 		  </div>
 		  <!-- Specialist bonus-slot utilization (populated for specialist wizards only) -->
-		  <div class="specialist-mem-status" style="display:none;margin-bottom:12px;padding:8px;background:var(--glass);border-radius:4px;font-size:13px;">
-			<strong>Specialist Spells Memorized:</strong> <span class="specialist-mem-status-text" style="margin-left:8px;">—</span>
+		  <div class="specialist-mem-status stat-strip" style="display:none;">
+			<span class="lab">SPECIALIST SLOTS</span>
+			<span class="prose specialist-mem-status-text">&mdash;</span>
 		  </div>
-		  <div class="memorization-time-status" style="display:none;margin-bottom:12px;padding:8px;background:var(--glass);border-radius:4px;font-size:13px;" title="PHB Ch.7: &quot;The wizard must have a clear head gained from a restful night's sleep and then has to spend time studying his spell books. The amount of study time needed is 10 minutes per level of the spell being memorized.&quot;&#10;&#10;Priests are identical — &quot;the conditions for praying are identical to those needed for the wizard's studying.&quot;&#10;&#10;Recover: time to re-study only the spells marked Cast. Spells still memorized stay put — PHB: &quot;A wizard cannot choose to forget a memorized spell to replace it with another one.&quot;&#10;&#10;Full list: time to memorize the entire loadout from scratch, for when you change your selection.&#10;&#10;Both assume a full night's rest beforehand (8 hours).">
-			<strong class="memorization-time-label">Study Time:</strong> <span class="memorization-time-text" style="margin-left:8px;">—</span>
+		  <div class="memorization-time-status stat-strip" style="display:none;" title="PHB Ch.7: &quot;The wizard must have a clear head gained from a restful night's sleep and then has to spend time studying his spell books. The amount of study time needed is 10 minutes per level of the spell being memorized.&quot;&#10;&#10;Priests are identical — &quot;the conditions for praying are identical to those needed for the wizard's studying.&quot;&#10;&#10;Recover: time to re-study only the spells marked Cast. Spells still memorized stay put — PHB: &quot;A wizard cannot choose to forget a memorized spell to replace it with another one.&quot;&#10;&#10;Full list: time to memorize the entire loadout from scratch, for when you change your selection.&#10;&#10;Both assume a full night's rest beforehand (8 hours).">
+			<span class="lab memorization-time-label">STUDY TIME</span>
+			<span class="prose memorization-time-text">&mdash;</span>
 		  </div>
 		  
 		  <!-- Level filter -->
@@ -1263,8 +1268,9 @@ const SHEET_HTML = `
 			</div>
 			
 			<!-- Spells known per level vs the PHB Table 4 Intelligence cap (wizards only) -->
-			<div class="spellbook-known-status" style="display:none;margin-bottom:12px;padding:8px;background:var(--glass);border-radius:4px;font-size:13px;">
-			  <strong>Spells Known:</strong> <span class="spellbook-known-text" style="margin-left:8px;">&mdash;</span>
+			<div class="spellbook-known-status stat-strip" style="display:none;">
+			  <span class="lab">SPELLS KNOWN</span>
+			  <span class="prose spellbook-known-text">&mdash;</span>
 			</div>
 			<!-- Specialist free-spell entitlement (populated for specialist wizards only) -->
 			<div class="specialist-freespell-note" style="display:none;margin-bottom:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
@@ -1346,7 +1352,7 @@ const SHEET_HTML = `
           <h3>Treasure & Money</h3>
           
           <h4 style="margin-bottom:8px;font-size:14px;">Coins Possessed</h4>
-          <div class="row">
+          <div class="row coin-inputs">
             <div class="col"><label>CP</label><input data-field="cp" type="number"></div>
             <div class="col"><label>SP</label><input data-field="sp" type="number"></div>
             <div class="col"><label>EP</label><input data-field="ep" type="number"></div>
@@ -1377,6 +1383,7 @@ const SHEET_HTML = `
             <input class="lval q" data-field="valuables_weight" type="text" readonly>
             <input class="lval" data-field="valuables_value" type="text" readonly>
 
+            <div class="ldivider"></div>
             <div class="lrow ltotal">Total</div>
             <div class="lval q none ltotal">&mdash;</div>
             <input class="lval q ltotal" data-field="treasure_weight" type="text" readonly>
@@ -1400,10 +1407,13 @@ const SHEET_HTML = `
 		<!-- Encumbrance -->
 		<section class="section">
 		  <h3>Encumbrance</h3>
-		  <div class="row">
-			<div class="col"><label>Current Load (lbs)</label><input data-field="encumbrance_current" type="text" readonly></div>
-			<div class="col"><label>Max Carry (lbs)</label><input data-field="encumbrance_max" type="text" readonly></div>
-			<div class="col"><label>Encumbrance Category</label><input data-field="encumbrance_category" type="text" readonly></div>
+		  <!-- All three stay <input readonly>: collectSheet, print.js and the KV
+			   sync address them by data-field, and spans would drop them silently.
+			   Same three fields, same wording -- presentation only. -->
+		  <div class="stat-strip">
+			<span class="pair">current load <input data-field="encumbrance_current" type="text" readonly></span>
+			<span class="pair">max carry <input data-field="encumbrance_max" type="text" readonly></span>
+			<span class="pair encumbrance-category-pair">category <input data-field="encumbrance_category" type="text" readonly></span>
 		  </div>
 		  <div class="encumbrance-magic-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
 		</section>
