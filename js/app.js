@@ -7778,6 +7778,31 @@ function bindSheet(root, tab){
     generateCharacterPDF(root, opts);
   };
 
+  // Blank sheet. Takes the LOOK from the modal (palette and both fonts, which
+  // live above the tab strip and are shared) and forces everything else. The
+  // section choices and blank-row counts describe a character's sheet, and a
+  // blank one is not that -- so they are not read, and NOT saved either: a
+  // blank print must never overwrite the preferences the other tab remembers.
+  qs(root, '.print-blank-generate').onclick = () => {
+    const look = readPrintOptionsFromModal(root);
+    closePrintModal(root);
+    generateCharacterPDF(root, buildBlankPrintOptions(look));
+  };
+
+  // Tab strip. Same classes and same shape as the Settings modal, so there is
+  // one tab mechanism in this codebase rather than three that drift apart.
+  qs(root, '.print-subtab-bar').addEventListener('click', e => {
+    const tab = e.target.closest('.subtab');
+    if (!tab) return;
+    const want = tab.dataset.printTab;
+    qs(root, '.print-subtab-bar').querySelectorAll('.subtab').forEach(t => {
+      t.classList.toggle('active', t === tab);
+    });
+    qs(root, '.print-modal-overlay').querySelectorAll('.print-panel').forEach(p => {
+      p.classList.toggle('subtab-panel-hidden', p.dataset.panel !== want);
+    });
+  });
+
   // KV Settings modal
   qs(root, '.kv-settings').onclick = () => openKvSettingsModal(root);
   qs(root, '.kv-modal-close').onclick = () => closeKvSettingsModal(root);
@@ -8175,6 +8200,38 @@ const PRINT_OPTION_DEFAULTS = {
 // Defaults are roughly "one session's worth of acquisitions" for the lists
 // that change fast, and less for the ones that rarely do. All default to 0 for
 // the extra PAGES, which are opt-in: a player who wants them knows they do.
+// Blank rows on a BLANK sheet, as distinct from the handful appended to a real
+// character's lists. Sized to fill a page rather than to leave room for one
+// session's acquisitions -- a blank sheet with three weapon rows is no use to
+// anyone rolling a character up longhand.
+const PRINT_BLANK_SHEET_ROWS = {
+  weapons: 8, equipment: 24, valuables: 10, magicItems: 8,
+  armor: 6, ammo: 6, weaponProfs: 8, nwps: 12, languages: 6,
+  memorized: 20, spellbook: 30, conditions: 6,
+  henchmen: 4, hirelings: 4, companions: 3, mounts: 3,
+  extraSpellbookPages: 0, extraMemorizationPages: 0, extraBlankPages: 0
+};
+
+// Builds the options for a blank sheet: the caller's LOOK, every section on,
+// generous rows, and the blank flag print.js keys off.
+//
+// Every section prints regardless of what the other tab has ticked. A blank
+// sheet is a form, and omitting the spellbook page because this character has
+// no spells would defeat the point -- the whole reason to print one is that
+// there is no character yet.
+function buildBlankPrintOptions(look) {
+  const opts = Object.assign({}, PRINT_OPTION_DEFAULTS);
+  Object.keys(opts).forEach(k => {
+    if (typeof opts[k] === 'boolean') opts[k] = true;
+  });
+  opts.palette   = (look && look.palette)   || 'graphite';
+  opts.titleFont = (look && look.titleFont) || 'Roboto';
+  opts.bodyFont  = (look && look.bodyFont)  || 'Roboto';
+  opts.blanks    = Object.assign({}, PRINT_BLANK_SHEET_ROWS);
+  opts.blankSheet = true;
+  return opts;
+}
+
 const PRINT_BLANK_DEFAULTS = {
   weapons:                3,
   equipment:              8,
