@@ -2696,8 +2696,6 @@ const SHEET_HTML = `
 	      <div>⬇ Last pulled: <span class="kv-last-pull-display" style="color:var(--text);">—</span></div>
 	    </div>
 
-	    <hr style="border:none;border-top:1px solid var(--border);margin:0 0 16px;">
-
 	    </div><!-- /panel: sync -->
 
 	    <!-- The three rule panels are populated by renderOptionalRules from
