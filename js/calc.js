@@ -4697,11 +4697,12 @@ function renderLanguageProficiencies(root) {
 
   listDiv.innerHTML = '';
 
-  // Header
+  // Header. Now a .stat-strip, styled by style.css rather than inline cssText --
+  // same reason the card builders stopped styling themselves: the inline copies
+  // drift and the theme switcher cannot reach them.
   const headerDiv = document.createElement('div');
-  headerDiv.style.cssText = 'padding:8px;margin-bottom:8px;background:var(--glass);border-radius:4px;font-size:13px;';
+  headerDiv.className = 'stat-strip';
   const atLimit = countedLangs >= languageLimit;
-  const color = atLimit ? 'var(--error, #ff6b6b)' : 'var(--accent-light)';
 
   // Report the same information two ways, because they answer different questions:
   // the TOTAL is "how many languages do I speak", the counted figure is "how many
@@ -4714,16 +4715,16 @@ function renderLanguageProficiencies(root) {
   if (nativeCount)    extras.push(`${nativeCount} native`);
   if (grantedCount)   extras.push(`${grantedCount} granted`);
   if (purchasedCount) extras.push(`${purchasedCount} purchased`);
-  const extraText = extras.length ? ` <span style="color:var(--muted);">(${extras.join(', ')})</span>` : '';
+  const extraText = extras.length ? ` (${extras.join(', ')})` : '';
 
+  // Three caption/value pairs. The at-limit state keeps --error via .over,
+  // which means "wrong or forbidden" on every other surface too.
   headerDiv.innerHTML =
-    `<strong>Languages Known:</strong> ${totalKnown}${extraText}` +
-    `<div style="margin-top:3px;">` +
-      `<span style="color:${color}">${countedLangs} / ${languageLimit}</span>` +
-      ` <span style="color:var(--muted);">count against your Intelligence limit ` +
-      `(the native tongue does not)</span>` +
-      ` <span style="color:var(--muted);">&middot; ${slotsSpent} NWP slot${slotsSpent === 1 ? '' : 's'} spent</span>` +
-    `</div>`;
+    `<span class="lab">LANGUAGES</span>` +
+    `<span class="pair">known<b>${totalKnown}</b>${escapeHtml(extraText)}</span>` +
+    `<span class="pair${atLimit ? ' over' : ''}">against INT cap` +
+      `<b>${countedLangs} / ${languageLimit}</b></span>` +
+    `<span class="pair">NWP slot${slotsSpent === 1 ? '' : 's'} spent<b>${slotsSpent}</b></span>`;
   headerDiv.title =
     `Intelligence ${int} allows ${languageLimit} language${languageLimit === 1 ? '' : 's'} beyond your native tongue (PHB Table 4).\n\n` +
     `NATIVE: free -- costs no slot, not counted against the cap.\n` +
@@ -7654,7 +7655,9 @@ function renderMemorizationTime(root) {
   // A priest prays rather than studies; the arithmetic is the same and only the
   // wording changes. A mixed caster gets the wizard wording -- the spellbook is
   // the more demanding of the two and the figure covers both.
-  label.textContent = isWiz ? 'Study Time:' : 'Prayer Time:';
+  // No colon, and uppercase: this element is now a .lab caption in a stat
+  // strip, so the strip supplies the styling and the punctuation is redundant.
+  label.textContent = isWiz ? 'STUDY TIME' : 'PRAYER TIME';
 
   const fullTime  = getMemorizationTime(all);
   const spentTime = getMemorizationTime(spent);
