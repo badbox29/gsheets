@@ -1447,7 +1447,10 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   const magicNotes = String(magic.notes || '').trim();
 
   const hasAnySlots = slotArr.some(s => String(s || '').trim() !== '');
+  // The 9-level slot grid is a fixed form like the thief skills table, so it
+  // prints on a blank sheet regardless of whether anything is recorded.
   const showSpellAccess = !!opts.spellAccess && (
+    _blank ||
     hasAnySlots ||
     spheresList.length > 0 ||
     schoolsList.length > 0 ||
@@ -1473,17 +1476,19 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
           ],
           [
             cell('Slots', 6, { bold: true }),
-            ...levelIdx.map(i => cell(slotArr[i] || '\u2014', 7, { alignment: 'center' }))
+            ...levelIdx.map(i => cell(slotArr[i] || (_blank ? ' ' : '\u2014'), 7, { alignment: 'center' }))
           ],
           [
             cell('Cast', 6, { bold: true }),
-            ...levelIdx.map(i => cell(usedArr[i] || '', 7, { alignment: 'center' }))
+            ...levelIdx.map(i => cell(usedArr[i] || ' ', 7, { alignment: 'center' }))
           ],
           [
             cell('Remaining', 6, { bold: true }),
             ...levelIdx.map(i => {
               const s = parseInt(slotArr[i], 10);
-              if (isNaN(s)) return cell('\u2014', 7, { alignment: 'center' });
+              // A dash means "no slots at this level", which is a fact about a
+              // character. A blank sheet has no character to report on.
+              if (isNaN(s)) return cell(_blank ? ' ' : '\u2014', 7, { alignment: 'center' });
               const u = parseInt(usedArr[i], 10) || 0;
               return cell(String(s - u), 7, { alignment: 'center' });
             })
@@ -2044,9 +2049,13 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     ['Alliances', 'alliances']
   ];
 
+  // On a real sheet the empty ones are dropped: most characters leave the
+  // majority blank, and a grid of empty labels would waste most of a page.
+  // On a BLANK sheet that inverts -- the full list of labels IS the form, and
+  // the empty value cells are what you write into.
   const detailPairs = DETAIL_FIELDS
-    .map(([label, key]) => [label, String(details[key] || '').trim()])
-    .filter(([, value]) => value !== '');
+    .map(([label, key]) => [label, _blank ? ' ' : String(details[key] || '').trim()])
+    .filter(([, value]) => _blank || value !== '');
 
   const showDetails = !!opts.details && detailPairs.length > 0;
 
@@ -2061,9 +2070,9 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       const right = detailPairs[i + 1];
       detailRows.push([
         cell(left[0], 6, { bold: true }),
-        cell(left[1]),
-        cell(right ? right[0] : '', 6, { bold: true }),
-        cell(right ? right[1] : '')
+        cell(left[1] || ' ', 6, { margin: [0, 2, 0, 2] }),
+        cell(right ? right[0] : ' ', 6, { bold: true }),
+        cell(right ? (right[1] || ' ') : ' ', 6, { margin: [0, 2, 0, 2] })
       ]);
     }
 
