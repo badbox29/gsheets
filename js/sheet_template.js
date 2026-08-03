@@ -2623,7 +2623,11 @@ const SHEET_HTML = `
 
 	<!-- KV Sync Settings Modal -->
 	<div class="kv-modal-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:10000;justify-content:center;align-items:center;">
-	  <div style="background:var(--panel);border-radius:8px;max-width:480px;width:90%;max-height:85vh;overflow-y:auto;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+	  <!-- FIXED height, not max-height: with content-driven height the box
+	       resized on every tab click, tall for Sync and tiny for Themes. A flex
+	       column pins the heading, tabs and Close, and gives the leftover space
+	       to .settings-scroll. -->
+	  <div style="background:var(--panel);border-radius:8px;max-width:520px;width:90%;height:85vh;display:flex;flex-direction:column;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
 	    <h2 style="margin:0 0 4px 0;font-size:16px;">⚙ Settings</h2>
 	    <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Here you will find app-wide settings that impact the way the tool performs. Settings are categorized below. Click a tab to begin.</p>
 
@@ -2638,6 +2642,11 @@ const SHEET_HTML = `
 	      <div class="subtab" data-settings-tab="table">🎲 Table Rulings</div>
 	      <div class="subtab" data-settings-tab="themes">🎨 Themes</div>
 	    </div>
+
+	    <!-- Only this scrolls. The heading, the tab strip and the Close button
+	         stay put, so the modal is one constant size whatever tab is open
+	         and the tabs do not scroll away on the long Sync panel. -->
+	    <div class="settings-scroll">
 
 	    <div class="settings-panel" data-panel="sync">
 	    <!-- Worker URL -->
@@ -2720,6 +2729,8 @@ const SHEET_HTML = `
 	    <div class="settings-panel subtab-panel-hidden" data-panel="themes">
 	      <p style="font-size:11px;color:var(--muted);margin:0 0 10px;">Theme selection will live here. Nothing to configure yet.</p>
 	    </div>
+
+	    </div><!-- /settings-scroll -->
 
 	    <hr style="border:none;border-top:1px solid var(--border);margin:0 0 16px;">
 	    <div style="display:flex;justify-content:flex-end;">
