@@ -701,7 +701,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // also sits in the space the player wants to write in.
   const orDash = v =>
     (v === null || v === undefined || String(v).trim() === '')
-      ? (_blank ? '' : '\u2014')
+      ? (_blank ? ' ' : '\u2014')
       : String(v);
 
   // Exceptional Strength prints in the PHB's 18/xx form. Only warriors with
@@ -1108,7 +1108,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     // Blank sheet: no THAC0 to work from, so every cell is empty and the
     // legend below suppresses itself, since it tests for an asterisk that
     // cannot be there.
-    if (thac0Num === null) { thac0Matrix.push(''); continue; }
+    if (thac0Num === null) { thac0Matrix.push(' '); continue; }
     const rollNeeded = thac0Num - targetAC;
     // Matches renderAttackMatrix. The old floor was `< 1`, which still printed a
     // bare "1" for a target of exactly 1 -- and a natural 1 always misses, so
@@ -1898,11 +1898,11 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
                 cell('PP', 6, { bold: true, alignment: 'center' })
               ],
               [
-                cell(_blank ? '' : (coins.cp || '0'), 8, { alignment: 'center' }),
-                cell(_blank ? '' : (coins.sp || '0'), 8, { alignment: 'center' }),
-                cell(_blank ? '' : (coins.ep || '0'), 8, { alignment: 'center' }),
-                cell(_blank ? '' : (coins.gp || '0'), 8, { alignment: 'center' }),
-                cell(_blank ? '' : (coins.pp || '0'), 8, { alignment: 'center' })
+                cell(_blank ? ' ' : (coins.cp || '0'), 8, { alignment: 'center' }),
+                cell(_blank ? ' ' : (coins.sp || '0'), 8, { alignment: 'center' }),
+                cell(_blank ? ' ' : (coins.ep || '0'), 8, { alignment: 'center' }),
+                cell(_blank ? ' ' : (coins.gp || '0'), 8, { alignment: 'center' }),
+                cell(_blank ? ' ' : (coins.pp || '0'), 8, { alignment: 'center' })
               ]
             ]
           },
@@ -1918,8 +1918,8 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
                 cell('Maximum', 6, { bold: true, alignment: 'center' })
               ],
               [
-                cell(_blank ? '' : (enc.current || '\u2014'), 8, { alignment: 'center' }),
-                cell(_blank ? '' : (enc.max || '\u2014'), 8, { alignment: 'center' })
+                cell(_blank ? ' ' : (enc.current || '\u2014'), 8, { alignment: 'center' }),
+                cell(_blank ? ' ' : (enc.max || '\u2014'), 8, { alignment: 'center' })
               ],
               // Worth, not weight. Stacked under the carrying figures rather
               // than given a table of its own -- all four answer "what have I
@@ -1929,8 +1929,8 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
                 cell('Valuables (gp)', 6, { bold: true, alignment: 'center' })
               ],
               [
-                cell(_blank || coinValueGp === null ? '' : formatGp(coinValueGp), 8, { alignment: 'center' }),
-                cell(_blank || valuablesValueGp === null ? '' : formatGp(valuablesValueGp), 8, { alignment: 'center' })
+                cell(_blank || coinValueGp === null ? ' ' : formatGp(coinValueGp), 8, { alignment: 'center' }),
+                cell(_blank || valuablesValueGp === null ? ' ' : formatGp(valuablesValueGp), 8, { alignment: 'center' })
               ]
             ]
           },
@@ -2538,10 +2538,10 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     return isNaN(n) ? String(v || '') : n.toLocaleString('en-US');
   };
 
-  const xpDisplay = xp ? commafy(xp) : '\u2014';
+  const xpDisplay = xp ? commafy(xp) : (_blank ? ' ' : '\u2014');
   const nextLevelDisplay = nextLevelParts.some(v => v !== null)
     ? nextLevelParts.map(v => (v === null ? '\u2014' : commafy(v))).join(' / ')
-    : '\u2014';
+    : (_blank ? ' ' : '\u2014');
 
   // === EXTRA APPENDED PAGES ===
   //
@@ -3297,7 +3297,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
                       {}
                     ],
                     [
-                      { text: armorWorn || '\u2014', fontSize: 6, colSpan: 2, margin: [0, 1, 0, 1] },
+                      { text: armorWorn || (_blank ? ' ' : '\u2014'), fontSize: 6, colSpan: 2, margin: [0, 1, 0, 1] },
                       {}
                     ]
                   ]
