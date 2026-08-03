@@ -2625,7 +2625,7 @@ const SHEET_HTML = `
 	<div class="kv-modal-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:10000;justify-content:center;align-items:center;">
 	  <div style="background:var(--panel);border-radius:8px;max-width:480px;width:90%;max-height:85vh;overflow-y:auto;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
 	    <h2 style="margin:0 0 4px 0;font-size:16px;">⚙ Settings</h2>
-	    <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Project settings. These apply to every character in this browser, and the modal works with no character open.</p>
+	    <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Settings. App-wide settings that impact the way the tool performs. Settings are categorized below. Click a tab to begin.</p>
 
 	    <!-- Reuses the Tools tab strip wholesale: .subtab-bar, .subtab and
 	         .subtab-panel-hidden. NO existence/visibility split is needed here,
