@@ -1251,7 +1251,7 @@ const SHEET_HTML = `
 			<!-- Level filter -->
 			<div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">
 			  <label style="font-size:12px;color:var(--muted);">Select to view your spell book by level, or select 'All levels' to view your entire spell book</label>
-			  <select class="spellbook-level-filter" style="width:120px;margin-left:auto;">
+			  <select class="spellbook-level-filter" style="width:120px;">
 				<option value="">All levels</option>
 				<option value="special">Special</option>
 				<option value="1">Level 1</option>
