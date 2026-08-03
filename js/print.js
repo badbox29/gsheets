@@ -286,6 +286,26 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // line 638, well below.
   const val = _blank ? (() => '') : window.val;
 
+  // val() is not the only DOM path. Several sections query root directly --
+  // saving throws, THAC0, the weapon list, attacks per round -- and those
+  // bypassed the shadow above entirely, which is how a blank sheet still
+  // printed this character's saves and weapons. These two wrap the remaining
+  // direct reads so there is ONE place the blank flag has to be honoured.
+  const q  = _blank ? (() => null) : (sel => root.querySelector(sel));
+  const qA = _blank ? (() => [])   : (sel => root.querySelectorAll(sel));
+
+  // Eight calc.js helpers take `root` and read the live sheet themselves --
+  // two-weapon state, proficiency resolution, specialization, slot totals,
+  // allowed NWP groups, language slots, NWP check targets. Every one of them
+  // bypasses both guards above, which is a third data path nobody would find by
+  // grepping for querySelector.
+  //
+  // Passing a DETACHED empty node rather than null: these helpers expect
+  // something with querySelector on it, and null would throw inside code this
+  // module does not own. An empty div answers every query with nothing, which
+  // is exactly what a blank sheet should report.
+  const src = _blank ? document.createElement('div') : root;
+
   // Wraps a section heading together with its content so pdfMake treats the
   // pair as one indivisible block. If the whole thing will not fit in the
   // space left on the current page, all of it moves to the next page -- the
@@ -722,7 +742,9 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   
   // === COMBAT STATS ===
   const hp = val(root, 'hp') || '';
-  const damageTaken = val(root, 'damage_taken') || '0';
+  // No '0' fallback on a blank sheet: the point of the form is that nothing is
+  // filled in, and a printed zero reads as a recorded value rather than a gap.
+  const damageTaken = val(root, 'damage_taken') || (_blank ? '' : '0');
   const currentHP = val(root, 'current_hp') || hp;
   // These three are DOM scrapes like the rest of page 1. hit_dice and
   // revivals_remaining are the derived readonly fields, so they already hold
@@ -749,7 +771,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
         .filter(Boolean)
         .join(', ')
     : '';
-  const thac0 = root.querySelector('.combat-thac0')?.textContent.trim() || '';
+  const thac0 = q('.combat-thac0')?.textContent.trim() || '';
   
   // === MOVEMENT ===
   const baseMovement = val(root, 'movement_base') || '';
@@ -769,7 +791,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   const saveMods = (sheet && sheet.savingThrows) || {};
 
   const parseSave = (saveNum) => {
-    const el = root.querySelector(`[data-field="save${saveNum}"]`);
+    const el = q(`[data-field="save${saveNum}"]`);
     const total = el?.value || '';
     if (!total) return { base: '', mod: '', total: '' };
 
@@ -816,7 +838,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // is what resolves that lookup, so this works for a weapon under any name;
   // matching on the name itself is only the fallback for pre-migration rows.
   const weapons = [];
-  const weaponNodes = root.querySelectorAll('.weapons-list .item');
+  const weaponNodes = qA('.weapons-list .item');
 
   // PHB Ch.9 two-weapon fighting, resolved ONCE for the sheet exactly as
   // renderCombatQuickReference does it. The penalty a given weapon takes depends
@@ -827,7 +849,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // queries at the table. Attacks/Round was already correct here, because it
   // reads the .combat-attacks-per-round mirror rather than recomputing.
   const twoWeaponPrint = (typeof getTwoWeaponState === 'function')
-    ? getTwoWeaponState(root) : { active: false };
+    ? getTwoWeaponState(src) : { active: false };
 
   // Strength row for this character, resolved once. Exceptional STR is handled
   // inside getStrengthData, which only grants the 18/xx row to warriors.
@@ -837,7 +859,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
 
   // Attacks per round is a character-level field on this sheet, not per weapon.
   const attacksPerRound =
-    (root.querySelector('.combat-attacks-per-round')?.value || '').trim();
+    (q('.combat-attacks-per-round')?.value || '').trim();
 
   // PER-WEAPON rate, which is NOT the character-level figure above. With two
   // weapons in use, .combat-attacks-per-round already includes the extra attack
@@ -848,9 +870,9 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // active this resolves to exactly the character-level figure, so nothing
   // changes for single-weapon characters.
   const weaponBaseAttacks =
-    (root.querySelector('[data-field="attacks_per_round_manual"]')?.value || '').trim() ||
+    (q('[data-field="attacks_per_round_manual"]')?.value || '').trim() ||
     ((typeof getBaseAttacksPerRound === 'function')
-      ? getBaseAttacksPerRound(root).rate : '') ||
+      ? getBaseAttacksPerRound(src).rate : '') ||
     attacksPerRound;
 
   // Zero is signed too: "+0 / +0" reads as a computed adjustment of none,
@@ -903,7 +925,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     // The penalty applies to the ATTACK ROLL ONLY, never to damage (PHB Table
     // 34), so it lands on the to-hit total and damage is left alone.
     const prof = (typeof resolveWeaponProficiency === 'function')
-      ? resolveWeaponProficiency(root, node)
+      ? resolveWeaponProficiency(src, node)
       : { status: 'proficient', penalty: 0 };
 
     // `magic` above is the ENCHANTMENT LEVEL: it drives the speed reduction and
@@ -936,7 +958,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     // here. getWeaponSpecialization already gates on the optional rule and on
     // single-class fighters.
     const wspec = (typeof getWeaponSpecialization === 'function')
-      ? getWeaponSpecialization(root, node) : null;
+      ? getWeaponSpecialization(src, node) : null;
     const specBonus = (wspec && wspec.specialized &&
                        typeof getSpecialistCombatBonuses === 'function')
       ? getSpecialistCombatBonuses(wspec.wtype, wspec.category, wspec.group)
@@ -1036,9 +1058,11 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   const nwpRows = named(sheet && sheet.nwps);
 
   // Slot budget, so the printed sheet shows the same accounting as the app.
-  const profSlots = (typeof getCharacterProficiencySlots === 'function')
-    ? getCharacterProficiencySlots(root)
-    : null;
+  // Takes `root`, not `sheet`, so it reads the live character regardless of the
+  // blank flag -- which is why a blank sheet printed "0 of 7 slots used".
+  const profSlots = (_blank || typeof getCharacterProficiencySlots !== 'function')
+    ? null
+    : getCharacterProficiencySlots(src);
 
   // Both totals summed RAW slots only, so the printed sheet disagreed with the
   // app's counter: weapon specialization was free, and the Table 38 crossover
@@ -1053,7 +1077,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   }, 0);
 
   const nwpAllowedGroups = (typeof getAllowedNWPGroups === 'function')
-    ? getAllowedNWPGroups(root)
+    ? getAllowedNWPGroups(src)
     : null;
 
   const nwpProfSpent = nwpRows.reduce((n, p) => {
@@ -1064,14 +1088,22 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   }, 0);
 
   const langSpent = (typeof getLanguageSlotsSpent === 'function')
-    ? getLanguageSlotsSpent(root)
+    ? getLanguageSlotsSpent(src)
     : 0;
   const nwpSpent = nwpProfSpent + langSpent;
   
   // === CALCULATE THAC0 MATRIX ===
-  const thac0Num = parseInt(thac0) || 20;
+  // A blank sheet leaves the matrix empty rather than defaulting to THAC0 20.
+  // Almost every 1st-level character IS 20, so the row would usually be right --
+  // but "usually right" is the worst kind of number to print onto a form
+  // someone is about to fill in by hand.
+  const thac0Num = _blank ? null : (parseInt(thac0) || 20);
   const thac0Matrix = [];
   for (let targetAC = 10; targetAC >= -10; targetAC--) {
+    // Blank sheet: no THAC0 to work from, so every cell is empty and the
+    // legend below suppresses itself, since it tests for an asterisk that
+    // cannot be there.
+    if (thac0Num === null) { thac0Matrix.push(''); continue; }
     const rollNeeded = thac0Num - targetAC;
     // Matches renderAttackMatrix. The old floor was `< 1`, which still printed a
     // bare "1" for a target of exactly 1 -- and a natural 1 always misses, so
@@ -3640,7 +3672,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
                             // number he rolls against, and the -6 non-ranger
                             // tracking penalty is invisible in the raw string.
                             const c = (typeof getNWPCheckTarget === 'function')
-                              ? getNWPCheckTarget(root, p) : null;
+                              ? getNWPCheckTarget(src, p) : null;
                             const checkText = !c ? (p.abilityCheck || '')
                               : !c.hasCheck   ? '\u2014'
                               : c.impossible  ? `${c.abilityLabel} \u2014 none`
