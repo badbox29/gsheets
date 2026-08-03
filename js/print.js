@@ -696,8 +696,13 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // A blank cell on a printed sheet reads as a rendering failure. An em dash
   // reads as "this modifier does not apply to this character" -- which is the
   // truth for, say, a paladin's Wisdom bonus spells.
+  // An em dash means "this modifier does not apply to this character" -- true
+  // on a real sheet, meaningless on a form nobody has filled in yet, where it
+  // also sits in the space the player wants to write in.
   const orDash = v =>
-    (v === null || v === undefined || String(v).trim() === '') ? '\u2014' : String(v);
+    (v === null || v === undefined || String(v).trim() === '')
+      ? (_blank ? '' : '\u2014')
+      : String(v);
 
   // Exceptional Strength prints in the PHB's 18/xx form. Only warriors with
   // STR 18 ever have a value here.
@@ -1212,7 +1217,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
 
   if (showLanguages) {
     languageBlocks.push({
-      text: `Languages Known: ${languageRows.length} ` +
+      text: _blank ? '' : `Languages Known: ${languageRows.length} ` +
             `(${langNative} native, ${langGranted} granted, ${langPurchased} purchased). ` +
             `The native tongue is free and does not count against the Intelligence limit.`,
       fontSize: 6,
@@ -1893,11 +1898,11 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
                 cell('PP', 6, { bold: true, alignment: 'center' })
               ],
               [
-                cell(coins.cp || '0', 8, { alignment: 'center' }),
-                cell(coins.sp || '0', 8, { alignment: 'center' }),
-                cell(coins.ep || '0', 8, { alignment: 'center' }),
-                cell(coins.gp || '0', 8, { alignment: 'center' }),
-                cell(coins.pp || '0', 8, { alignment: 'center' })
+                cell(_blank ? '' : (coins.cp || '0'), 8, { alignment: 'center' }),
+                cell(_blank ? '' : (coins.sp || '0'), 8, { alignment: 'center' }),
+                cell(_blank ? '' : (coins.ep || '0'), 8, { alignment: 'center' }),
+                cell(_blank ? '' : (coins.gp || '0'), 8, { alignment: 'center' }),
+                cell(_blank ? '' : (coins.pp || '0'), 8, { alignment: 'center' })
               ]
             ]
           },
@@ -1913,8 +1918,8 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
                 cell('Maximum', 6, { bold: true, alignment: 'center' })
               ],
               [
-                cell(enc.current || '\u2014', 8, { alignment: 'center' }),
-                cell(enc.max || '\u2014', 8, { alignment: 'center' })
+                cell(_blank ? '' : (enc.current || '\u2014'), 8, { alignment: 'center' }),
+                cell(_blank ? '' : (enc.max || '\u2014'), 8, { alignment: 'center' })
               ],
               // Worth, not weight. Stacked under the carrying figures rather
               // than given a table of its own -- all four answer "what have I
@@ -1924,8 +1929,8 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
                 cell('Valuables (gp)', 6, { bold: true, alignment: 'center' })
               ],
               [
-                cell(coinValueGp === null ? '\u2014' : formatGp(coinValueGp), 8, { alignment: 'center' }),
-                cell(valuablesValueGp === null ? '\u2014' : formatGp(valuablesValueGp), 8, { alignment: 'center' })
+                cell(_blank || coinValueGp === null ? '' : formatGp(coinValueGp), 8, { alignment: 'center' }),
+                cell(_blank || valuablesValueGp === null ? '' : formatGp(valuablesValueGp), 8, { alignment: 'center' })
               ]
             ]
           },
