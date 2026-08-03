@@ -8213,7 +8213,7 @@ const PRINT_BLANK_SHEET_ROWS = {
   weapons: 8, equipment: 30, valuables: 8, magicItems: 8,
   armor: 6, ammo: 6, weaponProfs: 8, nwps: 12, languages: 6,
   memorized: 60, spellbook: 30, conditions: 6,
-  henchmen: 4, hirelings: 4, companions: 3, mounts: 3,
+  henchmen: 16, hirelings: 16, companions: 8, mounts: 8,
   // Two of each appendix page. A blank sheet is for rolling a character up on
   // paper, so the spell pages are not "extra" here -- they are the only ones
   // there will be. Each prints APPENDIX_ROWS (32) ruled rows.
