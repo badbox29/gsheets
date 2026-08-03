@@ -2625,8 +2625,21 @@ const SHEET_HTML = `
 	<div class="kv-modal-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:10000;justify-content:center;align-items:center;">
 	  <div style="background:var(--panel);border-radius:8px;max-width:480px;width:90%;max-height:85vh;overflow-y:auto;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
 	    <h2 style="margin:0 0 4px 0;font-size:16px;">⚙ Settings</h2>
-	    <p style="font-size:12px;color:var(--muted);margin:0 0 16px;">Cloud sync for your character data via Cloudflare KV storage.</p>
+	    <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Project settings. These apply to every character in this browser, and the modal works with no character open.</p>
 
+	    <!-- Reuses the Tools tab strip wholesale: .subtab-bar, .subtab and
+	         .subtab-panel-hidden. NO existence/visibility split is needed here,
+	         unlike Tools -- every settings section shows for everyone, so there
+	         is only ever one reason for a panel to be hidden. -->
+	    <div class="subtab-bar settings-subtab-bar">
+	      <div class="subtab active" data-settings-tab="sync">☁️ Sync Settings</div>
+	      <div class="subtab" data-settings-tab="phb">📖 Optional Rules</div>
+	      <div class="subtab" data-settings-tab="override">⚖️ House Rules</div>
+	      <div class="subtab" data-settings-tab="table">🎲 Table Rulings</div>
+	      <div class="subtab" data-settings-tab="themes">🎨 Themes</div>
+	    </div>
+
+	    <div class="settings-panel" data-panel="sync">
 	    <!-- Worker URL -->
 	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px;">Worker URL</label>
 	    <p style="font-size:11px;color:var(--muted);margin:0 0 6px;">Deploy the gsheets-worker to your Cloudflare account and paste the URL here.</p>
@@ -2676,11 +2689,37 @@ const SHEET_HTML = `
 
 	    <hr style="border:none;border-top:1px solid var(--border);margin:0 0 16px;">
 
-	    <!-- Optional Rules -->
-	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px;">📖 Optional Rules</label>
-	    <p style="font-size:11px;color:var(--muted);margin:0 0 10px;">AD&amp;D 2e flags many rules as optional, and tables differ on which they use. These settings apply to every character in this browser.</p>
-	    <div class="optional-rules-list"></div>
-	    <p style="font-size:10px;color:var(--muted);margin:8px 0 16px;">Changes take effect immediately. Some may require reopening a character tab.</p>
+	    </div><!-- /panel: sync -->
+
+	    <!-- The three rule panels are populated by renderOptionalRules from
+	         OPTIONAL_RULES_CATEGORIES. Each category's blurb is written into its
+	         own panel, which is what makes the explanatory text swap with the
+	         tab. The category headings the renderer used to emit are gone: the
+	         tab IS the heading now, and printing both would say it twice. -->
+	    <div class="settings-panel subtab-panel-hidden" data-panel="phb">
+	      <p class="settings-blurb" style="font-size:11px;color:var(--muted);margin:0 0 10px;"></p>
+	      <div class="optional-rules-list" data-cat="phb"></div>
+	      <p style="font-size:10px;color:var(--muted);margin:8px 0 16px;">Changes take effect immediately. Some may require reopening a character tab.</p>
+	    </div>
+
+	    <div class="settings-panel subtab-panel-hidden" data-panel="override">
+	      <p class="settings-blurb" style="font-size:11px;color:var(--muted);margin:0 0 10px;"></p>
+	      <div class="optional-rules-list" data-cat="override"></div>
+	      <p style="font-size:10px;color:var(--muted);margin:8px 0 16px;">Changes take effect immediately. Some may require reopening a character tab.</p>
+	    </div>
+
+	    <div class="settings-panel subtab-panel-hidden" data-panel="table">
+	      <p class="settings-blurb" style="font-size:11px;color:var(--muted);margin:0 0 10px;"></p>
+	      <div class="optional-rules-list" data-cat="table"></div>
+	      <p style="font-size:10px;color:var(--muted);margin:8px 0 16px;">Changes take effect immediately. Some may require reopening a character tab.</p>
+	    </div>
+
+	    <!-- Ships EMPTY on purpose. It is the eventual home of the theme
+	         selector, and landing it now means the strip is built once rather
+	         than retrofitted later. -->
+	    <div class="settings-panel subtab-panel-hidden" data-panel="themes">
+	      <p style="font-size:11px;color:var(--muted);margin:0 0 10px;">Theme selection will live here. Nothing to configure yet.</p>
+	    </div>
 
 	    <hr style="border:none;border-top:1px solid var(--border);margin:0 0 16px;">
 	    <div style="display:flex;justify-content:flex-end;">
