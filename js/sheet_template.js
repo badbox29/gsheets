@@ -2823,7 +2823,15 @@ const SHEET_HTML = `
 	         min-height:0 is load-bearing: a flex item defaults to
 	         min-height:auto, refuses to shrink below its content, and the
 	         scrollbar never appears. -->
-	    <div class="print-modal-body" style="flex:1 1 auto;overflow-y:auto;min-height:0;">
+	    <!-- padding-right holds the content clear of the scrollbar, which on
+	         some platforms is an OVERLAY scrollbar: it paints on top of the
+	         content box instead of taking width from it, so nothing reflows to
+	         make room for it. The matching negative margin pulls the scroll
+	         container out into the dialog's own 24px right padding, putting the
+	         scrollbar there and landing the content edge back on the same line
+	         as the tab strip and the look-and-feel rows. Without it the panels
+	         would sit 12px narrower than everything else in the modal. -->
+	    <div class="print-modal-body" style="flex:1 1 auto;overflow-y:auto;min-height:0;padding-right:12px;margin-right:-12px;">
 
 	    <div class="print-panel" data-panel="character">
 
