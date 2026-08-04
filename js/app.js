@@ -6864,6 +6864,7 @@ function bindSheet(root, tab){
   // Runs after renderRacialChecks and renderThiefSkills above, which is what it
   // reads to decide the strip's contents.
   if (typeof renderToolsSubtabs === 'function') renderToolsSubtabs(root);
+  if (typeof renderSectionGroups === 'function') renderSectionGroups(root);
 
   // Ranger stealth depends on class, level, race and Dexterity across all three
   // character types. One delegated listener rather than patching each of the
@@ -13027,6 +13028,9 @@ function recalculateAll(root) {
   // can change whether a Tools panel APPLIES, and last is the one position that
   // guarantees it without having to keep track of which renderers those are.
   if (typeof renderToolsSubtabs === 'function') renderToolsSubtabs(root);
+
+  // After everything that can hide a section, so it sees the final answer.
+  if (typeof renderSectionGroups === 'function') renderSectionGroups(root);
 }
 
 /**
