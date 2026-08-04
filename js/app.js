@@ -8218,7 +8218,7 @@ const PRINT_BLANK_SHEET_ROWS = {
   // counts are RULED WRITING LINES, not table rows -- print.js reads them
   // through ruledLines() rather than blankRows(). Powers and Hindrances are
   // sized to finish page 3, which currently ends about a quarter short.
-  abilities: 14,
+  abilities: 12,
   powers: 5, hindrances: 5,
   background: 14,
   sessionLog: 24, questJournal: 24, npcs: 24, locations: 24,
