@@ -1930,7 +1930,10 @@ const SHEET_HTML = `
 
         <!-- Dice Rollers -->
         <section class="section dice-rollers-section">
-          <h3>Dice Rollers</h3>
+          <div class="section-group-head">
+            <span class="grp-name">Dice Rollers</span>
+            <span class="grp-rule"></span>
+          </div>
           <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
             Quick dice rolling utilities for gameplay.
           </p>
@@ -2042,7 +2045,10 @@ const SHEET_HTML = `
 		
 		<!-- Thief Skill Roller -->
         <section class="section thief-skills-section" style="display:none;">
-          <h3>Thief Skill Roller</h3>
+          <div class="section-group-head">
+            <span class="grp-name">Thief Skill Roller</span>
+            <span class="grp-rule"></span>
+          </div>
           <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
             Quick rolling for thief abilities. Click Roll to test against your current skill percentages.
           </p>
@@ -2193,7 +2199,10 @@ const SHEET_HTML = `
 		
 		<!-- Turn Undead Calculator -->
         <section class="section turn-undead-section" style="display:none;">
-          <h3>Turn Undead</h3>
+          <div class="section-group-head">
+            <span class="grp-name">Turn Undead</span>
+            <span class="grp-rule"></span>
+          </div>
           <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
             Attempt to turn undead creatures. Auto-updates based on your character level.
           </p>
@@ -2230,7 +2239,10 @@ const SHEET_HTML = `
           data in this markup and none should ever be added back.
         -->
         <section class="section racial-checks-section" style="display:none;">
-          <h3 class="racial-checks-title">Racial Abilities</h3>
+          <div class="section-group-head">
+            <span class="grp-name racial-checks-title">Racial Abilities</span>
+            <span class="grp-rule"></span>
+          </div>
 
           <div style="margin-bottom:24px;">
             <p class="racial-checks-note" style="font-size:12px;color:var(--muted);margin-bottom:12px;"></p>
@@ -2262,7 +2274,10 @@ const SHEET_HTML = `
           restamp _updatedAt.
         -->
         <section class="section vision-light-section">
-          <h3>Vision &amp; Light</h3>
+          <div class="section-group-head">
+            <span class="grp-name">Vision &amp; Light</span>
+            <span class="grp-rule"></span>
+          </div>
           <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
             Reference only &mdash; nothing on this panel is saved with the character.
           </p>
@@ -2328,7 +2343,10 @@ const SHEET_HTML = `
           was built to undo.
         -->
         <section class="section cover-reference-section">
-          <h3>Cover &amp; Concealment</h3>
+          <div class="section-group-head">
+            <span class="grp-name">Cover &amp; Concealment</span>
+            <span class="grp-rule"></span>
+          </div>
           <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
             Reference only &mdash; nothing here is saved with the character.
           </p>
@@ -2374,7 +2392,10 @@ const SHEET_HTML = `
           a table into this markup.
         -->
         <section class="section climbing-section">
-          <h3>Climbing</h3>
+          <div class="section-group-head">
+            <span class="grp-name">Climbing</span>
+            <span class="grp-rule"></span>
+          </div>
           <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
             Nothing on this panel is saved with the character.
           </p>
