@@ -776,6 +776,12 @@ const SHEET_HTML = `
 
     <div class="vtab-content" data-vtab="abilities">
       <main class="card">
+        <div class="section-group class-standing-group">
+          <div class="section-group-head">
+            <span class="grp-name">Class Standing</span>
+            <span class="grp-rule"></span>
+          </div>
+
         <!-- Grand Druid / Archdruid / Hierophant standing (PHB Ch.3). Hidden by
              default; renderDruidRole() reveals it for druids. The bonus spell-
              level pool this governs lives on the Magic tab (Bonus Spell Levels). -->
@@ -943,16 +949,20 @@ const SHEET_HTML = `
           </ul>
         </details>
 
+        </div>
+
         <!-- Proficiency Abilities (PHB Ch.5). Hidden unless the character has a
              proficiency with interactive rules. Sits ABOVE the divider with the
              other COMPUTED panels (ranger stealth, thief skills); everything
              below the divider is static reference prose. -->
         <section class="section proficiency-abilities-display" style="display:none;">
-          <!-- Divider lives INSIDE the section so it hides along with it. A bare
-               <hr> placed before the section would leave a stray gold line above
-               Class Abilities for every character with no qualifying proficiency. -->
-          <hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
-          <h3>Proficiency Abilities</h3>
+          <!-- The band lives INSIDE the section, so it hides with it. That is
+               exactly what the old inline divider was working around, and the
+               workaround is no longer needed. -->
+          <div class="section-group-head">
+            <span class="grp-name">Proficiency Abilities</span>
+            <span class="grp-rule"></span>
+          </div>
           <div class="prof-ability-intro" style="font-size:11px;color:var(--muted);margin-bottom:10px;">
             Proficiencies whose rules need working out at the table. Conditions reset
             when the sheet is reloaded.
@@ -971,7 +981,11 @@ const SHEET_HTML = `
           <div class="prof-ability-panel"></div>
         </section>
 		
-		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
+		<div class="section-group">
+		  <div class="section-group-head">
+			<span class="grp-name">Abilities</span>
+			<span class="grp-rule"></span>
+		  </div>
 
         <!-- Class / Racial / Kit Abilities (addable) -->
         <section class="section">
@@ -987,7 +1001,13 @@ const SHEET_HTML = `
           <div class="list kit-abilities-list"></div>
         </section>
 		
-		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
+		</div>
+
+		<div class="section-group">
+		  <div class="section-group-head">
+			<span class="grp-name">Powers &amp; Hindrances</span>
+			<span class="grp-rule"></span>
+		  </div>
 
         <!-- Special Notes -->
         <section class="section">
@@ -1002,6 +1022,7 @@ const SHEET_HTML = `
           <h3>Class / Kit Notes</h3>
           <textarea data-field="notes_classkit" style="overflow:auto"></textarea>
         </section>
+        </div>
       </main>
     </div>
 
