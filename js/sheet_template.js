@@ -1842,9 +1842,10 @@ const SHEET_HTML = `
     <div class="vtab-content" data-vtab="notes">
       <main class="card">
         <section class="section">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <h3 style="margin:0;">Notes</h3>
-            <select class="notes-category-selector" style="padding:6px 12px;border-radius:6px;background:#1a1d29;color:inherit;border:1px solid var(--border);">
+          <div class="section-group-head">
+            <span class="grp-name">Notes</span>
+            <span class="grp-rule"></span>
+            <select class="notes-category-selector" style="width:auto;padding:6px 12px;border-radius:6px;background:#1a1d29;color:inherit;border:1px solid var(--border);">
               <option value="session_log">Session Log</option>
               <option value="quest_journal">Quest Journal</option>
               <option value="npcs">Important NPCs</option>
