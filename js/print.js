@@ -897,17 +897,32 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   const save4Data = parseSave(4);
   const save5Data = parseSave(5);
 
-  // save5_mental is a second modifier against mental-effect spells (charm,
-  // domination and the like) where Wisdom's Magical Defense Adjustment applies
-  // on top of the ordinary spell save. It is recorded but has never printed.
-  const save5MentalMod = parseInt(saveMods.save5_mental, 10) || 0;
-  const save5MentalTotal = (save5Data.total && !isNaN(parseInt(save5Data.total, 10)))
-    ? parseInt(save5Data.total, 10) - save5MentalMod
-    : null;
-  const save5MentalNote = (save5MentalMod !== 0 && save5MentalTotal !== null)
-    ? `vs. mental-effect spells: ${save5MentalTotal} ` +
-      `(${save5MentalMod > 0 ? '+' : ''}${save5MentalMod} Wisdom magical defense)`
-    : '';
+  // Spell (Mental): the spell save with Wisdom's Magical Defense Adjustment
+  // applied, per PHB Ch.1. calc.js already computes it into
+  // [data-field="save5_mental"], so READ THAT FIELD -- do not recompute.
+  //
+  // What was here did save5Data.total - saveMods.save5_mental, but that key is
+  // the MANUAL mod (savemod5_mental, see app.js loadSheet) and never held the
+  // MDA at all, so with no manual mod it returned the plain spell save. The
+  // note it built was consumed by nothing.
+  //
+  // Start matches the Spell row's start; Mod is the whole distance between
+  // them -- MDA and manual mod together -- which is what the column means.
+  const save5MentalRaw = q('[data-field="save5_mental"]')?.value || '';
+  const save5MentalData = (() => {
+    if (!save5MentalRaw) return { base: '', mod: '', total: '' };
+    const totalNum = parseInt(save5MentalRaw, 10);
+    const baseNum = parseInt(save5Data.base, 10);
+    if (isNaN(totalNum) || isNaN(baseNum)) {
+      return { base: save5Data.base, mod: '', total: save5MentalRaw };
+    }
+    const modNum = totalNum - baseNum;
+    return {
+      base: save5Data.base,
+      mod: modNum !== 0 ? (modNum > 0 ? `+${modNum}` : String(modNum)) : '',
+      total: save5MentalRaw
+    };
+  })();
   
   // === COLLECT WEAPONS ===
   // Weapon rows.
@@ -3369,10 +3384,10 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
                       { text: '', fontSize: 8 }
                     ],
                     [
-                      { text: 'Spell\nResistance', fontSize: 6 },
-                      { text: '', fontSize: 8 },
-                      { text: '', fontSize: 8 },
-                      { text: '', fontSize: 8 },
+                      { text: 'Spell\n(Mental)', fontSize: 6 },
+                      { text: save5MentalData.base, fontSize: 9, bold: true, alignment: 'center' },
+                      { text: save5MentalData.mod, fontSize: 8, alignment: 'center' },
+                      { text: save5MentalData.total, fontSize: 9, bold: true, alignment: 'center' },
                       { text: '', fontSize: 8 },
                       { text: '', fontSize: 8 }
                     ]
