@@ -669,7 +669,13 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   const ruledBlock = (rows, height) => {
     const body = [];
     for (let r = 0; r < rows; r++) {
-      body.push([{ text: '', fontSize: 8, margin: [0, height, 0, height] }]);
+      // A SPACE, not '', and at fontSize 1. pdfMake collapses the line box of
+      // an empty string -- the trap blankCell's comment already records -- and
+      // the row heights it measures are then wrong, so a long ruled table
+      // neither paginates nor draws all its rows. The space keeps the line box
+      // alive; fontSize 1 keeps its contribution near zero, so row height stays
+      // margin-driven and the Changes page renders as it does today.
+      body.push([{ text: ' ', fontSize: 1, margin: [0, height, 0, height] }]);
     }
     return {
       table: { widths: ['100%'], body: body },
@@ -2550,7 +2556,12 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       const lines = ruledLines(blankKey);
       // No entries and no lines asked for: the section is genuinely absent.
       if (!lines.length) return [];
-      return [{ unbreakable: true, stack: [sectionTitle(title), ...lines] }];
+      // NOT unbreakable. A block taller than one page cannot be placed at
+      // all -- pdfMake emits an empty page and the section disappears, which
+      // is what characterJournal: 60 did. printSection is this file's own
+      // answer: the title goes into headerRows with keepWithHeaderRows, so it
+      // cannot be orphaned AND the ruled table splits between rows.
+      return [printSection(title, ...lines)];
     }
     const blocks = [{
       unbreakable: true,
