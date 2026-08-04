@@ -865,29 +865,41 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   
   // === SAVING THROWS ===
   //
-  // This used to regex-scrape el.title looking for "Base: X". That worked, but
-  // it silently degraded to "no modifiers at all" the moment the tooltip's
-  // wording changed -- a wrong number printed confidently, with no error.
+  // The save renderer in app.js writes the field as `final (base)` when
+  // anything adjusted it, and bare `final` when nothing did. Both numbers are
+  // therefore already in the value, and all three columns come from it alone.
   //
-  // The record carries the modifiers directly in sheet.savingThrows (save1
-  // through save5, plus save5_mental), and the field's own value is the final
-  // total. Base is then simply total minus modifier, with no parsing involved.
-  const saveMods = (sheet && sheet.savingThrows) || {};
-
+  // Two approaches are recorded here so neither gets tried again. The first
+  // regex-scraped el.title for "Base: X" and degraded silently the moment the
+  // tooltip wording changed. The second -- what this replaces -- read the
+  // LEADING number as the total and derived Start by subtracting only the
+  // manual mod from sheet.savingThrows. That printed the final in the Start
+  // column, left Mod blank whenever the adjustment was racial or class rather
+  // than hand-entered, and put the whole `6 (8)` string in Total with the
+  // class base sitting inside it. Every row, every character sheet.
+  //
+  // sheet.savingThrows is deliberately no longer consulted: it holds ONLY the
+  // manual mods, which are one contributor among several and were never the
+  // whole adjustment.
   const parseSave = (saveNum) => {
-    const el = q(`[data-field="save${saveNum}"]`);
-    const total = el?.value || '';
-    if (!total) return { base: '', mod: '', total: '' };
+    const raw = q(`[data-field="save${saveNum}"]`)?.value || '';
+    if (!raw) return { base: '', mod: '', total: '' };
 
-    const totalNum = parseInt(total, 10);
-    const modNum = parseInt(saveMods[`save${saveNum}`], 10) || 0;
+    // `6 (8)` -> final 6 from a base of 8. `6` -> base and final both 6.
+    const m = raw.match(/^\s*(-?\d+)\s*(?:\(\s*(-?\d+)\s*\))?\s*$/);
 
-    if (isNaN(totalNum)) return { base: total, mod: '', total: total };
+    // Anything this does not recognise prints verbatim rather than having
+    // numbers invented from it.
+    if (!m) return { base: raw, mod: '', total: raw };
+
+    const finalNum = parseInt(m[1], 10);
+    const baseNum = (m[2] !== undefined) ? parseInt(m[2], 10) : finalNum;
+    const modNum = finalNum - baseNum;
 
     return {
-      base: String(totalNum - modNum),
+      base: String(baseNum),
       mod: modNum !== 0 ? (modNum > 0 ? `+${modNum}` : String(modNum)) : '',
-      total: total
+      total: String(finalNum)
     };
   };
   
