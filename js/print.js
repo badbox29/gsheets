@@ -1366,7 +1366,8 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     classAbilityRows.length > 0 ||
     racialAbilityRows.length > 0 ||
     kitAbilityRows.length > 0 ||
-    classKitNotes !== ''
+    classKitNotes !== '' ||
+    blankCount('abilities') > 0
   );
 
   // A labelled two-column table: ability name on the left, its effect on the
@@ -1402,6 +1403,16 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       abilityBlocks.push(subLabel('Class / Kit Notes'));
       abilityBlocks.push({ text: classKitNotes, fontSize: 6, margin: [0, 0, 0, 4] });
     }
+
+    // Nothing was pushed at all: a blank sheet, where the character these
+    // abilities belong to does not exist yet. Ruled lines with NO group
+    // labels -- which of the three a player writes in is his business, and
+    // three labelled empty tables would waste the page arguing about it.
+    // Keyed on what actually got pushed rather than re-testing the four
+    // conditions above, so it cannot drift out of step with them.
+    if (abilityBlocks.length === 0) {
+      abilityBlocks.push(...ruledLines('abilities'));
+    }
   }
 
   // === POWERS & HINDRANCES (optional) ===
@@ -1410,7 +1421,9 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // how they are entered -- there is no structure to tabulate.
   const powersText = String((sheet && sheet.notesEx && sheet.notesEx.powers) || '').trim();
   const hindrancesText = String((sheet && sheet.notesEx && sheet.notesEx.hindrances) || '').trim();
-  const showPowers = !!opts.powersHindrances && (powersText !== '' || hindrancesText !== '');
+  const showPowers = !!opts.powersHindrances &&
+    (powersText !== '' || hindrancesText !== '' ||
+     blankCount('powers') > 0 || blankCount('hindrances') > 0);
 
   const powersBlocks = [];
 
@@ -1418,10 +1431,16 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     if (powersText) {
       powersBlocks.push(subLabel('Powers'));
       powersBlocks.push({ text: powersText, fontSize: 6, margin: [0, 0, 0, 4] });
+    } else if (blankCount('powers') > 0) {
+      powersBlocks.push(subLabel('Powers'));
+      powersBlocks.push(...ruledLines('powers'));
     }
     if (hindrancesText) {
       powersBlocks.push(subLabel('Hindrances'));
       powersBlocks.push({ text: hindrancesText, fontSize: 6, margin: [0, 0, 0, 4] });
+    } else if (blankCount('hindrances') > 0) {
+      powersBlocks.push(subLabel('Hindrances'));
+      powersBlocks.push(...ruledLines('hindrances'));
     }
   }
 
