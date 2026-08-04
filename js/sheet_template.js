@@ -937,18 +937,6 @@ const SHEET_HTML = `
           </div>
         </section>
 
-        <!-- Two Chapter 5 rules the app deliberately does NOT enforce: it cannot
-             know when a slot was filled, nor whether the character has adventured
-             yet. Guidance only, behind a disclosure so they do not clutter. -->
-        <details class="disclosure" style="font-size:11px;margin-top:12px;">
-          <summary>how proficiency slots work</summary>
-          <ul style="margin:6px 0 0 16px;padding:0;color:var(--muted);line-height:1.5;">
-            <li style="margin-bottom:4px;">Once a proficiency slot is filled, it can never be changed or reassigned.</li>
-            <li style="margin-bottom:4px;">A character&rsquo;s initial slots must be filled immediately, before his first adventure. Any not filled by then are lost.</li>
-            <li style="margin-bottom:4px;">Two proficient characters working together use the higher ability score, +1 for assistance &mdash; never more than +1.</li>
-          </ul>
-        </details>
-
         </div>
 
         <!-- Proficiency Abilities (PHB Ch.5). Hidden unless the character has a
