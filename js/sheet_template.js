@@ -1296,6 +1296,60 @@ const SHEET_HTML = `
 	  <main class="card">
 		<div class="section-group">
 		  <div class="section-group-head">
+			<span class="grp-name">Load &amp; Movement</span>
+			<span class="grp-rule"></span>
+		  </div>
+
+		<!-- Encumbrance -->
+		<section class="section">
+		  <h3>Encumbrance</h3>
+		  <!-- All three stay <input readonly>: collectSheet, print.js and the KV
+			   sync address them by data-field, and spans would drop them silently.
+			   Same three fields, same wording -- presentation only. -->
+		  <div class="stat-strip">
+			<span class="pair">current load <input data-field="encumbrance_current" type="text" readonly></span>
+			<span class="pair">max carry <input data-field="encumbrance_max" type="text" readonly></span>
+			<span class="pair encumbrance-category-pair">category <input data-field="encumbrance_category" type="text" readonly></span>
+		  </div>
+		  <div class="encumbrance-magic-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
+		</section>
+
+		<!--
+		  Movement Rate (PHB Ch.14)
+
+		  CLIMBING IS DELIBERATELY ABSENT. It used to sit here as "Climbing (/2)",
+		  which is not a rule from anywhere -- Table 67 makes the climb rate depend
+		  on the surface and its condition, from 1/4 to 4 times movement, doubled
+		  for thieves. No single number can be right, so climbing owns a panel on
+		  the Tools tab instead of a box that quietly lies.
+
+		  The jog and run row is hidden unless the joggingAndRunning optional rule
+		  is on; the chapter prints both in a box headed "(Optional Rule)".
+		-->
+		<section class="section">
+		  <h3>Movement Rate</h3>
+		  <div class="row">
+			<div class="col"><label>Base Movement</label><input data-field="movement_base" type="text" readonly></div>
+			<div class="col"><label>Current Movement</label><input data-field="movement_current" type="text" readonly></div>
+			<div class="col"><label>Flying (if applicable)</label><input data-field="movement_flying" type="number" min="0" placeholder="0"></div>
+		  </div>
+		  <div class="row" style="margin-top:8px">
+			<div class="col"><label>Swimming</label><input data-field="movement_swimming" type="text" readonly></div>
+			<div class="col"><label>Walk the Bottom</label><input data-field="movement_bottom" type="text" readonly></div>
+			<div class="col"><label>Hold Breath</label><input data-field="movement_breath" type="text" readonly></div>
+		  </div>
+		  <div class="row movement-optional-row" style="margin-top:8px;display:none">
+			<div class="col"><label>Jog (×2)</label><input data-field="movement_jog" type="text" readonly></div>
+			<div class="col"><label>Run (×3)</label><input data-field="movement_running" type="text" readonly></div>
+			<div class="col"></div>
+		  </div>
+		  <div style="margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;">
+			<strong>Climbing rate depends on the surface</strong> &mdash; see Tools &gt; Climbing.
+		  </div>
+		</section>
+		</div>
+		<div class="section-group">
+		  <div class="section-group-head">
 			<span class="grp-name">Carried Equipment</span>
 			<span class="grp-rule"></span>
 			<button class="add-item">+ Add Custom Item</button>
@@ -1352,61 +1406,7 @@ const SHEET_HTML = `
 		
 		</div>
 		
-		<div class="section-group">
-		  <div class="section-group-head">
-			<span class="grp-name">Load &amp; Movement</span>
-			<span class="grp-rule"></span>
-		  </div>
-
-		<!-- Encumbrance -->
-		<section class="section">
-		  <h3>Encumbrance</h3>
-		  <!-- All three stay <input readonly>: collectSheet, print.js and the KV
-			   sync address them by data-field, and spans would drop them silently.
-			   Same three fields, same wording -- presentation only. -->
-		  <div class="stat-strip">
-			<span class="pair">current load <input data-field="encumbrance_current" type="text" readonly></span>
-			<span class="pair">max carry <input data-field="encumbrance_max" type="text" readonly></span>
-			<span class="pair encumbrance-category-pair">category <input data-field="encumbrance_category" type="text" readonly></span>
-		  </div>
-		  <div class="encumbrance-magic-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
-		</section>
-
-		<!--
-		  Movement Rate (PHB Ch.14)
-
-		  CLIMBING IS DELIBERATELY ABSENT. It used to sit here as "Climbing (/2)",
-		  which is not a rule from anywhere -- Table 67 makes the climb rate depend
-		  on the surface and its condition, from 1/4 to 4 times movement, doubled
-		  for thieves. No single number can be right, so climbing owns a panel on
-		  the Tools tab instead of a box that quietly lies.
-
-		  The jog and run row is hidden unless the joggingAndRunning optional rule
-		  is on; the chapter prints both in a box headed "(Optional Rule)".
-		-->
-		<section class="section">
-		  <h3>Movement Rate</h3>
-		  <div class="row">
-			<div class="col"><label>Base Movement</label><input data-field="movement_base" type="text" readonly></div>
-			<div class="col"><label>Current Movement</label><input data-field="movement_current" type="text" readonly></div>
-			<div class="col"><label>Flying (if applicable)</label><input data-field="movement_flying" type="number" min="0" placeholder="0"></div>
-		  </div>
-		  <div class="row" style="margin-top:8px">
-			<div class="col"><label>Swimming</label><input data-field="movement_swimming" type="text" readonly></div>
-			<div class="col"><label>Walk the Bottom</label><input data-field="movement_bottom" type="text" readonly></div>
-			<div class="col"><label>Hold Breath</label><input data-field="movement_breath" type="text" readonly></div>
-		  </div>
-		  <div class="row movement-optional-row" style="margin-top:8px;display:none">
-			<div class="col"><label>Jog (×2)</label><input data-field="movement_jog" type="text" readonly></div>
-			<div class="col"><label>Run (×3)</label><input data-field="movement_running" type="text" readonly></div>
-			<div class="col"></div>
-		  </div>
-		  <div style="margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;">
-			<strong>Climbing rate depends on the surface</strong> &mdash; see Tools &gt; Climbing.
-		  </div>
-		</section>
-		</div>
-	  </main>
+		</main>
 	</div>
 
     <div class="vtab-content" data-vtab="treasure">
