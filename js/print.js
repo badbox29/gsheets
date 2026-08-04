@@ -650,6 +650,44 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // the section even though they own none yet.
   const hasContent = (rows, key) => rows.length > 0 || blankCount(key) > 0;
 
+  // === RULED WRITING LINES ===
+  // The prose sections -- Special Abilities, Powers, Hindrances, Background
+  // and the five journals -- render as text, not tables, so there is no body
+  // for blankRows() to push into. A blank sheet needs ruled lines instead.
+  //
+  // This is the same drawing the Changes to Enter page does with a local
+  // helper of its own, hoisted so there is ONE of them. Two line-drawing
+  // routines in one file is the drift the single-escapeHtml rule exists to
+  // prevent. Full content width, ruled every line, sides closed.
+  const ruledBlock = (rows, height) => {
+    const body = [];
+    for (let r = 0; r < rows; r++) {
+      body.push([{ text: '', fontSize: 8, margin: [0, height, 0, height] }]);
+    }
+    return {
+      table: { widths: ['100%'], body: body },
+      layout: {
+        hLineWidth: () => 1,
+        vLineWidth: (i, node) => (i === 0 || i === node.table.widths.length) ? 1 : 0,
+        hLineColor: () => palette.rule,
+        vLineColor: () => palette.rule,
+        paddingLeft: () => 2,
+        paddingRight: () => 2,
+        paddingTop: () => 1,
+        paddingBottom: () => 1
+      },
+      margin: [0, 0, 0, 6]
+    };
+  };
+
+  // Ruled lines for a blank-sheet key, returned as an ARRAY so it spreads
+  // straight into a block list. A zero count returns nothing at all, which is
+  // what keeps a real character's sheet identical to what it prints today.
+  const ruledLines = (key, height) => {
+    const n = blankCount(key);
+    return n > 0 ? [ruledBlock(n, height || 5)] : [];
+  };
+
   // === USED TALLY ===
   // Consumables count DOWN during play, and the quantity itself changes -- pick
   // up two arrows and any pre-drawn set of boxes is already wrong. So this is
