@@ -1293,8 +1293,15 @@ const SHEET_HTML = `
 
     <div class="vtab-content" data-vtab="equipment">
 	  <main class="card">
+		<div class="section-group">
+		  <div class="section-group-head">
+			<span class="grp-name">Carried Equipment</span>
+			<span class="grp-rule"></span>
+			<button class="add-item">+ Add Custom Item</button>
+		  </div>
+
 		<!-- Equipment Browser -->
-		<section class="section equipment-browser-section">
+		<section class="section utility equipment-browser-section">
 		  <div style="display:flex;justify-content:space-between;align-items:center;">
 			<h3>Carried Equipment Browser</h3>
 			<div style="display:flex;gap:6px;">
@@ -1337,19 +1344,19 @@ const SHEET_HTML = `
 		  </div>
 		</section>
 
-		<hr style="margin:24px 0;border:none;border-top:1px solid #555;opacity:0.4;">
-
 		<!-- Carried Equipment -->
 		<section class="section">
-		  <h3>Carried Equipment <button class="add-item">+ Add Custom Item</button></h3>
 		  <div class="list items-list"></div>
 		</section>
 		
-		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
+		</div>
 
         <!-- Money & Treasure -->
         <section class="section">
-          <h3>Treasure & Money</h3>
+          <div class="section-group-head">
+            <span class="grp-name">Treasure &amp; Money</span>
+            <span class="grp-rule"></span>
+          </div>
           
           <h4 style="margin-bottom:8px;font-size:14px;">Coins Possessed</h4>
           <div class="row coin-inputs">
@@ -1402,7 +1409,11 @@ const SHEET_HTML = `
           <div class="list valuables-list"></div>
         </section>
 		
-		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
+		<div class="section-group">
+		  <div class="section-group-head">
+			<span class="grp-name">Load &amp; Movement</span>
+			<span class="grp-rule"></span>
+		  </div>
 
 		<!-- Encumbrance -->
 		<section class="section">
@@ -1451,6 +1462,7 @@ const SHEET_HTML = `
 			<strong>Climbing rate depends on the surface</strong> &mdash; see Tools &gt; Climbing.
 		  </div>
 		</section>
+		</div>
 	  </main>
 	</div>
 
