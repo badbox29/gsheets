@@ -8746,6 +8746,31 @@ function renderOverlandPanel(root) {
 // selection lives in root._toolsSubtab rather than in the DOM -- the opposite
 // of the vision panel's <select>, which had to be built once precisely because
 // it holds the choice itself.
+// Hide a section group when every section inside it is hidden, so a character
+// never sees a gold band naming a group with nothing under it.
+//
+// READS each section's own inline display rather than re-deriving any gate.
+// The gating renderers already decide whether their section applies; asking the
+// same question a second way is how two answers drift apart, which is the
+// reasoning behind toolsSubtabApplies as well.
+//
+// MUST use section.style.display and NOT getComputedStyle or offsetParent.
+// Every inactive vertical tab is display:none, so a computed check would find
+// every group on every tab the user is not currently looking at to be empty and
+// hide the lot of them.
+//
+// The zero-sections guard is deliberate: an empty list would satisfy .some()
+// vacuously and hide a group that simply has no sections yet.
+function renderSectionGroups(root) {
+  if (!root) return;
+  Array.from(root.querySelectorAll('.section-group')).forEach(group => {
+    const sections = Array.from(group.querySelectorAll('.section'));
+    if (!sections.length) return;
+    const anyVisible = sections.some(s => s.style.display !== 'none');
+    group.classList.toggle('group-empty', !anyVisible);
+  });
+}
+
 function renderToolsSubtabs(root) {
   const bar = root.querySelector('.subtab-bar');
   if (!bar || typeof TOOLS_SUBTABS === 'undefined') return;
