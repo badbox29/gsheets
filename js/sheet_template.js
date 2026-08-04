@@ -361,7 +361,7 @@ const SHEET_HTML = `
 
 		<!-- Saving Throws -->
 		<section class="section saving-throws">
-		  <h3>Saving Throws (auto-calculated)</h3>
+		  <h3>Saving Throws</h3>
 
 		  <div class="row">
 			<div class="col">
