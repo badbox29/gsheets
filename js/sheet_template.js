@@ -2765,7 +2765,11 @@ const SHEET_HTML = `
 
 	<!-- Print Options Modal -->
 	<div class="print-modal-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:10000;justify-content:center;align-items:center;">
-	  <div style="background:var(--panel);border-radius:8px;max-width:660px;width:94%;max-height:85vh;overflow-y:auto;padding:20px 24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+	  <!-- height, NOT max-height: with a max the box shrinks to fit whichever
+	       tab is showing, and the Blank Sheet panel is a fraction of the
+	       character one, so the modal jumped size on every tab click.
+	       overflow-y moves off this element onto .print-modal-body. -->
+	  <div style="background:var(--panel);border-radius:8px;max-width:660px;width:94%;height:85vh;display:flex;flex-direction:column;padding:20px 24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
 	    <h2 style="margin:0 0 4px 0;font-size:16px;">🖨 Print Character Sheet</h2>
 	    <p style="font-size:12px;color:var(--muted);margin:0 0 12px;">Choose how the sheet should look, then pick a tab below.</p>
 
@@ -2810,6 +2814,16 @@ const SHEET_HTML = `
 	      <div class="subtab active" data-print-tab="character">This Character</div>
 	      <div class="subtab" data-print-tab="blank">Blank Sheet</div>
 	    </div>
+
+	    <!-- The ONLY scrolling region. Everything above it -- the title, the
+	         three look-and-feel strips and the tab strip -- and the Close row
+	         below it stay fixed, so the shared controls do not scroll away
+	         while a tab's own content moves under them.
+
+	         min-height:0 is load-bearing: a flex item defaults to
+	         min-height:auto, refuses to shrink below its content, and the
+	         scrollbar never appears. -->
+	    <div class="print-modal-body" style="flex:1 1 auto;overflow-y:auto;min-height:0;">
 
 	    <div class="print-panel" data-panel="character">
 
@@ -2938,6 +2952,7 @@ const SHEET_HTML = `
 	        <button class="print-blank-generate" style="padding:8px 20px;">Print Blank Sheet</button>
 	      </div>
 	    </div>
+	    </div><!-- /print-modal-body -->
 
 	    <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;">
 	    <div style="display:flex;justify-content:flex-end;">
