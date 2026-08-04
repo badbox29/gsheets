@@ -1712,7 +1712,10 @@ const SHEET_HTML = `
       <main class="card">
         <!-- Follower Stats -->
         <section class="section">
-          <h3>Follower Capacity</h3>
+          <div class="section-group-head">
+            <span class="grp-name">Capacity</span>
+            <span class="grp-rule"></span>
+          </div>
           <div class="row">
             <div class="col"><label>Reaction Adj.</label><input data-field="reaction_adj" type="text" readonly></div>
             <div class="col"><label>Max Henchmen</label><input data-field="henchmen_max" type="number" readonly title="PHB Table 6. Charisma sets the maximum number of HENCHMEN, not followers &mdash; followers come from class level and a stronghold (PHB Ch.3). Chapter 12 makes this a LIFETIME limit: retired, deceased and missing henchmen all count against it."></div>
@@ -1720,10 +1723,14 @@ const SHEET_HTML = `
           </div>
         </section>
 
-        <hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
+        <div class="section-group">
+          <div class="section-group-head">
+            <span class="grp-name">Mounts &amp; Transport</span>
+            <span class="grp-rule"></span>
+          </div>
 
         <!-- Animals, Mounts & Transport Browser -->
-		<section class="section">
+		<section class="section utility">
 		  <div style="display:flex;justify-content:space-between;align-items:center;">
 			<h3 style="margin:0;">Animals, Mounts &amp; Transport Browser</h3>
 			<button class="toggle-animals-browser-visibility" style="padding:4px 12px;font-size:12px;">Show/Hide</button>
@@ -1767,7 +1774,31 @@ const SHEET_HTML = `
 		  <div class="list mounts-list"></div>
 		</section>
 
-        <hr style="margin:24px 0;border:none;border-top:1px solid #555;opacity:0.4;">
+        <!-- Bonded Mounts & Animal Companions -->
+		<section class="section">
+		  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+			<h3 style="margin:0;">Bonded Mounts &amp; Animal Companions</h3>
+			<div style="display:flex;gap:12px;align-items:center;">
+			  <button class="add-companion">+ Add</button>
+			  <label style="font-size:12px;color:var(--muted);cursor:pointer;user-select:none;">
+				<input type="checkbox" class="show-archived-companions" style="margin-right:4px;">
+				Show Archived
+			  </label>
+			</div>
+		  </div>
+		  <p style="font-size:12px;color:var(--muted);margin-bottom:8px;">
+			Familiars, animal companions, bonded beasts and vehicles &mdash; anything with a lasting tie to the character. Tick <em>Is Mount</em> on any of them that can be ridden or driven.
+		  </p>
+		  <div class="list companions-list"></div>
+		</section>
+
+        </div>
+
+        <div class="section-group">
+          <div class="section-group-head">
+            <span class="grp-name">People</span>
+            <span class="grp-rule"></span>
+          </div>
 
         <!-- Henchmen & Retainers -->
 		<section class="section">
@@ -1792,8 +1823,6 @@ const SHEET_HTML = `
 		  <textarea data-field="henchmen_notes" placeholder="Obligations owed, ransom terms, who answers to whom..." style="width:100%;min-height:60px;resize:vertical;"></textarea>
 		</section>
 
-        <hr style="margin:24px 0;border:none;border-top:1px solid #555;opacity:0.4;">
-
         <!-- Followers & Hirelings -->
 		<section class="section">
 		  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -1817,25 +1846,7 @@ const SHEET_HTML = `
 		  <div class="list hirelings-list"></div>
 		</section>
 
-        <hr style="margin:24px 0;border:none;border-top:1px solid #555;opacity:0.4;">
-
-        <!-- Bonded Mounts & Animal Companions -->
-		<section class="section">
-		  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-			<h3 style="margin:0;">Bonded Mounts &amp; Animal Companions</h3>
-			<div style="display:flex;gap:12px;align-items:center;">
-			  <button class="add-companion">+ Add</button>
-			  <label style="font-size:12px;color:var(--muted);cursor:pointer;user-select:none;">
-				<input type="checkbox" class="show-archived-companions" style="margin-right:4px;">
-				Show Archived
-			  </label>
-			</div>
-		  </div>
-		  <p style="font-size:12px;color:var(--muted);margin-bottom:8px;">
-			Familiars, animal companions, bonded beasts and vehicles &mdash; anything with a lasting tie to the character. Tick <em>Is Mount</em> on any of them that can be ridden or driven.
-		  </p>
-		  <div class="list companions-list"></div>
-		</section>
+        </div>
       </main>
     </div>
 
