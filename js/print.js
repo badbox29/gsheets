@@ -361,6 +361,13 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
             color: palette.ink,
             characterSpacing: 1.2,
             alignment: 'center',
+            // The title is the 'auto' column between two '*' columns. Without
+            // this, its minimum width is the longest single WORD, so a title
+            // pdfMake cannot fit is squeezed and wraps -- and the flanking
+            // cells then draw their rules at the bottom of a two-line row,
+            // level with the second word instead of through the heading.
+            // noWrap makes minWidth = maxWidth, so the rules give way instead.
+            noWrap: true,
             margin: [8, 0, 8, 0],
             border: [false, false, false, false]
           },
