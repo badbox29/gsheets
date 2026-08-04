@@ -1628,6 +1628,12 @@ const SHEET_HTML = `
 	</div>
     <div class="vtab-content" data-vtab="details">
       <main class="card">
+        <div class="section-group">
+          <div class="section-group-head">
+            <span class="grp-name">Personal</span>
+            <span class="grp-rule"></span>
+          </div>
+
         <!-- Personal Info -->
         <section class="section">
           <h3>Personal Info</h3>
@@ -1667,6 +1673,14 @@ const SHEET_HTML = `
           <textarea data-field="appearance_notes"></textarea>
         </section>
 
+        </div>
+
+        <div class="section-group">
+          <div class="section-group-head">
+            <span class="grp-name">Background</span>
+            <span class="grp-rule"></span>
+          </div>
+
         <!-- Family Information -->
         <section class="section">
           <h3>Family Information</h3>
@@ -1705,6 +1719,7 @@ const SHEET_HTML = `
           <h3>Background History</h3>
           <textarea data-field="background_history" style="min-height:120px"></textarea>
         </section>
+        </div>
       </main>
     </div>
 
