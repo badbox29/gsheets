@@ -267,7 +267,7 @@ const SHEET_HTML = `
 
 		<!-- Combat -->
 		<section class="section">
-		  <h3>Combat</h3>
+		  <h3>Attack &amp; Defense</h3>
 		  <div class="col" style="flex:1 1 100%;margin:10px 0 18px;">
 		    <div class="base-thac0 small"></div>
 		    <div class="attack-matrix" style="margin-top:10px;"></div>
