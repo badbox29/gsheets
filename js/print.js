@@ -2727,26 +2727,9 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // record them, re-entering afterwards is an act of memory. Headed sections
   // turn that into transcription.
   if (opts.changesPage) {
-    const ruled = (rows, height) => {
-      const body = [];
-      for (let r = 0; r < rows; r++) {
-        body.push([{ text: '', fontSize: 8, margin: [0, height, 0, height] }]);
-      }
-      return {
-        table: { widths: ['100%'], body: body },
-        layout: {
-          hLineWidth: () => 1,
-          vLineWidth: (i, node) => (i === 0 || i === node.table.widths.length) ? 1 : 0,
-          hLineColor: () => palette.rule,
-          vLineColor: () => palette.rule,
-          paddingLeft: () => 2,
-          paddingRight: () => 2,
-          paddingTop: () => 1,
-          paddingBottom: () => 1
-        },
-        margin: [0, 0, 0, 6]
-      };
-    };
+    // Hoisted to ruledBlock, beside blankRows -- see RULED WRITING LINES.
+    // Kept under the local name so the six call sites below read unchanged.
+    const ruled = ruledBlock;
 
     const changeHeading = t => subLabel(t);
 
