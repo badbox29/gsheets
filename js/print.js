@@ -627,7 +627,34 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     if (node.fontSize === 5 && node.fillColor === undefined) {
       node.fillColor = palette.tint;
     }
-    if (node.table && node.table.body) inkFormLabels(node.table.body);
+    // A table DECLARES its own headerRows, so this walker can find header
+    // cells wherever they sit and whatever built them. Header colour used to
+    // live in two places -- hdrCell sets it directly, and printSection
+    // retro-fits it onto the FIRST table it finds in a section -- so a header
+    // row built from plain cell() that is not that first table fell through
+    // both and printed black. That is Ammunition (second table in its
+    // section), Valuables (likewise), spellHeaderRow (the spellbook section
+    // bypasses printSection, and the appendix page reuses the same row) and
+    // the Daily Memorization appendix page.
+    //
+    // The color === undefined guard means anything already coloured is left
+    // alone, so hdrCell and printSection both still win where they apply.
+    if (node.table && node.table.body) {
+      const hdrRows = node.table.headerRows || 0;
+      for (let r = 0; r < hdrRows && r < node.table.body.length; r++) {
+        const row = node.table.body[r];
+        if (!Array.isArray(row)) continue;
+        // Section title and preamble rows are marked and carry their own
+        // colour already -- skip rather than reach into them.
+        if (row[0] && row[0]._sectionTitle) continue;
+        row.forEach(c => {
+          if (c && typeof c === 'object' && 'text' in c && c.color === undefined) {
+            c.color = palette.ink;
+          }
+        });
+      }
+      inkFormLabels(node.table.body);
+    }
     if (node.columns) inkFormLabels(node.columns);
     if (node.stack) inkFormLabels(node.stack);
     if (Array.isArray(node.text)) inkFormLabels(node.text);
