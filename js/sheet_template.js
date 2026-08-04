@@ -1456,8 +1456,15 @@ const SHEET_HTML = `
 
     <div class="vtab-content" data-vtab="weapons-armor">
 	  <main class="card">
+		<div class="section-group">
+		  <div class="section-group-head">
+			<span class="grp-name">Weapons</span>
+			<span class="grp-rule"></span>
+			<button class="add-weapon">+ Add Custom Weapon</button>
+		  </div>
+
 		<!-- Weapon Browser -->
-		<section class="section weapon-inventory-browser-section">
+		<section class="section utility weapon-inventory-browser-section">
 		  <div style="display:flex;justify-content:space-between;align-items:center;">
 			<h3>Weapon Browser</h3>
 			<button class="toggle-weapon-inventory-browser-visibility" style="padding:4px 12px;font-size:12px;">Show/Hide</button>
@@ -1490,11 +1497,8 @@ const SHEET_HTML = `
 		  </div>
 		</section>
 
-		<hr style="margin:24px 0;border:none;border-top:1px solid #555;opacity:0.4;">
-
 		<!-- Weapons -->
 		<section class="section">
-		  <h3>Weapons <button class="add-weapon">+ Add Custom Weapon</button></h3>
 		  <!-- Rail key. The proficiency rail has existed since before the card
 		       pass and has never had one. Colours are resolveWeaponProficiency's:
 		       related is MUTED rather than amber because amber sits too close to
@@ -1509,10 +1513,17 @@ const SHEET_HTML = `
 		  <div class="list weapons-list"></div>
 		</section>
 
-		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
+		</div>
+
+		<div class="section-group">
+		  <div class="section-group-head">
+			<span class="grp-name">Ammunition</span>
+			<span class="grp-rule"></span>
+			<button class="add-ammunition">+ Add Custom Ammo</button>
+		  </div>
 
 		<!-- Ammunition Browser -->
-		<section class="section ammunition-browser-section">
+		<section class="section utility ammunition-browser-section">
 		  <div style="display:flex;justify-content:space-between;align-items:center;">
 			<h3>Ammunition Browser</h3>
 			<button class="toggle-ammunition-browser-visibility" style="padding:4px 12px;font-size:12px;">Show/Hide</button>
@@ -1544,11 +1555,8 @@ const SHEET_HTML = `
 		  </div>
 		</section>
 
-		<hr style="margin:24px 0;border:none;border-top:1px solid #555;opacity:0.4;">
-
 		<!-- Ammunition -->
 		<section class="section">
-		  <h3>Ammunition <button class="add-ammunition">+ Add Custom Ammo</button></h3>
 		  <p style="font-size:12px;color:var(--muted);margin-bottom:8px;">
 			Track arrows, bolts, sling stones, and other ammunition. Weight auto-updates encumbrance.
 		  </p>
@@ -1559,10 +1567,17 @@ const SHEET_HTML = `
 		  </div>
 		</section>
 
-		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
+		</div>
+
+		<div class="section-group">
+		  <div class="section-group-head">
+			<span class="grp-name">Armor &amp; Shields</span>
+			<span class="grp-rule"></span>
+			<button class="add-armor">+ Add Custom Armor</button>
+		  </div>
 
 		<!-- Armor Browser -->
-		<section class="section armor-browser-section">
+		<section class="section utility armor-browser-section">
 		  <div style="display:flex;justify-content:space-between;align-items:center;">
 			<h3>Armor & Shields Browser</h3>
 			<button class="toggle-armor-browser-visibility" style="padding:4px 12px;font-size:12px;">Show/Hide</button>
@@ -1593,11 +1608,8 @@ const SHEET_HTML = `
 		  </div>
 		</section>
 
-		<hr style="margin:24px 0;border:none;border-top:1px solid #555;opacity:0.4;">
-
 		<!-- Armor & Shields -->
 		<section class="section">
-		  <h3>Armor &amp; Shields <button class="add-armor">+ Add Custom Armor</button></h3>
 		  <!-- Class armor restrictions (advisory; never blocks) -->
 		  <div class="armor-restriction-note" style="display:none;margin-bottom:10px;padding:8px;border-radius:4px;font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
 		  <!-- Rail key. Hidden until resolveArmorLegality exists to paint the
@@ -1609,6 +1621,7 @@ const SHEET_HTML = `
 		  </div>
 		  <div class="list armor-list"></div>
 		</section>
+		</div>
 	  </main>
 	</div>
 
