@@ -23,6 +23,14 @@
          "enchanted" without needing a legend. */
       --magic: #a98fd0;
 
+      /* Section headings. NOT --text -- that is the colour of every field value
+         on the sheet, so a heading wearing it competes with the data instead of
+         framing it. NOT --muted either: that is the label colour, and the card
+         grammar already has it carrying "related / advisory / cast". A heading
+         is not a quieter piece of data, it is a different kind of thing, so it
+         gets its own rung rather than a lower value of an existing one. */
+      --heading: #a9afb7;
+
       /* Foreground for text sitting ON an accent-filled surface (badges,
          primary buttons). This is the variable whose absence made the NATIVE
          badge unreadable in light mode. */
@@ -163,17 +171,52 @@
       transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     }
     .section{margin-bottom:16px}
+	/* SECTION GROUP -- the gold band wraps the sections it names, so membership
+	   lives in the DOM and nothing has to maintain a list of members. */
+	.section-group{ margin:0 0 26px 0; }
+	.section-group:last-child{ margin-bottom:0; }
+	/* Every member section hidden means the band has nothing left to name. Set
+	   by JS, which READS each section's own display rather than re-deriving the
+	   gate -- two answers to one question is how the Tools sub-tabs would have
+	   drifted. */
+	.section-group.group-empty{ display:none !important; }
 	.section h3{
 	  margin:0 0 8px 0;
 	  display:flex;
 	  align-items:center;
 	  justify-content:space-between;
-	  font-size:18px;
-	  font-family: 'Almendra', serif;
+	  font-size:13px;
+	  font-family: inherit;
 	  font-weight: 700;
-	  color:var(--accent-light);
+	  text-transform: uppercase;
+	  letter-spacing: .11em;
+	  color:var(--heading);
 	  transition: color 0.5s ease;
-	  letter-spacing: 0.5px;
+	}
+	/* A browser is a utility that fills the list beneath it, not a peer of it. */
+	.section.utility{ margin-bottom:6px; }
+	.section.utility h3{ font-size:12px; letter-spacing:.1em; color:var(--muted); }
+    .section-group-head{
+	  display:flex;
+	  align-items:center;
+	  gap:10px;
+	  margin:0 0 12px 0;
+	}
+	.section-group-head .grp-name{
+	  font-family:'Almendra', serif;
+	  font-weight:700;
+	  font-size:16px;
+	  letter-spacing:.13em;
+	  text-transform:uppercase;
+	  color:var(--accent);
+	  white-space:nowrap;
+	  transition: color 0.5s ease;
+	}
+	.section-group-head .grp-rule{
+	  flex:1;
+	  height:1px;
+	  background:var(--accent);
+	  opacity:.4;
 	}
     .list{margin-top:8px}
     .item{
@@ -340,6 +383,12 @@
 	  --success: #2b6440;
 	  --info: #1d5878;
 	  --magic: #6b4a9e;
+
+	  /* Section headings. NOT --text (that is the colour of every field value
+	     on the sheet) and NOT --muted (that is the label colour, and it already
+	     carries "related / advisory / cast" in the card grammar). A heading is
+	     not a quieter piece of data, so it gets its own rung. */
+	  --heading: #565c65;
 
 	  --badge-fg: #eceef1;
 	  --btn-fg: #eceef1;
