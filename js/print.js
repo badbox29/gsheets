@@ -2509,8 +2509,16 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // The section title travels with the first entry. Each subsequent entry is
   // its own unbreakable block, so the list may break between entries but never
   // in the middle of one, and the title is never orphaned.
-  const journalSection = (title, entries) => {
-    if (!entries.length) return [];
+  // A blank sheet has no entries at all, so every one of these sections used
+  // to vanish from it. Ruled lines only, no field labels -- a blank journal is
+  // somewhere to write, not a form to fill in.
+  const journalSection = (title, entries, blankKey) => {
+    if (!entries.length) {
+      const lines = ruledLines(blankKey);
+      // No entries and no lines asked for: the section is genuinely absent.
+      if (!lines.length) return [];
+      return [{ unbreakable: true, stack: [sectionTitle(title), ...lines] }];
+    }
     const blocks = [{
       unbreakable: true,
       stack: [
@@ -2538,32 +2546,37 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     sessionLogRows.map(e => journalEntry(
       e.date || 'Undated session',
       [['XP', e.xp], ['Events', e.events], ['Loot', e.loot]]
-    ))
+    )),
+    'sessionLog'
   );
 
   const questBlocks = !showQuests ? [] : journalSection('QUEST JOURNAL',
     questRows.map(e => journalEntry(
       e.status ? `${e.name} \u2014 ${e.status}` : e.name,
       [['Objective', e.objective], ['Reward', e.reward], ['Notes', e.notes]]
-    ))
+    )),
+    'questJournal'
   );
 
   const npcBlocks = !showNpcs ? [] : journalSection('NPCs',
     npcRows.map(e => journalEntry(
       e.type ? `${e.name} \u2014 ${e.type}` : e.name,
       [['Relationship', e.relationship], ['Notes', e.notes]]
-    ))
+    )),
+    'npcs'
   );
 
   const locationBlocks = !showLocations ? [] : journalSection('LOCATIONS',
     locationRows.map(e => journalEntry(
       e.name,
       [['Description', e.description], ['Details', e.details]]
-    ))
+    )),
+    'locations'
   );
 
   const charJournalBlocks = !showCharJournal ? [] : journalSection('CHARACTER JOURNAL',
-    charJournalRows.map(e => journalEntry(e.title, [['', e.content]]))
+    charJournalRows.map(e => journalEntry(e.title, [['', e.content]])),
+    'characterJournal'
   );
 
   // === EXPERIENCE ===
