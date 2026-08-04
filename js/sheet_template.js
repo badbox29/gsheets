@@ -2413,7 +2413,10 @@ const SHEET_HTML = `
           is a flat derived number with nothing to choose.
         -->
         <section class="section overland-section">
-          <h3>Overland &amp; Endurance</h3>
+          <div class="section-group-head">
+            <span class="grp-name">Overland &amp; Endurance</span>
+            <span class="grp-rule"></span>
+          </div>
           <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
             Nothing on this panel is saved with the character.
           </p>
