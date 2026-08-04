@@ -2138,17 +2138,24 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // not something anyone reads mid-session. Ticked on, it prints verbatim
   // including line breaks, since the field is a textarea.
   const backgroundText = String(details.backgroundHistory || '').trim();
-  const showBackground = !!opts.background && backgroundText !== '';
+  // blankCount as well as the text: a blank sheet has no prose to trigger on.
+  const showBackground = !!opts.background &&
+    (backgroundText !== '' || blankCount('background') > 0);
 
   const backgroundBlocks = [];
 
   if (showBackground) {
-    backgroundBlocks.push({
-      text: backgroundText,
-      fontSize: 7,
-      lineHeight: 1.15,
-      margin: [0, 0, 0, 5]
-    });
+    if (backgroundText !== '') {
+      backgroundBlocks.push({
+        text: backgroundText,
+        fontSize: 7,
+        lineHeight: 1.15,
+        margin: [0, 0, 0, 5]
+      });
+    } else {
+      // Nothing written yet -- ruled lines to write it on.
+      backgroundBlocks.push(...ruledLines('background'));
+    }
   }
 
   // === HENCHMEN (optional) ===
