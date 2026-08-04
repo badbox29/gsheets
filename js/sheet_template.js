@@ -1007,6 +1007,12 @@ const SHEET_HTML = `
 
     <div class="vtab-content" data-vtab="magic">
       <main class="card">
+        <div class="section-group">
+          <div class="section-group-head">
+            <span class="grp-name">Spellcasting Capacity</span>
+            <span class="grp-rule"></span>
+          </div>
+
         <!-- Spell Slots -->
         <section class="section">
           <h3>Spell Slots</h3>
@@ -1111,10 +1117,16 @@ const SHEET_HTML = `
 		  </div>
 	    </section>
 
-		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
-		
+		</div>
+
+		<div class="section-group">
+		  <div class="section-group-head">
+			<span class="grp-name">Memorized Spells</span>
+			<span class="grp-rule"></span>
+		  </div>
+
 		<!-- Spell Browser -->
-        <section class="section spell-browser-section" style="display:none;">
+        <section class="section utility spell-browser-section" style="display:none;">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <h3>Spell Browser</h3>
             <button class="toggle-spell-browser-visibility" style="padding:4px 12px;font-size:12px;">Show/Hide</button>
@@ -1157,11 +1169,8 @@ const SHEET_HTML = `
           </div>
         </section>
 
-		<hr style="margin:24px 0;border:none;border-top:1px solid #555;opacity:0.4;">
-		
 		<!-- Memorized Spells -->
 		<section class="section">
-		  <h3>Memorized Spells</h3>
 		  
 		  <!-- Spell slot status display -->
 		  <div class="spell-slot-status stat-strip">
@@ -1208,12 +1217,13 @@ const SHEET_HTML = `
 		  <div class="list memspells-list"></div>
 		</section>
 
-		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
+		</div>
 
 		<!-- Spell Books / Known Spells -->
 		<section class="section spellbook-section" style="display:none;">
-		  <div style="display:flex;justify-content:space-between;align-items:center;">
-			<h3>Spell Books / Known Spells</h3>
+		  <div class="section-group-head">
+			<span class="grp-name">Spell Books / Known Spells</span>
+			<span class="grp-rule"></span>
 			<button class="toggle-spellbook-visibility" style="padding:4px 12px;font-size:12px;">Show/Hide</button>
 		  </div>
 		  <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
@@ -1279,11 +1289,12 @@ const SHEET_HTML = `
 		  </div>
 		</section>
 
-		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
-
-        <!-- Magic Notes -->
+		<!-- Magic Notes -->
         <section class="section">
-          <h3>Magic Notes</h3>
+          <div class="section-group-head">
+            <span class="grp-name">Magic Notes</span>
+            <span class="grp-rule"></span>
+          </div>
           <label>Journal</label>
           <textarea data-field="magic-schools"></textarea>
           <label style="margin-top:8px">Miscellaneous</label>
