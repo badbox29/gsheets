@@ -2536,11 +2536,15 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   const locationRows = named(journalList('locations'));
   const charJournalRows = journalList('characterJournal');
 
-  const showSessionLog = !!opts.sessionLog && sessionLogRows.length > 0;
-  const showQuests = !!opts.questJournal && questRows.length > 0;
-  const showNpcs = !!opts.npcs && npcRows.length > 0;
-  const showLocations = !!opts.locations && locationRows.length > 0;
-  const showCharJournal = !!opts.characterJournal && charJournalRows.length > 0;
+  // hasContent, not rows.length -- the same correction showHenchmen already
+  // carries. A section must open when blank lines were ASKED FOR as well as
+  // when there is data, and testing rows.length directly is exactly what hid
+  // all five of these from the blank sheet.
+  const showSessionLog = !!opts.sessionLog && hasContent(sessionLogRows, 'sessionLog');
+  const showQuests = !!opts.questJournal && hasContent(questRows, 'questJournal');
+  const showNpcs = !!opts.npcs && hasContent(npcRows, 'npcs');
+  const showLocations = !!opts.locations && hasContent(locationRows, 'locations');
+  const showCharJournal = !!opts.characterJournal && hasContent(charJournalRows, 'characterJournal');
 
   const sessionLogBlocks = !showSessionLog ? [] : journalSection('SESSION LOG',
     sessionLogRows.map(e => journalEntry(
