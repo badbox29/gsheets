@@ -2251,7 +2251,8 @@ function renderValuablesValue(root) {
 
   let totalGp = 0;
   Array.from(root.querySelectorAll('.valuables-list .item')).forEach(item => {
-    const qty  = parseFloat(item.querySelector('.qty')?.value) || 1;
+    const qtyRaw = parseFloat(item.querySelector('.qty')?.value);
+    const qty  = isNaN(qtyRaw) ? 1 : qtyRaw;
     const each = parseFloat(item.querySelector('.value-each')?.value) || 0;
     const unit = (item.querySelector('.value-unit')?.value) || 'gp';
     totalGp += coinsToGp(each, unit) * qty;
@@ -2808,7 +2809,8 @@ function renderEncumbrance(root) {
   const valuables = Array.from(root.querySelectorAll('.valuables-list .item'));
   let valuablesWeight = 0;
   valuables.forEach(item => {
-    const qty = parseFloat(item.querySelector('.qty')?.value) || 1;
+    const qtyRaw = parseFloat(item.querySelector('.qty')?.value);
+    const qty = isNaN(qtyRaw) ? 1 : qtyRaw;
     const weight = parseFloat(item.querySelector('.weight')?.value) || 0;
     valuablesWeight += qty * weight;
   });
@@ -2820,7 +2822,8 @@ function renderEncumbrance(root) {
   // Items weight (quantity * weight per item)
   const items = Array.from(root.querySelectorAll('.items-list .item'));
   items.forEach(item => {
-    const qty = parseFloat(item.querySelector('.qty')?.value) || 1;
+    const qtyRaw = parseFloat(item.querySelector('.qty')?.value);
+    const qty = isNaN(qtyRaw) ? 1 : qtyRaw;
     const weight = parseFloat(item.querySelector('.weight')?.value) || 0;
     totalWeight += qty * weight;
   });
@@ -2873,7 +2876,8 @@ function renderEncumbrance(root) {
   // is already handled against the armor list. See MAGIC_ITEM_TYPES.
   const magicItemEls = Array.from(root.querySelectorAll('.magic-items-list .item'));
   magicItemEls.forEach(item => {
-    const qty = parseFloat(item.querySelector('.qty')?.value) || 1;
+    const qtyRaw = parseFloat(item.querySelector('.qty')?.value);
+    const qty = isNaN(qtyRaw) ? 1 : qtyRaw;
     const weight = parseFloat(item.querySelector('.weight')?.value) || 0;
     totalWeight += qty * weight;
   });
