@@ -8221,8 +8221,8 @@ const PRINT_BLANK_SHEET_ROWS = {
   abilities: 14,
   powers: 5, hindrances: 5,
   background: 14,
-  sessionLog: 25, questJournal: 25, npcs: 25, locations: 25,
-  characterJournal: 60,
+  sessionLog: 24, questJournal: 24, npcs: 24, locations: 24,
+  characterJournal: 48,
   // Two of each appendix page. A blank sheet is for rolling a character up on
   // paper, so the spell pages are not "extra" here -- they are the only ones
   // there will be. Each prints APPENDIX_ROWS (32) ruled rows.
