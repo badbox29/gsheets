@@ -20,6 +20,12 @@ const SHEET_HTML = `
     <!-- Content Panels -->
     <div class="vtab-content active" data-vtab="core">
       <main class="card">
+        <div class="section-group">
+          <div class="section-group-head">
+            <span class="grp-name">Identity &amp; Statistics</span>
+            <span class="grp-rule"></span>
+          </div>
+
         <!-- Basic Info -->
         <section class="section">
           <h3>Basic Info</h3>
@@ -251,6 +257,14 @@ const SHEET_HTML = `
           </div>
         </section>
 
+		</div>
+
+		<div class="section-group">
+		  <div class="section-group-head">
+			<span class="grp-name">Combat</span>
+			<span class="grp-rule"></span>
+		  </div>
+
 		<!-- Combat -->
 		<section class="section">
 		  <h3>Combat</h3>
@@ -345,9 +359,7 @@ const SHEET_HTML = `
 		  <div class="revival-status" style="display:none;margin-top:6px;font-size:11px;"></div>
 		</section>
 
-		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
-
-        <!-- Saving Throws -->
+		<!-- Saving Throws -->
 		<section class="section saving-throws">
 		  <h3>Saving Throws (auto-calculated)</h3>
 
@@ -438,11 +450,17 @@ const SHEET_HTML = `
 		  <div class="armor-save-note" style="display:none;margin-top:12px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
 		</section>
 		
-		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
-		
+		</div>
+
+		<div class="section-group">
+		  <div class="section-group-head">
+			<span class="grp-name">Ability Effects</span>
+			<span class="grp-rule"></span>
+		  </div>
+
 		<!-- Strength Effects -->
         <section class="section">
-          <h3>Strength Effects</h3>
+          <h3>Strength</h3>
           <div class="row">
             <div class="col">
               <label>To-Hit Adj.</label>
@@ -476,7 +494,7 @@ const SHEET_HTML = `
 		
 		<!-- Dexterity Effects -->
         <section class="section">
-          <h3>Dexterity Effects</h3>
+          <h3>Dexterity</h3>
           <div class="row">
             <div class="col">
               <label>Reaction Adjustment</label>
@@ -495,7 +513,7 @@ const SHEET_HTML = `
 
 		<!-- Constitution Effects -->
 		<section class="section">
-		  <h3>Constitution Effects</h3>
+		  <h3>Constitution</h3>
 		  <div class="row">
 			<div class="col">
 			  <label>HP Bonus/Level</label>
@@ -525,7 +543,7 @@ const SHEET_HTML = `
 		
 		<!-- Intelligence Effects -->
         <section class="section">
-          <h3>Intelligence Effects</h3>
+          <h3>Intelligence</h3>
           <div class="row">
             <div class="col">
               <label>Additional Languages</label>
@@ -555,7 +573,7 @@ const SHEET_HTML = `
 
 		<!-- Wisdom Modifiers -->
 		<section class="section">
-		  <h3>Wisdom Effects</h3>
+		  <h3>Wisdom</h3>
 		  <div class="row">
 			<div class="col">
 			  <label>Magical Defense Adj.</label>
@@ -589,11 +607,14 @@ const SHEET_HTML = `
           </div>
         </section>
 		
-		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
+		</div>
 
         <!-- Notes -->
         <section class="section">
-          <h3>Notes</h3>
+          <div class="section-group-head">
+            <span class="grp-name">Notes</span>
+            <span class="grp-rule"></span>
+          </div>
           <textarea data-field="notes"></textarea>
         </section>		
 		
