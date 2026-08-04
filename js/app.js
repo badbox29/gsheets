@@ -8214,6 +8214,15 @@ const PRINT_BLANK_SHEET_ROWS = {
   armor: 14, ammo: 12, weaponProfs: 14, nwps: 14, languages: 15,
   memorized: 55, spellbook: 30, conditions: 18,
   henchmen: 9, hirelings: 9, companions: 8, mounts: 8,
+  // The prose sections have no table body to push blank rows into, so these
+  // counts are RULED WRITING LINES, not table rows -- print.js reads them
+  // through ruledLines() rather than blankRows(). Powers and Hindrances are
+  // sized to finish page 3, which currently ends about a quarter short.
+  abilities: 14,
+  powers: 5, hindrances: 5,
+  background: 14,
+  sessionLog: 20, questJournal: 16, npcs: 16, locations: 16,
+  characterJournal: 20,
   // Two of each appendix page. A blank sheet is for rolling a character up on
   // paper, so the spell pages are not "extra" here -- they are the only ones
   // there will be. Each prints APPENDIX_ROWS (32) ruled rows.
