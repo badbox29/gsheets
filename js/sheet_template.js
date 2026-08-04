@@ -8,6 +8,7 @@ const SHEET_HTML = `
       <div class="vtab" data-vtab="abilities">Abilities</div>
       <div class="vtab" data-vtab="magic">Magic</div>
       <div class="vtab" data-vtab="equipment">Equipment</div>
+      <div class="vtab" data-vtab="treasure">Treasure</div>
       <div class="vtab" data-vtab="weapons-armor">Weapons & Armor</div>
       <div class="vtab" data-vtab="magic-items">Magic Items</div>
       <div class="vtab" data-vtab="details">Details</div>
@@ -1350,64 +1351,6 @@ const SHEET_HTML = `
 		</section>
 		
 		</div>
-
-        <!-- Money & Treasure -->
-        <section class="section">
-          <div class="section-group-head">
-            <span class="grp-name">Treasure &amp; Money</span>
-            <span class="grp-rule"></span>
-          </div>
-          
-          <h4 style="margin-bottom:8px;font-size:14px;">Coins Possessed</h4>
-          <div class="row coin-inputs">
-            <div class="col"><label>CP</label><input data-field="cp" type="number"></div>
-            <div class="col"><label>SP</label><input data-field="sp" type="number"></div>
-            <div class="col"><label>EP</label><input data-field="ep" type="number"></div>
-            <div class="col"><label>GP</label><input data-field="gp" type="number"></div>
-            <div class="col"><label>PP</label><input data-field="pp" type="number"></div>
-          </div>
-          <h4 style="font-size:14px;margin:18px 0 0;">Coin &amp; Treasure &mdash; Value</h4>
-          <!-- Three rows, four columns. The readonly inputs are kept as INPUTS
-               rather than becoming spans: collectSheet, loadSheet, print.js and
-               the KV sync all address these by data-field, and turning them into
-               plain text would silently drop them from every one of those paths.
-               They are simply styled to read as figures.
-               Valuables has no count: four sapphires plus six pelts is ten
-               things, which is not a number anyone wants. -->
-          <div class="treasure-ledger">
-            <div class="lhead"></div>
-            <div class="lhead">Count</div>
-            <div class="lhead">Weight (lbs)</div>
-            <div class="lhead">Value (gp)</div>
-
-            <div class="lrow">Coins</div>
-            <input class="lval q" data-field="coin_total" type="text" readonly>
-            <input class="lval q" data-field="coin_weight" type="text" readonly>
-            <input class="lval" data-field="coin_value" type="text" readonly>
-
-            <div class="lrow">Valuables</div>
-            <div class="lval q none">&mdash;</div>
-            <input class="lval q" data-field="valuables_weight" type="text" readonly>
-            <input class="lval" data-field="valuables_value" type="text" readonly>
-
-            <div class="ldivider"></div>
-            <div class="lrow ltotal">Total</div>
-            <div class="lval q none ltotal">&mdash;</div>
-            <input class="lval q ltotal" data-field="treasure_weight" type="text" readonly>
-            <input class="lval ltotal" data-field="treasure_value" type="text" readonly>
-          </div>
-          
-          <h4 style="font-size:14px;margin:16px 0 8px;">Other Valuables</h4>
-          <!-- The two summary fields that used to sit here have moved into the
-               Coin and Treasure ledger above. They were aligned to the coin row
-               by an EMPTY LEADING COLUMN, which worked but had to be maintained
-               by hand; a grid aligns them structurally instead. The fields keep
-               their data-field names, so every reader of them is unaffected. -->
-          <div style="display:flex;justify-content:flex-end;margin-top:12px;margin-bottom:8px;">
-            <button class="add-valuable">+ Add Item</button>
-          </div>
-          <div class="list valuables-list"></div>
-        </section>
 		
 		<div class="section-group">
 		  <div class="section-group-head">
@@ -1463,6 +1406,74 @@ const SHEET_HTML = `
 		  </div>
 		</section>
 		</div>
+	  </main>
+	</div>
+
+    <div class="vtab-content" data-vtab="treasure">
+	  <main class="card">
+		<div class="section-group">
+		  <div class="section-group-head">
+			<span class="grp-name">Money</span>
+			<span class="grp-rule"></span>
+		  </div>
+
+		<!-- Coins Possessed -->
+		<section class="section">
+		  <h3>Coins Possessed</h3>
+		  <div class="row coin-inputs">
+			<div class="col"><label>CP</label><input data-field="cp" type="number"></div>
+			<div class="col"><label>SP</label><input data-field="sp" type="number"></div>
+			<div class="col"><label>EP</label><input data-field="ep" type="number"></div>
+			<div class="col"><label>GP</label><input data-field="gp" type="number"></div>
+			<div class="col"><label>PP</label><input data-field="pp" type="number"></div>
+		  </div>
+		</section>
+
+		<!-- Three rows, four columns. The readonly inputs are kept as INPUTS
+			 rather than becoming spans: collectSheet, loadSheet, print.js and
+			 the KV sync all address these by data-field, and turning them into
+			 plain text would silently drop them from every one of those paths.
+			 They are simply styled to read as figures.
+			 Valuables has no count: four sapphires plus six pelts is ten
+			 things, which is not a number anyone wants. -->
+		<section class="section">
+		  <h3>Coin &amp; Treasure &mdash; Value</h3>
+		  <div class="treasure-ledger">
+			<div class="lhead"></div>
+			<div class="lhead">Count</div>
+			<div class="lhead">Weight (lbs)</div>
+			<div class="lhead">Value (gp)</div>
+
+			<div class="lrow">Coins</div>
+			<input class="lval q" data-field="coin_total" type="text" readonly>
+			<input class="lval q" data-field="coin_weight" type="text" readonly>
+			<input class="lval" data-field="coin_value" type="text" readonly>
+
+			<div class="lrow">Valuables</div>
+			<div class="lval q none">&mdash;</div>
+			<input class="lval q" data-field="valuables_weight" type="text" readonly>
+			<input class="lval" data-field="valuables_value" type="text" readonly>
+
+			<div class="ldivider"></div>
+			<div class="lrow ltotal">Total</div>
+			<div class="lval q none ltotal">&mdash;</div>
+			<input class="lval q ltotal" data-field="treasure_weight" type="text" readonly>
+			<input class="lval ltotal" data-field="treasure_value" type="text" readonly>
+		  </div>
+		</section>
+		</div>
+
+		<!-- Other Valuables. The two summary fields that used to sit here moved
+			 into the ledger above; they keep their data-field names, so every
+			 reader of them is unaffected. -->
+		<section class="section">
+		  <div class="section-group-head">
+			<span class="grp-name">Other Valuables</span>
+			<span class="grp-rule"></span>
+			<button class="add-valuable">+ Add Item</button>
+		  </div>
+		  <div class="list valuables-list"></div>
+		</section>
 	  </main>
 	</div>
 
