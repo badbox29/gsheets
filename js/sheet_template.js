@@ -602,8 +602,15 @@ const SHEET_HTML = `
 
     <div class="vtab-content" data-vtab="skills">
       <main class="card">
+        <div class="section-group">
+          <div class="section-group-head">
+            <span class="grp-name">Languages</span>
+            <span class="grp-rule"></span>
+            <button class="add-custom-language">+ Add Custom Language</button>
+          </div>
+
         <!-- Language Browser -->
-        <section class="section language-browser-section">
+        <section class="section utility language-browser-section">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <h3>Language Browser</h3>
             <button class="toggle-language-browser-visibility" style="padding:4px 12px;font-size:12px;">Show/Hide</button>
@@ -635,21 +642,22 @@ const SHEET_HTML = `
           </div>
         </section>
 
-        <hr style="margin:24px 0;border:none;border-top:1px solid #555;opacity:0.4;">
-
         <!-- Language Proficiencies -->
         <section class="section">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <h3 style="margin:0;">Language Proficiencies</h3>
-            <button class="add-custom-language">+ Add Custom Language</button>
-          </div>
           <div class="list language-profs-list"></div>
         </section>
 
-        <hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
+        </div>
+
+        <div class="section-group">
+          <div class="section-group-head">
+            <span class="grp-name">Weapon Proficiencies</span>
+            <span class="grp-rule"></span>
+            <button class="add-custom-weapon-prof">+ Add Custom Weapon Proficiency</button>
+          </div>
 
         <!-- Weapon Proficiencies Browser -->
-        <section class="section weapon-browser-section">
+        <section class="section utility weapon-browser-section">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <h3>Weapon Proficiencies Browser</h3>
             <button class="toggle-weapon-browser-visibility" style="padding:4px 12px;font-size:12px;">Show/Hide</button>
@@ -682,14 +690,8 @@ const SHEET_HTML = `
           </div>
         </section>
 
-        <hr style="margin:24px 0;border:none;border-top:1px solid #555;opacity:0.4;">
-
         <!-- Weapon Proficiencies -->
         <section class="section">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <h3 style="margin:0;">Weapon Proficiencies</h3>
-            <button class="add-custom-weapon-prof">+ Add Custom Weapon Proficiency</button>
-          </div>
           <div class="stat-strip">
             <span class="lab">WEAPON SLOTS</span>
             <span class="prose wp-slot-counter"><span class="wp-slot-text">&mdash;</span></span>
@@ -701,10 +703,17 @@ const SHEET_HTML = `
           <div class="list weapon-profs-list"></div>
         </section>
 		
-		<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
+		</div>
+
+		<div class="section-group">
+		  <div class="section-group-head">
+			<span class="grp-name">Non-Weapon Proficiencies</span>
+			<span class="grp-rule"></span>
+			<button class="add-custom-nwp">+ Add Custom Non-Weapon Proficiency</button>
+		  </div>
 
         <!-- Non-Weapon Proficiencies Browser -->
-        <section class="section nwp-browser-section">
+        <section class="section utility nwp-browser-section">
           <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
             <div style="display:flex;align-items:center;gap:8px;min-width:0;">
               <h3 style="margin:0;">Non-Weapon Proficiencies Browser</h3>
@@ -753,14 +762,8 @@ const SHEET_HTML = `
           </div>
         </section>
 		
-		<hr style="margin:24px 0;border:none;border-top:1px solid #555;opacity:0.4;">
-        
-        <!-- Non-Weapon Proficiencies -->
+		<!-- Non-Weapon Proficiencies -->
         <section class="section">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <h3 style="margin:0;">Non-Weapon Proficiencies</h3>
-            <button class="add-custom-nwp">+ Add Custom Non-Weapon Proficiency</button>
-          </div>
           <div class="stat-strip">
             <span class="lab">NONWEAPON SLOTS</span>
             <span class="prose nwp-slot-counter"><span class="nwp-slot-text">&mdash;</span></span>
@@ -771,6 +774,19 @@ const SHEET_HTML = `
           </div>
           <div class="list nwp-list"></div>
         </section>
+        </div>
+
+        <!-- Two Chapter 5 rules the app deliberately does NOT enforce: it cannot
+             know when a slot was filled, nor whether the character has adventured
+             yet. Guidance only, behind a disclosure so they do not clutter. -->
+        <details class="disclosure" style="font-size:11px;margin-top:12px;">
+          <summary>how proficiency slots work</summary>
+          <ul style="margin:6px 0 0 16px;padding:0;color:var(--muted);line-height:1.5;">
+            <li style="margin-bottom:4px;">Once a proficiency slot is filled, it can never be changed or reassigned.</li>
+            <li style="margin-bottom:4px;">A character&rsquo;s initial slots must be filled immediately, before his first adventure. Any not filled by then are lost.</li>
+            <li style="margin-bottom:4px;">Two proficient characters working together use the higher ability score, +1 for assistance &mdash; never more than +1.</li>
+          </ul>
+        </details>
       </main>
     </div>
 
