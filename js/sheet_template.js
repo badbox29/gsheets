@@ -599,7 +599,7 @@ const SHEET_HTML = `
 		
 		<!-- Charisma Effects -->
         <section class="section">
-          <h3>Charisma Effects</h3>
+          <h3>Charisma</h3>
           <div class="row">
             <div class="col"><label>Reaction Adj.</label><input data-field="cha_reaction_core" type="text" readonly></div>
             <div class="col"><label>Max Henchmen</label><input data-field="cha_max_henchmen_core" type="number" readonly></div>
