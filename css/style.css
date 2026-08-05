@@ -43,20 +43,6 @@
          gets its own rung rather than a lower value of an existing one. */
       --heading: #a9afb7;
 
-      /* STATUS VOCABULARY -- fixed, never overridden by a theme. Every pair
-         below was scored as CIELAB dE against simulated deuteranopia AND
-         protanopia, threshold 25 for a 3px rail. There is no "inactive" colour
-         on purpose: related and cast are a HOLLOW rail, because colour
-         blindness collapses saturated hues toward grey and a grey inactive
-         collided with everything. --st-forbidden covers both "not proficient"
-         and a spellbook opposition school -- same meaning, so sharing it
-         cannot produce a colour that means opposite things in two legends. */
-      --st-specialized: #A8DFF5;
-      --st-proficient:  #3E79BE;
-      --st-forbidden:   #F0846A;
-      --st-available:   #63C9A8;
-      --st-lost:        #F0C24C;
-
       /* Foreground for text sitting ON an accent-filled surface (badges,
          primary buttons). This is the variable whose absence made the NATIVE
          badge unreadable in light mode. */
@@ -78,6 +64,140 @@
        border-radius values live in inline styles in sheet_template.js, and
        tokenising them is deliberately deferred until the shape-language pass,
        because each one is a judgement about WHICH radius it is. */
+    /* ========================================================================
+       STATUS VOCABULARY -- keyed to MODE ONLY, never to a theme.
+
+       These carry rules meaning: which weapons you may use, which spells are
+       still castable. A player learns the legend once and it must not change
+       when the theme does -- which is exactly what went wrong before, when
+       "proficient" was --accent-light and "related" was --muted.
+
+       Every pair was scored as CIELAB dE against simulated deuteranopia AND
+       protanopia, threshold 25 for a 3px rail. There is no "inactive" colour
+       on purpose: related and cast are a HOLLOW rail, because colour blindness
+       collapses saturated hues toward grey and a grey inactive collided with
+       everything. --st-forbidden covers both "not proficient" and a spellbook
+       opposition school -- same meaning, so sharing it cannot produce a colour
+       that means opposite things in two legends.
+
+       Light values are darkened for a pale panel, and the specialized/
+       proficient pair is WIDER there (teal vs indigo) because dark mode
+       separates them by LIGHTNESS and a light panel cannot.
+
+       A theme block would out-specify these. Do not put --st-* in one.
+       ======================================================================== */
+    [data-mode="dark"] {
+      --st-specialized: #A8DFF5;
+      --st-proficient:  #3E79BE;
+      --st-forbidden:   #F0846A;
+      --st-available:   #63C9A8;
+      --st-lost:        #F0C24C;
+    }
+    [data-mode="light"] {
+      --st-specialized: #16787F;
+      --st-proficient:  #2B3F8C;
+      --st-forbidden:   #A93F26;
+      --st-available:   #1E6B54;
+      --st-lost:        #8A6212;
+    }
+
+    /* ===== BLOODSTONE — near-black + crimson, near-square corners ===== */
+    [data-theme="bloodstone"] {
+      --radius: 2px;
+      --radius-sm: 2px;
+      --radius-lg: 3px;
+    }
+    [data-theme="bloodstone"][data-mode="dark"] {
+      --bg: #111013;
+      --panel: #1a181d;
+      --field: #151318;
+      --accent: #cf3d4a;
+      --accent-light: #e8737d;
+      --text: #eceaef;
+      --muted: #8b868f;
+      --border: rgba(255,255,255,0.09);
+      --glass: rgba(255,255,255,0.035);
+      /* CAREFUL: --accent is already red here, so --error must read HOTTER and
+         brighter than it, or "over budget" stops registering as an alarm and
+         just looks like more chrome. */
+      --error: #f0555f;
+      --warning: #d8a13c;
+      --success: #5fb877;
+      --info: #6ea8cc;
+      --magic: #a98fd0;
+      --heading: #a9a3a8;
+      --badge-fg: #ffffff;
+      --btn-fg: #ffffff;
+    }
+    [data-theme="bloodstone"][data-mode="light"] {
+      --bg: #c6c2c2;
+      --panel: #d6d3d3;
+      --field: #ccc8c8;
+      --accent: #801c26;
+      --accent-light: #65151c;
+      --text: #2d2a29;
+      --muted: #635e60;
+      --border: rgba(35,25,28,0.24);
+      --glass: rgba(35,25,28,0.06);
+      --error: #b8262f;
+      --warning: #7f5a14;
+      --success: #256842;
+      --info: #1d5878;
+      --magic: #6b4a9e;
+      --heading: #544f50;
+      --badge-fg: #efeded;
+      --btn-fg: #efeded;
+    }
+
+    /* ===== MIDNIGHT — deep indigo + silver-blue. Cold, quiet, nocturnal ===== */
+    [data-theme="midnight"] {
+      --radius: 4px;
+      --radius-sm: 2px;
+      --radius-lg: 6px;
+    }
+    [data-theme="midnight"][data-mode="dark"] {
+      --bg: #0f1220;
+      --panel: #171b2e;
+      --field: #131628;
+      --accent: #8fa4d8;
+      --accent-light: #bccaf0;
+      --text: #e4e8f4;
+      --muted: #7e879f;
+      --border: rgba(200,215,255,0.11);
+      --glass: rgba(200,215,255,0.04);
+      --error: #ef6b70;
+      --warning: #e8bc55;
+      /* NOTE --info is the same value as --accent here. That is inherited from
+         the palette design and is a real wart: anything info-coloured cannot be
+         told apart from the accent. It no longer matters for the CARD RAILS,
+         which now use --st-*, but it is worth fixing if --info regains a use. */
+      --success: #63c48d;
+      --info: #8fa4d8;
+      --magic: #a98fd0;
+      --heading: #a4abc0;
+      --badge-fg: #0f1220;
+      --btn-fg: #0f1220;
+    }
+    [data-theme="midnight"][data-mode="light"] {
+      --bg: #bfc3ce;
+      --panel: #d0d3dc;
+      --field: #c6cad4;
+      --accent: #28386a;
+      --accent-light: #1a274e;
+      --text: #292e39;
+      --muted: #5c6374;
+      --border: rgba(30,40,80,0.24);
+      --glass: rgba(30,40,80,0.06);
+      --error: #a83440;
+      --warning: #7f5a14;
+      --success: #23644a;
+      --info: #2e4177;
+      --heading: #4f5566;
+      --magic: #6b4a9e;
+      --badge-fg: #e9ebf1;
+      --btn-fg: #e9ebf1;
+    }
+
     [data-theme="slate-brass"] {
       --radius: 4px;
       --radius-sm: 2px;
@@ -438,18 +558,6 @@
 	     carries "related / advisory / cast" in the card grammar). A heading is
 	     not a quieter piece of data, so it gets its own rung. */
 	  --heading: #4d525b;
-
-	  /* STATUS VOCABULARY -- fixed, never overridden by a theme. These carry
-	     rules meaning: which weapons you may use, which spells are still
-	     castable. A player learns the legend once and it must not change when
-	     the theme does. Light values are darkened for a pale panel, and the
-	     specialized/proficient pair is WIDER here (teal vs indigo) because dark
-	     mode separates them by lightness and a light panel cannot. */
-	  --st-specialized: #16787F;
-	  --st-proficient:  #2B3F8C;
-	  --st-forbidden:   #A93F26;
-	  --st-available:   #1E6B54;
-	  --st-lost:        #8A6212;
 
 	  --badge-fg: #eceef1;
 	  --btn-fg: #eceef1;
