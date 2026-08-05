@@ -8,7 +8,7 @@
        already designed -- see themes-primary.css and themes-backup.css.
 
        The --st-* status tokens are NOT part of a theme. They carry rules
-       meaning and are fixed everywhere; a theme may not override them.
+       meaning and are fixed everywhere; a theme may not override them..
        ======================================================================== */
     [data-theme="slate-brass"][data-mode="dark"] {
       /* === SLATE & BRASS — dark === */
