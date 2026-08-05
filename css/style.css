@@ -60,6 +60,13 @@
       /* Foreground for text sitting ON an accent-filled surface (badges,
          primary buttons). This is the variable whose absence made the NATIVE
          badge unreadable in light mode. */
+      /* Input and textarea fill. Was hardcoded #1a1d29 in the base input rule
+         and #f9f9f9 in a light-mode override; both are gone. Deliberately not
+         --panel: fields sit slightly DARKER than the card in dark mode and
+         slightly darker than the panel in light mode, so an input reads as a
+         recess rather than as part of the surface. */
+      --field: #1a1d29;
+
       --badge-fg: #16181c;
       --btn-fg: #16181c;
 
@@ -183,7 +190,7 @@
       padding:8px;
       border-radius:6px;
       border:1px solid var(--border);
-      background:#1a1d29;
+      background: var(--field);d:#1a1d29;
       color:inherit;
       transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
     }
@@ -400,17 +407,22 @@
 	         screen being one flat bright plane
 	     Borders and glass are stronger than the dark theme's to compensate for
 	     the reduced luminance range. */
-	  --bg: #dcdee2;
-	  --panel: #eceef1;
-	  --accent: #7d5b1f;
+	  /* DIMMED FURTHER, August 2026. The previous values were still too bright
+	     in use. Body text holds ~8:1 here, so readability was never the limit.
+	     A further step was mocked and rejected: it read as a grey mode rather
+	     than a light one. Do not brighten this back up. */
+	  --bg: #c3c7ce;
+	  --panel: #d3d7de;
+	  --field: #c9cdd4;
+	  --accent: #6e501b;
 	  /* NOTE --accent-light is DARKER than --accent here, and that is correct:
 	     on a light background the "highlight" must darken to stay readable.
 	     --badge-fg flips to compensate. */
-	  --accent-light: #63481a;
-	  --text: #31363d;
-	  --muted: #6b7079;
-	  --border: rgba(30,35,45,0.20);
-	  --glass: rgba(30,35,45,0.05);
+	  --accent-light: #563f16;
+	  --text: #2b3037;
+	  --muted: #5f646d;
+	  --border: rgba(30,35,45,0.24);
+	  --glass: rgba(30,35,45,0.06);
 
 	  /* Semantic colours must DARKEN in light mode -- a single hardcoded
 	     #ff6b6b could never do this, which is why the old light mode washed out
@@ -425,7 +437,7 @@
 	     on the sheet) and NOT --muted (that is the label colour, and it already
 	     carries "related / advisory / cast" in the card grammar). A heading is
 	     not a quieter piece of data, so it gets its own rung. */
-	  --heading: #565c65;
+	  --heading: #4d525b;
 
 	  /* STATUS VOCABULARY -- fixed, never overridden by a theme. These carry
 	     rules meaning: which weapons you may use, which spells are still
@@ -448,14 +460,7 @@
       border: 1px solid var(--border);
       box-shadow: 0 6px 16px rgba(0,0,0,0.10);
     }
-    [data-mode="light"] input[type=text],
-    [data-mode="light"] input[type=number],
-    [data-mode="light"] textarea,
-    [data-mode="light"] select{
-      background:#f9f9f9;
-      color: var(--text);
-      border-color: var(--border);
-    }
+    
     [data-mode="light"] .avatar{ background: rgba(0,0,0,0.04); }
     [data-mode="light"] .item{ background: rgba(0,0,0,0.03); }
 
