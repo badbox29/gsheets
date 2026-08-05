@@ -1,4 +1,16 @@
-    :root {
+    /* ========================================================================
+       THEMES: two axes. [data-theme] carries structure, [data-theme][data-mode]
+       carries colour. Both attributes live on <html>, set by applyTheme() in
+       app.js and persisted per-browser in localStorage.
+
+       Adding a theme is one structural block plus two colour blocks. The
+       palettes for Bloodstone and Midnight, plus twelve more on the shelf, are
+       already designed -- see themes-primary.css and themes-backup.css.
+
+       The --st-* status tokens are NOT part of a theme. They carry rules
+       meaning and are fixed everywhere; a theme may not override them.
+       ======================================================================== */
+    [data-theme="slate-brass"][data-mode="dark"] {
       /* === SLATE & BRASS — dark === */
       --bg: #16181c;
       --panel: #1f2228;
@@ -51,13 +63,24 @@
       --badge-fg: #16181c;
       --btn-fg: #16181c;
 
-      /* Structural tokens. NOT YET CONSUMED -- ~89 hardcoded border-radius
-         values still live in JS inline styles. Defined now so Step A has a
-         target. */
+      }
+
+    /* Structural tokens hang off the THEME, not the mode -- a theme may change
+       corner radius, border weight or fonts, and none of those differ between
+       its own dark and light modes. STILL NOT CONSUMED: ~79 hardcoded
+       border-radius values live in inline styles in sheet_template.js, and
+       tokenising them is deliberately deferred until the shape-language pass,
+       because each one is a judgement about WHICH radius it is. */
+    [data-theme="slate-brass"] {
       --radius: 4px;
       --radius-sm: 2px;
       --radius-lg: 6px;
+    }
 
+    /* Genuinely global: the day/night toggle's own sizing and artwork. These
+       belong to the control, not to any theme, and are the reason the earlier
+       "four tokens missing from light mode" reading was a false alarm. */
+    :root {
       /* Added to support the Passphrase file’s toggle UI sizing/colors */
       --toggleHeight: 16em;
       --toggleWidth: 30em;
@@ -365,7 +388,7 @@
 	}
 
     /* === Light mode (mirrors the second file’s theme intent) === */
-	body.light{
+	[data-theme="slate-brass"][data-mode="light"]{
 	  /* === SLATE & BRASS — light ("dimmed") ===
 	     Deliberately NOT pure white. The whole luminance ceiling is lowered:
 	       --panel is #eceef1, not #ffffff (pure white behind every card is the
@@ -420,21 +443,21 @@
 	  --btn-fg: #eceef1;
 	}
 
-    body.light .card{
+    [data-mode="light"] .card{
       background: var(--panel);
       border: 1px solid var(--border);
       box-shadow: 0 6px 16px rgba(0,0,0,0.10);
     }
-    body.light input[type=text],
-    body.light input[type=number],
-    body.light textarea,
-    body.light select{
+    [data-mode="light"] input[type=text],
+    [data-mode="light"] input[type=number],
+    [data-mode="light"] textarea,
+    [data-mode="light"] select{
       background:#f9f9f9;
       color: var(--text);
       border-color: var(--border);
     }
-    body.light .avatar{ background: rgba(0,0,0,0.04); }
-    body.light .item{ background: rgba(0,0,0,0.03); }
+    [data-mode="light"] .avatar{ background: rgba(0,0,0,0.04); }
+    [data-mode="light"] .item{ background: rgba(0,0,0,0.03); }
 
     /* === Toggle control (identical UI from the second file) === */
     .tdnn {
@@ -677,8 +700,8 @@
 	  background: rgba(255,255,255,0.1);
 	  cursor: help;
 	}
-	body.light .attack-matrix-table td:hover,
-	body.light .attack-matrix-table th:hover {
+	[data-mode="light"] .attack-matrix-table td:hover,
+	[data-mode="light"] .attack-matrix-table th:hover {
 	  background: rgba(0,0,0,0.08);
 	}
 	.attack-matrix-table th {
