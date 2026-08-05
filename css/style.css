@@ -31,6 +31,20 @@
          gets its own rung rather than a lower value of an existing one. */
       --heading: #a9afb7;
 
+      /* STATUS VOCABULARY -- fixed, never overridden by a theme. Every pair
+         below was scored as CIELAB dE against simulated deuteranopia AND
+         protanopia, threshold 25 for a 3px rail. There is no "inactive" colour
+         on purpose: related and cast are a HOLLOW rail, because colour
+         blindness collapses saturated hues toward grey and a grey inactive
+         collided with everything. --st-forbidden covers both "not proficient"
+         and a spellbook opposition school -- same meaning, so sharing it
+         cannot produce a colour that means opposite things in two legends. */
+      --st-specialized: #A8DFF5;
+      --st-proficient:  #3E79BE;
+      --st-forbidden:   #F0846A;
+      --st-available:   #63C9A8;
+      --st-lost:        #F0C24C;
+
       /* Foreground for text sitting ON an accent-filled surface (badges,
          primary buttons). This is the variable whose absence made the NATIVE
          badge unreadable in light mode. */
@@ -389,6 +403,18 @@
 	     carries "related / advisory / cast" in the card grammar). A heading is
 	     not a quieter piece of data, so it gets its own rung. */
 	  --heading: #565c65;
+
+	  /* STATUS VOCABULARY -- fixed, never overridden by a theme. These carry
+	     rules meaning: which weapons you may use, which spells are still
+	     castable. A player learns the legend once and it must not change when
+	     the theme does. Light values are darkened for a pale panel, and the
+	     specialized/proficient pair is WIDER here (teal vs indigo) because dark
+	     mode separates them by lightness and a light panel cannot. */
+	  --st-specialized: #16787F;
+	  --st-proficient:  #2B3F8C;
+	  --st-forbidden:   #A93F26;
+	  --st-available:   #1E6B54;
+	  --st-lost:        #8A6212;
 
 	  --badge-fg: #eceef1;
 	  --btn-fg: #eceef1;
@@ -1158,24 +1184,28 @@
 	   fights the card's border-radius, and the old inline
 	   `borderLeft + paddingLeft` in resolveWeaponProficiency shifted the whole
 	   card's padding to make room. Spanning both rows makes it read as a spine.
-	   Colours are resolveWeaponProficiency's, unchanged. Related stays MUTED
-	   rather than amber: amber and --accent-light are near-identical in hue, so
-	   an amber rail reads as "Proficient" at a glance -- and identically so to
-	   anyone with a red-green deficiency. */
+	   Colours are the fixed status vocabulary -- NOT theme tokens. Proficient
+	   used to be --accent-light and related --muted, which meant the legend
+	   changed meaning with the theme, and in a blue theme "proficient" and
+	   "specialized" became the same blue. */
 	.item.gear .rail {
 	  grid-row: 1 / span 2;
 	  align-self: stretch;
 	  border-radius: 2px;
 	  background: var(--border);
 	}
-	.item.gear .rail.specialized              { background: var(--info); }
+	.item.gear .rail.specialized              { background: var(--st-specialized); }
 	.item.gear .rail.proficient,
-	.item.gear .rail.allowed                  { background: var(--accent-light); }
+	.item.gear .rail.allowed                  { background: var(--st-proficient); }
+	/* Hollow, not grey -- see the note on .item.spell.cast .rail. */
 	.item.gear .rail.related,
-	.item.gear .rail.advisory                 { background: var(--muted); }
+	.item.gear .rail.advisory {
+	  background: transparent;
+	  border: 1px solid var(--muted);
+	  box-sizing: border-box;
+	}
 	.item.gear .rail.notprof,
-	.item.gear .rail.restricted               { background: var(--error); }
-	.item.gear .rail.enchanted                { background: var(--magic); }
+	.item.gear .rail.restricted               { background: var(--st-forbidden); }
 
 	/* State chip. A <label> wrapping the REAL checkbox -- .equipped keeps
 	   working, collectSheet is untouched, and keyboard and screen readers get a
@@ -1260,13 +1290,13 @@
 	   learn and is invisible to anyone who cannot separate those hues, so the
 	   word carries the meaning and the rail accelerates it. */
 	.item.gear .status { font-size: 10px; letter-spacing: .5px; flex-shrink: 0; white-space: nowrap; }
-	.item.gear .status.specialized             { color: var(--info); }
+	.item.gear .status.specialized             { color: var(--st-specialized); }
 	.item.gear .status.proficient,
-	.item.gear .status.allowed                 { color: var(--accent-light); }
+	.item.gear .status.allowed                 { color: var(--st-proficient); }
 	.item.gear .status.related,
 	.item.gear .status.advisory                { color: var(--muted); }
 	.item.gear .status.notprof,
-	.item.gear .status.restricted              { color: var(--error); }
+	.item.gear .status.restricted              { color: var(--st-forbidden); }
 
 	/* Figures on row 1. `.line` is the DERIVED total (qty x each) and is never
 	   stored -- it is recomputed on every render from the fields on the card,
@@ -1557,14 +1587,23 @@
 	   for by "not proficient" and "class restricted" on the gear cards.
 	   Own-school gold is deliberately NOT applied in the memorized list; it
 	   silently overrode state on every spell of the specialist's own school. */
-	.item.spell .rail { background: var(--success); }
-	.item.spell.cast .rail { background: var(--muted); }
-	.item.spell.lost .rail { background: var(--warning); }
+	.item.spell .rail { background: var(--st-available); }
+	/* CAST IS HOLLOW, NOT GREY. Colour blindness collapses saturated hues
+	   toward grey, so a grey "inactive" rail collided with everything and cost
+	   four failed palettes. Outlined vs filled is a second channel, not a
+	   fourth colour -- and it says the right thing: filled means this row is
+	   doing something. The strikethrough on the name agrees. */
+	.item.spell.cast .rail {
+	  background: transparent;
+	  border: 1px solid var(--muted);
+	  box-sizing: border-box;
+	}
+	.item.spell.lost .rail { background: var(--st-lost); }
 	/* RAIL, SPELLBOOK: no state to carry, so it marks the specialist's own
 	   school and, once wired to isOppositionSpell, the schools he may never
 	   learn from. Neutral throughout for a non-specialist or a priest. */
 	.item.spell .rail.own        { background: var(--accent-light); }
-	.item.spell .rail.opposition { background: var(--error); }
+	.item.spell .rail.opposition { background: var(--st-forbidden); }
 	.item.spell .rail.neutral    { background: var(--border); }
 
 	.item.spell .lvl {
@@ -1580,7 +1619,7 @@
 	.item.spell .spell-name { font-size: 15px; font-weight: 600; }
 	.item.spell.cast .spell-name,
 	.item.spell.lost .spell-name { color: var(--muted); text-decoration: line-through; }
-	.item.spell.lost .spell-name { text-decoration-color: var(--warning); }
+	.item.spell.lost .spell-name { text-decoration-color: var(--st-lost); }
 	.item.spell.cast, .item.spell.lost { background: transparent; }
 
 	/* Reversed chip. ASYMMETRIC, unlike the weapon card's hand chip it borrows
@@ -1635,10 +1674,10 @@
 	.item.spell .btns .act-details,
 	.item.spell .btns .act-forget,
 	.item.spell .btns .act-remove { background: color-mix(in srgb, var(--accent) 26%, transparent); color: var(--text); }
-	.item.spell .btns .act-cast    { background: color-mix(in srgb, var(--success) 30%, transparent); color: var(--text); }
+	.item.spell .btns .act-cast    { background: color-mix(in srgb, var(--st-available) 30%, transparent); color: var(--text); }
 	.item.spell .btns .act-cast.on { background: color-mix(in srgb, var(--muted) 34%, transparent); }
-	.item.spell .btns .act-lost    { background: color-mix(in srgb, var(--warning) 20%, transparent); color: var(--text); }
-	.item.spell .btns .act-lost.on { background: color-mix(in srgb, var(--warning) 42%, transparent); }
+	.item.spell .btns .act-lost    { background: color-mix(in srgb, var(--st-lost) 20%, transparent); color: var(--text); }
+	.item.spell .btns .act-lost.on { background: color-mix(in srgb, var(--st-lost) 42%, transparent); }
 	.item.spell .btns .primary     { background: var(--accent); color: var(--badge-fg); }
 	.item.spell .btns .primary:hover { background: var(--accent-light); }
 
