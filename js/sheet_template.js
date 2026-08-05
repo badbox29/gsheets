@@ -2873,17 +2873,12 @@ const SHEET_HTML = `
 	         selector, and landing it now means the strip is built once rather
 	         than retrofitted later. -->
 	    <div class="settings-panel subtab-panel-hidden" data-panel="themes">
-	      <p style="font-size:11px;color:var(--muted);margin:0 0 12px;">Theme and light/dark mode are stored per browser and are not synced or saved with a character. The moon control at the top right also flips the mode.</p>
+	      <p style="font-size:11px;color:var(--muted);margin:0 0 12px;">Theme is stored per browser and is not synced or saved with a character. Light and dark are set by the moon control at the top right.</p>
 	      <label>Theme</label>
 	      <select class="theme-select" style="width:auto;min-width:200px;">
 	        <option value="slate-brass">Slate &amp; Brass</option>
 	        <option value="bloodstone">Bloodstone</option>
 	        <option value="midnight">Midnight</option>
-	      </select>
-	      <label style="margin-top:12px;">Mode</label>
-	      <select class="mode-select" style="width:auto;min-width:200px;">
-	        <option value="dark">Dark</option>
-	        <option value="light">Light</option>
 	      </select>
 	    </div>
 
