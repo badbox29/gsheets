@@ -2,7 +2,7 @@
 
 A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and zero dependencies.
 
-**Version 10.5.0**
+**Version 11.0.0**
 
 ## Live Demo
 
@@ -36,6 +36,8 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 * A climbing panel giving your chance of success and your rate of climb for any surface and condition, with the armor, race and encumbrance penalties itemized
 * An overland travel and endurance panel covering marching, force marching and its cumulative attack penalty, diving depth, and surfacing rate
 * Movement worked out in the units the book actually uses — feet per round underground, yards per round outdoors — with swimming, walking the bottom, and how long you can hold your breath
+* Three colour themes — Slate & Brass, Bloodstone and Midnight — each with its own light and dark mode, remembered per browser
+* Card status colours fixed across every theme and checked against red-green and red-blind colour vision, so the legend means the same thing whichever theme you use
 * Optional-rules framework with live toggles for Player's Handbook options and house-rule overrides
 * Multi-page printable character sheet with configurable sections, blank write-in lines, and color schemes
 * Import / export character data
@@ -186,6 +188,72 @@ Follow these steps **in order** to avoid overwriting your data:
 * I am not a developer.
 
 ### Recent Updates
+
+#### v11.0.0
+
+Two pieces of work that are not about rules at all. The chapter audit finished at
+v10.5.0; this release is about making what the audit produced legible.
+
+**Every tab was reorganised into named groups**
+
+* The sheet used two kinds of horizontal rule to separate things, and neither
+  said what it was separating. Gold meant one thing on some tabs and something
+  else on others; grey meant "this browser fills the list below" on three tabs
+  and "these are unrelated" on another. Meanwhile the most common relationship —
+  *these sections belong together* — was drawn as nothing at all, so on the Core
+  tab six identically-styled headings had to be understood as one group by
+  noticing where a line **wasn't**.
+* All 34 rules are gone. Each group now carries a named band, so the sheet says
+  "Ability Effects" and "Load & Movement" and "Armaments" out loud instead of
+  leaving you to infer them. A group holding one section absorbs its title
+  rather than repeating it.
+* Browsers sit tight above the list they fill, at reduced weight, so the pairing
+  is shown by proximity rather than by a second colour of line.
+* Section headings moved off gold onto their own colour. Gold now means
+  structure and nothing else.
+
+**Treasure has its own tab**
+
+* The coin and treasure ledger totals coins *and* valuables, but it used to sit
+  above the valuables list — a summary printed before one of the things it
+  summarises. On its own tab the ledger is at the top and the lists that feed it
+  are below.
+* Encumbrance and Movement moved to the top of the Equipment tab for the same
+  reason: the derived readout first, the list that produces it underneath.
+
+**A colour language for card status**
+
+* Weapon and spell cards carry a coloured rail showing proficiency and spell
+  state. Two of the four colours in the weapon legend were never status colours
+  at all — they were *theme* colours, so the legend changed meaning when the
+  theme did.
+* Proficiency and spell state now own dedicated colours that are the same in
+  every theme. Learn the legend once and it stays learned.
+* The whole set was checked against simulated red-green and red-blind colour
+  vision. *Related* and *cast* are now a hollow rail rather than a grey one —
+  colour blindness pulls saturated colours toward grey, so a grey "inactive"
+  was the one thing that could not be told apart from everything else.
+
+**Themes**
+
+* Slate & Brass, Bloodstone and Midnight, each with independent light and dark
+  modes. Chosen in Settings, remembered per browser, not saved with a character
+  or synced.
+* Light mode is deliberately dimmer than before. Pure white behind every card is
+  the brightest thing a monitor can emit, and body text still reads at about
+  eight times the contrast it needs.
+
+**Fixes**
+
+* An item with a quantity of **0** was counted as **1** for weight and value.
+  Setting a quantity from 1 to 0 changed nothing while 1 to 2 worked, which is
+  how it went unnoticed. Affected carried equipment, magic items, and both the
+  weight and gold value of valuables.
+* Button text was hardcoded near-black, which is correct on a gold button and
+  unreadable on a dark one — so every button, and the selected vertical tab,
+  became illegible in light mode.
+* A group with nothing in it now hides itself, so a fighter no longer sees an
+  empty "Class Standing" heading.
 
 #### v10.5.0
 
