@@ -198,6 +198,336 @@
       --btn-fg: #e9ebf1;
     }
 
+    /* ===== EMBERFORGE — charcoal + hot orange. A forge, not a library. ===== */
+    [data-theme="emberforge"] {
+      --radius: 3px;
+      --radius-sm: 2px;
+      --radius-lg: 4px;
+    }
+    [data-theme="emberforge"][data-mode="dark"] {
+      --bg: #131211;
+      --panel: #1c1a19;
+      --field: #181615;
+      --accent: #e8672c;
+      --accent-light: #f79763;
+      --text: #eeeae7;
+      --muted: #8b8480;
+      --border: rgba(255,255,255,0.09);
+      --glass: rgba(255,255,255,0.035);
+      --error: #ef5350;
+      --warning: #e0a83c;
+      --success: #68bd7b;
+      --info: #6fa3bf;
+      --magic: #a98fd0;
+      --heading: #a8a19d;
+      --badge-fg: #131211;
+      --btn-fg: #131211;
+    }
+    [data-theme="emberforge"][data-mode="light"] {
+      --bg: #c7c3bf;
+      --panel: #d8d4cf;
+      --field: #cdc8c4;
+      --accent: #af3e05;
+      --accent-light: #8a2e03;
+      --text: #33302e;
+      --muted: #68625d;
+      --border: rgba(40,30,25,0.24);
+      --glass: rgba(40,30,25,0.06);
+      --error: #a8302a;
+      --warning: #8a5f10;
+      --success: #276b38;
+      --info: #1d5f7a;
+      --magic: #6b4a9e;
+      --heading: #57514d;
+      --badge-fg: #ffffff;
+      --btn-fg: #ffffff;
+    }
+
+    /* ===== STEEL — zero hue in the shell. The only colour on screen is the DATA.
+       --accent is a NEUTRAL here, so the --st-* status tokens carry the entire
+       visual signal. Nothing else on screen has a hue. ===== */
+    [data-theme="steel"] {
+      --radius: 2px;
+      --radius-sm: 2px;
+      --radius-lg: 3px;
+    }
+    [data-theme="steel"][data-mode="dark"] {
+      --bg: #141517;
+      --panel: #1d1e21;
+      --field: #191a1d;
+      --accent: #c3c7cd;
+      --accent-light: #e6e9ee;
+      --text: #e8eaee;
+      --muted: #82868d;
+      --border: rgba(255,255,255,0.10);
+      --glass: rgba(255,255,255,0.035);
+      --error: #e8615c;
+      --warning: #d9a441;
+      --success: #5fbd7e;
+      --info: #69a5cc;
+      --magic: #a98fd0;
+      --heading: #9fa3aa;
+      --badge-fg: #141517;
+      --btn-fg: #141517;
+    }
+    [data-theme="steel"][data-mode="light"] {
+      --bg: #c2c4c6;
+      --panel: #d2d5d7;
+      --field: #c7c9cc;
+      --accent: #363b42;
+      --accent-light: #1e2227;
+      --text: #2e3034;
+      --muted: #5e646c;
+      --border: rgba(20,25,30,0.24);
+      --glass: rgba(20,25,30,0.06);
+      --error: #b32c26;
+      --warning: #8a6116;
+      --success: #22663f;
+      --info: #1d5b80;
+      --magic: #6b4a9e;
+      --heading: #4d535b;
+      --badge-fg: #ffffff;
+      --btn-fg: #ffffff;
+    }
+
+    /* ===== PHOSPHOR — CRT terminal green. ZERO corner radius.
+       --radius 0 is real but NOT YET VISIBLE: ~79 hardcoded border-radius values
+       still live in inline styles. Phosphor and Steel are the two themes that
+       change again after the shape-language pass. ===== */
+    [data-theme="phosphor"] {
+      --radius: 0px;
+      --radius-sm: 0px;
+      --radius-lg: 0px;
+    }
+    [data-theme="phosphor"][data-mode="dark"] {
+      --bg: #0a0f0a;
+      --panel: #101810;
+      --field: #0a140a;
+      --accent: #4ee06a;
+      --accent-light: #8bf0a0;
+      --text: #ccf5d4;
+      --muted: #6a8f74;
+      --border: rgba(120,240,150,0.14);
+      --glass: rgba(120,240,150,0.05);
+      --error: #ff5f56;
+      --warning: #ffd24a;
+      --success: #4ee06a;
+      --info: #5fc8e0;
+      --magic: #a98fd0;
+      --heading: #86ac90;
+      --badge-fg: #0a0f0a;
+      --btn-fg: #0a0f0a;
+    }
+    [data-theme="phosphor"][data-mode="light"] {
+      --bg: #bac7ba;
+      --panel: #cbd8cb;
+      --field: #c0cdc0;
+      --accent: #0e632b;
+      --accent-light: #04461c;
+      --text: #28332b;
+      --muted: #56675a;
+      --border: rgba(20,60,30,0.24);
+      --glass: rgba(20,60,30,0.06);
+      --error: #a8272a;
+      --warning: #7d5a0d;
+      --success: #1a6b32;
+      --info: #1d5f7a;
+      --magic: #6b4a9e;
+      --heading: #46564a;
+      --badge-fg: #ffffff;
+      --btn-fg: #ffffff;
+    }
+
+    /* ===== ZAKHARA (Al-Qadim) — turquoise tile and hammered brass.
+       The only theme whose two accent tokens are different METALS rather than
+       shades of one hue: --accent-light is brass against a turquoise --accent,
+       so spell level circles read warm against a cool accent. ===== */
+    [data-theme="zakhara"] {
+      --radius: 6px;
+      --radius-sm: 3px;
+      --radius-lg: 8px;
+    }
+    [data-theme="zakhara"][data-mode="dark"] {
+      --bg: #0e1618;
+      --panel: #152225;
+      --field: #111d20;
+      --accent: #4fc2d0;
+      --accent-light: #d8b26a;
+      --text: #e4eef0;
+      --muted: #7e9298;
+      --border: rgba(190,230,235,0.11);
+      --glass: rgba(190,230,235,0.04);
+      --error: #ef6b70;
+      --warning: #e8bc55;
+      --success: #63c48d;
+      --info: #6fa8d0;
+      --magic: #a98fd0;
+      --heading: #9aabb0;
+      --badge-fg: #0e1618;
+      --btn-fg: #0e1618;
+    }
+    [data-theme="zakhara"][data-mode="light"] {
+      --bg: #bcc8ca;
+      --panel: #cdd8da;
+      --field: #c3cfd1;
+      --accent: #14606b;
+      --accent-light: #7a5a12;
+      --text: #263133;
+      --muted: #566468;
+      --border: rgba(20,60,68,0.24);
+      --glass: rgba(20,60,68,0.06);
+      --error: #a83440;
+      --warning: #7f5a14;
+      --success: #23644a;
+      --info: #1d5878;
+      --magic: #6b4a9e;
+      --heading: #465356;
+      --badge-fg: #cdd8da;
+      --btn-fg: #cdd8da;
+    }
+
+    /* ===== FAERZRESS (Underdark) — the ambient glow of the deep places.
+       Sits at 315 deg, deliberately NOT the 268 deg of the shelved Nightshade,
+       so it clears --magic by 43 deg and needs no override. ===== */
+    [data-theme="faerzress"] {
+      --radius: 5px;
+      --radius-sm: 3px;
+      --radius-lg: 7px;
+    }
+    [data-theme="faerzress"][data-mode="dark"] {
+      --bg: #100e16;
+      --panel: #191524;
+      --field: #141020;
+      --accent: #cf72c4;
+      --accent-light: #e8a6de;
+      --text: #ece7f0;
+      --muted: #8a8296;
+      --border: rgba(220,200,240,0.11);
+      --glass: rgba(220,200,240,0.04);
+      --error: #ef6b70;
+      --warning: #e8bc55;
+      --success: #63c48d;
+      --info: #8fa4d8;
+      --magic: #a98fd0;
+      --heading: #a49bb0;
+      --badge-fg: #100e16;
+      --btn-fg: #100e16;
+    }
+    [data-theme="faerzress"][data-mode="light"] {
+      --bg: #c6bfcc;
+      --panel: #d7d0dd;
+      --field: #cdc6d3;
+      --accent: #8a1f76;
+      --accent-light: #6b1359;
+      --text: #2e2833;
+      --muted: #625a6b;
+      --border: rgba(45,30,55,0.24);
+      --glass: rgba(45,30,55,0.06);
+      --error: #a83440;
+      --warning: #7f5a14;
+      --success: #23644a;
+      --info: #2e4177;
+      --magic: #6b4a9e;
+      --heading: #524a5c;
+      --badge-fg: #d7d0dd;
+      --btn-fg: #d7d0dd;
+    }
+
+    /* ===== WILL-O'-WISP — corpse-light over black bog water.
+       84 deg is the only place on the wheel nothing else occupies. ===== */
+    [data-theme="wisp"] {
+      --radius: 4px;
+      --radius-sm: 2px;
+      --radius-lg: 6px;
+    }
+    [data-theme="wisp"][data-mode="dark"] {
+      --bg: #0f1210;
+      --panel: #171c18;
+      --field: #131714;
+      --accent: #c2d95c;
+      --accent-light: #dcefa0;
+      --text: #e8ece4;
+      --muted: #868f80;
+      --border: rgba(220,235,200,0.11);
+      --glass: rgba(220,235,200,0.04);
+      --error: #ef6b70;
+      --warning: #e8bc55;
+      --success: #63c48d;
+      --info: #6fa8d0;
+      --magic: #a98fd0;
+      --heading: #a0a899;
+      --badge-fg: #0f1210;
+      --btn-fg: #0f1210;
+    }
+    [data-theme="wisp"][data-mode="light"] {
+      --bg: #c3c8b8;
+      --panel: #d4d9c9;
+      --field: #cacfbf;
+      --accent: #4f5c11;
+      --accent-light: #3c470c;
+      --text: #2b3024;
+      --muted: #5e6455;
+      --border: rgba(50,58,20,0.24);
+      --glass: rgba(50,58,20,0.06);
+      --error: #a83440;
+      --warning: #7f5a14;
+      --success: #23644a;
+      --info: #1d5878;
+      --magic: #6b4a9e;
+      --heading: #4e5446;
+      --badge-fg: #d4d9c9;
+      --btn-fg: #d4d9c9;
+    }
+
+    /* ===== SPELLJAMMER — the phlogiston between the crystal spheres.
+       THE ONE --magic OVERRIDE IN THE WHOLE SET. The accent has taken violet, so
+       enchantment moves to rose. Rejected first: aqua (11.0 from --st-available),
+       gold (12.3 from --st-lost), and cyan -- which measured a comfortable 15.7
+       normally and 3.5 under deuteranopia. ===== */
+    [data-theme="spelljammer"] {
+      --radius: 6px;
+      --radius-sm: 3px;
+      --radius-lg: 8px;
+    }
+    [data-theme="spelljammer"][data-mode="dark"] {
+      --bg: #0d0b16;
+      --panel: #161226;
+      --field: #110e1e;
+      --accent: #8f6fd8;
+      --accent-light: #bda6ee;
+      --text: #e8e4f2;
+      --muted: #847d99;
+      --border: rgba(205,195,240,0.11);
+      --glass: rgba(205,195,240,0.04);
+      --error: #ef6b70;
+      --warning: #e8bc55;
+      --success: #63c48d;
+      --info: #6fa8d0;
+      --magic: #f0a8c8;
+      --heading: #9e97b3;
+      --badge-fg: #0d0b16;
+      --btn-fg: #0d0b16;
+    }
+    [data-theme="spelljammer"][data-mode="light"] {
+      --bg: #c1bdcf;
+      --panel: #d2cee0;
+      --field: #c8c4d6;
+      --accent: #3d2a86;
+      --accent-light: #2c1c6b;
+      --text: #2b2739;
+      --muted: #5d5771;
+      --border: rgba(40,30,80,0.24);
+      --glass: rgba(40,30,80,0.06);
+      --error: #a83440;
+      --warning: #7f5a14;
+      --success: #23644a;
+      --info: #2e4177;
+      --magic: #9c3d66;
+      --heading: #4d4762;
+      --badge-fg: #d2cee0;
+      --btn-fg: #d2cee0;
+    }
+
     [data-theme="slate-brass"] {
       --radius: 4px;
       --radius-sm: 2px;
