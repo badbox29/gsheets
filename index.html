@@ -9,7 +9,7 @@
 			/* Runs before the stylesheet so a saved light mode never flashes
 			   dark first. Deliberately duplicates a little of applyTheme() --
 			   it must not depend on app.js, which loads far later. Wrapped in
-			   try/catch because localStorage throws in private-mode Safari. */
+			   try/catch because localStorage throws in private-mode Safari.. */
 			try {
 				var t = JSON.parse(localStorage.getItem('gsheets_theme') || '{}');
 				if (t.theme) document.documentElement.setAttribute('data-theme', t.theme);
