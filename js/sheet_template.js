@@ -1,4 +1,4 @@
-// ===== SHEET TEMPLATE (scoped; no IDs) =====
+// ===== SHEET TEMPLATE (scoped; no IDs). =====
 const SHEET_HTML = `
   <div class="sheet-body">
     <!-- Vertical Tab Bar -->
