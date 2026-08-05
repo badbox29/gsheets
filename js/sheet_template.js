@@ -2875,11 +2875,25 @@ const SHEET_HTML = `
 	    <div class="settings-panel subtab-panel-hidden" data-panel="themes">
 	      <p style="font-size:11px;color:var(--muted);margin:0 0 12px;">Theme is stored per browser and is not synced or saved with a character. Light and dark are set by the moon control at the top right.</p>
 	      <label>Theme</label>
-	      <select class="theme-select" style="width:auto;min-width:200px;">
-	        <option value="slate-brass">Slate &amp; Brass</option>
-	        <option value="bloodstone">Bloodstone</option>
-	        <option value="midnight">Midnight</option>
-	      </select>
+	      <!-- Radio inputs with styled labels, NOT a custom listbox: keyboard
+	           navigation, focus and form semantics come free and need no ARIA.
+	           A chip inside a <select> was tried and abandoned -- <option> takes
+	           a background colour in Firefox, ignores it on macOS, and cannot
+	           contain markup, so it would have looked right on one machine only.
+	           Order is default first, then a hue ramp, then Steel, which has no
+	           hue to place. -->
+	      <div class="theme-grid">
+	        <label class="theme-tile" data-theme-key="slate-brass"><input type="radio" name="gsheets-theme" value="slate-brass"><span class="sw"><span class="b"></span></span><span class="nm">Slate &amp; Brass</span></label>
+	        <label class="theme-tile" data-theme-key="emberforge"><input type="radio" name="gsheets-theme" value="emberforge"><span class="sw"><span class="b"></span></span><span class="nm">Emberforge</span></label>
+	        <label class="theme-tile" data-theme-key="wisp"><input type="radio" name="gsheets-theme" value="wisp"><span class="sw"><span class="b"></span></span><span class="nm">Will-o'-Wisp</span></label>
+	        <label class="theme-tile" data-theme-key="phosphor"><input type="radio" name="gsheets-theme" value="phosphor"><span class="sw"><span class="b"></span></span><span class="nm">Phosphor</span></label>
+	        <label class="theme-tile" data-theme-key="zakhara"><input type="radio" name="gsheets-theme" value="zakhara"><span class="sw"><span class="b"></span></span><span class="nm">Zakhara</span></label>
+	        <label class="theme-tile" data-theme-key="midnight"><input type="radio" name="gsheets-theme" value="midnight"><span class="sw"><span class="b"></span></span><span class="nm">Midnight</span></label>
+	        <label class="theme-tile" data-theme-key="spelljammer"><input type="radio" name="gsheets-theme" value="spelljammer"><span class="sw"><span class="b"></span></span><span class="nm">Spelljammer</span></label>
+	        <label class="theme-tile" data-theme-key="faerzress"><input type="radio" name="gsheets-theme" value="faerzress"><span class="sw"><span class="b"></span></span><span class="nm">Faerzress</span></label>
+	        <label class="theme-tile" data-theme-key="bloodstone"><input type="radio" name="gsheets-theme" value="bloodstone"><span class="sw"><span class="b"></span></span><span class="nm">Bloodstone</span></label>
+	        <label class="theme-tile" data-theme-key="steel"><input type="radio" name="gsheets-theme" value="steel"><span class="sw"><span class="b"></span></span><span class="nm">Steel</span></label>
+	      </div>
 	    </div>
 
 	    </div><!-- /settings-scroll -->
