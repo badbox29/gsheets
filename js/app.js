@@ -7812,14 +7812,9 @@ function bindSheet(root, tab){
   // control calls, so there is ONE place that writes the attributes and the
   // localStorage key -- the two controls cannot drift apart.
   const themeSel = qs(root, '.theme-select');
-  const modeSel  = qs(root, '.mode-select');
   if (themeSel) {
     themeSel.value = document.documentElement.getAttribute('data-theme') || 'slate-brass';
     themeSel.onchange = () => applyTheme(themeSel.value, null);
-  }
-  if (modeSel) {
-    modeSel.value = document.documentElement.getAttribute('data-mode') || 'dark';
-    modeSel.onchange = () => applyTheme(null, modeSel.value);
   }
   qs(root, '.kv-modal-overlay').addEventListener('click', e => {
     if (e.target === qs(root, '.kv-modal-overlay')) closeKvSettingsModal(root);
@@ -11038,14 +11033,11 @@ function applyTheme(theme, mode) {
   const isLight = el.getAttribute('data-mode') === 'light';
   if (moon)   moon.classList.toggle('sun', isLight);
   if (toggle) toggle.classList.toggle('day', isLight);
-  // Push the values back into the Settings selects if they exist. applyTheme is
-  // the single writer, so the moon control and the dropdowns cannot show
-  // different answers -- without this, flipping the mode by moon leaves a stale
-  // value in the Mode select the next time Settings is opened.
+  // Push the value back into the Settings select if it exists, so applyTheme
+  // stays the single writer. Only theme needs this now -- mode is the moon
+  // control's alone, and it derives its own art from data-mode above.
   const themeSel = document.querySelector('.theme-select');
-  const modeSel  = document.querySelector('.mode-select');
   if (themeSel) themeSel.value = el.getAttribute('data-theme');
-  if (modeSel)  modeSel.value  = el.getAttribute('data-mode');
   try {
     localStorage.setItem(THEME_KEY, JSON.stringify({
       theme: el.getAttribute('data-theme'),
