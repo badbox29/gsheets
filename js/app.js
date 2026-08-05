@@ -10998,14 +10998,44 @@ function moveSpellToAnotherSpellbook(spellNode, onChange) {
   };
 }
 	
-/* ===== Light/Dark toggle logic (from the second file, pared to what’s needed here) ===== */
+/* ===== Theme and mode =====
+   Two axes on <html>: data-theme (which palette) and data-mode (dark|light).
+   Per-browser only -- deliberately NOT in the character record or the KV
+   payload, matching how print options are handled.
+
+   index.html carries a tiny inline copy of the read half, before the
+   stylesheet, so a saved light mode does not flash dark on load. If the key
+   name changes, it must change in BOTH places. */
+const THEME_KEY = 'gsheets_theme';
+
+function readThemePref() {
+  try { return JSON.parse(localStorage.getItem(THEME_KEY) || '{}') || {}; }
+  catch (e) { return {}; }
+}
+
+function applyTheme(theme, mode) {
+  const el = document.documentElement;
+  if (theme) el.setAttribute('data-theme', theme);
+  if (mode)  el.setAttribute('data-mode', mode);
+  // The toggle art is driven by the mode, not the other way round, so the
+  // control still reads correctly after a reload rather than only after a click.
+  const moon   = document.getElementsByClassName('moon')[0];
+  const toggle = document.getElementsByClassName('tdnn')[0];
+  const isLight = el.getAttribute('data-mode') === 'light';
+  if (moon)   moon.classList.toggle('sun', isLight);
+  if (toggle) toggle.classList.toggle('day', isLight);
+  try {
+    localStorage.setItem(THEME_KEY, JSON.stringify({
+      theme: el.getAttribute('data-theme'),
+      mode:  el.getAttribute('data-mode')
+    }));
+  } catch (e) {}
+}
+
+// Bound to the moon control by an onclick in index.html. Name kept.
 function tdnn() {
-  const moon = document.getElementsByClassName("moon")[0];
-  const toggle = document.getElementsByClassName("tdnn")[0];
-  if (!moon || !toggle) return;
-  moon.classList.toggle("sun");
-  toggle.classList.toggle("day");
-  document.body.classList.toggle("light");
+  const cur = document.documentElement.getAttribute('data-mode');
+  applyTheme(null, cur === 'light' ? 'dark' : 'light');
 }
 /* ===== DICE ROLLER UTILITIES ===== */
 
