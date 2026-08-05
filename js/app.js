@@ -7811,10 +7811,12 @@ function bindSheet(root, tab){
   // Theme and mode selects. Both call applyTheme(), which is also what the moon
   // control calls, so there is ONE place that writes the attributes and the
   // localStorage key -- the two controls cannot drift apart.
-  const themeSel = qs(root, '.theme-select');
-  if (themeSel) {
-    themeSel.value = document.documentElement.getAttribute('data-theme') || 'slate-brass';
-    themeSel.onchange = () => applyTheme(themeSel.value, null);
+  const grid = qs(root, '.theme-grid');
+  if (grid) {
+    paintThemeTiles(grid);
+    grid.querySelectorAll('input[type=radio]').forEach(r => {
+      r.onchange = () => applyTheme(r.value, null);
+    });
   }
   qs(root, '.kv-modal-overlay').addEventListener('click', e => {
     if (e.target === qs(root, '.kv-modal-overlay')) closeKvSettingsModal(root);
@@ -11022,6 +11024,34 @@ function readThemePref() {
   catch (e) { return {}; }
 }
 
+/* Read each theme's REAL palette and paint its tile from it.
+   A hidden probe element gets the theme's attributes, so getComputedStyle
+   returns exactly what that theme would produce in the current mode. Hardcoding
+   the swatch colours in CSS would mean a theme's tile could drift from the
+   theme, and adding a theme would mean editing two places instead of one. */
+function paintThemeTiles(grid) {
+  const mode = document.documentElement.getAttribute('data-mode') || 'dark';
+  const cur  = document.documentElement.getAttribute('data-theme') || 'slate-brass';
+  const probe = document.createElement('div');
+  probe.style.display = 'none';
+  document.body.appendChild(probe);
+  grid.querySelectorAll('.theme-tile').forEach(tile => {
+    const key = tile.getAttribute('data-theme-key');
+    probe.setAttribute('data-theme', key);
+    probe.setAttribute('data-mode', mode);
+    const cs = getComputedStyle(probe);
+    tile.style.setProperty('--tbg',    cs.getPropertyValue('--bg').trim());
+    tile.style.setProperty('--tpanel', cs.getPropertyValue('--panel').trim());
+    tile.style.setProperty('--tacc',   cs.getPropertyValue('--accent').trim());
+    tile.style.setProperty('--tal',    cs.getPropertyValue('--accent-light').trim());
+    const on = key === cur;
+    tile.classList.toggle('selected', on);
+    const radio = tile.querySelector('input[type=radio]');
+    if (radio) radio.checked = on;
+  });
+  probe.remove();
+}
+
 function applyTheme(theme, mode) {
   const el = document.documentElement;
   if (theme) el.setAttribute('data-theme', theme);
@@ -11033,11 +11063,11 @@ function applyTheme(theme, mode) {
   const isLight = el.getAttribute('data-mode') === 'light';
   if (moon)   moon.classList.toggle('sun', isLight);
   if (toggle) toggle.classList.toggle('day', isLight);
-  // Push the value back into the Settings select if it exists, so applyTheme
-  // stays the single writer. Only theme needs this now -- mode is the moon
-  // control's alone, and it derives its own art from data-mode above.
-  const themeSel = document.querySelector('.theme-select');
-  if (themeSel) themeSel.value = el.getAttribute('data-theme');
+  // Repaint and re-mark the picker if it is on screen, so applyTheme stays the
+  // single writer. The repaint matters because the tiles are drawn in the
+  // CURRENT MODE -- flipping the moon must redraw all ten, not just re-tick one.
+  const grid = document.querySelector('.theme-grid');
+  if (grid) paintThemeTiles(grid);
   try {
     localStorage.setItem(THEME_KEY, JSON.stringify({
       theme: el.getAttribute('data-theme'),
