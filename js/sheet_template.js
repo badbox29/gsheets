@@ -1256,9 +1256,9 @@ const SHEET_HTML = `
 		       the pair one man in twelve cannot separate, and it was the pair
 		       that mattered most -- castable now versus gone. -->
 		  <div class="spell-listbar">
-			<span class="key"><i style="background:var(--success)"></i>available</span>
-			<span class="key"><i style="background:var(--muted)"></i>cast</span>
-			<span class="key"><i style="background:var(--warning)"></i>lost</span>
+			<span class="key"><i style="background:var(--st-available)"></i>available</span>
+			<span class="key"><i style="background:transparent;border:1px solid var(--muted);box-sizing:border-box"></i>cast</span>
+			<span class="key"><i style="background:var(--st-lost)"></i>lost</span>
 		  </div>
 		  <div class="list memspells-list"></div>
 		</section>
@@ -1579,16 +1579,16 @@ const SHEET_HTML = `
 
 		<!-- Weapons -->
 		<section class="section">
-		  <!-- Rail key. The proficiency rail has existed since before the card
-		       pass and has never had one. Colours are resolveWeaponProficiency's:
-		       related is MUTED rather than amber because amber sits too close to
-		       --accent-light to be told apart at 3px, identically so to anyone
-		       with a red-green deficiency. -->
+		  <!-- Rail key. Colours are the FIXED status vocabulary, not theme
+		       tokens -- proficient used to be --accent-light, which meant this
+		       legend changed meaning with the theme. Related is a HOLLOW rail
+		       rather than a colour: colour blindness collapses saturated hues
+		       toward grey, so a grey "inactive" collided with everything. -->
 		  <div class="spell-listbar">
-			<span class="key"><i style="background:var(--info)"></i>specialized</span>
-			<span class="key"><i style="background:var(--accent-light)"></i>proficient</span>
-			<span class="key"><i style="background:var(--muted)"></i>related</span>
-			<span class="key"><i style="background:var(--error)"></i>not proficient</span>
+			<span class="key"><i style="background:var(--st-specialized)"></i>specialized</span>
+			<span class="key"><i style="background:var(--st-proficient)"></i>proficient</span>
+			<span class="key"><i style="background:transparent;border:1px solid var(--muted);box-sizing:border-box"></i>related</span>
+			<span class="key"><i style="background:var(--st-forbidden)"></i>not proficient</span>
 		  </div>
 		  <div class="list weapons-list"></div>
 		</section>
@@ -1695,9 +1695,9 @@ const SHEET_HTML = `
 		  <!-- Rail key. Hidden until resolveArmorLegality exists to paint the
 		       rails: a key for colours nothing produces is worse than none. -->
 		  <div class="spell-listbar armor-rail-key" style="display:none;">
-			<span class="key"><i style="background:var(--accent-light)"></i>allowed</span>
-			<span class="key"><i style="background:var(--muted)"></i>advisory</span>
-			<span class="key"><i style="background:var(--error)"></i>class restricted</span>
+			<span class="key"><i style="background:var(--st-proficient)"></i>allowed</span>
+			<span class="key"><i style="background:transparent;border:1px solid var(--muted);box-sizing:border-box"></i>advisory</span>
+			<span class="key"><i style="background:var(--st-forbidden)"></i>class restricted</span>
 		  </div>
 		  <div class="list armor-list"></div>
 		</section>
