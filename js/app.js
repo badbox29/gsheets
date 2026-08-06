@@ -10443,7 +10443,7 @@ function makeCharacterJournalEntry(data = {}, onChange) {
   // also rewrites localStorage so a bad value is corrected once rather than
   // every load.
   const pref = readThemePref();
-  applyTheme(pref.theme || THEME_FALLBACK, pref.mode || 'dark');
+  applyTheme(pref.theme || themeFallback(), pref.mode || 'dark');
 
   const firstContainer = document.querySelector('.tab-content.active .sheet-container');  firstContainer.innerHTML = SHEET_HTML;
 
@@ -11067,7 +11067,10 @@ function paintThemeTiles(grid) {
    Note a probe element cannot be used for this: custom properties INHERIT, so a
    div carrying an unknown data-theme still reports the <html> palette's --bg
    and would look valid. */
-let THEME_KEYS = null;
+/* var, not let: same hoisting problem as themeFallback above. As `var` this is
+   `undefined` when init() runs, which is falsy, so the cache check below simply
+   misses and the scan proceeds normally. */
+var THEME_KEYS = null;
 function knownThemes() {
   if (THEME_KEYS) return THEME_KEYS;
   const keys = new Set();
@@ -11085,7 +11088,12 @@ function knownThemes() {
   return keys;
 }
 
-const THEME_FALLBACK = 'slate-brass';
+/* A hoisted FUNCTION, not a const. init() is an IIFE that runs ~600 lines above
+   this point, and a const/let is in the temporal dead zone until its own line is
+   evaluated -- so a const here throws a ReferenceError at boot. `var` would be
+   worse: it hoists as undefined and would set data-theme="undefined", failing
+   silently instead of loudly. Function declarations hoist completely. */
+function themeFallback() { return 'slate-brass'; }
 
 function applyTheme(theme, mode) {
   const el = document.documentElement;
@@ -11096,7 +11104,7 @@ function applyTheme(theme, mode) {
   // app renders with unresolved variables. Fall back rather than showing that.
   const known = knownThemes();
   if (known.size && !known.has(el.getAttribute('data-theme'))) {
-    el.setAttribute('data-theme', THEME_FALLBACK);
+    el.setAttribute('data-theme', themeFallback());
   }
   if (el.getAttribute('data-mode') !== 'light') el.setAttribute('data-mode', 'dark');
   // The toggle art is driven by the mode, not the other way round, so the
