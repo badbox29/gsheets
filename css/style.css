@@ -290,57 +290,57 @@
       --btn-fg: #ffffff;
     }
 
-    /* ===== PHOSPHOR — CRT terminal green. ZERO corner radius.
-       --radius 0 is real but NOT YET VISIBLE: ~79 hardcoded border-radius values
-       still live in inline styles. Phosphor and Steel are the two themes that
-       change again after the shape-language pass. ===== */
-    [data-theme="phosphor"] {
-      --radius: 0px;
-      --radius-sm: 0px;
-      --radius-lg: 0px;
+    /* ===== ARBOREA — the plane of wild, untamed growth.
+       Replaced Phosphor, whose CRT green was emitted rather than grown. The
+       yellow-green register was NOT available: everything from 71 to 100 deg
+       collides with Will-o'-Wisp, so this sits at 129 deg, a true green.
+       Holly #4faa5c clears --st-available by 28.0 and the nearest theme by 37.7.
+
+       THE PANEL IS DARKER THAN THE BACKGROUND, which no other theme does. Stone
+       grey around, deep green within -- moss on stone. Everything that carries
+       meaning stays green; only the surface behind the cards is neutral. ===== */
+    [data-theme="arborea"] {
+      --radius: 5px;
+      --radius-sm: 3px;
+      --radius-lg: 7px;
     }
-    [data-theme="phosphor"][data-mode="dark"] {
-      /* INVERTED ON PURPOSE: the panel is DARKER than the background here,
-         which no other theme does. The card is the screen and the page around
-         it is the case, so the display reads as recessed. Everything that
-         carries meaning -- text, muted, borders, glass, both accents -- stays
-         green; only the surface behind the cards is neutral. */
-      --bg: #1c1e21;
+    [data-theme="arborea"][data-mode="dark"] {
+      --bg: #1e2220;
       --panel: #0d160d;
       --field: #0a120a;
-      --accent: #4ee06a;
-      --accent-light: #8bf0a0;
-      --text: #ccf5d4;
-      --muted: #6a8f74;
-      --border: rgba(120,240,150,0.14);
-      --glass: rgba(120,240,150,0.05);
-      --error: #ff5f56;
-      --warning: #ffd24a;
-      --success: #4ee06a;
-      --info: #5fc8e0;
+      --accent: #4faa5c;
+      --accent-light: #83cc8e;
+      --text: #dfe8df;
+      --muted: #7d8f80;
+      --border: rgba(180,225,190,0.13);
+      --glass: rgba(180,225,190,0.05);
+      --error: #ef6b70;
+      --warning: #e8bc55;
+      --success: #63c48d;
+      --info: #6fa8d0;
       --magic: #a98fd0;
-      --heading: #86ac90;
-      --badge-fg: #0a0f0a;
-      --btn-fg: #0a0f0a;
+      --heading: #9aab9d;
+      --badge-fg: #0a120a;
+      --btn-fg: #0a120a;
     }
-    [data-theme="phosphor"][data-mode="light"] {
-      --bg: #bac7ba;
-      --panel: #cbd8cb;
-      --field: #c0cdc0;
-      --accent: #0e632b;
-      --accent-light: #04461c;
-      --text: #28332b;
-      --muted: #56675a;
-      --border: rgba(20,60,30,0.24);
-      --glass: rgba(20,60,30,0.06);
-      --error: #a8272a;
-      --warning: #7d5a0d;
-      --success: #1a6b32;
-      --info: #1d5f7a;
+    [data-theme="arborea"][data-mode="light"] {
+      --bg: #bcc4bc;
+      --panel: #cdd4cd;
+      --field: #c3cbc3;
+      --accent: #1f6b32;
+      --accent-light: #144f24;
+      --text: #28322a;
+      --muted: #566159;
+      --border: rgba(25,55,32,0.24);
+      --glass: rgba(25,55,32,0.06);
+      --error: #a8302a;
+      --warning: #7f5a14;
+      --success: #23644a;
+      --info: #1d5878;
       --magic: #6b4a9e;
-      --heading: #46564a;
-      --badge-fg: #ffffff;
-      --btn-fg: #ffffff;
+      --heading: #46514a;
+      --badge-fg: #cdd4cd;
+      --btn-fg: #cdd4cd;
     }
 
     /* ===== ZAKHARA (Al-Qadim) — turquoise tile and hammered brass.
