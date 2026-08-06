@@ -300,9 +300,14 @@
       --radius-lg: 0px;
     }
     [data-theme="phosphor"][data-mode="dark"] {
-      --bg: #0a0f0a;
-      --panel: #101810;
-      --field: #0a140a;
+      /* INVERTED ON PURPOSE: the panel is DARKER than the background here,
+         which no other theme does. The card is the screen and the page around
+         it is the case, so the display reads as recessed. Everything that
+         carries meaning -- text, muted, borders, glass, both accents -- stays
+         green; only the surface behind the cards is neutral. */
+      --bg: #1c1e21;
+      --panel: #0d160d;
+      --field: #0a120a;
       --accent: #4ee06a;
       --accent-light: #8bf0a0;
       --text: #ccf5d4;
