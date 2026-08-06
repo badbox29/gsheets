@@ -10437,8 +10437,15 @@ function makeCharacterJournalEntry(data = {}, onChange) {
 
 // ===== Bootstrap the default tab =====
 (function init(){
-  const firstContainer = document.querySelector('.tab-content.active .sheet-container');
-  firstContainer.innerHTML = SHEET_HTML;
+  // The inline script in index.html sets the attributes before the stylesheet
+  // loads, to avoid a flash -- but it cannot validate them, because the
+  // stylesheet is not parsed yet. This is the first chance to check, and it
+  // also rewrites localStorage so a bad value is corrected once rather than
+  // every load.
+  const pref = readThemePref();
+  applyTheme(pref.theme || THEME_FALLBACK, pref.mode || 'dark');
+
+  const firstContainer = document.querySelector('.tab-content.active .sheet-container');  firstContainer.innerHTML = SHEET_HTML;
 
   const defaultTab = document.querySelector('.tab[data-id="default"]');
   if(!defaultTab.querySelector('.label')){
@@ -11052,10 +11059,46 @@ function paintThemeTiles(grid) {
   probe.remove();
 }
 
+/* Which themes actually exist, read out of the stylesheet rather than kept as a
+   list here. A hardcoded list would need editing every time a theme is added,
+   renamed or removed -- and the case this guards against IS someone editing
+   themes, so a list that can go stale is the wrong tool.
+
+   Note a probe element cannot be used for this: custom properties INHERIT, so a
+   div carrying an unknown data-theme still reports the <html> palette's --bg
+   and would look valid. */
+let THEME_KEYS = null;
+function knownThemes() {
+  if (THEME_KEYS) return THEME_KEYS;
+  const keys = new Set();
+  for (const sheet of document.styleSheets) {
+    let rules;
+    try { rules = sheet.cssRules; } catch (e) { continue; }  // cross-origin
+    for (const rule of rules) {
+      const sel = rule.selectorText;
+      if (!sel) continue;
+      const found = sel.match(/\[data-theme="[a-z0-9-]+"\]/g);
+      if (found) found.forEach(s => keys.add(s.slice(13, -2)));
+    }
+  }
+  THEME_KEYS = keys;
+  return keys;
+}
+
+const THEME_FALLBACK = 'slate-brass';
+
 function applyTheme(theme, mode) {
   const el = document.documentElement;
   if (theme) el.setAttribute('data-theme', theme);
   if (mode)  el.setAttribute('data-mode', mode);
+
+  // A stored theme that no longer exists leaves every palette unmatched and the
+  // app renders with unresolved variables. Fall back rather than showing that.
+  const known = knownThemes();
+  if (known.size && !known.has(el.getAttribute('data-theme'))) {
+    el.setAttribute('data-theme', THEME_FALLBACK);
+  }
+  if (el.getAttribute('data-mode') !== 'light') el.setAttribute('data-mode', 'dark');
   // The toggle art is driven by the mode, not the other way round, so the
   // control still reads correctly after a reload rather than only after a click.
   const moon   = document.getElementsByClassName('moon')[0];
