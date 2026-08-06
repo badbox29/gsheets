@@ -2886,7 +2886,7 @@ const SHEET_HTML = `
 	        <label class="theme-tile" data-theme-key="slate-brass"><input type="radio" name="gsheets-theme" value="slate-brass"><span class="sw"><span class="b"></span></span><span class="nm">Slate &amp; Brass</span></label>
 	        <label class="theme-tile" data-theme-key="emberforge"><input type="radio" name="gsheets-theme" value="emberforge"><span class="sw"><span class="b"></span></span><span class="nm">Emberforge</span></label>
 	        <label class="theme-tile" data-theme-key="wisp"><input type="radio" name="gsheets-theme" value="wisp"><span class="sw"><span class="b"></span></span><span class="nm">Will-o'-Wisp</span></label>
-	        <label class="theme-tile" data-theme-key="phosphor"><input type="radio" name="gsheets-theme" value="phosphor"><span class="sw"><span class="b"></span></span><span class="nm">Phosphor</span></label>
+	        <label class="theme-tile" data-theme-key="arborea"><input type="radio" name="gsheets-theme" value="arborea"><span class="sw"><span class="b"></span></span><span class="nm">Arborea</span></label>
 	        <label class="theme-tile" data-theme-key="zakhara"><input type="radio" name="gsheets-theme" value="zakhara"><span class="sw"><span class="b"></span></span><span class="nm">Zakhara</span></label>
 	        <label class="theme-tile" data-theme-key="midnight"><input type="radio" name="gsheets-theme" value="midnight"><span class="sw"><span class="b"></span></span><span class="nm">Midnight</span></label>
 	        <label class="theme-tile" data-theme-key="spelljammer"><input type="radio" name="gsheets-theme" value="spelljammer"><span class="sw"><span class="b"></span></span><span class="nm">Spelljammer</span></label>
