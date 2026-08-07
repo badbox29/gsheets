@@ -668,17 +668,21 @@
          .btn-quiet    text only  -- disclosures, steppers, row actions
          .btn-danger   text only  -- destructive; outlines itself on hover
 
-       The border is --border at REST and --accent on HOVER. Chosen over an
-       accent border at rest: that would put the accent back on ~150 elements,
-       and it spends all its signal before you reach for anything, leaving hover
-       nowhere to go.
+       NO border at rest -- a --glass fill marks the target instead -- and an
+       --accent border on hover. An accent border at rest was rejected: it puts
+       the accent back on ~150 elements and spends all its signal before you
+       reach for anything, leaving hover nowhere to go.
+
+       The fill is what keeps four levels rather than three: secondary has a
+       surface, .btn-quiet does not. Drop the fill too and those two become the
+       same shape, separated only by text colour.
        ======================================================================== */
     button{
-      background:transparent;
+      background:var(--glass);
       color:var(--accent-light);
       padding:6px 12px;
       border-radius:var(--radius);
-      border:1px solid var(--border);
+      border:1px solid transparent;
       cursor:pointer;
       font-weight:600;
       font-size:12px;
