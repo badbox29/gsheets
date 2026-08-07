@@ -848,8 +848,8 @@ const SHEET_HTML = `
         <section class="section ranger-stealth-display" style="display:none;">
           <h3>Ranger Stealth</h3>
           <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;">
-            <div style="flex:1 1 220px;min-width:200px;padding:10px 12px;border:1px solid var(--success, #6fbf73);border-radius:var(--radius);background:rgba(111,191,115,0.06);">
-              <div style="font-size:11px;font-weight:bold;letter-spacing:0.6px;text-transform:uppercase;color:var(--success, #6fbf73);margin-bottom:8px;">Natural Surroundings</div>
+            <div style="flex:1 1 220px;min-width:200px;padding:10px 12px;border:1px solid var(--success);border-radius:var(--radius);background:color-mix(in srgb, var(--success) 8%, transparent);">
+              <div style="font-size:11px;font-weight:bold;letter-spacing:0.6px;text-transform:uppercase;color:var(--success);margin-bottom:8px;">Natural Surroundings</div>
               <label>Hide in Shadows</label>
               <input data-field="ranger_hide" type="text" readonly title="PHB Table 18, adjusted for race (Table 27) and Dexterity (Table 28). Applies in forest, hill, marsh and other wild terrain.">
               <label style="margin-top:8px;">Move Silently</label>
@@ -1641,7 +1641,7 @@ const SHEET_HTML = `
 			Track arrows, bolts, sling stones, and other ammunition. Weight auto-updates encumbrance.
 		  </p>
 		  <div class="list ammunition-list"></div>
-		  <div style="margin-top:8px;padding:8px;background:rgba(255,255,255,0.03);border-radius:var(--radius-lg);">
+		  <div style="margin-top:8px;padding:8px;background:var(--glass);border-radius:var(--radius-lg);">
 			<strong style="font-size:12px;">Total Ammo Weight:</strong> 
 			<span class="total-ammo-weight" style="color:var(--accent-light);font-weight:600;">0.0 lbs</span>
 		  </div>
@@ -1761,7 +1761,7 @@ const SHEET_HTML = `
               <input data-field="age" type="number" min="1" step="1" title="Current age in years. PHB Table 12 applies cumulative ability score adjustments at middle age, old age and venerable age. The sheet reports which bracket you have reached but never changes a score.">
             </div>
           </div>
-          <div class="aging-note" style="display:none;margin-top:8px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.45;border:1px solid var(--info, #6fb3d2);background:rgba(111,179,210,0.08);"></div>
+          <div class="aging-note" style="display:none;margin-top:8px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.45;border:1px solid var(--info);background:color-mix(in srgb, var(--info) 10%, transparent);"></div>
           <div class="row" style="margin-top:8px">
             <div class="col"><label>Hair</label><input data-field="hair" type="text"></div>
             <div class="col"><label>Eyes</label><input data-field="eyes" type="text"></div>
@@ -2159,7 +2159,7 @@ const SHEET_HTML = `
             <!-- Roll History (right side) -->
             <div style="display:flex;flex-direction:column;min-height:0;">
               <h4 style="font-size:14px;margin-bottom:8px;">Roll History (most recent on top)</h4>
-              <div class="roll-history" style="flex:1 1 0;min-height:0;overflow-y:auto;padding:8px;background:rgba(255,255,255,0.03);border-radius:var(--radius-lg);font-family:monospace;font-size:12px;margin-bottom:8px;">
+              <div class="roll-history" style="flex:1 1 0;min-height:0;overflow-y:auto;padding:8px;background:var(--glass);border-radius:var(--radius-lg);font-family:monospace;font-size:12px;margin-bottom:8px;">
                 <div style="color:var(--muted);font-style:italic;">Roll results will appear here...</div>
               </div>
               <button class="clear-roll-history" style="padding:6px 12px;font-size:12px;">Clear History</button>
@@ -2313,7 +2313,7 @@ const SHEET_HTML = `
             <!-- Thief Roll History (right side) -->
             <div style="display:flex;flex-direction:column;min-height:0;">
               <h4 style="font-size:14px;margin-bottom:8px;">Thief Roll History (most recent on top)</h4>
-              <div class="thief-roll-history" style="flex:1 1 0;min-height:0;overflow-y:auto;padding:8px;background:rgba(255,255,255,0.03);border-radius:var(--radius-lg);font-family:monospace;font-size:12px;border:1px solid var(--border);margin-bottom:8px;">
+              <div class="thief-roll-history" style="flex:1 1 0;min-height:0;overflow-y:auto;padding:8px;background:var(--glass);border-radius:var(--radius-lg);font-family:monospace;font-size:12px;border:1px solid var(--border);margin-bottom:8px;">
                 <div style="color:var(--muted);font-style:italic;">Thief skill roll results will appear here...</div>
               </div>
               <button class="clear-thief-roll-history" style="padding:6px 12px;font-size:12px;">Clear History</button>
@@ -2334,7 +2334,7 @@ const SHEET_HTML = `
           <div style="display:grid;grid-template-columns:65fr 35fr;gap:16px;">
             <!-- Turn Undead Table (left side) -->
             <div class="turn-undead-table">
-              <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;padding:8px;background:rgba(255,255,255,0.05);border-radius:var(--radius);margin-bottom:8px;font-weight:600;font-size:11px;">
+              <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;padding:8px;background:var(--glass);border-radius:var(--radius);margin-bottom:8px;font-weight:600;font-size:11px;">
                 <div>Undead Type</div>
                 <div style="text-align:center;">Requirement</div>
                 <div></div>
@@ -2347,7 +2347,7 @@ const SHEET_HTML = `
             <!-- Turn History (right side) -->
             <div style="display:flex;flex-direction:column;min-height:0;">
               <h4 style="font-size:14px;margin-bottom:8px;">Turn History</h4>
-              <div class="turn-undead-history" style="flex:1 1 0;min-height:0;overflow-y:auto;padding:8px;background:rgba(255,255,255,0.03);border-radius:var(--radius-lg);font-family:monospace;font-size:12px;border:1px solid var(--border);margin-bottom:8px;">
+              <div class="turn-undead-history" style="flex:1 1 0;min-height:0;overflow-y:auto;padding:8px;background:var(--glass);border-radius:var(--radius-lg);font-family:monospace;font-size:12px;border:1px solid var(--border);margin-bottom:8px;">
                 <div style="color:var(--muted);font-style:italic;">Turn undead results will appear here...</div>
               </div>
               <button class="clear-turn-undead-history" style="padding:6px 12px;font-size:12px;">Clear History</button>
@@ -2375,7 +2375,7 @@ const SHEET_HTML = `
 
             <div style="margin-top:12px;">
               <div style="font-size:12px;font-weight:600;margin-bottom:4px;">Roll History</div>
-              <div class="detection-history" style="height:120px;overflow-y:auto;padding:6px;background:rgba(255,255,255,0.03);border-radius:var(--radius);font-family:monospace;font-size:11px;border:1px solid var(--border);">
+              <div class="detection-history" style="height:120px;overflow-y:auto;padding:6px;background:var(--glass);border-radius:var(--radius);font-family:monospace;font-size:11px;border:1px solid var(--border);">
                 <div style="color:var(--muted);font-style:italic;">Rolls will appear here...</div>
               </div>
               <button class="clear-detection-history" style="margin-top:4px;padding:4px 8px;font-size:11px;">Clear History</button>
@@ -2616,7 +2616,7 @@ const SHEET_HTML = `
 	<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
     
     <!-- Combat Tracker (Round + Conditions) -->
-    <div style="margin-top:16px;padding:10px;background:rgba(255,100,100,0.1);border:1px solid rgba(255,100,100,0.3);border-radius:var(--radius-lg);">
+    <div style="margin-top:16px;padding:10px;background:color-mix(in srgb, var(--error) 12%, transparent);border:1px solid color-mix(in srgb, var(--error) 35%, transparent);border-radius:var(--radius-lg);">
       <!-- Round Counter -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
         <div style="display:flex;align-items:center;gap:8px;">
@@ -2631,7 +2631,7 @@ const SHEET_HTML = `
       </div>
       
       <!-- Condition/Status Tracker -->
-      <div style="border-top:1px solid rgba(255,100,100,0.3);padding-top:8px;">
+      <div style="border-top:1px solid color-mix(in srgb, var(--error) 35%, transparent);padding-top:8px;">
       <label class="small">Condition / Status</label>
         <div class="condition-status-container">
           <div class="healthy-indicator" style="display:block;color:var(--accent-light);font-size:12px;padding:4px 0;">✓ Healthy</div>
@@ -2659,7 +2659,7 @@ const SHEET_HTML = `
 	<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
 	
 	<!-- Combat Quick Reference -->
-	<div style="margin-top:16px;padding:10px;background:rgba(100,255,150,0.05);border:1px solid rgba(100,255,150,0.2);border-radius:var(--radius-lg);">
+	<div style="margin-top:16px;padding:10px;background:color-mix(in srgb, var(--success) 8%, transparent);border:1px solid color-mix(in srgb, var(--success) 30%, transparent);border-radius:var(--radius-lg);">
 	  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
 		<div style="display:flex;align-items:center;gap:8px;">
 		  <span style="font-size:16px;">⚔️</span>
@@ -2700,7 +2700,7 @@ const SHEET_HTML = `
 	<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
 	
 	<!-- Character Bonuses & Abilities (Quick Reference) -->
-	<div class="character-bonuses-section" style="display:none;margin-top:16px;padding:10px;background:rgba(100,255,150,0.05);border:1px solid rgba(100,255,150,0.2);border-radius:var(--radius-lg);">
+	<div class="character-bonuses-section" style="display:none;margin-top:16px;padding:10px;background:color-mix(in srgb, var(--success) 8%, transparent);border:1px solid color-mix(in srgb, var(--success) 30%, transparent);border-radius:var(--radius-lg);">
 	  <!-- Header -->
 	  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
 		<div style="display:flex;align-items:center;gap:8px;">
