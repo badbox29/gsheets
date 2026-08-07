@@ -237,9 +237,9 @@ const SHEET_HTML = `
         </div>
 
         <!-- Specialist wizard requirements warning (advisory only, never blocks) -->
-          <div class="specialist-validation-message" style="display:none;margin-top:8px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
+          <div class="specialist-validation-message" style="display:none;margin-top:8px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
         <!-- Illegal class-group combination warning (advisory; switchable off in Settings) -->
-          <div class="class-group-validation-message" style="display:none;margin-top:8px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
+          <div class="class-group-validation-message" style="display:none;margin-top:8px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
         </section>
 
         <!-- Ability Scores -->
@@ -855,7 +855,7 @@ const SHEET_HTML = `
               <label style="margin-top:8px;">Move Silently</label>
               <input data-field="ranger_movesilently" type="text" readonly title="PHB Table 18, adjusted for race (Table 27) and Dexterity (Table 28). Applies in forest, hill, marsh and other wild terrain.">
             </div>
-            <div style="flex:1 1 220px;min-width:200px;padding:10px 12px;border:1px solid var(--warning, #e0a34a);border-radius:var(--radius);background:rgba(224,163,74,0.06);">
+            <div style="flex:1 1 220px;min-width:200px;padding:10px 12px;border:1px solid var(--warning, #e0a34a);border-radius:var(--radius);background:color-mix(in srgb, var(--accent) 6%, transparent);">
               <div style="font-size:11px;font-weight:bold;letter-spacing:0.6px;text-transform:uppercase;color:var(--warning, #e0a34a);margin-bottom:8px;">Non-natural &mdash; Halved</div>
               <label>Hide in Shadows</label>
               <input data-field="ranger_hide_nonnatural" type="text" readonly title="Halved in non-natural surroundings such as a musty crypt or city streets (PHB Ch.3, Ranger).">
@@ -864,7 +864,7 @@ const SHEET_HTML = `
             </div>
           </div>
           <div class="ranger-stealth-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:var(--radius);font-size:12px;line-height:1.4;"></div>
-          <div class="ranger-stealth-dormant" style="display:none;margin-top:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
+          <div class="ranger-stealth-dormant" style="display:none;margin-top:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
         </section>
 
         <!-- Thief Abilities -->
@@ -887,7 +887,7 @@ const SHEET_HTML = `
             <div class="col"><label>Read Languages</label><input data-field="thief_readlang" type="number" min="0" max="100" readonly></div>
           </div>
 		  <!-- Dual-class dormancy advisory (advisory only, never blocks) -->
-		  <div class="thief-dormant-note" style="display:none;margin-top:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
+		  <div class="thief-dormant-note" style="display:none;margin-top:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
 		  <!-- Armor effect on thief skills (PHB Table 29) -->
 		  <div class="thief-armor-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:var(--radius);font-size:12px;line-height:1.4;"></div>
 		  <!-- Hidden fields to store discretionary points allocated to each skill -->
@@ -906,7 +906,7 @@ const SHEET_HTML = `
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
             <div style="display:flex;align-items:center;gap:12px;">
               <h3 style="margin:0;">Discretionary Points</h3>
-              <span class="thief-points-warning" style="display:none;color:#fbbf24;font-size:13px;font-weight:600;">⚠ You have unassigned skill points</span>
+              <span class="thief-points-warning" style="display:none;color:var(--warning);font-size:13px;font-weight:600;">⚠ You have unassigned skill points</span>
             </div>
             <button class="toggle-thief-points" type="button" style="padding:6px 12px;font-size:13px;">Show Point Allocation</button>
           </div>
@@ -915,7 +915,7 @@ const SHEET_HTML = `
             <div style="background:#1a1a1a;padding:12px;border-radius:var(--radius);margin-bottom:12px;">
               <div style="display:flex;justify-content:space-between;align-items:center;">
                 <span style="font-weight:600;">Total Points Available:</span>
-                <span class="thief-total-points" style="font-size:18px;font-weight:700;color:#fbbf24;">0</span>
+                <span class="thief-total-points" style="font-size:18px;font-weight:700;color:var(--warning);">0</span>
               </div>
               <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
                 <span style="font-weight:600;">Points Allocated:</span>
@@ -1691,7 +1691,7 @@ const SHEET_HTML = `
 		<!-- Armor & Shields -->
 		<section class="section">
 		  <!-- Class armor restrictions (advisory; never blocks) -->
-		  <div class="armor-restriction-note" style="display:none;margin-bottom:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
+		  <div class="armor-restriction-note" style="display:none;margin-bottom:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
 		  <!-- Rail key. Hidden until resolveArmorLegality exists to paint the
 		       rails: a key for colours nothing produces is worse than none. -->
 		  <div class="spell-listbar armor-rail-key" style="display:none;">
@@ -1929,7 +1929,7 @@ const SHEET_HTML = `
 			in a <em>lifetime</em> &mdash; retired, deceased and missing all still count
 			(PHB Ch.12).
 		  </p>
-		  <div class="henchman-limit-message" style="display:none;margin-bottom:8px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
+		  <div class="henchman-limit-message" style="display:none;margin-bottom:8px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
 		  <div class="list henchmen-list"></div>
 		  <label style="font-size:11px;color:var(--muted);display:block;margin:10px 0 2px;">Henchmen Notes</label>
 		  <textarea data-field="henchmen_notes" placeholder="Obligations owed, ransom terms, who answers to whom..." style="width:100%;min-height:60px;resize:vertical;"></textarea>
@@ -2187,7 +2187,7 @@ const SHEET_HTML = `
                   <div style="font-weight:600;font-size:13px;white-space:nowrap;">Pick Pockets</div>
                   <div style="font-size:11px;color:var(--muted);">
                     Base: <span class="thief-skill-percentage" data-skill="thief_pickpockets">--</span>
-                    <span class="thief-skill-adjusted" style="font-weight:600;color:#fbbf24;margin-left:8px;"></span>
+                    <span class="thief-skill-adjusted" style="font-weight:600;color:var(--warning);margin-left:8px;"></span>
                   </div>
                 </div>
                 <div style="display:flex;gap:12px;align-items:center;margin-left:auto;">
@@ -2203,7 +2203,7 @@ const SHEET_HTML = `
                   <div style="font-weight:600;font-size:13px;white-space:nowrap;">Open Locks</div>
                   <div style="font-size:11px;color:var(--muted);">
                     Base: <span class="thief-skill-percentage" data-skill="thief_openlocks">--</span>
-                    <span class="thief-skill-adjusted" style="font-weight:600;color:#fbbf24;margin-left:8px;"></span>
+                    <span class="thief-skill-adjusted" style="font-weight:600;color:var(--warning);margin-left:8px;"></span>
                   </div>
                 </div>
                 <div style="display:flex;gap:12px;align-items:center;margin-left:auto;">
@@ -2219,7 +2219,7 @@ const SHEET_HTML = `
                   <div style="font-weight:600;font-size:13px;white-space:nowrap;">Find/Remove Traps</div>
                   <div style="font-size:11px;color:var(--muted);">
                     Base: <span class="thief-skill-percentage" data-skill="thief_traps">--</span>
-                    <span class="thief-skill-adjusted" style="font-weight:600;color:#fbbf24;margin-left:8px;"></span>
+                    <span class="thief-skill-adjusted" style="font-weight:600;color:var(--warning);margin-left:8px;"></span>
                   </div>
                 </div>
                 <div style="display:flex;gap:12px;align-items:center;margin-left:auto;">
@@ -2235,7 +2235,7 @@ const SHEET_HTML = `
                   <div style="font-weight:600;font-size:13px;white-space:nowrap;">Move Silently</div>
                   <div style="font-size:11px;color:var(--muted);">
                     Base: <span class="thief-skill-percentage" data-skill="thief_movesilently">--</span>
-                    <span class="thief-skill-adjusted" style="font-weight:600;color:#fbbf24;margin-left:8px;"></span>
+                    <span class="thief-skill-adjusted" style="font-weight:600;color:var(--warning);margin-left:8px;"></span>
                   </div>
                 </div>
                 <div style="display:flex;gap:12px;align-items:center;margin-left:auto;">
@@ -2251,7 +2251,7 @@ const SHEET_HTML = `
                   <div style="font-weight:600;font-size:13px;white-space:nowrap;">Hide in Shadows</div>
                   <div style="font-size:11px;color:var(--muted);">
                     Base: <span class="thief-skill-percentage" data-skill="thief_hide">--</span>
-                    <span class="thief-skill-adjusted" style="font-weight:600;color:#fbbf24;margin-left:8px;"></span>
+                    <span class="thief-skill-adjusted" style="font-weight:600;color:var(--warning);margin-left:8px;"></span>
                   </div>
                 </div>
                 <div style="display:flex;gap:12px;align-items:center;margin-left:auto;">
@@ -2267,7 +2267,7 @@ const SHEET_HTML = `
                   <div style="font-weight:600;font-size:13px;white-space:nowrap;">Detect Noise</div>
                   <div style="font-size:11px;color:var(--muted);">
                     Base: <span class="thief-skill-percentage" data-skill="thief_detectnoise">--</span>
-                    <span class="thief-skill-adjusted" style="font-weight:600;color:#fbbf24;margin-left:8px;"></span>
+                    <span class="thief-skill-adjusted" style="font-weight:600;color:var(--warning);margin-left:8px;"></span>
                   </div>
                 </div>
                 <div style="display:flex;gap:12px;align-items:center;margin-left:auto;">
@@ -2283,7 +2283,7 @@ const SHEET_HTML = `
                   <div style="font-weight:600;font-size:13px;white-space:nowrap;">Climb Walls</div>
                   <div style="font-size:11px;color:var(--muted);">
                     Base: <span class="thief-skill-percentage" data-skill="thief_climb">--</span>
-                    <span class="thief-skill-adjusted" style="font-weight:600;color:#fbbf24;margin-left:8px;"></span>
+                    <span class="thief-skill-adjusted" style="font-weight:600;color:var(--warning);margin-left:8px;"></span>
                   </div>
                 </div>
                 <div style="display:flex;gap:12px;align-items:center;margin-left:auto;">
@@ -2299,7 +2299,7 @@ const SHEET_HTML = `
                   <div style="font-weight:600;font-size:13px;white-space:nowrap;">Read Languages</div>
                   <div style="font-size:11px;color:var(--muted);">
                     Base: <span class="thief-skill-percentage" data-skill="thief_readlang">--</span>
-                    <span class="thief-skill-adjusted" style="font-weight:600;color:#fbbf24;margin-left:8px;"></span>
+                    <span class="thief-skill-adjusted" style="font-weight:600;color:var(--warning);margin-left:8px;"></span>
                   </div>
                 </div>
                 <div style="display:flex;gap:12px;align-items:center;margin-left:auto;">
@@ -2644,7 +2644,7 @@ const SHEET_HTML = `
 	<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
 	
 	<!-- Rest & Recovery -->
-	<div style="margin-top:16px;padding:10px;background:rgba(150,100,255,0.05);border:1px solid rgba(150,100,255,0.2);border-radius:var(--radius-lg);">
+	<div style="margin-top:16px;padding:10px;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-lg);">
 	  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
 		<div style="display:flex;align-items:center;gap:8px;">
 		  <span style="font-size:16px;">💤</span>
@@ -2652,8 +2652,8 @@ const SHEET_HTML = `
 		</div>
 	  </div>
 	  <p style="font-size:11px;color:var(--muted);margin:0 0 8px 0;">Rest to recover hit points and clear temporary conditions. Spell recovery is separate &mdash; PHB Ch.7 requires eight hours' rest <em>and</em> study time.</p>
-	  <button class="rest-button" style="width:100%;padding:8px;font-size:13px;font-weight:600;background:rgba(150,100,255,0.2);border:1px solid rgba(150,100,255,0.4);color:var(--accent-light);border-radius:var(--radius-lg);cursor:pointer;">🛌 Rest</button>
-	  <button class="study-button" style="width:100%;margin-top:6px;padding:8px;font-size:13px;font-weight:600;background:rgba(100,150,255,0.2);border:1px solid rgba(100,150,255,0.4);color:var(--accent-light);border-radius:var(--radius-lg);cursor:pointer;display:none;" title="Recover spells that were cast or disrupted.&#10;PHB Ch.7: a restful night's sleep, then 10 minutes of study&#10;per spell level. Priests pray instead of studying, under&#10;identical conditions.">📖 Study / Pray</button>
+	  <button class="rest-button btn-primary" style="width:100%;">🛌 Rest</button>
+	  <button class="study-button" style="width:100%;margin-top:6px;display:none;" title="Recover spells that were cast or disrupted.&#10;PHB Ch.7: a restful night's sleep, then 10 minutes of study&#10;per spell level. Priests pray instead of studying, under&#10;identical conditions.">📖 Study / Pray</button>
 	</div>
 
 	<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
