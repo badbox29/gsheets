@@ -634,7 +634,7 @@
     .card{
       background:var(--panel);
       padding:16px;
-      border-radius:10px;
+      border-radius:var(--radius-lg);
       box-shadow:0 6px 18px rgba(0,0,0,0.4);
       border:1px solid var(--border);
       transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
@@ -643,7 +643,7 @@
     input[type=text], input[type=number], textarea, select{
       width:100%;
       padding:8px;
-      border-radius:6px;
+      border-radius:var(--radius);
       border:1px solid var(--border);
       background: var(--field);d:#1a1d29;
       color:inherit;
@@ -869,7 +869,7 @@
       gap:8px;
       align-items:flex-start;
       padding:8px;
-      border-radius:8px;
+      border-radius:var(--radius-lg);
       background:rgba(255,255,255,0.03);
       margin-bottom:8px;
       transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
@@ -887,7 +887,7 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      border-radius:8px;
+      border-radius:var(--radius-lg);
       background:rgba(255,255,255,0.04);
       overflow:hidden;
       transition: background-color 0.5s ease, border-color 0.5s ease;
@@ -900,7 +900,7 @@
     .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
     .stat{
       padding:8px;
-      border-radius:8px;
+      border-radius:var(--radius-lg);
       background:rgba(255,255,255,0.05);
       text-align:center;
       transition: background-color 0.5s ease, color 0.5s ease;
@@ -1104,7 +1104,7 @@
       padding: 8px 6px;
       margin-bottom: 6px;
       background: var(--glass);
-      border-radius: 6px;
+      border-radius: var(--radius);
       cursor: pointer;
       text-align: center;
       font-size: 12px;
@@ -1131,7 +1131,7 @@
       padding: 6px 12px;
       background: var(--glass);
       border: 1px solid transparent;
-      border-radius: 6px;
+      border-radius: var(--radius);
       cursor: pointer;
       font-size: 12px;
       user-select: none;
@@ -1158,7 +1158,7 @@
       background: var(--accent);
       color: var(--btn-fg);
       border: none;
-      border-radius: 6px;
+      border-radius: var(--radius);
       cursor: pointer;
       font-weight: 600;
       transition: background-color 0.3s ease;
@@ -1192,7 +1192,7 @@
       padding: 4px 6px;
       margin-bottom: 4px;
       background: rgba(255, 255, 255, 0.05);
-      border-radius: 4px;
+      border-radius: var(--radius);
       font-size: 11px;
       transition: background-color 0.2s;
       cursor: pointer;
@@ -1230,7 +1230,7 @@
       display: none;
       background: var(--panel);
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: var(--radius);
       padding: 8px;
       font-size: 11px;
       line-height: 1.4;
@@ -1383,7 +1383,7 @@
     .item.collapsible {
       background: var(--glass);
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: var(--radius-lg);
       margin-bottom: 8px;
       overflow: hidden;
     }
@@ -1687,7 +1687,7 @@
 	  padding: 10px;
 	  background: var(--panel);
 	  border: 1px solid var(--border);
-	  border-radius: 6px;
+	  border-radius: var(--radius);
 	  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 	  line-height: 1.5;
 	  font-weight: 400;
@@ -1822,7 +1822,7 @@
 	.item.gear .rail {
 	  grid-row: 1 / span 2;
 	  align-self: stretch;
-	  border-radius: 2px;
+	  border-radius: var(--radius-sm);
 	  background: var(--border);
 	}
 	.item.gear .rail.specialized              { background: var(--st-specialized); }
@@ -2001,7 +2001,7 @@
 	  background: transparent;
 	  color: var(--muted);
 	  border: 1px solid var(--border);
-	  border-radius: 2px;
+	  border-radius: var(--radius-sm);
 	  padding: 0;
 	  width: 18px;
 	  height: 13px;
@@ -2478,7 +2478,7 @@
          the base rule at line 1353, which would otherwise show through as a
          heavier top edge. */
       border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
-      border-radius: 6px;
+      border-radius: var(--radius-lg);
       padding: 12px 14px;
       gap: 8px 22px;
     }
