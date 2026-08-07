@@ -645,7 +645,7 @@
       padding:8px;
       border-radius:var(--radius);
       border:1px solid var(--border);
-      background: var(--field);d:#1a1d29;
+      background: var(--field);
       color:inherit;
       transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
     }
@@ -1709,17 +1709,17 @@
 	  display: inline-flex;
 	  align-items: center;
 	  gap: 10px;
-	  border: 1px solid var(--magic, #a98fd0);
+	  border: 1px solid var(--magic);
 	  border-radius: var(--radius, 4px);
 	  padding: 2px 8px;
 	  margin: 4px 0;
-	  background: color-mix(in srgb, var(--magic, #a98fd0) 7%, transparent);
+	  background: color-mix(in srgb, var(--magic) 7%, transparent);
 	}
 	.magic-group > label.magic-toggle {
 	  display: inline-flex;
 	  align-items: center;
 	  gap: 6px;
-	  color: var(--magic, #a98fd0);
+	  color: var(--magic);
 	  font-weight: 600;
 	  font-size: 12px;
 	  margin: 0;
@@ -1764,7 +1764,7 @@
 	  width: 8px;
 	  height: 8px;
 	  border-radius: 50%;
-	  background: var(--magic, #a98fd0);
+	  background: var(--magic);
 	  flex-shrink: 0;
 	  align-self: center;
 	}
@@ -1782,7 +1782,7 @@
 	  min-width: 26px;
 	  flex-shrink: 0;
 	  padding-left: 4px;
-	  color: var(--magic, #a98fd0);
+	  color: var(--magic);
 	  font-size: 11px;
 	  font-weight: 600;
 	  white-space: nowrap;
