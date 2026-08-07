@@ -113,7 +113,7 @@ const SHEET_HTML = `
           
           <!-- Multi-Class Fields (hidden by default) -->
           <div class="multi-class-fields" style="display:none;">
-            <div class="row" style="margin-top:8px;padding:8px;background:rgba(0,0,0,0.1);border-radius:4px;">
+            <div class="row" style="margin-top:8px;padding:8px;background:rgba(0,0,0,0.1);border-radius:var(--radius);">
               <div class="col" style="flex:2">
                 <label>Class 1</label>
                 <select data-field="mc_class1">
@@ -141,7 +141,7 @@ const SHEET_HTML = `
                <input data-field="mc_xp_next1" type="text" readonly>
               </div>
             </div>
-            <div class="row" style="margin-top:4px;padding:8px;background:rgba(0,0,0,0.1);border-radius:4px;">
+            <div class="row" style="margin-top:4px;padding:8px;background:rgba(0,0,0,0.1);border-radius:var(--radius);">
               <div class="col" style="flex:2">
                 <label>Class 2</label>
                 <select data-field="mc_class2">
@@ -169,7 +169,7 @@ const SHEET_HTML = `
                 <input data-field="mc_xp_next2" type="text" readonly>
               </div>
             </div>
-            <div class="row" style="margin-top:4px;padding:8px;background:rgba(0,0,0,0.1);border-radius:4px;">
+            <div class="row" style="margin-top:4px;padding:8px;background:rgba(0,0,0,0.1);border-radius:var(--radius);">
               <div class="col" style="flex:2">
                 <label>Class 3 (Optional)</label>
                 <select data-field="mc_class3">
@@ -195,7 +195,7 @@ const SHEET_HTML = `
             </div>
             <div class="row" style="margin-top:8px;">
               <div class="col">
-                <div class="mc-validation-message" style="padding:8px;border-radius:4px;font-size:12px;"></div>
+                <div class="mc-validation-message" style="padding:8px;border-radius:var(--radius);font-size:12px;"></div>
               </div>
             </div>
           </div>
@@ -204,12 +204,12 @@ const SHEET_HTML = `
           <div class="dual-class-fields" style="display:none;">
             <div class="row" style="margin-top:8px;">
               <div class="col" style="flex:3;">
-                <div style="padding:8px;background:rgba(0,0,0,0.05);border-radius:4px;font-size:11px;color:var(--muted);">
+                <div style="padding:8px;background:rgba(0,0,0,0.05);border-radius:var(--radius);font-size:11px;color:var(--muted);">
                   <strong>Dual-Class Setup:</strong> Enter your original class info, then specify your new class. You must have 15+ in original class prime requisites and 17+ in new class prime requisites.
                 </div>
               </div>
             </div>
-            <div class="row" style="margin-top:8px;padding:8px;background:rgba(0,0,0,0.1);border-radius:4px;">
+            <div class="row" style="margin-top:8px;padding:8px;background:rgba(0,0,0,0.1);border-radius:var(--radius);">
               <div class="col" style="flex:2;">
                 <label>Original Class</label>
                 <input data-field="dc_original_class" type="text" placeholder="e.g., Fighter">
@@ -230,16 +230,16 @@ const SHEET_HTML = `
             <div class="row" style="margin-top:4px;">
               <div class="col">
                 <div class="col">
-                <div class="dc-status-message" style="padding:8px;border-radius:4px;font-size:12px;"></div>
+                <div class="dc-status-message" style="padding:8px;border-radius:var(--radius);font-size:12px;"></div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Specialist wizard requirements warning (advisory only, never blocks) -->
-          <div class="specialist-validation-message" style="display:none;margin-top:8px;padding:8px;border-radius:4px;font-size:12px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
+          <div class="specialist-validation-message" style="display:none;margin-top:8px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
         <!-- Illegal class-group combination warning (advisory; switchable off in Settings) -->
-          <div class="class-group-validation-message" style="display:none;margin-top:8px;padding:8px;border-radius:4px;font-size:12px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
+          <div class="class-group-validation-message" style="display:none;margin-top:8px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
         </section>
 
         <!-- Ability Scores -->
@@ -446,8 +446,8 @@ const SHEET_HTML = `
 			</div>
 		  </div>
 
-		  <div class="dex-save-note" style="display:none;margin-top:12px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
-		  <div class="armor-save-note" style="display:none;margin-top:12px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
+		  <div class="dex-save-note" style="display:none;margin-top:12px;padding:8px;background:var(--glass);border-radius:var(--radius);font-size:12px;line-height:1.4;"></div>
+		  <div class="armor-save-note" style="display:none;margin-top:12px;padding:8px;background:var(--glass);border-radius:var(--radius);font-size:12px;line-height:1.4;"></div>
 		</section>
 		
 		</div>
@@ -657,7 +657,7 @@ const SHEET_HTML = `
             </div>
             
             <!-- Language Results -->
-            <div class="language-results" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:4px;padding:8px;">
+            <div class="language-results" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius);padding:8px;">
               <p style="color:var(--muted);text-align:center;padding:20px;">Click Refresh List to load available languages.</p>
             </div>
           </div>
@@ -705,7 +705,7 @@ const SHEET_HTML = `
             </div>
             
             <!-- Weapon Results -->
-            <div class="weapon-results" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:4px;padding:8px;">
+            <div class="weapon-results" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius);padding:8px;">
               <p style="color:var(--muted);text-align:center;padding:20px;">Click Refresh List to load available weapons.</p>
             </div>
           </div>
@@ -777,7 +777,7 @@ const SHEET_HTML = `
             </div>
             
             <!-- NWP Results -->
-            <div class="nwp-results" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:4px;padding:8px;">
+            <div class="nwp-results" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius);padding:8px;">
               <p style="color:var(--muted);text-align:center;padding:20px;">Click Refresh List to load available proficiencies.</p>
             </div>
           </div>
@@ -841,21 +841,21 @@ const SHEET_HTML = `
             </div>
           </div>
           <!-- Advisory campaign notes (single-in-the-world, level cap, etc.) -->
-          <div class="druid-role-note" style="display:none;margin-top:8px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
+          <div class="druid-role-note" style="display:none;margin-top:8px;padding:8px;background:var(--glass);border-radius:var(--radius);font-size:12px;line-height:1.4;"></div>
         </section>
 
         <!-- Ranger Stealth (PHB Table 18) -->
         <section class="section ranger-stealth-display" style="display:none;">
           <h3>Ranger Stealth</h3>
           <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;">
-            <div style="flex:1 1 220px;min-width:200px;padding:10px 12px;border:1px solid var(--success, #6fbf73);border-radius:4px;background:rgba(111,191,115,0.06);">
+            <div style="flex:1 1 220px;min-width:200px;padding:10px 12px;border:1px solid var(--success, #6fbf73);border-radius:var(--radius);background:rgba(111,191,115,0.06);">
               <div style="font-size:11px;font-weight:bold;letter-spacing:0.6px;text-transform:uppercase;color:var(--success, #6fbf73);margin-bottom:8px;">Natural Surroundings</div>
               <label>Hide in Shadows</label>
               <input data-field="ranger_hide" type="text" readonly title="PHB Table 18, adjusted for race (Table 27) and Dexterity (Table 28). Applies in forest, hill, marsh and other wild terrain.">
               <label style="margin-top:8px;">Move Silently</label>
               <input data-field="ranger_movesilently" type="text" readonly title="PHB Table 18, adjusted for race (Table 27) and Dexterity (Table 28). Applies in forest, hill, marsh and other wild terrain.">
             </div>
-            <div style="flex:1 1 220px;min-width:200px;padding:10px 12px;border:1px solid var(--warning, #e0a34a);border-radius:4px;background:rgba(224,163,74,0.06);">
+            <div style="flex:1 1 220px;min-width:200px;padding:10px 12px;border:1px solid var(--warning, #e0a34a);border-radius:var(--radius);background:rgba(224,163,74,0.06);">
               <div style="font-size:11px;font-weight:bold;letter-spacing:0.6px;text-transform:uppercase;color:var(--warning, #e0a34a);margin-bottom:8px;">Non-natural &mdash; Halved</div>
               <label>Hide in Shadows</label>
               <input data-field="ranger_hide_nonnatural" type="text" readonly title="Halved in non-natural surroundings such as a musty crypt or city streets (PHB Ch.3, Ranger).">
@@ -863,8 +863,8 @@ const SHEET_HTML = `
               <input data-field="ranger_move_nonnatural" type="text" readonly title="Halved in non-natural surroundings such as a musty crypt or city streets (PHB Ch.3, Ranger).">
             </div>
           </div>
-          <div class="ranger-stealth-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
-          <div class="ranger-stealth-dormant" style="display:none;margin-top:10px;padding:8px;border-radius:4px;font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
+          <div class="ranger-stealth-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:var(--radius);font-size:12px;line-height:1.4;"></div>
+          <div class="ranger-stealth-dormant" style="display:none;margin-top:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
         </section>
 
         <!-- Thief Abilities -->
@@ -887,9 +887,9 @@ const SHEET_HTML = `
             <div class="col"><label>Read Languages</label><input data-field="thief_readlang" type="number" min="0" max="100" readonly></div>
           </div>
 		  <!-- Dual-class dormancy advisory (advisory only, never blocks) -->
-		  <div class="thief-dormant-note" style="display:none;margin-top:10px;padding:8px;border-radius:4px;font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
+		  <div class="thief-dormant-note" style="display:none;margin-top:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
 		  <!-- Armor effect on thief skills (PHB Table 29) -->
-		  <div class="thief-armor-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
+		  <div class="thief-armor-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:var(--radius);font-size:12px;line-height:1.4;"></div>
 		  <!-- Hidden fields to store discretionary points allocated to each skill -->
           <input data-field="thief_points_pickpockets" type="hidden" value="0">
           <input data-field="thief_points_openlocks" type="hidden" value="0">
@@ -912,7 +912,7 @@ const SHEET_HTML = `
           </div>
           
           <div class="thief-points-content collapsed">
-            <div style="background:#1a1a1a;padding:12px;border-radius:4px;margin-bottom:12px;">
+            <div style="background:#1a1a1a;padding:12px;border-radius:var(--radius);margin-bottom:12px;">
               <div style="display:flex;justify-content:space-between;align-items:center;">
                 <span style="font-weight:600;">Total Points Available:</span>
                 <span class="thief-total-points" style="font-size:18px;font-weight:700;color:#fbbf24;">0</span>
@@ -1076,9 +1076,9 @@ const SHEET_HTML = `
 			  <div class="col"><label>9th</label><input data-field="slots9" type="text" readonly><div class="slot-breakdown" data-field="slot_breakdown_9"></div></div>
 			</div>
 			<!-- Specialist spell reminder (populated for specialist wizards only) -->
-			<div class="specialist-slot-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
+			<div class="specialist-slot-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:var(--radius);font-size:12px;line-height:1.4;"></div>
 			<!-- Wisdom gate on 6th/7th-level priest spells (PHB Table 24 footnotes) -->
-			<div class="wis-gate-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
+			<div class="wis-gate-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:var(--radius);font-size:12px;line-height:1.4;"></div>
         </section>
 
 		<!-- Grand Druid / Archdruid bonus spell-level pool (PHB Ch.3). The role
@@ -1208,8 +1208,8 @@ const SHEET_HTML = `
             </div>
             
             <!-- Spell Results -->
-            <div class="spell-int-cap-notice" style="display:none;font-size:11px;color:var(--error, #ff6b6b);padding:6px 8px;margin-bottom:8px;background:var(--glass);border-radius:4px;"></div>
-            <div class="spell-results" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:4px;padding:8px;">
+            <div class="spell-int-cap-notice" style="display:none;font-size:11px;color:var(--error, #ff6b6b);padding:6px 8px;margin-bottom:8px;background:var(--glass);border-radius:var(--radius);"></div>
+            <div class="spell-results" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius);padding:8px;">
               <p style="color:var(--muted);text-align:center;padding:20px;">No spells found. Select your class and spheres/schools, then click Refresh List.</p>
             </div>
           </div>
@@ -1295,7 +1295,7 @@ const SHEET_HTML = `
 			<!-- Overflow menu (for 5+ spellbooks) -->
 			<div class="spellbook-overflow-container" style="position:relative;flex-shrink:0;display:none;">
 			  <button class="spellbook-overflow-btn" style="padding:4px 12px;font-size:14px;">⋯</button>
-				<div class="spellbook-overflow-menu" style="display:none;position:absolute;top:100%;right:0;margin-top:4px;background:#232739;border:1px solid var(--border);border-radius:6px;padding:4px;min-width:180px;max-height:300px;overflow-y:auto;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,0.3);">
+				<div class="spellbook-overflow-menu" style="display:none;position:absolute;top:100%;right:0;margin-top:4px;background:#232739;border:1px solid var(--border);border-radius:var(--radius-lg);padding:4px;min-width:180px;max-height:300px;overflow-y:auto;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,0.3);">
 				<!-- Overflow items inserted here -->
 			  </div>
 			</div>
@@ -1330,7 +1330,7 @@ const SHEET_HTML = `
 			  <span class="prose spellbook-known-text">&mdash;</span>
 			</div>
 			<!-- Specialist free-spell entitlement (populated for specialist wizards only) -->
-			<div class="specialist-freespell-note" style="display:none;margin-bottom:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
+			<div class="specialist-freespell-note" style="display:none;margin-bottom:10px;padding:8px;background:var(--glass);border-radius:var(--radius);font-size:12px;line-height:1.4;"></div>
 			<div class="list spellbook-list"></div>
 		  </div>
 		</section>
@@ -1368,7 +1368,7 @@ const SHEET_HTML = `
 			<span class="pair">max carry <input data-field="encumbrance_max" type="text" readonly></span>
 			<span class="pair encumbrance-category-pair">category <input data-field="encumbrance_category" type="text" readonly></span>
 		  </div>
-		  <div class="encumbrance-magic-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;"></div>
+		  <div class="encumbrance-magic-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:var(--radius);font-size:12px;line-height:1.4;"></div>
 		</section>
 
 		<!--
@@ -1400,7 +1400,7 @@ const SHEET_HTML = `
 			<div class="col"><label>Run (×3)</label><input data-field="movement_running" type="text" readonly></div>
 			<div class="col"></div>
 		  </div>
-		  <div style="margin-top:10px;padding:8px;background:var(--glass);border-radius:4px;font-size:12px;line-height:1.4;">
+		  <div style="margin-top:10px;padding:8px;background:var(--glass);border-radius:var(--radius);font-size:12px;line-height:1.4;">
 			<strong>Climbing rate depends on the surface</strong> &mdash; see Tools &gt; Climbing.
 		  </div>
 		</section>
@@ -1450,7 +1450,7 @@ const SHEET_HTML = `
 			</div>
 			
 			<!-- Equipment Results -->
-			<div class="equipment-results" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:4px;padding:8px;">
+			<div class="equipment-results" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius);padding:8px;">
 			  <p style="color:var(--muted);text-align:center;padding:20px;">Click Refresh List to load available equipment.</p>
 			</div>
 		  </div>
@@ -1571,7 +1571,7 @@ const SHEET_HTML = `
 			</div>
 			
 			<!-- Weapon Results -->
-			<div class="weapon-inventory-browser-results" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:4px;padding:8px;">
+			<div class="weapon-inventory-browser-results" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius);padding:8px;">
 			  <p style="color:var(--muted);text-align:center;padding:20px;">Click Refresh List to load available weapons.</p>
 			</div>
 		  </div>
@@ -1629,7 +1629,7 @@ const SHEET_HTML = `
 			</div>
 			
 			<!-- Ammunition Results -->
-			<div class="ammunition-browser-results" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:4px;padding:8px;">
+			<div class="ammunition-browser-results" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius);padding:8px;">
 			  <p style="color:var(--muted);text-align:center;padding:20px;">Click Refresh List to load available ammunition.</p>
 			</div>
 		  </div>
@@ -1641,7 +1641,7 @@ const SHEET_HTML = `
 			Track arrows, bolts, sling stones, and other ammunition. Weight auto-updates encumbrance.
 		  </p>
 		  <div class="list ammunition-list"></div>
-		  <div style="margin-top:8px;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px;">
+		  <div style="margin-top:8px;padding:8px;background:rgba(255,255,255,0.03);border-radius:var(--radius-lg);">
 			<strong style="font-size:12px;">Total Ammo Weight:</strong> 
 			<span class="total-ammo-weight" style="color:var(--accent-light);font-weight:600;">0.0 lbs</span>
 		  </div>
@@ -1682,7 +1682,7 @@ const SHEET_HTML = `
 			</div>
 			
 			<!-- Armor Results -->
-			<div class="armor-browser-results" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:4px;padding:8px;">
+			<div class="armor-browser-results" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius);padding:8px;">
 			  <p style="color:var(--muted);text-align:center;padding:20px;">Click Refresh List to load available armor.</p>
 			</div>
 		  </div>
@@ -1691,7 +1691,7 @@ const SHEET_HTML = `
 		<!-- Armor & Shields -->
 		<section class="section">
 		  <!-- Class armor restrictions (advisory; never blocks) -->
-		  <div class="armor-restriction-note" style="display:none;margin-bottom:10px;padding:8px;border-radius:4px;font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
+		  <div class="armor-restriction-note" style="display:none;margin-bottom:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
 		  <!-- Rail key. Hidden until resolveArmorLegality exists to paint the
 		       rails: a key for colours nothing produces is worse than none. -->
 		  <div class="spell-listbar armor-rail-key" style="display:none;">
@@ -1714,7 +1714,7 @@ const SHEET_HTML = `
 			<span class="grp-rule"></span>
 			<button class="add-magic-item">+ Add</button>
 		  </div>
-		  <p style="font-size:12px;line-height:1.4;background:var(--glass);border-radius:4px;padding:8px;margin:0 0 12px;">
+		  <p style="font-size:12px;line-height:1.4;background:var(--glass);border-radius:var(--radius);padding:8px;margin:0 0 12px;">
 			Magical <strong>weapons</strong> and <strong>armor</strong> go on the Weapons and Armor tabs — tick
 			<em>Enchanted?</em> there so the bonuses reach THAC0, damage, weapon speed and Armor Class.
 			An enchanted weapon or suit recorded on this tab is a note only and changes no calculation.
@@ -1761,7 +1761,7 @@ const SHEET_HTML = `
               <input data-field="age" type="number" min="1" step="1" title="Current age in years. PHB Table 12 applies cumulative ability score adjustments at middle age, old age and venerable age. The sheet reports which bracket you have reached but never changes a score.">
             </div>
           </div>
-          <div class="aging-note" style="display:none;margin-top:8px;padding:8px;border-radius:4px;font-size:12px;line-height:1.45;border:1px solid var(--info, #6fb3d2);background:rgba(111,179,210,0.08);"></div>
+          <div class="aging-note" style="display:none;margin-top:8px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.45;border:1px solid var(--info, #6fb3d2);background:rgba(111,179,210,0.08);"></div>
           <div class="row" style="margin-top:8px">
             <div class="col"><label>Hair</label><input data-field="hair" type="text"></div>
             <div class="col"><label>Eyes</label><input data-field="eyes" type="text"></div>
@@ -1862,7 +1862,7 @@ const SHEET_HTML = `
 			  </select>
 			  <button class="refresh-animals" style="padding:4px 12px;font-size:12px;">Refresh</button>
 			</div>
-			<div class="animals-results" style="max-height:320px;overflow-y:auto;border:1px solid var(--border);border-radius:4px;padding:8px;"></div>
+			<div class="animals-results" style="max-height:320px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius);padding:8px;"></div>
 		  </div>
 		</section>
 
@@ -1929,7 +1929,7 @@ const SHEET_HTML = `
 			in a <em>lifetime</em> &mdash; retired, deceased and missing all still count
 			(PHB Ch.12).
 		  </p>
-		  <div class="henchman-limit-message" style="display:none;margin-bottom:8px;padding:8px;border-radius:4px;font-size:12px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
+		  <div class="henchman-limit-message" style="display:none;margin-bottom:8px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:rgba(224,163,74,0.08);"></div>
 		  <div class="list henchmen-list"></div>
 		  <label style="font-size:11px;color:var(--muted);display:block;margin:10px 0 2px;">Henchmen Notes</label>
 		  <textarea data-field="henchmen_notes" placeholder="Obligations owed, ransom terms, who answers to whom..." style="width:100%;min-height:60px;resize:vertical;"></textarea>
@@ -1968,7 +1968,7 @@ const SHEET_HTML = `
           <div class="section-group-head">
             <span class="grp-name">Notes</span>
             <span class="grp-rule"></span>
-            <select class="notes-category-selector" style="width:auto;padding:6px 12px;border-radius:6px;background:#1a1d29;color:inherit;border:1px solid var(--border);">
+            <select class="notes-category-selector" style="width:auto;padding:6px 12px;border-radius:var(--radius-lg);background:#1a1d29;color:inherit;border:1px solid var(--border);">
               <option value="session_log">Session Log</option>
               <option value="quest_journal">Quest Journal</option>
               <option value="npcs">Important NPCs</option>
@@ -2159,7 +2159,7 @@ const SHEET_HTML = `
             <!-- Roll History (right side) -->
             <div style="display:flex;flex-direction:column;min-height:0;">
               <h4 style="font-size:14px;margin-bottom:8px;">Roll History (most recent on top)</h4>
-              <div class="roll-history" style="flex:1 1 0;min-height:0;overflow-y:auto;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px;font-family:monospace;font-size:12px;margin-bottom:8px;">
+              <div class="roll-history" style="flex:1 1 0;min-height:0;overflow-y:auto;padding:8px;background:rgba(255,255,255,0.03);border-radius:var(--radius-lg);font-family:monospace;font-size:12px;margin-bottom:8px;">
                 <div style="color:var(--muted);font-style:italic;">Roll results will appear here...</div>
               </div>
               <button class="clear-roll-history" style="padding:6px 12px;font-size:12px;">Clear History</button>
@@ -2182,7 +2182,7 @@ const SHEET_HTML = `
             <div class="thief-skills-roller">
 			<h4 style="font-size:14px;margin-bottom:8px;">Thief Rolls</h4>
 			<!-- Pick Pockets -->
-              <div class="thief-skill-roll-item" style="display:flex;align-items:center;padding:8px;border:1px solid var(--border);border-radius:4px;margin-bottom:6px;">
+              <div class="thief-skill-roll-item" style="display:flex;align-items:center;padding:8px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:6px;">
                 <div style="flex:1;">
                   <div style="font-weight:600;font-size:13px;white-space:nowrap;">Pick Pockets</div>
                   <div style="font-size:11px;color:var(--muted);">
@@ -2198,7 +2198,7 @@ const SHEET_HTML = `
               </div>
               
               <!-- Open Locks -->
-              <div class="thief-skill-roll-item" style="display:flex;align-items:center;padding:8px;border:1px solid var(--border);border-radius:4px;margin-bottom:6px;">
+              <div class="thief-skill-roll-item" style="display:flex;align-items:center;padding:8px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:6px;">
                 <div style="flex:1;">
                   <div style="font-weight:600;font-size:13px;white-space:nowrap;">Open Locks</div>
                   <div style="font-size:11px;color:var(--muted);">
@@ -2214,7 +2214,7 @@ const SHEET_HTML = `
               </div>
               
               <!-- Find/Remove Traps -->
-              <div class="thief-skill-roll-item" style="display:flex;align-items:center;padding:8px;border:1px solid var(--border);border-radius:4px;margin-bottom:6px;">
+              <div class="thief-skill-roll-item" style="display:flex;align-items:center;padding:8px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:6px;">
                 <div style="flex:1;">
                   <div style="font-weight:600;font-size:13px;white-space:nowrap;">Find/Remove Traps</div>
                   <div style="font-size:11px;color:var(--muted);">
@@ -2230,7 +2230,7 @@ const SHEET_HTML = `
               </div>
               
               <!-- Move Silently -->
-              <div class="thief-skill-roll-item" style="display:flex;align-items:center;padding:8px;border:1px solid var(--border);border-radius:4px;margin-bottom:6px;">
+              <div class="thief-skill-roll-item" style="display:flex;align-items:center;padding:8px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:6px;">
                 <div style="flex:1;">
                   <div style="font-weight:600;font-size:13px;white-space:nowrap;">Move Silently</div>
                   <div style="font-size:11px;color:var(--muted);">
@@ -2246,7 +2246,7 @@ const SHEET_HTML = `
               </div>
               
               <!-- Hide in Shadows -->
-              <div class="thief-skill-roll-item" style="display:flex;align-items:center;padding:8px;border:1px solid var(--border);border-radius:4px;margin-bottom:6px;">
+              <div class="thief-skill-roll-item" style="display:flex;align-items:center;padding:8px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:6px;">
                 <div style="flex:1;">
                   <div style="font-weight:600;font-size:13px;white-space:nowrap;">Hide in Shadows</div>
                   <div style="font-size:11px;color:var(--muted);">
@@ -2262,7 +2262,7 @@ const SHEET_HTML = `
               </div>
               
               <!-- Detect Noise -->
-              <div class="thief-skill-roll-item" style="display:flex;align-items:center;padding:8px;border:1px solid var(--border);border-radius:4px;margin-bottom:6px;">
+              <div class="thief-skill-roll-item" style="display:flex;align-items:center;padding:8px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:6px;">
                 <div style="flex:1;">
                   <div style="font-weight:600;font-size:13px;white-space:nowrap;">Detect Noise</div>
                   <div style="font-size:11px;color:var(--muted);">
@@ -2278,7 +2278,7 @@ const SHEET_HTML = `
               </div>
               
               <!-- Climb Walls -->
-              <div class="thief-skill-roll-item" style="display:flex;align-items:center;padding:8px;border:1px solid var(--border);border-radius:4px;margin-bottom:6px;">
+              <div class="thief-skill-roll-item" style="display:flex;align-items:center;padding:8px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:6px;">
                 <div style="flex:1;">
                   <div style="font-weight:600;font-size:13px;white-space:nowrap;">Climb Walls</div>
                   <div style="font-size:11px;color:var(--muted);">
@@ -2294,7 +2294,7 @@ const SHEET_HTML = `
               </div>
               
               <!-- Read Languages -->
-              <div class="thief-skill-roll-item" style="display:flex;align-items:center;padding:8px;border:1px solid var(--border);border-radius:4px;margin-bottom:6px;">
+              <div class="thief-skill-roll-item" style="display:flex;align-items:center;padding:8px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:6px;">
                 <div style="flex:1;">
                   <div style="font-weight:600;font-size:13px;white-space:nowrap;">Read Languages</div>
                   <div style="font-size:11px;color:var(--muted);">
@@ -2313,7 +2313,7 @@ const SHEET_HTML = `
             <!-- Thief Roll History (right side) -->
             <div style="display:flex;flex-direction:column;min-height:0;">
               <h4 style="font-size:14px;margin-bottom:8px;">Thief Roll History (most recent on top)</h4>
-              <div class="thief-roll-history" style="flex:1 1 0;min-height:0;overflow-y:auto;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px;font-family:monospace;font-size:12px;border:1px solid var(--border);margin-bottom:8px;">
+              <div class="thief-roll-history" style="flex:1 1 0;min-height:0;overflow-y:auto;padding:8px;background:rgba(255,255,255,0.03);border-radius:var(--radius-lg);font-family:monospace;font-size:12px;border:1px solid var(--border);margin-bottom:8px;">
                 <div style="color:var(--muted);font-style:italic;">Thief skill roll results will appear here...</div>
               </div>
               <button class="clear-thief-roll-history" style="padding:6px 12px;font-size:12px;">Clear History</button>
@@ -2334,7 +2334,7 @@ const SHEET_HTML = `
           <div style="display:grid;grid-template-columns:65fr 35fr;gap:16px;">
             <!-- Turn Undead Table (left side) -->
             <div class="turn-undead-table">
-              <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;padding:8px;background:rgba(255,255,255,0.05);border-radius:4px;margin-bottom:8px;font-weight:600;font-size:11px;">
+              <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;padding:8px;background:rgba(255,255,255,0.05);border-radius:var(--radius);margin-bottom:8px;font-weight:600;font-size:11px;">
                 <div>Undead Type</div>
                 <div style="text-align:center;">Requirement</div>
                 <div></div>
@@ -2347,7 +2347,7 @@ const SHEET_HTML = `
             <!-- Turn History (right side) -->
             <div style="display:flex;flex-direction:column;min-height:0;">
               <h4 style="font-size:14px;margin-bottom:8px;">Turn History</h4>
-              <div class="turn-undead-history" style="flex:1 1 0;min-height:0;overflow-y:auto;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px;font-family:monospace;font-size:12px;border:1px solid var(--border);margin-bottom:8px;">
+              <div class="turn-undead-history" style="flex:1 1 0;min-height:0;overflow-y:auto;padding:8px;background:rgba(255,255,255,0.03);border-radius:var(--radius-lg);font-family:monospace;font-size:12px;border:1px solid var(--border);margin-bottom:8px;">
                 <div style="color:var(--muted);font-style:italic;">Turn undead results will appear here...</div>
               </div>
               <button class="clear-turn-undead-history" style="padding:6px 12px;font-size:12px;">Clear History</button>
@@ -2375,7 +2375,7 @@ const SHEET_HTML = `
 
             <div style="margin-top:12px;">
               <div style="font-size:12px;font-weight:600;margin-bottom:4px;">Roll History</div>
-              <div class="detection-history" style="height:120px;overflow-y:auto;padding:6px;background:rgba(255,255,255,0.03);border-radius:4px;font-family:monospace;font-size:11px;border:1px solid var(--border);">
+              <div class="detection-history" style="height:120px;overflow-y:auto;padding:6px;background:rgba(255,255,255,0.03);border-radius:var(--radius);font-family:monospace;font-size:11px;border:1px solid var(--border);">
                 <div style="color:var(--muted);font-style:italic;">Rolls will appear here...</div>
               </div>
               <button class="clear-detection-history" style="margin-top:4px;padding:4px 8px;font-size:11px;">Clear History</button>
@@ -2616,7 +2616,7 @@ const SHEET_HTML = `
 	<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
     
     <!-- Combat Tracker (Round + Conditions) -->
-    <div style="margin-top:16px;padding:10px;background:rgba(255,100,100,0.1);border:1px solid rgba(255,100,100,0.3);border-radius:6px;">
+    <div style="margin-top:16px;padding:10px;background:rgba(255,100,100,0.1);border:1px solid rgba(255,100,100,0.3);border-radius:var(--radius-lg);">
       <!-- Round Counter -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
         <div style="display:flex;align-items:center;gap:8px;">
@@ -2644,7 +2644,7 @@ const SHEET_HTML = `
 	<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
 	
 	<!-- Rest & Recovery -->
-	<div style="margin-top:16px;padding:10px;background:rgba(150,100,255,0.05);border:1px solid rgba(150,100,255,0.2);border-radius:6px;">
+	<div style="margin-top:16px;padding:10px;background:rgba(150,100,255,0.05);border:1px solid rgba(150,100,255,0.2);border-radius:var(--radius-lg);">
 	  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
 		<div style="display:flex;align-items:center;gap:8px;">
 		  <span style="font-size:16px;">💤</span>
@@ -2652,14 +2652,14 @@ const SHEET_HTML = `
 		</div>
 	  </div>
 	  <p style="font-size:11px;color:var(--muted);margin:0 0 8px 0;">Rest to recover hit points and clear temporary conditions. Spell recovery is separate &mdash; PHB Ch.7 requires eight hours' rest <em>and</em> study time.</p>
-	  <button class="rest-button" style="width:100%;padding:8px;font-size:13px;font-weight:600;background:rgba(150,100,255,0.2);border:1px solid rgba(150,100,255,0.4);color:var(--accent-light);border-radius:6px;cursor:pointer;">🛌 Rest</button>
-	  <button class="study-button" style="width:100%;margin-top:6px;padding:8px;font-size:13px;font-weight:600;background:rgba(100,150,255,0.2);border:1px solid rgba(100,150,255,0.4);color:var(--accent-light);border-radius:6px;cursor:pointer;display:none;" title="Recover spells that were cast or disrupted.&#10;PHB Ch.7: a restful night's sleep, then 10 minutes of study&#10;per spell level. Priests pray instead of studying, under&#10;identical conditions.">📖 Study / Pray</button>
+	  <button class="rest-button" style="width:100%;padding:8px;font-size:13px;font-weight:600;background:rgba(150,100,255,0.2);border:1px solid rgba(150,100,255,0.4);color:var(--accent-light);border-radius:var(--radius-lg);cursor:pointer;">🛌 Rest</button>
+	  <button class="study-button" style="width:100%;margin-top:6px;padding:8px;font-size:13px;font-weight:600;background:rgba(100,150,255,0.2);border:1px solid rgba(100,150,255,0.4);color:var(--accent-light);border-radius:var(--radius-lg);cursor:pointer;display:none;" title="Recover spells that were cast or disrupted.&#10;PHB Ch.7: a restful night's sleep, then 10 minutes of study&#10;per spell level. Priests pray instead of studying, under&#10;identical conditions.">📖 Study / Pray</button>
 	</div>
 
 	<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
 	
 	<!-- Combat Quick Reference -->
-	<div style="margin-top:16px;padding:10px;background:rgba(100,255,150,0.05);border:1px solid rgba(100,255,150,0.2);border-radius:6px;">
+	<div style="margin-top:16px;padding:10px;background:rgba(100,255,150,0.05);border:1px solid rgba(100,255,150,0.2);border-radius:var(--radius-lg);">
 	  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
 		<div style="display:flex;align-items:center;gap:8px;">
 		  <span style="font-size:16px;">⚔️</span>
@@ -2681,7 +2681,7 @@ const SHEET_HTML = `
 		</div>
 		<div style="margin-top:4px;">
 		  <strong>Attacks/Round:</strong> 
-		  <input class="combat-attacks-per-round" type="text" placeholder="1" style="width:40px;padding:2px 4px;text-align:center;background:var(--glass);border:1px solid var(--border);border-radius:3px;color:var(--text);font-size:11px;">
+		  <input class="combat-attacks-per-round" type="text" placeholder="1" style="width:40px;padding:2px 4px;text-align:center;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:11px;">
 		</div>
 	  </div>
 	  
@@ -2700,7 +2700,7 @@ const SHEET_HTML = `
 	<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
 	
 	<!-- Character Bonuses & Abilities (Quick Reference) -->
-	<div class="character-bonuses-section" style="display:none;margin-top:16px;padding:10px;background:rgba(100,255,150,0.05);border:1px solid rgba(100,255,150,0.2);border-radius:6px;">
+	<div class="character-bonuses-section" style="display:none;margin-top:16px;padding:10px;background:rgba(100,255,150,0.05);border:1px solid rgba(100,255,150,0.2);border-radius:var(--radius-lg);">
 	  <!-- Header -->
 	  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
 		<div style="display:flex;align-items:center;gap:8px;">
@@ -2736,7 +2736,7 @@ const SHEET_HTML = `
   </aside>
   <!-- Spell Details Modal -->
         <div class="spell-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:10000;justify-content:center;align-items:center;">
-          <div class="spell-modal-content" style="background:var(--panel);border-radius:8px;max-width:600px;max-height:80vh;overflow-y:auto;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+          <div class="spell-modal-content" style="background:var(--panel);border-radius:var(--radius-lg);max-width:600px;max-height:80vh;overflow-y:auto;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
             <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:16px;">
               <div>
                 <h2 class="spell-modal-name" style="margin:0 0 4px 0;"></h2>
@@ -2775,7 +2775,7 @@ const SHEET_HTML = `
 	       resized on every tab click, tall for Sync and tiny for Themes. A flex
 	       column pins the heading, tabs and Close, and gives the leftover space
 	       to .settings-scroll. -->
-	  <div style="background:var(--panel);border-radius:8px;max-width:520px;width:90%;height:85vh;display:flex;flex-direction:column;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+	  <div style="background:var(--panel);border-radius:var(--radius-lg);max-width:520px;width:90%;height:85vh;display:flex;flex-direction:column;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
 	    <h2 style="margin:0 0 4px 0;font-size:16px;">⚙ Settings</h2>
 	    <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Here you will find app-wide settings that impact the way the tool performs. Settings are categorized below. Click a tab to begin.</p>
 
@@ -2801,7 +2801,7 @@ const SHEET_HTML = `
 	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px;">Worker URL</label>
 	    <p style="font-size:11px;color:var(--muted);margin:0 0 6px;">Deploy the gsheets-worker to your Cloudflare account and paste the URL here.</p>
 	    <div style="display:flex;gap:6px;margin-bottom:4px;">
-	      <input type="text" class="kv-worker-url-inp" placeholder="https://gsheets-worker.your-subdomain.workers.dev" style="flex:1;padding:6px 8px;font-size:12px;background:var(--glass);border:1px solid var(--border);border-radius:4px;color:var(--text);">
+	      <input type="text" class="kv-worker-url-inp" placeholder="https://gsheets-worker.your-subdomain.workers.dev" style="flex:1;padding:6px 8px;font-size:12px;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);">
 	      <button class="kv-save-worker-url" style="padding:6px 12px;font-size:12px;">Save</button>
 	    </div>
 	    <div class="kv-worker-url-status" style="font-size:11px;color:var(--accent-light);min-height:16px;margin-bottom:16px;"></div>
@@ -2816,7 +2816,7 @@ const SHEET_HTML = `
 	    <p style="font-size:11px;margin:0 0 6px;"><strong>Step 2</strong> — Your sync token is your identity. Copy it and keep it safe. On a new browser, use <em>Enter Token</em> to paste it so both devices share the same KV namespace. Your token is also included in any JSON export.</p>
 
 	    <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
-	      <input type="text" class="kv-token-display" readonly style="flex:1;padding:6px 8px;font-size:11px;font-family:monospace;background:var(--glass);border:1px solid var(--border);border-radius:4px;color:var(--muted);">
+	      <input type="text" class="kv-token-display" readonly style="flex:1;padding:6px 8px;font-size:11px;font-family:monospace;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);color:var(--muted);">
 	      <button class="kv-copy-token" style="padding:6px 10px;font-size:11px;">Copy</button>
 	      <button class="kv-enter-token" style="padding:6px 10px;font-size:11px;">Enter Token</button>
 	      <button class="kv-reset-token" style="padding:6px 10px;font-size:11px;">Reset</button>
@@ -2831,7 +2831,7 @@ const SHEET_HTML = `
 	    <div class="kv-token-status" style="font-size:11px;color:var(--accent-light);min-height:14px;margin-bottom:12px;"></div>
 
 	    <!-- Auto Sync Toggle -->
-	    <div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--glass);border-radius:4px;margin-bottom:8px;">
+	    <div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--glass);border-radius:var(--radius);margin-bottom:8px;">
 	      <input type="checkbox" class="kv-enabled-chk" style="width:16px;height:16px;cursor:pointer;">
 	      <span style="font-size:12px;">Enable automatic KV sync</span>
 	      <span class="kv-sync-status" style="margin-left:auto;font-size:11px;color:var(--muted);"></span>
@@ -2907,7 +2907,7 @@ const SHEET_HTML = `
 
 	<!-- Goods & Services Price Reference (read-only) -->
 	<div class="goods-modal-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:10000;justify-content:center;align-items:center;">
-	  <div style="background:var(--panel);border-radius:8px;max-width:640px;width:94%;max-height:85vh;overflow-y:auto;padding:20px 24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+	  <div style="background:var(--panel);border-radius:var(--radius-lg);max-width:640px;width:94%;max-height:85vh;overflow-y:auto;padding:20px 24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
 	    <h2 style="margin:0 0 4px 0;font-size:16px;">Goods &amp; Services Price Reference</h2>
 	    <p style="font-size:12px;color:var(--muted);margin:0 0 12px;">
 	      PHB Chapter 6, Table 44. Reference only &mdash; nothing here can be added to your
@@ -2924,7 +2924,7 @@ const SHEET_HTML = `
 	        <option value="Service">Service</option>
 	      </select>
 	    </div>
-	    <div class="goods-results" style="max-height:50vh;overflow-y:auto;border:1px solid var(--border);border-radius:4px;padding:8px;"></div>
+	    <div class="goods-results" style="max-height:50vh;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius);padding:8px;"></div>
 	    <div style="display:flex;justify-content:flex-end;margin-top:16px;">
 	      <button class="goods-modal-close" style="padding:8px 16px;">Close</button>
 	    </div>
@@ -2937,11 +2937,11 @@ const SHEET_HTML = `
 	       tab is showing, and the Blank Sheet panel is a fraction of the
 	       character one, so the modal jumped size on every tab click.
 	       overflow-y moves off this element onto .print-modal-body. -->
-	  <div style="background:var(--panel);border-radius:8px;max-width:660px;width:94%;height:85vh;display:flex;flex-direction:column;padding:20px 24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+	  <div style="background:var(--panel);border-radius:var(--radius-lg);max-width:660px;width:94%;height:85vh;display:flex;flex-direction:column;padding:20px 24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
 	    <h2 style="margin:0 0 4px 0;font-size:16px;">🖨 Print Character Sheet</h2>
 	    <p style="font-size:12px;color:var(--muted);margin:0 0 12px;">Choose how the sheet should look, then pick a tab below.</p>
 
-	    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:8px 10px;background:var(--glass);border-radius:4px;">
+	    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:8px 10px;background:var(--glass);border-radius:var(--radius);">
 	      <label style="font-size:12px;color:var(--text);margin:0;white-space:nowrap;">Colour scheme</label>
 	      <select class="print-palette" style="width:auto;font-size:11px;padding:3px 6px;">
 	        <option value="graphite">Iron Gall &mdash; no colour</option>
@@ -2954,7 +2954,7 @@ const SHEET_HTML = `
 	      <span style="font-size:10px;color:var(--muted);">Tints section rules and table headers. All schemes print as grey on a mono printer.</span>
 	    </div>
 
-	    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:8px 10px;background:var(--glass);border-radius:4px;">
+	    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:8px 10px;background:var(--glass);border-radius:var(--radius);">
 	      <label style="font-size:12px;color:var(--text);margin:0;white-space:nowrap;">Title font</label>
 	      <select class="print-title-font" style="width:auto;font-size:11px;padding:3px 6px;">
 	        <option value="Cinzel">Cinzel &mdash; Roman caps</option>
@@ -2964,7 +2964,7 @@ const SHEET_HTML = `
 	      <span style="font-size:10px;color:var(--muted);">Section headings only. Embedded fonts add a moment to the first print.</span>
 	    </div>
 
-	    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:8px 10px;background:var(--glass);border-radius:4px;">
+	    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:8px 10px;background:var(--glass);border-radius:var(--radius);">
 	      <label style="font-size:12px;color:var(--text);margin:0;white-space:nowrap;">Body font</label>
 	      <select class="print-body-font" style="width:auto;font-size:11px;padding:3px 6px;">
 	        <option value="PlexSans">IBM Plex Sans</option>
@@ -3015,7 +3015,7 @@ const SHEET_HTML = `
 
 	    <!-- Character -->
 	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Character</label>
-	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:4px;margin-bottom:12px;">
+	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:var(--radius);margin-bottom:12px;">
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="abilities"><span>Class / Racial / Kit Abilities</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="powersHindrances"><span>Powers &amp; Hindrances</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="thiefSkills"><span>Thief Skills</span></label>
@@ -3026,7 +3026,7 @@ const SHEET_HTML = `
 
 	    <!-- Magic -->
 	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Magic</label>
-	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:4px;margin-bottom:12px;">
+	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:var(--radius);margin-bottom:12px;">
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="spellAccess"><span>Spell Slots &amp; Access</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="memorized"><span>Memorized Spells</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="spellbooks"><span>Spellbook(s)</span></label>
@@ -3042,7 +3042,7 @@ const SHEET_HTML = `
 
 	    <!-- Gear -->
 	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Gear</label>
-	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:4px;margin-bottom:12px;">
+	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:var(--radius);margin-bottom:12px;">
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="equipment"><span>Equipment &amp; Valuables</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="magicItems"><span>Magic Items</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="armorAmmo"><span>Armor &amp; Ammunition</span></label>
@@ -3050,7 +3050,7 @@ const SHEET_HTML = `
 
 	    <!-- Background -->
 	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Background &amp; Followers</label>
-	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:4px;margin-bottom:12px;">
+	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:var(--radius);margin-bottom:12px;">
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="details"><span>Character Details</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="background"><span>Background / History</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="henchmen"><span>Henchmen</span></label>
@@ -3061,7 +3061,7 @@ const SHEET_HTML = `
 
 	    <!-- Journal -->
 	    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Journal</label>
-	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:4px;margin-bottom:16px;">
+	    <div class="print-group" style="padding:8px;background:var(--glass);border-radius:var(--radius);margin-bottom:16px;">
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="sessionLog"><span>Session Log</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="questJournal"><span>Quest Journal</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="npcs"><span>NPCs</span></label>
@@ -3137,14 +3137,14 @@ const SHEET_HTML = `
 	  </div>
 	</div>
 	<div class="avatar-modal-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:10000;justify-content:center;align-items:center;">
-	  <div style="background:var(--panel);border-radius:8px;max-width:520px;width:94%;max-height:90vh;overflow-y:auto;padding:20px 24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+	  <div style="background:var(--panel);border-radius:var(--radius-lg);max-width:520px;width:94%;max-height:90vh;overflow-y:auto;padding:20px 24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
 	    <h2 style="margin:0 0 4px 0;font-size:16px;">Adjust Portrait</h2>
 	    <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Drag the image to reposition, and zoom to fill the frame. Whatever sits inside the box is what gets saved and printed.</p>
 
 	    <!-- The crop window is a FIXED 3:2 frame; the image moves behind it.
 	         Sizing the frame rather than a draggable selection makes a
 	         wrong-shaped result impossible. -->
-	    <div class="avatar-crop-frame" style="position:relative;width:100%;aspect-ratio:3 / 2;overflow:hidden;background:#000;border:1px solid var(--border);border-radius:4px;cursor:grab;touch-action:none;">
+	    <div class="avatar-crop-frame" style="position:relative;width:100%;aspect-ratio:3 / 2;overflow:hidden;background:#000;border:1px solid var(--border);border-radius:var(--radius);cursor:grab;touch-action:none;">
 	      <img class="avatar-crop-img" alt="" style="position:absolute;transform-origin:0 0;user-select:none;-webkit-user-drag:none;pointer-events:none;">
 	    </div>
 
