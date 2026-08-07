@@ -677,7 +677,14 @@
        surface, .btn-quiet does not. Drop the fill too and those two become the
        same shape, separated only by text colour.
        ======================================================================== */
-    button{
+    /* :where() ZEROES SPECIFICITY -- deliberately. This is the DEFAULT, and a
+       default must lose to every rule that has an opinion. Written as plain
+       `button{}` it computes as (0,0,1) and `button:hover` as (0,1,1), which
+       beat .next-round-btn (0,1,0) -- so the base hover colour overrode every
+       bespoke button's own colour and Next Round went gold-on-gold. At (0,0,0)
+       nothing has to be patched: .next-round-btn, .remove-btn, .toggle-btn, the
+       gear and spell row buttons all keep their own treatment automatically. */
+    :where(button){
       background:var(--glass);
       color:var(--accent-light);
       padding:6px 12px;
@@ -689,7 +696,7 @@
       font-family:inherit;
       transition: background-color .12s ease, color .12s ease, border-color .12s ease;
     }
-    button:hover{
+    :where(button:hover){
       border-color:var(--accent);
       color:var(--accent);
       background:color-mix(in srgb, var(--accent) 10%, transparent);
@@ -737,6 +744,60 @@
       border-color:var(--st-forbidden);
       color:var(--st-forbidden);
       background:color-mix(in srgb, var(--st-forbidden) 14%, transparent);
+    }
+
+    /* ------------------------------------------------------------------------
+       CLASSIFY BY CONVENTION, not by hand. The markup already names these
+       consistently -- add-*, toggle-*-visibility, refresh-*, clear-*-history --
+       so 48 buttons are covered by four selectors. Adding a new browser or list
+       inherits the right treatment automatically; a per-button class would have
+       to be remembered every time.
+       ------------------------------------------------------------------------ */
+
+    /* PRIMARY: the "+ Add" on a section band. One per band, and on a populated
+       tab they sit hundreds of pixels apart -- the crowding only looks bad on an
+       empty sheet. */
+    button[class^="add-"]{
+      background:var(--accent);
+      color:var(--btn-fg);
+      border-color:var(--accent);
+    }
+    button[class^="add-"]:hover{
+      background:var(--accent-light);
+      border-color:var(--accent-light);
+      color:var(--btn-fg);
+    }
+    /* EXCEPTION: this one sits in the round tracker, which already has Next
+       Round as its primary. A panel gets ONE. */
+    button.add-condition{
+      background:var(--glass);
+      color:var(--accent-light);
+      border-color:transparent;
+    }
+    button.add-condition:hover{
+      background:color-mix(in srgb, var(--accent) 10%, transparent);
+      border-color:var(--accent);
+      color:var(--accent);
+    }
+
+    /* QUIET: disclosures and repeatable utilities. These carry inline padding
+       and font-size in the markup, which beats a stylesheet -- so this sets
+       colour and border only, and they keep their current size. */
+    button[class^="toggle-"],
+    button[class^="refresh-"],
+    button[class^="clear-"],
+    button.open-goods-modal{
+      background:transparent;
+      border-color:transparent;
+      color:var(--muted);
+    }
+    button[class^="toggle-"]:hover,
+    button[class^="refresh-"]:hover,
+    button[class^="clear-"]:hover,
+    button.open-goods-modal:hover{
+      background:var(--glass);
+      border-color:transparent;
+      color:var(--text);
     }
     .ghost{
       background:var(--glass);
