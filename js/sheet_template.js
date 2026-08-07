@@ -2591,7 +2591,7 @@ const SHEET_HTML = `
     <div class="controls">
       <button class="upload-avatar">Upload Avatar</button>
       <button class="adjust-avatar">Adjust</button>
-      <button class="remove-avatar">Remove</button>
+      <button class="remove-avatar btn-danger">Remove</button>
     </div>
 	
 	<hr style="margin:24px 0;border:none;border-top:1px solid var(--accent);opacity:0.5;">
@@ -2606,7 +2606,7 @@ const SHEET_HTML = `
         <button class="open-local">Open…</button>
         <button class="export-json">Export</button>
         <button class="import-json">Import</button>
-		<button class="delete-char">Delete</button>
+		<button class="delete-char btn-danger">Delete</button>
         <button class="print">Print</button>
 		<button class="kv-settings">⚙ Settings</button>
 		<input class="file-input import-file" type="file" accept="application/json">
