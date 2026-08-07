@@ -653,21 +653,87 @@
     .row{display:flex;gap:8px}
     .row .col{flex:1}
     .buttons{display:flex;gap:8px;flex-wrap:wrap}
+    /* ========================================================================
+       CONTROL LANGUAGE. Every control used to be a filled accent slab, so a
+       destructive Delete, a Show/Hide disclosure and THE TAB YOU ARE CURRENTLY
+       ON were visually identical -- "where you are" and "what you can do"
+       shared one treatment.
+
+       Four roles. The BASE is secondary, so an unclassed button is quiet by
+       default and only the exceptions need marking.
+
+         (base)        secondary  -- faint border, accent-light text
+         .btn-primary  filled     -- ONE per panel, and only where that panel
+                                     has a single obvious thing to do
+         .btn-quiet    text only  -- disclosures, steppers, row actions
+         .btn-danger   text only  -- destructive; outlines itself on hover
+
+       The border is --border at REST and --accent on HOVER. Chosen over an
+       accent border at rest: that would put the accent back on ~150 elements,
+       and it spends all its signal before you reach for anything, leaving hover
+       nowhere to go.
+       ======================================================================== */
     button{
+      background:transparent;
+      color:var(--accent-light);
+      padding:6px 12px;
+      border-radius:var(--radius);
+      border:1px solid var(--border);
+      cursor:pointer;
+      font-weight:600;
+      font-size:12px;
+      font-family:inherit;
+      transition: background-color .12s ease, color .12s ease, border-color .12s ease;
+    }
+    button:hover{
+      border-color:var(--accent);
+      color:var(--accent);
+      background:color-mix(in srgb, var(--accent) 10%, transparent);
+    }
+
+    /* ONE per panel. Weapons has "+ Add"; the round tracker has "Next Round";
+       Rest has "Rest". Export/Import has NONE -- those eight are genuine peers
+       and Save is not more important than Export. */
+    button.btn-primary{
       background:var(--accent);
       /* NOT a hardcoded near-black. This sits ON an accent fill, and the accent
          is DARK in every light mode -- black text on it is unreadable, which is
          exactly what shipped. --btn-fg is the token for foreground-on-accent
          and flips with the mode. */
       color:var(--btn-fg);
-      padding:8px 12px;
-      border-radius:8px;
-      border:none;
-      cursor:pointer;
-      font-weight:600;
-      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+      border-color:var(--accent);
     }
-    button:hover{background:var(--accent-light)}
+    button.btn-primary:hover{
+      background:var(--accent-light);
+      border-color:var(--accent-light);
+      color:var(--btn-fg);
+    }
+
+    /* Row actions matter most here: there are dozens per page, and at full
+       button weight they out-shout the data they belong to. */
+    button.btn-quiet{
+      border-color:transparent;
+      color:var(--muted);
+      padding:5px 8px;
+      font-size:11px;
+    }
+    button.btn-quiet:hover{
+      border-color:transparent;
+      color:var(--text);
+      background:var(--glass);
+    }
+
+    button.btn-danger{
+      border-color:transparent;
+      color:var(--st-forbidden);
+      padding:5px 8px;
+      font-size:11px;
+    }
+    button.btn-danger:hover{
+      border-color:var(--st-forbidden);
+      color:var(--st-forbidden);
+      background:color-mix(in srgb, var(--st-forbidden) 14%, transparent);
+    }
     .ghost{
       background:var(--glass);
       color:var(--text);
