@@ -1317,9 +1317,12 @@
 	  background: rgba(255,255,255,0.05);
 	}
 	/* Generic highlight for auto-modified fields */
+	/* "This field was modified for you." Was a hardcoded electric cyan that
+	   appeared nowhere else in the app and ignored every theme. --info is the
+	   right token: it means informational rather than good, bad or magical. */
 	input.auto-bonus {
-	  box-shadow: 0 0 4px rgba(0, 200, 255, 0.6);
-	  border-color: rgba(0, 200, 255, 0.8);
+	  box-shadow: 0 0 4px color-mix(in srgb, var(--info) 60%, transparent);
+	  border-color: color-mix(in srgb, var(--info) 80%, transparent);
 	}
 	/* === Saving Throws Section === */
 	.saving-throws .save-pair { display: block; }
