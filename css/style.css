@@ -740,10 +740,21 @@
       padding:5px 8px;
       font-size:11px;
     }
+    /* DESTRUCTIVE IS THE ONLY CONTROL THAT GOES SOLID ON HOVER. Everything else
+       gets a 10% wash and an accent outline.
+
+       This is deliberately NOT a colour distinction. In a red-accented theme --
+       Bloodstone, Emberforge -- "red means danger" cannot be told apart from
+       "red means theme", because the theme owns red. Measured: Emberforge's
+       accent is dE 25.3 from --st-forbidden, Bloodstone's 26.9. An earlier note
+       dismissed those as harmless because an accent is a band and a status
+       colour is a 3px rail, so they never touch -- true at the time, and then
+       this pass put --st-forbidden onto buttons sitting beside accent-hovered
+       ones. Filling is a channel hue cannot collide with. */
     button.btn-danger:hover{
       border-color:var(--st-forbidden);
-      color:var(--st-forbidden);
-      background:color-mix(in srgb, var(--st-forbidden) 14%, transparent);
+      background:var(--st-forbidden);
+      color:var(--btn-fg);
     }
 
     /* ------------------------------------------------------------------------
@@ -1437,7 +1448,8 @@
     }
     .remove-btn:hover {
       border-color: var(--st-forbidden);
-      background: color-mix(in srgb, var(--st-forbidden) 14%, transparent);
+      background: var(--st-forbidden);
+      color: var(--btn-fg);
     }
     
     .item-body {
