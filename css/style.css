@@ -879,12 +879,89 @@
       border-radius:var(--radius-lg);
       background:rgba(255,255,255,0.04);
       overflow:hidden;
+      /* The crop is now expressed by positioning the image inside this box, so
+         the box has to be the containing block for it. */
+      position:relative;
       transition: background-color 0.5s ease, border-color 0.5s ease;
     }
-    /* cover, not contain: everything stored from the cropper is already 3:2, so
-       there is nothing to crop -- but a legacy portrait of some other shape
-       fills the box rather than sitting in bars. Adjust re-crops it properly. */
-    .avatar img{width:100%;height:100%;object-fit:cover}
+    /* Long-press must not raise iOS's copy/save sheet on top of our own
+       preview, and a drag-select of the image cancels the press. */
+    .avatar.has-portrait{
+      cursor:zoom-in;
+      -webkit-touch-callout:none;
+      user-select:none;
+      -webkit-user-select:none;
+    }
+    /* BASE state = "no crop recorded", which is what a legacy portrait saved as
+       a bare data URL gets. Those are already 3:2, so cover is a no-op on them
+       and merely stops an odd-shaped one sitting in bars.
+
+       When a crop IS recorded, app.js overrides width/height/top/left inline
+       with PERCENTAGES of this box. Percentages, not pixels, so the framing
+       survives a sidebar resize with no recompute and no resize listener. */
+    .avatar img{
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    /* === PORTRAIT WINDOW ===
+       The full artwork, shown on hover-dwell or long-press. Exists because the
+       .avatar box is 3:2 landscape while character art is almost always
+       portrait -- the crop is a THUMBNAIL FRAMING CHOICE now, not an edit, and
+       this is where the un-cropped original is seen.
+
+       Below the crop modal's z-index (10000) on purpose: adjusting a crop while
+       the preview floats over it would be nonsense, so the modal wins. */
+    .portrait-pop-backdrop{
+      position:fixed;
+      inset:0;
+      z-index:9500;
+      background:transparent;
+    }
+    .portrait-pop{
+      position:fixed;
+      z-index:9501;
+      background:var(--panel);
+      border:1px solid var(--accent);
+      border-radius:var(--radius);
+      padding:11px;
+      box-shadow:0 8px 28px rgba(0,0,0,0.45);
+      /* Fades in only. The dwell delay is the real "don't flash at me" guard;
+         this just softens the arrival. */
+      opacity:0;
+      transition:opacity .18s ease;
+      pointer-events:none;
+    }
+    .portrait-pop.open{opacity:1}
+    .portrait-pop img{
+      display:block;
+      /* Sized by the image's own shape -- a tall portrait stays tall. Capped so
+         a large source cannot run off the viewport. */
+      max-width:300px;
+      max-height:62vh;
+      width:auto;
+      height:auto;
+      border:1px solid var(--border);
+    }
+    /* The four corner flourishes. Absolute against the frame, one SVG each so
+       nothing is stretched -- a single overlay SVG scaled to the frame would
+       distort the arcs on a tall image. */
+    .portrait-corner{
+      position:absolute;
+      width:14px;
+      height:14px;
+      color:var(--accent);
+      pointer-events:none;
+    }
+    .portrait-corner.tl{top:3px;left:3px}
+    .portrait-corner.tr{top:3px;right:3px;transform:rotate(90deg)}
+    .portrait-corner.br{bottom:3px;right:3px;transform:rotate(180deg)}
+    .portrait-corner.bl{bottom:3px;left:3px;transform:rotate(270deg)}
     .controls{display:flex;gap:8px;margin-top:8px}
     .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
     .stat{
