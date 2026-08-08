@@ -2625,23 +2625,21 @@ function moveBondedToUnbonded(el, onChange){
 
 function makeMountNode(m, onChange){
   const el = document.createElement('div');
-  el.className = 'item';
-  el.style.flexDirection = 'column';
-  el.style.alignItems = 'stretch';
-  el.style.padding = '12px';
+  el.className = 'item follower';
   // Kept so fields this UI does not display survive a move -- see the
   // comment above readNodeFields.
   el._data = m || {};
   
   el.innerHTML =
-    '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div style="flex:1;">Mount/Vehicle Name</div>' +
-      '<div style="width:120px;">Type</div>' +
-      '<div style="width:80px;"></div>' + // Space for Details button
-      '<div style="width:70px;"></div>' + // Space for Remove button
-    '</div>' +
-    '<div style="display:flex;gap:8px;align-items:stretch;margin-bottom:8px;">' +
-      '<input class="mount-name" placeholder="e.g., Shadowfax" value="'+escapeHtml(m.name||'')+'" style="flex:1;font-weight:bold;">' +
+    '<div class="fol-rail"></div>' +
+    '<div class="fol-r1">' +
+      '<input class="mount-name" placeholder="e.g., Shadowfax" value="'+escapeHtml(m.name||'')+'">' +
+      '<select class="mount-status">' +
+        '<option value="Active"'+((m.status||'Active')==='Active'?' selected':'')+'>Active</option>' +
+        '<option value="Retired"'+((m.status||'')==='Retired'?' selected':'')+'>Retired</option>' +
+        '<option value="Deceased"'+((m.status||'')==='Deceased'?' selected':'')+'>Deceased</option>' +
+        '<option value="Missing"'+((m.status||'')==='Missing'?' selected':'')+'>Missing</option>' +
+      '</select>' +
       '<select class="mount-type" style="width:120px;">' +
         '<option value=""'+((m.type||'')==''?' selected':'')+'>--</option>' +
         '<option value="Animal"'+((m.type||'')==='Animal'?' selected':'')+'>Animal</option>' +
@@ -2683,25 +2681,16 @@ function makeMountNode(m, onChange){
           '<input class="mount-com" type="number" placeholder="--" value="'+escapeHtml(m.com||'')+'" style="width:100%;"></div>' +
       '</div>' +
     '</div>' +
+    '<div class="fol-r2">' +
+      '<span class="fol-stat">hp<input class="mount-hp" type="number" placeholder="0" value="'+escapeHtml(m.hp||'')+'"></span>' +
+      '<span class="fol-stat">ac<input class="mount-ac" type="number" placeholder="10" value="'+escapeHtml(m.ac||'')+'"></span>' +
+      '<span class="fol-stat">mv<input class="mount-movement" placeholder="e.g., 24" value="'+escapeHtml(m.movement||'')+'"></span>' +
+      '<span class="fol-stat wide">carries<input class="mount-capacity" placeholder="e.g., 400 lbs" value="'+escapeHtml(m.capacity||'')+'"></span>' +
+    '</div>' +
     '<div class="mount-details" style="display:none;margin-top:8px;">' +
-      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">' +
-        '<div><label style="font-size:11px;color:var(--muted);">HP</label>' +
-          '<input class="mount-hp" type="number" placeholder="0" value="'+escapeHtml(m.hp||'')+'" style="width:100%;"></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">AC</label>' +
-          '<input class="mount-ac" type="number" placeholder="10" value="'+escapeHtml(m.ac||'')+'" style="width:100%;"></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">Movement</label>' +
-          '<input class="mount-movement" placeholder="e.g., 24" value="'+escapeHtml(m.movement||'')+'" style="width:100%;"></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">Carrying Capacity</label>' +
-          '<input class="mount-capacity" placeholder="e.g., 400 lbs" value="'+escapeHtml(m.capacity||'')+'" style="width:100%;"></div>' +
+     '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">' +
         '<div><label style="font-size:11px;color:var(--muted);">Cost</label>' +
           '<input class="mount-cost" placeholder="e.g., 250 gp" value="'+escapeHtml(m.cost||'')+'" style="width:100%;"></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">Status</label>' +
-          '<select class="mount-status" style="width:100%;">' +
-            '<option value="Active"'+((m.status||'Active')==='Active'?' selected':'')+'>Active</option>' +
-            '<option value="Retired"'+((m.status||'')==='Retired'?' selected':'')+'>Retired</option>' +
-            '<option value="Deceased"'+((m.status||'')==='Deceased'?' selected':'')+'>Deceased</option>' +
-            '<option value="Missing"'+((m.status||'')==='Missing'?' selected':'')+'>Missing</option>' +
-          '</select></div>' +
       '</div>' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Special Abilities</label>' +
       '<textarea class="mount-abilities" placeholder="" style="width:100%;min-height:60px;resize:vertical;overflow-y:hidden;">'+escapeHtml(m.abilities||'')+'</textarea>' +
@@ -2711,6 +2700,14 @@ function makeMountNode(m, onChange){
   
   // Toggle details
   const toggleBtn = el.querySelector('.toggle-details');
+  const setRail = ()=>{
+    const v = (el.querySelector('.mount-status').value || 'Active').toLowerCase();
+    el.classList.remove('st-retired','st-missing','st-deceased');
+    if(v !== 'active') el.classList.add('st-' + v);
+  };
+  setRail();
+  el.querySelector('.mount-status').addEventListener('change', setRail);
+
   const detailsDiv = el.querySelector('.mount-details');
   const abilitiesArea = el.querySelector('.mount-abilities');
   const notesArea = el.querySelector('.mount-notes');
