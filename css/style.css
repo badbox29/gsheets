@@ -1867,8 +1867,11 @@
 	  display: flex; gap: 12px; align-items: baseline;
 	  margin-top: 5px; flex-wrap: wrap;
 	}
-	/* The details panel spans the full width under both summary rows. */
-	.item.follower > [class$="-details"] { grid-column: 2; }
+	/* Everything except the rail lives in column 2. Named children are not
+	   enough: the mount card also has .mount-animal-fields as a sibling, gated
+	   on type, and anything not placed lands in the 3px rail track. */
+	.item.follower > * { grid-column: 2; }
+	.item.follower > .fol-rail { grid-column: 1; }
 
 	/* Borderless until touched: a bordered box per row made the list read as a
 	   form rather than as a list of names. */
