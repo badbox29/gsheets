@@ -1,6 +1,6 @@
 # AD&D 2E Character Sheet Tool
 
-A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and zero dependencies.
+A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and no build step.
 
 **Version 11.2.0**
 
@@ -57,16 +57,11 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 ### Trying it with a character already loaded
 
 An empty sheet does not show much. The `demo_sheets/` folder in this repository
-holds three finished characters, one for each way the tool handles class —
-single-class, multi-class and dual-class:
+holds finished characters covering all three ways the tool handles class —
+single-class, multi-class and dual-class — with spellbooks, proficiencies,
+equipment and followers already filled in.
 
-| File | Character | What it shows |
-| --- | --- | --- |
-| `human_wizard.json` | Johnias Jones, Illusionist 14 | A single-class specialist wizard — spellbook, memorized spells, school access and opposition schools |
-| `dwarven_cleric.json` | Boden Bravebeard, Cleric 7 / Fighter 9 | Multi-classing, plus dwarven racial abilities and saving throw bonuses |
-| `dual_class_fighter_necromancer.json` | Zarvek the Black Sage, Ranger 5 / Necromancer 6 | Dual-classing, which is the most involved case the sheet handles |
-
-Download any one of them and use **Import** to open it.
+Download any of them and use **Import** to open it.
 
 They arrive as ordinary characters, so anything you change is yours to keep and
 deleting one works like deleting any other. One thing to watch: if you already
@@ -93,6 +88,15 @@ npx serve
 ```
 
 You can also host the files on any static web server — GitHub Pages, IIS, Apache, nginx, or similar.
+
+### What it loads from elsewhere
+
+There is no framework and no build step, but the page is not entirely self-contained. Two things are fetched from a CDN at runtime:
+
+* **pdfMake**, which generates the printed character sheet. Without it the sheet works normally but printing will not run.
+* **Almendra and Metamorphous** from Google Fonts, used for headings and group bands. Without them the page falls back to a generic serif and looks plainer.
+
+Everything else — the rules data, the calculations, the stylesheet, the print fonts — is in this repository.
 
 ## Data Storage
 
@@ -123,7 +127,7 @@ The tool supports optional cloud sync using a Cloudflare Worker and KV storage. 
 
 ### How It Works
 
-Each user is assigned a unique sync token automatically when they first open the tool. This token is their identity in the KV store — all character data is stored under that token's namespace. The token travels with JSON exports so it can be easily transferred to a new browser.
+Each user is assigned a unique sync token automatically when they first open the tool. This token is their identity in the KV store — all character data is stored under that token's namespace. The token stays in the browser and is never written into a character export; to use the same identity elsewhere, paste it in yourself under **Enter Token**.
 
 Cloud sync is disabled by default. Once enabled, changes are pushed to KV automatically within approximately 65 seconds of your last edit (60 second autosave + 5 second debounce). Additionally, any pending changes are flushed immediately if you close or navigate away from the tab.
 
@@ -196,7 +200,7 @@ Follow these steps **in order** to avoid overwriting your data:
 * **Use Push/Pull manually when switching devices mid-session.** Push on the device you are leaving, then Pull on the device you are switching to. The auto-sync timing means there can be a short window where the latest changes haven't reached KV yet.
 * **Avoid editing the same character on two browsers simultaneously.** Merging happens per character, not per field — if you edit hit points on one device and experience on another, the more recent save wins entirely rather than the two combining. Your local copy on either browser is always safe.
 * **Close and reopen a character after pulling.** A pull updates storage, not a sheet you already have open — an open tab will still hold the older copy and will overwrite it on its next save.
-* **Use JSON export as a backup.** Cloud sync is a convenience feature, not a replacement for periodic JSON exports. Your sync token is included in exports so you can restore your KV identity from a backup file if needed.
+* **Use JSON export as a backup.** Cloud sync is a convenience feature, not a replacement for periodic JSON exports. Note that exports carry the character only — keep a copy of your sync token somewhere separate if you want to be able to restore your KV identity.
 
 ### Limitations
 
@@ -691,7 +695,7 @@ A systematic review of Player's Handbook Chapter 6, *Money and Equipment*, table
 * Stay faithful to AD&D 2E structure
 * Keep everything fast and responsive
 * Avoid unnecessary complexity
-* Ensure full offline capability
+* Keep the tool self-contained — no framework, no build step, no account
 
 ## About This Project
 
