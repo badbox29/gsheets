@@ -2651,6 +2651,12 @@ function makeMountNode(m, onChange){
       '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
       '<button class="rm">Remove</button>' +
     '</div>' +
+    '<div class="fol-r2">' +
+      '<span class="fol-stat">hp<input class="mount-hp" type="number" placeholder="0" value="'+escapeHtml(m.hp||'')+'"></span>' +
+      '<span class="fol-stat">ac<input class="mount-ac" type="number" placeholder="10" value="'+escapeHtml(m.ac||'')+'"></span>' +
+      '<span class="fol-stat">mv<input class="mount-movement" placeholder="e.g., 24" value="'+escapeHtml(m.movement||'')+'"></span>' +
+      '<span class="fol-stat wide">carries<input class="mount-capacity" placeholder="e.g., 400 lbs" value="'+escapeHtml(m.capacity||'')+'"></span>' +
+    '</div>' +
     '<div class="mount-animal-fields" style="display:'+(m.type==='Animal'?'block':'none')+';margin-bottom:8px;">' +
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">' +
         '<div><label style="font-size:11px;color:var(--muted);">Species</label>' +
@@ -2680,12 +2686,6 @@ function makeMountNode(m, onChange){
         '<div><label style="font-size:11px;color:var(--muted);">COM</label>' +
           '<input class="mount-com" type="number" placeholder="--" value="'+escapeHtml(m.com||'')+'" style="width:100%;"></div>' +
       '</div>' +
-    '</div>' +
-    '<div class="fol-r2">' +
-      '<span class="fol-stat">hp<input class="mount-hp" type="number" placeholder="0" value="'+escapeHtml(m.hp||'')+'"></span>' +
-      '<span class="fol-stat">ac<input class="mount-ac" type="number" placeholder="10" value="'+escapeHtml(m.ac||'')+'"></span>' +
-      '<span class="fol-stat">mv<input class="mount-movement" placeholder="e.g., 24" value="'+escapeHtml(m.movement||'')+'"></span>' +
-      '<span class="fol-stat wide">carries<input class="mount-capacity" placeholder="e.g., 400 lbs" value="'+escapeHtml(m.capacity||'')+'"></span>' +
     '</div>' +
     '<div class="mount-details" style="display:none;margin-top:8px;">' +
      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">' +
