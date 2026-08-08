@@ -2945,7 +2945,7 @@ function makeHirelingNode(h, onChange){
       '<span class="fol-stat">qty<input class="hireling-quantity" type="number" placeholder="1" value="'+escapeHtml(h.quantity||'')+'"></span>' +
       '<span class="fol-stat wide">wage<input class="hireling-wage" placeholder="e.g., 2 gp/month" value="'+escapeHtml(h.wage||'')+'"></span>' +
       '<span class="fol-stat wide"><span class="hireling-duration-label">for</span><input class="hireling-duration" placeholder="e.g., 6 months" value="'+escapeHtml(h.duration||'')+'"></span>' +
-      '<span class="fol-stat wide">purpose<input class="hireling-purpose" placeholder="e.g., Guard the stronghold" value="'+escapeHtml(h.purpose||'')+'"></span>' +
+      '<span class="fol-stat grow">purpose<input class="hireling-purpose" placeholder="e.g., Guard the stronghold" value="'+escapeHtml(h.purpose||'')+'"></span>' +
     '</div>' +
     '<div class="hireling-details" style="display:none;margin-top:8px;">' +
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">' +
