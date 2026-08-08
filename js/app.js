@@ -2782,10 +2782,9 @@ function makeMountNode(m, onChange){
 // ===== Henchmen & Retainers =====
 function makeHenchmanNode(h, onChange){
   const el = document.createElement('div');
-  el.className = 'item';
-  el.style.flexDirection = 'column';
-  el.style.alignItems = 'stretch';
-  el.style.padding = '12px';
+  // .follower supplies the grid, the rail and the summary rows. The three
+  // inline styles below were the old column layout and are now the CSS's job.
+  el.className = 'item follower';
 
   // PHB Ch.12: henchmen "commonly receive a portion (half a normal share) of
   // all treasure and magic found on adventures", so a NEW card opens on Half
@@ -2796,15 +2795,31 @@ function makeHenchmanNode(h, onChange){
   const sh = (h.share === undefined || h.share === null) ? 'Half share' : h.share;
 
   el.innerHTML =
-    '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div style="flex:1;">Henchman Name</div>' +
-      '<div style="width:80px;"></div>' + // Space for Details button
-      '<div style="width:70px;"></div>' + // Space for Remove button
+    '<div class="fol-rail"></div>' +
+    '<div class="fol-r1">' +
+      '<input class="henchman-name" placeholder="e.g., Garrett the Bold" value="'+escapeHtml(h.name||'')+'">' +
+      '<select class="henchman-status fol-status" style="font-size:11px;padding:2px 6px;">' +
+        '<option value="Active"'+((h.status||'Active')==='Active'?' selected':'')+'>Active</option>' +
+        '<option value="Retired"'+((h.status||'')==='Retired'?' selected':'')+'>Retired</option>' +
+        '<option value="Deceased"'+((h.status||'')==='Deceased'?' selected':'')+'>Deceased</option>' +
+        '<option value="Missing"'+((h.status||'')==='Missing'?' selected':'')+'>Missing</option>' +
+      '</select>' +
+      '<button class="toggle-details btn-quiet">Details</button>' +
+      '<button class="rm btn-danger">Remove</button>' +
     '</div>' +
-    '<div style="display:flex;gap:8px;align-items:stretch;">' +
-      '<input class="henchman-name" placeholder="e.g., Garrett the Bold" value="'+escapeHtml(h.name||'')+'" style="flex:1;font-weight:bold;">' +
-      '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
-      '<button class="rm">Remove</button>' +
+    '<div class="fol-r2">' +
+      '<span class="fol-stat">hp<input class="henchman-hp" type="number" placeholder="--" value="'+escapeHtml(h.hp||'')+'"></span>' +
+      '<span class="fol-stat">ac<input class="henchman-ac" type="number" placeholder="--" value="'+escapeHtml(h.ac||'')+'"></span>' +
+      '<span class="fol-stat">thac0<input class="henchman-thac0" type="number" placeholder="--" value="'+escapeHtml(h.thac0||'')+'"></span>' +
+      '<span class="fol-stat">loyalty<input class="henchman-loyalty" type="number" placeholder="--" title="Your Loyalty Base from PHB Table 6 modifies this. The loyalty and morale checks themselves are the DM\'s -- PHB Ch.12 refers them to the DMG." value="'+escapeHtml(h.loyalty||'')+'"></span>' +
+      '<span class="fol-stat">morale<input class="henchman-morale" type="number" placeholder="--" value="'+escapeHtml(h.morale||'')+'"></span>' +
+      '<span class="fol-stat wide">share<select class="henchman-share">' +
+        '<option value=""'+(sh===''?' selected':'')+'>--</option>' +
+        '<option value="Half share"'+(sh==='Half share'?' selected':'')+'>Half share</option>' +
+        '<option value="Full share"'+(sh==='Full share'?' selected':'')+'>Full share</option>' +
+        '<option value="Wage only"'+(sh==='Wage only'?' selected':'')+'>Wage only</option>' +
+        '<option value="Custom"'+(sh==='Custom'?' selected':'')+'>Custom</option>' +
+      '</select></span>' +
     '</div>' +
     '<div class="henchman-details" style="display:none;margin-top:8px;">' +
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">' +
@@ -2814,13 +2829,7 @@ function makeHenchmanNode(h, onChange){
           '<input class="henchman-class" placeholder="e.g., Fighter" value="'+escapeHtml(h.class||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Level</label>' +
           '<input class="henchman-level" type="number" placeholder="--" value="'+escapeHtml(h.level||'')+'" style="width:100%;"></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">HP</label>' +
-          '<input class="henchman-hp" type="number" placeholder="--" value="'+escapeHtml(h.hp||'')+'" style="width:100%;"></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">AC</label>' +
-          '<input class="henchman-ac" type="number" placeholder="--" value="'+escapeHtml(h.ac||'')+'" style="width:100%;"></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">THAC0</label>' +
-          '<input class="henchman-thac0" type="number" placeholder="--" value="'+escapeHtml(h.thac0||'')+'" style="width:100%;"></div>' +
-       '<div><label style="font-size:11px;color:var(--muted);">STR</label>' +
+        '<div><label style="font-size:11px;color:var(--muted);">STR</label>' +
           '<input class="henchman-str" type="number" placeholder="--" value="'+escapeHtml(h.str||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">DEX</label>' +
           '<input class="henchman-dex" type="number" placeholder="--" value="'+escapeHtml(h.dex||'')+'" style="width:100%;"></div>' +
@@ -2838,37 +2847,23 @@ function makeHenchmanNode(h, onChange){
           '<input class="henchman-com" type="number" placeholder="--" value="'+escapeHtml(h.com||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Alignment</label>' +
           alignmentSelectHTML('henchman-alignment', h.alignment) + '</div>' +
-        // The placeholder read "e.g., 2d6" on a type="number" input, so the
-        // example it gave could never be entered. Morale beside it has always
-        // said "--"; this now matches. PHB Ch.12 refers the loyalty and morale
-        // checks themselves to the DMG, so no scale is asserted here.
-        '<div><label style="font-size:11px;color:var(--muted);">Loyalty Score</label>' +
-          '<input class="henchman-loyalty" type="number" placeholder="--" title="Your Loyalty Base from PHB Table 6 modifies this. The loyalty and morale checks themselves are the DM\'s -- PHB Ch.12 refers them to the DMG." value="'+escapeHtml(h.loyalty||'')+'" style="width:100%;"></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">Morale</label>' +
-          '<input class="henchman-morale" type="number" placeholder="--" value="'+escapeHtml(h.morale||'')+'" style="width:100%;"></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">Share</label>' +
-          '<select class="henchman-share" style="width:100%;">' +
-            '<option value=""'+(sh===''?' selected':'')+'>--</option>' +
-            '<option value="Half share"'+(sh==='Half share'?' selected':'')+'>Half share</option>' +
-            '<option value="Full share"'+(sh==='Full share'?' selected':'')+'>Full share</option>' +
-            '<option value="Wage only"'+(sh==='Wage only'?' selected':'')+'>Wage only</option>' +
-            '<option value="Custom"'+(sh==='Custom'?' selected':'')+'>Custom</option>' +
-          '</select></div>' +
       '</div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">' +
+      '<div style="display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:8px;">' +
         '<div><label style="font-size:11px;color:var(--muted);">Equipment Held</label>' +
           '<input class="henchman-equipment" placeholder="" value="'+escapeHtml(h.equipment||'')+'" style="width:100%;"></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">Status</label>' +
-          '<select class="henchman-status" style="width:100%;">' +
-            '<option value="Active"'+((h.status||'Active')==='Active'?' selected':'')+'>Active</option>' +
-            '<option value="Retired"'+((h.status||'')==='Retired'?' selected':'')+'>Retired</option>' +
-            '<option value="Deceased"'+((h.status||'')==='Deceased'?' selected':'')+'>Deceased</option>' +
-            '<option value="Missing"'+((h.status||'')==='Missing'?' selected':'')+'>Missing</option>' +
-          '</select></div>' +
       '</div>' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Notes</label>' +
       '<textarea class="henchman-notes" placeholder="" style="width:100%;min-height:60px;resize:vertical;overflow-y:hidden;">'+escapeHtml(h.notes||'')+'</textarea>' +
     '</div>';
+
+  // Rail follows the status select. Set once on build so a loaded card is right
+  // before any interaction, then on every change.
+  const setRail = ()=>{
+    const v = (el.querySelector('.henchman-status').value || 'Active').toLowerCase();
+    el.classList.remove('st-retired','st-missing','st-deceased');
+    if(v !== 'active') el.classList.add('st-' + v);
+  };
+  setRail();
   
   // Toggle details
   const toggleBtn = el.querySelector('.toggle-details');
@@ -2913,6 +2908,7 @@ function makeHenchmanNode(h, onChange){
   const statusSelect = el.querySelector('.henchman-status');
   if(statusSelect){
     statusSelect.addEventListener('change', ()=>{
+      setRail();
       const root = el.closest('.sheet-container');
       if(root) applyArchiveFilter(root, '.henchmen-list', '.show-archived-henchmen', '.henchman-status');
     });
