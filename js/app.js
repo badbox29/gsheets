@@ -7946,7 +7946,7 @@ function bindSheet(root, tab){
     // returns a token, so the old condition was always true and every export
     // from every browser carried that browser's KV credential -- which meant
     // handing a character file to another player handed them the keys to your
-    // namespace. Exports are character data only.if (kvCfgExp.kvToken) obj._kvToken = kvCfgExp.kvToken;
+    // namespace. Exports are character data only.
     const sanitize = s => (s||'').toString().trim().replace(/\s+/g,'_').replace(/[^A-Za-z0-9_\-]/g,'');
 
     const charName = sanitize(obj.meta.name) || 'Unnamed';
