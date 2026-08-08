@@ -6158,7 +6158,12 @@ function positionPortraitWindow(root){
   e.pop.style.top  = top + 'px';
 }
 
-function openPortraitWindow(root){
+/* viaTouch is load-bearing. The backdrop is a full-viewport element whose only
+   job is catching the tap that dismisses this on a phone. Showing it for a
+   MOUSE hover slides an invisible sheet under the cursor, which takes the
+   pointer off .avatar, fires mouseleave, closes the window, uncovers .avatar,
+   fires mouseenter -- and the window flickers open and shut forever. */
+function openPortraitWindow(root, viaTouch){
   const rec = root._avatarData;
   const e = portraitEls(root);
   if (!rec || !rec.src || !e.pop || !e.img) return;
@@ -6168,7 +6173,7 @@ function openPortraitWindow(root){
   e.img.onload = () => positionPortraitWindow(root);
   e.img.src = rec.src;
   e.pop.style.display = 'block';
-  if (e.back) e.back.style.display = 'block';
+  if (viaTouch && e.back) e.back.style.display = 'block';
   positionPortraitWindow(root);
   // Two frames, not one. display:block has to be committed before the class
   // lands, or the opacity transition has no start value and the window snaps in.
@@ -6213,7 +6218,7 @@ function bindPortraitWindow(root){
     if (ev.pointerType === 'mouse' || !root._avatarData) return;
     pressX = ev.clientX; pressY = ev.clientY;
     clearTimeout(pressT);
-    pressT = setTimeout(() => openPortraitWindow(root), PORTRAIT_PRESS_DELAY);
+    pressT = setTimeout(() => openPortraitWindow(root, true), PORTRAIT_PRESS_DELAY);
   });
   box.addEventListener('pointerup', endPress);
   box.addEventListener('pointercancel', endPress);
