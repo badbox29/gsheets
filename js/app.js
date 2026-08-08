@@ -7942,8 +7942,11 @@ function bindSheet(root, tab){
   };
   qs(root,'.export-json').onclick = ()=>{
     const obj = collectSheet(root);
-    const kvCfgExp = getKvConfig();
-    if (kvCfgExp.kvToken) obj._kvToken = kvCfgExp.kvToken;
+    // The sync token is deliberately NOT written here. getKvConfig() always
+    // returns a token, so the old condition was always true and every export
+    // from every browser carried that browser's KV credential -- which meant
+    // handing a character file to another player handed them the keys to your
+    // namespace. Exports are character data only.if (kvCfgExp.kvToken) obj._kvToken = kvCfgExp.kvToken;
     const sanitize = s => (s||'').toString().trim().replace(/\s+/g,'_').replace(/[^A-Za-z0-9_\-]/g,'');
 
     const charName = sanitize(obj.meta.name) || 'Unnamed';
@@ -7977,15 +7980,23 @@ function bindSheet(root, tab){
       try{
         const obj=JSON.parse(ev.target.result);
         const nm = (obj.meta&&obj.meta.name)||'Imported Character';
-        // If the exported file carries a KV token, adopt it (but don't
-        // overwrite an existing token — only use it if we have none yet)
-        if (obj._kvToken) {
-          const cfg = getKvConfig();
-          if (!cfg.kvToken) {
-            cfg.kvToken = obj._kvToken;
-            saveKvConfig(cfg);
-          }
-        }
+        // NO TOKEN ADOPTION. There used to be a block here that adopted an
+        // exported file's _kvToken "if we do not already have one" -- and it
+        // could never run. getKvConfig() is a GET-OR-CREATE: line 41 fills in a
+        // freshly generated token before returning, so the !cfg.kvToken guard
+        // was testing a property the call above had just made impossible.
+        // Verified by transcribing both functions and running them: there is no
+        // ordering, including import-before-boot, in which it fires.
+        //
+        // Not repaired, removed. The sync token is BROWSER state, not character
+        // state, and silently taking an identity out of a file someone sent you
+        // is the wrong default -- characters get shared around a table. The
+        // documented manual path (Settings -> Enter Token) already does this
+        // deliberately and has always worked.
+        //
+        // A stray _kvToken in an older export is harmless: loadSheet only reads
+        // named fields, and saving rebuilds the record from collectSheet, so it
+        // cannot survive the round trip.
         openIntoCurrentOrNew(nm, obj);
       }catch(err){ alert('Invalid JSON: '+err.message); }
     };
