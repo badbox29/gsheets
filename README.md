@@ -57,13 +57,14 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 ### Trying it with a character already loaded
 
 An empty sheet does not show much. The `demo_sheets/` folder in this repository
-holds three finished characters covering different corners of the rules:
+holds three finished characters, one for each way the tool handles class —
+single-class, multi-class and dual-class:
 
-| File | What it shows |
-| --- | --- |
-| `human_wizard.json` | A single-class arcane caster — spellbook, memorized spells, school access |
-| `dwarven_cleric.json` | A priest with sphere access, racial abilities, and the dwarf's saving throw bonuses |
-| `dual_class_fighter_necromancer.json` | Dual-classing, which is the most involved case the sheet handles |
+| File | Character | What it shows |
+| --- | --- | --- |
+| `human_wizard.json` | Johnias Jones, Illusionist 14 | A single-class specialist wizard — spellbook, memorized spells, school access and opposition schools |
+| `dwarven_cleric.json` | Boden Bravebeard, Cleric 7 / Fighter 9 | Multi-classing, plus dwarven racial abilities and saving throw bonuses |
+| `dual_class_fighter_necromancer.json` | Zarvek the Black Sage, Ranger 5 / Necromancer 6 | Dual-classing, which is the most involved case the sheet handles |
 
 Download any one of them and use **Import** to open it.
 
@@ -173,8 +174,9 @@ Follow these steps **in order** to avoid overwriting your data:
 ### Sync Token
 
 * Your sync token is auto-generated and stored in your browser's local storage
-* It is also embedded in any JSON export so it travels with your character files
-* When importing a JSON file that contains a token, the tool will adopt that token if you don't already have one — making it easy to restore your identity from a backup
+* It stays in the browser. It is **not** written into character exports, so a character file you send to another player carries no credentials — only the character
+* To use the same identity on another browser, paste the token in yourself (see [Setting Up a Second Browser or Device](#setting-up-a-second-browser-or-device))
+* An imported character syncs under whatever token the receiving browser already has, like any other character on that browser
 * Use **Reset** in Settings to generate a new token if needed — note this permanently disconnects the browser from its current KV data (your local characters are unaffected)
 
 ### When Sync Fires
@@ -245,6 +247,25 @@ Follow these steps **in order** to avoid overwriting your data:
 * Portraits saved before this release still work and still print. Their window
   shows the cropped image, because for those there is no original left to show.
   Re-cropping one records a proper rectangle from then on.
+
+**Sync tokens no longer travel in character files**
+
+* Exporting a character used to embed that browser's sync token in the file.
+  Since characters get passed around a table, that meant handing someone a
+  character also handed them access to your cloud storage. Exports now contain
+  character data and nothing else.
+* The matching import behaviour — "adopt the token from a file if you have
+  none" — has been removed. It could never actually run: the token is created
+  on demand the moment anything asks for it, so "you have none" was never true
+  by the time the check happened. Setting up a second browser has always used
+  the manual paste in Settings, and still does.
+* Older exports that still contain a token are harmless. Nothing reads it, and
+  saving the character rewrites the file without it.
+
+**Demo characters**
+
+* Three finished characters now live in `demo_sheets/`, so the tool can be
+  tried with something in it rather than an empty sheet.
 
 #### v11.1.0
 
