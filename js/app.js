@@ -7797,8 +7797,8 @@ function bindSheet(root, tab){
   qs(root, '.kv-settings').onclick = () => openKvSettingsModal(root);
   qs(root, '.kv-modal-close').onclick = () => closeKvSettingsModal(root);
 
-  // Theme and mode selects. Both call applyTheme(), which is also what the moon
-  // control calls, so there is ONE place that writes the attributes and the
+  // Theme tiles. These call applyTheme(), which is also what the mode lamp in
+  // the header calls, so there is ONE place that writes both attributes and the
   // localStorage key -- the two controls cannot drift apart.
   const grid = qs(root, '.theme-grid');
   if (grid) {
@@ -11096,16 +11096,26 @@ function applyTheme(theme, mode) {
     el.setAttribute('data-theme', themeFallback());
   }
   if (el.getAttribute('data-mode') !== 'light') el.setAttribute('data-mode', 'dark');
-  // The toggle art is driven by the mode, not the other way round, so the
-  // control still reads correctly after a reload rather than only after a click.
-  const moon   = document.getElementsByClassName('moon')[0];
-  const toggle = document.getElementsByClassName('tdnn')[0];
+  // The lamp's ART is pure CSS off <html data-mode>, so nothing here touches a
+  // colour, a class or a path. What JS must still do is the part a stylesheet
+  // cannot express: the ACCESSIBLE state. aria-pressed is what a screen reader
+  // announces; title is what a mouse user gets on hover. Neither is derivable
+  // from CSS, which is the whole reason this block still exists at all.
+  //
+  // Driven by the MODE rather than by the click, so the control still reads
+  // correctly after a reload and not only after someone has pressed it once.
   const isLight = el.getAttribute('data-mode') === 'light';
-  if (moon)   moon.classList.toggle('sun', isLight);
-  if (toggle) toggle.classList.toggle('day', isLight);
+  const lamp = document.getElementById('mode-lamp');
+  if (lamp) {
+    lamp.setAttribute('aria-pressed', isLight ? 'true' : 'false');
+    // title names the DESTINATION (what a click will do); aria-label names the
+    // CONTROL and never changes. Putting the destination in both would make a
+    // screen reader announce "switch to light mode" as the button's NAME.
+    lamp.title = isLight ? 'Switch to dark mode' : 'Switch to light mode';
+  }
   // Repaint and re-mark the picker if it is on screen, so applyTheme stays the
   // single writer. The repaint matters because the tiles are drawn in the
-  // CURRENT MODE -- flipping the moon must redraw all ten, not just re-tick one.
+  // CURRENT MODE -- flipping the lamp must redraw all ten, not just re-tick one.
   const grid = document.querySelector('.theme-grid');
   if (grid) paintThemeTiles(grid);
   try {
@@ -11116,11 +11126,23 @@ function applyTheme(theme, mode) {
   } catch (e) {}
 }
 
-// Bound to the moon control by an onclick in index.html. Name kept.
-function tdnn() {
+/* The mode lamp's handler. Renamed from tdnn(), which was named after the
+   borrowed toggle's markup and meant nothing here. Nothing calls the old name
+   any more -- the inline onclick in index.html is gone with it.
+
+   Bound below rather than in the per-sheet wiring, because the lamp lives in
+   index.html and exists ONCE for the whole app, not once per character tab.
+   app.js is the last script in <body>, so the button is already parsed by the
+   time this runs and no DOMContentLoaded wrapper is needed. */
+function toggleMode() {
   const cur = document.documentElement.getAttribute('data-mode');
   applyTheme(null, cur === 'light' ? 'dark' : 'light');
 }
+(function bindModeLamp() {
+  const lamp = document.getElementById('mode-lamp');
+  if (lamp) lamp.addEventListener('click', toggleMode);
+})();
+
 /* ===== DICE ROLLER UTILITIES ===== */
 
 // Roll a single die
