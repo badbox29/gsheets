@@ -6350,7 +6350,15 @@ function openAvatarCropper(root, tab, srcUrl, initCrop){
     sx = Math.max(0, Math.min(sx, nW));
     sy = Math.max(0, Math.min(sy, nH));
     sw = Math.min(sw, nW - sx);
-    sh = Math.min(sh, nH - sy);
+    // Derive h from w rather than trusting the frame's own height. sh started
+    // as f.h / scale, so sw/sh reduces to f.w/f.h -- and clientWidth and
+    // clientHeight are INTEGERS, so a frame CSS-sized at 3:2 reports as e.g.
+    // 472x314 (1.5032). That 0.1% was landing in every stored crop.
+    //
+    // Invisible in the thumbnail (a third of a pixel over a 300px box), but
+    // applyAvatarCrop's percentage maths states the rectangle is exactly 3:2,
+    // and a documented invariant should be true rather than nearly true.
+    sh = Math.min(sw * AVATAR_OUT_H / AVATAR_OUT_W, nH - sy);
 
     if (!(sw > 0 && sh > 0)) {
       alert('That crop could not be applied. Try again.');
