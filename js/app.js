@@ -3141,22 +3141,6 @@ function makeCompanionNode(c, onChange){
           '<input class="companion-per" type="number" placeholder="--" value="'+escapeHtml(c.per||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">COM</label>' +
           '<input class="companion-com" type="number" placeholder="--" value="'+escapeHtml(c.com||'')+'" style="width:100%;"></div>' +
-        '<div style="grid-column: span 2;"><label style="font-size:11px;color:var(--muted);">Bond Type</label>' +
-          '<select class="companion-bond" style="width:100%;">' +
-            '<option value=""'+(c.bond===''?' selected':'')+'>--</option>' +
-            '<option value="Familiar"'+((c.bond||'')==='Familiar'?' selected':'')+'>Familiar</option>' +
-            '<option value="Animal Companion"'+((c.bond||'')==='Animal Companion'?' selected':'')+'>Animal Companion</option>' +
-            '<option value="Follower"'+((c.bond||'')==='Follower'?' selected':'')+'>Follower</option>' +
-            '<option value="Mount"'+((c.bond||'')==='Mount'?' selected':'')+'>Mount</option>' +
-            '<option value="Vehicle"'+((c.bond||'')==='Vehicle'?' selected':'')+'>Vehicle</option>' +
-          '</select></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">Status</label>' +
-          '<select class="companion-status" style="width:100%;">' +
-            '<option value="Active"'+((c.status||'Active')==='Active'?' selected':'')+'>Active</option>' +
-            '<option value="Retired"'+((c.status||'')==='Retired'?' selected':'')+'>Retired</option>' +
-            '<option value="Deceased"'+((c.status||'')==='Deceased'?' selected':'')+'>Deceased</option>' +
-            '<option value="Missing"'+((c.status||'')==='Missing'?' selected':'')+'>Missing</option>' +
-          '</select></div>' +
       '</div>' +
       // Is Mount is deliberately INDEPENDENT of Bond Type. Bond records what the
       // creature IS -- familiar, animal companion, follower. Is Mount records
