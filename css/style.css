@@ -2573,9 +2573,15 @@
 	}
 	.theme-tile.selected .nm { color: var(--text); }
 
+	/* scrollbar-gutter reserves the scrollbar's space whether or not it is
+	   showing, so content never sits under it AND the layout does not jump when
+	   a panel becomes long enough to scroll. padding-right is the fallback for
+	   browsers without it, and gives breathing room regardless. */
 	.settings-scroll {
 	  flex: 1;
 	  min-height: 0;
 	  overflow-y: auto;
+	  scrollbar-gutter: stable;
+	  padding-right: 10px;
 	  margin-bottom: 16px;
 	}
