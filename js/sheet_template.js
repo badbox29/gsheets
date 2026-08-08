@@ -2897,7 +2897,7 @@ const SHEET_HTML = `
 	         selector, and landing it now means the strip is built once rather
 	         than retrofitted later. -->
 	    <div class="settings-panel subtab-panel-hidden" data-panel="themes">
-	      <p style="font-size:11px;color:var(--muted);margin:0 0 12px;">Theme is stored per browser and is not synced or saved with a character. Light and dark are set by the moon control at the top right.</p>
+	      <p style="font-size:11px;color:var(--muted);margin:0 0 12px;">Theme is stored per browser and is not synced or saved with a character. Light and dark are set by the lantern in the page header.</p>
 	      <label>Theme</label>
 	      <!-- Radio inputs with styled labels, NOT a custom listbox: keyboard
 	           navigation, focus and form semantics come free and need no ARIA.
