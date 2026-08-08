@@ -2,7 +2,7 @@
 
 A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and zero dependencies.
 
-**Version 11.1.0**
+**Version 11.2.0**
 
 ## Live Demo
 
@@ -28,6 +28,7 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 * Interactive panels for proficiencies whose rules need working out at the table
 * Enchanted items marked on the card and carried through to armor class, attack rolls, weapon speed, and encumbrance
 * Magic item records carrying type, charges, command word, and whether the item has been identified
+* Character portraits that keep the uploaded image — the crop frames the thumbnail, and hovering the portrait opens the full artwork in a framed window
 * Treasure valued in gold from the Player's Handbook exchange rates, with weight and worth totalled separately for coin and valuables
 * Henchmen, followers and hirelings tracked as the separate things the book makes them, with the lifetime limit Charisma places on henchmen
 * A vision and light reference giving the book's sighting distances by weather and target size, and the radius and burning time of every light source
@@ -52,6 +53,24 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 3. Changes are saved automatically in your browser.
 4. Use export to back up or transfer characters.
 5. Use import to restore saved characters.
+
+### Trying it with a character already loaded
+
+An empty sheet does not show much. The `demo_sheets/` folder in this repository
+holds three finished characters covering different corners of the rules:
+
+| File | What it shows |
+| --- | --- |
+| `human_wizard.json` | A single-class arcane caster — spellbook, memorized spells, school access |
+| `dwarven_cleric.json` | A priest with sphere access, racial abilities, and the dwarf's saving throw bonuses |
+| `dual_class_fighter_necromancer.json` | Dual-classing, which is the most involved case the sheet handles |
+
+Download any one of them and use **Import** to open it.
+
+They arrive as ordinary characters, so anything you change is yours to keep and
+deleting one works like deleting any other. One thing to watch: if you already
+have a character saved under the same name, rename one of them first — import
+will otherwise overwrite the character you already had.
 
 ## Hosting Locally
 
@@ -188,6 +207,44 @@ Follow these steps **in order** to avoid overwriting your data:
 * I am not a developer.
 
 ### Recent Updates
+
+#### v11.2.0
+
+**The light/dark control is a lantern**
+
+* One glyph with two states: unlit for dark mode, lit for light. A sun/moon
+  pair was tried first and rejected — with two icons there is always the
+  question of whether you are looking at the mode you are in or the mode you
+  would get. A lamp is the state rather than a name for it.
+* It takes its colour from the active theme, so it is gold in Slate & Brass,
+  green in Arborea, crimson in Bloodstone. The control it replaced carried six
+  hardcoded colours and looked identically purple in all ten themes — it was
+  the only piece of the interface that ignored your theme entirely.
+* A glow around the lit lamp was mocked up and dropped. It reads as a
+  rendering fault in Steel, whose accent is deliberately colourless.
+* It is now a real button. It can be reached by keyboard, it announces its
+  state to a screen reader, and it sits in the header rather than floating on
+  top of the page — which also removes the special case that stopped it
+  colliding with the sheet on narrow screens.
+
+**Portraits keep the original image**
+
+* Character art is almost always taller than it is wide, and the sheet's
+  portrait box is wider than it is tall. Cropping used to resolve that by
+  throwing the rest of the picture away.
+* Now the picture is what gets stored, and the crop is recorded as a rectangle
+  against it. The crop frames the thumbnail; it no longer discards anything.
+* Hover the portrait — or press and hold it on a phone — and a framed window
+  opens showing the full artwork.
+* **Adjust is no longer lossy.** It used to re-crop its own previous output, so
+  every adjustment lost a little quality and could only ever zoom further in.
+  It now re-frames the original, however many times you do it, and reopens on
+  the framing you last chose.
+* Printing is unchanged. The plate still uses the crop, not the full image, and
+  it is rendered when you print rather than stored.
+* Portraits saved before this release still work and still print. Their window
+  shows the cropped image, because for those there is no original left to show.
+  Re-cropping one records a proper rectangle from then on.
 
 #### v11.1.0
 
