@@ -1935,6 +1935,11 @@
 	}
 	.item.gear .rail.notprof,
 	.item.gear .rail.restricted               { background: var(--st-forbidden); }
+	/* Magic items. The ONE rail that states a fact rather than a status: a magic
+	   item is magical by definition, so this is not a proficiency value and
+	   never varies. It is also why --magic can be violet while --st-specialized
+	   is blue -- the two never appear on the same list. */
+	.item.gear .rail.enchanted                { background: var(--magic); }
 
 	/* State chip. A <label> wrapping the REAL checkbox -- .equipped keeps
 	   working, collectSheet is untouched, and keyboard and screen readers get a
