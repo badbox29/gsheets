@@ -1900,6 +1900,11 @@
 	}
 	.item.follower .fol-stat.wide > input,
 	.item.follower .fol-stat.wide > select { width: auto; min-width: 9ch; text-align: left; }
+	/* Purpose is the only free-text field on any follower card -- a sentence,
+	   not a figure. Given a fixed minimum alongside wage and duration it forced
+	   a second line; given the slack it absorbs whatever is left. */
+	.item.follower .fol-stat.grow { flex: 1 1 12ch; min-width: 12ch; }
+	.item.follower .fol-stat.grow > input { width: 100%; min-width: 0; }
 	.item.follower .fol-stat > input:hover, .item.follower .fol-stat > select:hover,
 	.item.follower .fol-stat > input:focus, .item.follower .fol-stat > select:focus {
 	  background: var(--field); border-color: var(--border);
