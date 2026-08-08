@@ -1858,6 +1858,11 @@
 	.item.follower.st-deceased .fol-rail { background: var(--st-forbidden); }
 
 	.item.follower .fol-r1 { display: flex; gap: 8px; align-items: center; min-width: 0; }
+	/* The global rule sets select{width:100%}, so a select in a flex row claims
+	   the whole row and squeezes the name input to nothing. Third time this has
+	   caught us -- the Notes category selector and the theme dropdown were the
+	   others. ANY select placed in a flex row needs this. */
+	.item.follower .fol-r1 > select { width: auto; flex: 0 0 auto; }
 	.item.follower .fol-r2 {
 	  display: flex; gap: 12px; align-items: baseline;
 	  margin-top: 5px; flex-wrap: wrap;
