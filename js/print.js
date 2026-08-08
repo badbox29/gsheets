@@ -276,6 +276,21 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   const sheet = _blank ? {} :
     ((typeof collectSheet === 'function') ? collectSheet(root) : null);
 
+  // The printable portrait is DERIVED from { src, crop }, so it is deliberately
+  // absent from the character record. It is rendered once per print and hung on
+  // this LOCAL copy, which is discarded when the PDF is built -- it never
+  // reaches localStorage, KV or an export.
+  //
+  // Attached here rather than read at the point of use because `root` is in
+  // scope here and is not, 2600 lines below, where the portrait is consumed.
+  //
+  // The _blank guard is load-bearing: without it a blank sheet would be handed
+  // the current character's portrait, since avatarPrintDataUrl reads the DOM
+  // rather than the (empty) record.
+  if (!_blank && sheet && typeof avatarPrintDataUrl === 'function') {
+    sheet._avatarPrint = avatarPrintDataUrl(root);
+  }
+
   // Shadows the global val() for the duration of this build. Derived figures --
   // THAC0, AC, saves, encumbrance -- are not stored fields; they are rendered
   // into the DOM by calc.js, so they can only be blanked by intercepting the
@@ -2939,7 +2954,13 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // Any other format throws and takes the entire PDF down with it, so the
   // format is verified rather than trusted -- an unsupported portrait simply
   // does not print instead of breaking the sheet.
-  const avatarData = String((sheet && sheet.avatar) || '').trim();
+  //
+  // Reads _avatarPrint, NOT sheet.avatar. A stored portrait is now
+  // { src, crop } -- an object, which String() renders as "[object Object]".
+  // The test below would then reject it and the portrait would vanish from
+  // every PDF with no error anywhere. _avatarPrint is the 3:2 raster rendered
+  // from that pair at print time and attached to this local record above.
+  const avatarData = String((sheet && sheet._avatarPrint) || '').trim();
   const portraitUsable = /^data:image\/(png|jpe?g);base64,/i.test(avatarData);
   const showPortrait = !!opts.portrait && portraitUsable;
 
