@@ -2926,21 +2926,26 @@ function makeHenchmanNode(h, onChange){
 // ===== Followers & Hirelings =====
 function makeHirelingNode(h, onChange){
   const el = document.createElement('div');
-  el.className = 'item';
-  el.style.flexDirection = 'column';
-  el.style.alignItems = 'stretch';
-  el.style.padding = '12px';
-  
+  el.className = 'item follower';
+
   el.innerHTML =
-    '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div style="flex:1;">Name/Description</div>' +
-      '<div style="width:80px;"></div>' + // Space for Details button
-      '<div style="width:70px;"></div>' + // Space for Remove button
+    '<div class="fol-rail"></div>' +
+    '<div class="fol-r1">' +
+      '<input class="hireling-name" placeholder="e.g., 10 Men-at-Arms" value="'+escapeHtml(h.name||'')+'">' +
+      '<select class="hireling-status">' +
+        '<option value="Active"'+((h.status||'Active')==='Active'?' selected':'')+'>Active</option>' +
+        '<option value="Retired"'+((h.status||'')==='Retired'?' selected':'')+'>Retired</option>' +
+        '<option value="Deceased"'+((h.status||'')==='Deceased'?' selected':'')+'>Deceased</option>' +
+        '<option value="Missing"'+((h.status||'')==='Missing'?' selected':'')+'>Missing</option>' +
+      '</select>' +
+      '<button class="toggle-details btn-quiet">Details</button>' +
+      '<button class="rm btn-danger">Remove</button>' +
     '</div>' +
-    '<div style="display:flex;gap:8px;align-items:stretch;">' +
-      '<input class="hireling-name" placeholder="e.g., 10 Men-at-Arms" value="'+escapeHtml(h.name||'')+'" style="flex:1;font-weight:bold;">' +
-      '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
-      '<button class="rm">Remove</button>' +
+    '<div class="fol-r2">' +
+      '<span class="fol-stat">qty<input class="hireling-quantity" type="number" placeholder="1" value="'+escapeHtml(h.quantity||'')+'"></span>' +
+      '<span class="fol-stat wide">wage<input class="hireling-wage" placeholder="e.g., 2 gp/month" value="'+escapeHtml(h.wage||'')+'"></span>' +
+      '<span class="fol-stat wide"><span class="hireling-duration-label">for</span><input class="hireling-duration" placeholder="e.g., 6 months" value="'+escapeHtml(h.duration||'')+'"></span>' +
+      '<span class="fol-stat wide">purpose<input class="hireling-purpose" placeholder="e.g., Guard the stronghold" value="'+escapeHtml(h.purpose||'')+'"></span>' +
     '</div>' +
     '<div class="hireling-details" style="display:none;margin-top:8px;">' +
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">' +
@@ -2964,14 +2969,6 @@ function makeHirelingNode(h, onChange){
         // to record the level itself, so the rule had no home.
         '<div><label style="font-size:11px;color:var(--muted);">Level</label>' +
           '<input class="hireling-level" type="number" placeholder="--" title="PHB Ch.12. Followers can gain levels, and ALL followers in a unit advance together -- one figure covers the whole unit. Most hirelings never advance at all." value="'+escapeHtml(h.level||'')+'" style="width:100%;"></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">Quantity</label>' +
-          '<input class="hireling-quantity" type="number" placeholder="1" value="'+escapeHtml(h.quantity||'')+'" style="width:100%;"></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">Wage</label>' +
-          '<input class="hireling-wage" placeholder="e.g., 2 gp/month" value="'+escapeHtml(h.wage||'')+'" style="width:100%;"></div>' +
-        '<div><label class="hireling-duration-label" style="font-size:11px;color:var(--muted);">Duration</label>' +
-          '<input class="hireling-duration" placeholder="e.g., 6 months" value="'+escapeHtml(h.duration||'')+'" style="width:100%;"></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">Purpose/Task</label>' +
-          '<input class="hireling-purpose" placeholder="e.g., Guard the stronghold" value="'+escapeHtml(h.purpose||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Alignment</label>' +
           alignmentSelectHTML('hireling-alignment', h.alignment) + '</div>' +
         '<div><label style="font-size:11px;color:var(--muted);">THAC0</label>' +
@@ -2992,13 +2989,6 @@ function makeHirelingNode(h, onChange){
           '<input class="hireling-per" type="number" placeholder="--" value="'+escapeHtml(h.per||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">COM</label>' +
           '<input class="hireling-com" type="number" placeholder="--" value="'+escapeHtml(h.com||'')+'" style="width:100%;"></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">Status</label>' +
-          '<select class="hireling-status" style="width:100%;">' +
-            '<option value="Active"'+((h.status||'Active')==='Active'?' selected':'')+'>Active</option>' +
-            '<option value="Retired"'+((h.status||'')==='Retired'?' selected':'')+'>Retired</option>' +
-            '<option value="Deceased"'+((h.status||'')==='Deceased'?' selected':'')+'>Deceased</option>' +
-            '<option value="Missing"'+((h.status||'')==='Missing'?' selected':'')+'>Missing</option>' +
-          '</select></div>' +
       '</div>' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Notes</label>' +
       '<textarea class="hireling-notes" placeholder="" style="width:100%;min-height:60px;resize:vertical;overflow-y:hidden;">'+escapeHtml(h.notes||'')+'</textarea>' +
@@ -3022,6 +3012,14 @@ function makeHirelingNode(h, onChange){
   // A Duration already filled in stays fully legible; only an EMPTY one dims.
   // Dimming text someone deliberately entered would hide the very mismatch
   // this is meant to surface.
+  const setRail = ()=>{
+    const v = (el.querySelector('.hireling-status').value || 'Active').toLowerCase();
+    el.classList.remove('st-retired','st-missing','st-deceased');
+    if(v !== 'active') el.classList.add('st-' + v);
+  };
+  setRail();
+  el.querySelector('.hireling-status').addEventListener('change', setRail);
+
   const durationEl  = el.querySelector('.hireling-duration');
   const durationLab = el.querySelector('.hireling-duration-label');
   const categoryEl  = el.querySelector('.hireling-category');
