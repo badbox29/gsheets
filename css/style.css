@@ -538,20 +538,7 @@
       --radius-sm: 2px;
       --radius-lg: 6px;
     }
-
-    /* Genuinely global: the day/night toggle's own sizing and artwork. These
-       belong to the control, not to any theme, and are the reason the earlier
-       "four tokens missing from light mode" reading was a false alarm. */
-    :root {
-      /* Added to support the Passphrase file’s toggle UI sizing/colors */
-      --toggleHeight: 16em;
-      --toggleWidth: 30em;
-      --toggleBtnRadius: 10em;
-      --bgColor--night: #423966;
-      --mooncolor: #d9fbff;
-      --bgColor--day: #9ee3fb;
-    }
-
+    
     *{box-sizing:border-box}
     html, body {
       min-height: 100vh;
@@ -1057,36 +1044,49 @@
     [data-mode="light"] .avatar{ background: rgba(0,0,0,0.04); }
     [data-mode="light"] .item{ background: rgba(0,0,0,0.03); }
 
-    /* === Toggle control (identical UI from the second file) === */
-    .tdnn {
-      cursor: pointer;
-      font-size: 10%;
-      position: fixed;
-      top: 17em;
-      right: 10em;
-      height: var(--toggleHeight);
-      width: var(--toggleWidth);
-      border-radius: var(--toggleHeight);
-      transition: all 500ms ease-in-out;
-      background: var(--bgColor--night);
-      z-index: 2000;
-    }
-    .day { background: #ffbf71; }
-    .moon {
-      position: absolute; border-radius: 50%; transition: all 400ms ease-in-out;
-      top: 3em; left: 3em; transform: rotate(-75deg);
-      width: var(--toggleBtnRadius); height: var(--toggleBtnRadius);
-      background: var(--bgColor--night);
-      box-shadow: 3em 2.5em 0 0em var(--mooncolor) inset,
-        rgba(255,255,255,0.1) 0em -7em 0 -4.5em,
-        rgba(255,255,255,0.1) 3em 7em 0 -4.5em,
-        rgba(255,255,255,0.1) 2em 13em 0 -4em;
-    }
-    .sun { top: 4.5em; left: 18em; transform: rotate(0deg); width: 7em; height: 7em; background: #fff; }
+    /* === MODE LAMP — the light/dark control ===
+       ONE glyph, two states. Unlit is dark mode; lit is light mode. Deliberately
+       NOT a sun/moon pair: a lamp IS the state rather than a name for it, so
+       there is nothing to decode and no "which one am I looking at" ambiguity.
 
-    @media (max-width: 768px){
-      .tdnn { top: auto; bottom: 1.25rem; right: 1.25rem; font-size: 12%; }
+       Every colour here is a theme token. The control this replaced was the only
+       chrome in the app that consumed none -- it carried six hardcoded hexes in
+       :root and looked identically purple in all ten themes.
+
+       No border and no fill, by design: the glyph itself is the hit target. The
+       padding is what makes that target big enough to click; it is invisible but
+       it is not decoration -- remove it and the target drops to 21px. */
+    .mode-lamp {
+      background: none;
+      border: none;
+      margin: 0;
+      padding: 7px;
+      line-height: 0;
+      cursor: pointer;
+      color: var(--muted);
+      border-radius: var(--radius);
+      transition: color 0.3s ease;
+      flex: none;
     }
+    /* An unbounded icon has no border to brighten, so the glyph itself has to
+       carry the hover cue -- it is the only signal that this is clickable. */
+    .mode-lamp:hover { color: var(--accent-light); }
+    /* :focus-visible, NOT :focus -- with plain :focus a mouse click leaves the
+       ring sitting there afterwards. Nothing here for a ring to hug, so it is
+       drawn explicitly. Same treatment as .theme-tile:focus-within. */
+    .mode-lamp:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+    /* Lit state. Driven entirely by the data-mode attribute on <html>, so the
+       SVG markup is IDENTICAL in both states and only colour changes -- no
+       swapping paths, no second icon, nothing for JS to keep in sync. */
+    [data-mode="light"] .mode-lamp { color: var(--accent); }
+    .mode-lamp .flame,
+    .mode-lamp .glass { fill: none; transition: fill 0.3s ease; }
+    [data-mode="light"] .mode-lamp .flame { fill: var(--accent); }
+    /* The glass tint is what sells "lit" without a glow. A halo was mocked and
+       rejected: it reads as a rendering artifact in Steel, whose accent is a
+       deliberate neutral. */
+    [data-mode="light"] .mode-lamp .glass { fill: var(--accent); fill-opacity: 0.22; }
 
     /* === Vertical tabs (new) === */
     .sheet-body {
