@@ -2657,6 +2657,7 @@ function makeMountNode(m, onChange){
       '<span class="fol-stat">mv<input class="mount-movement" placeholder="e.g., 24" value="'+escapeHtml(m.movement||'')+'"></span>' +
       '<span class="fol-stat wide">carries<input class="mount-capacity" placeholder="e.g., 400 lbs" value="'+escapeHtml(m.capacity||'')+'"></span>' +
     '</div>' +
+    '<div class="mount-details" style="display:none;margin-top:8px;">' +
     '<div class="mount-animal-fields" style="display:'+(m.type==='Animal'?'block':'none')+';margin-bottom:8px;">' +
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">' +
         '<div><label style="font-size:11px;color:var(--muted);">Species</label>' +
@@ -2687,8 +2688,7 @@ function makeMountNode(m, onChange){
           '<input class="mount-com" type="number" placeholder="--" value="'+escapeHtml(m.com||'')+'" style="width:100%;"></div>' +
       '</div>' +
     '</div>' +
-    '<div class="mount-details" style="display:none;margin-top:8px;">' +
-     '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">' +
+      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">' +
         '<div><label style="font-size:11px;color:var(--muted);">Cost</label>' +
           '<input class="mount-cost" placeholder="e.g., 250 gp" value="'+escapeHtml(m.cost||'')+'" style="width:100%;"></div>' +
       '</div>' +
