@@ -2,7 +2,7 @@
 
 A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and zero dependencies.
 
-**Version 11.0.0**
+**Version 11.1.0**
 
 ## Live Demo
 
@@ -36,7 +36,7 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 * A climbing panel giving your chance of success and your rate of climb for any surface and condition, with the armor, race and encumbrance penalties itemized
 * An overland travel and endurance panel covering marching, force marching and its cumulative attack penalty, diving depth, and surfacing rate
 * Movement worked out in the units the book actually uses — feet per round underground, yards per round outdoors — with swimming, walking the bottom, and how long you can hold your breath
-* Three colour themes — Slate & Brass, Bloodstone and Midnight — each with its own light and dark mode, remembered per browser
+* Ten colour themes, each with its own light and dark mode, chosen from a swatch grid and remembered per browser
 * Card status colours fixed across every theme and checked against red-green and red-blind colour vision, so the legend means the same thing whichever theme you use
 * Optional-rules framework with live toggles for Player's Handbook options and house-rule overrides
 * Multi-page printable character sheet with configurable sections, blank write-in lines, and color schemes
@@ -188,6 +188,55 @@ Follow these steps **in order** to avoid overwriting your data:
 * I am not a developer.
 
 ### Recent Updates
+
+#### v11.1.0
+
+Follows on from v11.0.0, which introduced themes and the card status colours.
+
+**Ten themes instead of three**
+
+* Slate & Brass, Emberforge, Will-o'-Wisp, Arborea, Zakhara, Midnight,
+  Spelljammer, Faerzress, Bloodstone and Steel — the default first, then a
+  spectrum, then Steel, which has no hue to place.
+* Picked from a grid of swatches rather than a dropdown. Each swatch shows the
+  page background, the card over it and both accent colours, drawn in whichever
+  mode you are currently in.
+* Every theme was checked so that its own colour cannot be confused with the
+  colours that carry rules meaning — which weapons you may use, which spells are
+  still castable — including under red-green and red-blind colour vision.
+* A theme you have selected that later stops existing now falls back to the
+  default instead of leaving the page unstyled. That matters if you edit the
+  theme file yourself.
+
+**Buttons say what kind of thing they are**
+
+* Every control used to be the same gold slab. A *Delete*, a *Show/Hide*, and
+  **the tab you were currently on** were indistinguishable — so "where you are"
+  and "what you can do" looked identical.
+* Now there are four kinds: one filled action per panel where a panel has an
+  obvious single purpose; ordinary actions that are quiet until you hover them;
+  disclosures and row actions quieter still; and destructive actions in the
+  warning colour.
+* **Destructive buttons are the only ones that fill solid on hover.** That is
+  deliberate rather than decorative: in a red-accented theme, "red means danger"
+  cannot be told apart from "red means theme", so *Delete* had to be marked by
+  something other than its colour.
+* The vertical tab you are on is no longer button-shaped at all.
+
+**Themes now change shape, not just colour**
+
+* Corner radius follows the theme. Steel and Bloodstone are near-square
+  throughout; Arborea is softer. Previously this only worked on a handful of
+  elements because most corners were fixed in place.
+* Roughly a hundred hardcoded values were replaced, and a batch of colours that
+  ignored the theme entirely were fixed with them — the Rest & Recovery panel was
+  purple in every theme, and the auto-adjusted field highlight was an electric
+  cyan that appeared nowhere else.
+
+**Fixes**
+
+* The Settings panel's scrollbar no longer sits on top of the buttons at the
+  right-hand edge.
 
 #### v11.0.0
 
