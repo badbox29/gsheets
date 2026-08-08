@@ -606,7 +606,9 @@
     .tab{
       padding:6px 12px;
       background:var(--glass);
-      border-radius:6px 6px 0 0;
+      /* Top corners only: the bottom edge meets the content this tab labels, so
+         it is flat by structure, not by style. Only the rounded pair tokenises. */
+      border-radius:var(--radius-lg) var(--radius-lg) 0 0;
       cursor:pointer;
       user-select:none;
       transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
@@ -959,7 +961,9 @@
 		background: var(--accent);
 		color: var(--btn-fg);
 		border: none;
-		border-radius: 6px 0 0 6px;
+		/* Left corners only: it is fixed to the right edge of the viewport, so
+		   the right side is flat against the screen. */
+		border-radius: var(--radius) 0 0 var(--radius);
 		padding: 8px 12px;
 		cursor: pointer;
 		font-weight: 700;
