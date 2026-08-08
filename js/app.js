@@ -3159,7 +3159,6 @@ function makeCompanionNode(c, onChange){
         '<div><label style="font-size:11px;color:var(--muted);">Capacity</label>' +
           '<input class="companion-capacity" placeholder="e.g., 220 lbs" value="'+escapeHtml(c.capacity||'')+'" style="width:100%;"></div>' +
       '</div>' +
-      '</div>' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Special Abilities</label>' +
       '<textarea class="companion-abilities" placeholder="" style="width:100%;min-height:60px;resize:vertical;overflow-y:hidden;">'+escapeHtml(c.abilities||'')+'</textarea>' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Notes</label>' +
