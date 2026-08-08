@@ -5,16 +5,31 @@ const APP_JS_BUILD = 'prod-1';
 const $ = id => document.getElementById(id);
 const CHAR_MAP_KEY = 'adnd2e_characters_map';
 const KV_CONFIG_KEY = 'adnd2e_kv_config';
-// Upload gate. Only rejects the absurd -- anything under this is cropped and
-// downscaled to AVATAR_OUT_* regardless of what came in, so refusing a 3MB
-// photo would mean refusing work the cropper is about to do anyway. The old
-// 1MB cap rejected files the app could handle perfectly well.
+// Upload gate. Only rejects the absurd -- anything under this is downscaled to
+// AVATAR_SRC_MAX regardless of what came in, so refusing a 3MB photo would mean
+// refusing work we are about to do anyway. The old 1MB cap rejected files the
+// app could handle perfectly well.
 const AVATAR_MAX_SIZE = 12 * 1024 * 1024; // 12 MB
 
-// Stored portrait dimensions. 3:2, matching the .avatar box and the print
-// plate's portrait frame, so a saved portrait fills all three with no
-// letterboxing. 660px across a 150pt printed frame is roughly 317 dpi -- past
-// the point where more pixels show on paper.
+// STORED SOURCE. What actually lives in the character record now -- the whole
+// uploaded image, not a crop of it, because character art is nearly always
+// portrait while the .avatar box is 3:2 landscape.
+//
+// 1024 is set by the portrait window, which caps at 300px wide: past roughly
+// 600px there is nothing left for a retina display to show. It is not set by
+// print, which renders from the crop at AVATAR_OUT_* below.
+//
+// The ceiling is real, not aesthetic: localStorage is ~5MB for every character
+// plus the map plus config, and each portrait rides into KV as well. 1024 at
+// q0.82 lands near 110KB; 1600 would land near 260KB and put a dozen
+// characters within reach of the quota.
+const AVATAR_SRC_MAX = 1024;      // longest edge, px
+const AVATAR_SRC_QUALITY = 0.82;
+
+// PRINT RASTER dimensions -- no longer the stored size. 3:2, matching the
+// .avatar box and the print plate's portrait frame. 660px across a 150pt
+// printed frame is roughly 317 dpi, past the point where more pixels show on
+// paper. Produced on demand by avatarPrintDataUrl() and never saved.
 const AVATAR_OUT_W = 660;
 const AVATAR_OUT_H = 440;
 
@@ -5979,20 +5994,248 @@ function loadSheet(root, data){
   migrateSheetSpells(root);
 }
 
-function setAvatar(root, dataUrl){
+/* A portrait is { src, crop } -- the stored original, plus the rectangle that
+   frames the thumbnail. Anything saved before this feature is a bare data URL,
+   which normalises to crop:null and renders exactly as it always did. No
+   migration pass: old records simply keep working. */
+function normalizeAvatar(a){
+  if (!a) return null;
+  if (typeof a === 'string') return { src: a, crop: null };
+  if (typeof a === 'object' && a.src) return { src: a.src, crop: a.crop || null };
+  return null;
+}
+
+/* Render the crop by positioning the image inside the box, in PERCENTAGES.
+   Percentages rather than pixels because the sidebar's width is fluid: a pixel
+   layout would need recomputing on every resize, and this needs recomputing
+   never.
+
+   The height and top percentages resolve against the box's HEIGHT while the
+   width and left resolve against its WIDTH, so the two only agree if the crop
+   rectangle carries the same 3:2 ratio as the box. It always does -- the
+   cropper's frame is fixed at 3:2 -- but that is the assumption holding this
+   up, which is why applyCrop keeps two decimals instead of rounding. */
+function applyAvatarCrop(box, img, crop){
+  if (!crop || !crop.w || !crop.h) {
+    // No rectangle recorded: fall back to the stylesheet's 100% + cover.
+    img.style.width = ''; img.style.height = '';
+    img.style.left  = ''; img.style.top    = '';
+    img.style.objectFit = '';
+    return;
+  }
+  const nW = img.naturalWidth, nH = img.naturalHeight;
+  if (!nW || !nH) return;
+  img.style.width  = (nW / crop.w * 100) + '%';
+  img.style.height = (nH / crop.h * 100) + '%';
+  img.style.left   = (-crop.x / crop.w * 100) + '%';
+  img.style.top    = (-crop.y / crop.h * 100) + '%';
+  // The percentages already carry the aspect ratio; cover would crop a second
+  // time on top of the crop we just expressed.
+  img.style.objectFit = 'fill';
+}
+
+function setAvatar(root, avatar){
   const box = qs(root,'.avatar');
+  const rec = normalizeAvatar(avatar);
   box.innerHTML='';
-  root._avatarData = dataUrl || null;
-  if(dataUrl){
+  box.classList.toggle('has-portrait', !!rec);
+  root._avatarData = rec;
+  // Cached print raster is derived from what just changed, so it is now stale.
+  root._avatarPrint = null;
+  if(rec){
     const img = document.createElement('img');
-    img.src = dataUrl;
+    img.alt = '';
+    img.onload = () => applyAvatarCrop(box, img, rec.crop);
+    img.src = rec.src;
     box.appendChild(img);
+    // A data URL already in the decode cache can be complete before onload is
+    // attached. Calling twice is harmless; never calling leaves it unframed.
+    if (img.complete && img.naturalWidth) applyAvatarCrop(box, img, rec.crop);
   } else {
     const span = document.createElement('span');
     span.className='small placeholder';
     span.textContent='No avatar — upload below';
     box.appendChild(span);
   }
+}
+
+/* The printable 3:2 raster. DERIVED, so it is never stored -- print.js asks for
+   it at print time and the result is memoised on the root for the session only.
+   Drawn from the <img> already in the DOM, which is decoded by the time anyone
+   can click Print, so this stays synchronous and pdfMake gets its data URL
+   without a promise. */
+function avatarPrintDataUrl(root){
+  const rec = root && root._avatarData ? root._avatarData : null;
+  if (!rec || !rec.src) return null;
+  if (root._avatarPrint) return root._avatarPrint;
+  const img = root.querySelector('.avatar img');
+  // Not decoded yet: the original is still a valid image, so print that rather
+  // than printing nothing.
+  if (!img || !img.complete || !img.naturalWidth) return rec.src;
+  const crop = rec.crop;
+  const canvas = document.createElement('canvas');
+  canvas.width  = AVATAR_OUT_W;
+  canvas.height = AVATAR_OUT_H;
+  const ctx = canvas.getContext('2d');
+  // JPEG has no alpha, so a transparent PNG would composite onto black anyway.
+  // Doing it explicitly makes that a decision rather than a surprise.
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  let sx = 0, sy = 0, sw = img.naturalWidth, sh = img.naturalHeight;
+  if (crop && crop.w && crop.h) { sx = crop.x; sy = crop.y; sw = crop.w; sh = crop.h; }
+  try {
+    ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+    root._avatarPrint = canvas.toDataURL('image/jpeg', AVATAR_JPEG_QUALITY);
+  } catch(err) {
+    console.warn('Portrait raster failed:', err);
+    return rec.src;
+  }
+  return root._avatarPrint;
+}
+
+/* The ONE lossy step in the portrait path. Runs on upload, before the cropper,
+   so the pixels the cropper sees are the pixels that get stored and every later
+   re-frame works from them. Skips re-encoding a JPEG that is already small
+   enough, because a needless re-encode is a second generation of loss. */
+function downscaleImage(dataUrl, maxEdge, quality, cb){
+  const im = new Image();
+  im.onload = () => {
+    const nW = im.naturalWidth, nH = im.naturalHeight;
+    if (!nW || !nH) { cb(null); return; }
+    const k = Math.min(1, maxEdge / Math.max(nW, nH));
+    if (k === 1 && /^data:image\/jpeg/i.test(dataUrl)) { cb(dataUrl); return; }
+    const w = Math.max(1, Math.round(nW * k));
+    const h = Math.max(1, Math.round(nH * k));
+    const c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, w, h);
+    try {
+      ctx.drawImage(im, 0, 0, w, h);
+      cb(c.toDataURL('image/jpeg', quality));
+    } catch(err) { console.warn('Portrait downscale failed:', err); cb(null); }
+  };
+  im.onerror = () => cb(null);
+  im.src = dataUrl;
+}
+
+// === PORTRAIT WINDOW ===
+//
+// The .avatar box is 3:2 landscape; character art is almost always portrait. So
+// the crop frames a THUMBNAIL and this shows the artwork as drawn.
+//
+// Dwell rather than instant: the sidebar is sticky and the cursor crosses it on
+// the way to other controls, and a portrait that flashes up on every pass is an
+// irritation rather than a feature.
+const PORTRAIT_HOVER_DELAY = 450;   // ms of mouse dwell before opening
+const PORTRAIT_PRESS_DELAY = 500;   // ms of hold before opening, on touch
+const PORTRAIT_PRESS_SLOP  = 10;    // px of finger drift still counted as a hold
+
+function portraitEls(root){
+  return {
+    pop:  qs(root, '.portrait-pop'),
+    img:  qs(root, '.portrait-pop-img'),
+    back: qs(root, '.portrait-pop-backdrop')
+  };
+}
+
+function positionPortraitWindow(root){
+  const e = portraitEls(root);
+  const box = qs(root, '.avatar');
+  if (!e.pop || !box || e.pop.style.display === 'none') return;
+  const b = box.getBoundingClientRect();
+  const p = e.pop.getBoundingClientRect();
+  // Prefer the empty space LEFT of the sidebar. Right of it is usually off the
+  // viewport, since the sidebar is the rightmost column.
+  let left = b.left - p.width - 12;
+  if (left < 8) left = b.right + 12;
+  if (left + p.width > window.innerWidth - 8) left = Math.max(8, window.innerWidth - p.width - 8);
+  let top = b.top + (b.height / 2) - (p.height / 2);
+  if (top < 8) top = 8;
+  if (top + p.height > window.innerHeight - 8) top = Math.max(8, window.innerHeight - p.height - 8);
+  e.pop.style.left = left + 'px';
+  e.pop.style.top  = top + 'px';
+}
+
+function openPortraitWindow(root){
+  const rec = root._avatarData;
+  const e = portraitEls(root);
+  if (!rec || !rec.src || !e.pop || !e.img) return;
+  clearTimeout(root._portraitHideT);
+  // Position once now and again on load: the window is sized by the image, so
+  // before it decodes there is no height to centre against.
+  e.img.onload = () => positionPortraitWindow(root);
+  e.img.src = rec.src;
+  e.pop.style.display = 'block';
+  if (e.back) e.back.style.display = 'block';
+  positionPortraitWindow(root);
+  // Two frames, not one. display:block has to be committed before the class
+  // lands, or the opacity transition has no start value and the window snaps in.
+  requestAnimationFrame(() => requestAnimationFrame(() => e.pop.classList.add('open')));
+}
+
+function closePortraitWindow(root){
+  const e = portraitEls(root);
+  if (!e.pop) return;
+  e.pop.classList.remove('open');
+  if (e.back) e.back.style.display = 'none';
+  // Hide only after the fade, or it vanishes mid-transition.
+  clearTimeout(root._portraitHideT);
+  root._portraitHideT = setTimeout(() => {
+    e.pop.style.display = 'none';
+    if (e.img) { e.img.onload = null; e.img.removeAttribute('src'); }
+  }, 200);
+}
+
+function bindPortraitWindow(root){
+  const box = qs(root, '.avatar');
+  const e = portraitEls(root);
+  if (!box || !e.pop) return;
+
+  let hoverT = null, pressT = null, pressX = 0, pressY = 0;
+
+  const endPress = () => { clearTimeout(pressT); pressT = null; };
+
+  box.addEventListener('mouseenter', () => {
+    if (!root._avatarData) return;
+    clearTimeout(hoverT);
+    hoverT = setTimeout(() => openPortraitWindow(root), PORTRAIT_HOVER_DELAY);
+  });
+  box.addEventListener('mouseleave', () => {
+    clearTimeout(hoverT); hoverT = null;
+    closePortraitWindow(root);
+  });
+
+  // Touch. pointerType is tested rather than binding touchstart, so a stylus
+  // behaves like a finger and the mouse path above is never doubled up.
+  box.addEventListener('pointerdown', ev => {
+    if (ev.pointerType === 'mouse' || !root._avatarData) return;
+    pressX = ev.clientX; pressY = ev.clientY;
+    clearTimeout(pressT);
+    pressT = setTimeout(() => openPortraitWindow(root), PORTRAIT_PRESS_DELAY);
+  });
+  box.addEventListener('pointerup', endPress);
+  box.addEventListener('pointercancel', endPress);
+  // A scroll that happens to start on the portrait is a scroll. The slop is
+  // there because a finger never holds perfectly still -- cancelling on any
+  // movement at all would make the long-press almost impossible to trigger.
+  box.addEventListener('pointermove', ev => {
+    if (ev.pointerType === 'mouse' || !pressT) return;
+    if (Math.abs(ev.clientX - pressX) > PORTRAIT_PRESS_SLOP ||
+        Math.abs(ev.clientY - pressY) > PORTRAIT_PRESS_SLOP) endPress();
+  });
+  // Without this, iOS and Android raise their own image menu on top of ours.
+  box.addEventListener('contextmenu', ev => { if (root._avatarData) ev.preventDefault(); });
+
+  if (e.back) e.back.addEventListener('click', () => closePortraitWindow(root));
+  // These two are per-sheet, so N open tabs means N listeners. Each only acts on
+  // its own root and closing an already-closed window is a no-op, so the cost is
+  // a few dead calls rather than a bug.
+  window.addEventListener('resize', () => positionPortraitWindow(root));
+  document.addEventListener('keydown', ev => {
+    if (ev.key === 'Escape') closePortraitWindow(root);
+  });
 }
 
 // === AVATAR CROPPER ===
@@ -6003,9 +6246,13 @@ function setAvatar(root, dataUrl){
 // profile-picture cropper.
 //
 // The ratio is shared by three places -- this frame, the .avatar box in
-// style.css, and the print plate's portrait frame -- so a saved portrait fills
-// all three edge to edge.
-function openAvatarCropper(root, tab, dataUrl){
+// style.css, and the print plate's portrait frame -- so a crop fills all three
+// edge to edge.
+//
+// srcUrl is the STORED ORIGINAL and initCrop is the rectangle last recorded
+// against it, or null for a fresh upload. Applying records a new rectangle; it
+// never rewrites srcUrl, so re-framing is non-destructive however often it runs.
+function openAvatarCropper(root, tab, srcUrl, initCrop){
   const overlay   = qs(root, '.avatar-modal-overlay');
   const frame     = qs(root, '.avatar-crop-frame');
   const img       = qs(root, '.avatar-crop-img');
@@ -6082,40 +6329,39 @@ function openAvatarCropper(root, tab, dataUrl){
     img.removeAttribute('src');
   }
 
+  // Records a RECTANGLE, not a picture. The 660x440 raster this used to produce
+  // was a derived value stored in place of what it derived from -- which is why
+  // the original was unrecoverable and Adjust was lossy. The source plus the
+  // rectangle are the facts; the thumbnail and the print plate are renders of
+  // them, made on demand.
   function applyCrop(){
     const f = frameSize();
-    const canvas = document.createElement('canvas');
-    canvas.width  = AVATAR_OUT_W;
-    canvas.height = AVATAR_OUT_H;
-    const ctx = canvas.getContext('2d');
 
     // What the frame is showing, expressed in the source image's own pixels.
     let sx = -x / scale, sy = -y / scale;
     let sw = f.w / scale, sh = f.h / scale;
     // Float guard: clamp() keeps these in range, but a rounding error of a
-    // fraction of a pixel makes drawImage throw rather than clip.
+    // fraction of a pixel puts the rectangle outside the image.
     sx = Math.max(0, Math.min(sx, nW));
     sy = Math.max(0, Math.min(sy, nH));
     sw = Math.min(sw, nW - sx);
     sh = Math.min(sh, nH - sy);
 
-    // JPEG has no alpha, so a transparent PNG would composite onto black by
-    // default anyway -- doing it explicitly makes that a decision, not a
-    // surprise.
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    let out;
-    try {
-      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
-      out = canvas.toDataURL('image/jpeg', AVATAR_JPEG_QUALITY);
-    } catch(err) {
-      console.warn('Avatar crop failed:', err);
-      alert('That image could not be processed. Try a different file.');
+    if (!(sw > 0 && sh > 0)) {
+      alert('That crop could not be applied. Try again.');
       return;
     }
 
-    setAvatar(root, out);
+    // Two decimals, not integers. The thumbnail maths in applyAvatarCrop relies
+    // on this rectangle holding the frame's 3:2 ratio, and rounding w and h
+    // independently to whole pixels can break that by enough to letterbox.
+    setAvatar(root, {
+      src: srcUrl,
+      crop: {
+        x: +sx.toFixed(2), y: +sy.toFixed(2),
+        w: +sw.toFixed(2), h: +sh.toFixed(2)
+      }
+    });
     markUnsaved(tab, true, root);
     closeCropper();
   }
@@ -6129,19 +6375,32 @@ function openAvatarCropper(root, tab, dataUrl){
 
     const f = frameSize();
     baseScale = Math.max(f.w / nW, f.h / nH);   // cover the frame at zoom 1
-    scale = baseScale;
-    zoomInp.value = 1;
-    x = (f.w - nW * scale) / 2;
-    y = (f.h - nH * scale) / 2;
+
+    if (initCrop && initCrop.w && initCrop.h) {
+      // Reopen on the SAME framing the player last chose, rather than resetting
+      // to centre. Adjust is now a nudge, so landing somewhere else each time
+      // would make it useless.
+      scale = f.w / initCrop.w;
+      x = -initCrop.x * scale;
+      y = -initCrop.y * scale;
+      // scale can never fall below baseScale -- a recorded crop is by
+      // construction no wider than the cover width -- so this stays in range.
+      zoomInp.value = Math.min(4, Math.max(1, scale / baseScale));
+    } else {
+      scale = baseScale;
+      zoomInp.value = 1;
+      x = (f.w - nW * scale) / 2;
+      y = (f.h - nH * scale) / 2;
+    }
     paint();
 
     if (info) {
       info.textContent = 'Source ' + nW + ' \u00d7 ' + nH +
-        ' \u2014 saved as ' + AVATAR_OUT_W + ' \u00d7 ' + AVATAR_OUT_H + ' JPEG.';
+        ' \u2014 the box sets the thumbnail and print framing. The full image is kept.';
     }
   };
   img.onerror = () => { alert('That image could not be read.'); closeCropper(); };
-  img.src = dataUrl;
+  img.src = srcUrl;
 
   frame.addEventListener('pointerdown', onDown);
   window.addEventListener('pointermove', onMove);
@@ -7599,13 +7858,14 @@ function bindSheet(root, tab){
   }
 
   // Avatar
+  bindPortraitWindow(root);
   qs(root,'.upload-avatar').onclick = ()=> qs(root,'.avatar-input').click();
   qs(root,'.avatar-input').onchange = e=>{
     const f=e.target.files&&e.target.files[0];
     if(!f) return;
-    // The cap now only rejects the absurd. Everything under it gets cropped and
-    // downscaled to AVATAR_OUT_W x AVATAR_OUT_H regardless of what came in, so
-    // refusing a 2MB photo would be refusing work we are about to do anyway.
+    // The cap only rejects the absurd. Everything under it gets downscaled to
+    // AVATAR_SRC_MAX regardless of what came in, so refusing a 2MB photo would
+    // be refusing work we are about to do anyway.
     if(f.size > AVATAR_MAX_SIZE){
       alert("That image is " + (f.size/1024/1024).toFixed(1) + "MB, over the " +
             (AVATAR_MAX_SIZE/1024/1024).toFixed(0) + "MB limit.\n\n" +
@@ -7615,24 +7875,38 @@ function bindSheet(root, tab){
     }
     const r=new FileReader();
     r.onload=ev=>{
-      openAvatarCropper(root, tab, ev.target.result);
+      // Downscale BEFORE the cropper, not after. This is the only lossy step in
+      // the whole path now: what the cropper receives is what gets stored, and
+      // every later re-frame works from these same pixels rather than from a
+      // crop of a crop.
+      downscaleImage(ev.target.result, AVATAR_SRC_MAX, AVATAR_SRC_QUALITY, src => {
+        if(!src){ alert('That image could not be read.'); return; }
+        openAvatarCropper(root, tab, src, null);
+      });
     };
     r.readAsDataURL(f);
     // Cleared so re-picking the SAME file fires change again -- otherwise
     // cancelling the cropper and retrying the same image does nothing.
     e.target.value='';
   };
-  // Re-crop what is already stored. This is how portraits saved before the
-  // cropper existed get migrated: there is no migration pass, the player just
-  // adjusts one when they happen to care.
+  // Re-frame the stored ORIGINAL, not the last crop of it. This used to feed
+  // the cropper its own 660x440 output, so every Adjust was another generation
+  // of loss and could only ever zoom further in. Now the crop is a rectangle
+  // recorded against pixels that never change, and adjusting is free.
+  //
+  // Legacy portraits saved as a bare data URL still arrive here with crop:null,
+  // and re-framing one records a proper rectangle -- the same "migrates when
+  // someone happens to care" behaviour as before, minus the quality loss.
   qs(root,'.adjust-avatar').onclick = ()=>{
-    if(!root._avatarData){
+    const rec = root._avatarData;
+    if(!rec || !rec.src){
       alert('No portrait to adjust yet — upload one first.');
       return;
     }
-    openAvatarCropper(root, tab, root._avatarData);
+    openAvatarCropper(root, tab, rec.src, rec.crop || null);
   };
   qs(root,'.remove-avatar').onclick = ()=>{
+    closePortraitWindow(root);
     setAvatar(root,null);
     markUnsaved(tab,true,root);
   };
