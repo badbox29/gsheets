@@ -3082,36 +3082,43 @@ function makeHirelingNode(h, onChange){
 // ===== Animal Companions =====
 function makeCompanionNode(c, onChange){
   const el = document.createElement('div');
-  el.className = 'item';
-  el.style.flexDirection = 'column';
-  el.style.alignItems = 'stretch';
-  el.style.padding = '12px';
+  el.className = 'item follower';
   // Kept so fields this UI does not display survive a move -- see the
   // comment above readNodeFields.
   el._data = c || {};
   
   el.innerHTML =
-    '<div style="display:flex;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div style="flex:1;">Companion Name</div>' +
-      '<div style="width:80px;"></div>' + // Space for Details button
-      '<div style="width:70px;"></div>' + // Space for Remove button
+    '<div class="fol-rail"></div>' +
+    '<div class="fol-r1">' +
+      '<input class="companion-name" placeholder="e.g., Whiskers" value="'+escapeHtml(c.name||'')+'">' +
+      '<select class="companion-status">' +
+        '<option value="Active"'+((c.status||'Active')==='Active'?' selected':'')+'>Active</option>' +
+        '<option value="Retired"'+((c.status||'')==='Retired'?' selected':'')+'>Retired</option>' +
+        '<option value="Deceased"'+((c.status||'')==='Deceased'?' selected':'')+'>Deceased</option>' +
+        '<option value="Missing"'+((c.status||'')==='Missing'?' selected':'')+'>Missing</option>' +
+      '</select>' +
+      '<button class="move-to-unbonded btn-quiet" title="Move to Unbonded Mounts &amp; Vehicles. Nothing is lost -- fields that list does not show are kept.">&rarr; Unbonded</button>' +
+      '<button class="toggle-details btn-quiet">Details</button>' +
+      '<button class="rm btn-danger">Remove</button>' +
     '</div>' +
-    '<div style="display:flex;gap:8px;align-items:stretch;">' +
-      '<input class="companion-name" placeholder="e.g., Whiskers" value="'+escapeHtml(c.name||'')+'" style="flex:1;font-weight:bold;">' +
-      '<button class="move-to-unbonded" style="padding:8px 10px;font-size:11px;" title="Move to Unbonded Mounts &amp; Vehicles. Nothing is lost -- fields that list does not show are kept.">&rarr; Unbonded</button>' +
-      '<button class="toggle-details" style="padding:8px 12px;font-size:11px;">Details</button>' +
-      '<button class="rm">Remove</button>' +
+    '<div class="fol-r2">' +
+      '<span class="fol-stat wide">bond<select class="companion-bond">' +
+        '<option value=""'+(c.bond===''?' selected':'')+'>--</option>' +
+        '<option value="Familiar"'+((c.bond||'')==='Familiar'?' selected':'')+'>Familiar</option>' +
+        '<option value="Animal Companion"'+((c.bond||'')==='Animal Companion'?' selected':'')+'>Animal Companion</option>' +
+        '<option value="Follower"'+((c.bond||'')==='Follower'?' selected':'')+'>Follower</option>' +
+        '<option value="Mount"'+((c.bond||'')==='Mount'?' selected':'')+'>Mount</option>' +
+        '<option value="Vehicle"'+((c.bond||'')==='Vehicle'?' selected':'')+'>Vehicle</option>' +
+      '</select></span>' +
+      '<span class="fol-stat">hd<input class="companion-hd" placeholder="e.g., 2+2" value="'+escapeHtml(c.hd||'')+'"></span>' +
+      '<span class="fol-stat">hp<input class="companion-hp" type="number" placeholder="--" value="'+escapeHtml(c.hp||'')+'"></span>' +
+      '<span class="fol-stat">ac<input class="companion-ac" type="number" placeholder="--" value="'+escapeHtml(c.ac||'')+'"></span>' +
+      '<span class="fol-stat">loyalty<input class="companion-loyalty" type="number" placeholder="--" value="'+escapeHtml(c.loyalty||'')+'"></span>' +
     '</div>' +
     '<div class="companion-details" style="display:none;margin-top:8px;">' +
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">' +
         '<div><label style="font-size:11px;color:var(--muted);">Species</label>' +
           '<input class="companion-species" placeholder="e.g., Wolf, Hawk" value="'+escapeHtml(c.species||'')+'" style="width:100%;"></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">HD</label>' +
-          '<input class="companion-hd" placeholder="e.g., 2+2" value="'+escapeHtml(c.hd||'')+'" style="width:100%;"></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">HP</label>' +
-          '<input class="companion-hp" type="number" placeholder="--" value="'+escapeHtml(c.hp||'')+'" style="width:100%;"></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">AC</label>' +
-          '<input class="companion-ac" type="number" placeholder="--" value="'+escapeHtml(c.ac||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">THAC0</label>' +
           '<input class="companion-thac0" type="number" placeholder="--" value="'+escapeHtml(c.thac0||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Attacks</label>' +
@@ -3134,8 +3141,6 @@ function makeCompanionNode(c, onChange){
           '<input class="companion-per" type="number" placeholder="--" value="'+escapeHtml(c.per||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">COM</label>' +
           '<input class="companion-com" type="number" placeholder="--" value="'+escapeHtml(c.com||'')+'" style="width:100%;"></div>' +
-        '<div><label style="font-size:11px;color:var(--muted);">Loyalty</label>' +
-          '<input class="companion-loyalty" type="number" placeholder="--" value="'+escapeHtml(c.loyalty||'')+'" style="width:100%;"></div>' +
         '<div style="grid-column: span 2;"><label style="font-size:11px;color:var(--muted);">Bond Type</label>' +
           '<select class="companion-bond" style="width:100%;">' +
             '<option value=""'+(c.bond===''?' selected':'')+'>--</option>' +
@@ -3179,6 +3184,14 @@ function makeCompanionNode(c, onChange){
   
   // Toggle details
   const toggleBtn = el.querySelector('.toggle-details');
+  const setRail = ()=>{
+    const v = (el.querySelector('.companion-status').value || 'Active').toLowerCase();
+    el.classList.remove('st-retired','st-missing','st-deceased');
+    if(v !== 'active') el.classList.add('st-' + v);
+  };
+  setRail();
+  el.querySelector('.companion-status').addEventListener('change', setRail);
+
   const detailsDiv = el.querySelector('.companion-details');
   toggleBtn.onclick = ()=>{
     const isOpen = detailsDiv.style.display !== 'none';
