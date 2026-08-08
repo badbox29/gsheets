@@ -2943,8 +2943,6 @@ function makeHirelingNode(h, onChange){
     '</div>' +
     '<div class="fol-r2">' +
       '<span class="fol-stat">qty<input class="hireling-quantity" type="number" placeholder="1" value="'+escapeHtml(h.quantity||'')+'"></span>' +
-      '<span class="fol-stat wide">wage<input class="hireling-wage" placeholder="e.g., 2 gp/month" value="'+escapeHtml(h.wage||'')+'"></span>' +
-      '<span class="fol-stat wide"><span class="hireling-duration-label">for</span><input class="hireling-duration" placeholder="e.g., 6 months" value="'+escapeHtml(h.duration||'')+'"></span>' +
       '<span class="fol-stat grow">purpose<input class="hireling-purpose" placeholder="e.g., Guard the stronghold" value="'+escapeHtml(h.purpose||'')+'"></span>' +
     '</div>' +
     '<div class="hireling-details" style="display:none;margin-top:8px;">' +
@@ -2961,6 +2959,10 @@ function makeHirelingNode(h, onChange){
           '</select></div>' +
         // Relabelled from "Type": this is the OCCUPATION, the thing Chapter 12
         // lists as archer, armorer, sage, spy. The stored key stays `type`.
+        '<div><label style="font-size:11px;color:var(--muted);">Wage</label>' +
+          '<input class="hireling-wage" placeholder="e.g., 2 gp/month" value="'+escapeHtml(h.wage||'')+'" style="width:100%;"></div>' +
+        '<div><label class="hireling-duration-label" style="font-size:11px;color:var(--muted);">Duration</label>' +
+          '<input class="hireling-duration" placeholder="e.g., 6 months" value="'+escapeHtml(h.duration||'')+'" style="width:100%;"></div>' +
         '<div><label style="font-size:11px;color:var(--muted);">Occupation</label>' +
           '<input class="hireling-type" placeholder="e.g., Men-at-Arms, Torchbearer" value="'+escapeHtml(h.type||'')+'" style="width:100%;"></div>' +
         // PHB Ch.12 gives followers the one thing most hirelings lack: they
