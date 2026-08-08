@@ -1826,6 +1826,84 @@
 	   used to be --accent-light and related --muted, which meant the legend
 	   changed meaning with the theme, and in a blue theme "proficient" and
 	   "specialized" became the same blue. */
+	/* ========================================================================
+	   FOLLOWER CARDS. Same idea as the gear cards: a rail carries status, the
+	   face carries the figures you would otherwise open the card to read.
+
+	   All four lists -- henchmen, hirelings, mounts, companions -- share ONE
+	   status vocabulary (Active / Retired / Deceased / Missing), and each value
+	   maps to a token that already means the same thing elsewhere. Nothing new
+	   is invented and no colour means two things.
+
+	   The summary fields are the REAL INPUTS, moved up out of the details panel
+	   rather than mirrored. A mirrored value would need syncing, and a second
+	   element carrying the same class would be read by collectSheet while the
+	   first was written -- the silent-failure trap.
+	   ======================================================================== */
+	.item.follower {
+	  display: grid;
+	  grid-template-columns: 3px 1fr;
+	  gap: 0 10px;
+	  align-items: center;
+	  padding: 10px 12px;
+	}
+	.item.follower .fol-rail {
+	  grid-row: 1 / span 2;
+	  align-self: stretch;
+	  border-radius: var(--radius-sm);
+	  background: var(--st-available);
+	}
+	.item.follower.st-retired  .fol-rail { background: transparent; border: 1px solid var(--muted); }
+	.item.follower.st-missing  .fol-rail { background: var(--st-lost); }
+	.item.follower.st-deceased .fol-rail { background: var(--st-forbidden); }
+
+	.item.follower .fol-r1 { display: flex; gap: 8px; align-items: center; min-width: 0; }
+	.item.follower .fol-r2 {
+	  display: flex; gap: 12px; align-items: baseline;
+	  margin-top: 5px; flex-wrap: wrap;
+	}
+	/* The details panel spans the full width under both summary rows. */
+	.item.follower > [class$="-details"] { grid-column: 2; }
+
+	/* Borderless until touched: a bordered box per row made the list read as a
+	   form rather than as a list of names. */
+	.item.follower .fol-r1 > input {
+	  flex: 1; min-width: 0; font-weight: 700;
+	  background: transparent; border-color: transparent; padding: 2px 4px;
+	}
+	.item.follower .fol-r1 > input:hover,
+	.item.follower .fol-r1 > input:focus {
+	  background: var(--field); border-color: var(--border);
+	}
+	.item.follower.st-deceased .fol-r1 > input { color: var(--muted); text-decoration: line-through; }
+	.item.follower.st-retired  .fol-r1 > input { color: var(--muted); }
+
+	/* A labelled figure on the summary line. The label is text, the value is the
+	   real input, sized to its content. */
+	.item.follower .fol-stat {
+	  font-size: 11px; color: var(--muted); white-space: nowrap;
+	  display: inline-flex; align-items: baseline; gap: 3px;
+	}
+	.item.follower .fol-stat > input,
+	.item.follower .fol-stat > select {
+	  width: 5.5ch; font-size: 12.5px; font-weight: 600; color: var(--text);
+	  background: transparent; border-color: transparent; padding: 1px 2px;
+	  text-align: center; font-family: inherit;
+	}
+	.item.follower .fol-stat.wide > input,
+	.item.follower .fol-stat.wide > select { width: auto; min-width: 9ch; text-align: left; }
+	.item.follower .fol-stat > input:hover, .item.follower .fol-stat > select:hover,
+	.item.follower .fol-stat > input:focus, .item.follower .fol-stat > select:focus {
+	  background: var(--field); border-color: var(--border);
+	}
+	/* Spinners off: these sit inline in a text run, and the arrows double the
+	   apparent width of a two-character field. */
+	.item.follower .fol-stat > input[type=number] { -moz-appearance: textfield; }
+	.item.follower .fol-stat > input[type=number]::-webkit-outer-spin-button,
+	.item.follower .fol-stat > input[type=number]::-webkit-inner-spin-button {
+	  -webkit-appearance: none; margin: 0;
+	}
+
 	.item.gear .rail {
 	  grid-row: 1 / span 2;
 	  align-self: stretch;
