@@ -1883,6 +1883,12 @@ const SHEET_HTML = `
 		  <p style="font-size:12px;color:var(--muted);margin-bottom:8px;">
 			Horses, ponies, wagons, ships and other transport the character owns or hires but has no bond with. Use <em>Move to Bonded</em> if one of them later becomes a companion or bonded mount.
 		  </p>
+		  <div class="spell-listbar">
+			<span class="key"><i style="background:var(--st-available)"></i>active</span>
+			<span class="key"><i style="background:transparent;border:1px solid var(--muted);box-sizing:border-box"></i>retired</span>
+			<span class="key"><i style="background:var(--st-lost)"></i>missing</span>
+			<span class="key"><i style="background:var(--st-forbidden)"></i>deceased</span>
+		  </div>
 		  <div class="list mounts-list"></div>
 		</section>
 
@@ -1901,6 +1907,12 @@ const SHEET_HTML = `
 		  <p style="font-size:12px;color:var(--muted);margin-bottom:8px;">
 			Familiars, animal companions, bonded beasts and vehicles &mdash; anything with a lasting tie to the character. Tick <em>Is Mount</em> on any of them that can be ridden or driven.
 		  </p>
+		  <div class="spell-listbar">
+			<span class="key"><i style="background:var(--st-available)"></i>active</span>
+			<span class="key"><i style="background:transparent;border:1px solid var(--muted);box-sizing:border-box"></i>retired</span>
+			<span class="key"><i style="background:var(--st-lost)"></i>missing</span>
+			<span class="key"><i style="background:var(--st-forbidden)"></i>deceased</span>
+		  </div>
 		  <div class="list companions-list"></div>
 		</section>
 
@@ -1930,6 +1942,12 @@ const SHEET_HTML = `
 			(PHB Ch.12).
 		  </p>
 		  <div class="henchman-limit-message" style="display:none;margin-bottom:8px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
+		  <div class="spell-listbar">
+			<span class="key"><i style="background:var(--st-available)"></i>active</span>
+			<span class="key"><i style="background:transparent;border:1px solid var(--muted);box-sizing:border-box"></i>retired</span>
+			<span class="key"><i style="background:var(--st-lost)"></i>missing</span>
+			<span class="key"><i style="background:var(--st-forbidden)"></i>deceased</span>
+		  </div>
 		  <div class="list henchmen-list"></div>
 		  <label style="font-size:11px;color:var(--muted);display:block;margin:10px 0 2px;">Henchmen Notes</label>
 		  <textarea data-field="henchmen_notes" placeholder="Obligations owed, ransom terms, who answers to whom..." style="width:100%;min-height:60px;resize:vertical;"></textarea>
@@ -1955,6 +1973,12 @@ const SHEET_HTML = `
 			once with no replacements for the fallen, and advances a level as a whole unit.
 			Neither goes adventuring with the party (PHB Ch.12).
 		  </p>
+		  <div class="spell-listbar">
+			<span class="key"><i style="background:var(--st-available)"></i>active</span>
+			<span class="key"><i style="background:transparent;border:1px solid var(--muted);box-sizing:border-box"></i>retired</span>
+			<span class="key"><i style="background:var(--st-lost)"></i>missing</span>
+			<span class="key"><i style="background:var(--st-forbidden)"></i>deceased</span>
+		  </div>
 		  <div class="list hirelings-list"></div>
 		</section>
 
