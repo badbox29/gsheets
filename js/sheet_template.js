@@ -3163,7 +3163,7 @@ const SHEET_HTML = `
 	<div class="avatar-modal-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:10000;justify-content:center;align-items:center;">
 	  <div style="background:var(--panel);border-radius:var(--radius-lg);max-width:520px;width:94%;max-height:90vh;overflow-y:auto;padding:20px 24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
 	    <h2 style="margin:0 0 4px 0;font-size:16px;">Adjust Portrait</h2>
-	    <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Drag the image to reposition, and zoom to fill the frame. Whatever sits inside the box is what gets saved and printed.</p>
+	    <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Drag the image to reposition, and zoom to fill the frame. This sets the thumbnail and what gets printed &mdash; your full image is kept, and hovering the portrait shows all of it.</p>
 
 	    <!-- The crop window is a FIXED 3:2 frame; the image moves behind it.
 	         Sizing the frame rather than a draggable selection makes a
@@ -3184,5 +3184,27 @@ const SHEET_HTML = `
 	      <button class="avatar-crop-apply" style="padding:8px 16px;font-size:12px;">Apply</button>
 	    </div>
 	  </div>
+	</div>
+
+	<!-- PORTRAIT WINDOW. Shows the FULL artwork on hover-dwell or long-press.
+	     The .avatar box is 3:2 landscape and character art is almost always
+	     portrait, so the crop is a thumbnail framing choice rather than an edit
+	     -- this is where the uncropped original is seen.
+
+	     Ships display:none and position:fixed (from style.css), so it costs
+	     nothing until opened and does not participate in sheet layout. Placed
+	     at the end of the template beside the crop modal for the same reason
+	     that one is here: it is chrome, not part of the sheet.
+
+	     The backdrop is transparent and exists ONLY to catch the tap that
+	     closes the window on touch. A document-level listener would do the same
+	     job but would also fire the control underneath the tap. -->
+	<div class="portrait-pop-backdrop" style="display:none;"></div>
+	<div class="portrait-pop" style="display:none;">
+	  <svg class="portrait-corner tl" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 13V5a4 4 0 0 1 4-4h8" stroke="currentColor" stroke-width="1.2"/></svg>
+	  <svg class="portrait-corner tr" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 13V5a4 4 0 0 1 4-4h8" stroke="currentColor" stroke-width="1.2"/></svg>
+	  <svg class="portrait-corner br" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 13V5a4 4 0 0 1 4-4h8" stroke="currentColor" stroke-width="1.2"/></svg>
+	  <svg class="portrait-corner bl" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 13V5a4 4 0 0 1 4-4h8" stroke="currentColor" stroke-width="1.2"/></svg>
+	  <img class="portrait-pop-img" alt="Full character portrait">
 	</div>
 `;
