@@ -2,7 +2,7 @@
 
 A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and no build step.
 
-**Version 11.2.0**
+**Version 11.2.3**
 
 ## Live Demo
 
