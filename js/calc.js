@@ -551,6 +551,75 @@ function conditionAffectedSaves(root, key) {
   return [];
 }
 
+// Values that ACTUALLY CHANGE between the recorded score and the adjusted one.
+// Rows where nothing moves are omitted on purpose: these tables are banded --
+// DEX_TABLE is flat from 7 to 14, CON_POISON_ADJ from 3 to 18 -- so most -1s
+// change nothing, and printing "+1 -> +1" trains the reader to skim.
+//
+// ALLOW-LIST ONLY. Every table here is a pure lookup off the current score.
+// CON_HP_BONUS, INT_TABLE's language and spell columns and the priest bonus
+// spells are deliberately ABSENT: those are cumulative or already spent, and
+// restating them as a number would be a lie. See P8 in the project notes.
+function conditionAbilityValueRows(root, key, base, now, adj) {
+  const rows = [];
+  const sgn  = v => (typeof v === 'number' && v > 0) ? '+' + v : String(v);
+  const pct  = v => v + '%';
+  const DASH = '\u2014';
+
+  const at = (tbl, s, fmt, dflt) => {
+    const v = tbl ? tbl[s] : undefined;
+    if (v === undefined || v === null) return dflt;
+    return fmt ? fmt(v) : v;
+  };
+  const push = (label, a, b) => {
+    if (a === undefined || b === undefined) return;
+    if (String(a) === String(b)) return;
+    rows.push({ label: label, from: a, to: b });
+  };
+
+  if (key === 'str') {
+    const clazz = val(root, 'clazz');
+    const exc0  = val(root, 'str_exceptional') || '';
+    const a = getStrengthData(base, exc0, clazz) || [];
+    const b = getStrengthData(now, adj.strExceptional, clazz) || [];
+    ['To-Hit Adj.', 'Damage Adj.', 'Weight Allowance', 'Open Doors', 'Bend Bars/Lift Gates']
+      .forEach((L, i) => push(L, i < 2 ? sgn(a[i]) : a[i], i < 2 ? sgn(b[i]) : b[i]));
+    const ea = getEncumbranceData(base, exc0, clazz);
+    const eb = getEncumbranceData(now, adj.strExceptional, clazz);
+    if (ea && eb) push('Max Carried Weight', ea[4], eb[4]);
+
+  } else if (key === 'dex') {
+    const a = DEX_TABLE[base] || [], b = DEX_TABLE[now] || [];
+    ['Reaction Adjustment', 'Missile Attack Adj.', 'Defensive Adj. (AC)']
+      .forEach((L, i) => push(L, sgn(a[i]), sgn(b[i])));
+
+  } else if (key === 'con') {
+    push('System Shock %', at(CON_SYSTEM_SHOCK, base, pct), at(CON_SYSTEM_SHOCK, now, pct));
+    push('Resurrection Survival %', at(CON_RESURRECTION, base, pct), at(CON_RESURRECTION, now, pct));
+    push('Poison Save Adj.', at(CON_POISON_ADJ, base, sgn), at(CON_POISON_ADJ, now, sgn));
+    push('Regeneration', at(CON_REGENERATION, base, null, DASH), at(CON_REGENERATION, now, null, DASH));
+
+  } else if (key === 'int') {
+    push('Spell Immunity', at(INT_TABLE, base, r => r[3] || DASH),
+                           at(INT_TABLE, now,  r => r[3] || DASH));
+
+  } else if (key === 'wis') {
+    push('Magical Defense Adj.', at(WIS_MDA, base, sgn), at(WIS_MDA, now, sgn));
+    push('Spell Failure (priests)', at(WIS_FAILURE, base, null, DASH),
+                                    at(WIS_FAILURE, now,  null, DASH));
+    push('Spell Immunity', at(WIS_IMMUNITIES, base, null, DASH),
+                           at(WIS_IMMUNITIES, now,  null, DASH));
+
+  } else if (key === 'cha') {
+    const a = CHA_TABLE[base] || {}, b = CHA_TABLE[now] || {};
+    push('Reaction Adjustment', sgn(a.reaction), sgn(b.reaction));
+    push('Max Henchmen', a.henchmen, b.henchmen);
+    push('Loyalty Base', sgn(a.loyalty), sgn(b.loyalty));
+  }
+
+  return rows;
+}
+
 // DISPLAY ONLY. Reads the resolver and writes three containers; never touches a
 // recorded score. <details> rather than title= on purpose -- tooltips do not
 // fire on touch and this expanding list is the entire payload.
@@ -576,12 +645,22 @@ function renderConditionAbilityEffects(root) {
     const t     = CONDITION_ABILITY_TOUCHES[k];
     const saves = conditionAffectedSaves(root, k);
     const src   = (adj.sources[k] || []).join(', ');
+    const rows = conditionAbilityValueRows(root, k, adj.base[k], adj.adjusted[k], adj);
     let body = '';
     if (saves.length) {
-      body += '<div><strong>Saving throws:</strong> ' + escapeHtml(saves.join(', ')) + '</div>';
+      body += '<div><strong>Saving throws:</strong> ' + escapeHtml(saves.join(', ')) +
+              ' \u2014 recompute from the adjusted score</div>';
     }
-    if (t.effects.length) {
-      body += '<div><strong>Ability effects:</strong> ' + escapeHtml(t.effects.join(', ')) + '</div>';
+    if (rows.length) {
+      body += '<div><strong>Ability effects:</strong></div>';
+      rows.forEach(r => {
+        body += '<div style="padding-left:8px;">' + escapeHtml(r.label) + ': ' +
+                escapeHtml(String(r.from)) + ' \u2192 <strong>' +
+                escapeHtml(String(r.to)) + '</strong></div>';
+      });
+    } else {
+      body += '<div style="color:var(--muted);">No listed effect changes at this score ' +
+              '\u2014 the tables are banded. Checked: ' + escapeHtml(t.effects.join(', ')) + '</div>';
     }
     t.deferred.forEach(d => {
       body += '<div style="color:var(--muted);">' + escapeHtml(d) +
