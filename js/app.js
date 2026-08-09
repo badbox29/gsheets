@@ -243,6 +243,22 @@ function writeCharacterMap(map, context){
   }
 }
 function performAutosave(tab, root){
+  // REFUSE TO WRITE A SHEET THAT HAS NOT FINISHED RENDERING. collectSheet reads
+  // the DOM, so a list that never built reads as an empty list, and the write
+  // replaces real data with nothing -- silently, and then KV-syncs it to every
+  // other device. The flag is set at the end of loadSheet and on the two blank
+  // paths (newTab's else branch, and the default tab in the boot IIFE).
+  //
+  // Deliberately NOT an alert: this fires during normal operation, in the gap
+  // between a tab being built and its data loading. Skipping the write is
+  // correct and the next autosave picks it up. The console line is for
+  // diagnosis if it ever fires repeatedly, which would mean a builder is
+  // throwing and the flag is never being set.
+  if (!root._renderComplete) {
+    console.warn('[autosave] Skipped: sheet has not finished rendering.');
+    return;
+  }
+
   const data = collectSheet(root);
   const currentTypedName = (data.meta.name && data.meta.name.trim()) || 'Unnamed';
 
@@ -389,6 +405,12 @@ function newTab(name='Character', data=null){
     // Loaded data should be considered clean; set the save key to the provided name
     setTabSaveKey(tab, name || '');
     markUnsaved(tab, false, container);
+  } else {
+    // A BLANK character never passes through loadSheet, so nothing would ever
+    // set its render flag and it could never autosave. Its lists are legitimately
+    // empty rather than missing, so the sheet is complete as soon as SHEET_HTML
+    // is in place and bound.
+    container._renderComplete = true;
   }
 
   tab.querySelector('.close').onclick = ()=> closeTab(tab, content);
@@ -5402,6 +5424,12 @@ function populateCampaignSettings(root) {
 function loadSheet(root, data){
   if(!data) return;
 
+  // Clear FIRST. From here until the flag is set again at the bottom, this sheet
+  // is mid-render and autosave will refuse to write it. The early return above
+  // is deliberately left outside that window: a call with no data renders
+  // nothing, so it must not invalidate a sheet that already rendered fine.
+  root._renderComplete = false;
+
   // Twelve list builders below pass ()=>markUnsaved(tab,true,root) as their
   // onChange, but this function's signature is (root, data) -- there has never
   // been a `tab` in scope, so every one of those arrows threw ReferenceError on
@@ -6007,6 +6035,13 @@ function loadSheet(root, data){
   // so loadSheet stays synchronous). Fixes messy old school/sphere strings and
   // surfaces any level corrections in a dismissible banner.
   migrateSheetSpells(root);
+
+  // RENDER COMPLETED. Set LAST, and never in bindSheet: the whole point is that
+  // a builder throwing part-way through this function leaves the flag CLEAR, so
+  // autosave refuses to write a sheet whose lists never rendered. collectSheet
+  // cannot tell "no weapons" from "the weapons list is missing", and that
+  // ambiguity is what flattened a character once already (§0).
+  root._renderComplete = true;
 }
 
 /* A portrait is { src, crop } -- the stored original, plus the rectangle that
@@ -10822,6 +10857,12 @@ function makeCharacterJournalEntry(data = {}, onChange) {
   }
 
   bindSheet(firstContainer, defaultTab);
+
+  // The default tab is built HERE, not by newTab, so neither of the other two
+  // render-flag paths reaches it. Without this line the tab every user starts in
+  // could never autosave -- a data-loss bug introduced by the data-loss fix.
+  // Blank like newTab's else branch: its lists are empty, not missing.
+  firstContainer._renderComplete = true;
 
   setDefaultTabHandlers(defaultTab);
 
