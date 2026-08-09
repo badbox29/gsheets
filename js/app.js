@@ -199,6 +199,110 @@ function startAutosaveForTab(tab, root){
     }
   }, 1000);
 }
+// ===== Mass-emptying guard (the silent-flatten failure, §0) =====
+//
+// collectSheet reads the DOM, so a list that failed to build reads as an empty
+// list and the save replaces real data with nothing. The render-completion flag
+// prevents the known cause; this catches the symptom whatever the cause.
+//
+// THE THRESHOLD IS THE WHOLE DESIGN. Deleting your last weapon is normal.
+// Weapons, armor, ammunition, proficiencies and companions all emptying in ONE
+// save is not. Two or more sections going non-empty to empty is the bar; one is
+// always allowed. Too sensitive and it gets dismissed reflexively, which is
+// worse than absent.
+//
+// Paths read off the real collectSheet return object, not from memory.
+const FLATTEN_WATCHED_PATHS = [
+  'weaponProficiencies', 'nonWeaponProficiencies', 'classAbilities',
+  'racialAbilities', 'kitAbilities',
+  'items', 'valuables', 'armor', 'weapons', 'ammunition', 'magicItems',
+  'mounts', 'henchmen', 'hirelings', 'companions',
+  'languages', 'weaponProfs', 'nwps', 'conditions',
+  'selectedSpheres', 'selectedSchools',
+  'magic.memorized', 'magic.spellbooks', 'magic.schools',
+  'notesTab.sessionLog', 'notesTab.questJournal', 'notesTab.npcs',
+  'notesTab.locations', 'notesTab.characterJournal'
+];
+
+// null means "not a collection here" -- absent on one side, or a legacy record
+// that never had the key. Those are SKIPPED, which handles new characters,
+// deletions and old saves for free.
+function flattenSizeAt(record, path){
+  let node = record;
+  const parts = path.split('.');
+  for (let i = 0; i < parts.length; i++){
+    if (!node || typeof node !== 'object') return null;
+    node = node[parts[i]];
+  }
+  if (Array.isArray(node)) return node.length;
+  // selectedSpheres is an OBJECT keyed by sphere name, not an array. Measure
+  // both shapes rather than assuming.
+  if (node && typeof node === 'object') return Object.keys(node).length;
+  return null;
+}
+
+function findFlattenedSections(prev, next){
+  const emptied = [];
+  FLATTEN_WATCHED_PATHS.forEach(p => {
+    const a = flattenSizeAt(prev, p);
+    const b = flattenSizeAt(next, p);
+    if (a === null || b === null) return;
+    if (a > 0 && b === 0) emptied.push(p);
+  });
+  return emptied;
+}
+
+// Remembered per character AND per set of emptied sections. Without this, a
+// refusal would re-prompt on every autosave tick: performAutosave returns before
+// stopAutosaveForTab, so the timer keeps running.
+const _flattenDecisions = {};
+
+function passesFlattenCheck(map, context){
+  let prevMap;
+  try { prevMap = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}'); }
+  catch(_) { return true; }   // no readable previous state: nothing to compare
+
+  const hits = [];
+  Object.keys(map || {}).forEach(name => {
+    const prev = prevMap[name];
+    if (!prev || typeof prev !== 'object') return;   // new character
+    const emptied = findFlattenedSections(prev, map[name]);
+    if (emptied.length >= 2) hits.push({ name: name, emptied: emptied });
+  });
+  if (!hits.length) return true;
+
+  const signature = hits.map(h => h.name + ':' + h.emptied.join(',')).join('|');
+  if (_flattenDecisions[signature] === 'allow') return true;
+  if (_flattenDecisions[signature] === 'block'){
+    console.error('[flatten guard] Write refused again, same change.', hits);
+    return false;
+  }
+
+  console.error('[flatten guard] Mass emptying detected' +
+                (context ? ' (' + context + ')' : ''), hits);
+
+  const detail = hits.map(h =>
+    '  ' + h.name + ' — ' + h.emptied.length + ' sections: ' + h.emptied.join(', ')
+  ).join('\n');
+
+  // confirm, not alert: a hard block would trap anyone legitimately stripping a
+  // character, with no way to save ever again. Default is to REFUSE.
+  const proceed = confirm(
+    'SAVE BLOCKED — this save would empty several sections at once.' +
+    (context ? '\n\n(' + context + ')' : '') +
+    '\n\n' + detail +
+    '\n\nThis is what a failed render looks like: lists that did not build read ' +
+    'as empty and overwrite your real data. Nothing has been lost yet, and your ' +
+    'work is still on screen.' +
+    '\n\nIf you did NOT just delete all of that yourself, click Cancel, then ' +
+    'reload WITHOUT saving — the last good copy is still stored.' +
+    '\n\nClick OK only if you meant to clear these sections.'
+  );
+
+  _flattenDecisions[signature] = proceed ? 'allow' : 'block';
+  return proceed;
+}
+
 // Every write to the character map goes through here. localStorage throws
 // QuotaExceededError when the origin's ~5MB budget is full, and an uncaught
 // throw skips whatever follows -- which in saveAsDialog meant no "Saved" alert
@@ -211,6 +315,11 @@ function startAutosaveForTab(tab, root){
 // Returns true on success, false on failure. Callers that show their own
 // confirmation should check it before claiming anything was saved.
 function writeCharacterMap(map, context){
+  // The mass-emptying check runs BEFORE the write, at the single chokepoint all
+  // six call sites funnel through -- including 'KV pull merge', the path that
+  // propagated the flattened copy to other devices in the original incident.
+  if (!passesFlattenCheck(map, context)) return false;
+
   try {
     localStorage.setItem(CHAR_MAP_KEY, JSON.stringify(map));
     return true;
