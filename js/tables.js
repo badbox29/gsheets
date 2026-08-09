@@ -5155,6 +5155,7 @@ const CAMPAIGN_SETTINGS = {
   'spelljammer':      { label: 'Spelljammer',       enabled: true,
                         settingSpheres: ['Cosmos'] },
   'forgotten-realms': { label: 'Forgotten Realms',  enabled: true,  settingSpheres: [] },
+  'dragonlance':      { label: 'Dragonlance',       enabled: false, settingSpheres: [] },
   'greyhawk':         { label: 'Greyhawk',          enabled: false, settingSpheres: [] },
   'planescape':       { label: 'Planescape',        enabled: false, settingSpheres: [] },
   'ravenloft':        { label: 'Ravenloft',         enabled: false, settingSpheres: [] },
