@@ -522,8 +522,26 @@ function renderCombatQuickReference(root) {
   
   // Get combat stats
   const clazz = val(root, 'clazz');
-  const level = parseInt(val(root, 'level') || 1, 10);
-  const thac0 = getThac0(clazz, level) || '—';
+
+  // THAC0 is resolved in exactly one place -- renderAttackMatrix -- and stashed
+  // on root, the same arrangement renderArmorClass uses for _acBreakdown.
+  //
+  // This used to call getThac0(val(root,'clazz'), val(root,'level')) directly.
+  // For a multi- or dual-class character the `clazz` field holds a DISPLAY
+  // string like "Cleric 7/Fighter 9", which getClassCategory substring-matched
+  // to a single category belonging to neither class, and `level` holds a figure
+  // that need not match it -- producing a THAC0 the character has under no
+  // class. It also skipped the STR and DEX to-hit adjustments entirely, so even
+  // single-class sheets disagreed with their own attack matrix.
+  //
+  // Called lazily because the Quick Reference renders during character load,
+  // before the first full recalculation.
+  if (!root._thac0 && typeof renderAttackMatrix === 'function') renderAttackMatrix(root);
+  const thac0Data    = root._thac0 || null;
+  const thac0Base    = thac0Data ? thac0Data.base    : null;
+  const thac0Melee   = thac0Data ? thac0Data.melee   : null;
+  const thac0Missile = thac0Data ? thac0Data.missile : null;
+
   const ac = val(root, 'ac') || '—';
   const moveRate = val(root, 'movement_current') || '—';
   
@@ -603,7 +621,26 @@ function renderCombatQuickReference(root) {
         '.\nInitiative is low-roll-wins, so a negative modifier means acting sooner.'
       : '';
   }
-  if (thac0El) thac0El.textContent = thac0;
+  if (thac0El) {
+    if (thac0Data) {
+      const thac0Sign = n => (n >= 0 ? '+' : '') + n;
+      // Mirrors the gold header above the attack matrix. Collapsed to one number
+      // when STR and DEX adjustments happen to agree, because "17 melee / 17
+      // missile" is two numbers where the character has one.
+      thac0El.textContent = (thac0Melee === thac0Missile)
+        ? String(thac0Melee)
+        : thac0Melee + ' melee / ' + thac0Missile + ' missile';
+      thac0El.title =
+        'Base ' + thac0Base + ' from class and level.\n' +
+        'Melee ' + thac0Melee + ' (STR to-hit ' + thac0Sign(thac0Data.strAdj) + ').\n' +
+        'Missile ' + thac0Missile + ' (DEX missile ' + thac0Sign(thac0Data.dexAdj) + ').\n\n' +
+        'Weapon enchantment, specialisation and weapon-vs-armour-type are per\n' +
+        'weapon and appear on the weapon lines below, not in this number.';
+    } else {
+      thac0El.textContent = '\u2014';
+      thac0El.title = '';
+    }
+  }
   if (acEl) {
     acEl.textContent = acShown;
     acEl.style.color = condAcPenalty ? 'var(--error, #ff6b6b)' : '';
