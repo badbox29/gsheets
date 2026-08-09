@@ -21,7 +21,7 @@ function renderWisdomPriestEffects(root) {
     immunityEl.value = "—";
   }
 
-  // Bonus spells and spell failure are PRIEST CLASSES ONLY (clerics + druids).
+  // Bonus spells and spell failure are PRIEST CLASSES ONLY (clerics + druids)..
   // Paladins and rangers cast priest spells but are warriors — per PHB they get
   // no WIS bonus spells and are not subject to WIS spell failure.
   const isPriest = clazz.includes("cleric") || clazz.includes("druid");
