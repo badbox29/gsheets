@@ -1266,26 +1266,24 @@
     }
     
     /* Condition/Status Tracker */
+    /* WRAPPER ONLY -- do not give this display:flex again. It used to BE the
+       card, with the name, duration and Remove button as direct children, which
+       is what the flex row was for. makeConditionNode now puts a fully styled
+       card div and a details block inside it, so flex laid those two out SIDE BY
+       SIDE: the card was crushed to one word per line and the rules text sat
+       beside it instead of beneath. The card carries its own background, border,
+       padding and hover inline; the wrapper must not compete with them. */
     .condition-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 4px 6px;
       margin-bottom: 4px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: var(--radius);
       font-size: 11px;
-      transition: background-color 0.2s;
-      cursor: pointer;
-    }
-    .condition-item:hover {
-      background: rgba(255, 255, 255, 0.08);
     }
     .condition-item:hover .condition-tooltip {
       display: block;
     }
+    /* flex:1 also dates from the old markup. The name now sits in an inner flex
+       row beside the duration and the +1/-1 buttons, where growing to fill the
+       row shoves them to the far edge. */
     .condition-name {
-      flex: 1;
       color: var(--text);
     }
     .condition-duration {
