@@ -1,4 +1,4 @@
-// Adding temp variable for sync testing.
+// Adding temp variable for sync testing
 const APP_JS_BUILD = 'prod-1';
 
 // Shortcuts & constants
