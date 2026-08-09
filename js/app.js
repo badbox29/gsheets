@@ -9203,9 +9203,10 @@ function getActiveConditionEffects(root) {
     // ability nobody has modified is absent rather than sitting at 0. Its
     // sources entry is likewise an OBJECT of arrays, not a flat array.
     abilityMods: {},
+    savesWorseUnstated: false,
     sources: { ownAttack: [], acPenalty: [], initiativeMod: [], surpriseMod: [],
                moveMult: [], attackRateMult: [], negatesDexCombat: [],
-               abilityMods: {} },
+               savesWorseUnstated: [], abilityMods: {} },
     any: false
   };
 
@@ -9244,6 +9245,16 @@ function getActiveConditionEffects(root) {
     // Positive values are supported deliberately: a future buff condition uses
     // the same field. Zero rows are skipped, so a condition that lists an
     // ability at 0 contributes nothing and names nobody.
+    // A saving-throw effect with NO NUMBER (Surprised, PHB Ch.9). Boolean, not
+    // summed: two conditions that both make saves worse still say only that
+    // saves are worse. Kept separate from surpriseMod, which is a different
+    // roll -- conflating them is the bug conditions.js records in its header.
+    if (def.savesWorseUnstated) {
+      out.savesWorseUnstated = true;
+      out.sources.savesWorseUnstated.push(name);
+      out.any = true;
+    }
+
     if (def.abilityMods) {
       Object.keys(def.abilityMods).forEach(k => {
         const v = def.abilityMods[k];
