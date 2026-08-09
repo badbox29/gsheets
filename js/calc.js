@@ -705,9 +705,15 @@ function renderConditionAbilityEffects(root) {
   const savesKeys = keys.filter(k => conditionAffectedSaves(root, k).length);
 
   if (fxB) {
-    fxB.innerHTML = '<strong>\u26A0 ' + escapeHtml(named) + ' from active conditions.</strong> ' +
+    // Name the sources here too. The savesWorseUnstated line says "From:
+    // Surprised" and this one said only "from active conditions" -- one banner,
+    // two conventions, which reads as a bug even though both were correct.
+    const fxFrom = keys.reduce((acc, k) =>
+      acc.concat((adj.sources[k] || []).filter(s => acc.indexOf(s) === -1)), []).join(', ');
+    fxB.innerHTML = '<strong>\u26A0 ' + escapeHtml(named) + '.</strong> ' +
       'These boxes show your RECORDED scores and are not adjusted. See the Combat ' +
-      'Quick Reference in the sidebar for what each change reaches.';
+      'Quick Reference in the sidebar for what each change reaches. ' +
+      'From: ' + escapeHtml(fxFrom) + '.';
     fxB.style.display = '';
   }
 
@@ -716,8 +722,11 @@ function renderConditionAbilityEffects(root) {
     if (savesKeys.length) {
       const savesNamed = savesKeys.map(k =>
         CONDITION_ABILITY_TOUCHES[k].label.slice(0, 3).toUpperCase() + ' ' + sign(adj.delta[k])).join(', ');
-      parts.push('<strong>\u26A0 ' + escapeHtml(savesNamed) + ' from active conditions.</strong> ' +
-                 'These targets are not adjusted. See the Combat Quick Reference in the sidebar.');
+      const savesFrom = savesKeys.reduce((acc, k) =>
+        acc.concat((adj.sources[k] || []).filter(s => acc.indexOf(s) === -1)), []).join(', ');
+      parts.push('<strong>\u26A0 ' + escapeHtml(savesNamed) + '.</strong> ' +
+                 'These targets are not adjusted. See the Combat Quick Reference in the ' +
+                 'sidebar. From: ' + escapeHtml(savesFrom) + '.');
     }
     if (worse) {
       parts.push('<strong>\u26A0 Saving throws are worse</strong> by an amount the rules do not ' +
