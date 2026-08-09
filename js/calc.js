@@ -635,7 +635,26 @@ function renderConditionAbilityEffects(root) {
   const keys = ['str', 'dex', 'con', 'int', 'wis', 'cha']
     .filter(k => adj.delta && adj.delta[k]);
 
-  if (!keys.length) { hide(panel); hide(savesB); hide(fxB); return; }
+  // savesWorseUnstated fires the saves banner ON ITS OWN -- Surprised changes no
+  // ability score, so without this the one section that needs to mention it
+  // would stay silent. Second call to getActiveConditionEffects in this render;
+  // it is a pure DOM read and renderCombatQuickReference already calls it twice.
+  const fx        = (typeof getActiveConditionEffects === 'function')
+    ? getActiveConditionEffects(root) : {};
+  const worse     = !!fx.savesWorseUnstated;
+  const worseFrom = (fx.sources && fx.sources.savesWorseUnstated) || [];
+
+  if (!keys.length) {
+    hide(panel); hide(fxB);
+    if (worse && savesB) {
+      savesB.innerHTML = '<strong>\u26A0 Saving throws are worse</strong> by an amount the rules ' +
+        'do not state. From: ' + escapeHtml(worseFrom.join(', ')) + '.';
+      savesB.style.display = '';
+    } else {
+      hide(savesB);
+    }
+    return;
+  }
 
   const sign = n => (n > 0 ? '+' : '\u2212') + Math.abs(n);
   let html = '<div style="font-weight:600;margin-bottom:4px;color:var(--warning);">' +
@@ -693,11 +712,19 @@ function renderConditionAbilityEffects(root) {
   }
 
   if (savesB) {
-    if (!savesKeys.length) { hide(savesB); return; }
-    const savesNamed = savesKeys.map(k =>
-      CONDITION_ABILITY_TOUCHES[k].label.slice(0, 3).toUpperCase() + ' ' + sign(adj.delta[k])).join(', ');
-    savesB.innerHTML = '<strong>\u26A0 ' + escapeHtml(savesNamed) + ' from active conditions.</strong> ' +
-      'These targets are not adjusted. See the Combat Quick Reference in the sidebar.';
+    const parts = [];
+    if (savesKeys.length) {
+      const savesNamed = savesKeys.map(k =>
+        CONDITION_ABILITY_TOUCHES[k].label.slice(0, 3).toUpperCase() + ' ' + sign(adj.delta[k])).join(', ');
+      parts.push('<strong>\u26A0 ' + escapeHtml(savesNamed) + ' from active conditions.</strong> ' +
+                 'These targets are not adjusted. See the Combat Quick Reference in the sidebar.');
+    }
+    if (worse) {
+      parts.push('<strong>\u26A0 Saving throws are worse</strong> by an amount the rules do not ' +
+                 'state. From: ' + escapeHtml(worseFrom.join(', ')) + '.');
+    }
+    if (!parts.length) { hide(savesB); return; }
+    savesB.innerHTML = parts.map(p => '<div>' + p + '</div>').join('');
     savesB.style.display = '';
   }
 }
