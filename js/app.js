@@ -9457,7 +9457,7 @@ function makeConditionNode(data = {}, onChange) {
     // align-items:flex-start, NOT center -- with two lines of effects text a
     // vertically centred button drifts away from the name it belongs to.
     // The gap and the button's flex:0 0 auto stop the text crowding it.
-    '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:6px 8px;background:' + cardBg + ';border:1px solid ' + cardBd + ';border-radius:4px;margin-bottom:6px;cursor:pointer;">' +
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:6px 8px;background:' + cardBg + ';border:1px solid ' + cardBd + ';border-radius:4px;margin-bottom:6px;">' +
       // min-width:0 is the actual fix. A flex item defaults to min-width:auto,
       // so it refuses to shrink below its own text and overruns its neighbour
       // instead of wrapping. Without this the effects line sat under the button.
@@ -9472,25 +9472,20 @@ function makeConditionNode(data = {}, onChange) {
       '</div>' +
       '<button class="condition-remove" style="flex:0 0 auto;padding:4px 8px;font-size:11px;background:' + btnBg + ';border:1px solid ' + btnBd + ';color:' + btnFg + ';border-radius:4px;cursor:pointer;">Remove</button>' +
     '</div>' +
-    '<div class="condition-description" style="display:none;padding:8px;background:var(--glass);border:1px solid var(--border);border-radius:4px;margin-top:-6px;margin-bottom:6px;font-size:12px;color:var(--muted);line-height:1.4;"></div>';
-  
-  // Toggle description on click
-  const mainDiv = el.querySelector('div');
-  mainDiv.onclick = (e) => {
-    if (e.target.classList.contains('condition-remove') || 
-        e.target.classList.contains('duration-inc') || 
-        e.target.classList.contains('duration-dec') ||
-        e.target.classList.contains('hp-loss-input')) {
-      return;
-    }
-    const desc = el.querySelector('.condition-description');
-    if (desc.style.display === 'none') {
-      desc.style.display = 'block';
-      desc.textContent = getConditionDescription(conditionName);
-    } else {
-      desc.style.display = 'none';
-    }
-  };
+    // A <details> disclosure, not a click-anywhere-on-the-card toggle. It gives
+    // the player something visible to click, works on touch, and drops the
+    // four-way exclusion list the old handler needed to avoid firing on Remove
+    // and the duration buttons. The text is static, so it is rendered up front
+    // rather than filled in by a handler.
+    '<details class="disclosure" style="font-size:11px;margin:-2px 0 6px;">' +
+      '<summary>rules text</summary>' +
+      '<div class="condition-description" style="padding:6px 8px;background:var(--glass);' +
+        'border:1px solid var(--border);border-radius:4px;margin-top:4px;color:var(--muted);' +
+        'line-height:1.45;">' +
+        escapeHtml(typeof getConditionDescription === 'function'
+          ? getConditionDescription(conditionName) : '') +
+      '</div>' +
+    '</details>';
   
   // HP Loss input handler
   if (canLoseHP) {
