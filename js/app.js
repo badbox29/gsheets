@@ -9199,8 +9199,13 @@ function getActiveConditionEffects(root) {
   const out = {
     ownAttack: 0, acPenalty: 0, initiativeMod: 0, surpriseMod: 0,
     moveMult: 1, attackRateMult: 1, negatesDexCombat: false,
+    // Keyed by ability ('str', 'dex', ...) rather than a fixed set, so an
+    // ability nobody has modified is absent rather than sitting at 0. Its
+    // sources entry is likewise an OBJECT of arrays, not a flat array.
+    abilityMods: {},
     sources: { ownAttack: [], acPenalty: [], initiativeMod: [], surpriseMod: [],
-               moveMult: [], attackRateMult: [], negatesDexCombat: [] },
+               moveMult: [], attackRateMult: [], negatesDexCombat: [],
+               abilityMods: {} },
     any: false
   };
 
@@ -9234,7 +9239,62 @@ function getActiveConditionEffects(root) {
       out.sources.negatesDexCombat.push(name);
       out.any = true;
     }
+
+    // Ability score modifiers SUM, per ability, and each records its sources.
+    // Positive values are supported deliberately: a future buff condition uses
+    // the same field. Zero rows are skipped, so a condition that lists an
+    // ability at 0 contributes nothing and names nobody.
+    if (def.abilityMods) {
+      Object.keys(def.abilityMods).forEach(k => {
+        const v = def.abilityMods[k];
+        if (!v) return;
+        out.abilityMods[k] = (out.abilityMods[k] || 0) + v;
+        (out.sources.abilityMods[k] = out.sources.abilityMods[k] || []).push(name);
+        out.any = true;
+      });
+    }
   });
+
+  return out;
+}
+
+// Ability scores as the active conditions leave them. READ-ONLY: nothing here
+// writes to the sheet, and the recorded scores are never touched. See P8 in the
+// project notes for the scope decision behind this.
+//
+// Returns { any, base{}, adjusted{}, delta{}, sources{}, strExceptional }.
+//
+// EXCEPTIONAL STRENGTH (Chris's ruling): a whole-point penalty removes it for
+// the duration -- an 18/00 warrior at -1 has a plain 17's effects. That falls
+// out of getStrengthData, which only consults the percentile at exactly 18, so
+// no special case is needed. The percentile is carried forward ONLY when the
+// character already had an 18: a buff that raises 17 to 18 does not grant
+// exceptional Strength, which is rolled once at generation. A future PERCENTILE
+// debuff belongs on strExceptional below; the return shape already carries it.
+function getConditionAdjustedAbilities(root) {
+  const KEYS = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+  const eff  = getActiveConditionEffects(root);
+  const mods = eff.abilityMods || {};
+  const out  = { any: false, base: {}, adjusted: {}, delta: {}, sources: {},
+                 strExceptional: '' };
+
+  KEYS.forEach(k => {
+    const raw = parseInt(val(root, k), 10);
+    const d   = mods[k] || 0;
+    out.base[k]    = isNaN(raw) ? null : raw;
+    out.delta[k]   = d;
+    out.sources[k] = (eff.sources.abilityMods && eff.sources.abilityMods[k]) || [];
+    // Clamp 1-25: STR_TABLE and WIS_MDA both define 1, and getStrengthData
+    // returns null outside the table, which prints as a blank rather than a
+    // number.
+    out.adjusted[k] = (out.base[k] === null) ? null
+                    : Math.max(1, Math.min(25, out.base[k] + d));
+    if (d) out.any = true;
+  });
+
+  if (out.base.str === 18 && out.adjusted.str === 18) {
+    out.strExceptional = val(root, 'str_exceptional') || '';
+  }
 
   return out;
 }
