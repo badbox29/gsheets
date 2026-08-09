@@ -49,6 +49,17 @@ function generateSyncToken() {
 // ===== KV Sync — config helpers =====
 // KV settings are stored separately from character data so they persist
 // independently of character saves and exports.
+//
+// GET-OR-CREATE: kvToken is the one field that can NEVER come back empty. Both
+// exits fill it — the try block generates one when absent, and the catch returns
+// a fresh object that already has one. So `if (!cfg.kvToken)` after a call here
+// can never fire. Three such guards were removed rather than repaired; each one
+// asserted that a missing token was a case that occurs, which is a small lie to
+// the next reader. workerUrl is the real guard, and it stands alone.
+//
+// This is also why import does not adopt a token out of an exported file: the
+// old "adopt if we have none" branch was unreachable for the same reason. See
+// the import handler.
 function getKvConfig() {
   try {
     const raw = localStorage.getItem(KV_CONFIG_KEY);
@@ -8897,7 +8908,6 @@ async function kvSaveWorkerUrl(root) {
 
 function kvCopyToken(root) {
   const cfg = getKvConfig();
-  if (!cfg.kvToken) return;
   navigator.clipboard.writeText(cfg.kvToken).then(() => {
     const btn = qs(root, '.kv-copy-token');
     if (btn) {
@@ -9019,7 +9029,7 @@ function kvMergeChars(localMap, remoteMap) {
 // the manual push button; autosave always merges.
 async function kvPush(force = false) {
   const cfg = getKvConfig();
-  if (!cfg.workerUrl || !cfg.kvToken) return;
+  if (!cfg.workerUrl) return;
   const rawMap   = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
   const charMap  = {};
   Object.entries(rawMap).forEach(([name, data]) => {
@@ -9080,7 +9090,7 @@ async function kvPush(force = false) {
 
 async function kvPull(overwrite = false) {
   const cfg = getKvConfig();
-  if (!cfg.workerUrl || !cfg.kvToken) return 0;
+  if (!cfg.workerUrl) return 0;
   try {
     const res = await fetch(cfg.workerUrl.replace(/\/+$/, '') + '/kv', {
       method:  'GET',
