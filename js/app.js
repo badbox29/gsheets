@@ -1198,6 +1198,21 @@ function renderAttackMatrix(root) {
   const thac0Melee   = thac0Base - strToHit;
   const thac0Missile = thac0Base - dexToHit;
 
+  // Stashed for the Combat Quick Reference and print.js. Both used to recompute
+  // THAC0 themselves from val(root,'clazz'), which for multi- and dual-class
+  // characters is a DISPLAY string ("Cleric 7/Fighter 9") -- getClassCategory
+  // substring-matched it to a category that belonged to neither class, then
+  // crossed that with whatever the hidden `level` field held. Only this function
+  // resolves THAC0 correctly (getBestTHAC0 for multi, dormancy for dual), so it
+  // is now the only place that resolves it at all.
+  root._thac0 = {
+    base:    thac0Base,
+    melee:   thac0Melee,
+    missile: thac0Missile,
+    strAdj:  strToHit,
+    dexAdj:  dexToHit
+  };
+
   // --- Base THAC0 display summary ---
   const baseBox = root.querySelector(".base-thac0");
   if (baseBox) {
