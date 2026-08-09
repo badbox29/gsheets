@@ -513,8 +513,123 @@ function getTwoWeaponState(root) {
   };
 }
 
+// ===== Condition ability effects =====
+// What each ability score reaches. `effects` are PURE TABLE LOOKUPS off the
+// current score and are safe to restate. `deferred` are CUMULATIVE OR ALREADY
+// SPENT -- hit points banked across levels, languages already chosen, a
+// spellbook that already exists -- and must never be restated as a number.
+// Saying less beats stating a figure that is not true. See P8 in the notes.
+const CONDITION_ABILITY_TOUCHES = {
+  str: { label: 'Strength', effects: ['To-Hit Adj.', 'Damage Adj.', 'Weight Allowance',
+         'Open Doors', 'Bend Bars/Lift Gates', 'encumbrance ceilings'], deferred: [] },
+  dex: { label: 'Dexterity', effects: ['Reaction Adjustment', 'Missile Attack Adj.',
+         'Defensive Adj. (AC)', 'thief skill percentages'], deferred: [] },
+  con: { label: 'Constitution', effects: ['System Shock %', 'Resurrection Survival %',
+         'Poison Save Adj.'], deferred: ['HP Bonus/Level (already banked across levels)'] },
+  int: { label: 'Intelligence', effects: ['Spell Immunity'],
+         deferred: ['Additional Languages (already chosen)',
+                    'Learn Spell % and Max Spells/Level (govern a spellbook that exists)'] },
+  wis: { label: 'Wisdom', effects: ['Magical Defense Adj.'],
+         deferred: ['Bonus Priest Spells (already memorized)'] },
+  cha: { label: 'Charisma', effects: ['Reaction Adjustment', 'Max Henchmen',
+         'Loyalty Base'], deferred: [] }
+};
+
+// Which SAVING THROWS an ability actually reaches -- traced, not assumed.
+// Wisdom hits Spell (Mental) only, for everyone. Constitution hits saves for
+// three demihuman races only, via RACE_SAVE_BONUSES, and the gnome entry has
+// NO poison clause. ABILITY_SAVE_BONUSES is empty by design: no other ability
+// grants a saving throw bonus in 2e.
+function conditionAffectedSaves(root, key) {
+  if (key === 'wis') return ['Spell (Mental)'];
+  if (key !== 'con') return [];
+  const race = (typeof getRaceKey === 'function') ? getRaceKey(val(root, 'race')) : null;
+  if (race === 'dwarf' || race === 'halfling') {
+    return ['Paralyzation/Poison/Death', 'Rod/Staff/Wand', 'Spell'];
+  }
+  if (race === 'gnome') return ['Rod/Staff/Wand', 'Spell'];
+  return [];
+}
+
+// DISPLAY ONLY. Reads the resolver and writes three containers; never touches a
+// recorded score. <details> rather than title= on purpose -- tooltips do not
+// fire on touch and this expanding list is the entire payload.
+function renderConditionAbilityEffects(root) {
+  const panel   = root.querySelector('.combat-ability-effects');
+  const savesB  = root.querySelector('.saves-condition-banner');
+  const fxB     = root.querySelector('.ability-effects-condition-banner');
+  const hide = el => { if (el) { el.innerHTML = ''; el.style.display = 'none'; } };
+
+  const adj = (typeof getConditionAdjustedAbilities === 'function')
+    ? getConditionAdjustedAbilities(root) : { any: false, delta: {} };
+
+  const keys = ['str', 'dex', 'con', 'int', 'wis', 'cha']
+    .filter(k => adj.delta && adj.delta[k]);
+
+  if (!keys.length) { hide(panel); hide(savesB); hide(fxB); return; }
+
+  const sign = n => (n > 0 ? '+' : '\u2212') + Math.abs(n);
+  let html = '<div style="font-weight:600;margin-bottom:4px;color:var(--warning);">' +
+             '\u26A0 Ability scores changed by conditions</div>';
+
+  keys.forEach(k => {
+    const t     = CONDITION_ABILITY_TOUCHES[k];
+    const saves = conditionAffectedSaves(root, k);
+    const src   = (adj.sources[k] || []).join(', ');
+    let body = '';
+    if (saves.length) {
+      body += '<div><strong>Saving throws:</strong> ' + escapeHtml(saves.join(', ')) + '</div>';
+    }
+    if (t.effects.length) {
+      body += '<div><strong>Ability effects:</strong> ' + escapeHtml(t.effects.join(', ')) + '</div>';
+    }
+    t.deferred.forEach(d => {
+      body += '<div style="color:var(--muted);">' + escapeHtml(d) +
+              ' \u2014 affected; see your DM</div>';
+    });
+    if (src) {
+      body += '<div style="color:var(--muted);margin-top:2px;">From: ' + escapeHtml(src) + '</div>';
+    }
+    html += '<details class="disclosure" style="margin-bottom:2px;">' +
+            '<summary>' + escapeHtml(t.label.slice(0, 3).toUpperCase()) + ' ' + sign(adj.delta[k]) +
+            ' (now ' + adj.adjusted[k] + ')</summary>' +
+            '<div style="padding:2px 0 4px 12px;line-height:1.5;">' + body + '</div>' +
+            '</details>';
+  });
+
+  if (panel) { panel.innerHTML = html; panel.style.display = ''; }
+
+  // The two banners are POINTERS, not a second copy of the numbers. They name
+  // the attributes so the player knows whether this section is affected at all,
+  // and send him to the one place that carries the arithmetic.
+  const named = keys.map(k => CONDITION_ABILITY_TOUCHES[k].label.slice(0, 3).toUpperCase() +
+                              ' ' + sign(adj.delta[k])).join(', ');
+  const savesKeys = keys.filter(k => conditionAffectedSaves(root, k).length);
+
+  if (fxB) {
+    fxB.innerHTML = '<strong>\u26A0 ' + escapeHtml(named) + ' from active conditions.</strong> ' +
+      'These boxes show your RECORDED scores and are not adjusted. See the Combat ' +
+      'Quick Reference in the sidebar for what each change reaches.';
+    fxB.style.display = '';
+  }
+
+  if (savesB) {
+    if (!savesKeys.length) { hide(savesB); return; }
+    const savesNamed = savesKeys.map(k =>
+      CONDITION_ABILITY_TOUCHES[k].label.slice(0, 3).toUpperCase() + ' ' + sign(adj.delta[k])).join(', ');
+    savesB.innerHTML = '<strong>\u26A0 ' + escapeHtml(savesNamed) + ' from active conditions.</strong> ' +
+      'These targets are not adjusted. See the Combat Quick Reference in the sidebar.';
+    savesB.style.display = '';
+  }
+}
+
 // ===== Combat Quick Reference =====
 function renderCombatQuickReference(root) {
+  // FIRST, not last: this function returns early at `if (!weaponsList) return;`
+  // further down, so anything at the bottom would not run for a character
+  // whose weapons list is missing.
+  renderConditionAbilityEffects(root);
+
   // Get ability scores
   const dex = parseInt(val(root, 'dex') || 10, 10);
   const str = parseInt(val(root, 'str') || 10, 10);
