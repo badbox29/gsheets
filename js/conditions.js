@@ -48,6 +48,12 @@
 //   blocksNaturalHealing  true = no hit points from natural rest. NEVER read
 //                   this from a magical healing path.
 //   beneficial      true = this condition helps the character.
+//   abilityMods     Object of ability score modifiers, e.g. { dex: -2, int: -3 }.
+//                   NEGATIVE = the score drops. ADVISORY ONLY: these are
+//                   DISPLAYED and never applied. Nothing writes to the recorded
+//                   scores and no derived value -- Armor Class, thief skills,
+//                   bonus spells, language cap -- reads them. Omit zero rows.
+//                   NOT the same as negatesDexCombat, which cancels BONUSES.
 //
 // A FIELD IS PRESENT ONLY IF ITS VALUE IS SOURCED. Conditions whose effects
 // vary (Poisoned, Cursed, Frightened, Confused) carry no numeric fields --
@@ -260,6 +266,32 @@ const CONDITIONS_DB = [
     // proficiency-check half has no structured field and lives in the prose,
     // as Poisoned's does.
     description: 'Fighting an opponent seen only by reflection. Suffers \u22122 ON ATTACK ROLLS and LOSES ALL DEXTERITY BONUSES TO ARMOR CLASS. The same \u22122 applies to ANY action directed by a mirror, in or out of combat -- every ability check and every proficiency check -- because acting on a reflected view is disorienting. A MIRROR IS ALSO USELESS WITHOUT A LIGHT SOURCE. Mirrors are the standard answer to creatures so hideous that gazing directly upon them might turn the viewer to stone, such as a medusa (PHB Ch.13).'
+  },
+  // === THE THREE INTOXICATION STATES ===
+  // Source: INTOXICATION TABLE, 1st Edition DMG, "Effects of Alcohol and Drugs".
+  // 2e does not restate it; carried here on Chris's ruling that it still applies.
+  // THIS IS THE ONLY 1e SOURCE IN THIS FILE -- not a precedent, see P8 in notes.
+  // Zero-valued rows are omitted rather than stored as 0, so the card summary
+  // does not read "0 DEX". Bravery and Morale are 1e NPC characteristics and
+  // stay in the prose; the hit point row is prose too, because the table never
+  // says current, maximum or both. negatesDexCombat is deliberately NOT set: a
+  // Dexterity SCORE penalty is not the same rule as cancelling Dexterity bonuses.
+  {
+    name: 'Drunk (Slight)',
+    abilityMods: { int: -1, wis: -1 },
+    description: 'Lightly intoxicated. \u22121 Intelligence and \u22121 Wisdom. Dexterity, Charisma, attack rolls and hit points are unaffected at this state. SCORE PENALTIES ARE ADVISORY \u2014 the sheet does not alter your recorded ability scores or anything derived from them; apply them at the table. The table\u2019s Bravery and Morale rows are NPC characteristics and are not modelled. Source: INTOXICATION TABLE, 1st Edition DMG; 2nd Edition does not restate it.'
+  },
+  {
+    name: 'Drunk (Moderate)',
+    ownAttack: -1,
+    abilityMods: { int: -3, wis: -4, dex: -2, cha: -1 },
+    description: 'Noticeably intoxicated. \u22123 Intelligence, \u22124 Wisdom, \u22122 Dexterity, \u22121 Charisma, and \u22121 to attack rolls. The table also grants +1 HIT POINT, but does not say whether that is current, maximum or both \u2014 the DM\u2019s call. SCORE PENALTIES ARE ADVISORY \u2014 the sheet does not alter your recorded scores or anything derived from them (Armor Class, thief skills, bonus spells, language cap); apply them at the table. Only the attack penalty is applied, in the combat quick reference. Bravery and Morale are NPC characteristics and are not modelled. Source: INTOXICATION TABLE, 1st Edition DMG; 2nd Edition does not restate it.'
+  },
+  {
+    name: 'Drunk (Great)',
+    ownAttack: -5,
+    abilityMods: { int: -6, wis: -7, dex: -5, cha: -4 },
+    description: 'Heavily intoxicated. \u22126 Intelligence, \u22127 Wisdom, \u22125 Dexterity, \u22124 Charisma, and \u22125 to attack rolls. The table also grants +3 HIT POINTS, but does not say whether that is current, maximum or both \u2014 the DM\u2019s call. BEYOND THIS STATE the character becomes comatose and sleeps 7 to 10 hours \u2014 use the Unconscious condition with that duration rather than a fourth entry here. SCORE PENALTIES ARE ADVISORY \u2014 the sheet does not alter your recorded scores or anything derived from them; apply them at the table. Only the attack penalty is applied, in the combat quick reference. Bravery and Morale are NPC characteristics and are not modelled. Source: INTOXICATION TABLE, 1st Edition DMG; 2nd Edition does not restate it.'
   }
 ];
 
@@ -325,6 +357,16 @@ function summarizeConditionEffects(nameOrDef) {
            : c.attackRateMult === 2   ? 'double attacks'
            : Math.round(c.attackRateMult * 100) + '% attacks');
   }
+  // Ability score changes (the Drunk states). ADVISORY ONLY -- nothing writes
+  // these to the recorded scores and no derived value reads them. Fixed order
+  // so two conditions always read alike.
+  if (c.abilityMods) {
+    const mods = ['str','dex','con','int','wis','cha']
+      .filter(k => c.abilityMods[k])
+      .map(k => sign(c.abilityMods[k]) + ' ' + k.toUpperCase());
+    if (mods.length) out.push(mods.join(', '));
+  }
+
   if (c.negatesDexCombat)    out.push('no DEX combat bonuses');
   if (c.surpriseMod)         out.push(sign(c.surpriseMod) + ' surprise');
   if (c.savesWorseUnstated)  out.push('saves worse (amount unstated)');
