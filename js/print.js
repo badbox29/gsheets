@@ -870,7 +870,15 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
         .filter(Boolean)
         .join(', ')
     : '';
-  const thac0 = q('.combat-thac0')?.textContent.trim() || '';
+  // THAC0 comes from the stash renderAttackMatrix leaves on root, not from
+  // scraping .combat-thac0. That element now reads "17 melee / 19 missile", and
+  // parsing display text back into a number is how the printed matrix would
+  // silently lose the missile row the next time the wording changed. Honours
+  // _blank explicitly, since this bypasses the q() guard above.
+  if (!_blank && !root._thac0 && typeof renderAttackMatrix === 'function') {
+    renderAttackMatrix(root);
+  }
+  const thac0Data = _blank ? null : (root._thac0 || null);
   
   // === MOVEMENT ===
   const baseMovement = val(root, 'movement_base') || (_blank ? ' ' : '');
@@ -1223,14 +1231,20 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
   // Almost every 1st-level character IS 20, so the row would usually be right --
   // but "usually right" is the worst kind of number to print onto a form
   // someone is about to fill in by hand.
-  const thac0Num = _blank ? null : (parseInt(thac0) || 20);
-  const thac0Matrix = [];
+  //
+  // Two rows now, melee and missile, mirroring the on-screen attack matrix. The
+  // single row this replaces used the base THAC0 alone, so a printed sheet
+  // discarded the character's STR and DEX to-hit adjustments entirely.
+  const thac0Melee   = (_blank || !thac0Data) ? null : thac0Data.melee;
+  const thac0Missile = (_blank || !thac0Data) ? null : thac0Data.missile;
+  const buildThac0Row = (thac0Mode) => {
+  const row = [];
   for (let targetAC = 10; targetAC >= -10; targetAC--) {
     // Blank sheet: no THAC0 to work from, so every cell is empty and the
     // legend below suppresses itself, since it tests for an asterisk that
     // cannot be there.
-    if (thac0Num === null) { thac0Matrix.push(' '); continue; }
-    const rollNeeded = thac0Num - targetAC;
+    if (thac0Mode === null) { row.push(' '); continue; }
+    const rollNeeded = thac0Mode - targetAC;
     // Matches renderAttackMatrix. The old floor was `< 1`, which still printed a
     // bare "1" for a target of exactly 1 -- and a natural 1 always misses, so
     // that cell claimed a hit that cannot happen. See PHB Ch.9, "Impossible
@@ -1239,8 +1253,12 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     // missing-glyph box in the PDF -- pdfMake's default Roboto does not carry
     // it. Anything outside basic Latin needs checking against the embedded font
     // before it goes in a print string.
-    thac0Matrix.push(rollNeeded > 20 ? '20*' : (rollNeeded <= 1 ? '*' : rollNeeded.toString()));
+    row.push(rollNeeded > 20 ? '20*' : (rollNeeded <= 1 ? '*' : rollNeeded.toString()));
   }
+    return row;
+  };
+  const thac0MatrixMelee   = buildThac0Row(thac0Melee);
+  const thac0MatrixMissile = buildThac0Row(thac0Missile);
 
   // === ARMOR & AMMUNITION (optional) ===
   // Both are arrays on the character record and therefore unreachable through
@@ -3606,8 +3624,12 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
               )
             ],
             [
-              { text: 'To Hit #', fontSize: 6, bold: true },
-              ...thac0Matrix.map(roll => ({ text: roll, fontSize: 7, alignment: 'center' }))
+              { text: 'Melee', fontSize: 6, bold: true },
+              ...thac0MatrixMelee.map(roll => ({ text: roll, fontSize: 7, alignment: 'center' }))
+            ],
+            [
+              { text: 'Missile', fontSize: 6, bold: true },
+              ...thac0MatrixMissile.map(roll => ({ text: roll, fontSize: 7, alignment: 'center' }))
             ]
           ]
         },
@@ -3620,7 +3642,7 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       // legend for symbols that do not appear is noise on a page that is
       // already dense. Print has no tooltips, so this is the only explanation
       // a player at the table gets.
-      thac0Matrix.some(v => String(v).indexOf('*') !== -1)
+      thac0MatrixMelee.concat(thac0MatrixMissile).some(v => String(v).indexOf('*') !== -1)
         ? {
             text: '*  hits on anything but a natural 1     20*  needs a natural 20     (PHB Ch.9, "Impossible To-Hit Numbers")',
             fontSize: 6,
