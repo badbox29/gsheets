@@ -363,6 +363,8 @@ const SHEET_HTML = `
 		<section class="section saving-throws">
 		  <h3>Saving Throws</h3>
 
+		  <div class="saves-condition-banner" style="display:none;margin:0 0 12px;padding:8px;background:color-mix(in srgb, var(--warning) 10%, transparent);border:1px solid color-mix(in srgb, var(--warning) 35%, transparent);border-radius:var(--radius);font-size:12px;line-height:1.4;"></div>
+
 		  <div class="row">
 			<div class="col">
 			  <div class="save-pair">
@@ -457,6 +459,8 @@ const SHEET_HTML = `
 			<span class="grp-name">Ability Effects</span>
 			<span class="grp-rule"></span>
 		  </div>
+
+		  <div class="ability-effects-condition-banner" style="display:none;margin:0 0 12px;padding:8px;background:color-mix(in srgb, var(--warning) 10%, transparent);border:1px solid color-mix(in srgb, var(--warning) 35%, transparent);border-radius:var(--radius);font-size:12px;line-height:1.4;"></div>
 
 		<!-- Strength Effects -->
         <section class="section">
@@ -2709,6 +2713,12 @@ const SHEET_HTML = `
 		</div>
 	  </div>
 	  
+	  <!-- Ability scores as active conditions leave them. Populated by
+	       renderConditionAbilityEffects (calc.js); empty and hidden when no
+	       condition carries an abilityMods entry. READ-ONLY -- the recorded
+	       scores on the Abilities tab are never touched. -->
+	  <div class="combat-ability-effects" style="border-top:1px solid rgba(255,255,255,0.1);padding-top:8px;margin-bottom:8px;font-size:11px;line-height:1.4;display:none;"></div>
+
 	  <!-- Specialist save modifier (populated for specialist wizards only) -->
 	  <div class="combat-specialist-saves" style="border-top:1px solid rgba(255,255,255,0.1);padding-top:8px;margin-bottom:8px;font-size:11px;line-height:1.4;color:var(--muted);display:none;"></div>
 
