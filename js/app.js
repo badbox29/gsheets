@@ -263,6 +263,128 @@ function resolveGeneratorRaceClass(wantRace, wantClass) {
   return { race: race, clazz: pick(ok) };
 }
 
+// Roll a legal set of ability scores for a given race and class.
+//
+// THE METHODS ARE NOT EQUIVALENT, and that drives the design:
+//   - method1 rolls 3d6 six times IN ORDER and cannot be rearranged.
+//   - method2, 3d6 and 4d6 produce six scores the player assigns freely, so we
+//     ASSIGN TO FIT before rerolling -- place each requirement on a score that
+//     satisfies it, then fill the rest. Far fewer rerolls, and it is what a
+//     player actually does.
+//
+// Method I rerolls until legal, which is rejection sampling: the result is
+// systematically stronger than plain 3d6, because we are sampling 3d6 CONDITIONED
+// on legality. The rarity is itself the rule -- paladins are rare precisely
+// because those scores in order are rare -- so the attempt count is REPORTED
+// rather than hidden. attempts is returned for that purpose.
+//
+// Legality lives in THREE places and all three must be checked:
+//   Table 7  RACE_ABILITY_REQUIREMENTS -- tested against the ROLLED score
+//   Table 8  RACE_ABILITY_ADJUSTMENTS  -- applied AFTER, giving the final score
+//   Table 13 CLASS_ABILITY_MINIMUMS, or SPECIALIST_WIZARDS.minAbility for a
+//            specialist, which validateAbilityMinimums deliberately skips
+//            because Table 13 defers to Table 22.
+const GEN_ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+const GEN_MAX_ROLL_ATTEMPTS = 250000;
+
+function generatorClassMinimums(clazz) {
+  const c = (clazz || '').toLowerCase();
+  if (typeof SPECIALIST_WIZARDS === 'object' && SPECIALIST_WIZARDS[c]) {
+    const spec = SPECIALIST_WIZARDS[c];
+    // A specialist is a wizard first: INT 9 from the mage row, plus the school's
+    // own minimum from Table 22.
+    const mins = Object.assign({}, (CLASS_ABILITY_MINIMUMS || {}).mage || {});
+    if (spec.minAbility) mins[spec.minAbility.stat] = spec.minAbility.score;
+    return mins;
+  }
+  return (typeof CLASS_ABILITY_MINIMUMS === 'object' && CLASS_ABILITY_MINIMUMS[c])
+    ? CLASS_ABILITY_MINIMUMS[c] : {};
+}
+
+function generatorRollScores(race, clazz, method) {
+  const raceKey = (typeof getRaceKey === 'function') ? getRaceKey(race) : null;
+  const ranges  = (typeof RACE_ABILITY_REQUIREMENTS === 'object' && raceKey)
+    ? RACE_ABILITY_REQUIREMENTS[raceKey] : null;
+  const adj     = (typeof RACE_ABILITY_ADJUSTMENTS === 'object' && raceKey)
+    ? (RACE_ABILITY_ADJUSTMENTS[raceKey] || {}) : {};
+  const mins    = generatorClassMinimums(clazz);
+
+  // Six totals for one character. 3d6 and 4d6 return ONE roll per call, so they
+  // are called six times; method1 and method2 already return six.
+  const rollSix = () => {
+    if (method === 'method1' || method === 'method2') {
+      return rollAbilityScores(method).map(r => r.total);
+    }
+    const out = [];
+    for (let i = 0; i < 6; i++) out.push(rollAbilityScores(method)[0].total);
+    return out;
+  };
+
+  const rolledOk = (ability, rolled) => {
+    if (!ranges || !ranges[ability]) return true;
+    return rolled >= ranges[ability][0] && rolled <= ranges[ability][1];
+  };
+  const finalOk = (ability, rolled) => {
+    if (!mins[ability]) return true;
+    return rolled + (adj[ability] || 0) >= mins[ability];
+  };
+  const fits = (ability, rolled) => rolledOk(ability, rolled) && finalOk(ability, rolled);
+
+  // Assignable methods: try to PLACE the six totals rather than reroll blindly.
+  // Hardest requirement first, so a scarce high score is not spent on an easy
+  // slot. Greedy is sufficient here -- six values, six slots, and the
+  // constraints are simple thresholds.
+  const assign = totals => {
+    const pool = totals.slice();
+    const out = {};
+    const order = GEN_ABILITIES.slice().sort((a, b) => (mins[b] || 0) - (mins[a] || 0));
+    for (const ability of order) {
+      let idx = -1;
+      let best = Infinity;
+      pool.forEach((v, i) => {
+        // Cheapest score that still satisfies the slot: spending an 18 on a
+        // requirement of 9 wastes it.
+        if (fits(ability, v) && v < best) { best = v; idx = i; }
+      });
+      if (idx === -1) return null;
+      out[ability] = pool.splice(idx, 1)[0];
+    }
+    return out;
+  };
+
+  let attempts = 0;
+  while (attempts < GEN_MAX_ROLL_ATTEMPTS) {
+    attempts++;
+    const totals = rollSix();
+
+    if (method === 'method1') {
+      // IN ORDER: str, dex, con, int, wis, cha. No rearranging.
+      const set = {};
+      GEN_ABILITIES.forEach((a, i) => { set[a] = totals[i]; });
+      if (GEN_ABILITIES.every(a => fits(a, set[a]))) {
+        return { rolled: set, adjusted: applyGeneratorAdjustments(set, adj), attempts: attempts };
+      }
+    } else {
+      const set = assign(totals);
+      if (set) {
+        return { rolled: set, adjusted: applyGeneratorAdjustments(set, adj), attempts: attempts };
+      }
+    }
+  }
+
+  return { error: 'Could not roll a legal ' + clazz + ' after ' +
+                  GEN_MAX_ROLL_ATTEMPTS.toLocaleString() + ' attempts.', attempts: attempts };
+}
+
+// Table 8 applied to the rolled scores. Kept separate so the ROLLED values stay
+// available -- Table 7 is tested against those, and the sheet's own validator
+// backs the adjustment out again to do the same.
+function applyGeneratorAdjustments(set, adj) {
+  const out = {};
+  GEN_ABILITIES.forEach(a => { out[a] = set[a] + (adj[a] || 0); });
+  return out;
+}
+
 // ===== KV Sync — config helpers =====
 // KV settings are stored separately from character data so they persist
 // independently of character saves and exports.
