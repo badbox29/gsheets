@@ -4,7 +4,7 @@
     "counts": {
       "firstNames": 1334,
       "lastNames": 1512,
-      "titles": 349
+      "titles": 427
     },
     "sourcePolicy": "Use sourceType to distinguish campaign material from historical terminology and generated material.",
     "titleEligibilityVersion": "1.0",
@@ -51,8 +51,8 @@
       "mode=open means class-independent.",
       "weight is a relative random-selection weight within the eligible title pool."
     ],
-    "version": "6.0",
-    "notes": "Added raceAffinity tags and the affinityWeighting rule. Affinity now WEIGHTS rather than gates, for both race and class, matching each title's own note that class affinity is a heuristic and not a requirement. Only the stems actually present in this dataset are tagged: Forge- and Gold- as dwarf, Dawn- and Dusk- as elf. Gnome and halfling have no flavoured stems here and are untagged rather than mistagged. Name records are unchanged from v4/v5.",
+    "version": "7.0",
+    "notes": "Added 78 gnome and halfling titles (one, Champion of the Small Folk, is shared and carries both affinities) and raised the affinity multiplier from 3 to 4. All new titles are race-AFFINITY tagged, never race-restricted: their race array is all six, so any character may draw them, gnomes and halflings simply four times more often. Name records unchanged since v4.",
     "supportedRaces": [
       "human",
       "elf",
@@ -163,7 +163,7 @@
       ]
     },
     "affinityWeighting": {
-      "multiplier": 3,
+      "multiplier": 4,
       "appliesTo": [
         "raceAffinity",
         "eligibility.classGroups",
@@ -179,8 +179,8 @@
     "raceAffinityCoverage": {
       "dwarf": "Forge-, Gold-",
       "elf": "Dawn-, Dusk-",
-      "gnome": "none -- no gnome-flavoured stems exist in this dataset",
-      "halfling": "none -- no halfling-flavoured stems exist in this dataset",
+      "gnome": "Forge-free gnomish set: gem, spark, burrow, clockwork and comic monster-slayer epithets (39 titles)",
+      "halfling": "Hearth, green, burrow, road and small-folk epithets (40 titles)",
       "human": "none by design; human is the default culture in most settings and tagging it would only make human titles blander",
       "untagged": "Ash-, Battle-, Blood-, Dragon-, Flame-, Frost-, Ghost- and all office, nobility, religious, knightly, court, military and professional titles. Battle- is deliberately untagged: it reads as class flavour rather than racial, and a fighter of any race earns it."
     }
@@ -31134,6 +31134,2333 @@
         "weight": 7,
         "recommendedMinLevel": 5,
         "note": "Flavor epithet; no class requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Gemwarden",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Glitterkeeper",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Sparkwarden",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Brightdelver",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Keeper of Small Wonders",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Keeper of Hidden Things",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Keeper of the Glittering Vault",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Warden of the Deep Burrows",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Warden of the Gemways",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Guardian of the Hearthstone",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior",
+          "priest"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Guardian of the Hidden Door",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior",
+          "priest"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Defender of the Burrows",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior",
+          "priest"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Defender of the Hearth",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior",
+          "priest"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Defender of the Golden Hall",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior",
+          "priest"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Champion of the Small Folk",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome",
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Champion of the Glittering Court",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Knight of the Golden Gear",
+      "category": "knightly",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 6,
+        "weight": 3,
+        "recommendedMinLevel": 8,
+        "classGroups": [
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Knight of the Laughing Stone",
+      "category": "knightly",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 6,
+        "weight": 3,
+        "recommendedMinLevel": 8,
+        "classGroups": [
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Knight of the Bright Burrow",
+      "category": "knightly",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 6,
+        "weight": 3,
+        "recommendedMinLevel": 8,
+        "classGroups": [
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Shield of the Warren",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Shield of the Deep Halls",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Hammer of the Kobolds",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Bane of the Burrowers",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Goblin-Baffler",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "open",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Kobold-Botherer",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "open",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Orc-Tripper",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "open",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Giant-Feller",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Giant-Baffler",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "open",
+        "minLevel": 6,
+        "weight": 8,
+        "recommendedMinLevel": 8
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Dragon-Tickler",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "open",
+        "minLevel": 8,
+        "weight": 8,
+        "recommendedMinLevel": 10
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Gem-Eyed",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "wizard"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Quick-Witted",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "open",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Many-Clevered",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "wizard"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Unfooled",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "wizard",
+          "rogue"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Unexpected",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "open",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Inconvenient",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "open",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Twice-Hidden",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "rogue",
+          "wizard"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Laughing Blade",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior",
+          "rogue"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Golden Grin",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "open",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Impossible-to-Reach",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "gnome"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "rogue"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Hearthwarden",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Hearthkeeper",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Burrowwarden",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Greenwarden",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Fieldwarden",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Hedgewarden",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Keeper of the Hearth",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Keeper of the Old Burrow",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Keeper of the Green",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Keeper of the Good Earth",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Keeper of the Last Lantern",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Keeper of the Quiet Road",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Guardian of the Shire",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior",
+          "priest"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Guardian of the Hearth",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior",
+          "priest"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Guardian of the Harvest",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior",
+          "priest"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Defender of the Downs",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior",
+          "priest"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Defender of the Green",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior",
+          "priest"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Defender of the Hearthlands",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior",
+          "priest"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Champion of the Homeward Road",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Warden of the Hedgerows",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Warden of the Old Road",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Warden of the Green Hills",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Warden of the Burrows",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "priest",
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Shield of the Hearth",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Shield of the Downs",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Blade of the Green Hills",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Thorn of the Road",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Goblin-Bane",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "Wolf-Bane",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 4,
+        "weight": 8,
+        "recommendedMinLevel": 6,
+        "classGroups": [
+          "warrior"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Far-Wandered",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "open",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Long-Walked",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "open",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Sure-Footed",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "open",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Light-Fingered",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "rogue"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Keen-Eyed",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "warrior",
+          "rogue"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Quiet Step",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "rogue"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Greencloak",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "rogue",
+          "priest"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Hedgewalker",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "affinity",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5,
+        "classGroups": [
+          "rogue",
+          "priest"
+        ],
+        "note": "Class affinity is a generator heuristic, not a rules requirement."
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Homecomer",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "open",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5
+      },
+      "integration": {
+        "persistSeparatelyFromName": true
+      }
+    },
+    {
+      "title": "The Unlooked-For",
+      "category": "epithet",
+      "gender": "any",
+      "race": [
+        "human",
+        "elf",
+        "half-elf",
+        "dwarf",
+        "gnome",
+        "halfling"
+      ],
+      "sourceType": "generated",
+      "raceAffinity": [
+        "halfling"
+      ],
+      "eligibility": {
+        "mode": "open",
+        "minLevel": 3,
+        "weight": 8,
+        "recommendedMinLevel": 5
       },
       "integration": {
         "persistSeparatelyFromName": true
