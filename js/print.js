@@ -761,6 +761,13 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
 
   // === BASIC INFO ===
   const characterName = val(root, 'name') || '';
+  // Kept out of `name` on purpose -- name is the save key and export filename.
+  // 64 characters holds two or three honorifics; beyond that the footer would
+  // wrap.
+  const characterTitleRaw = (val(root, 'title') || '').trim();
+  const characterTitle = characterTitleRaw.length > 64
+    ? characterTitleRaw.slice(0, 61).replace(/[,\s]+$/, '') + '\u2026'
+    : characterTitleRaw;
   const playerName = val(root, 'player') || '';
   const race = val(root, 'race') || '';
   const clazz = val(root, 'clazz') || '';
@@ -3163,6 +3170,16 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
         {
           text: [
             { text: characterName || 'Unnamed', bold: true },
+            // Titles ride with the name, since that is what they modify. The
+            // footer rather than the header because the header is a fixed
+            // 12-column grid whose row heights are derived from the plate
+            // height -- an extra line there would break the block alignment.
+            // Truncated because the field is a comma-separated LIST that grows
+            // through play, and an unbounded one would wrap the footer onto a
+            // second line and eat the page margin.
+            characterTitle
+              ? { text: `, ${characterTitle}`, italics: true }
+              : { text: '' },
             { text: `  \u2014  ${clazzDisplay || 'Adventurer'}${level ? ' ' + level : ''}` +
                     `${race ? ', ' + race : ''}` },
             playerName ? { text: `  \u2014  ${playerName}`, italics: true } : { text: '' }
