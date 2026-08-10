@@ -48,7 +48,7 @@ const SHEET_HTML = `
             </div>
           </div>
 		  <div class="row" style="margin-top:8px">
-            <div class="col"><label>Race</label><input data-field="race" type="text"></div>
+            <div class="col"><label>Race</label><input data-field="race" type="text" list="race-options" autocomplete="off" title="The six player races. Subraces such as Grey Elf or Deep Gnome are fine — they resolve to their base race. Anything unrecognised is flagged, not blocked."></div>
             <div class="col">
               <label>Gender</label>
               <select data-field="gender">
@@ -57,7 +57,7 @@ const SHEET_HTML = `
                 <option value="Female">Female</option>
               </select>
             </div>
-            <div class="col single-class-field"><label>Class</label><input data-field="clazz" type="text"></div>
+            <div class="col single-class-field"><label>Class</label><input data-field="clazz" type="text" list="class-options" autocomplete="off" title="Suggestions only — this stays a free-text field. Multi and dual-class characters store a formatted display string here, which no dropdown could hold. Prefix homebrew with hb_."></div>
             <div class="col single-class-field">
               <label>Kit</label>
               <select data-field="kit">
