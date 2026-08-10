@@ -5804,6 +5804,62 @@ function getRaceClassToken(clazz) {
   return key ? MAP[key] : null;
 }
 
+// Is the race or class a value this app can actually resolve?
+//
+// NOT A RULES CHECK -- every other validator here tests the book. This one tests
+// whether the sheet is silently doing nothing. An unresolvable race means
+// getRaceKey returns null at seven call sites, so racial languages, save
+// bonuses, Table 7 validation and thief racial adjustments ALL go quiet while
+// the character renders perfectly. An unresolvable class means getClassCategory
+// returns null, so hitDiceParts returns null and hit dice do not resolve at all.
+// Nothing warns today except the age, height and weight rollers.
+//
+// Deliberately NOT gated by isOptionalRule: this is not a house-rule matter, it
+// is a statement of fact about what the app is applying.
+function validateFieldRecognition(root) {
+  const problems = [];
+
+  const race = (val(root, 'race') || '').trim();
+  if (race && typeof getRaceKey === 'function' && !getRaceKey(race)) {
+    problems.push('Race "' + race + '" is not recognised. Racial languages, saving ' +
+                  'throw bonuses, ability score ranges and thief skill adjustments ' +
+                  'are NOT being applied. The six player races are dwarf, elf, gnome, ' +
+                  'half-elf, halfling and human; subraces such as "Grey Elf" or ' +
+                  '"Deep Gnome" resolve on their own.');
+  }
+
+  // Multi and dual-class characters keep their real classes in their own fields;
+  // `clazz` holds a formatted display string for them, so check the components.
+  const charType = (val(root, 'char_type') || 'single').toLowerCase();
+  const classes = [];
+  if (charType === 'multi') {
+    for (let i = 1; i <= 3; i++) {
+      const c = (val(root, 'mc_class' + i) || '').trim();
+      if (c) classes.push(c);
+    }
+  } else if (charType === 'dual') {
+    ['dc_original_class', 'dc_new_class'].forEach(f => {
+      const c = (val(root, f) || '').trim();
+      if (c) classes.push(c);
+    });
+  } else {
+    const c = (val(root, 'clazz') || '').trim();
+    if (c) classes.push(c);
+  }
+
+  classes.forEach(c => {
+    // Homebrew is never judged, here as everywhere else.
+    if (c.toLowerCase().indexOf('hb_') === 0) return;
+    if (typeof getClassCategory === 'function' && !getClassCategory(c)) {
+      problems.push('Class "' + c + '" is not recognised. Hit dice, saving throws, ' +
+                    'THAC0 and proficiency slots cannot be resolved for it. Prefix a ' +
+                    'deliberate homebrew class with "hb_" to silence this.');
+    }
+  });
+
+  return problems;
+}
+
 // Advisory only. Returns [] for humans, unrecognised races, homebrew classes,
 // or when the check is switched off.
 function validateRaceClass(root) {
