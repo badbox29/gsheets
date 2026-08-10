@@ -441,6 +441,84 @@ function generatorHitPoints(clazz, level, con) {
   return { hp: Math.max(1, total), rolls: rolls, conBonus: conBonus, flat: parts.flat };
 }
 
+// Draw a name and, sometimes, a title from core_names.json.
+//
+// HALF-ELVES HAVE NO POOL OF THEIR OWN. _meta.derivedRacePools says to build
+// their candidates from the union of human and elf, plus any record explicitly
+// tagged half-elf. Do not look for half-elf tags on ordinary names -- v4 removed
+// them deliberately, and re-adding them would double-weight those entries.
+function generatorNamePool(list, raceKey, gender) {
+  if (!list) return [];
+  const wanted = (raceKey === 'half-elf') ? ['human', 'elf', 'half-elf'] : [raceKey];
+  return list.filter(rec => {
+    if (gender && rec.gender && rec.gender !== gender) return false;
+    return (rec.race || []).some(r => wanted.indexOf(r) !== -1);
+  });
+}
+
+// Chance that a character has a title at all, by level. Bands are [min, max];
+// _meta.titleChanceRule says 21+ uses the final band rather than falling off
+// the end of the table.
+function generatorTitleChance(level) {
+  const bands = (NAMES_DB && NAMES_DB._meta && NAMES_DB._meta.titleChanceByLevel) || [];
+  if (!bands.length) return 0;
+  for (const b of bands) {
+    if (level >= b.levels[0] && level <= b.levels[1]) return b.chance;
+  }
+  return bands[bands.length - 1].chance;
+}
+
+// Eligible titles for this character, then a WEIGHTED draw -- weight is the only
+// tuning the file carries, and a uniform pick would throw it away.
+function generatorPickTitle(raceKey, gender, clazz, level) {
+  if (!NAMES_DB || !NAMES_DB.titles) return '';
+  if (Math.random() > generatorTitleChance(level)) return '';
+
+  const group = (typeof getClassCategory === 'function') ? getClassCategory(clazz) : null;
+  const c = (clazz || '').toLowerCase();
+
+  const eligible = NAMES_DB.titles.filter(t => {
+    const e = t.eligibility || {};
+    if (t.gender && t.gender !== 'any' && t.gender !== gender) return false;
+    if ((t.race || []).length && (t.race || []).indexOf(raceKey) === -1) return false;
+    if (e.minLevel && level < e.minLevel) return false;
+    // A title naming classes or groups is restricted to them. One naming
+    // neither is open to anyone who clears the level gate.
+    const names = e.classes || [];
+    const groups = e.classGroups || [];
+    if (!names.length && !groups.length) return true;
+    return names.indexOf(c) !== -1 || (group && groups.indexOf(group) !== -1);
+  });
+  if (!eligible.length) return '';
+
+  const total = eligible.reduce((sum, t) => sum + ((t.eligibility || {}).weight || 1), 0);
+  let n = Math.random() * total;
+  for (const t of eligible) {
+    n -= ((t.eligibility || {}).weight || 1);
+    if (n <= 0) return t.title;
+  }
+  return eligible[eligible.length - 1].title;
+}
+
+// Returns { first, last, title }. The caller joins first and last into the Name
+// field; the TITLE IS KEPT SEPARATE and must never be appended to it -- Name is
+// the KV sync key and the export filename, which is what _meta.titleIntegration
+// warns about.
+function generatorPickName(race, gender, clazz, level) {
+  if (!NAMES_DB) return { first: '', last: '', title: '', error: 'Name tables are not loaded.' };
+  const raceKey = (typeof getRaceKey === 'function') ? getRaceKey(race) : race;
+
+  const firsts = generatorNamePool(NAMES_DB.firstNames, raceKey, gender);
+  const lasts  = generatorNamePool(NAMES_DB.lastNames,  raceKey, null);
+  const pick = arr => arr.length ? arr[Math.floor(Math.random() * arr.length)].name : '';
+
+  return {
+    first: pick(firsts),
+    last:  pick(lasts),
+    title: generatorPickTitle(raceKey, gender, clazz, level)
+  };
+}
+
 // ===== KV Sync — config helpers =====
 // KV settings are stored separately from character data so they persist
 // independently of character saves and exports.
