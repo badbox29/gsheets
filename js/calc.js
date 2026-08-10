@@ -8019,6 +8019,11 @@ function renderClassGroupValidation(root) {
       problems: (typeof validateRaceRequirements === 'function') ? validateRaceRequirements(root) : [] },
     { heading: 'Class not open to this race (PHB Ch.2)',
       problems: (typeof validateRaceClass === 'function') ? validateRaceClass(root) : [] },
+    // FIRST in the list on purpose when it fires alone: if the race or class
+    // cannot be resolved, several of the checks above return [] for that same
+    // reason, so this is the finding that explains their silence.
+    { heading: 'Race or class not recognised',
+      problems: (typeof validateFieldRecognition === 'function') ? validateFieldRecognition(root) : [] },
     { heading: 'Alignment and class (PHB Ch.4)',
       problems: (typeof validateClassAlignment === 'function') ? validateClassAlignment(root) : [] },
     { heading: 'Alignment and kit (Complete handbooks)',
