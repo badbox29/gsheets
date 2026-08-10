@@ -8455,6 +8455,17 @@ function bindSheet(root, tab){
       const liveRoot   = getActiveRoot() || root;
       const liveResult = qs(liveRoot, '.gen-result');
       const liveOverlay = qs(liveRoot, '.gen-modal-overlay');
+
+      // EVERY TAB HAS ITS OWN MODAL -- the markup is part of the sheet template.
+      // The overlay we opened belongs to the tab the button was clicked in, and
+      // generation has since moved to a different tab, so that one must be
+      // hidden or it sits at display:flex forever and "reappears" the next time
+      // that tab is brought forward. Harmless when root is the detached tab
+      // openIntoCurrentOrNew replaced, and harmless when root === liveRoot,
+      // since the show below runs after this hide.
+      const originOverlay = qs(root, '.gen-modal-overlay');
+      if (originOverlay) originOverlay.style.display = 'none';
+
       if (!liveResult) return;
       if (liveOverlay) liveOverlay.style.display = 'flex';
 
