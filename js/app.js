@@ -8499,6 +8499,32 @@ function bindSheet(root, tab){
       if (originOverlay) originOverlay.style.display = 'none';
 
       if (!liveResult) return;
+
+      // THIS IS A DIFFERENT TAB'S MODAL, and its controls have never been
+      // populated -- populateGeneratorControls only runs from the Generate
+      // button's own handler. Left unfilled, .gen-class has no options, so the
+      // next click finds no legal class for any race. Populate it, then carry
+      // the settings across so the window the user sees still shows what they
+      // chose rather than silently resetting to defaults.
+      if (liveRoot !== root) {
+        if (typeof populateGeneratorControls === 'function') populateGeneratorControls(liveRoot);
+        ['.gen-race', '.gen-gender', '.gen-class', '.gen-level', '.gen-roll-method']
+          .forEach(s => {
+            const from = qs(root, s), to = qs(liveRoot, s);
+            if (from && to) to.value = from.value;
+          });
+        // Kit and alignment depend on class, so they must be rebuilt AFTER the
+        // class value is copied across, then have their own values applied.
+        if (typeof populateGeneratorKits === 'function') populateGeneratorKits(liveRoot);
+        if (typeof populateGeneratorAlignments === 'function') populateGeneratorAlignments(liveRoot);
+        ['.gen-kit', '.gen-alignment'].forEach(s => {
+          const from = qs(root, s), to = qs(liveRoot, s);
+          if (from && to) to.value = from.value;
+        });
+        const fromBox = qs(root, '.gen-roll-attrs'), toBox = qs(liveRoot, '.gen-roll-attrs');
+        if (fromBox && toBox) toBox.checked = fromBox.checked;
+      }
+
       if (liveOverlay) liveOverlay.style.display = 'flex';
 
       let html = '<strong>' + escapeHtml(out.name) + '</strong>';
