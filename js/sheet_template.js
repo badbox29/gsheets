@@ -2632,11 +2632,12 @@ const SHEET_HTML = `
         <button class="save-local">Save</button>
         <button class="save-as">Save As…</button>
         <button class="open-local">Open…</button>
+        <button class="generate-char">Generate</button>
         <button class="export-json">Export</button>
         <button class="import-json">Import</button>
 		<button class="delete-char btn-danger">Delete</button>
         <button class="print">Print</button>
-		<button class="kv-settings">⚙ Settings</button>
+		<button class="kv-settings" title="Settings" aria-label="Settings" style="min-width:44px;">⚙</button>
 		<input class="file-input import-file" type="file" accept="application/json">
       </div>
     </div>
@@ -2961,6 +2962,76 @@ const SHEET_HTML = `
 	    <div class="goods-results" style="max-height:50vh;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius);padding:8px;"></div>
 	    <div style="display:flex;justify-content:flex-end;margin-top:16px;">
 	      <button class="goods-modal-close" style="padding:8px 16px;">Close</button>
+	    </div>
+	  </div>
+	</div>
+
+	<!-- Character Generator Modal -->
+	<div class="gen-modal-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:10000;justify-content:center;align-items:center;">
+	  <div style="background:var(--panel);border-radius:var(--radius-lg);max-width:640px;width:94%;max-height:85vh;overflow-y:auto;padding:20px 24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+	    <h2 style="margin:0 0 4px 0;font-size:16px;">Generate a Character</h2>
+	    <p style="font-size:12px;color:var(--muted);margin:0 0 12px;">
+	      Creates a NEW character &mdash; the sheet you are on now is never overwritten.
+	      Names and titles are invented, not canon. Everything generated can be edited
+	      afterwards like any other character.
+	    </p>
+
+	    <div class="gen-loading" style="display:none;font-size:12px;color:var(--muted);margin-bottom:12px;">Loading name tables&hellip;</div>
+
+	    <div class="gen-controls" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px 12px;">
+	      <div>
+	        <label class="small">Race</label>
+	        <select class="gen-race"></select>
+	      </div>
+	      <div>
+	        <label class="small">Gender</label>
+	        <select class="gen-gender">
+	          <option value="random">Random</option>
+	          <option value="male">Male</option>
+	          <option value="female">Female</option>
+	        </select>
+	      </div>
+	      <div>
+	        <label class="small">Class</label>
+	        <select class="gen-class"></select>
+	      </div>
+	      <div>
+	        <label class="small">Kit</label>
+	        <select class="gen-kit"><option value="">None</option></select>
+	      </div>
+	      <div>
+	        <label class="small">Level</label>
+	        <input class="gen-level" type="number" min="1" max="20" step="1" value="1">
+	      </div>
+	      <div>
+	        <label class="small">Alignment</label>
+	        <select class="gen-alignment"><option value="random">Random (legal for class)</option></select>
+	      </div>
+	    </div>
+
+	    <hr style="margin:16px 0;border:none;border-top:1px solid var(--border);">
+
+	    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+	      <input class="gen-roll-attrs" type="checkbox" id="gen-roll-attrs" checked>
+	      <label for="gen-roll-attrs" style="margin:0;">Roll attributes</label>
+	    </div>
+	    <select class="gen-roll-method" style="width:100%;">
+	      <option value="3d6">3d6</option>
+	      <option value="4d6">4d6 (drop lowest)</option>
+	      <option value="method1">Method I (3d6, 6 times, in order)</option>
+	      <option value="method2" selected>Method II (3d6, 12 times, arrange)</option>
+	    </select>
+	    <div class="gen-roll-note" style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4;">
+	      Rolls repeat until the scores are legal for the chosen race and class. Method I
+	      rolls in order and cannot be rearranged, so a demanding class may take many
+	      attempts &mdash; the count is reported with the result.
+	    </div>
+
+	    <div class="gen-result" style="display:none;margin-top:16px;padding:10px;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);font-size:12px;line-height:1.5;"></div>
+
+	    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px;">
+	      <button class="gen-modal-close" style="padding:8px 16px;">Cancel</button>
+	      <button class="gen-run btn-primary" style="padding:8px 16px;">Generate</button>
 	    </div>
 	  </div>
 	</div>
