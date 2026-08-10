@@ -209,7 +209,11 @@ function populateGeneratorAlignments(root) {
 // array in SPECIALIST_WIZARDS, which is narrower still.
 //
 // Returns { race, clazz } or { error } when the pair cannot be satisfied.
-function resolveGeneratorRaceClass(wantRace, wantClass) {
+// root is REQUIRED in practice: every tab carries its own copy of the modal, so
+// a document-wide lookup finds the first tab's class dropdown, which is empty
+// unless the modal was opened there. That yields zero legal classes for every
+// race and reports a nonsense "no class is legal for a <race>" error.
+function resolveGeneratorRaceClass(wantRace, wantClass, root) {
   const RACES = ['human', 'dwarf', 'elf', 'gnome', 'half-elf', 'halfling'];
   const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 
