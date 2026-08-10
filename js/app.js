@@ -578,9 +578,18 @@ function runCharacterGenerator(root) {
 
   const fullName = [nm.first, nm.last].filter(Boolean).join(' ') || 'Unnamed';
 
+  // Titles are a comma-separated LIST -- a character collects them from
+  // different peoples over time. Preserve anything already on the sheet rather
+  // than replacing it; on a fresh character there is nothing to preserve.
+  const existingTitle = (val(root, 'title') || '').trim();
+  const titleField = nm.title
+    ? (existingTitle ? existingTitle + ', ' + nm.title : nm.title)
+    : existingTitle;
+
   const data = {
     meta: {
       name: fullName,
+      title: titleField,
       // Title-cased for display only, per hyphenated part so "half-elf" becomes
       // "Half-Elf". The lowercase key is what every table matches on, so the
       // conversion happens HERE, at the boundary, and pair.race/pair.clazz stay
@@ -5316,6 +5325,10 @@ function collectSheet(root){
   const meta = {
     name: val(root,'name'),
     player: val(root,'player'),
+    // SEPARATE FROM NAME, deliberately. Name is the character map key and the
+    // export filename, so appending a title there would change where the
+    // character is stored. core_names.json says the same in _meta.titleIntegration.
+    title: val(root,'title'),
     race: val(root,'race'),
 	gender: val(root,'gender'),
     clazz: val(root,'clazz'),
@@ -6153,6 +6166,9 @@ function loadSheet(root, data){
   populateCampaignSettings(root);   // options must exist before we set the value
   val(root,'name',m.name||'');
   val(root,'player',m.player||'');
+  // Absent on every record saved before the field existed, which reads as empty
+  // -- correct, and no migration needed.
+  val(root,'title',m.title||'');
   val(root,'race',m.race||'');
   val(root,'gender',m.gender||'');
   val(root,'clazz',m.clazz||'');
