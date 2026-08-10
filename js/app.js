@@ -538,6 +538,88 @@ function generatorPickName(race, gender, clazz, level) {
   };
 }
 
+// Assemble everything into a character record and open it.
+//
+// Builds the SAME shape collectSheet produces, so loadSheet restores it with no
+// special casing: meta for identity, scores and hit points; details for the
+// physical description. Anything omitted simply loads blank.
+//
+// Opens through openIntoCurrentOrNew -- the helper Import already uses. It
+// replaces an untouched tab and opens a new one otherwise, so a character with
+// data is never overwritten. Do not reimplement that test here.
+function runCharacterGenerator(root) {
+  const gv = sel => { const el = qs(root, sel); return el ? el.value : ''; };
+  const level = Math.max(1, Math.min(20, parseInt(gv('.gen-level'), 10) || 1));
+
+  const pair = resolveGeneratorRaceClass(gv('.gen-race'), gv('.gen-class'));
+  if (pair.error) return { error: pair.error };
+
+  const gender = (gv('.gen-gender') === 'random')
+    ? (Math.random() < 0.5 ? 'male' : 'female')
+    : gv('.gen-gender');
+
+  const scores = generatorRollScores(pair.race, pair.clazz, gv('.gen-roll-method'));
+  if (scores.error) return { error: scores.error };
+
+  const physical = generatorPhysical(pair.race, gender);
+  const hp = generatorHitPoints(pair.clazz, level, scores.adjusted.con);
+  const nm = generatorPickName(pair.race, gender, pair.clazz, level);
+
+  // Alignment: an explicit choice wins, otherwise draw from the legal set for
+  // the class rather than from all nine.
+  let alignment = gv('.gen-alignment');
+  if (!alignment || alignment === 'random') {
+    const req = (typeof CLASS_ALIGNMENT_REQUIREMENTS === 'object')
+      ? CLASS_ALIGNMENT_REQUIREMENTS[pair.clazz] : null;
+    const pool = (req && req.allowed) ? req.allowed
+               : (typeof PLAYER_ALIGNMENTS !== 'undefined' ? PLAYER_ALIGNMENTS : ['tn']);
+    alignment = pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  const fullName = [nm.first, nm.last].filter(Boolean).join(' ') || 'Unnamed';
+
+  const data = {
+    meta: {
+      name: fullName,
+      race: pair.race,
+      gender: gender,
+      clazz: pair.clazz,
+      level: String(level),
+      kit: gv('.gen-kit') || '',
+      alignment: alignment,
+      char_type: 'single',
+      hp: hp ? String(hp.hp) : '',
+      // TABLE 8 IS ALREADY APPLIED. The sheet stores final scores; its own
+      // validators back the adjustment out again to test Table 7.
+      str: String(scores.adjusted.str),
+      dex: String(scores.adjusted.dex),
+      con: String(scores.adjusted.con),
+      int: String(scores.adjusted.int),
+      wis: String(scores.adjusted.wis),
+      cha: String(scores.adjusted.cha)
+    },
+    details: {
+      height: physical.height ? String(physical.height) : '',
+      weight: physical.weight ? String(physical.weight) : '',
+      age:    physical.age    ? String(physical.age)    : ''
+    }
+  };
+
+  openIntoCurrentOrNew(fullName, data);
+
+  return {
+    name: fullName,
+    title: nm.title,
+    race: pair.race,
+    clazz: pair.clazz,
+    level: level,
+    gender: gender,
+    alignment: alignment,
+    attempts: scores.attempts,
+    hp: hp ? hp.hp : null
+  };
+}
+
 // ===== KV Sync — config helpers =====
 // KV settings are stored separately from character data so they persist
 // independently of character saves and exports.
