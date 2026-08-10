@@ -233,7 +233,8 @@ function resolveGeneratorRaceClass(wantRace, wantClass, root) {
     return allowed.indexOf(token) !== -1;
   };
 
-  const classSel = document.querySelector('.gen-class');
+  const scope = root || (typeof getActiveRoot === 'function' ? getActiveRoot() : null);
+  const classSel = scope ? qs(scope, '.gen-class') : null;
   const allClasses = classSel
     ? Array.from(classSel.options).map(o => o.value).filter(v => v && v !== 'random')
     : [];
@@ -555,7 +556,7 @@ function runCharacterGenerator(root) {
   const gv = sel => { const el = qs(root, sel); return el ? el.value : ''; };
   const level = Math.max(1, Math.min(20, parseInt(gv('.gen-level'), 10) || 1));
 
-  const pair = resolveGeneratorRaceClass(gv('.gen-race'), gv('.gen-class'));
+  const pair = resolveGeneratorRaceClass(gv('.gen-race'), gv('.gen-class'), root);
   if (pair.error) return { error: pair.error };
 
   const gender = (gv('.gen-gender') === 'random')
