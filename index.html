@@ -19,6 +19,44 @@
 		<link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
+		<!-- SUGGESTION LISTS for the Race and Class inputs.
+		     HERE, not in sheet_template.js, because every tab gets its own copy
+		     of SHEET_HTML: a <datalist> in the template would repeat its id once
+		     per open character, which is invalid and the same per-tab
+		     duplication that has caused several bugs in the modals.
+
+		     Both fields stay <input>, NOT <select>. A select silently blanks any
+		     value not in its option list, and two values must survive: subraces
+		     like "Grey Elf", which getRaceKey resolves by substring, and the
+		     formatted display string ("Cleric 7 / Fighter 9") that
+		     updateMultiClassCalculations writes into clazz. Unrecognised entries
+		     are flagged by validateFieldRecognition, never blocked. -->
+		<datalist id="race-options">
+			<option value="Dwarf"></option>
+			<option value="Elf"></option>
+			<option value="Gnome"></option>
+			<option value="Half-Elf"></option>
+			<option value="Halfling"></option>
+			<option value="Human"></option>
+		</datalist>
+		<datalist id="class-options">
+			<option value="Fighter"></option>
+			<option value="Paladin"></option>
+			<option value="Ranger"></option>
+			<option value="Cleric"></option>
+			<option value="Druid"></option>
+			<option value="Mage"></option>
+			<option value="Abjurer"></option>
+			<option value="Conjurer"></option>
+			<option value="Diviner"></option>
+			<option value="Enchanter"></option>
+			<option value="Illusionist"></option>
+			<option value="Invoker"></option>
+			<option value="Necromancer"></option>
+			<option value="Transmuter"></option>
+			<option value="Thief"></option>
+			<option value="Bard"></option>
+		</datalist>
 		<div class="wrap">
 			<header>
 			  <div>
