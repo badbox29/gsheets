@@ -42,6 +42,12 @@ const SHEET_HTML = `
             </div>
           </div>
 		  <div class="row" style="margin-top:8px">
+            <div class="col" style="flex:1 1 100%;">
+              <label>Title</label>
+              <input data-field="title" type="text" placeholder="e.g. Frostbane, Warden of the Pass" title="Honorifics and epithets earned in play. Comma-separate several — a character may collect titles from different peoples. Kept SEPARATE from Name on purpose: Name is the save key and the export filename, so a title appended there would change where the character is stored.">
+            </div>
+          </div>
+		  <div class="row" style="margin-top:8px">
             <div class="col"><label>Race</label><input data-field="race" type="text"></div>
             <div class="col">
               <label>Gender</label>
