@@ -385,6 +385,62 @@ function applyGeneratorAdjustments(set, adj) {
   return out;
 }
 
+// Physical description and hit points. Everything here is a table lookup plus
+// dice -- Tables 10 and 11 are transcribed in tables.js and photo-verified.
+//
+// Height and weight are BASE + dice, and the base differs by sex, so gender has
+// to be resolved before this runs.
+function generatorPhysical(race, gender) {
+  const raceKey = (typeof getRaceKey === 'function') ? getRaceKey(race) : null;
+  const hw  = (typeof RACE_HEIGHT_WEIGHT === 'object' && raceKey) ? RACE_HEIGHT_WEIGHT[raceKey] : null;
+  const age = (typeof RACE_STARTING_AGE  === 'object' && raceKey) ? RACE_STARTING_AGE[raceKey]  : null;
+  const sex = (gender === 'female') ? 'female' : 'male';
+  const out = {};
+
+  if (hw) {
+    out.height = hw.height[sex] + rollDiceFormula(hw.height.dice).total;
+    out.weight = hw.weight[sex] + rollDiceFormula(hw.weight.dice).total;
+  }
+  if (age) out.age = age.base + rollDiceFormula(age.dice).total;
+  return out;
+}
+
+// Hit points for a single-class character at a given level.
+//
+// Three rules interact and all three are already in tables.js:
+//   hitDiceParts   -- how many dice, and the FLAT points gained past the cap
+//                     (warrior/priest 10th+, wizard/rogue 11th+)
+//   applyHitDieFloor -- Table 3's CON 20+ footnotes turn low rolls into 2s, 3s
+//                     or 4s. PER DIE, and NOT applied to flat levels, because
+//                     no die is rolled there.
+//   CON_HP_BONUS   -- a PAIR: [0] for everyone, [1] the warriors-only figure.
+//                     A CON 18 fighter gets +4 where a CON 18 thief gets +2.
+//
+// The Constitution bonus applies once per Hit Die, and NOT to flat levels --
+// the same reason the floor does not.
+function generatorHitPoints(clazz, level, con) {
+  const parts = (typeof hitDiceParts === 'function') ? hitDiceParts(clazz, 1, level) : null;
+  if (!parts) return null;
+
+  const row = (typeof CON_HP_BONUS === 'object') ? CON_HP_BONUS[con] : null;
+  const isWarrior = (typeof isWarriorClass === 'function') && isWarriorClass(clazz);
+  const conBonus = row ? (isWarrior ? row[1] : row[0]) : 0;
+
+  let total = 0;
+  const rolls = [];
+  for (let i = 0; i < parts.dice; i++) {
+    let r = rollDie(parts.die);
+    if (typeof applyHitDieFloor === 'function') r = applyHitDieFloor(r, con);
+    rolls.push(r);
+    total += r + conBonus;
+  }
+  total += parts.flat;
+
+  // A living character has at least 1 hit point, however punishing the
+  // Constitution penalty.
+  return { hp: Math.max(1, total), rolls: rolls, conBonus: conBonus, flat: parts.flat };
+}
+
 // ===== KV Sync — config helpers =====
 // KV settings are stored separately from character data so they persist
 // independently of character saves and exports.
