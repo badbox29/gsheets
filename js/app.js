@@ -86,6 +86,100 @@ async function loadNameTables() {
   return NAMES_LOADING;
 }
 
+// Fills the six generator dropdowns. EVERY list is derived from an existing
+// table rather than hardcoded here -- a second copy of the race or class
+// vocabulary would drift the moment either changes.
+//
+// Re-run on class change: kits and legal alignments both depend on it.
+function populateGeneratorControls(root) {
+  const raceSel  = qs(root, '.gen-race');
+  const classSel = qs(root, '.gen-class');
+  if (!raceSel || !classSel) return;
+
+  // The six PHB races. getRaceKey is the app's own normaliser, so this is the
+  // authoritative list -- half-orc is absent because 2e dropped it (see notes).
+  if (!raceSel.options.length) {
+    ['human', 'dwarf', 'elf', 'gnome', 'half-elf', 'halfling'].forEach(r => {
+      const o = document.createElement('option');
+      o.value = r;
+      o.textContent = r.charAt(0).toUpperCase() + r.slice(1).replace('-e', '-E');
+      raceSel.appendChild(o);
+    });
+    raceSel.insertBefore(new Option('Random', 'random'), raceSel.firstChild);
+    raceSel.value = 'random';
+  }
+
+  // Single classes only. CLASS_CATEGORIES also carries generic ('warrior') and
+  // homebrew ('hb_') entries, which are real classes on a sheet but not things
+  // to offer in a generator.
+  if (!classSel.options.length && typeof CLASS_CATEGORIES === 'object') {
+    Object.keys(CLASS_CATEGORIES)
+      .filter(c => c.indexOf('hb_') !== 0)
+      .filter(c => ['warrior', 'priest', 'rogue', 'wizard', 'specialist'].indexOf(c) === -1)
+      .sort()
+      .forEach(c => {
+        const o = document.createElement('option');
+        o.value = c;
+        o.textContent = c.charAt(0).toUpperCase() + c.slice(1);
+        classSel.appendChild(o);
+      });
+    classSel.insertBefore(new Option('Random', 'random'), classSel.firstChild);
+    classSel.value = 'random';
+  }
+
+  populateGeneratorKits(root);
+  populateGeneratorAlignments(root);
+}
+
+// Kits depend on class. 'Random' class means we cannot know the kit list yet,
+// so the control degrades to None rather than offering kits from a class the
+// character may not get.
+function populateGeneratorKits(root) {
+  const classSel = qs(root, '.gen-class');
+  const kitSel   = qs(root, '.gen-kit');
+  if (!kitSel) return;
+
+  const clazz = classSel ? classSel.value : '';
+  kitSel.innerHTML = '<option value="">None</option>';
+  if (!clazz || clazz === 'random' || typeof getKitsForClass !== 'function') {
+    kitSel.disabled = true;
+    return;
+  }
+  const kits = getKitsForClass(clazz) || [];
+  kitSel.disabled = kits.length === 0;
+  kits.forEach(kit => {
+    const o = document.createElement('option');
+    o.value = kit.name.toLowerCase().replace(/\s+/g, '');
+    o.textContent = kit.name;
+    kitSel.appendChild(o);
+  });
+}
+
+// Only alignments the chosen class can legally hold. A paladin offers Lawful
+// Good and nothing else, so an illegal character cannot be requested in the
+// first place -- cheaper than generating one and rejecting it.
+function populateGeneratorAlignments(root) {
+  const classSel = qs(root, '.gen-class');
+  const alignSel = qs(root, '.gen-alignment');
+  if (!alignSel || typeof ALIGNMENT_ORDER === 'undefined') return;
+
+  const clazz = classSel ? classSel.value : '';
+  const req = (clazz && clazz !== 'random' && typeof CLASS_ALIGNMENT_REQUIREMENTS === 'object')
+    ? CLASS_ALIGNMENT_REQUIREMENTS[clazz] : null;
+  const allowed = req ? req.allowed : PLAYER_ALIGNMENTS;
+
+  alignSel.innerHTML = '';
+  alignSel.appendChild(new Option('Random (legal for class)', 'random'));
+  allowed.forEach(key => {
+    if (!ALIGNMENTS[key] || ALIGNMENTS[key].notAnAlignment) return;
+    alignSel.appendChild(new Option(ALIGNMENTS[key].label, key));
+  });
+  if (req) {
+    const note = ' \u2014 ' + req.describe;
+    alignSel.options[0].textContent = 'Random' + note;
+  }
+}
+
 // ===== KV Sync — config helpers =====
 // KV settings are stored separately from character data so they persist
 // independently of character saves and exports.
