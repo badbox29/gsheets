@@ -46,8 +46,6 @@ function generateSyncToken() {
   return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
 }
 
-};
-
 // ===== Character generator — name tables =====
 // js/core_names.json is ~380KB and most sessions never open the generator, so
 // this loads LAZILY on first modal open rather than at boot. Deliberately the
