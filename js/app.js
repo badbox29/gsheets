@@ -589,13 +589,13 @@ function runCharacterGenerator(root) {
 
   const fullName = [nm.first, nm.last].filter(Boolean).join(' ') || 'Unnamed';
 
-  // Titles are a comma-separated LIST -- a character collects them from
-  // different peoples over time. Preserve anything already on the sheet rather
-  // than replacing it; on a fresh character there is nothing to preserve.
-  const existingTitle = (val(root, 'title') || '').trim();
-  const titleField = nm.title
-    ? (existingTitle ? existingTitle + ', ' + nm.title : nm.title)
-    : existingTitle;
+  // The FIELD is a comma-separated list -- a character collects titles from
+  // different peoples over play, by hand. The GENERATOR never merges into it:
+  // generation always produces a new character (openIntoCurrentOrNew replaces a
+  // pristine tab or opens a new one, and never overwrites a populated sheet), so
+  // reading the current sheet's title here would leak one character's honorifics
+  // onto an unrelated one.
+  const titleField = nm.title || '';
 
   const data = {
     meta: {
