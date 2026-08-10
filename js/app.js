@@ -582,7 +582,13 @@ function runCharacterGenerator(root) {
     meta: {
       name: fullName,
       race: pair.race,
-      gender: gender,
+      // The sheet's <select> options are "Male" and "Female", CAPITALISED, while
+      // core_names.json uses lowercase and the pools match on that. Setting a
+      // <select> to a value with no matching option fails SILENTLY and leaves it
+      // blank -- the same defect loadSheet documents for kit and campaign
+      // setting. Convert here, at the boundary, and keep the lowercase value
+      // internally for the name and title lookups.
+      gender: gender ? gender.charAt(0).toUpperCase() + gender.slice(1) : '',
       clazz: pair.clazz,
       level: String(level),
       kit: gv('.gen-kit') || '',
@@ -8434,7 +8440,17 @@ function bindSheet(root, tab){
       // Deliberately NOT the sidebar: startAutosaveForTab rewrites
       // .sidebar-message once a second with the autosave countdown, so anything
       // posted there is erased within a second on an unsaved sheet.
-      if (!result) return;
+      // openIntoCurrentOrNew may REPLACE this whole tab -- when the current one
+      // is pristine it removes the .tab-content and builds a fresh one. The
+      // modal markup lives inside the sheet template, so `root` is now detached
+      // and writing to it paints a node that is no longer on the page. Re-find
+      // the modal from the ACTIVE root, and reopen it: from the user's side the
+      // window simply stayed open.
+      const liveRoot   = getActiveRoot() || root;
+      const liveResult = qs(liveRoot, '.gen-result');
+      const liveOverlay = qs(liveRoot, '.gen-modal-overlay');
+      if (!liveResult) return;
+      if (liveOverlay) liveOverlay.style.display = 'flex';
 
       let html = '<strong>' + escapeHtml(out.name) + '</strong>';
       if (out.title) html += ' <em>' + escapeHtml(out.title) + '</em>';
@@ -8456,8 +8472,8 @@ function bindSheet(root, tab){
       }
       html += '<br><span style="color:var(--muted);">Opened in a tab behind this window.</span>';
 
-      result.innerHTML = html;
-      result.style.display = 'block';
+      liveResult.innerHTML = html;
+      liveResult.style.display = 'block';
     };
   }
 
