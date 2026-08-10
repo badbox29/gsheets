@@ -8410,6 +8410,57 @@ function bindSheet(root, tab){
     });
   }
 
+  const genRun = qs(root, '.gen-run');
+  if (genRun) {
+    genRun.onclick = () => {
+      const result = qs(root, '.gen-result');
+      const out = runCharacterGenerator(root);
+
+      if (out.error) {
+        // Errors keep the modal OPEN so the offending choice can be changed --
+        // closing it would make the user rebuild every selection.
+        if (result) {
+          result.innerHTML = '<strong style="color:var(--warning);">\u26A0 ' +
+                             escapeHtml(out.error) + '</strong>';
+          result.style.display = 'block';
+        }
+        return;
+      }
+
+      // The character is already open in a tab behind the modal. The summary
+      // goes in .gen-result and the modal STAYS OPEN, so it can be read and
+      // another character generated without reopening.
+      //
+      // Deliberately NOT the sidebar: startAutosaveForTab rewrites
+      // .sidebar-message once a second with the autosave countdown, so anything
+      // posted there is erased within a second on an unsaved sheet.
+      if (!result) return;
+
+      let html = '<strong>' + escapeHtml(out.name) + '</strong>';
+      if (out.title) html += ' <em>' + escapeHtml(out.title) + '</em>';
+      html += '<br>Level ' + out.level + ' ' + escapeHtml(out.gender) + ' ' +
+              escapeHtml(out.race) + ' ' + escapeHtml(out.clazz);
+      if (out.hp) html += ' \u2014 ' + out.hp + ' hp';
+
+      // Report the reroll count rather than hiding it. Rerolling until legal is
+      // rejection sampling: the result is stronger than the method implies, and
+      // for Method I a demanding class can take thousands of sets. That rarity
+      // IS the rule, so it is shown rather than quietly smoothed away.
+      if (out.attempts > 1) {
+        html += '<br><span style="color:var(--muted);">' +
+                out.attempts.toLocaleString() + ' sets rolled before a legal one.</span>';
+      }
+      if (out.title) {
+        html += '<br><span style="color:var(--muted);">The sheet has no title field yet ' +
+                '\u2014 note it by hand for now.</span>';
+      }
+      html += '<br><span style="color:var(--muted);">Opened in a tab behind this window.</span>';
+
+      result.innerHTML = html;
+      result.style.display = 'block';
+    };
+  }
+
   const goodsOverlay = qs(root, '.goods-modal-overlay');
   if (goodsOverlay) {
     // Click the backdrop to dismiss -- but ONLY the backdrop. A click inside the
