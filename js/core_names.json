@@ -51,8 +51,8 @@
       "mode=open means class-independent.",
       "weight is a relative random-selection weight within the eligible title pool."
     ],
-    "version": "7.0",
-    "notes": "Added 78 gnome and halfling titles (one, Champion of the Small Folk, is shared and carries both affinities) and raised the affinity multiplier from 3 to 4. All new titles are race-AFFINITY tagged, never race-restricted: their race array is all six, so any character may draw them, gnomes and halflings simply four times more often. Name records unchanged since v4.",
+    "version": "8.0",
+    "notes": "Excluded the named race from the three 'Friend of X' outsider honorifics; see _meta.outsiderHonorifics for the rule and why it does not extend to 'Champion of' or 'Defender of'. No other change since v7.",
     "supportedRaces": [
       "human",
       "elf",
@@ -183,6 +183,15 @@
       "halfling": "Hearth, green, burrow, road and small-folk epithets (40 titles)",
       "human": "none by design; human is the default culture in most settings and tagging it would only make human titles blander",
       "untagged": "Ash-, Battle-, Blood-, Dragon-, Flame-, Frost-, Ghost- and all office, nobility, religious, knightly, court, military and professional titles. Battle- is deliberately untagged: it reads as class flavour rather than racial, and a fighter of any race earns it."
+    },
+    "outsiderHonorifics": {
+      "rule": "A title of the form 'Friend of X' is an honorific granted by X to someone who is NOT one of them, so the named race is removed from that title's race array -- a HARD gate, not reduced weight, because the title is meaningless rather than merely unlikely for them. This does NOT apply to 'Champion of', 'Defender of', 'Guardian of' or 'Warden of', where leading one's own people is the natural reading: Champion of the Small Folk is correctly affinity-tagged for gnomes and halflings.",
+      "affected": [
+        "Friend of Elves",
+        "Friend of Dwarves",
+        "Friend of the Small Folk"
+      ],
+      "note": "Half-elf is deliberately KEPT on Friend of Elves -- a half-elf stands partly outside elven society and can earn it."
     }
   },
   "firstNames": [
@@ -30396,7 +30405,6 @@
         "human",
         "elf",
         "half-elf",
-        "dwarf",
         "gnome",
         "halfling"
       ],
@@ -30413,7 +30421,8 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "note": "Outsider's honorific: excluded for the race it names, since a member of that people cannot meaningfully be its 'friend'."
     },
     {
       "title": "Friend of Elves",
@@ -30421,7 +30430,6 @@
       "gender": "any",
       "race": [
         "human",
-        "elf",
         "half-elf",
         "dwarf",
         "gnome",
@@ -30440,7 +30448,8 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "note": "Outsider's honorific: excluded for the race it names, since a member of that people cannot meaningfully be its 'friend'."
     },
     {
       "title": "Friend of the Small Folk",
@@ -30450,9 +30459,7 @@
         "human",
         "elf",
         "half-elf",
-        "dwarf",
-        "gnome",
-        "halfling"
+        "dwarf"
       ],
       "sourceType": "generated",
       "eligibility": {
@@ -30467,7 +30474,8 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "note": "Outsider's honorific: excluded for the race it names, since a member of that people cannot meaningfully be its 'friend'."
     },
     {
       "title": "Bane of Orcs",
