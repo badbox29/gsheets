@@ -201,6 +201,68 @@ function populateGeneratorAlignments(root) {
   }
 }
 
+// Resolve race and class against each other BEFORE any dice are rolled.
+//
+// A race/class mismatch can never be fixed by rerolling -- Abjurer is human-only
+// and an elf Abjurer stays illegal at attempt one million. Legality here comes
+// from RACE_CLASSES (Chapter 2) plus, for specialists, the per-school `races`
+// array in SPECIALIST_WIZARDS, which is narrower still.
+//
+// Returns { race, clazz } or { error } when the pair cannot be satisfied.
+function resolveGeneratorRaceClass(wantRace, wantClass) {
+  const RACES = ['human', 'dwarf', 'elf', 'gnome', 'half-elf', 'halfling'];
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+  const classLegalForRace = (clazz, raceKey) => {
+    // Specialists carry their OWN race list, and it is stricter than the
+    // Chapter 2 row -- an elf may be "specialist" generally but not an Abjurer.
+    if (typeof SPECIALIST_WIZARDS === 'object' && SPECIALIST_WIZARDS[clazz]) {
+      const races = SPECIALIST_WIZARDS[clazz].races || [];
+      if (races.indexOf(raceKey) === -1) return false;
+    }
+    if (raceKey === 'human') return true;          // humans may be anything
+    const allowed = (typeof RACE_CLASSES === 'object') ? RACE_CLASSES[raceKey] : null;
+    if (!allowed) return true;                     // unknown race: do not judge
+    const token = (typeof getRaceClassToken === 'function')
+      ? getRaceClassToken(clazz) : null;
+    if (!token) return true;                       // unrecognised class: silent
+    return allowed.indexOf(token) !== -1;
+  };
+
+  const classSel = document.querySelector('.gen-class');
+  const allClasses = classSel
+    ? Array.from(classSel.options).map(o => o.value).filter(v => v && v !== 'random')
+    : [];
+
+  const raceGiven  = wantRace  && wantRace  !== 'random';
+  const classGiven = wantClass && wantClass !== 'random';
+
+  if (raceGiven && classGiven) {
+    if (!classLegalForRace(wantClass, wantRace)) {
+      return { error: 'A ' + wantRace + ' cannot be a ' + wantClass + '.' };
+    }
+    return { race: wantRace, clazz: wantClass };
+  }
+
+  // Build the legal pairs and draw from those, rather than guessing and
+  // retrying -- with one side fixed the candidate list is short.
+  if (raceGiven) {
+    const ok = allClasses.filter(c => classLegalForRace(c, wantRace));
+    if (!ok.length) return { error: 'No available class is legal for a ' + wantRace + '.' };
+    return { race: wantRace, clazz: pick(ok) };
+  }
+  if (classGiven) {
+    const ok = RACES.filter(r => classLegalForRace(wantClass, r));
+    if (!ok.length) return { error: 'No player race can be a ' + wantClass + '.' };
+    return { race: pick(ok), clazz: wantClass };
+  }
+
+  const race = pick(RACES);
+  const ok = allClasses.filter(c => classLegalForRace(c, race));
+  if (!ok.length) return { error: 'No available class is legal for a ' + race + '.' };
+  return { race: race, clazz: pick(ok) };
+}
+
 // ===== KV Sync — config helpers =====
 // KV settings are stored separately from character data so they persist
 // independently of character saves and exports.
