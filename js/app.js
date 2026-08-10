@@ -114,18 +114,39 @@ function populateGeneratorControls(root) {
   // to offer in a generator.
   if (!classSel.options.length && typeof CLASS_CATEGORIES === 'object') {
     Object.keys(CLASS_CATEGORIES)
-      .filter(c => c.indexOf('hb_') !== 0)
+      // hb_ is the homebrew prefix. 'demipaladin' is Chris's one-off demi-paladin
+      // under a second, UNPREFIXED key, so the prefix filter alone misses it --
+      // exclude it by name. A one-off character is not a generator option.
+      .filter(c => c.indexOf('hb_') !== 0 && c !== 'demipaladin')
+      // CLASS_CATEGORIES also carries the four GROUP names and 'specialist' as
+      // catch-alls. They are real values on a sheet, but not classes to offer.
       .filter(c => ['warrior', 'priest', 'rogue', 'wizard', 'specialist'].indexOf(c) === -1)
       .sort()
       .forEach(c => {
         const o = document.createElement('option');
         o.value = c;
-        o.textContent = c.charAt(0).toUpperCase() + c.slice(1);
+        // Legality lives in TWO tables: CLASS_ABILITY_MINIMUMS covers the eight
+        // PHB classes, and specialists are deliberately skipped there because
+        // Table 13 defers to Table 22 -- their minimums are in SPECIALIST_WIZARDS.
+        // A class in neither cannot have requirements enforced, so roll-until-
+        // legal is a no-op for it. Say so rather than letting it look gated.
+        const hasMins = (typeof CLASS_ABILITY_MINIMUMS === 'object' && CLASS_ABILITY_MINIMUMS[c]) ||
+                        (typeof SPECIALIST_WIZARDS === 'object' && SPECIALIST_WIZARDS[c]);
+        o.textContent = c.charAt(0).toUpperCase() + c.slice(1) +
+                        (hasMins ? '' : ' (no ability requirements)');
         classSel.appendChild(o);
       });
     classSel.insertBefore(new Option('Random', 'random'), classSel.firstChild);
     classSel.value = 'random';
   }
+
+  // Kits and legal alignments BOTH depend on class, so they have to follow it
+  // rather than only filling on modal open. Assigned with onchange (not
+  // addEventListener) so reopening the modal cannot stack duplicate handlers.
+  classSel.onchange = () => {
+    populateGeneratorKits(root);
+    populateGeneratorAlignments(root);
+  };
 
   populateGeneratorKits(root);
   populateGeneratorAlignments(root);
