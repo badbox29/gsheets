@@ -46,6 +46,48 @@ function generateSyncToken() {
   return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
 }
 
+};
+
+// ===== Character generator — name tables =====
+// js/core_names.json is ~380KB and most sessions never open the generator, so
+// this loads LAZILY on first modal open rather than at boot. Deliberately the
+// spells.js shape (flag-guarded, awaited, idempotent) and NOT the weapons.js
+// fire-and-forget fetch, which would pay the cost on every page view.
+//
+// A failure is non-fatal: NAMES_DB stays null, NAMES_LOADED goes true so we do
+// not retry on every click, and the generator reports it rather than throwing.
+let NAMES_DB = null;
+let NAMES_LOADED = false;
+let NAMES_LOADING = null;
+
+async function loadNameTables() {
+  if (NAMES_LOADED) return NAMES_DB;
+  // Concurrent callers await the SAME promise instead of each firing a fetch.
+  if (NAMES_LOADING) return NAMES_LOADING;
+
+  NAMES_LOADING = (async () => {
+    try {
+      const response = await fetch('js/core_names.json');
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const data = await response.json();
+      NAMES_DB = data;
+      console.log('Name tables loaded:',
+        (data.firstNames || []).length + ' first, ' +
+        (data.lastNames  || []).length + ' last, ' +
+        (data.titles     || []).length + ' titles');
+    } catch (err) {
+      console.error('Error loading name tables:', err);
+      NAMES_DB = null;
+    } finally {
+      NAMES_LOADED = true;
+      NAMES_LOADING = null;
+    }
+    return NAMES_DB;
+  })();
+
+  return NAMES_LOADING;
+}
+
 // ===== KV Sync — config helpers =====
 // KV settings are stored separately from character data so they persist
 // independently of character saves and exports.
@@ -7796,6 +7838,44 @@ function bindSheet(root, tab){
       const overlay = qs(root, '.goods-modal-overlay');
       if (overlay) overlay.style.display = 'none';
     };
+  }
+
+  // Character generator. The name tables are ~380KB, so they load on FIRST OPEN
+  // rather than at boot -- most sessions never open this. Same shape as
+  // loadSpells(): a flag-guarded async loader the opener awaits.
+  const generateChar = qs(root, '.generate-char');
+  if (generateChar) {
+    generateChar.onclick = async () => {
+      const overlay = qs(root, '.gen-modal-overlay');
+      if (!overlay) return;
+      // 'flex', not 'block' -- the overlay centres its card with flexbox.
+      overlay.style.display = 'flex';
+      const loading = qs(root, '.gen-loading');
+      const result  = qs(root, '.gen-result');
+      if (result) { result.style.display = 'none'; result.innerHTML = ''; }
+      if (!NAMES_LOADED) {
+        if (loading) loading.style.display = 'block';
+        await loadNameTables();
+        if (loading) loading.style.display = 'none';
+      }
+      if (typeof populateGeneratorControls === 'function') populateGeneratorControls(root);
+    };
+  }
+
+  const genModalClose = qs(root, '.gen-modal-close');
+  if (genModalClose) {
+    genModalClose.onclick = () => {
+      const overlay = qs(root, '.gen-modal-overlay');
+      if (overlay) overlay.style.display = 'none';
+    };
+  }
+
+  const genOverlay = qs(root, '.gen-modal-overlay');
+  if (genOverlay) {
+    // Backdrop only -- a click inside the card bubbles here too.
+    genOverlay.addEventListener('click', (e) => {
+      if (e.target === genOverlay) genOverlay.style.display = 'none';
+    });
   }
 
   const goodsOverlay = qs(root, '.goods-modal-overlay');
