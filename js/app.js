@@ -581,7 +581,13 @@ function runCharacterGenerator(root) {
   const data = {
     meta: {
       name: fullName,
-      race: pair.race,
+      // Title-cased for display only, per hyphenated part so "half-elf" becomes
+      // "Half-Elf". The lowercase key is what every table matches on, so the
+      // conversion happens HERE, at the boundary, and pair.race/pair.clazz stay
+      // lowercase for the lookups above. Both fields are free-text inputs, so an
+      // unrecognised value cannot silently blank them the way a <select> would;
+      // getRaceKey normalises case on the way back in regardless.
+      race: pair.race.split('-').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join('-'),
       // The sheet's <select> options are "Male" and "Female", CAPITALISED, while
       // core_names.json uses lowercase and the pools match on that. Setting a
       // <select> to a value with no matching option fails SILENTLY and leaves it
@@ -589,7 +595,7 @@ function runCharacterGenerator(root) {
       // setting. Convert here, at the boundary, and keep the lowercase value
       // internally for the name and title lookups.
       gender: gender ? gender.charAt(0).toUpperCase() + gender.slice(1) : '',
-      clazz: pair.clazz,
+      clazz: pair.clazz.charAt(0).toUpperCase() + pair.clazz.slice(1),
       level: String(level),
       kit: gv('.gen-kit') || '',
       alignment: alignment,
