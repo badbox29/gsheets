@@ -558,11 +558,22 @@ function runCharacterGenerator(root) {
     ? (Math.random() < 0.5 ? 'male' : 'female')
     : gv('.gen-gender');
 
-  const scores = generatorRollScores(pair.race, pair.clazz, gv('.gen-roll-method'));
-  if (scores.error) return { error: scores.error };
+  // "Roll attributes" off means the DM will roll at the table and only wants the
+  // identity generated. HIT POINTS GO WITH IT: there is no Constitution to apply,
+  // and rolling Hit Dice with no CON bonus would look like a real number while
+  // quietly being the wrong one. Legality is unchecked in this mode too -- the
+  // sheet's own validators will flag it once scores are entered by hand.
+  const rollBox = qs(root, '.gen-roll-attrs');
+  const wantScores = rollBox ? rollBox.checked : true;
+
+  let scores = null;
+  if (wantScores) {
+    scores = generatorRollScores(pair.race, pair.clazz, gv('.gen-roll-method'));
+    if (scores.error) return { error: scores.error };
+  }
 
   const physical = generatorPhysical(pair.race, gender);
-  const hp = generatorHitPoints(pair.clazz, level, scores.adjusted.con);
+  const hp = wantScores ? generatorHitPoints(pair.clazz, level, scores.adjusted.con) : null;
   const nm = generatorPickName(pair.race, gender, pair.clazz, level);
 
   // Alignment: an explicit choice wins, otherwise draw from the legal set for
@@ -612,12 +623,12 @@ function runCharacterGenerator(root) {
       hp: hp ? String(hp.hp) : '',
       // TABLE 8 IS ALREADY APPLIED. The sheet stores final scores; its own
       // validators back the adjustment out again to test Table 7.
-      str: String(scores.adjusted.str),
-      dex: String(scores.adjusted.dex),
-      con: String(scores.adjusted.con),
-      int: String(scores.adjusted.int),
-      wis: String(scores.adjusted.wis),
-      cha: String(scores.adjusted.cha)
+      str: scores ? String(scores.adjusted.str) : '',
+      dex: scores ? String(scores.adjusted.dex) : '',
+      con: scores ? String(scores.adjusted.con) : '',
+      int: scores ? String(scores.adjusted.int) : '',
+      wis: scores ? String(scores.adjusted.wis) : '',
+      cha: scores ? String(scores.adjusted.cha) : ''
     },
     details: {
       height: physical.height ? String(physical.height) : '',
@@ -636,7 +647,7 @@ function runCharacterGenerator(root) {
     level: level,
     gender: gender,
     alignment: alignment,
-    attempts: scores.attempts,
+    attempts: scores ? scores.attempts : 0,
     hp: hp ? hp.hp : null
   };
 }
