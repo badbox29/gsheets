@@ -470,31 +470,50 @@ function generatorTitleChance(level) {
 
 // Eligible titles for this character, then a WEIGHTED draw -- weight is the only
 // tuning the file carries, and a uniform pick would throw it away.
+// AFFINITY WEIGHTS, IT DOES NOT GATE. Only three things are hard gates: gender,
+// the race array, and minLevel. Class and race affinity multiply a title's
+// weight instead of excluding it, because every title's own eligibility.note
+// says class affinity is a generator heuristic and not a rules requirement --
+// filtering on it contradicts the data. A human cleric of a forge god may be
+// Forgehand; he is simply four times less likely to be than a dwarf.
+//
+// The multiplier comes from _meta.affinityWeighting so it can be tuned in the
+// data file rather than here.
 function generatorPickTitle(raceKey, gender, clazz, level) {
   if (!NAMES_DB || !NAMES_DB.titles) return '';
   if (Math.random() > generatorTitleChance(level)) return '';
 
   const group = (typeof getClassCategory === 'function') ? getClassCategory(clazz) : null;
   const c = (clazz || '').toLowerCase();
+  const mult = ((NAMES_DB._meta || {}).affinityWeighting || {}).multiplier || 1;
 
+  // Hard gates only.
   const eligible = NAMES_DB.titles.filter(t => {
     const e = t.eligibility || {};
     if (t.gender && t.gender !== 'any' && t.gender !== gender) return false;
     if ((t.race || []).length && (t.race || []).indexOf(raceKey) === -1) return false;
     if (e.minLevel && level < e.minLevel) return false;
-    // A title naming classes or groups is restricted to them. One naming
-    // neither is open to anyone who clears the level gate.
-    const names = e.classes || [];
-    const groups = e.classGroups || [];
-    if (!names.length && !groups.length) return true;
-    return names.indexOf(c) !== -1 || (group && groups.indexOf(group) !== -1);
+    return true;
   });
   if (!eligible.length) return '';
 
-  const total = eligible.reduce((sum, t) => sum + ((t.eligibility || {}).weight || 1), 0);
+  // Race and class affinity stack: a dwarf priest drawing Keeper of the Forge
+  // gets both multipliers, which is the intent -- it is the most fitting title
+  // in the set for him.
+  const weightOf = t => {
+    const e = t.eligibility || {};
+    let w = e.weight || 1;
+    if ((t.raceAffinity || []).indexOf(raceKey) !== -1) w *= mult;
+    const names = e.classes || [];
+    const groups = e.classGroups || [];
+    if (names.indexOf(c) !== -1 || (group && groups.indexOf(group) !== -1)) w *= mult;
+    return w;
+  };
+
+  const total = eligible.reduce((sum, t) => sum + weightOf(t), 0);
   let n = Math.random() * total;
   for (const t of eligible) {
-    n -= ((t.eligibility || {}).weight || 1);
+    n -= weightOf(t);
     if (n <= 0) return t.title;
   }
   return eligible[eligible.length - 1].title;
