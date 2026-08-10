@@ -51,8 +51,8 @@
       "mode=open means class-independent.",
       "weight is a relative random-selection weight within the eligible title pool."
     ],
-    "version": "5.0",
-    "notes": "Class vocabulary now mirrors the application's CLASS_CATEGORIES exactly, including the homebrew and generic entries. Removed 'specialist wizard', which the app never uses: both titles naming it meant any arcane caster and now use classGroups=['wizard']. Removed the psionicist group as unsupported, matching the half-orc treatment. Added classMatching and raceMatching rules, since both fields are free text in the app. Name and title records are unchanged from v4.",
+    "version": "6.0",
+    "notes": "Added raceAffinity tags and the affinityWeighting rule. Affinity now WEIGHTS rather than gates, for both race and class, matching each title's own note that class affinity is a heuristic and not a requirement. Only the stems actually present in this dataset are tagged: Forge- and Gold- as dwarf, Dawn- and Dusk- as elf. Gnome and halfling have no flavoured stems here and are untagged rather than mistagged. Name records are unchanged from v4/v5.",
     "supportedRaces": [
       "human",
       "elf",
@@ -161,6 +161,28 @@
         "'halfelf' and 'half elf' normalise to 'half-elf'.",
         "An unrecognised race should draw from the human pool rather than returning nothing."
       ]
+    },
+    "affinityWeighting": {
+      "multiplier": 3,
+      "appliesTo": [
+        "raceAffinity",
+        "eligibility.classGroups",
+        "eligibility.classes"
+      ],
+      "note": "Affinity is a PREFERENCE, not a gate. A title whose raceAffinity or class affinity matches the character has its eligibility.weight multiplied; a title that does not match stays eligible at base weight. A human cleric of a forge god may be Forgehand -- he is simply less likely to be than a dwarf. Titles with no raceAffinity key have no racial preference and are equally likely for everyone. Gating on affinity contradicts each title's own eligibility.note, which states that class affinity is a generator heuristic and not a rules requirement.",
+      "hardGates": [
+        "gender",
+        "race",
+        "eligibility.minLevel"
+      ]
+    },
+    "raceAffinityCoverage": {
+      "dwarf": "Forge-, Gold-",
+      "elf": "Dawn-, Dusk-",
+      "gnome": "none -- no gnome-flavoured stems exist in this dataset",
+      "halfling": "none -- no halfling-flavoured stems exist in this dataset",
+      "human": "none by design; human is the default culture in most settings and tagging it would only make human titles blander",
+      "untagged": "Ash-, Battle-, Blood-, Dragon-, Flame-, Frost-, Ghost- and all office, nobility, religious, knightly, court, military and professional titles. Battle- is deliberately untagged: it reads as class flavour rather than racial, and a fighter of any race earns it."
     }
   },
   "firstNames": [
@@ -24985,7 +25007,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawnbearer",
@@ -25012,7 +25037,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawnbinder",
@@ -25039,7 +25067,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawnbreaker",
@@ -25067,7 +25098,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawncaller",
@@ -25094,7 +25128,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawncleaver",
@@ -25122,7 +25159,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawndelver",
@@ -25149,7 +25189,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawnfriend",
@@ -25177,7 +25220,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawnguard",
@@ -25205,7 +25251,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawnhand",
@@ -25232,7 +25281,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawnheart",
@@ -25260,7 +25312,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawnkeeper",
@@ -25288,7 +25343,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawnlighter",
@@ -25316,7 +25374,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawnmantle",
@@ -25343,7 +25404,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawnrunner",
@@ -25373,7 +25437,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawnseeker",
@@ -25400,7 +25467,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawnshield",
@@ -25428,7 +25498,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawnsong",
@@ -25458,7 +25531,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawnward",
@@ -25486,7 +25562,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawnwatcher",
@@ -25513,7 +25592,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawnwalker",
@@ -25543,7 +25625,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dawnweaver",
@@ -25573,7 +25658,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dragonbane",
@@ -26183,7 +26271,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Duskbearer",
@@ -26210,7 +26301,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Duskbinder",
@@ -26237,7 +26331,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Duskbreaker",
@@ -26265,7 +26362,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Duskcaller",
@@ -26292,7 +26392,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Duskcleaver",
@@ -26320,7 +26423,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Duskdelver",
@@ -26347,7 +26453,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Duskfriend",
@@ -26375,7 +26484,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Duskguard",
@@ -26403,7 +26515,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Duskhand",
@@ -26430,7 +26545,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Duskheart",
@@ -26458,7 +26576,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Duskkeeper",
@@ -26486,7 +26607,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dusklighter",
@@ -26514,7 +26638,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Duskmantle",
@@ -26541,7 +26668,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Duskrunner",
@@ -26571,7 +26701,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Duskseeker",
@@ -26598,7 +26731,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Duskshield",
@@ -26626,7 +26762,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Dusksong",
@@ -26656,7 +26795,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Duskward",
@@ -26684,7 +26826,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Duskwatcher",
@@ -26711,7 +26856,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Duskwalker",
@@ -26741,7 +26889,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Duskweaver",
@@ -26771,7 +26922,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "elf"
+      ]
     },
     {
       "title": "Flamebane",
@@ -27415,7 +27569,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgebearer",
@@ -27443,7 +27600,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgebinder",
@@ -27472,7 +27632,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgebreaker",
@@ -27500,7 +27663,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgecaller",
@@ -27529,7 +27695,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgecleaver",
@@ -27557,7 +27726,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgedelver",
@@ -27585,7 +27757,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgefriend",
@@ -27613,7 +27788,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgeguard",
@@ -27641,7 +27819,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgehand",
@@ -27669,7 +27850,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgeheart",
@@ -27697,7 +27881,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgekeeper",
@@ -27725,7 +27912,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgelighter",
@@ -27753,7 +27943,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgemantle",
@@ -27781,7 +27974,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgerunner",
@@ -27812,7 +28008,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgeseeker",
@@ -27841,7 +28040,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgeshield",
@@ -27869,7 +28071,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgesong",
@@ -27900,7 +28105,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgeward",
@@ -27928,7 +28136,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgewatcher",
@@ -27957,7 +28168,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgewalker",
@@ -27988,7 +28202,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Forgeweaver",
@@ -28019,7 +28236,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Frostbane",
@@ -29279,7 +29499,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Goldbearer",
@@ -29307,7 +29530,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Goldbinder",
@@ -29336,7 +29562,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Goldbreaker",
@@ -29364,7 +29593,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Goldcaller",
@@ -29393,7 +29625,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Goldcleaver",
@@ -29421,7 +29656,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Golddelver",
@@ -29449,7 +29687,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Goldfriend",
@@ -29477,7 +29718,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Goldguard",
@@ -29505,7 +29749,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Goldhand",
@@ -29533,7 +29780,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Goldheart",
@@ -29561,7 +29811,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Goldkeeper",
@@ -29589,7 +29842,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Goldlighter",
@@ -29617,7 +29873,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Goldmantle",
@@ -29645,7 +29904,10 @@
       },
       "integration": {
         "persistSeparatelyFromName": true
-      }
+      },
+      "raceAffinity": [
+        "dwarf"
+      ]
     },
     {
       "title": "Defender of the Realm",
