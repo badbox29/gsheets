@@ -3770,6 +3770,50 @@ function getRangerStealth(root) {
   };
 }
 
+// === Animal empathy (PHBR11 Ch.2, Tables 30 and 31) ===
+// The ranger soothes an animal; the ANIMAL saves vs. rods, and the ranger's
+// experience level PENALISES that save. So a higher ranger level makes the
+// animal MORE likely to fail, which is the ranger succeeding -- the sign is
+// easy to get backwards.
+//
+// Not gated behind the PHBR11 toggle. The PHB grants rangers animal empathy but
+// never quantifies it; the CRH is the only place the numbers appear, so this
+// ADDS a rule rather than changing one, and added content does not get a
+// toggle. Ungated for the same reason the Falconry proficiency is.
+const ANIMAL_EMPATHY_LEVEL_MOD = [
+  { max: 3,        mod: -1 },
+  { max: 6,        mod: -2 },
+  { max: 9,        mod: -3 },
+  { max: 12,       mod: -4 },
+  { max: 15,       mod: -5 },
+  { max: Infinity, mod: -6 }
+];
+
+// Table 30, in the book's own order. `shift` marks the two the text calls out:
+// an Indifferent animal moves to Cautious OR Friendly, and the ranger chooses
+// the direction of the shift for everything else.
+const ANIMAL_ATTITUDES = [
+  { name: 'Frightened',  text: 'Filled with panic and terror. Will flee at the earliest opportunity.' },
+  { name: 'Friendly',    text: 'Feels warm or conciliatory toward the stranger. Will not attack. May nuzzle or lick the stranger to express affection.' },
+  { name: 'Indifferent', text: 'Bored or unimpressed. Oblivious to the stranger.' },
+  { name: 'Cautious',    text: 'Suspicious, guarded, nervous. Ready to defend itself if attacked.' },
+  { name: 'Threatening', text: 'Openly belligerent. Growling, snapping, crouched to spring. Likely to attack if the stranger doesn\u2019t withdraw.' },
+  { name: 'Hostile',     text: 'Aggressive, violent, enraged. Will definitely attack if the stranger doesn\u2019t withdraw; may pursue even if he does.' }
+];
+
+// Null when the character is not a ranger, so the caller can hide the panel.
+function getAnimalEmpathy(root) {
+  const comp = (typeof getRangerComponent === 'function') ? getRangerComponent(root) : null;
+  if (!comp || !comp.level) return null;
+  const lvl = comp.level;
+  const row = ANIMAL_EMPATHY_LEVEL_MOD.find(r => lvl <= r.max);
+  return {
+    level:   lvl,
+    dormant: !!comp.dormant,
+    mod:     row ? row.mod : 0
+  };
+}
+
 // Aliases
 CLASS_ABILITIES.warrior = CLASS_ABILITIES.fighter;
 CLASS_ABILITIES.priest = CLASS_ABILITIES.cleric;
