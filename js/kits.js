@@ -10,7 +10,7 @@
 // - hindrances:   Restrictions and penalties (prose)
 //
 // ---------------------------------------------------------------------------
-// PROVENANCE -- read this before trusting any number in this file..
+// PROVENANCE -- read this before trusting any number in this file.
 // ---------------------------------------------------------------------------
 //
 // source.status is one of three values:
@@ -63,6 +63,52 @@
 // page restricts; the ranger CLASS check narrows it to good separately. The
 // Feralan's set is good-and-non-lawful because his page states BOTH. Reading one
 // entry should tell you what that kit's book says, with no second file needed.
+//
+// ---------------------------------------------------------------------------
+// thiefSkillMods -- ranger kit stealth adjustments (PHBR11 Table 12, p.11)
+// ---------------------------------------------------------------------------
+//
+//   thiefSkillMods: { hideInShadows: 10, moveSilently: 10 }
+//
+// PERCENTAGE POINTS, added to the figures getRangerStealth() computes from PHB
+// Table 18. 0 means the book prints "--" (no adjustment). NULL means the kit
+// has no such ability at all -- only the Sea Ranger, who has neither, and whose
+// entry carries a `note` saying so. A null must NOT be treated as zero.
+//
+// Ranger-only for now. If another class's handbook turns out to adjust thief
+// skills per kit, widen the shape rather than adding a second field.
+//
+// ---------------------------------------------------------------------------
+// TERRAIN AND RACE -- same treatment as alignment
+// ---------------------------------------------------------------------------
+//
+// Both are closed domains, so both resolve to a SET at audit time with the
+// book's own wording kept alongside:
+//
+//   terrain: ["forest", "jungle"]        terrainPrinted: "Required: Forest or Jungle"
+//   race:    ["human", "half-elf"]       racePrinted:    "Cannot be a full elf"
+//
+// ABSENT MEANS ANY. A kit with no `terrain` key may take any primary terrain;
+// a kit with no `race` key is open to any race the CLASS allows. Absence never
+// means "not yet transcribed" -- source.status is the only field permitted to
+// say that.
+//
+// TERRAIN VOCABULARY (10), taken from the CRH's own usage:
+//   arctic, aquatic, desert, forest, hill, jungle, mountain, plains, swamp, urban
+// `urban` is a Stalker special case; the CRH does not otherwise treat it as a
+// primary terrain. If a consumer is ever built, this list should move to
+// tables.js so druid terrain can share it rather than defining a second one.
+//
+// RACE VOCABULARY: the keys already used by RACE_ABILITY_REQUIREMENTS in
+// tables.js -- human, dwarf, elf, gnome, half-elf, halfling. NOTE that
+// `halfelf` is an alias there; use the hyphenated form here.
+//
+// WHY SETS, again: the Mountain Man was stored as the string "Not a full elf".
+// That is a negation in prose over a closed domain -- structurally the same
+// thing as "Any good, non-lawful", and the same silent-half-enforcement bug
+// waiting for whoever writes the race check. It is now ["human", "half-elf"],
+// which is what the CRH's Demi-Rangers section (p.79) leaves once full elves
+// are removed from the three races that may be rangers at all.
 //
 // ---------------------------------------------------------------------------
 // ADVISORY, NEVER BLOCKING -- do not "fix" this into a gate
@@ -323,6 +369,7 @@ const KITS = {
         pages:  "47-49",
         note:   "Transcribed from the book."
       },
+      thiefSkillMods: { hideInShadows: 5, moveSilently: 0 },
       abilities: [
         { name: "Stealth", notes: "+5% chance to hide in natural surroundings." },
         { name: "Animal Henchmen", notes: "Receives no special followers at high level, but may acquire normal or giant animals as henchmen at ANY level. Number depends on Charisma. Slain or driven-off animals may be replaced without penalty, though it may take time." },
@@ -337,7 +384,11 @@ const KITS = {
         { name: "Limited Funds", notes: "Starts with 1d4 x 10 gp." },
         { name: "No Fortress", notes: "Will never build a fortress. At 9th level he may establish himself as the protector of an area of land equivalent to a barony." }
       ],
-      requirements: { /* Standard -- the book sets no kit-specific minimum */ },
+      requirements: {
+        // Standard -- the book sets no kit-specific ability minimum
+        terrain: ["arctic","desert","forest","hill","jungle","mountain","plains","swamp"],
+        terrainPrinted: "Any outdoor land"
+      },
       benefits: "Primary terrain: any outdoor land. Secondary skills: Hunter, Fisher. Stealth +5% to hide in natural surroundings. Animal henchmen at any level, with animal telepathy and animal bonding. Animal horde at 9th level. Armor/equipment: starts only with leather armor and weapons he has made himself. Species enemy: standard. Followers: none, but see the animal henchmen benefit.",
       hindrances: "Empathic shock when a henchman is wounded or killed. Unruly allies -- his animal henchmen are free to come, go, or act as they will; arbitrarily restricting their freedom or habitually ignoring their needs results in resentment, sulkiness, and possible abandonment. Outcast reaction penalties. Starts with only 1d4 x 10 gp. Will never build a fortress. Weapon proficiencies initially limited to weapons he can make himself. Five barred nonweapon proficiencies."
     },
@@ -350,6 +401,7 @@ const KITS = {
         pages:  "49-50",
         note:   "Transcribed from the book."
       },
+      thiefSkillMods: { hideInShadows: 0, moveSilently: 0 },
       abilities: [
         { name: "Languages", notes: "Can learn twice the normal number of languages allowed by his Intelligence score (PHB Table 4). An Explorer with Intelligence 12 can learn six languages instead of the usual three. All languages still cost a proficiency slot each." },
         { name: "Find the Path", notes: "Can sense the correct direction that will eventually lead to a desired geographical locale. Must be in an outdoor setting, and must have some clue, map, information, or body of research about the locale. Usable once per week, providing a day's worth of guidance." },
@@ -361,7 +413,10 @@ const KITS = {
         { name: "Few Followers", notes: "No more than two followers at the same time. A new follower will not arrive until one of his current followers is dismissed, lost, or killed. His career limit is the normal 2d6." },
         { name: "No Fortifications", notes: "Will never build a castle or any other fortification." }
       ],
-      requirements: { int: 12 },
+      requirements: {
+        int: 12,
+        terrainPrinted: "Any (no specialization; used for followers and species enemy only)"
+      },
       benefits: "Primary terrain: any (no specialization; used for followers and species enemy only). Secondary skills: Fisher, Forester, Hunter, Navigator, Trader/Barterer, Trapper/Furrier. Learns twice the normal number of languages. Find the path once per week. Culture sense once per week, with a +1 reaction adjustment among that people. Survival proficiency benefits in all terrain types. Armor/equipment: no special requirements, but he rarely wears armor heavier than leather and most Explorers find shields awkward and confining.",
       hindrances: "Limited animal empathy -- +2 to the animal's save when dealing with wild or attack-trained animals, and a Wisdom check needed to calm or befriend domestic animals. No more than two followers at a time. Will never build a castle or other fortification. Weapon proficiencies confined to seven light weapons. Cartography and Reading/Writing are required proficiency spends."
     },
@@ -374,6 +429,7 @@ const KITS = {
         pages:  "51-52",
         note:   "Transcribed from the book."
       },
+      thiefSkillMods: { hideInShadows: 0, moveSilently: 0 },
       abilities: [
         { name: "Enhanced Training", notes: "If a normal falcon has failed to learn a trick or task and become untrainable, the Falconer can try again after gaining a level." },
         { name: "Attuned Follower", notes: "May bond with a falcon follower. Attuning takes six weeks of at least an hour each day; he may forego his own training during this period. At the end he makes a Wisdom check -- on a failure the falcon continues as a normal follower and no second attempt may be made on that bird. On a success the falcon is attuned: it can learn a task or trick each time the FALCONER gains a level, training time is half that given in the falconry proficiency, it can learn tricks up to one per level of the falconer, and it never becomes untrainable. It also gains a one-time hit point bonus equal to twice the Falconer's level at the time of attuning; that bonus does not change as the Falconer advances." },
@@ -387,7 +443,11 @@ const KITS = {
         { name: "Followers: 3d6, Falcons First", notes: "Unlike other rangers, receives an allotment of 3d6 followers determined at 1st level, and immediately receives a falcon follower which counts against that allotment. Until 10th level he can have only ONE follower and it must be a falcon; a lost falcon is replaced per Chapter 3 and the new falcon counts against the allotment. At 10th level and beyond he becomes eligible for non-falcon followers and may have more than one falcon." },
         { name: "Grief of the Lost Falcon", notes: "If an attuned falcon dies or is lost for any reason, the Falconer succumbs to grief and despair for 1-4 weeks. During this mourning he makes all attack rolls and ability checks at -2, no new followers can be acquired, and he cannot use the animal empathy ability." }
       ],
-      requirements: { /* Standard -- the book sets no kit-specific minimum */ },
+      requirements: {
+        // Standard -- the book sets no kit-specific ability minimum
+        terrain: ["desert","forest","hill","mountain","plains"],
+        terrainPrinted: "Required: a terrain where falcons are commonly found"
+      },
       benefits: "Primary terrain REQUIRED: must be one where falcons are commonly found -- Desert, Forest, Hill, Mountain, or Plains. Secondary skills: Bowyer/Fletcher, Forester, Groom, Hunter, Leather worker, Trader. Bonus proficiency: Falconry. 3d6 followers determined at 1st level, beginning with a falcon. Enhanced training, an attuned falcon with its own species enemy and attack bonuses, speak with falcon at 10th, mental communication at 15th. Armor/equipment: no special requirements, though each falcon he trains requires a set of falconry training equipment.",
       hindrances: "Must take two initial weapon proficiency slots from a fixed list. Until 10th level he may have only one follower and it must be a falcon. If an attuned falcon dies or is lost he mourns for 1-4 weeks at -2 to all attack rolls and ability checks, acquires no new followers, and cannot use animal empathy."
     },
@@ -400,6 +460,7 @@ const KITS = {
         pages:  "52-55",
         note:   "Transcribed from the book."
       },
+      thiefSkillMods: { hideInShadows: 10, moveSilently: 10 },
       abilities: [
         { name: "Familial Species", notes: "At the beginning of his career the player chooses a familial species representing the type of animal that raised him. A Feralan has only a SINGLE familial species, which never changes. It must share his primary terrain and is subject to DM approval. Suitable animals include wild dogs, bears (any), wolves, great cats (any), and primates (any). It cannot be human, demihuman, humanoid, or of magical or supernatural origin." },
         { name: "Stealth", notes: "+10% chance to hide in natural surroundings and +10% chance to move silently." },
@@ -421,7 +482,9 @@ const KITS = {
       requirements: {
         con: 15, str: 14,
         alignment: ["ng", "cg"],
-        alignmentPrinted: "any good alignment, but not lawful"
+        alignmentPrinted: "any good alignment, but not lawful",
+        terrain: ["arctic","forest","hill","jungle","mountain","plains","swamp"],
+        terrainPrinted: "Usually Forest or Jungle; Arctic, Hill, Mountain, Plains and Swamp are possible but less common"
       },
       benefits: "Primary terrain: usually Forest or Jungle; Arctic, Hill, Mountain, Plains and Swamp are possible but less common. Secondary skills: Fisher, Forester, Hunter, Trapper/Furrier -- wilderness applications only. Stealth +10% to hide in natural surroundings and +10% to move silently. Feral rage. 60% base climbing. Speak with animals at will with his familial species. Familial rapport, animal training, and call of the wild once per day.",
       hindrances: "Cannot be of lawful alignment. Limited magic -- animal sphere only, nothing above 2nd level, on the Table 45 progression. Wears no armor and carries no shield. Club and knife are required weapon proficiencies and the rest must be primitive weapons. No followers until 5th level, at most one non-animal follower and only at 10th or higher. -3 reaction penalty with humans, demihumans and humanoids including other Feralans. Little interest in money. Will never build a fortification."
@@ -435,6 +498,7 @@ const KITS = {
         pages:  "55-56",
         note:   "Transcribed from the book."
       },
+      thiefSkillMods: { hideInShadows: 5, moveSilently: 5 },
       abilities: [
         { name: "Stealth", notes: "+5% chance to hide in natural surroundings and +5% chance to move silently." },
         { name: "Inspire", notes: "Once per day, prior to making an attack, may spend 2-5 (1d4+1) rounds boosting the morale of his companions with flattering words and expressions of confidence. He can influence a number of companions equal to his level. If he makes a successful Charisma check, the companions enjoy a +2 bonus to their morale for the next 3-12 (3d4) rounds, and each also receives a +1 bonus to his first attack roll. The inspiring speech does not affect animals, other Forest Runners, or himself. He cannot attempt to inspire companions in the midst of battle or while they are occupied in any other activity." },
@@ -446,7 +510,10 @@ const KITS = {
         { name: "Personal Nemesis (4th level)", notes: "Any time after reaching 4th level, the Forest Runner acquires a personal nemesis: an NPC of near equal level whose campaign goal is to capture or kill him." },
         { name: "Hunted", notes: "Runs a constant risk of arrest by the authorities of his homeland, as well as from other regimes which have extradition agreements with his homeland. Law-enforcement authorities may plague a Forest Runner through his entire career. He will rarely develop a close relationship with any NPC with political power." }
       ],
-      requirements: { cha: 12 },
+      requirements: {
+        cha: 12,
+        terrainPrinted: "Usually Forest, Hill, Plains, Mountain or Jungle, but no terrain type is excluded provided it holds a reasonably sized and sufficiently corrupt settlement"
+      },
       benefits: "Primary terrain: most hail from civilized regions in Forest, Hill, Plains, Mountain or Jungle, but no terrain type is excluded provided it contains a reasonably sized and sufficiently corrupt settlement. A Forest Runner from a primary terrain other than Forest modifies the name accordingly -- Mountain Runner, Swamp Runner and so on. Secondary skills: Bowyer/Fletcher, Forester, Farmer, Hunter, Leather worker, Teamster, Weaponsmith. Stealth +5%/+5%. Inspire once per day. Disguise for a single slot. Reaction bonus and free food and shelter in his homeland. A bonus weapon proficiency slot. Armor/equipment: standard.",
       hindrances: "Acquires a personal nemesis at 4th level. Constant risk of arrest at home and in regimes with extradition agreements; law-enforcement may plague him for his entire career. Rarely develops a close relationship with any politically powerful NPC. The bonus weapon slot and three of his first six slots are locked to a fixed list. Bowyer/Fletcher is a required proficiency spend."
     },
@@ -459,6 +526,7 @@ const KITS = {
         pages:  "56-59",
         note:   "Transcribed from the book."
       },
+      thiefSkillMods: { hideInShadows: 0, moveSilently: 0 },
       abilities: [
         { name: "Bonus Damage vs. Giants", notes: "Inflicts bonus damage against giants of +1 point of damage for every level of the Giant Killer. A 7th level Giant Killer who hits with a spear deals 1-8 from the spear plus 7." },
         { name: "Giants Suffer -4 to Hit Him", notes: "Giants have a base -4 to hit when attacking Giant Killers. A giant with THAC0 10 needs a 14 to hit a Giant Killer with AC 0." },
@@ -472,7 +540,11 @@ const KITS = {
         { name: "Tracking Limitation", notes: "Unlike other rangers, his tracking ability is limited to tracking GIANTS. A Giant Killer who selects a general Tracking proficiency can track other creatures as a non-ranger character." },
         { name: "Singled Out for Harassment", notes: "Because Giant Killers seldom make an effort to conceal their identities they are often singled out. Insecure villagers may challenge them to duels to impress their friends, and bullies may ambush them to demonstrate their toughness. To avenge the death of a companion, some giants may target a Giant Killer for assassination, and giant tribes occasionally offer bounties for proof of his death." }
       ],
-      requirements: { str: 15, dex: 15 },
+      requirements: {
+        str: 15,
+        dex: 15,
+        terrainPrinted: "Any, so long as some type of giant calls it home"
+      },
       benefits: "Primary terrain: any, so long as some type of giant calls it home. For this kit, giants include true giants -- cloud, fire, frost, hill, stone and storm -- and giant-kin such as cyclops, ettins, firbolg, fomorians, verbeeg and voadkyn; the DM may augment the list. Secondary skills: Bowyer/Fletcher, Forester, Groom, Hunter, Tailor, Weaponsmith. Bonus damage of +1 per level against giants, giants at -4 to hit him, the ability to dodge giant attacks, infuriate, and giant lore. Armor/equipment: no special requirements. Followers: normal.",
       hindrances: "Takes no species enemy. Tracking is limited to giants only. Only ONE nonweapon proficiency at 1st level, from a fixed list of ten. The first and every odd weapon proficiency slot must be a missile or hurled weapon. Frequently singled out for duels, ambushes, assassination, and bounties."
     },
@@ -485,6 +557,7 @@ const KITS = {
         pages:  "59-63",
         note:   "Transcribed from the book. Long entry with a staged transformation; the latency rules on p.59-60 are as important as the benefits."
       },
+      thiefSkillMods: { hideInShadows: 0, moveSilently: -5 },
       abilities: [
         { name: "Becoming a Greenwood Ranger", notes: "Must commit at 1st level, but the special abilities are not acquired until 4th level. From 1st through 3rd he is a LATENT Greenwood Ranger, operating as a standard ranger while following the secondary skill, weapon and nonweapon proficiency restrictions below and receiving the bonus proficiencies. He may wear any armor allowed a normal ranger and does NOT have the kit's special benefits or hindrances yet. During latency he must spend a minimum of three hours per week in silent prayer; the gods tolerate an occasional lapse, but a ranger who intentionally neglects his prayers on a regular basis is informed in a dream that he is no longer eligible, must abandon the kit, and may NOT take another. At 4th level the gods give him a simple task involving the protection or support of plant life; failing to complete it within a month means an additional 1-4 months of praying before a new task is granted. He then lies in an isolated area of forest or jungle covered in leaves and branches and sleeps for a full day -- if disturbed before 24 hours elapse the transformation is interrupted and he may try again another time." },
         { name: "Cannot Abandon the Kit", notes: "Once transformed, a Greenwood Ranger CANNOT abandon this kit, although actions that would normally cost a ranger his class result in the loss of spell use and other penalties determined by the DM." },
@@ -504,7 +577,12 @@ const KITS = {
         { name: "Reaction Penalty", notes: "-3 reaction adjustment penalty when encountering any NPCs, with the exception of learned nobles, sages, and other high level characters of good or neutral alignment, who are not intimidated by his appearance." },
         { name: "Treant Follower", notes: "Will have at least one treant follower at some point in his career." }
       ],
-      requirements: { race: "Human" },
+      requirements: {
+        race: ["human"],
+        racePrinted: "Must be human",
+        terrain: ["forest","jungle"],
+        terrainPrinted: "Required: Forest or Jungle"
+      },
       benefits: "Primary terrain REQUIRED: Forest or Jungle. Secondary skills: Bowyer/Fletcher, Farmer, Forester, Woodworker/Carpenter. Bonus proficiency: Herbalism. Bark-like skin giving AC 5 at 4th level and improving by 1 per level to a maximum of -6 at 15th. +2 to save against plant-related spells. Speak with plants at will. Photosynthesis, buoyancy, rooting at 8th level, limbing at 10th. Will have at least one treant follower at some point in his career.",
       hindrances: "Must be human. Special abilities do not arrive until 4th level, and the 1st-3rd level latency requires three hours of prayer a week. Once transformed the kit CANNOT be abandoned. Cannot wear armor and gets no Dexterity bonus to AC. -5% to move silently. Severe vulnerability to fire and to extreme climates. Limited magic -- plant sphere only. -3 reaction penalty with almost all NPCs. Thirteen barred nonweapon proficiencies, a required Agriculture spend, and a limited weapon list."
     },
@@ -517,6 +595,7 @@ const KITS = {
         pages:  "62-64",
         note:   "Transcribed from the book."
       },
+      thiefSkillMods: { hideInShadows: 0, moveSilently: 0 },
       abilities: [
         { name: "Domain", notes: "Every Guardian has a specific region he protects. The DM establishes the boundaries at the beginning of his career. There are no fixed rules, but in general a 1st level Guardian's domain should not exceed a few square miles; it expands by several square miles each time he gains a level. By 5th level it might encompass a region about 20-25 miles across, and by 15th level or higher it might comprise an area the size of a small country. It should correspond to his primary terrain and is typically in an uncivilized part of the world. Two or more Guardians may share an especially large domain, but such cases are rare." },
         { name: "Bonus Sphere: Protection", notes: "Minor access to the Protection sphere." },
@@ -526,7 +605,11 @@ const KITS = {
         { name: "Tied to His Domain", notes: "If he leaves his domain for any length of time he must make arrangements for someone else to assume his duties -- hiring a caretaker, or assigning temporary custody to a human or demihuman follower. There are no fixed penalties for failing to do so. However, should he abandon his responsibilities for more than a few days, the gods may deny him the use of the special benefits associated with this kit. If he is absent for longer periods -- say, a few weeks -- the gods may also deny him the use of ALL spells. He recovers the use of his special benefits and spells as soon as he returns to his domain." },
         { name: "At Least One Humanoid Follower", notes: "Acquires at least one human or demihuman follower at some point in his career. There are no other restrictions or recommendations." }
       ],
-      requirements: { /* Standard -- the book sets no kit-specific minimum */ },
+      requirements: {
+        // Standard -- the book sets no kit-specific ability minimum
+        terrain: ["forest","hill","jungle","mountain","plains"],
+        terrainPrinted: "Forest, Hill, Jungle, Mountain, or Plains"
+      },
       benefits: "Primary terrain: Forest, Hill, Jungle, Mountain, or Plains. Secondary skills: Bowyer/Fletcher, Farmer, Fisher, Hunter, Trapper/Furrier, Woodworker/Carpenter. Minor access to the Protection sphere. Within his domain he can cast detect evil three times per day and bless and commune with nature once per week each. Revive plants once per month. Armor/equipment: standard. Species enemy: any. Followers: at least one human or demihuman at some point.",
       hindrances: "Bound to a domain he must arrange cover for whenever he leaves. Abandoning his responsibilities for more than a few days may cost him the kit's special benefits; longer absences may cost him ALL spells until he returns."
     },
@@ -539,6 +622,7 @@ const KITS = {
         pages:  "63-66",
         note:   "Transcribed from the book."
       },
+      thiefSkillMods: { hideInShadows: 5, moveSilently: 5 },
       abilities: [
         { name: "Weapon Specialization", notes: "Because of his extensive combat training, the Justifier MUST use some of his initial proficiency slots to take one weapon specialization (PHB Chapter 5). The weapon of specialization is taken from his list of recommended weapons." },
         { name: "Stealth", notes: "+5% bonus to his chance of hiding in natural surroundings and to his chance of moving silently." },
@@ -554,7 +638,10 @@ const KITS = {
       requirements: {
         str: 14, dex: 14, race: "Human",
         alignment: ["lg"],
-        alignmentPrinted: "lawful good"
+        alignmentPrinted: "lawful good",
+        race: ["human"],
+        racePrinted: "Must be human",
+        terrainPrinted: "Any"
       },
       benefits: "Primary terrain: any. Secondary skills: Armorer, Bowyer/Fletcher, Forester, Hunter, Trapper/Furrier, Weaponsmith. One weapon specialization taken from his recommended weapons. Stealth +5%/+5%. Tactical advantage -- automatic surprise and initiative on a successful Wisdom check after a full turn of observation. Unarmed combat expertise. Coordinated attack with a trained animal follower. Survival in an extra terrain of his choice. Only -2 encounter reaction penalty with his species enemy, and none under a formal truce. Can wear any armor and still hide in shadows and move silently.",
       hindrances: "Must be human and of lawful good alignment. Limited proficiencies -- only ONE nonweapon proficiency slot at 1st level in addition to the Survival bonus, thereafter at the normal rate. Limited spell use -- no spells until 10th level, on the Table 46 progression. Must spend initial proficiency slots on a weapon specialization."
@@ -568,6 +655,7 @@ const KITS = {
         pages:  "65-68",
         note:   "Transcribed from the book."
       },
+      thiefSkillMods: { hideInShadows: -5, moveSilently: -5 },
       abilities: [
         { name: "Will to Live", notes: "Where others would submit to death, the Mountain Man clings to life ferociously. If missing a saving throw vs. death magic would be fatal, he receives a +2 saving throw bonus. If a damage roll would reduce him to zero hit points or less, he makes a Constitution check; if it succeeds he is reduced to 1 hit point instead. He cannot use this ability if he has only 1 hit point remaining. If an encounter results in his death he may not die immediately -- he makes a system shock roll and fights on for another 1-4 rounds, or until he suffers damage below -10 hit points equal to his level, whichever occurs first, then drops dead." },
         { name: "Brew Healing Elixir (7th level)", notes: "Gains the ability to brew a special healing elixir. He must spend 1-4 hours gathering the necessary fresh herbs and mosses, usually available in any forest, jungle or mountain region as determined by the DM. It takes an hour to brew and remains potent for 24 hours. The elixir acts as one dose of a potion of healing. He may brew one per day." },
@@ -583,7 +671,14 @@ const KITS = {
         { name: "Followers: 20% Chance", notes: "Only a 20% chance of attracting human, demihuman, or humanoid followers. Treat a roll of 81-00 as a bear, type determined by the DM -- usually black, brown, or cave. Any followers rolled as full elves will be dwarves instead, except for full elf mages, who will instead be gnome illusionists." },
         { name: "No Fortifications", notes: "Has no interest in fortifications and will never build one." }
       ],
-      requirements: { str: 14, con: 15, race: "Not a full elf" },
+      requirements: {
+        str: 14,
+        con: 15,
+        race: ["human","half-elf"],
+        racePrinted: "Cannot be a full elf",
+        terrain: ["mountain"],
+        terrainPrinted: "Required: Mountains"
+      },
       benefits: "Primary terrain REQUIRED: Mountains. Secondary skills: Bowyer/Fletcher, Fisher, Forester, Hunter, Miner, Trapper/Furrier. Bonus proficiencies: Mountaineering and Weaponsmithing (Crude), the latter letting him make the weapons in Table 47 at no cost. Will to live. Brew healing elixir once per day from 7th level. Begins with two handmade weapons free and a handmade leather-and-fur suit worth AC 8.",
       hindrances: "Cannot be a full elf. Limited stealth, -5% to hide in natural surroundings and to move silently. Limited magic -- fewer spells, none until 10th level. Limited money -- one item over 15 gp, 100 gp total in other possessions. -1 reaction from all NPCs and -2 from nobles and the cultural elite. Only a 20% chance of humanoid followers. Never builds a fortification. Fourteen barred nonweapon proficiencies, a required Hunting spend, and a limited weapon list. -2 to all attack rolls if he wears metal armor."
     },
@@ -596,6 +691,7 @@ const KITS = {
         pages:  "67-70",
         note:   "Transcribed from the book."
       },
+      thiefSkillMods: { hideInShadows: 0, moveSilently: 0 },
       abilities: [
         { name: "Trail Sense", notes: "His chance of getting lost in any outdoor land setting is reduced by 10%. Further, his base chance of getting lost in his primary terrain -- the Surroundings column of Table 81 in the DUNGEON MASTER Guide -- will not exceed 20%. This is NOT cumulative with other benefits, such as the one for the direction sense proficiency. Applies only when the Pathfinder leads the party and at least 20 feet separates him from the rest of it." },
         { name: "Overland Guiding", notes: "Able to find the optimum trail through rough terrain, increasing the party's movement rate when traversing long distances. Use Table 49 in place of Table 74 in Chapter 14 of the DUNGEON MASTER Guide. Movement costs per mile: Barren/wasteland 1; Clear farmland 1/2; Desert, rocky 1; Desert, sand 2; Forest, light 1; Forest, medium 2; Forest, heavy 3; Glacier 1; Hills, rolling 1; Hills, steep (foothills) 3; Jungle, medium 4; Jungle, heavy 6; Marsh/swamp 6; Moor 3; Mountains, low 3; Mountains, medium 4; Mountains, high 6; Plains/grassland/heath 1; Scrub/brushland 1; Tundra 2. Applies only when the Pathfinder leads the party and at least 20 feet separates him from the rest of it." },
@@ -606,7 +702,11 @@ const KITS = {
         { name: "Exposed at the Front", notes: "By moving ahead of the party the Pathfinder places himself in a position of risk. Separated from his companions he is more likely to be the victim of enemy attacks, runs a greater risk of drawing fire from snipers, and is more susceptible to ambushes from hostile creatures. If he fails to recognize a hazard, he will probably be the first to become a victim of it." },
         { name: "Followers: Fast Movers", notes: "All species are eligible, though he is likely to attract followers with higher movement rates (12+), as he tends to have little patience with creatures that cannot keep up with him." }
       ],
-      requirements: { /* Same as standard ranger -- the book sets no kit-specific minimum */ },
+      requirements: {
+        // Same as a standard ranger -- no kit-specific ability minimum
+        terrain: ["forest","hill","jungle","mountain","plains"],
+        terrainPrinted: "Forest, Hill, Jungle, Mountain, or Plains"
+      },
       benefits: "Primary terrain: Forest, Hill, Jungle, Mountain, or Plains. Secondary skills: Farmer, Forester, Groom, Hunter, Navigator, Trapper/Furrier. Four bonus proficiencies -- Direction Sense, Distance Sense, Trail Marking and Alertness. Trail sense and overland guiding when he leads the party. Marksmanship +1 with a favorite missile weapon. Recognize trail hazard at 10% per level to a maximum of 90%. Armor/equipment: favors light armor such as leather or padded and seldom carries a shield, but has no particular requirements.",
       hindrances: "Trail sense and overland guiding apply ONLY when he leads the party and at least 20 feet separates him from it -- the proximity of others distracts him. Moving ahead exposes him to ambush, snipers, and any hazard he fails to spot. Must fill an initial weapon slot with a machete, hand axe, or sword."
     },
@@ -618,6 +718,11 @@ const KITS = {
         work:   "PHBR11 The Complete Ranger's Handbook",
         pages:  "69-72",
         note:   "Transcribed from the book."
+      },
+      thiefSkillMods: {
+        hideInShadows: null,
+        moveSilently:  null,
+        note: "N/A -- a Sea Ranger has NEITHER hide in shadows nor move silently, replacing them with Sea Legs and Aquatic Combat"
       },
       abilities: [
         { name: "Sea Tracking", notes: "Because of his knowledge of prevailing winds, currents and other general aquatic conditions, he can effectively track waterborne craft and aquatic creatures. This is not so much a reading of physical signs as an instinctive deduction of the probable course and destination of the quarry. For purposes of general play he uses the normal Tracking proficiency check rules." },
@@ -631,7 +736,11 @@ const KITS = {
         { name: "Armor AC 8 or Less", notes: "Because heavy armor interferes with swimming and makes moving around a ship uncomfortable, most Sea Rangers wear armor with an Armor Class of 8 or less." },
         { name: "Aquatic Followers", notes: "The primary terrain of all animal followers must be Aquatic. Any full elf follower is 80% likely to be an aquatic elf." }
       ],
-      requirements: { int: 12 },
+      requirements: {
+        int: 12,
+        terrain: ["aquatic"],
+        terrainPrinted: "Required: Aquatic -- oceans, lakes, ponds and rivers, plus coastlines, beaches and small islands"
+      },
       benefits: "Primary terrain REQUIRED: Aquatic, which for this kit includes oceans, lakes, ponds and rivers as well as coastlines, beaches and small islands. Secondary skills: Fisher, Navigator, Sailor, Shipwright, Trader/Barterer, Weaver. Bonus proficiencies: Boating or Seamanship, and Swimming. Sea tracking, land scent within 50 miles, sea legs, aquatic combat with no attack penalties in water, and parliament of fishes at 12th level. Species enemy: any aquatic creature is eligible.",
       hindrances: "Has NEITHER move silently nor hide in shadows, replacing them with sea legs and aquatic combat. Tracking in non-Aquatic terrain is halved. Most wear armor of AC 8 or less because heavy armor interferes with swimming and shipboard movement. All animal followers must have Aquatic as their primary terrain. Nine barred nonweapon proficiencies."
     },
@@ -644,6 +753,7 @@ const KITS = {
         pages:  "71-74",
         note:   "Transcribed from the book."
       },
+      thiefSkillMods: { hideInShadows: 0, moveSilently: 0 },
       abilities: [
         { name: "Increased Access to Spells", notes: "Unlike other rangers, the Seeker acquires spells when he reaches 6th level, and can also cast 4th level spells. Table 51: no spells to 5th level; 6th casting level 1 (1/-/-/-); 7th casting level 2 (2/-/-/-); 8th casting level 3 (2/1/-/-); 9th casting level 4 (2/2/-/-); 10th casting level 5 (2/2/1/-); 11th casting level 6 (3/2/1/-); 12th casting level 7 (3/2/2/-); 13th casting level 8 (3/3/2/1); 14th casting level 9 (3/3/3/1); 15th casting level 10 (4/4/3/1); 16th and above casting level 11 (4/4/3/2)." },
         { name: "Extra Sphere", notes: "Has access to spells from an EXTRA sphere in addition to those of plant and animal. On reaching 6th level he chooses an extra sphere from divination, healing, protection, or weather. This extra sphere remains the same for the rest of his career." },
@@ -656,7 +766,10 @@ const KITS = {
         { name: "Vows to the Sacred Animal", notes: "He is forbidden from intentionally or unintentionally inflicting harm on his sacred animal, or standing by while others do so; he is required to care for injured or ailing sacred animals; he must liberate captive sacred animals held against their will -- this excludes followers of other rangers and domesticated animals serving as pets or mounts, but it DOES include farm animals being raised for consumption; and he must protect his sacred animal from hunters, trappers and predators. If he violates any of these requirements, as determined by the DM, he is consumed with guilt and remorse and cannot cast spells of any kind for the next week. If his action or inaction directly results in the death of a sacred animal, he is unable to cast spells for a full month. If he benefits from an atonement spell cast by a sympathetic priest, the one week suspension is reduced to four days and the month suspension to two weeks." },
         { name: "Possible Religious Restrictions", notes: "In most cases no special equipment restrictions beyond those normally associated with rangers. However, Seekers worshipping particular gods or adhering to strict religious doctrines may have additional restrictions as determined by the DM -- certain Seekers may be forbidden from using any bladed weapon or wearing any type of armor. Such restrictions should be made clear at the outset of the Seeker's career." }
       ],
-      requirements: { wis: 15 },
+      requirements: {
+        wis: 15,
+        terrainPrinted: "Any"
+      },
       benefits: "Primary terrain: any. Secondary skills: Farmer, Forester, Groom, Mason, Scribe, Tailor/Weaver, Woodworker/Carpenter. Bonus proficiency: Religion, and clerical proficiencies at non-doubled cost. Acquires spells at 6th level rather than 8th, can cast up to 4th level spells, and gains an extra sphere from divination, healing, protection or weather. Can use any magical staff usable by a druid.",
       hindrances: "A particular religion may impose additional requirements as determined by the DM. Only a SINGLE weapon proficiency at first level, from a list of eight, and he can never use a sword of any type. Species enemy must be evil. Must meditate a full hour at the same time each day, or take -1 to all ability checks and attack rolls the following day. Bound by four vows to a sacred animal, with spell loss for a week -- or a month if one dies -- for violating them, and he can never take a follower of that species."
     },
@@ -669,6 +782,7 @@ const KITS = {
         pages:  "73-76",
         note:   "Transcribed from the book."
       },
+      thiefSkillMods: { hideInShadows: 10, moveSilently: 10 },
       abilities: [
         { name: "Urban Tracking", notes: "Normal ranger tracking abilities in outdoor land settings. In addition, he has FULL (not half) tracking capabilities in urban settings." },
         { name: "Stealth Abilities", notes: "+10% bonus to his base chance to hide in shadows / hide in natural surroundings and a +10% bonus to his chances to move silently. He has the FULL (not half) chance for success when attempting to hide in shadows or move silently in urban settings, or in non-natural constructions such as crypts or dungeons." },
@@ -682,7 +796,13 @@ const KITS = {
         { name: "One Follower at a Time", notes: "Receives a career total of 2d6 followers like other rangers, but only ONE follower at a time. A new follower will not appear until his current follower dies or is dismissed. He will not acquire a new follower even if he releases his current one or arranges for its care elsewhere -- he must sever all ties with the old follower before another will arrive. He never accepts human or demihuman followers, nor followers whose intelligence compares favourably with that of humans, such as pixies or aarakocra, as he fears such beings are undependable and may cause unnecessary distractions. All animal followers must be less than four feet tall, size S or T." },
         { name: "Hated by Both Sides", notes: "Neither lawbreakers nor outlaws appreciate snoops, and typically the harshest possible penalties are reserved for captured Stalkers. Should a band of orcs or goblins realize a Stalker is in their midst, they are likely to chase him down and beat him mercilessly. A Stalker caught lurking in a private residence will probably be prosecuted to the fullest extent of the law. An otherwise friendly NPC may be less likely to cooperate with the party if he recognizes one of its members as a Stalker." }
       ],
-      requirements: { int: 14, race: "Human" },
+      requirements: {
+        int: 14,
+        race: ["human"],
+        racePrinted: "Must be human",
+        terrain: ["arctic","aquatic","desert","forest","hill","jungle","mountain","plains","swamp","urban"],
+        terrainPrinted: "Any; in addition, a Stalker's primary terrain can be URBAN"
+      },
       benefits: "Primary terrain: any; in addition, a Stalker's primary terrain can be URBAN. Secondary skills: any. Bonus proficiencies: Alertness and Camouflage. Full tracking in urban settings. +10% to hide in shadows and to move silently, with full chance in urban settings and in non-natural constructions such as crypts and dungeons. Can hide and move silently in armor of AC 6 or less. Opponents he sneaks up on take -3 on their surprise roll. Interrogation. Photographic memory at 10th level. A free terrain suit at the start of his career.",
       hindrances: "Must be human. Weapon proficiencies limited to easily concealed weapons. Only ONE follower at a time out of a 2d6 career total, never human or demihuman, never a creature of near-human intelligence, and all animal followers must be under four feet tall. Hated by lawbreakers and law-enforcers alike, with the harshest penalties reserved for captured Stalkers."
     },
@@ -695,6 +815,7 @@ const KITS = {
         pages:  "75-78",
         note:   "Transcribed from the book."
       },
+      thiefSkillMods: { hideInShadows: 0, moveSilently: 0 },
       abilities: [
         { name: "Stipend", notes: "A Warden in good standing with his overlord receives a monthly stipend commensurate with his responsibilities and experience. Warden salaries average 30-50 gp per month, plus a monthly bonus of 10 gp times the Warden's level." },
         { name: "Expenses", notes: "When undertaking an expedition on behalf of his overlord he may receive a small stipend to cover his expenses, typically ranging from 100-500 gp depending on the length of the expedition, his level, and the generosity of the overlord. He may spend these funds ONLY on goods and services directly relating to the success of the expedition. In lieu of money he may receive the loan of a mount, weapons, or equipment necessary for the undertaking." },
@@ -707,7 +828,8 @@ const KITS = {
       requirements: {
         cha: 12,
         alignment: ["lg", "ln", "le", "ng", "tn", "ne"],
-        alignmentPrinted: "any non-chaotic alignment"
+        alignmentPrinted: "any non-chaotic alignment",
+        terrainPrinted: "Any, though Forest and Plains are the most common; it should correspond to the area the Warden is first assigned to supervise"
       },
       benefits: "Primary terrain: any, though Forest and Plains are the most common; it should correspond to the area the Warden is first assigned to supervise. Secondary skills: Armorer, Bowyer/Fletcher, Farmer, Forester, Groom, Weaponsmith, Woodworker/Carver. A monthly stipend of 30-50 gp plus 10 gp times his level. Expenses of 100-500 gp on his overlord's business. An annual boon. +2 reaction with good and neutral characters of high social status when representing his overlord. Armor/equipment: no special requirements, and depending on his overlord's generosity he may have access to the finest equipment money can buy.",
       hindrances: "Cannot be of chaotic alignment. Held fully accountable for anything that reflects badly on his overlord -- an unsatisfactory explanation means reprimand or termination, and a terminated Warden is FORCED to abandon the kit and take the abandonment penalties. Must fully account for expenses and return excess funds or face fines or imprisonment. Always subject to his overlord's orders, critical or trivial, on pain of fines or dismissal. Will not undertake any adventure without direct orders from, or the express permission of, his overlord."
@@ -728,6 +850,8 @@ const KITS = {
                 "Proficiency lines below are prose awaiting the structured kit-proficiency " +
                 "schema -- see project notes, 'Structured kit proficiency data'."
       },
+      thiefSkillMods: { hideInShadows: 0, moveSilently: 0,
+        note: "DRAGON #234 states no stealth adjustment. Not in PHBR11 Table 12, which predates these kits." },
       abilities: [
         { name: "Protection from Evil", notes: "A special form of the 1st-level wizard spell. Undead opponents take -2 on any attack rolls against him, and he gains +1 to all saving throws." },
         { name: "Immunity to Fear and Scare Effects", notes: "Immune to fear and scare effects generated by creatures of the same level/hit dice or lower." },
@@ -738,7 +862,11 @@ const KITS = {
         { name: "Primary Terrain: Any Land", notes: "May pick any land as primary terrain. Arctic tundra and similar types are less likely to harbour undead but are not forbidden." },
         { name: "Followers", notes: "As per normal rangers." }
       ],
-      requirements: { int: 14 },
+      requirements: {
+        int: 14,
+        terrain: ["arctic","desert","forest","hill","jungle","mountain","plains","swamp"],
+        terrainPrinted: "Any land. Arctic tundra and similar types are less likely to harbour undead but are not forbidden"
+      },
       benefits: "Protection from evil (undead attackers at -2 to hit him; +1 to all his saving throws). Immune to fear and scare effects from creatures of his own level/HD or lower. Detect undead three times per day. Bonus nonweapon proficiency: Ancient history. Secondary skills: forester, scribe, trader/barterer, weaponsmith. Prefers light armor but may use any armor or equipment the situation requires.",
       hindrances: "-3 to reaction rolls from 0-level NPCs who know of his profession -- the sight of a known Crypt Ranger makes people wonder what foul creature has brought him to their community. Must take one weapon proficiency in a bludgeoning weapon. Species enemy must be an undead type. Exposed by profession to aging, level drain and the risk of becoming undead, and to harassment from the necromancers, liches and vampire lords he makes enemies of."
     },
@@ -765,6 +893,8 @@ const KITS = {
                 "Proficiency lines below are prose awaiting the structured kit-proficiency " +
                 "schema -- see project notes, 'Structured kit proficiency data'."
       },
+      thiefSkillMods: { hideInShadows: 0, moveSilently: 0,
+        note: "DRAGON #234 states no stealth adjustment. Not in PHBR11 Table 12, which predates these kits." },
       abilities: [
         { name: "Reaction Bonus", notes: "+2 to NPC encounter reaction rolls with anyone who knows he is a Crypt Defender. NOT scoped to his site -- the station is respected wherever he goes. Defenders of the dead are honoured by periodic visits from priests and noblemen, and a reasonable request is usually granted. The roll itself is the DM's." },
         { name: "Alertness and Area Knowledge", notes: "+2 to his own surprise roll while within the site he defends. He knows the place so well that anything out of the ordinary puts him on his guard -- air currents, smells and sounds in catacombs, for instance -- and he shifts into a defensive mode immediately. Does NOT stack with the Reaction Bonus above; the two are different subsystems with different scopes. See ambiguity below: the article prints this as a reaction bonus.",
@@ -789,7 +919,9 @@ const KITS = {
         { name: "Special Terrain: A Single Locale", notes: "Must choose a single locale rather than a terrain type -- normally a large tomb complex, a battlefield with mass graves, or a large cemetery or catacombs. The only exception is a defender in the service of a ruler, who is assigned to different locales as needed." },
         { name: "One Follower Only", notes: "Receives only one follower, at the appropriate level. That follower becomes the next defender of the site when he retires or moves on; if the site is not permanent, the follower leaves with him as an apprentice." }
       ],
-      requirements: {},
+      requirements: {
+        terrainPrinted: "NOT a terrain type -- a single named locale, normally a large tomb complex, a battlefield with mass graves, or a large cemetery or catacombs"
+      },
       benefits: "+2 to reaction rolls from those who know his station, and a further +2 on reaction rolls from alertness and area knowledge (see the source note on that second bonus). Speak with dead at his locale once per week. Bonus nonweapon proficiency: Local history. Secondary skills: farmer, fisher, limner/painter, mason, trapper/furrier. No restriction on the amount of equipment he may possess, though most adopt their brethren's spartan ways; for armor he adopts the ceremonial armor of the site he protects.",
       hindrances: "Takes NO species enemy, and gains neither the attack bonus nor the reaction penalty that go with one. Receives only one follower. Bound to a single locale and rarely travels or adventures. Weapon choice is capped by the size his locale allows, and one weapon proficiency slot must go to a site-linked weapon. Must train himself under the DMG self-training rules except in the rarest of cases. Requirements are those of the ranger class, with no kit-specific ability minimum."
     }
@@ -1244,7 +1376,12 @@ const KITS = {
         { name: "Grove Defender", notes: "Enhanced abilities in home grove" },
         { name: "Territorial Awareness", notes: "Sense disturbances in protected area" }
       ],
-      requirements: { wis: 15, alignment: "Neutral" },
+      requirements: {
+        wis: 15,
+        alignment: "Neutral",
+        terrain: ["forest","hill","jungle","mountain","plains"],
+        terrainPrinted: "Forest, Hill, Jungle, Mountain, or Plains"
+      },
       benefits: "+2 to all rolls in home territory. Allies get +1 to saves. Plant growth improved.",
       hindrances: "Must remain in territory. Weakened when far from grove (-2 to all rolls)."
     },
