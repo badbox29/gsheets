@@ -6415,12 +6415,39 @@ PROF_ABILITY_BUILDERS['tracking'] = function (root, entry, panelEl) {
   const base = getNWPCheckTarget(root, entry.nwp);
   const coop = getProficiencyCooperation(root);
 
+  // PHBR11 Tables 15-17 replace PHB Table 39 outright -- the book says so in as
+  // many words -- so this is a list swap, not a merge. The loop below is
+  // unchanged: both lists share the same {key, label, mod, repeating, per}
+  // shape, and the CRH entries add `group` and `autoLevel` on top.
+  const useCRH = (typeof isOptionalRule === 'function') &&
+                 isOptionalRule('rangerTrackingCRH') &&
+                 (typeof TRACKING_MODIFIERS_CRH !== 'undefined');
+  const modList = useCRH ? TRACKING_MODIFIERS_CRH : (TRACKING_MODIFIERS || []);
+
   let total = base.hasCheck ? base.target : 0;
   const lines = [];
   base.adjustments.forEach(a =>
     lines.push(`${a.label}: ${a.mod < 0 ? a.mod : '+' + a.mod}`));
 
-  (TRACKING_MODIFIERS || []).forEach(m => {
+  // Table 17's "+1 per three experience levels" is DERIVED, never entered. The
+  // ranger's level is already on the sheet, and asking him to type it would be
+  // a field the player fills in about himself. getRangerComponent handles
+  // single, multi and dual class.
+  let rangerLevel = 0;
+  if (useCRH && typeof getRangerComponent === 'function') {
+    const comp = getRangerComponent(root);
+    if (comp && comp.level) rangerLevel = comp.level;
+  }
+  const levelBonus = Math.floor(rangerLevel / 3);
+
+  modList.forEach(m => {
+    if (m.autoLevel) {
+      if (levelBonus > 0) {
+        total += levelBonus;
+        lines.push(`Ranger level ${rangerLevel} (+1 per 3): +${levelBonus}`);
+      }
+      return;
+    }
     if (m.repeating) {
       const n = Math.max(0, parseInt(st[m.key], 10) || 0);
       const times = Math.floor(n / m.per);
@@ -6445,7 +6472,68 @@ PROF_ABILITY_BUILDERS['tracking'] = function (root, entry, panelEl) {
   const lost = total < 0;
   const move = (typeof getTrackingMovement === 'function') ? getTrackingMovement(total) : null;
 
-  const rows = (TRACKING_MODIFIERS || []).map(m => {
+  // Terrain and illumination are "use only one" in the CRH, so they render as
+  // RADIOS. The PHB list is one flat group of checkboxes and keeps that shape.
+  const renderRow = m => {
+    if (m.autoLevel) {
+      return `<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;opacity:0.75;">
+                <span style="width:52px;flex-shrink:0;text-align:right;">${levelBonus > 0 ? '+' + levelBonus : '\u2014'}</span>
+                <span>${escapeHtml(m.label)}
+                  <span style="color:var(--muted);">(from your ranger level, not entered)</span>
+                </span>
+              </div>`;
+    }
+    const note = m.note
+      ? `<div style="color:var(--muted);margin-left:22px;">${escapeHtml(m.note)}</div>` : '';
+    if (m.repeating) {
+      return `<div style="margin-bottom:4px;">
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <input type="number" class="trk-num" data-key="${m.key}" min="0" step="1"
+                         value="${Math.max(0, parseInt(st[m.key], 10) || 0)}"
+                         style="width:52px;flex-shrink:0;padding:2px 4px;font-size:11px;">
+                  <span>${escapeHtml(m.countLabel)}
+                    <span style="color:var(--muted);">(${m.mod > 0 ? '+' : ''}${m.mod} per ${m.per})</span>
+                  </span>
+                </div>${note}
+              </div>`;
+    }
+    const grp = m.group && TRACKING_GROUPS_CRH && TRACKING_GROUPS_CRH[m.group];
+    const exclusive = !!(grp && grp.exclusive);
+    // A zero-modifier row does nothing when ticked. It stays in the list so a
+    // player scanning for "normal ground" finds it, but is muted so it does not
+    // read as broken. NOT muted when exclusive -- there it is a real choice.
+    const dim = (m.mod === 0 && !exclusive) ? 'opacity:0.55;' : '';
+    const input = exclusive
+      ? `<input type="radio" class="trk-radio" name="trk-grp-${m.group}" data-key="${m.key}"
+                data-group="${m.group}" ${st[m.key] ? 'checked' : ''}
+                style="width:auto;flex-shrink:0;">`
+      : `<input type="checkbox" class="trk-chk" data-key="${m.key}" ${st[m.key] ? 'checked' : ''}
+                style="width:auto;flex-shrink:0;">`;
+    return `<div style="margin-bottom:4px;">
+              <label style="display:flex;align-items:flex-start;gap:6px;color:var(--text);cursor:pointer;${dim}">
+                ${input}
+                <span>${escapeHtml(m.label)}
+                  <span style="color:var(--muted);">(${m.mod > 0 ? '+' : ''}${m.mod})</span>
+                </span>
+              </label>${note}
+            </div>`;
+  };
+
+  let rows;
+  if (useCRH) {
+    rows = Object.keys(TRACKING_GROUPS_CRH).map(g => {
+      const inGroup = modList.filter(m => m.group === g);
+      if (!inGroup.length) return '';
+      return `<div style="margin-bottom:10px;">
+                <div style="font-weight:600;margin-bottom:4px;">${escapeHtml(TRACKING_GROUPS_CRH[g].label)}</div>
+                ${inGroup.map(renderRow).join('')}
+              </div>`;
+    }).join('');
+  } else {
+    rows = modList.map(renderRow).join('');
+  }
+
+  const _unusedRows = (TRACKING_MODIFIERS || []).map(m => {
     // A zero-modifier row does nothing when ticked. It stays in the list so a
     // player scanning for "normal ground" finds it, but is muted so it does not
     // read as broken.
@@ -6524,6 +6612,18 @@ PROF_ABILITY_BUILDERS['tracking'] = function (root, entry, panelEl) {
 
   panelEl.querySelectorAll('.trk-chk').forEach(el => {
     el.onchange = () => { st[el.dataset.key] = el.checked; renderProficiencyAbilities(root); };
+  });
+  // A radio group is one choice, so selecting one must CLEAR its siblings in
+  // the scratch state -- the browser unchecks them visually but knows nothing
+  // about st.
+  panelEl.querySelectorAll('.trk-radio').forEach(el => {
+    el.onchange = () => {
+      (TRACKING_MODIFIERS_CRH || [])
+        .filter(m => m.group === el.dataset.group)
+        .forEach(m => { st[m.key] = false; });
+      st[el.dataset.key] = true;
+      renderProficiencyAbilities(root);
+    };
   });
   panelEl.querySelectorAll('.trk-num').forEach(el => {
     el.onchange = () => { st[el.dataset.key] = el.value; renderProficiencyAbilities(root); };
