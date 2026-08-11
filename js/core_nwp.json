@@ -9,6 +9,24 @@
     "Notes": "Knowledge of farming, planting, harvesting, and soil conditions"
   },
   {
+    "Proficiency Name": "Alertness",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Wis / +1",
+    "Modifier": "+1",
+    "Source": "PHBR1",
+    "Notes": "+1 bonus to surprise rolls. Notice small details others miss."
+  },
+  {
+    "Proficiency Name": "Ancient History",
+    "Category": "Wizard",
+    "Slots": "1",
+    "Ability Check": "Int / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Knowledge of historical events, personalities, wars, migrations, etc."
+  },
+  {
     "Proficiency Name": "Animal Handling",
     "Category": "General",
     "Slots": "1",
@@ -16,6 +34,15 @@
     "Modifier": "-1",
     "Source": "PHB",
     "Notes": "General care and treatment of normal animals, calming frightened animals"
+  },
+  {
+    "Proficiency Name": "Animal Lore",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "Int / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Identify species, habits, and abilities of animals"
   },
   {
     "Proficiency Name": "Animal Training",
@@ -27,6 +54,24 @@
     "Notes": "Train one type of animal (must specialize). Takes 2d6 weeks per animal."
   },
   {
+    "Proficiency Name": "Appraising",
+    "Category": "Rogue",
+    "Slots": "1",
+    "Ability Check": "Int / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Estimate value of common and precious items accurately"
+  },
+  {
+    "Proficiency Name": "Armorer",
+    "Category": "Warrior",
+    "Slots": "2",
+    "Ability Check": "Int / -2",
+    "Modifier": "-2",
+    "Source": "PHB",
+    "Notes": "Make and repair metal armor and shields. Requires forge."
+  },
+  {
     "Proficiency Name": "Artistic Ability",
     "Category": "General",
     "Slots": "1",
@@ -34,6 +79,15 @@
     "Modifier": "0",
     "Source": "PHB",
     "Notes": "Create works of art in one field (painting, sculpture, poetry, etc.). Must specialize."
+  },
+  {
+    "Proficiency Name": "Astrology",
+    "Category": "Wizard",
+    "Slots": "2",
+    "Ability Check": "Int / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Cast horoscopes and make predictions. Not always accurate."
   },
   {
     "Proficiency Name": "Blacksmithing",
@@ -45,6 +99,33 @@
     "Notes": "Create and repair metal objects. Requires forge and tools."
   },
   {
+    "Proficiency Name": "Blind-Fighting",
+    "Category": "Warrior",
+    "Slots": "2",
+    "Ability Check": "N/A",
+    "Modifier": "N/A",
+    "Source": "PHB",
+    "Notes": "Reduce penalties for fighting in darkness. Never completely surprised."
+  },
+  {
+    "Proficiency Name": "Boating",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Wis / +1",
+    "Modifier": "+1",
+    "Source": "PHBR11",
+    "Notes": "Handle small boats, rafts, canoes in calm or rough water"
+  },
+  {
+    "Proficiency Name": "Bowyer/Fletcher",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "Dex / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Make and repair bows, crossbows, and arrows/bolts"
+  },
+  {
     "Proficiency Name": "Brewing",
     "Category": "General",
     "Slots": "1",
@@ -54,6 +135,15 @@
     "Notes": "Prepare alcoholic beverages including beer, mead, and wine"
   },
   {
+    "Proficiency Name": "Camouflage",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "Wis / 0",
+    "Modifier": "0",
+    "Source": "PHBR11",
+    "Notes": "Conceal yourself, companions, or inanimate objects with natural or man-made materials. Takes half an hour for a person, two or three hours for a cart or comparable object, a half-day for a small building. Objects the size of a person are at no penalty, cart-sized at -1, building-sized at -3. One check covers a whole group. Camouflaged persons are unseen by human, demihuman, monster or animal passersby, but the proficiency does nothing against predators hunting by scent or other keen senses, nor against someone who brushes against or bumps into you. Only needed for a person or object that would otherwise be partly or wholly exposed. Crossover groups: Warrior, Rogue"
+  },
+  {
     "Proficiency Name": "Carpentry",
     "Category": "General",
     "Slots": "1",
@@ -61,6 +151,24 @@
     "Modifier": "0",
     "Source": "PHB",
     "Notes": "Build wooden structures and items. Requires tools."
+  },
+  {
+    "Proficiency Name": "Cartography",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Int / -2",
+    "Modifier": "-2",
+    "Source": "PHBR11",
+    "Notes": "Draw maps to scale with complex land formations, coastal outlines and other geographic features. The character must be reasonably familiar with the area being mapped. The DM makes the check in secret: success means the map is correct in all significant details, failure means a few errors and possibly a significant one, and a roll of exactly 20 means a serious error that makes the map useless. Crossover groups: General"
+  },
+  {
+    "Proficiency Name": "Charioteering",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "Dex / +2",
+    "Modifier": "+2",
+    "Source": "PHB",
+    "Notes": "Drive chariots and similar vehicles in combat"
   },
   {
     "Proficiency Name": "Cobbling",
@@ -99,6 +207,42 @@
     "Notes": "Instinctively know direction of north. Less chance of getting lost."
   },
   {
+    "Proficiency Name": "Disguise",
+    "Category": "Rogue",
+    "Slots": "1",
+    "Ability Check": "Cha / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Alter appearance with clothing, makeup, and props"
+  },
+  {
+    "Proficiency Name": "Distance Sense",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Wis / 0",
+    "Modifier": "0",
+    "Source": "PHBR11",
+    "Notes": "Estimate the total distance travelled in any given day, part of a day, or a number of consecutive days equal to the character's level. The estimate is 90% accurate. Crossover groups: General"
+  },
+  {
+    "Proficiency Name": "Endurance",
+    "Category": "Warrior",
+    "Slots": "2",
+    "Ability Check": "Con / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Perform strenuous activity longer. Resist effects of heat, cold, hunger."
+  },
+  {
+    "Proficiency Name": "Engineering",
+    "Category": "Wizard",
+    "Slots": "2",
+    "Ability Check": "Int / -3",
+    "Modifier": "-3",
+    "Source": "PHB",
+    "Notes": "Design and build large structures, siege engines, and fortifications"
+  },
+  {
     "Proficiency Name": "Etiquette",
     "Category": "General",
     "Slots": "1",
@@ -106,6 +250,15 @@
     "Modifier": "0",
     "Source": "PHB",
     "Notes": "Know proper behavior for social situations in a specific culture"
+  },
+  {
+    "Proficiency Name": "Falconry",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Wis / -1",
+    "Modifier": "-1",
+    "Source": "PHBR11",
+    "Notes": "Most properly the Animal Training (Falcon) proficiency. Train and handle falcons, teaching them tricks and tasks. Hawks may be trained at -1; owls are a separate proficiency and can be trained at -2. A falcon can be taught 2d4 (2-8) tricks or tasks in any combination -- 2d6 weeks for a trick, three months for a task -- with a proficiency check at the end of each training period; a failed check means that falcon is incapable of learning more. Without falconry training equipment (Chapter 7) the roll is penalised by -2. Crossover groups: General"
   },
   {
     "Proficiency Name": "Fire-Building",
@@ -126,256 +279,22 @@
     "Notes": "Catch fish with hook, net, or spear. Provides food."
   },
   {
-    "Proficiency Name": "Heraldry",
-    "Category": "General",
-    "Slots": "1",
-    "Ability Check": "Int / 0",
-    "Modifier": "0",
-    "Source": "PHB",
-    "Notes": "Identify symbols, crests, and coats of arms. Know lineages."
-  },
-  {
-    "Proficiency Name": "Languages, Modern",
-    "Category": "General",
-    "Slots": "1",
-    "Ability Check": "Int / 0",
-    "Modifier": "0",
-    "Source": "PHB",
-    "Notes": "Learn to SPEAK one modern language. Does not include reading or writing -- literacy requires the separate Reading/Writing proficiency."
-  },
-  {
-    "Proficiency Name": "Leatherworking",
-    "Category": "General",
-    "Slots": "1",
-    "Ability Check": "Int / 0",
-    "Modifier": "0",
-    "Source": "PHB",
-    "Notes": "Tan and treat leather. Create leather goods and armor."
-  },
-  {
-    "Proficiency Name": "Mining",
-    "Category": "General",
-    "Slots": "2",
-    "Ability Check": "Wis / -3",
-    "Modifier": "-3",
-    "Source": "PHB",
-    "Notes": "Knowledge of mining techniques. Assess tunnel safety. Identify valuable ores."
-  },
-  {
-    "Proficiency Name": "Pottery",
-    "Category": "General",
-    "Slots": "1",
-    "Ability Check": "Dex / -2",
-    "Modifier": "-2",
-    "Source": "PHB",
-    "Notes": "Create pottery and ceramic items"
-  },
-  {
-    "Proficiency Name": "Religion",
-    "Category": "Priest",
-    "Slots": "1",
-    "Ability Check": "Wis / 0",
-    "Modifier": "0",
-    "Source": "PHB",
-    "Notes": "Knowledge of mythology, rituals, and beliefs of a specific religion"
-  },
-  {
-    "Proficiency Name": "Rope Use",
-    "Category": "General",
-    "Slots": "1",
-    "Ability Check": "Dex / 0",
-    "Modifier": "0",
-    "Source": "PHB",
-    "Notes": "Tie knots, lash objects, use rope and tackle effectively"
-  },
-  {
-    "Proficiency Name": "Seamanship",
-    "Category": "General",
-    "Slots": "1",
-    "Ability Check": "Dex / +1",
-    "Modifier": "+1",
-    "Source": "PHB",
-    "Notes": "Knowledge of sailing, rigging, and general ship operations"
-  },
-  {
-    "Proficiency Name": "Seamstress/Tailor",
-    "Category": "General",
-    "Slots": "1",
-    "Ability Check": "Dex / -1",
-    "Modifier": "-1",
-    "Source": "PHB",
-    "Notes": "Sew, mend, and create clothing of quality"
-  },
-  {
-    "Proficiency Name": "Singing",
-    "Category": "General",
-    "Slots": "1",
-    "Ability Check": "Cha / 0",
-    "Modifier": "0",
-    "Source": "PHB",
-    "Notes": "Sing pleasingly and know many ballads and songs"
-  },
-  {
-    "Proficiency Name": "Stonemasonry",
-    "Category": "General",
-    "Slots": "1",
-    "Ability Check": "Str / -2",
-    "Modifier": "-2",
-    "Source": "PHB",
-    "Notes": "Shape and set stone. Create stone structures. Requires tools."
-  },
-  {
-    "Proficiency Name": "Swimming",
-    "Category": "General",
-    "Slots": "1",
-    "Ability Check": "Str / 0",
-    "Modifier": "0",
-    "Source": "PHB",
-    "Notes": "Swim with ease. Can swim half movement rate without checks."
-  },
-  {
-    "Proficiency Name": "Weather Sense",
-    "Category": "General",
-    "Slots": "1",
-    "Ability Check": "Wis / -1",
-    "Modifier": "-1",
-    "Source": "PHB",
-    "Notes": "Predict weather accurately for next 6-12 hours"
-  },
-  {
-    "Proficiency Name": "Weaving",
-    "Category": "General",
-    "Slots": "1",
-    "Ability Check": "Int / -1",
-    "Modifier": "-1",
-    "Source": "PHB",
-    "Notes": "Create cloth, rugs, tapestries on a loom"
-  },
-  {
-    "Proficiency Name": "Ancient History",
-    "Category": "Wizard",
-    "Slots": "1",
-    "Ability Check": "Int / -1",
-    "Modifier": "-1",
-    "Source": "PHB",
-    "Notes": "Knowledge of historical events, personalities, wars, migrations, etc."
-  },
-  {
-    "Proficiency Name": "Astrology",
-    "Category": "Wizard",
-    "Slots": "2",
-    "Ability Check": "Int / 0",
-    "Modifier": "0",
-    "Source": "PHB",
-    "Notes": "Cast horoscopes and make predictions. Not always accurate."
-  },
-  {
-    "Proficiency Name": "Engineering",
-    "Category": "Wizard",
-    "Slots": "2",
-    "Ability Check": "Int / -3",
-    "Modifier": "-3",
-    "Source": "PHB",
-    "Notes": "Design and build large structures, siege engines, and fortifications"
-  },
-  {
-    "Proficiency Name": "Gem Cutting",
-    "Category": "Wizard",
-    "Slots": "2",
-    "Ability Check": "Dex / -2",
-    "Modifier": "-2",
-    "Source": "PHB",
-    "Notes": "Cut and polish gems to enhance value. Identify gems."
-  },
-  {
-    "Proficiency Name": "Herbalism",
-    "Category": "Wizard",
-    "Slots": "2",
-    "Ability Check": "Int / -2",
-    "Modifier": "-2",
-    "Source": "PHB",
-    "Notes": "Identify plants. Create healing salves and poultices."
-  },
-  {
-    "Proficiency Name": "Languages, Ancient",
-    "Category": "Wizard",
-    "Slots": "1",
-    "Ability Check": "Int / 0",
-    "Modifier": "0",
-    "Source": "PHB",
-    "Notes": "One slot buys EITHER the ability to read and write the language OR to speak it -- the character's choice, not both."
-  },
-  {
-    "Proficiency Name": "Navigation",
-    "Category": "Wizard",
+    "Proficiency Name": "Foraging",
+    "Category": "Warrior",
     "Slots": "1",
     "Ability Check": "Int / -2",
     "Modifier": "-2",
-    "Source": "PHB",
-    "Notes": "Plot course using instruments and charts. Reduce chance of getting lost."
+    "Source": "PHBR11",
+    "Notes": "Search a wilderness area for a small amount of a desired material -- a branch suitable for carving into a bow, kindling, a medicinal herb, a spell component. Takes 2-8 (2d4) hours of searching, and the material must theoretically be available in the area. The DM does not confirm availability until after the search; if the material is not there, no check is needed and he simply reports that the search was in vain. On a success the character finds no more than a handful, though the DM may make exceptions. On a failure the material is not found there, and a different area may be searched with another 2-8 hours and a new check. Crossover groups: Warrior, Rogue"
   },
   {
-    "Proficiency Name": "Reading Lips",
+    "Proficiency Name": "Forgery",
     "Category": "Rogue",
-    "Slots": "2",
-    "Ability Check": "Int / -2",
-    "Modifier": "-2",
-    "Source": "PHB",
-    "Notes": "Understand speech by watching lips. Must see face clearly."
-  },
-  {
-    "Proficiency Name": "Spellcraft",
-    "Category": "Wizard",
-    "Slots": "1",
-    "Ability Check": "Int / -2",
-    "Modifier": "-2",
-    "Source": "PHB",
-    "Notes": "Identify spells being cast. Recognize magical items."
-  },
-  {
-    "Proficiency Name": "Armorer",
-    "Category": "Warrior",
-    "Slots": "2",
-    "Ability Check": "Int / -2",
-    "Modifier": "-2",
-    "Source": "PHB",
-    "Notes": "Make and repair metal armor and shields. Requires forge."
-  },
-  {
-    "Proficiency Name": "Blind-Fighting",
-    "Category": "Warrior",
-    "Slots": "2",
-    "Ability Check": "N/A",
-    "Modifier": "N/A",
-    "Source": "PHB",
-    "Notes": "Reduce penalties for fighting in darkness. Never completely surprised."
-  },
-  {
-    "Proficiency Name": "Bowyer/Fletcher",
-    "Category": "Warrior",
     "Slots": "1",
     "Ability Check": "Dex / -1",
     "Modifier": "-1",
     "Source": "PHB",
-    "Notes": "Make and repair bows, crossbows, and arrows/bolts"
-  },
-  {
-    "Proficiency Name": "Charioteering",
-    "Category": "Warrior",
-    "Slots": "1",
-    "Ability Check": "Dex / +2",
-    "Modifier": "+2",
-    "Source": "PHB",
-    "Notes": "Drive chariots and similar vehicles in combat"
-  },
-  {
-    "Proficiency Name": "Endurance",
-    "Category": "Warrior",
-    "Slots": "2",
-    "Ability Check": "Con / 0",
-    "Modifier": "0",
-    "Source": "PHB",
-    "Notes": "Perform strenuous activity longer. Resist effects of heat, cold, hunger."
+    "Notes": "Create fake documents and signatures. Detect forgeries."
   },
   {
     "Proficiency Name": "Gaming",
@@ -387,67 +306,13 @@
     "Notes": "Skilled at games of chance and strategy. Better chance of winning."
   },
   {
-    "Proficiency Name": "Hunting",
-    "Category": "Warrior",
-    "Slots": "1",
-    "Ability Check": "Wis / -1",
-    "Modifier": "-1",
-    "Source": "PHB",
-    "Notes": "Track and hunt wild game. Provides food for several people."
-  },
-  {
-    "Proficiency Name": "Mountaineering",
-    "Category": "Warrior",
-    "Slots": "1",
-    "Ability Check": "N/A",
-    "Modifier": "N/A",
-    "Source": "PHB",
-    "Notes": "Climb mountains safely. Better chance to succeed on difficult climbs."
-  },
-  {
-    "Proficiency Name": "Running",
-    "Category": "Warrior",
-    "Slots": "1",
-    "Ability Check": "Con / -6",
-    "Modifier": "-6",
-    "Source": "PHB",
-    "Notes": "Run at faster speed for extended periods without tiring"
-  },
-  {
-    "Proficiency Name": "Set Snares",
-    "Category": "Warrior",
-    "Slots": "1",
-    "Ability Check": "Dex / -1",
-    "Modifier": "-1",
-    "Source": "PHB",
-    "Notes": "Create and set snares and traps to catch game or enemies"
-  },
-  {
-    "Proficiency Name": "Survival",
-    "Category": "Warrior",
+    "Proficiency Name": "Gem Cutting",
+    "Category": "Wizard",
     "Slots": "2",
-    "Ability Check": "Int / 0",
-    "Modifier": "0",
+    "Ability Check": "Dex / -2",
+    "Modifier": "-2",
     "Source": "PHB",
-    "Notes": "Find food, water, shelter in wilderness. Must specialize by terrain type."
-  },
-  {
-    "Proficiency Name": "Tracking",
-    "Category": "Warrior",
-    "Slots": "2",
-    "Ability Check": "Wis / 0",
-    "Modifier": "0",
-    "Source": "PHB",
-    "Notes": "Follow tracks and trail of creatures. Identify tracks."
-  },
-  {
-    "Proficiency Name": "Weaponsmithing",
-    "Category": "Warrior",
-    "Slots": "3",
-    "Ability Check": "Int / -3",
-    "Modifier": "-3",
-    "Source": "PHB",
-    "Notes": "Make and repair weapons. Must specialize by weapon type. Requires forge."
+    "Notes": "Cut and polish gems to enhance value. Identify gems."
   },
   {
     "Proficiency Name": "Healing",
@@ -459,49 +324,58 @@
     "Notes": "Restore 1d3 hp to wounded character. Tends diseases and poisons."
   },
   {
-    "Proficiency Name": "Local History",
-    "Category": "Priest",
+    "Proficiency Name": "Heraldry",
+    "Category": "General",
     "Slots": "1",
-    "Ability Check": "Cha / 0",
+    "Ability Check": "Int / 0",
     "Modifier": "0",
     "Source": "PHB",
-    "Notes": "Know details about a specific region: rulers, legends, events, etc."
+    "Notes": "Identify symbols, crests, and coats of arms. Know lineages."
   },
   {
-    "Proficiency Name": "Musical Instrument",
-    "Category": "Priest",
-    "Slots": "1",
-    "Ability Check": "Dex / -1",
-    "Modifier": "-1",
+    "Proficiency Name": "Herbalism",
+    "Category": "Wizard",
+    "Slots": "2",
+    "Ability Check": "Int / -2",
+    "Modifier": "-2",
     "Source": "PHB",
-    "Notes": "Play one type of musical instrument. Must specialize."
+    "Notes": "Identify plants. Create healing salves and poultices."
   },
   {
-    "Proficiency Name": "Reading/Writing",
-    "Category": "Priest",
-    "Slots": "1",
-    "Ability Check": "Int / +1",
-    "Modifier": "+1",
-    "Source": "PHB",
-    "Notes": "Literate in ONE language you can speak. Reading and writing are a single purchase -- one slot covers both."
-  },
-  {
-    "Proficiency Name": "Disguise",
-    "Category": "Rogue",
-    "Slots": "1",
-    "Ability Check": "Cha / -1",
-    "Modifier": "-1",
-    "Source": "PHB",
-    "Notes": "Alter appearance with clothing, makeup, and props"
-  },
-  {
-    "Proficiency Name": "Forgery",
+    "Proficiency Name": "Hiding",
     "Category": "Rogue",
     "Slots": "1",
     "Ability Check": "Dex / -1",
     "Modifier": "-1",
+    "Source": "PHBR2",
+    "Notes": "Blend into shadows and backgrounds. Works with Move Silently."
+  },
+  {
+    "Proficiency Name": "Hunting",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "Wis / -1",
+    "Modifier": "-1",
     "Source": "PHB",
-    "Notes": "Create fake documents and signatures. Detect forgeries."
+    "Notes": "Track and hunt wild game. Provides food for several people."
+  },
+  {
+    "Proficiency Name": "Information Gathering",
+    "Category": "Rogue",
+    "Slots": "1",
+    "Ability Check": "Int / 0",
+    "Modifier": "0",
+    "Source": "PHBR2",
+    "Notes": "Find rumors, gossip, and information in settlements"
+  },
+  {
+    "Proficiency Name": "Intimidation",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "Str or Cha / 0",
+    "Modifier": "0",
+    "Source": "PHBR1",
+    "Notes": "Frighten or bully others into cooperation through threats"
   },
   {
     "Proficiency Name": "Juggling",
@@ -522,85 +396,130 @@
     "Notes": "Make impressive leaps. Add to jumping distance."
   },
   {
-    "Proficiency Name": "Tightrope Walking",
-    "Category": "Rogue",
+    "Proficiency Name": "Languages, Ancient",
+    "Category": "Wizard",
     "Slots": "1",
-    "Ability Check": "Dex / 0",
+    "Ability Check": "Int / 0",
     "Modifier": "0",
     "Source": "PHB",
-    "Notes": "Walk along narrow surfaces like ropes, ledges, beams"
+    "Notes": "One slot buys EITHER the ability to read and write the language OR to speak it -- the character's choice, not both."
   },
   {
-    "Proficiency Name": "Tumbling",
-    "Category": "Rogue",
+    "Proficiency Name": "Languages, Modern",
+    "Category": "General",
     "Slots": "1",
-    "Ability Check": "Dex / 0",
+    "Ability Check": "Int / 0",
     "Modifier": "0",
     "Source": "PHB",
-    "Notes": "Perform acrobatic maneuvers: rolls, flips, falls. Reduce falling damage."
+    "Notes": "Learn to SPEAK one modern language. Does not include reading or writing -- literacy requires the separate Reading/Writing proficiency."
   },
   {
-    "Proficiency Name": "Ventriloquism",
-    "Category": "Rogue",
+    "Proficiency Name": "Leatherworking",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Int / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Tan and treat leather. Create leather goods and armor."
+  },
+  {
+    "Proficiency Name": "Local History",
+    "Category": "Priest",
+    "Slots": "1",
+    "Ability Check": "Cha / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Know details about a specific region: rulers, legends, events, etc."
+  },
+  {
+    "Proficiency Name": "Mining",
+    "Category": "General",
+    "Slots": "2",
+    "Ability Check": "Wis / -3",
+    "Modifier": "-3",
+    "Source": "PHB",
+    "Notes": "Knowledge of mining techniques. Assess tunnel safety. Identify valuable ores."
+  },
+  {
+    "Proficiency Name": "Mountaineering",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "N/A",
+    "Modifier": "N/A",
+    "Source": "PHB",
+    "Notes": "Climb mountains safely. Better chance to succeed on difficult climbs."
+  },
+  {
+    "Proficiency Name": "Musical Instrument",
+    "Category": "Priest",
+    "Slots": "1",
+    "Ability Check": "Dex / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Play one type of musical instrument. Must specialize."
+  },
+  {
+    "Proficiency Name": "Navigation",
+    "Category": "Wizard",
     "Slots": "1",
     "Ability Check": "Int / -2",
     "Modifier": "-2",
     "Source": "PHB",
-    "Notes": "Make voice appear to come from somewhere else"
+    "Notes": "Plot course using instruments and charts. Reduce chance of getting lost."
   },
   {
-    "Proficiency Name": "Alertness",
-    "Category": "General",
-    "Slots": "1",
-    "Ability Check": "Wis / +1",
-    "Modifier": "+1",
-    "Source": "Complete Fighter",
-    "Notes": "+1 bonus to surprise rolls. Notice small details others miss."
-  },
-  {
-    "Proficiency Name": "Animal Lore",
-    "Category": "Warrior",
-    "Slots": "1",
-    "Ability Check": "Int / 0",
-    "Modifier": "0",
-    "Source": "PHB",
-    "Notes": "Identify species, habits, and abilities of animals"
-  },
-  {
-    "Proficiency Name": "Appraising",
+    "Proficiency Name": "Observation",
     "Category": "Rogue",
     "Slots": "1",
     "Ability Check": "Int / 0",
     "Modifier": "0",
-    "Source": "PHB",
-    "Notes": "Estimate value of common and precious items accurately"
+    "Source": "PHBR2",
+    "Notes": "Notice small details and remember them accurately"
   },
   {
-    "Proficiency Name": "Boating",
+    "Proficiency Name": "Persuasion",
     "Category": "General",
     "Slots": "1",
-    "Ability Check": "Wis / +1",
-    "Modifier": "+1",
-    "Source": "Complete Ranger",
-    "Notes": "Handle small boats, rafts, canoes in calm or rough water"
-  },
-  {
-    "Proficiency Name": "Hiding",
-    "Category": "Rogue",
-    "Slots": "1",
-    "Ability Check": "Dex / -1",
-    "Modifier": "-1",
-    "Source": "Complete Thief",
-    "Notes": "Blend into shadows and backgrounds. Works with Move Silently."
-  },
-  {
-    "Proficiency Name": "Intimidation",
-    "Category": "Warrior",
-    "Slots": "1",
-    "Ability Check": "Str or Cha / 0",
+    "Ability Check": "Cha / 0",
     "Modifier": "0",
-    "Source": "Complete Fighter",
-    "Notes": "Frighten or bully others into cooperation through threats"
+    "Source": "PHBR11",
+    "Notes": "Make a compelling argument to convince a subject NPC to see things your way, respond more favourably, or comply with a request. Requires at least 10 rounds of conversation, so the subject must be willing to talk in the first place; subjects whose attitudes are threatening or hostile are unaffected. A successful check modifies the subject's reaction by +2 in the character's favour (DMG Table 59). This bonus is NOT cumulative with any other reaction modifier, including Charisma. Each additional slot spent boosts the reaction modifier by a further +1 -- two slots give +3. Crossover groups: General"
+  },
+  {
+    "Proficiency Name": "Pottery",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Dex / -2",
+    "Modifier": "-2",
+    "Source": "PHB",
+    "Notes": "Create pottery and ceramic items"
+  },
+  {
+    "Proficiency Name": "Reading Lips",
+    "Category": "Rogue",
+    "Slots": "2",
+    "Ability Check": "Int / -2",
+    "Modifier": "-2",
+    "Source": "PHB",
+    "Notes": "Understand speech by watching lips. Must see face clearly."
+  },
+  {
+    "Proficiency Name": "Reading/Writing",
+    "Category": "Priest",
+    "Slots": "1",
+    "Ability Check": "Int / +1",
+    "Modifier": "+1",
+    "Source": "PHB",
+    "Notes": "Literate in ONE language you can speak. Reading and writing are a single purchase -- one slot covers both."
+  },
+  {
+    "Proficiency Name": "Religion",
+    "Category": "Priest",
+    "Slots": "1",
+    "Ability Check": "Wis / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Knowledge of mythology, rituals, and beliefs of a specific religion"
   },
   {
     "Proficiency Name": "Riding, Airborne",
@@ -621,31 +540,166 @@
     "Notes": "Ride horses and similar land mounts. Covers one type of animal."
   },
   {
+    "Proficiency Name": "Riding, Sea-based",
+    "Category": "General",
+    "Slots": "2",
+    "Ability Check": "Dex / -2",
+    "Modifier": "-2",
+    "Source": "PHBR11",
+    "Notes": "Handle a particular species of sea-based mount, specified when the proficiency is acquired; additional slots add other species. The rider may leap onto a surfaced mount and spur it in the same round with no check, and urge it over obstacles under 3 ft high and 5 ft across with no check. Greater jumps need a check, with DM-assigned modifiers; failure means the mount balks and a second check determines whether the rider stays on. Spurring to speed needs an initial check, after which the mount moves up to 2d6 feet per round beyond its normal rate, with checks every five rounds, for up to two turns; it then drops to two-thirds rate and can move no faster until rested a full hour. A failed later check drops it to half rate until rested. An attacked surfaced mount submerges unless it makes its morale roll; the rider may command it to re-surface with a successful check, retrying each round while physically able, and risks drowning meanwhile -- exerting himself, he can hold his breath for rounds equal to half his Constitution. Crossover groups: General"
+  },
+  {
+    "Proficiency Name": "Rope Use",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Dex / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Tie knots, lash objects, use rope and tackle effectively"
+  },
+  {
+    "Proficiency Name": "Running",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "Con / -6",
+    "Modifier": "-6",
+    "Source": "PHB",
+    "Notes": "Run at faster speed for extended periods without tiring"
+  },
+  {
+    "Proficiency Name": "Seamanship",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Dex / +1",
+    "Modifier": "+1",
+    "Source": "PHB",
+    "Notes": "Knowledge of sailing, rigging, and general ship operations"
+  },
+  {
+    "Proficiency Name": "Seamstress/Tailor",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Dex / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Sew, mend, and create clothing of quality"
+  },
+  {
+    "Proficiency Name": "Set Snares",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "Dex / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Create and set snares and traps to catch game or enemies"
+  },
+  {
+    "Proficiency Name": "Signaling",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Int / -2",
+    "Modifier": "-2",
+    "Source": "PHBR11",
+    "Notes": "Send messages over long distances by a designated preferred method -- smoke signals, whistling, waving flags, drums, reflecting mirrors. Each additional slot adds another method. Signaling is essentially a language: messages of reasonable complexity can be sent, and a practised signaller transmits about 10 words per combat round. The recipient must be able to see or hear it, have the proficiency, and know the same method; both parties check. If one fails the message is distorted and may be re-sent the following round. If both fail, or either rolls a natural 20, an incorrect message was sent and received and the message has the OPPOSITE of its intended meaning. Crossover groups: General"
+  },
+  {
+    "Proficiency Name": "Singing",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Cha / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Sing pleasingly and know many ballads and songs"
+  },
+  {
     "Proficiency Name": "Sound Analysis",
     "Category": "Wizard",
     "Slots": "1",
     "Ability Check": "Wis / -1",
     "Modifier": "-1",
-    "Source": "Complete Wizard",
+    "Source": "PHBR4",
     "Notes": "Identify sounds and their sources. Estimate distances by sound."
   },
   {
-    "Proficiency Name": "Information Gathering",
-    "Category": "Rogue",
+    "Proficiency Name": "Spellcraft",
+    "Category": "Wizard",
     "Slots": "1",
-    "Ability Check": "Int / 0",
-    "Modifier": "0",
-    "Source": "Complete Thief",
-    "Notes": "Find rumors, gossip, and information in settlements"
+    "Ability Check": "Int / -2",
+    "Modifier": "-2",
+    "Source": "PHB",
+    "Notes": "Identify spells being cast. Recognize magical items."
   },
   {
-    "Proficiency Name": "Observation",
-    "Category": "Rogue",
+    "Proficiency Name": "Spelunking",
+    "Category": "Warrior",
     "Slots": "1",
+    "Ability Check": "Int / -2",
+    "Modifier": "-2",
+    "Source": "PHBR11",
+    "Notes": "A thorough understanding of caves and underground passages -- their geology, formation and hazards -- and what equipment a spelunking party should carry. A successful check can determine from cracks in the walls, pebbles on the floor, the smell of the air and so on whether a cave-in, flash flood or other natural hazard is likely; this works only on natural formations and is negated where they have been shored up, bricked in or otherwise tampered with. It can also estimate the time needed to excavate a rubble-blocked passage, and while exploring extensive caverns it reduces the chance of getting hopelessly lost among unmarked passages and sinkholes to a maximum of 30%, assuming good lighting (DMG Tables 81-82). Crossover groups: Warrior"
+  },
+  {
+    "Proficiency Name": "Stonemasonry",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Str / -2",
+    "Modifier": "-2",
+    "Source": "PHB",
+    "Notes": "Shape and set stone. Create stone structures. Requires tools."
+  },
+  {
+    "Proficiency Name": "Survival",
+    "Category": "Warrior",
+    "Slots": "2",
     "Ability Check": "Int / 0",
     "Modifier": "0",
-    "Source": "Complete Thief",
-    "Notes": "Notice small details and remember them accurately"
+    "Source": "PHB",
+    "Notes": "Find food, water, shelter in wilderness. Must specialize by terrain type."
+  },
+  {
+    "Proficiency Name": "Swimming",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Str / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Swim with ease. Can swim half movement rate without checks."
+  },
+  {
+    "Proficiency Name": "Tightrope Walking",
+    "Category": "Rogue",
+    "Slots": "1",
+    "Ability Check": "Dex / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Walk along narrow surfaces like ropes, ledges, beams"
+  },
+  {
+    "Proficiency Name": "Tracking",
+    "Category": "Warrior",
+    "Slots": "2",
+    "Ability Check": "Wis / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Follow tracks and trail of creatures. Identify tracks."
+  },
+  {
+    "Proficiency Name": "Trail Marking",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "Wis / 0",
+    "Modifier": "0",
+    "Source": "PHBR11",
+    "Notes": "Mark a trail through any wilderness area by notching trees, scattering pebbles, piling stones and clipping weeds. Providing he moves at two-thirds his normal movement rate, the character can mark a continuous trail as long as he likes -- but the longer the trail, the less likely he is to follow it back. Each successful check lets a backtracking character follow his own trail for a distance in miles equal to his level; a failed check loses the trail. A 3rd level character who marked a 12-mile trail follows three miles per success, and on his third check fails and loses it, having covered six miles. Tracking is not needed to use this proficiency, but a ranger who loses his marked trail may try to follow it with tracking, as may any other character with tracking. A marked trail lasts unless obscured by precipitation, forest fire or the passage of time -- an undisturbed forest trail should last weeks, an arctic trail less than a day in heavy precipitation. Crossover groups: Warrior"
+  },
+  {
+    "Proficiency Name": "Trail Signs",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "Int / -1",
+    "Modifier": "-1",
+    "Source": "PHBR11",
+    "Notes": "Read symbolic messages made from arrangements of stones or other physical objects. The character designates the method preferred by his family, tribe or culture -- piling rocks, stacking branches, building snow sculptures. On a successful check he understands the meaning of such a message; the message is meaningless to characters without the proficiency. A character whose own method differs from the one encountered may try to read it at half the normal chance. The proficiency can also identify the cultural group or tribe that left a specific trail sign. Crossover groups: Warrior, Rogue"
   },
   {
     "Proficiency Name": "Trailing",
@@ -653,7 +707,70 @@
     "Slots": "1",
     "Ability Check": "Dex / 0",
     "Modifier": "0",
-    "Source": "Complete Thief",
+    "Source": "PHBR2",
     "Notes": "Follow someone in urban areas without being noticed"
+  },
+  {
+    "Proficiency Name": "Tumbling",
+    "Category": "Rogue",
+    "Slots": "1",
+    "Ability Check": "Dex / 0",
+    "Modifier": "0",
+    "Source": "PHB",
+    "Notes": "Perform acrobatic maneuvers: rolls, flips, falls. Reduce falling damage."
+  },
+  {
+    "Proficiency Name": "Ventriloquism",
+    "Category": "Rogue",
+    "Slots": "1",
+    "Ability Check": "Int / -2",
+    "Modifier": "-2",
+    "Source": "PHB",
+    "Notes": "Make voice appear to come from somewhere else"
+  },
+  {
+    "Proficiency Name": "Veterinary Healing",
+    "Category": "Priest",
+    "Slots": "1",
+    "Ability Check": "Wis / -3",
+    "Modifier": "-3",
+    "Source": "PHBR11",
+    "Notes": "Heal all types of normal animals, following the procedures in the healing proficiency: restores 1-3 hit points if used within one round of wounding, once per creature per day; continued care restores 1 hit point per day during non-strenuous travel for up to 6 creatures; gives +2 to save vs. poison if the creature is treated for 5 rounds within a round after poisoning; and diagnoses disease, identifies magical origins, and makes natural diseases take their mildest form and shortest duration. Supernatural creatures such as skeletons or ghouls, and creatures from another plane such as aerial servants or xorn, cannot be treated. NOT cumulative with the healing proficiency -- whichever is used first takes precedence. The veterinary proficiency can be used on humans, demihumans and humanoids at half the normal chance of success. Crossover groups: Priest"
+  },
+  {
+    "Proficiency Name": "Weaponsmithing",
+    "Category": "Warrior",
+    "Slots": "3",
+    "Ability Check": "Int / -3",
+    "Modifier": "-3",
+    "Source": "PHB",
+    "Notes": "Make and repair weapons. Must specialize by weapon type. Requires forge."
+  },
+  {
+    "Proficiency Name": "Weaponsmithing, Crude",
+    "Category": "Warrior",
+    "Slots": "1",
+    "Ability Check": "Wis / -3",
+    "Modifier": "-3",
+    "Source": "PHBR11",
+    "Notes": "Make simple weapons out of natural materials -- stone, wood, bone, sinew, reed and the like -- most often found in those from a primitive, tribal or savage background. The fashioner must be proficient in the weapon he is making. The check is against Wisdom at -3; any warrior, or any character with the hunting proficiency, has a +3 bonus. On a success the weapon can be used normally. On a failure it is so badly flawed as to be useless. On a roll of 20 it seems sound but breaks upon first use. On a roll of 1 it has no chance of breaking except against a harder material. Construction times: arrows 7/day; battle axe 4 days; hand axe 1 day; throwing axe 6 days; long bow 15 days (plus 1 year to season the wood); short bow 12 days; dagger 2 days; dart 3/day; javelin 1 day; knife 2 days; quarterstaff 1 day; spear 2 days; staff sling 3 days; warhammer 5 days. OPTIONAL: crude weapons check for breaking on inflicting damage -- roll 1d6, bone breaks on 1-2, stone on 1. Crossover groups: Warrior"
+  },
+  {
+    "Proficiency Name": "Weather Sense",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Wis / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Predict weather accurately for next 6-12 hours"
+  },
+  {
+    "Proficiency Name": "Weaving",
+    "Category": "General",
+    "Slots": "1",
+    "Ability Check": "Int / -1",
+    "Modifier": "-1",
+    "Source": "PHB",
+    "Notes": "Create cloth, rugs, tapestries on a loom"
   }
 ]
