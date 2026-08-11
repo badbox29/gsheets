@@ -2272,7 +2272,7 @@ function renderRangerStealth(root) {
         'noise (PHB Ch.3, Ranger).</div>';
       noteEl.style.color = '';
     } else {
-     // THREE reasons stealth can be unblocked, and they are not interchangeable.
+      // THREE reasons stealth can be unblocked, and they are not interchangeable.
       // The PHB wording below is only true when the CRH supplement rule is OFF;
       // with it on nothing is ever blocked, so saying "studded leather or
       // lighter" about a man in chain mail is simply false.
