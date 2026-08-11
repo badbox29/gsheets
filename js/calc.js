@@ -2240,19 +2240,26 @@ function renderRangerStealth(root) {
   val(root, 'ranger_move_nonnatural',  s.blocked ? DASH : s.moveNonNatural + '%');
 
   const sgn = v => (v >= 0 ? '+' : '') + v;
-  const setTip = (field, base, racial, dexA, halved) => {
+  // Takes the INDEX (0 = hide, 1 = move silently) rather than the individual
+  // figures, so every term getRangerStealth adds is named here. A breakdown
+  // that does not sum to the number displayed is worse than no breakdown.
+  const setTip = (field, i, halved) => {
     const el = root.querySelector('[data-field="' + field + '"]');
     if (!el) return;
     if (s.blocked) { el.title = 'Not possible in this armor.'; return; }
-    let t = 'Base: ' + base + '% (Table 18, ranger level ' + s.level + '), Race: ' +
-            sgn(racial) + ', DEX: ' + sgn(dexA);
+    let t = 'Base: ' + s.base[i] + '% (Table 18, ranger level ' + s.level + '), Race: ' +
+            sgn(s.racial[i]) + ', DEX: ' + sgn(s.dex[i]);
+    if (s.kit && s.kit[i]) t += ', Kit (' + (s.kitName || 'kit') + '): ' + sgn(s.kit[i]);
+    if (s.crhArmor && s.armorMod && s.armorMod[i]) {
+      t += ', Armor (' + s.armorName + ', CRH Table 11): ' + sgn(s.armorMod[i]);
+    }
     if (halved) t += ', halved for non-natural surroundings';
     el.title = t;
   };
-  setTip('ranger_hide',            s.base[0], s.racial[0], s.dex[0], false);
-  setTip('ranger_movesilently',    s.base[1], s.racial[1], s.dex[1], false);
-  setTip('ranger_hide_nonnatural', s.base[0], s.racial[0], s.dex[0], true);
-  setTip('ranger_move_nonnatural', s.base[1], s.racial[1], s.dex[1], true);
+  setTip('ranger_hide',            0, false);
+  setTip('ranger_movesilently',    1, false);
+  setTip('ranger_hide_nonnatural', 0, true);
+  setTip('ranger_move_nonnatural', 1, true);
 
   const noteEl = section.querySelector('.ranger-stealth-note');
   if (noteEl) {
@@ -2265,8 +2272,19 @@ function renderRangerStealth(root) {
         'noise (PHB Ch.3, Ranger).</div>';
       noteEl.style.color = '';
     } else {
+     // THREE reasons stealth can be unblocked, and they are not interchangeable.
+      // The PHB wording below is only true when the CRH supplement rule is OFF;
+      // with it on nothing is ever blocked, so saying "studded leather or
+      // lighter" about a man in chain mail is simply false.
       let why = 'Studded leather or lighter, so stealth is available.';
-      if (s.armorKey === 'elven_chain') {
+      if (s.crhArmor) {
+        const mod = (s.armorMod && (s.armorMod[0] || s.armorMod[1]))
+          ? ' It carries ' + sgn(s.armorMod[0]) + '% to hide in shadows and ' +
+            sgn(s.armorMod[1]) + '% to move silently.'
+          : ' It carries no adjustment.';
+        why = 'Using the Complete Ranger\u2019s Handbook armor table (Tables 11 and 13), so ' +
+              'armor adjusts the chance rather than removing it.' + mod;
+      } else if (s.armorKey === 'elven_chain') {
         why = 'Elven chain weighs less than studded leather and is described as lighter and ' +
               'quieter, so it does not trip the ranger\u2019s armor restriction.';
       }
