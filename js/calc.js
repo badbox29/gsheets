@@ -2663,8 +2663,17 @@ function populateKitDropdown(root) {
     return;
   }
   
-  // Populate dropdown with kits
-  availableKits.forEach(kit => {
+  // Populate dropdown with kits, ALPHABETICALLY. getKitsForClass returns
+  // Object.values(), which is insertion order -- so the dropdown was showing
+  // whatever order the kits happen to sit in kits.js. That looked alphabetical
+  // only because the original entries were typed that way; the ranger block is
+  // now in the Complete Ranger's Handbook's own order with the two DRAGON #234
+  // crypt kits appended, and they landed at the bottom.
+  //
+  // Sorted HERE rather than by reordering the data, so file order stays a
+  // transcription concern (keep a book's kits in the book's order) and display
+  // order stays a UI concern. Appending a kit can no longer disturb the list.
+  availableKits.slice().sort((a, b) => a.name.localeCompare(b.name)).forEach(kit => {
     const option = document.createElement('option');
     option.value = kit.name.toLowerCase().replace(/\s+/g, '');
     option.textContent = kit.name;
