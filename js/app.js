@@ -7893,6 +7893,7 @@ function bindSheet(root, tab){
   renderRevivals(root);
   renderThiefSkills(root);
   if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
+  if (typeof renderAnimalEmpathy === 'function') renderAnimalEmpathy(root);
   if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
   if (typeof renderDruidRole === 'function') renderDruidRole(root);
   // Vision & Light (PHB Ch.13). bindSheet ONLY -- deliberately NOT added to
@@ -7924,6 +7925,7 @@ function bindSheet(root, tab){
     const f = (e.target && e.target.getAttribute) ? e.target.getAttribute('data-field') : null;
     if (f && rangerStealthFields.test(f)) {
       if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
+      if (typeof renderAnimalEmpathy === 'function') renderAnimalEmpathy(root);
       if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
     }
   });
@@ -7931,6 +7933,7 @@ function bindSheet(root, tab){
     const f = (e.target && e.target.getAttribute) ? e.target.getAttribute('data-field') : null;
     if (f && rangerStealthFields.test(f)) {
       if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
+      if (typeof renderAnimalEmpathy === 'function') renderAnimalEmpathy(root);
       if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
     }
   });
