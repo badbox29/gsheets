@@ -875,7 +875,15 @@ const SHEET_HTML = `
           </div>
           <div class="ranger-stealth-note" style="display:none;margin-top:10px;padding:8px;background:var(--glass);border-radius:var(--radius);font-size:12px;line-height:1.4;"></div>
           <div class="ranger-stealth-dormant" style="display:none;margin-top:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
-        </section>
+	        </section>
+
+	        <!-- Animal Empathy (PHBR11 Ch.2, Tables 30 and 31). Sits next to
+	             Ranger Stealth because both are ranger-only and both are driven
+	             by getRangerComponent. Body is rendered by renderAnimalEmpathy. -->
+	        <section class="section animal-empathy-display" style="display:none;">
+	          <h3>Animal Empathy</h3>
+	          <div class="animal-empathy-body"></div>
+	        </section>
 
         <!-- Thief Abilities -->
         <section class="section thief-abilities-display">
