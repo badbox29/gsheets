@@ -10,7 +10,7 @@
 // - hindrances:   Restrictions and penalties (prose)
 //
 // ---------------------------------------------------------------------------
-// PROVENANCE -- read this before trusting any number in this file.
+// PROVENANCE -- read this before trusting any number in this file..
 // ---------------------------------------------------------------------------
 //
 // source.status is one of three values:
