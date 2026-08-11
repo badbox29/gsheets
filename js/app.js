@@ -9213,6 +9213,7 @@ function openKvSettingsModal(root) {
   qs(root, '.kv-token-status').textContent      = '';
   updateKvSyncStatus(root, cfg);
   renderOptionalRules(root);
+  renderSupplements(root);
   // Bound once (guarded internally), reset every open so the modal always
   // lands on Sync Settings rather than wherever it was last left.
   bindSettingsTabs(root);
@@ -9306,6 +9307,123 @@ function renderOptionalRules(root) {
 
 // One checkbox row. Split out of renderOptionalRules so the grouping loop above
 // stays readable.
+// ===== Supplements =====
+// One collapsed row per book, in publication order, expanding to the two
+// toggles. Deliberately NOT folded into renderOptionalRules: that function
+// renders a flat list of checkboxes from OPTIONAL_RULES, and a book is a
+// two-level thing -- a row that opens, containing toggles that own several
+// rules each.
+function renderSupplements(root) {
+  const listEl = root.querySelector('.supplements-list');
+  if (!listEl || typeof SUPPLEMENTS === 'undefined') return;
+  listEl.innerHTML = '';
+
+  let expanded = {};
+  try { expanded = JSON.parse(localStorage.getItem(SUPPLEMENTS_EXPAND_KEY) || '{}'); }
+  catch (e) { expanded = {}; }
+
+  getSupplementKeys().forEach(bookKey => {
+    const book = SUPPLEMENTS[bookKey];
+    const active = ['core', 'optional'].some(b => isSupplementActive(bookKey, b));
+    // A book with anything switched on is ALWAYS open, whatever the saved
+    // state. A live supplement collapsed out of sight is how a table loses
+    // track of which rules it is playing.
+    const open = active || !!expanded[bookKey];
+
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'background:var(--glass);border-radius:4px;margin-bottom:6px;';
+
+    const head = document.createElement('div');
+    head.style.cssText = 'display:flex;align-items:center;gap:8px;padding:8px;cursor:pointer;';
+    head.innerHTML =
+      '<span class="supp-caret" style="font-size:10px;color:var(--muted);width:10px;">' +
+        (open ? '\u25BC' : '\u25B6') + '</span>' +
+      '<span style="font-size:12px;font-weight:600;">' + escapeHtml(book.code) + '</span>' +
+      '<span style="font-size:12px;color:var(--muted);flex:1;">' + escapeHtml(book.title) + '</span>' +
+      (active ? '<span style="font-size:10px;color:var(--accent-light);">\u25CF active</span>' : '');
+
+    const body = document.createElement('div');
+    body.style.cssText = 'padding:0 8px 8px 26px;' + (open ? '' : 'display:none;');
+
+    const BANDS = {
+      core:     { label: 'Apply ' + book.code + ' core rules',
+                  hint:  'Rules this book states as its own. These change how numbers are ' +
+                         'calculated. Unticked is the PHB.' },
+      optional: { label: 'Apply ' + book.code + ' optional rules',
+                  hint:  'Experiments the book itself marks optional. These SUPPRESS ' +
+                         'warnings so your table can build them \u2014 they enforce nothing.' }
+    };
+
+    ['core', 'optional'].forEach(band => {
+      const grp = book[band];
+      if (!grp) return;
+      const meta = BANDS[band];
+
+      const row = document.createElement('label');
+      row.style.cssText = 'display:flex;align-items:flex-start;gap:8px;cursor:pointer;margin:0 0 8px;';
+
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = isSupplementActive(bookKey, band);
+      cb.style.cssText = 'width:16px;height:16px;cursor:pointer;flex-shrink:0;margin-top:1px;';
+
+      const changes = (grp.changes || []).map(c =>
+        '<li style="margin-top:3px;">' + escapeHtml(c.text) +
+        (c.caveat ? '<div style="color:var(--warning, #e0a34a);margin-top:2px;">' +
+                    escapeHtml(c.caveat) + '</div>' : '') + '</li>').join('');
+
+      const text = document.createElement('div');
+      text.style.flex = '1';
+      text.innerHTML =
+        '<div style="font-size:12px;">' + meta.label + '</div>' +
+        '<div style="font-size:10px;color:var(--muted);margin-top:2px;">' + meta.hint + '</div>' +
+        (changes ? '<ul style="font-size:10px;color:var(--muted);margin:4px 0 0;' +
+                   'padding-left:14px;">' + changes + '</ul>' : '');
+
+      row.appendChild(cb);
+      row.appendChild(text);
+      body.appendChild(row);
+
+      cb.addEventListener('click', e => e.stopPropagation());
+      cb.addEventListener('change', () => {
+        setSupplement(bookKey, band, cb.checked);
+        renderSupplements(root);          // repaint: the active marker may change
+        recalcAllOpenSheets();
+      });
+    });
+
+    head.addEventListener('click', () => {
+      const nowOpen = body.style.display === 'none';
+      body.style.display = nowOpen ? '' : 'none';
+      const caret = head.querySelector('.supp-caret');
+      if (caret) caret.textContent = nowOpen ? '\u25BC' : '\u25B6';
+      let saved = {};
+      try { saved = JSON.parse(localStorage.getItem(SUPPLEMENTS_EXPAND_KEY) || '{}'); }
+      catch (e) { saved = {}; }
+      saved[bookKey] = nowOpen;
+      localStorage.setItem(SUPPLEMENTS_EXPAND_KEY, JSON.stringify(saved));
+    });
+
+    wrap.appendChild(head);
+    wrap.appendChild(body);
+    listEl.appendChild(wrap);
+  });
+}
+
+// Shared by the optional-rule checkboxes and the supplement toggles, which used
+// to carry two copies of this list. Both change rules that move movement,
+// combat, stealth and the build advisories.
+function recalcAllOpenSheets() {
+  document.querySelectorAll('.sheet-container').forEach(sheet => {
+    if (typeof recalculateAll === 'function') recalculateAll(sheet);
+    // renderArmorRestrictions and renderHenchmanLimits ARE inside
+    // recalculateAll and need no line here. renderClassGroupValidation is not,
+    // so it still does.
+    if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(sheet);
+    if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(sheet);
+  });
+}
+
 function renderOneOptionalRule(listEl, key) {
   {
     const rule = OPTIONAL_RULES[key];
