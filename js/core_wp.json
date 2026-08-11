@@ -14,9 +14,8 @@
     "Group": "Firearm",
     "Cost": "500 gp",
     "Weight": "10 lb",
-    "Range": "50/150/210",
-    "Notes": "Optional rule - Renaissance weapons",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": "Optional rule - Renaissance weapons"
   },
   {
     "Weapon Name": "Bardiche",
@@ -33,7 +32,8 @@
     "Group": "Polearm",
     "Cost": "7 gp",
     "Weight": "12 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Battle Axe",
@@ -50,7 +50,8 @@
     "Group": "Axe",
     "Cost": "5 gp",
     "Weight": "7 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Bec de Corbin",
@@ -67,7 +68,8 @@
     "Group": "Polearm",
     "Cost": "8 gp",
     "Weight": "10 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Belaying Pin",
@@ -102,7 +104,8 @@
     "Group": "Polearm",
     "Cost": "7 gp",
     "Weight": "15 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Blowgun",
@@ -119,8 +122,8 @@
     "Group": "Blowgun",
     "Cost": "5 gp",
     "Weight": "2 lb",
-    "Range": "10/20/30",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Blunderbuss",
@@ -137,9 +140,8 @@
     "Group": "Firearm",
     "Cost": "500 gp",
     "Weight": "8 lb",
-    "Range": "10/20/30",
-    "Notes": "Optional rule - Renaissance weapons, cone effect",
-    "Source": "Unattributed"
+    "Source": "Unattributed",
+    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Optional rule - Renaissance weapons, cone effect"
   },
   {
     "Weapon Name": "Bo Stick",
@@ -156,8 +158,8 @@
     "Group": "Staff",
     "Cost": "1 sp",
     "Weight": "4 lb",
-    "Notes": "Oriental weapon",
-    "Source": "Unattributed"
+    "Source": "Unattributed",
+    "Notes": "Oriental weapon"
   },
   {
     "Weapon Name": "Bola",
@@ -174,9 +176,8 @@
     "Group": "Bola",
     "Cost": "5 sp",
     "Weight": "2 lb",
-    "Range": "10/20/30",
-    "Notes": "Entangles on hit",
-    "Source": "Unattributed"
+    "Source": "Unattributed",
+    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Entangles on hit"
   },
   {
     "Weapon Name": "Club",
@@ -193,7 +194,8 @@
     "Group": "Club",
     "Cost": "-",
     "Weight": "3 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Composite Long Bow",
@@ -210,9 +212,8 @@
     "Group": "Bow",
     "Cost": "100 gp",
     "Weight": "3 lb",
-    "Range": "60/120/210",
-    "Notes": "Requires STR 18 for +2 bonus",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": "Requires STR 18 for +2 bonus"
   },
   {
     "Weapon Name": "Composite Short Bow",
@@ -229,9 +230,8 @@
     "Group": "Bow",
     "Cost": "75 gp",
     "Weight": "2 lb",
-    "Range": "50/100/180",
-    "Notes": "Requires STR 6 for +1 bonus",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": "Requires STR 6 for +1 bonus"
   },
   {
     "Weapon Name": "Cutlass",
@@ -266,8 +266,8 @@
     "Group": "Dagger",
     "Cost": "2 gp",
     "Weight": "1 lb",
-    "Range": "10/20/30",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Dart",
@@ -284,8 +284,8 @@
     "Group": "Dart",
     "Cost": "5 sp",
     "Weight": "0.5 lb",
-    "Range": "10/20/40",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Dirk",
@@ -302,7 +302,8 @@
     "Group": "Dagger",
     "Cost": "3 gp",
     "Weight": "1 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Falchion",
@@ -319,7 +320,8 @@
     "Group": "Sword",
     "Cost": "18 gp",
     "Weight": "7 lb",
-    "Source": "Unattributed"
+    "Source": "Unattributed",
+    "Notes": ""
   },
   {
     "Weapon Name": "Fauchard",
@@ -336,7 +338,8 @@
     "Group": "Polearm",
     "Cost": "5 gp",
     "Weight": "7 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Fauchard-Fork",
@@ -353,7 +356,8 @@
     "Group": "Polearm",
     "Cost": "8 gp",
     "Weight": "9 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Flail, Footman's",
@@ -370,7 +374,8 @@
     "Group": "Flail",
     "Cost": "15 gp",
     "Weight": "15 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Flail, Grain",
@@ -405,7 +410,8 @@
     "Group": "Flail",
     "Cost": "8 gp",
     "Weight": "5 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Fork, Military",
@@ -422,7 +428,8 @@
     "Group": "Polearm",
     "Cost": "5 gp",
     "Weight": "7 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Gaff/Hook, Attached",
@@ -475,7 +482,8 @@
     "Group": "Polearm",
     "Cost": "6 gp",
     "Weight": "8 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Glaive-Guisarme",
@@ -492,7 +500,8 @@
     "Group": "Polearm",
     "Cost": "10 gp",
     "Weight": "10 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Guisarme",
@@ -509,7 +518,8 @@
     "Group": "Polearm",
     "Cost": "5 gp",
     "Weight": "8 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Guisarme-Voulge",
@@ -526,7 +536,8 @@
     "Group": "Polearm",
     "Cost": "8 gp",
     "Weight": "15 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Halberd",
@@ -543,7 +554,8 @@
     "Group": "Polearm",
     "Cost": "10 gp",
     "Weight": "15 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Hammer",
@@ -560,8 +572,8 @@
     "Group": "Hammer",
     "Cost": "1 gp",
     "Weight": "2 lb",
-    "Range": "10/20/30",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Hand Axe",
@@ -578,7 +590,8 @@
     "Group": "Axe",
     "Cost": "1 gp",
     "Weight": "5 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Hand Crossbow",
@@ -595,8 +608,8 @@
     "Group": "Crossbow",
     "Cost": "300 gp",
     "Weight": "3 lb",
-    "Range": "20/40/60",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Harpoon",
@@ -613,7 +626,8 @@
     "Group": "Spear",
     "Cost": "20 gp",
     "Weight": "6 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Hatchet",
@@ -648,8 +662,8 @@
     "Group": "Crossbow",
     "Cost": "50 gp",
     "Weight": "14 lb",
-    "Range": "80/160/240",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Hook Fauchard",
@@ -666,7 +680,8 @@
     "Group": "Polearm",
     "Cost": "10 gp",
     "Weight": "8 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Ice Pick",
@@ -701,8 +716,8 @@
     "Group": "Spear",
     "Cost": "5 sp",
     "Weight": "2 lb",
-    "Range": "20/40/60",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Kama",
@@ -719,8 +734,8 @@
     "Group": "Dagger",
     "Cost": "2 gp",
     "Weight": "2 lb",
-    "Notes": "Oriental weapon",
-    "Source": "Unattributed"
+    "Source": "Unattributed",
+    "Notes": "Oriental weapon"
   },
   {
     "Weapon Name": "Katana",
@@ -737,8 +752,8 @@
     "Group": "Sword",
     "Cost": "200 gp",
     "Weight": "6 lb",
-    "Notes": "Oriental weapon",
-    "Source": "Unattributed"
+    "Source": "Unattributed",
+    "Notes": "Oriental weapon"
   },
   {
     "Weapon Name": "Knife",
@@ -755,8 +770,8 @@
     "Group": "Dagger",
     "Cost": "5 sp",
     "Weight": "0.5 lb",
-    "Range": "10/20/30",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Knife, Harness",
@@ -791,8 +806,8 @@
     "Group": "Lance",
     "Cost": "15 gp",
     "Weight": "15 lb",
-    "Notes": "Mounted only",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": "Mounted only"
   },
   {
     "Weapon Name": "Lance, Jousting",
@@ -809,8 +824,8 @@
     "Group": "Lance",
     "Cost": "20 gp",
     "Weight": "20 lb",
-    "Notes": "Mounted only, tournament use",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": "Mounted only, tournament use"
   },
   {
     "Weapon Name": "Lance, Light",
@@ -827,8 +842,8 @@
     "Group": "Lance",
     "Cost": "6 gp",
     "Weight": "5 lb",
-    "Notes": "Mounted only",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": "Mounted only"
   },
   {
     "Weapon Name": "Lance, Medium",
@@ -845,7 +860,8 @@
     "Group": "Lance",
     "Cost": "10 gp",
     "Weight": "10 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Light Crossbow",
@@ -862,8 +878,8 @@
     "Group": "Crossbow",
     "Cost": "35 gp",
     "Weight": "7 lb",
-    "Range": "60/120/180",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Long Bow",
@@ -880,8 +896,8 @@
     "Group": "Bow",
     "Cost": "75 gp",
     "Weight": "3 lb",
-    "Range": "70/140/210",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Lucern Hammer",
@@ -898,7 +914,8 @@
     "Group": "Polearm",
     "Cost": "7 gp",
     "Weight": "15 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Mace, Footman's",
@@ -915,7 +932,8 @@
     "Group": "Mace",
     "Cost": "8 gp",
     "Weight": "10 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Mace, Horseman's",
@@ -932,7 +950,8 @@
     "Group": "Mace",
     "Cost": "5 gp",
     "Weight": "6 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Machete",
@@ -985,7 +1004,8 @@
     "Group": "Polearm",
     "Cost": "30 gp",
     "Weight": "8 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Maul",
@@ -1002,7 +1022,8 @@
     "Group": "Hammer",
     "Cost": "10 gp",
     "Weight": "16 lb",
-    "Source": "Unattributed"
+    "Source": "Unattributed",
+    "Notes": ""
   },
   {
     "Weapon Name": "Morning Star",
@@ -1019,7 +1040,8 @@
     "Group": "Mace",
     "Cost": "10 gp",
     "Weight": "12 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Net",
@@ -1036,9 +1058,8 @@
     "Group": "Net",
     "Cost": "5 gp",
     "Weight": "10 lb",
-    "Range": "10/20/30",
-    "Notes": "Entangles, no damage",
-    "Source": "Unattributed"
+    "Source": "Unattributed",
+    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Entangles, no damage"
   },
   {
     "Weapon Name": "Nunchaku",
@@ -1055,8 +1076,8 @@
     "Group": "Flail",
     "Cost": "3 gp",
     "Weight": "2 lb",
-    "Notes": "Oriental weapon",
-    "Source": "Unattributed"
+    "Source": "Unattributed",
+    "Notes": "Oriental weapon"
   },
   {
     "Weapon Name": "Partisan",
@@ -1073,7 +1094,8 @@
     "Group": "Polearm",
     "Cost": "10 gp",
     "Weight": "8 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Pick, Footman's",
@@ -1090,7 +1112,8 @@
     "Group": "Pick",
     "Cost": "8 gp",
     "Weight": "6 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Pick, Horseman's",
@@ -1107,7 +1130,8 @@
     "Group": "Pick",
     "Cost": "7 gp",
     "Weight": "4 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Pike, Awl",
@@ -1124,7 +1148,8 @@
     "Group": "Polearm",
     "Cost": "5 gp",
     "Weight": "8 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Pilum",
@@ -1141,8 +1166,8 @@
     "Group": "Spear",
     "Cost": "4 gp",
     "Weight": "4 lb",
-    "Range": "10/20/30",
-    "Source": "Unattributed"
+    "Source": "Unattributed",
+    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source."
   },
   {
     "Weapon Name": "Quarterstaff",
@@ -1159,7 +1184,8 @@
     "Group": "Staff",
     "Cost": "-",
     "Weight": "4 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Ranseur",
@@ -1176,7 +1202,8 @@
     "Group": "Polearm",
     "Cost": "6 gp",
     "Weight": "7 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Rapier",
@@ -1247,8 +1274,8 @@
     "Group": "Dagger",
     "Cost": "1 gp",
     "Weight": "1 lb",
-    "Notes": "Oriental weapon, disarm bonus",
-    "Source": "Unattributed"
+    "Source": "Unattributed",
+    "Notes": "Oriental weapon, disarm bonus"
   },
   {
     "Weapon Name": "Scimitar",
@@ -1265,7 +1292,8 @@
     "Group": "Sword",
     "Cost": "15 gp",
     "Weight": "4 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Scourge",
@@ -1282,7 +1310,8 @@
     "Group": "Flail",
     "Cost": "1 gp",
     "Weight": "2 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Scythe",
@@ -1299,8 +1328,8 @@
     "Group": "Polearm",
     "Cost": "5 gp",
     "Weight": "8 lb",
-    "Notes": "A curved blade on a 5-ft wooden pole. This farm tool cuts grain at harvest and doubles as a weapon, wielded by holding the short wooden bars on the end opposite the blade. ALWAYS used two-handed. Improvised weapon",
-    "Source": "PHBR11"
+    "Source": "PHBR11",
+    "Notes": "A curved blade on a 5-ft wooden pole. This farm tool cuts grain at harvest and doubles as a weapon, wielded by holding the short wooden bars on the end opposite the blade. ALWAYS used two-handed. Improvised weapon"
   },
   {
     "Weapon Name": "Short Bow",
@@ -1317,8 +1346,8 @@
     "Group": "Bow",
     "Cost": "30 gp",
     "Weight": "2 lb",
-    "Range": "50/100/150",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Shuriken",
@@ -1335,9 +1364,8 @@
     "Group": "Dart",
     "Cost": "3 sp",
     "Weight": "0.1 lb",
-    "Range": "10/20/30",
-    "Notes": "Oriental weapon",
-    "Source": "Unattributed"
+    "Source": "Unattributed",
+    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Oriental weapon"
   },
   {
     "Weapon Name": "Sickle",
@@ -1354,7 +1382,8 @@
     "Group": "Dagger",
     "Cost": "6 sp",
     "Weight": "3 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Sling",
@@ -1371,8 +1400,8 @@
     "Group": "Sling",
     "Cost": "5 cp",
     "Weight": "0 lb",
-    "Range": "50/100/200",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Snow Blade (Iuak)",
@@ -1407,8 +1436,8 @@
     "Group": "Spear",
     "Cost": "8 sp",
     "Weight": "5 lb",
-    "Range": "10/20/30",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Spetum",
@@ -1425,7 +1454,8 @@
     "Group": "Polearm",
     "Cost": "5 gp",
     "Weight": "7 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Staff Sling",
@@ -1442,8 +1472,8 @@
     "Group": "Sling",
     "Cost": "2 sp",
     "Weight": "2 lb",
-    "Range": "30-60/90",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Stiletto",
@@ -1460,8 +1490,8 @@
     "Group": "Dagger",
     "Cost": "5 sp",
     "Weight": "0.5 lb",
-    "Notes": "A narrow-bladed knife with a sharpened point only. Non-magical +2 bonus against ring mail, chain mail and plate mail. Knife proficiency covers the stiletto. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. Values here are the CRH reprint; the original PHBR1 entry has NOT been checked against them.",
-    "Source": "PHBR1"
+    "Source": "PHBR1",
+    "Notes": "A narrow-bladed knife with a sharpened point only. Non-magical +2 bonus against ring mail, chain mail and plate mail. Knife proficiency covers the stiletto. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. Values here are the CRH reprint; the original PHBR1 entry has NOT been checked against them."
   },
   {
     "Weapon Name": "Sword, Bastard",
@@ -1478,8 +1508,8 @@
     "Group": "Sword",
     "Cost": "25 gp",
     "Weight": "10 lb",
-    "Notes": "1-handed: 1d8 vs S-M, 1d12 vs L",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": "1-handed: 1d8 vs S-M, 1d12 vs L"
   },
   {
     "Weapon Name": "Sword, Broad",
@@ -1496,7 +1526,8 @@
     "Group": "Sword",
     "Cost": "10 gp",
     "Weight": "4 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Sword, Khopesh",
@@ -1513,7 +1544,8 @@
     "Group": "Sword",
     "Cost": "10 gp",
     "Weight": "7 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Sword, Long",
@@ -1530,7 +1562,8 @@
     "Group": "Sword",
     "Cost": "15 gp",
     "Weight": "4 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Sword, Short",
@@ -1547,7 +1580,8 @@
     "Group": "Sword",
     "Cost": "10 gp",
     "Weight": "3 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Sword, Two-Handed",
@@ -1564,7 +1598,8 @@
     "Group": "Sword",
     "Cost": "50 gp",
     "Weight": "15 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Three-Section Staff",
@@ -1581,12 +1616,12 @@
     "Group": "Flail",
     "Cost": "3 gp",
     "Weight": "3 lb",
-    "Notes": "Oriental weapon",
-    "Source": "Unattributed"
+    "Source": "Unattributed",
+    "Notes": "Oriental weapon"
   },
   {
     "Weapon Name": "Trident",
-    "Category": "Melee/Thrown",
+    "Category": "Melee",
     "Size": "L",
     "Type": "P",
     "Damage (S-M)": "1d6+1",
@@ -1599,8 +1634,8 @@
     "Group": "Spear",
     "Cost": "15 gp",
     "Weight": "5 lb",
-    "Range": "10/20/30",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": "PHB Table 44 gives the trident no ROF and it has NO row in Table 45: Missile Weapon Ranges, so the PHB grants it no throwing range. An earlier record carried 10/20/30, identical to the spear's, in a field nothing read. Removed rather than promoted."
   },
   {
     "Weapon Name": "Voulge",
@@ -1617,7 +1652,8 @@
     "Group": "Polearm",
     "Cost": "5 gp",
     "Weight": "12 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Wakizashi",
@@ -1634,8 +1670,8 @@
     "Group": "Sword",
     "Cost": "50 gp",
     "Weight": "3 lb",
-    "Notes": "Oriental weapon",
-    "Source": "Unattributed"
+    "Source": "Unattributed",
+    "Notes": "Oriental weapon"
   },
   {
     "Weapon Name": "War Hammer",
@@ -1652,7 +1688,8 @@
     "Group": "Hammer",
     "Cost": "2 gp",
     "Weight": "6 lb",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": ""
   },
   {
     "Weapon Name": "Whip",
@@ -1669,7 +1706,7 @@
     "Group": "Whip",
     "Cost": "1 sp",
     "Weight": "2 lb",
-    "Notes": "Cannot cause lethal damage",
-    "Source": "PHB"
+    "Source": "PHB",
+    "Notes": "Cannot cause lethal damage"
   }
 ]
