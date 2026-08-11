@@ -5233,6 +5233,19 @@ const OPTIONAL_RULES = {
     category: 'phb',
     default: false
   },
+  rangerDruidCRH: {
+    label:   'Allow the half-elf ranger/druid multi-class',
+    detail:  'PHBR11 p.79, printed as an Optional Rule. The PHB precludes this combination ' +
+             'on alignment grounds -- a ranger must be good, a druid must be true neutral, ' +
+             'and no alignment satisfies both. The CRH allows it where the campaign has a ' +
+             'nature deity of good alignment whose specialty priests are druidic, AND that ' +
+             'priesthood has an allied group of rangers. Both are your DM\'s call, not the ' +
+             'app\'s: ticking this only stops the alignment warning for a ranger/druid. ' +
+             'NOT ENFORCED: the CRH caps such a character at 16th level ranger and 9th ' +
+             'level druid, and this app models no racial or class level limits at all.',
+    category: 'supplement',
+    default: false
+  },
   rangerArmorStealthCRH: {
     label:   'Ranger stealth: use the Complete Ranger\'s Handbook armor table',
     detail:  'PHBR11 Tables 11 and 13. The PHB gives rangers no armor percentages and ' +
@@ -5720,8 +5733,24 @@ function validateClassAlignment(root) {
 
   const label = getAlignmentLabel(key);
 
+  // PHBR11 p.79, Optional Rule: The Ranger-Druid. The two requirements cannot
+  // both be met -- ranger must be good, druid must be true neutral -- so this
+  // character ALWAYS produces at least one warning, and the pairing is the
+  // whole point of the rule. Scoped as narrowly as possible: it suppresses the
+  // ranger and druid rows only, and only when BOTH are present. A ranger/cleric
+  // or a lone druid is judged exactly as before, and every other class in a
+  // ranger/druid's list still reports normally.
+  const lowered = classes.map(c => String(c).trim().toLowerCase());
+  const rangerDruid =
+    lowered.some(c => c.includes('ranger')) &&
+    lowered.some(c => c.includes('druid')) &&
+    typeof isOptionalRule === 'function' &&
+    isOptionalRule('rangerDruidCRH');
+
   classes.forEach(clazz => {
-    const req = CLASS_ALIGNMENT_REQUIREMENTS[clazz.trim().toLowerCase()];
+    const lc = String(clazz).trim().toLowerCase();
+    if (rangerDruid && (lc.includes('ranger') || lc.includes('druid'))) return;
+    const req = CLASS_ALIGNMENT_REQUIREMENTS[lc];
     if (!req) return;                   // unrecognised or unrestricted class
     if (req.allowed.indexOf(key) !== -1) return;
     problems.push('A ' + clazz + ' ' + req.describe +
