@@ -2918,7 +2918,7 @@ const SHEET_HTML = `
 	         data-panel matching the category key exactly. -->
 	    <div class="settings-panel subtab-panel-hidden" data-panel="supplement">
 	      <p class="settings-blurb" style="font-size:11px;color:var(--muted);margin:0 0 10px;"></p>
-	      <div class="optional-rules-list" data-cat="supplement"></div>
+	      <div class="supplements-list"></div>
 	      <p style="font-size:10px;color:var(--muted);margin:8px 0 16px;">Changes take effect immediately. Some may require reopening a character tab.</p>
 	    </div>
 
