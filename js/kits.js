@@ -65,6 +65,47 @@
 // entry should tell you what that kit's book says, with no second file needed.
 //
 // ---------------------------------------------------------------------------
+// PHBR11 TABLE 54 -- demi-ranger stealth, and a probable printing error
+// ---------------------------------------------------------------------------
+//
+// Table 54 gives demi-ranger race adjustments to hide in shadows / move
+// silently. Dwarf (-- / --) and Gnome (+5% / +5%) match THIEF_RACIAL_ADJUSTMENTS
+// in tables.js exactly. The halfling row does NOT:
+//
+//   CRH Table 54:      Halfling  hide +10%  move +15%
+//   PHB Table 27:      Halfling  hide +15%  move +10%
+//
+// TRANSPOSED. The app follows the PHB, which is the correct default -- a
+// supplement's typo should not silently rewrite a core table. Recorded here
+// rather than in a kit entry because it is a RACE row, not a kit row, and no
+// kit owns it.
+//
+// Table 54 also gives demi-rangers a slower spell progression -- no spells
+// until 10th level, capped at 2nd level. NOT MODELLED.
+//
+// ---------------------------------------------------------------------------
+// demiRanger -- PHBR11 Table 53, dwarf / gnome / halfling rangers
+// ---------------------------------------------------------------------------
+//
+//   demiRanger: { race: "dwarf", maxLevel: 15 }
+//
+// A SUPPLEMENT PERMISSION, deliberately kept out of `race`. PHB Ch.2 allows
+// rangers only to humans, elves and half-elves, and `race` holds that answer;
+// this field holds the CRH's. Merging them would make the data claim the PHB
+// permits a dwarf ranger.
+//
+// Table 53 is a race-by-KIT matrix, not a blanket permission -- a dwarf may be
+// a Guardian, Mountain Man or Warden and nothing else. Nine kits carry the
+// field; the other six do not, and their absence means "no demi-ranger option",
+// not "not yet transcribed".
+//
+// NOTHING ENFORCES THIS. maxLevel is recorded because the book prints it, but
+// the app models NO racial or class level limits for any race -- see the open
+// items in the project notes. Two kits, Stalker and Mountain Man, have their
+// own text restricting race, and Table 53 contradicts it; both readings are
+// recorded and neither is resolved.
+//
+// ---------------------------------------------------------------------------
 // thiefSkillMods -- ranger kit stealth adjustments (PHBR11 Table 12, p.11)
 // ---------------------------------------------------------------------------
 //
@@ -415,7 +456,9 @@ const KITS = {
       ],
       requirements: {
         int: 12,
-        terrainPrinted: "Any (no specialization; used for followers and species enemy only)"
+        terrainPrinted: "Any (no specialization; used for followers and species enemy only)",
+        demiRanger: { race: "halfling", maxLevel: 9 },
+        demiRangerNote: "PHBR11 Table 53 (p.79). NOT enforced -- this is a SUPPLEMENT permission that contradicts PHB Ch.2, which allows rangers only to humans, elves and half-elves, and the app models no racial level limits at all. Kept separate from `race` so that field stays the PHB answer."
       },
       benefits: "Primary terrain: any (no specialization; used for followers and species enemy only). Secondary skills: Fisher, Forester, Hunter, Navigator, Trader/Barterer, Trapper/Furrier. Learns twice the normal number of languages. Find the path once per week. Culture sense once per week, with a +1 reaction adjustment among that people. Survival proficiency benefits in all terrain types. Armor/equipment: no special requirements, but he rarely wears armor heavier than leather and most Explorers find shields awkward and confining.",
       hindrances: "Limited animal empathy -- +2 to the animal's save when dealing with wild or attack-trained animals, and a Wisdom check needed to calm or befriend domestic animals. No more than two followers at a time. Will never build a castle or other fortification. Weapon proficiencies confined to seven light weapons. Cartography and Reading/Writing are required proficiency spends."
@@ -484,7 +527,9 @@ const KITS = {
         alignment: ["ng", "cg"],
         alignmentPrinted: "any good alignment, but not lawful",
         terrain: ["arctic","forest","hill","jungle","mountain","plains","swamp"],
-        terrainPrinted: "Usually Forest or Jungle; Arctic, Hill, Mountain, Plains and Swamp are possible but less common"
+        terrainPrinted: "Usually Forest or Jungle; Arctic, Hill, Mountain, Plains and Swamp are possible but less common",
+        demiRanger: { race: "halfling", maxLevel: 9 },
+        demiRangerNote: "PHBR11 Table 53 (p.79). NOT enforced -- this is a SUPPLEMENT permission that contradicts PHB Ch.2, which allows rangers only to humans, elves and half-elves, and the app models no racial level limits at all. Kept separate from `race` so that field stays the PHB answer."
       },
       benefits: "Primary terrain: usually Forest or Jungle; Arctic, Hill, Mountain, Plains and Swamp are possible but less common. Secondary skills: Fisher, Forester, Hunter, Trapper/Furrier -- wilderness applications only. Stealth +10% to hide in natural surroundings and +10% to move silently. Feral rage. 60% base climbing. Speak with animals at will with his familial species. Familial rapport, animal training, and call of the wild once per day.",
       hindrances: "Cannot be of lawful alignment. Limited magic -- animal sphere only, nothing above 2nd level, on the Table 45 progression. Wears no armor and carries no shield. Club and knife are required weapon proficiencies and the rest must be primitive weapons. No followers until 5th level, at most one non-animal follower and only at 10th or higher. -3 reaction penalty with humans, demihumans and humanoids including other Feralans. Little interest in money. Will never build a fortification."
@@ -512,7 +557,9 @@ const KITS = {
       ],
       requirements: {
         cha: 12,
-        terrainPrinted: "Usually Forest, Hill, Plains, Mountain or Jungle, but no terrain type is excluded provided it holds a reasonably sized and sufficiently corrupt settlement"
+        terrainPrinted: "Usually Forest, Hill, Plains, Mountain or Jungle, but no terrain type is excluded provided it holds a reasonably sized and sufficiently corrupt settlement",
+        demiRanger: { race: "gnome", maxLevel: 11 },
+        demiRangerNote: "PHBR11 Table 53 (p.79). NOT enforced -- this is a SUPPLEMENT permission that contradicts PHB Ch.2, which allows rangers only to humans, elves and half-elves, and the app models no racial level limits at all. Kept separate from `race` so that field stays the PHB answer."
       },
       benefits: "Primary terrain: most hail from civilized regions in Forest, Hill, Plains, Mountain or Jungle, but no terrain type is excluded provided it contains a reasonably sized and sufficiently corrupt settlement. A Forest Runner from a primary terrain other than Forest modifies the name accordingly -- Mountain Runner, Swamp Runner and so on. Secondary skills: Bowyer/Fletcher, Forester, Farmer, Hunter, Leather worker, Teamster, Weaponsmith. Stealth +5%/+5%. Inspire once per day. Disguise for a single slot. Reaction bonus and free food and shelter in his homeland. A bonus weapon proficiency slot. Armor/equipment: standard.",
       hindrances: "Acquires a personal nemesis at 4th level. Constant risk of arrest at home and in regimes with extradition agreements; law-enforcement may plague him for his entire career. Rarely develops a close relationship with any politically powerful NPC. The bonus weapon slot and three of his first six slots are locked to a fixed list. Bowyer/Fletcher is a required proficiency spend."
@@ -608,7 +655,9 @@ const KITS = {
       requirements: {
         // Standard -- the book sets no kit-specific ability minimum
         terrain: ["forest","hill","jungle","mountain","plains"],
-        terrainPrinted: "Forest, Hill, Jungle, Mountain, or Plains"
+        terrainPrinted: "Forest, Hill, Jungle, Mountain, or Plains",
+        demiRanger: { race: "dwarf", maxLevel: 15 },
+        demiRangerNote: "PHBR11 Table 53 (p.79). NOT enforced -- this is a SUPPLEMENT permission that contradicts PHB Ch.2, which allows rangers only to humans, elves and half-elves, and the app models no racial level limits at all. Kept separate from `race` so that field stays the PHB answer."
       },
       benefits: "Primary terrain: Forest, Hill, Jungle, Mountain, or Plains. Secondary skills: Bowyer/Fletcher, Farmer, Fisher, Hunter, Trapper/Furrier, Woodworker/Carpenter. Minor access to the Protection sphere. Within his domain he can cast detect evil three times per day and bless and commune with nature once per week each. Revive plants once per month. Armor/equipment: standard. Species enemy: any. Followers: at least one human or demihuman at some point.",
       hindrances: "Bound to a domain he must arrange cover for whenever he leaves. Abandoning his responsibilities for more than a few days may cost him the kit's special benefits; longer absences may cost him ALL spells until he returns."
@@ -675,9 +724,11 @@ const KITS = {
         str: 14,
         con: 15,
         race: ["human","half-elf"],
-        racePrinted: "Cannot be a full elf",
+        racePrinted: "Cannot be a full elf -- BUT Table 53 (p.79) lists this kit as available to a demi-ranger, so the book contradicts itself. `race` holds the kit description's answer; `demiRanger` holds Table 53's. Neither is enforced.",
         terrain: ["mountain"],
-        terrainPrinted: "Required: Mountains"
+        terrainPrinted: "Required: Mountains",
+        demiRanger: { race: "dwarf", maxLevel: 15 },
+        demiRangerNote: "PHBR11 Table 53 (p.79). NOT enforced -- this is a SUPPLEMENT permission that contradicts PHB Ch.2, which allows rangers only to humans, elves and half-elves, and the app models no racial level limits at all. Kept separate from `race` so that field stays the PHB answer."
       },
       benefits: "Primary terrain REQUIRED: Mountains. Secondary skills: Bowyer/Fletcher, Fisher, Forester, Hunter, Miner, Trapper/Furrier. Bonus proficiencies: Mountaineering and Weaponsmithing (Crude), the latter letting him make the weapons in Table 47 at no cost. Will to live. Brew healing elixir once per day from 7th level. Begins with two handmade weapons free and a handmade leather-and-fur suit worth AC 8.",
       hindrances: "Cannot be a full elf. Limited stealth, -5% to hide in natural surroundings and to move silently. Limited magic -- fewer spells, none until 10th level. Limited money -- one item over 15 gp, 100 gp total in other possessions. -1 reaction from all NPCs and -2 from nobles and the cultural elite. Only a 20% chance of humanoid followers. Never builds a fortification. Fourteen barred nonweapon proficiencies, a required Hunting spend, and a limited weapon list. -2 to all attack rolls if he wears metal armor."
@@ -705,7 +756,9 @@ const KITS = {
       requirements: {
         // Same as a standard ranger -- no kit-specific ability minimum
         terrain: ["forest","hill","jungle","mountain","plains"],
-        terrainPrinted: "Forest, Hill, Jungle, Mountain, or Plains"
+        terrainPrinted: "Forest, Hill, Jungle, Mountain, or Plains",
+        demiRanger: { race: "gnome", maxLevel: 11 },
+        demiRangerNote: "PHBR11 Table 53 (p.79). NOT enforced -- this is a SUPPLEMENT permission that contradicts PHB Ch.2, which allows rangers only to humans, elves and half-elves, and the app models no racial level limits at all. Kept separate from `race` so that field stays the PHB answer."
       },
       benefits: "Primary terrain: Forest, Hill, Jungle, Mountain, or Plains. Secondary skills: Farmer, Forester, Groom, Hunter, Navigator, Trapper/Furrier. Four bonus proficiencies -- Direction Sense, Distance Sense, Trail Marking and Alertness. Trail sense and overland guiding when he leads the party. Marksmanship +1 with a favorite missile weapon. Recognize trail hazard at 10% per level to a maximum of 90%. Armor/equipment: favors light armor such as leather or padded and seldom carries a shield, but has no particular requirements.",
       hindrances: "Trail sense and overland guiding apply ONLY when he leads the party and at least 20 feet separates him from it -- the proximity of others distracts him. Moving ahead exposes him to ambush, snipers, and any hazard he fails to spot. Must fill an initial weapon slot with a machete, hand axe, or sword."
@@ -739,7 +792,9 @@ const KITS = {
       requirements: {
         int: 12,
         terrain: ["aquatic"],
-        terrainPrinted: "Required: Aquatic -- oceans, lakes, ponds and rivers, plus coastlines, beaches and small islands"
+        terrainPrinted: "Required: Aquatic -- oceans, lakes, ponds and rivers, plus coastlines, beaches and small islands",
+        demiRanger: { race: "halfling", maxLevel: 9 },
+        demiRangerNote: "PHBR11 Table 53 (p.79). NOT enforced -- this is a SUPPLEMENT permission that contradicts PHB Ch.2, which allows rangers only to humans, elves and half-elves, and the app models no racial level limits at all. Kept separate from `race` so that field stays the PHB answer."
       },
       benefits: "Primary terrain REQUIRED: Aquatic, which for this kit includes oceans, lakes, ponds and rivers as well as coastlines, beaches and small islands. Secondary skills: Fisher, Navigator, Sailor, Shipwright, Trader/Barterer, Weaver. Bonus proficiencies: Boating or Seamanship, and Swimming. Sea tracking, land scent within 50 miles, sea legs, aquatic combat with no attack penalties in water, and parliament of fishes at 12th level. Species enemy: any aquatic creature is eligible.",
       hindrances: "Has NEITHER move silently nor hide in shadows, replacing them with sea legs and aquatic combat. Tracking in non-Aquatic terrain is halved. Most wear armor of AC 8 or less because heavy armor interferes with swimming and shipboard movement. All animal followers must have Aquatic as their primary terrain. Nine barred nonweapon proficiencies."
@@ -799,9 +854,11 @@ const KITS = {
       requirements: {
         int: 14,
         race: ["human"],
-        racePrinted: "Must be human",
+        racePrinted: "Must be human -- BUT Table 53 (p.79) lists this kit as available to a demi-ranger, so the book contradicts itself. `race` holds the kit description's answer; `demiRanger` holds Table 53's. Neither is enforced.",
         terrain: ["arctic","aquatic","desert","forest","hill","jungle","mountain","plains","swamp","urban"],
-        terrainPrinted: "Any; in addition, a Stalker's primary terrain can be URBAN"
+        terrainPrinted: "Any; in addition, a Stalker's primary terrain can be URBAN",
+        demiRanger: { race: "gnome", maxLevel: 11 },
+        demiRangerNote: "PHBR11 Table 53 (p.79). NOT enforced -- this is a SUPPLEMENT permission that contradicts PHB Ch.2, which allows rangers only to humans, elves and half-elves, and the app models no racial level limits at all. Kept separate from `race` so that field stays the PHB answer."
       },
       benefits: "Primary terrain: any; in addition, a Stalker's primary terrain can be URBAN. Secondary skills: any. Bonus proficiencies: Alertness and Camouflage. Full tracking in urban settings. +10% to hide in shadows and to move silently, with full chance in urban settings and in non-natural constructions such as crypts and dungeons. Can hide and move silently in armor of AC 6 or less. Opponents he sneaks up on take -3 on their surprise roll. Interrogation. Photographic memory at 10th level. A free terrain suit at the start of his career.",
       hindrances: "Must be human. Weapon proficiencies limited to easily concealed weapons. Only ONE follower at a time out of a 2d6 career total, never human or demihuman, never a creature of near-human intelligence, and all animal followers must be under four feet tall. Hated by lawbreakers and law-enforcers alike, with the harshest penalties reserved for captured Stalkers."
@@ -829,7 +886,9 @@ const KITS = {
         cha: 12,
         alignment: ["lg", "ln", "le", "ng", "tn", "ne"],
         alignmentPrinted: "any non-chaotic alignment",
-        terrainPrinted: "Any, though Forest and Plains are the most common; it should correspond to the area the Warden is first assigned to supervise"
+        terrainPrinted: "Any, though Forest and Plains are the most common; it should correspond to the area the Warden is first assigned to supervise",
+        demiRanger: { race: "dwarf", maxLevel: 15 },
+        demiRangerNote: "PHBR11 Table 53 (p.79). NOT enforced -- this is a SUPPLEMENT permission that contradicts PHB Ch.2, which allows rangers only to humans, elves and half-elves, and the app models no racial level limits at all. Kept separate from `race` so that field stays the PHB answer."
       },
       benefits: "Primary terrain: any, though Forest and Plains are the most common; it should correspond to the area the Warden is first assigned to supervise. Secondary skills: Armorer, Bowyer/Fletcher, Farmer, Forester, Groom, Weaponsmith, Woodworker/Carver. A monthly stipend of 30-50 gp plus 10 gp times his level. Expenses of 100-500 gp on his overlord's business. An annual boon. +2 reaction with good and neutral characters of high social status when representing his overlord. Armor/equipment: no special requirements, and depending on his overlord's generosity he may have access to the finest equipment money can buy.",
       hindrances: "Cannot be of chaotic alignment. Held fully accountable for anything that reflects badly on his overlord -- an unsatisfactory explanation means reprimand or termination, and a terminated Warden is FORCED to abandon the kit and take the abandonment penalties. Must fully account for expenses and return excess funds or face fines or imprisonment. Always subject to his overlord's orders, critical or trivial, on pain of fines or dismissal. Will not undertake any adventure without direct orders from, or the express permission of, his overlord."
