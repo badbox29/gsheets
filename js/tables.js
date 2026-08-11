@@ -5601,6 +5601,19 @@ function matchesAlignmentRequirement(alignKey, phrase) {
   const a = getAlignmentData(alignKey);
   if (!a) return null;
 
+  // AUTHORITATIVE FORM: an explicit array of alignment keys, resolved from the
+  // book's prose at audit time. There are only nine alignments, so the set is
+  // always short enough to write down -- and writing it down removes the parser
+  // entirely. The string path below matches on the FIRST axis keyword it finds
+  // and silently drops the rest, so "Any good, non-lawful" enforces only the
+  // non-lawful half. Use arrays for every newly audited kit.
+  //
+  // An EMPTY array means unknown, not "nothing is permitted" -- returning false
+  // for all nine would raise a banner that can never be cleared.
+  if (Array.isArray(phrase)) {
+    return phrase.length ? phrase.indexOf(alignKey) !== -1 : null;
+  }
+
   const p = String(phrase || '').trim().toLowerCase();
   if (!p) return null;
   if (p === 'any') return true;
@@ -5622,6 +5635,29 @@ function matchesAlignmentRequirement(alignKey, phrase) {
 
   if (ok === null) return null;
   return negated ? !ok : ok;
+}
+
+// Renders a kit's alignment requirement for the warning banner. The stored
+// requirement is now a SET of alignment keys, which would concatenate as
+// "ng,cg" if pushed straight into a sentence.
+//
+// Prefers requirements.alignmentPrinted when present -- the book's own wording
+// is what the player will find if he goes looking, so the banner quotes the
+// source rather than reciting a resolved list back at him. The list is the
+// fallback, and the legacy string passes through untouched.
+function describeAlignmentRequirement(reqs) {
+  if (!reqs) return '';
+  if (reqs.alignmentPrinted) return String(reqs.alignmentPrinted);
+
+  const a = reqs.alignment;
+  if (Array.isArray(a)) {
+    const labels = a.map(k => (typeof getAlignmentLabel === 'function')
+      ? getAlignmentLabel(k) : String(k)).filter(Boolean);
+    if (!labels.length) return '';
+    if (labels.length === 1) return labels[0];
+    return labels.slice(0, -1).join(', ') + ' or ' + labels[labels.length - 1];
+  }
+  return String(a || '');
 }
 
 function validateKitAlignment(root) {
@@ -5648,8 +5684,8 @@ function validateKitAlignment(root) {
   // warning fatigue the override toggles exist to prevent.
   if (matchesAlignmentRequirement(key, kit.requirements.alignment) === false) {
     problems.push('The ' + kit.name + ' kit requires ' +
-                  kit.requirements.alignment + '. This character is ' +
-                  getAlignmentLabel(key) + '.');
+                  describeAlignmentRequirement(kit.requirements) +
+                  '. This character is ' + getAlignmentLabel(key) + '.');
   }
 
   return problems;
