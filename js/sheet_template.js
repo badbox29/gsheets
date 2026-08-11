@@ -2829,6 +2829,7 @@ const SHEET_HTML = `
 	      <div class="subtab" data-settings-tab="phb">📖 Optional Rules</div>
 	      <div class="subtab" data-settings-tab="override">⚖️ House Rules</div>
 	      <div class="subtab" data-settings-tab="table">🎲 Table Rulings</div>
+	      <div class="subtab" data-settings-tab="supplement">📚 Supplement Rules</div>
 	      <div class="subtab" data-settings-tab="themes">🎨 Themes</div>
 	    </div>
 
@@ -2907,6 +2908,17 @@ const SHEET_HTML = `
 	    <div class="settings-panel subtab-panel-hidden" data-panel="table">
 	      <p class="settings-blurb" style="font-size:11px;color:var(--muted);margin:0 0 10px;"></p>
 	      <div class="optional-rules-list" data-cat="table"></div>
+	      <p style="font-size:10px;color:var(--muted);margin:8px 0 16px;">Changes take effect immediately. Some may require reopening a character tab.</p>
+	    </div>
+
+	    <!-- Supplement rules. The tab strip and these panels are STATIC markup;
+	         only their contents come from OPTIONAL_RULES_CATEGORIES, so adding a
+	         category to that object is not enough on its own -- a tab and a
+	         panel have to be added here too, with data-settings-tab and
+	         data-panel matching the category key exactly. -->
+	    <div class="settings-panel subtab-panel-hidden" data-panel="supplement">
+	      <p class="settings-blurb" style="font-size:11px;color:var(--muted);margin:0 0 10px;"></p>
+	      <div class="optional-rules-list" data-cat="supplement"></div>
 	      <p style="font-size:10px;color:var(--muted);margin:8px 0 16px;">Changes take effect immediately. Some may require reopening a character tab.</p>
 	    </div>
 
