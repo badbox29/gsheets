@@ -3538,6 +3538,46 @@ const RANGER_STEALTH_CAP = 99;   // Table 18: "maximum attainable"
 // too much noise) does not apply to it either.
 const RANGER_STEALTH_MAX_ARMOR = ['none', 'padded', 'leather', 'studded', 'elven_chain'];
 
+// === PHBR11 Tables 11 and 13: ranger stealth by armor (SUPPLEMENT, OFF by default) ===
+// [Hide in Shadows, Move Silently], percentage points.
+//
+// THIS CONFLICTS WITH THE PHB, which is why it is gated. The PHB gives rangers
+// NO armor percentages -- the ranger text names only Tables 27 (race) and 28
+// (Dexterity) and never references Table 29 -- and states a binary rule instead:
+// no hiding or moving silently in anything heavier than studded leather. The
+// CRH disagrees on TWO points, not one:
+//
+//   1. It applies percentages, implying Table 18's base assumes LEATHER (which
+//      is why leather is 0 here and no armor is a BONUS).
+//   2. Its Table 11 lists RING MAIL -- heavier than studded leather -- so under
+//      the CRH a ranger keeps a reduced chance rather than losing it entirely.
+//
+// Table 13 is the CRH's OWN optional extension, for DMs who let rangers wear
+// anything. Both are folded into one toggle here: a table that has opted into
+// the supplement's armor model has no reason to take half of it, and the
+// Justifier and Stalker kits both already reference Table 13 by name.
+const RANGER_STEALTH_ARMOR_CRH = {
+  // Table 11 (p.11). "None" includes magical apparel such as cloaks and
+  // bracers, but NOT large or bulky garments.
+  none:         [  5,  10],
+  leather:      [  0,   0],
+  padded:       [-20, -20],
+  studded:      [-20, -20],
+  ring:         [-30, -40],
+  // Table 13: Optional Armor Adjustments (p.11).
+  hide:         [-20, -30],
+  brigandine:   [-30, -40],
+  scale:        [-50, -60],
+  chain:        [-30, -40],
+  elven_chain:  [-10, -10],
+  splint:       [-30, -40],
+  banded:       [-50, -60],
+  bronze_plate: [-75, -80],
+  plate:        [-75, -80],
+  field_plate:  [-95, -95],
+  full_plate:   [-95, -95]
+};
+
 // Which sub-class is the ranger? Half-elves may be fighter/ranger or
 // cleric/ranger, so multi-class has to be searched rather than assumed.
 function getRangerComponent(root) {
@@ -3613,16 +3653,34 @@ function getRangerStealth(root) {
   const kitHide = (kitMods && typeof kitMods.hideInShadows === 'number') ? kitMods.hideInShadows : 0;
   const kitMove = (kitMods && typeof kitMods.moveSilently  === 'number') ? kitMods.moveSilently  : 0;
 
-  const clamp = v => Math.max(0, Math.min(RANGER_STEALTH_CAP, v));
-  const hide = clamp(base[0] + racial[4] + dexAdj[4] + kitHide);
-  const move = clamp(base[1] + racial[3] + dexAdj[3] + kitMove);
-
+// MOVED ABOVE THE ARITHMETIC. Under the CRH supplement rule the armor worn is
+  // an INPUT to the percentages rather than only a yes/no gate, so it has to be
+  // resolved before hide and move are computed.
   const armor = (typeof getThiefArmorCategory === 'function')
     ? getThiefArmorCategory(root) : { key: 'none', typeKey: 'none', name: 'No armor' };
   // typeKey, NOT key. key is the Table 29 COLUMN ('elven', 'padded', ...) while
   // RANGER_STEALTH_MAX_ARMOR lists ARMOR_TYPES keys ('elven_chain', 'studded').
   // The two vocabularies overlap enough to look interchangeable and are not.
-  const blocked = RANGER_STEALTH_MAX_ARMOR.indexOf(armor.typeKey || 'none') === -1;
+  const armorKey = armor.typeKey || 'none';
+
+  const crhArmor = (typeof isOptionalRule === 'function') &&
+                   isOptionalRule('rangerArmorStealthCRH') &&
+                   (typeof RANGER_STEALTH_ARMOR_CRH !== 'undefined');
+
+  // Under the CRH the studded-leather ceiling is LIFTED: heavy armor carries a
+  // steep penalty instead of removing the ability, so nothing is blocked. An
+  // armor with no row falls back to [0, 0] rather than being treated as barred,
+  // because a missing row is our gap, not a prohibition.
+  const armorMod = crhArmor
+    ? (RANGER_STEALTH_ARMOR_CRH[armorKey] || [0, 0])
+    : [0, 0];
+  const blocked = crhArmor
+    ? false
+    : RANGER_STEALTH_MAX_ARMOR.indexOf(armorKey) === -1;
+
+  const clamp = v => Math.max(0, Math.min(RANGER_STEALTH_CAP, v));
+  const hide = clamp(base[0] + racial[4] + dexAdj[4] + kitHide + armorMod[0]);
+  const move = clamp(base[1] + racial[3] + dexAdj[3] + kitMove + armorMod[1]);
 
   return {
     level: comp.level,
@@ -3631,6 +3689,8 @@ function getRangerStealth(root) {
     racial: [racial[4], racial[3]],
     dex: [dexAdj[4], dexAdj[3]],
     kit: [kitHide, kitMove],
+    armorMod: armorMod,
+    crhArmor: crhArmor,
     kitName: kitName,
     noStealth: noStealth,
     kitNote: (kitMods && kitMods.note) ? kitMods.note : '',
@@ -5171,6 +5231,19 @@ const OPTIONAL_RULES = {
              'round after that. Without this rule the chapter settles a chase by comparing ' +
              'initiative dice instead, so the sheet shows no running figure at all.',
     category: 'phb',
+    default: false
+  },
+  rangerArmorStealthCRH: {
+    label:   'Ranger stealth: use the Complete Ranger\'s Handbook armor table',
+    detail:  'PHBR11 Tables 11 and 13. The PHB gives rangers no armor percentages and ' +
+             'rules that hiding in shadows and moving silently are simply not possible ' +
+             'in anything heavier than studded leather. The CRH replaces that with a ' +
+             'sliding scale: +5%/+10% in no armor, no change in leather, -20%/-20% in ' +
+             'padded or studded, -30%/-40% in ring mail, down to -95%/-95% in full ' +
+             'plate. Ticking this ALSO lifts the studded-leather ceiling, since under ' +
+             'the CRH a ranger in heavy armor keeps a reduced chance rather than none. ' +
+             'The Justifier and Stalker kits both reference this table.',
+    category: 'supplement',
     default: false
   }
 };
