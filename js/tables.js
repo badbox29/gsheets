@@ -854,7 +854,35 @@ const NWP_TABLE37_GROUPS = {
   "running":            ["warrior"],
   "survival":           ["warrior"],
   "tracking":           ["warrior"],
-  "weaponsmithing":     ["warrior"]
+  "weaponsmithing":     ["warrior"],
+
+  // --- PHBR11 The Complete Ranger's Handbook, pp.82-86 ---
+  // Group assignments are the book's own "Crossover Groups:" line at the end of
+  // each proficiency description, NOT an inference from Table 55 (which is just
+  // the filtered list of what a ranger may buy).
+  //
+  // THE THREE MULTI-GROUP ENTRIES ARE WHY THIS BLOCK EXISTS. A JSON record
+  // carries ONE Category, so camouflage, foraging and trail signs would fall
+  // back to warrior-only and overcharge a rogue a slot for each. The single-
+  // group entries would work via the fallback, but are listed anyway so this
+  // table stays the one authority and a later Category edit cannot silently
+  // change what a proficiency costs.
+  //
+  // The book prints camouflage's groups as "Fighter, Rogue"; fighter is the
+  // warrior group.
+  "camouflage":           ["warrior", "rogue"],
+  "foraging":             ["warrior", "rogue"],
+  "trail signs":          ["warrior", "rogue"],
+  "cartography":          ["general"],
+  "distance sense":       ["general"],
+  "falconry":             ["general"],
+  "persuasion":           ["general"],
+  "riding, sea-based":    ["general"],
+  "signaling":            ["general"],
+  "spelunking":           ["warrior"],
+  "trail marking":        ["warrior"],
+  "veterinary healing":   ["priest"],
+  "weaponsmithing, crude": ["warrior"]
 };
 
 // Every Table 37 group a proficiency belongs to. Falls back to the entry's own
