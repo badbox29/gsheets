@@ -5260,6 +5260,79 @@ const OPTIONAL_RULES = {
     default: false
   }
 };
+// ===== Supplements (the Complete Handbooks and friends) =====
+// ONE ROW PER BOOK, not one per rule. Fifteen handbooks with several conflicts
+// each would be forty-odd checkboxes nobody reads, and the book is the real
+// unit of consent anyway -- a table says "we use the Complete Ranger's
+// Handbook", not "we use Table 11 but not Table 53".
+//
+// TWO TOGGLES PER BOOK, and the split is the book's own, not ours:
+//
+//   core     -- rules the book STATES. These change numbers. Ship OFF, so
+//               unticked is always the PHB.
+//   optional -- experiments the book itself flags as optional, in a box or
+//               with "if your table wants to try this". These SUPPRESS
+//               WARNINGS and enforce nothing. Ticking one means "stop telling
+//               me this is illegal", so a table can build a demi-ranger without
+//               the sheet complaining on every render.
+//
+// The distinction matters: bundling an optional experiment into "apply this
+// book" would make a DM's judgement call automatic, and bundling a stated rule
+// into "suppress warnings" would hide a real change behind a permissive label.
+//
+// `rules` lists the OPTIONAL_RULES keys the toggle owns. isOptionalRule()
+// delegates for those keys, so every existing call site keeps working unchanged
+// -- the rules stay the implementation layer and the book becomes the consent
+// layer above it.
+//
+// `order` is the publication number, so the list reads PHBR1, PHBR2, ... and
+// the Ranger's Handbook sits eleventh whenever the rest arrive.
+const SUPPLEMENTS = {
+  phbr11: {
+    code:  'PHBR11',
+    title: 'The Complete Ranger\u2019s Handbook',
+    order: 11,
+    core: {
+      rules: ['rangerArmorStealthCRH'],
+      changes: [
+        { text: 'Ranger stealth uses the CRH armor table (Tables 11 and 13) instead of ' +
+                'the PHB\u2019s binary rule: +5%/+10% unarmored, no change in leather, ' +
+                '-20%/-20% padded or studded, -30%/-40% ring mail, down to -95%/-95% in ' +
+                'full plate. Also lifts the studded-leather ceiling, since under the CRH ' +
+                'heavy armor reduces the chance rather than removing it.' }
+      ]
+    },
+    optional: {
+      rules: ['rangerDruidCRH', 'demiRangersCRH'],
+      changes: [
+        { text: 'Half-elf ranger/druid (p.79). Stops the alignment warning for that ' +
+                'pairing only \u2014 a ranger must be good and a druid true neutral, so ' +
+                'the combination always conflicts. The book\u2019s conditions (a good ' +
+                'nature deity with druidic specialty priests, and an allied group of ' +
+                'rangers) are your DM\u2019s call.',
+          caveat: 'The CRH caps such a character at 16th level ranger and 9th level ' +
+                  'druid. Not enforced \u2014 this app models no level limits.' },
+        { text: 'Demi-rangers (Table 53, p.79). Stops the race/class warning for the nine ' +
+                'race-and-kit pairs the book lists: dwarf Guardian, Mountain Man or Warden; ' +
+                'gnome Forest Runner, Pathfinder or Stalker; halfling Explorer, Feralan or ' +
+                'Sea Ranger. Other combinations still warn.',
+          caveat: 'Table 53 suggests caps of 15th level for dwarves, 11th for gnomes and ' +
+                  '9th for halflings, and Table 54 a slower spell progression. Shown for ' +
+                  'reference; neither is enforced.' }
+      ]
+    }
+  }
+};
+
+const SUPPLEMENTS_STORAGE_KEY  = 'gsheets_supplements';
+const SUPPLEMENTS_EXPAND_KEY   = 'gsheets_supplements_expanded';
+
+// Books in publication order.
+function getSupplementKeys() {
+  return Object.keys(SUPPLEMENTS)
+    .sort((a, b) => (SUPPLEMENTS[a].order || 0) - (SUPPLEMENTS[b].order || 0));
+}
+
 const OPTIONAL_RULES_CATEGORIES = {
   phb:      { label: '\u{1F4D6} Optional Rules',
               blurb: 'Rules the PHB marks optional. Use them or not as your table prefers.' },
@@ -5332,9 +5405,75 @@ function getSettingSpheres(settingKey) {
 
 const OPTIONAL_RULES_STORAGE_KEY = 'gsheets_optional_rules';
 
+// Which supplement toggle, if any, OWNS this rule key. Built once and cached,
+// because isOptionalRule is called on every render.
+let _supplementRuleOwner = null;
+function getSupplementRuleOwner(key) {
+  if (!_supplementRuleOwner) {
+    _supplementRuleOwner = {};
+    if (typeof SUPPLEMENTS !== 'undefined') {
+      Object.keys(SUPPLEMENTS).forEach(bookKey => {
+        ['core', 'optional'].forEach(band => {
+          const grp = SUPPLEMENTS[bookKey][band];
+          if (!grp || !grp.rules) return;
+          grp.rules.forEach(r => { _supplementRuleOwner[r] = { book: bookKey, band: band }; });
+        });
+      });
+    }
+  }
+  return _supplementRuleOwner[key] || null;
+}
+
+// Is a supplement's core or optional band switched on?
+//
+// MIGRATION: before the book-level toggles existed, each rule had its own
+// checkbox. If a player ticked one of those, the old key is still in storage
+// and is honoured as the initial answer -- ticking "Ranger stealth: use the CRH
+// armor table" last month must not silently switch itself off today. Once the
+// book toggle is used, its own stored value takes over.
+function isSupplementActive(bookKey, band) {
+  const book = (typeof SUPPLEMENTS !== 'undefined') ? SUPPLEMENTS[bookKey] : null;
+  if (!book || !book[band]) return false;
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(SUPPLEMENTS_STORAGE_KEY) || '{}');
+    const id = bookKey + '.' + band;
+    if (Object.prototype.hasOwnProperty.call(saved, id)) return !!saved[id];
+  } catch (e) { /* corrupt storage -- fall through */ }
+
+  // Legacy per-rule settings, read directly rather than through
+  // isOptionalRule() to avoid recursing back into this function.
+  try {
+    const old = JSON.parse(localStorage.getItem(OPTIONAL_RULES_STORAGE_KEY) || '{}');
+    const hit = (book[band].rules || []).some(
+      r => Object.prototype.hasOwnProperty.call(old, r) && !!old[r]);
+    if (hit) return true;
+  } catch (e) { /* corrupt storage -- fall through */ }
+
+  return false;
+}
+
+function setSupplement(bookKey, band, enabled) {
+  const book = (typeof SUPPLEMENTS !== 'undefined') ? SUPPLEMENTS[bookKey] : null;
+  if (!book || !book[band]) return;
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(SUPPLEMENTS_STORAGE_KEY) || '{}'); }
+  catch (e) { saved = {}; }
+  saved[bookKey + '.' + band] = !!enabled;
+  localStorage.setItem(SUPPLEMENTS_STORAGE_KEY, JSON.stringify(saved));
+}
+
 // Is an optional rule enabled? Reads the player's saved setting, falling back to
 // the registry default. Safe to call before any settings UI exists.
+//
+// A rule a SUPPLEMENT owns delegates to that book's toggle instead. This is why
+// absorbing the per-rule checkboxes needed no changes at the call sites:
+// getRangerStealth and validateClassAlignment still ask isOptionalRule() the
+// same question and are unaware the answer now comes from a book-level switch.
 function isOptionalRule(key) {
+  const owner = getSupplementRuleOwner(key);
+  if (owner) return isSupplementActive(owner.book, owner.band);
+
   const rule = OPTIONAL_RULES[key];
   if (!rule) return false;
 
@@ -6101,9 +6240,27 @@ function validateRaceClass(root) {
   }
   if (!classes.length) return problems;
 
+  // PHBR11 Table 53, demi-rangers. SCOPED, not blanket: the suppression applies
+  // only when the character's race AND selected kit match one of the nine pairs
+  // the book lists, which is what the demiRanger field in kits.js is for. A
+  // gnome Stalker goes quiet; a gnome Paladin still warns, and so does a gnome
+  // ranger with no kit or a kit not on Table 53.
+  let demiRangerOk = false;
+  if (typeof isOptionalRule === 'function' && isOptionalRule('demiRangersCRH') &&
+      typeof getKitsForClass === 'function') {
+    const kitValue = (val(root, 'kit') || '').trim();
+    if (kitValue) {
+      const kit = getKitsForClass('ranger')
+        .find(k => k.name.toLowerCase().replace(/\s+/g, '') === kitValue);
+      const demi = kit && kit.requirements && kit.requirements.demiRanger;
+      if (demi && demi.race === raceKey) demiRangerOk = true;
+    }
+  }
+
   classes.forEach(clazz => {
     const token = getRaceClassToken(clazz);
     if (!token) return;                        // homebrew or unrecognised: silent
+    if (token === 'ranger' && demiRangerOk) return;
     if (allowed.indexOf(token) === -1) {
       problems.push(clazz + ' is not a class the PHB permits for this race (' +
         raceKey + ', Chapter 2). Permitted: ' + allowed.join(', ') + '.');
