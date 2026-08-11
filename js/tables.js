@@ -977,18 +977,84 @@ const TRACKING_MODIFIERS = [
   { key: "hidden",      label: "Tracked party tries to hide trail", mod:  -5 }
 ];
 
+// === PHBR11 Tables 15, 16 and 17 (p.15) -- SUPPLEMENT, gated ===
+// The book states these "may be used in place of Table 39 in Chapter 5 of the
+// Player's Handbook", so this is a straight replacement for TRACKING_MODIFIERS
+// above, not an addition to it.
+//
+// THE STRUCTURE IS THE POINT. The PHB gives one flat list; the CRH splits it
+// into three and says explicitly which are exclusive -- terrain and
+// illumination are "use only one", special modifiers are "use all applicable".
+// The PHB's terrain rows were always implicitly exclusive (ground cannot be
+// both soft and rocky) and the panel rendered them as checkboxes anyway. The
+// CRH makes the rule explicit, so the panel renders these as radios.
+const TRACKING_GROUPS_CRH = {
+  terrain:      { label: 'Terrain \u2014 use only one',        exclusive: true  },
+  illumination: { label: 'Illumination \u2014 use only one',   exclusive: true  },
+  special:      { label: 'Special \u2014 use all applicable',  exclusive: false }
+};
+
+const TRACKING_MODIFIERS_CRH = [
+  // Table 15: Terrain Tracking Modifiers
+  { key: "crhSnow",    group: "terrain", mod:  +6, label: "Fresh snow (clearly outlined footprints)" },
+  { key: "crhSoft",    group: "terrain", mod:  +4, label: "Soft or muddy ground, loose dirt floor (good impressions, but not as defined as fresh snow)" },
+  { key: "crhBrush",   group: "terrain", mod:  +3, label: "Thick brush, dense jungle (broken branches, crushed weeds)" },
+  { key: "crhForest",  group: "terrain", mod:  +2, label: "Forests, fields, dusty indoor area (occasional marks of passage)" },
+  { key: "crhNormal",  group: "terrain", mod:   0, label: "Normal ground, wood floor, plains with sparse vegetation (infrequent marks)" },
+  { key: "crhDesert",  group: "terrain", mod:  -2, label: "Desert, dry sand" },
+  { key: "crhSwamp",   group: "terrain", mod:  -5, label: "Swamp (spongy surface, little mud for prints, much vegetation)" },
+  { key: "crhRocky",   group: "terrain", mod: -10, label: "Rocky terrain, solid ice, stone floors, shallow water (all but the most minute signs prohibited)" },
+
+  // Table 16: Illumination Modifiers
+  { key: "crhLightGood", group: "illumination", mod:   0, label: "Good illumination, sunny day; continual light or equivalent indoors" },
+  { key: "crhLightDim",  group: "illumination", mod:  -3, label: "Twilight, light fog, snow, single torch in dark interior of building" },
+  { key: "crhLightMoon", group: "illumination", mod:  -6, label: "Night with full moon, day with moderate fog" },
+  { key: "crhLightNone", group: "illumination", mod: -10, label: "Overcast night with no moon, dense fog, blizzard, blowing sand" },
+
+  // Table 17: Special Tracking Modifiers
+  { key: "crhPerTwo",     group: "special", mod: +1, repeating: true, per: 2,
+    label: "Every two creatures in the group being tracked", countLabel: "Creatures in the group" },
+  // The ranger's own level bonus is DERIVED, not entered -- the panel reads the
+  // character's ranger level. Left in the list so the player can see the rule.
+  { key: "crhLevelBonus", group: "special", mod: +1, autoLevel: true, per: 3,
+    label: "Every three experience levels of the ranger (round down)" },
+  { key: "crhHelpers",    group: "special", mod: +1, repeating: true, per: 1,
+    label: "Each additional tracker assisting (use the score of the best tracker)",
+    countLabel: "Assisting trackers",
+    note: "Total assistance bonus is capped at the ranger's own level bonus, +1 per 3 levels." },
+  { key: "crhAnimal",     group: "special", mod: +1,
+    label: "Animal follower assists in tracking",
+    note: "An animal follower does NOT count as an additional tracker for the row above." },
+  { key: "crhOwnTerrain", group: "special", mod: +2,
+    label: "Trail is in a specialized ranger's primary terrain" },
+  { key: "crhPer12Hours", group: "special", mod: -1, repeating: true, per: 12,
+    label: "Every 12 hours since the trail was made", countLabel: "Hours since the trail was made" },
+  { key: "crhPerHourRain", group: "special", mod: -5, repeating: true, per: 1,
+    label: "Every hour of rain, snow or sleet since the trail was made", countLabel: "Hours of rain, snow or sleet" },
+  { key: "crhHidden",     group: "special", mod: -5,
+    label: "Creature being tracked attempts to hide the trail (covering footprints, detouring into a stream, secret doors)" },
+  { key: "crhHiddenSpec", group: "special", mod: -2,
+    label: "A specialized ranger being tracked hides his trail in his own primary terrain" }
+];
+
 // Table 40. The chance is the ADJUSTED Wisdom score being rolled against, not
 // a percentage -- a higher number means an easier check and faster pursuit.
-// Table 40. The printed table OVERLAPS AT 14 -- it reads "7-14" and then
-// "14 or greater" on consecutive rows, which is an error in the book, not a
-// transcription slip. Resolved in favour of the top band: "14 or greater"
-// names 14 explicitly as its lower bound, while "7-14" includes it only as a
-// range endpoint, and it is the player-favourable reading. A genuine coin
-// flip -- if a DM rules the other way, change the middle band's max to 14.
 // The slowdown applies to the whole party, not just the tracker.
+//
+// THE OVERLAP AT 14 IS SETTLED, August 2026. PHB Table 40 reads "7-14" and then
+// "14 or greater" on consecutive rows -- an error in the book, not a
+// transcription slip. This was originally resolved in favour of the top band as
+// the player-favourable reading, and flagged as a coin flip.
+//
+// PHBR11 Table 18 (p.15) prints the same table unambiguously as 1-6 / 7-14 /
+// 15+, giving 14 to the MIDDLE band. That is the same publisher restating the
+// same rule four years later, so it is read as CLARIFYING the PHB's intent
+// rather than as a supplement changing it -- which is why this correction is
+// NOT gated behind the PHBR11 toggle and applies to every character. The middle
+// band's max moved from 13 to 14 and the earlier guess was wrong.
 const TRACKING_MOVEMENT = [
   { max:  6, fraction: 1 / 4, label: "1/4 normal" },
-  { max: 13, fraction: 1 / 2, label: "1/2 normal" },
+  { max: 14, fraction: 1 / 2, label: "1/2 normal" },
   { max: Infinity, fraction: 3 / 4, label: "3/4 normal" }
 ];
 
@@ -5233,6 +5299,14 @@ const OPTIONAL_RULES = {
     category: 'phb',
     default: false
   },
+  rangerTrackingCRH: {
+    label:   'Ranger tracking: use the Complete Ranger\'s Handbook tables',
+    detail:  'PHBR11 Tables 15\u201317 (p.15), which the book states may be used in place ' +
+             'of PHB Table 39. Base is the ranger\'s Wisdom either way. Owned by the ' +
+             '\u201cApply PHBR11 core rules\u201d toggle.',
+    category: 'supplement',
+    default: false
+  },
   rangerDruidCRH: {
     label:   'Allow the half-elf ranger/druid multi-class',
     detail:  'PHBR11 p.79, printed as an Optional Rule. The PHB precludes this combination ' +
@@ -5293,13 +5367,22 @@ const SUPPLEMENTS = {
     title: 'The Complete Ranger\u2019s Handbook',
     order: 11,
     core: {
-      rules: ['rangerArmorStealthCRH'],
+      rules: ['rangerArmorStealthCRH', 'rangerTrackingCRH'],
       changes: [
         { text: 'Ranger stealth uses the CRH armor table (Tables 11 and 13) instead of ' +
                 'the PHB\u2019s binary rule: +5%/+10% unarmored, no change in leather, ' +
                 '-20%/-20% padded or studded, -30%/-40% ring mail, down to -95%/-95% in ' +
                 'full plate. Also lifts the studded-leather ceiling, since under the CRH ' +
-                'heavy armor reduces the chance rather than removing it.' }
+                'heavy armor reduces the chance rather than removing it.' },
+        { text: 'Tracking uses CRH Tables 15\u201317 in place of PHB Table 39, as the book ' +
+                'itself directs. Finer terrain detail (8 rows rather than 5), illumination ' +
+                'as its own table (4 rows rather than one blanket -6), and modifiers the ' +
+                'PHB has no equivalent for: +1 per three ranger levels, +2 in a specialized ' +
+                'ranger\u2019s primary terrain, and bonuses for assisting trackers and an ' +
+                'animal follower. Terrain and illumination become pick-one; special ' +
+                'modifiers stay cumulative.',
+          caveat: 'The cap on the assistance bonus (no more than the ranger\u2019s own ' +
+                  '+1-per-3-levels) is shown but not enforced.' }
       ]
     },
     optional: {
