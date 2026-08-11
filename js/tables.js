@@ -3589,9 +3589,33 @@ function getRangerStealth(root) {
   const dexAdj = (typeof THIEF_DEX_ADJUSTMENTS !== 'undefined')
     ? (THIEF_DEX_ADJUSTMENTS[dex] || [0, 0, 0, 0, 0]) : [0, 0, 0, 0, 0];
 
+  // PHBR11 Table 12: Kit Adjustments. Percentage points, added alongside the
+  // race and Dexterity figures. NO optional-rule gate -- this is not a
+  // supplement overriding the PHB, it is the content of a kit the player chose,
+  // and the kit selection IS the opt-in.
+  //
+  // Looked up by the same derivation validateKitAlignment and renderKitAbilities
+  // use: the select stores the kit NAME with whitespace removed, not the KITS
+  // object key.
+  let kitMods = null, kitName = '';
+  const kitValue = (val(root, 'kit') || '').trim();
+  if (kitValue && typeof getKitsForClass === 'function') {
+    const kit = getKitsForClass('ranger')
+      .find(k => k.name.toLowerCase().replace(/\s+/g, '') === kitValue);
+    if (kit && kit.thiefSkillMods) { kitMods = kit.thiefSkillMods; kitName = kit.name; }
+  }
+
+  // NULL is not zero. The Sea Ranger has NEITHER ability -- he replaces them
+  // with Sea Legs and Aquatic Combat -- so the figures are unavailable rather
+  // than unmodified, and the UI needs to say so instead of printing a number.
+  const noStealth = !!(kitMods &&
+    (kitMods.hideInShadows === null || kitMods.moveSilently === null));
+  const kitHide = (kitMods && typeof kitMods.hideInShadows === 'number') ? kitMods.hideInShadows : 0;
+  const kitMove = (kitMods && typeof kitMods.moveSilently  === 'number') ? kitMods.moveSilently  : 0;
+
   const clamp = v => Math.max(0, Math.min(RANGER_STEALTH_CAP, v));
-  const hide = clamp(base[0] + racial[4] + dexAdj[4]);
-  const move = clamp(base[1] + racial[3] + dexAdj[3]);
+  const hide = clamp(base[0] + racial[4] + dexAdj[4] + kitHide);
+  const move = clamp(base[1] + racial[3] + dexAdj[3] + kitMove);
 
   const armor = (typeof getThiefArmorCategory === 'function')
     ? getThiefArmorCategory(root) : { key: 'none', typeKey: 'none', name: 'No armor' };
@@ -3606,6 +3630,10 @@ function getRangerStealth(root) {
     base: base,
     racial: [racial[4], racial[3]],
     dex: [dexAdj[4], dexAdj[3]],
+    kit: [kitHide, kitMove],
+    kitName: kitName,
+    noStealth: noStealth,
+    kitNote: (kitMods && kitMods.note) ? kitMods.note : '',
     hide: hide,
     move: move,
     hideNonNatural: Math.floor(hide / 2),
@@ -5160,9 +5188,27 @@ const OPTIONAL_RULES_CATEGORIES = {
   // divisor rather than suppressing a warning, and there is no PHB coin weight
   // for "checked" to mean. Forcing a second such entry in would have quietly
   // broken the rule that ON always means the book.
-  table:    { label: '\u{1F3B2} Table Rulings',
+ table:    { label: '\u{1F3B2} Table Rulings',
               blurb: 'Questions the PHB leaves open. The default is the more common reading, ' +
-                     'not a rule -- settle these with your DM.' }
+                     'not a rule -- settle these with your DM.' },
+  // FOURTH CATEGORY. Rules from the Complete Handbooks and other supplements
+  // that CHANGE something the PHB already settles. Its invariant is different
+  // again from the other three: 'phb' and 'override' both anchor to the PHB,
+  // and 'table' covers questions the PHB never answers -- but here the PHB DOES
+  // answer, and a supplement answers differently.
+  //
+  // These always ship OFF. Unticked is the PHB, so ticking one is always the
+  // departure, and a table that owns only the core book is never silently
+  // playing a supplement's rules. Agreed with Chris, August 2026, as the
+  // standing rule for EVERY supplement integrated from here on.
+  //
+  // Content a supplement ADDS rather than changes -- a new kit, a new
+  // proficiency, a new weapon -- does NOT belong here. Adding a Falconry
+  // proficiency to the list takes nothing away from a PHB-only table, and the
+  // opt-in is choosing to use it. Only conflicts get a toggle.
+  supplement: { label: '\u{1F4DA} Supplement Rules',
+              blurb: 'Rules from the Complete Handbooks and other supplements that CHANGE ' +
+                     'something the PHB settles. Unticked is always the PHB.' }
 };
 
 // ===== Campaign Settings =====
