@@ -6485,8 +6485,11 @@ PROF_ABILITY_BUILDERS['tracking'] = function (root, entry, panelEl) {
   // RADIOS. The PHB list is one flat group of checkboxes and keeps that shape.
   const renderRow = m => {
     if (m.autoLevel) {
-      return `<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;opacity:0.75;">
-                <span style="width:52px;flex-shrink:0;text-align:right;">${levelBonus > 0 ? '+' + levelBonus : '\u2014'}</span>
+      return `<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+                <span style="width:52px;flex-shrink:0;text-align:center;padding:2px 4px;font-size:11px;
+                             border:1px solid var(--border);border-radius:var(--radius);
+                             background:color-mix(in srgb, var(--accent) 10%, transparent);
+                             color:var(--accent-light);font-weight:600;">${levelBonus > 0 ? '+' + levelBonus : '\u2014'}</span>
                 <span>${escapeHtml(m.label)}
                   <span style="color:var(--muted);">(from your ranger level, not entered)</span>
                 </span>
@@ -6528,16 +6531,31 @@ PROF_ABILITY_BUILDERS['tracking'] = function (root, entry, panelEl) {
             </div>`;
   };
 
+  // Each CRH table gets its own bordered box with an uppercase rule label, so
+  // "use only one" and "use all applicable" are attached to the group they
+  // govern rather than asserted once at the top for a mixed list. Matches the
+  // Ranger Stealth section's grammar directly above it.
   let rows;
   if (useCRH) {
-    rows = Object.keys(TRACKING_GROUPS_CRH).map(g => {
-      const inGroup = modList.filter(m => m.group === g);
-      if (!inGroup.length) return '';
-      return `<div style="margin-bottom:10px;">
-                <div style="font-weight:600;margin-bottom:4px;">${escapeHtml(TRACKING_GROUPS_CRH[g].label)}</div>
-                ${inGroup.map(renderRow).join('')}
-              </div>`;
-    }).join('');
+    const BOX = 'flex:1 1 260px;min-width:240px;padding:10px 12px;border:1px solid var(--border);' +
+                'border-radius:var(--radius);background:var(--glass);';
+    const CAP = 'font-size:10px;font-weight:bold;letter-spacing:0.6px;text-transform:uppercase;' +
+                'color:var(--accent-light);margin-bottom:8px;';
+    rows = '<div style="display:flex;gap:12px;flex-wrap:wrap;">' +
+      Object.keys(TRACKING_GROUPS_CRH).map(g => {
+        const inGroup = modList.filter(m => m.group === g);
+        if (!inGroup.length) return '';
+        const meta  = TRACKING_GROUPS_CRH[g];
+        const parts = meta.label.split('\u2014');
+        const name  = escapeHtml((parts[0] || meta.label).trim());
+        const rule  = parts[1] ? escapeHtml(parts[1].trim()) : '';
+        // Special is the long one; let it take the full width on its own row.
+        const box = meta.exclusive ? BOX : BOX + 'flex-basis:100%;';
+        return `<div style="${box}">
+                  <div style="${CAP}">${name}${rule ? ' <span style="font-weight:normal;text-transform:none;letter-spacing:0;color:var(--muted);">\u00B7 ' + rule + '</span>' : ''}</div>
+                  ${inGroup.map(renderRow).join('')}
+                </div>`;
+      }).join('') + '</div>';
   } else {
     rows = modList.map(renderRow).join('');
   }
@@ -6593,8 +6611,12 @@ PROF_ABILITY_BUILDERS['tracking'] = function (root, entry, panelEl) {
       ${lines.length ? `<div style="font-size:11px;color:var(--muted);margin-top:6px;white-space:pre-wrap;">${escapeHtml(lines.join('\n'))}</div>` : ''}
     </div>
 
-    <div style="font-size:11px;font-weight:600;margin-bottom:6px;">Conditions \u2014 tick every one that applies, they are cumulative</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0 16px;font-size:11px;margin-bottom:12px;">
+    <div style="font-size:11px;font-weight:600;margin-bottom:6px;">${useCRH
+      ? 'Conditions \u2014 each box says whether it takes one choice or several'
+      : 'Conditions \u2014 tick every one that applies, they are cumulative'}</div>
+    <div style="${useCRH
+      ? 'font-size:11px;margin-bottom:12px;'
+      : 'display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0 16px;font-size:11px;margin-bottom:12px;'}">
       ${rows}
     </div>
 
