@@ -2223,6 +2223,100 @@ function resolveArmorLegality(root) {
   });
 }
 
+// Animal empathy (PHBR11 Ch.2, Tables 30 and 31).
+//
+// THE SIGN IS THE THING TO GET RIGHT. The modifier is a PENALTY TO THE ANIMAL'S
+// saving throw, not a bonus to the ranger, so a higher ranger level makes the
+// animal more likely to FAIL its save -- which is the ranger succeeding. The
+// panel says whose roll it is in as many words, because "-4" on a ranger's
+// sheet reads as something bad happening to him.
+function renderAnimalEmpathy(root) {
+  const section = root.querySelector('.animal-empathy-display');
+  if (!section) return;
+
+  const ae = (typeof getAnimalEmpathy === 'function') ? getAnimalEmpathy(root) : null;
+  if (!ae) { section.style.display = 'none'; return; }
+  section.style.display = '';
+
+  const body = section.querySelector('.animal-empathy-body');
+  if (!body) return;
+
+  const attitudes = (typeof ANIMAL_ATTITUDES !== 'undefined' ? ANIMAL_ATTITUDES : [])
+    .map(a => `<div style="margin-top:4px;">
+                 <strong style="color:var(--text);">${escapeHtml(a.name)}</strong>
+                 <span style="color:var(--muted);"> \u2014 ${escapeHtml(a.text)}</span>
+               </div>`).join('');
+
+  const dormant = ae.dormant
+    ? `<div style="margin-top:10px;padding:8px;border-radius:var(--radius);font-size:12px;
+                   line-height:1.4;border:1px solid var(--warning, #e0a34a);
+                   background:color-mix(in srgb, var(--accent) 8%, transparent);">
+         <strong style="color:var(--warning, #e0a34a);">\u26A0 Dormant class</strong>
+         <div style="margin-top:4px;">Your ranger levels are dormant until your new class passes
+         level ${escapeHtml(String(ae.level))}. Shown for reference \u2014 using a former class\u2019s
+         abilities costs you the experience for that adventure.</div>
+       </div>`
+    : '';
+
+  body.innerHTML = `
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;">
+      <div style="flex:1 1 220px;min-width:200px;padding:10px 12px;border:1px solid var(--border);
+                  border-radius:var(--radius);background:var(--glass);">
+        <div style="font-size:10px;font-weight:bold;letter-spacing:0.6px;text-transform:uppercase;
+                    color:var(--accent-light);margin-bottom:8px;">Wild animals</div>
+        <div style="font-size:12px;line-height:1.5;">
+          The animal rolls a saving throw vs. rods at
+          <strong style="color:var(--accent-light);">${ae.mod}</strong>
+          <span style="color:var(--muted);">(your level ${ae.level})</span>.
+          <div style="color:var(--muted);margin-top:4px;">
+            If it FAILS, you shift its attitude one step up or down Table 30, your choice.
+            If it succeeds, nothing changes and you may not try again on that animal.
+            The new reaction applies to you only, and lasts a few minutes to an hour after
+            you leave.
+          </div>
+        </div>
+      </div>
+      <div style="flex:1 1 220px;min-width:200px;padding:10px 12px;border:1px solid var(--border);
+                  border-radius:var(--radius);background:var(--glass);">
+        <div style="font-size:10px;font-weight:bold;letter-spacing:0.6px;text-transform:uppercase;
+                    color:var(--accent-light);margin-bottom:8px;">Domestic animals</div>
+        <div style="font-size:12px;line-height:1.5;">
+          <strong style="color:var(--accent-light);">No saving throw.</strong>
+          <div style="color:var(--muted);margin-top:4px;">
+            Approach and soothe, and the animal becomes Friendly automatically and permanently,
+            so long as you stay in sight of it. Includes formerly wild animals that have been
+            tamed. You can also judge a domestic animal\u2019s general qualities by observation \u2014
+            which puppy will be the best hunter, which horse is soundest.
+          </div>
+        </div>
+      </div>
+    </div>
+    ${dormant}
+    <details class="disclosure" style="font-size:11px;margin-top:10px;">
+      <summary>conditions, and the animals this will not work on</summary>
+      <div style="color:var(--muted);margin-top:6px;line-height:1.5;">
+        <strong style="color:var(--text);">All of these must hold</strong><br>
+        You must move quietly, slowly and confidently, speaking soothing words and making
+        calming gestures \u2014 no fear shown, no weapon wielded, nothing that might frighten
+        or enrage the animal. The animal must be able to see and hear you: you must be in
+        plain sight, not hidden, with no barrier between you, and close enough for it to see
+        your eyes. Ideally your companions are out of its sight, and at least 10 feet behind
+        you if not. It must be stationary or moving only slightly \u2014 you cannot soothe a
+        charging or attacking animal \u2014 and you must soothe it for
+        <strong style="color:var(--text);">5-10 (1d6+4) uninterrupted rounds</strong>.<br><br>
+        <strong style="color:var(--text);">Never works on</strong><br>
+        Your species enemy, ever \u2014 the antagonism is too overwhelming to establish empathy.
+        Non-intelligent animals (Intelligence 0) such as centipedes or barracudas. Creatures of
+        higher intelligence, such as leprechauns, ogres and a paladin\u2019s warhorse, resist it.
+        As a rule of thumb it works on natural animals of Animal to Low intelligence
+        (Intelligence 1 to 7).<br><br>
+        <strong style="color:var(--text);">Table 30 \u2014 attitudes</strong>
+        ${attitudes}
+      </div>
+    </details>
+  `;
+}
+
 function renderRangerStealth(root) {
   const section = root.querySelector('.ranger-stealth-display');
   if (!section) return;
