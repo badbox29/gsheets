@@ -4209,7 +4209,15 @@ function addArmorFromBrowser(root, armor) {
     // other armor". It ADDS rather than replacing, so it must not land in the
     // Bracers slot, which is the bracers-of-defense behaviour and competes with
     // body armor instead of stacking.
-    'bracers': 'Supplemental Armor'
+    'bracers': 'Supplemental Armor',
+    // core_armor.json's barding rows (Chain, Full Scale, Banded Mail, Full
+    // Plate, the half-bardings) carry Armor Type "Horse Armor". Without a
+    // mapping they fell through to 'Armor' and sat in the character's own body
+    // armor slot. That was already wrong; it becomes actively dangerous once
+    // armorTypeKey is stored below, because "Barding, Chain" would then resolve
+    // to the chain key and drive AC, stealth and class restrictions from a
+    // mount's armor. Barding is not worn by the character.
+    'horse armor': 'Other'
   };
   const rawType  = String(armor['Armor Type'] || '').toLowerCase().trim();
   let armorType  = ARMOR_TYPE_TO_SLOT[rawType] || 'Armor';
@@ -4223,6 +4231,19 @@ function addArmorFromBrowser(root, armor) {
   const newArmorNode = makeArmorNode({
     name: armor['Armor Name'],
     armorType: armorType,
+    // THE ANCHOR RULE, finally honoured. getThiefArmorCategory documents the
+    // stored armorTypeKey as authoritative with the NAME as a fallback "for
+    // records predating the dropdown" -- but nothing ever wrote the key, so
+    // inference was carrying every character, not just legacy ones.
+    //
+    // Inferred ONCE here, from the catalogue name, and stored. That is the
+    // right place for a guess: made against a known-good name rather than a
+    // user-editable title, then visible and correctable in the Type dropdown.
+    // inferArmorTypeKey substring-matches, so "Boots, Hard Leather" would
+    // resolve to leather -- harmless because the slot is Boots and every
+    // consumer checks the slot first, but a reason not to re-run it per render.
+    armorTypeKey: (typeof inferArmorTypeKey === 'function')
+      ? inferArmorTypeKey(armor['Armor Name']) : '',
     baseAC: armor.AC || '10',
     acBonus: '0',
     equipped: false,
