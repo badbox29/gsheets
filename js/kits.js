@@ -5,6 +5,7 @@
 // - class:        Base class required
 // - source:       Provenance of this entry -- see PROVENANCE below
 // - abilities:    Special kit abilities, painted into the Kit Abilities list
+// - proficiencies: Weapon / nonweapon proficiency rules -- see PROFICIENCIES below
 // - requirements: Ability score / alignment / other requirements
 // - benefits:     Mechanical bonuses (prose)
 // - hindrances:   Restrictions and penalties (prose)
@@ -163,6 +164,153 @@
 // are removed from the three races that may be rangers at all.
 //
 // ---------------------------------------------------------------------------
+// PROFICIENCIES -- the four-way split
+// ---------------------------------------------------------------------------
+//
+//   proficiencies: {
+//     weapon:    { bonus, bonusChoice, required, recommended, allowed,
+//                  allowedGroups, barred, barredGroups, allowedPrinted, note },
+//     nonweapon: { bonus, bonusChoice, required, recommended, allowed,
+//                  barred, allowedPrinted, note }
+//   }
+//
+// Top level, a sibling of abilities and requirements -- NOT inside requirements,
+// even though three of the fields gate. The relationships all come out of one
+// printed paragraph, and splitting them by whether they gate would make the
+// transcriber decide twice about a single sentence.
+//
+//   bonus        Granted FREE at 1st level. Costs no slot.
+//   bonusChoice  A free grant the player CHOOSES from. Array of groups; pick one
+//                from each. "Bonus: Hunting or Fishing" is one free proficiency,
+//                not two, so it cannot be a flat bonus array.
+//   required     The kit forces one of the character's own slots onto it.
+//   recommended  Flavour. No mechanical force whatsoever.
+//   allowed      Whitelist -- everything outside it is flagged.
+//   barred       Blacklist.
+//
+// ONLY ONE OF THESE HAS A PHB ANALOGUE. The PHB has exactly one relationship --
+// a slot was spent or it wasn't -- with Table 37 crossover as a PRICE, not a
+// different kind of relationship. It never grants a proficiency free, never
+// mandates one, never suggests one, and has no concept of a forbidden one.
+// bonus and required are ARITHMETIC WITH OPPOSITE EFFECTS on the slot budget.
+//
+// RULES:
+//
+// 1. OMIT any key the book does not restrict. NEVER write []. This is
+//    deliberately DIFFERENT from the alignment convention above, where empty
+//    means unknown: source.status already carries "not yet transcribed", so an
+//    empty array here has no job -- and [] is truthy and sails through if (!x).
+//    The Warden has no proficiencies key at all, because his page restricts
+//    nothing. That is the rule working, not an omission.
+//
+// 2. allowed and barred are MUTUALLY EXCLUSIVE -- transcribe the shape the book
+//    printed, and never derive one from the other. Deriving barred from allowed
+//    enumerates today's core_wp.json into a kit's rules; add a weapon next year
+//    and the derived list is silently wrong.
+//    ONE EXCEPTION, and it is a real one: the Seeker carries BOTH, because his
+//    page prints two different SCOPES -- an allow-list governing his single
+//    1st-level slot, and a permanent absolute prohibition on swords. When a book
+//    does that, record both and say so in note.
+//
+// 3. WEAPON AND NONWEAPON ARE SEPARATE BLOCKS. Different slot pools, different
+//    name lists, restricted independently by the books.
+//
+// 4. NAMES ARE CANONICAL, resolving against core_nwp.json's Proficiency Name and
+//    core_wp.json's Weapon Name. The book's own wording goes in allowedPrinted
+//    and note, never in an array. The books and these files disagree constantly:
+//    "Modern Languages" is Languages, Modern; "short sword" is Sword, Short;
+//    "staff" is Quarterstaff; "Cobbler" is Cobbling; "Tailor" is
+//    Seamstress/Tailor; "kopesh" is Sword, Khopesh; "Weaponsmithing (Crude)" is
+//    Weaponsmithing, Crude. NOTE THAT core_wp.json HAS NO SINGLE CONVENTION --
+//    Short Bow and Hand Axe are natural order while every sword is inverted --
+//    so every name must be checked rather than derived from a rule.
+//
+// 5. A NAME-RESOLUTION VALIDATOR IS THE POINT of storing names. Normalise case
+//    and whitespace ONLY, never word order, never fuzzy. A word-order mismatch
+//    is a transcription error and must FAIL rather than be silently repaired.
+//
+// PRECEDENT: languages already carry isGranted -- free, badged GRANTED, excluded
+// from slots-spent but still counted against the Intelligence cap. That is
+// exactly bonus semantics. NWP entries have NO equivalent flag, and that is the
+// one genuinely new piece of plumbing a consumer will need.
+//
+// WHAT THESE FIELDS CANNOT SAY -- and deliberately do not try to.
+//
+// Eight ranger kits restrict SLOT COUNT or SLOT ORDER rather than WHICH
+// proficiency, and none of it is expressible here. Every case is recorded in the
+// relevant note, in the book's words, prefixed SLOT RULE / SLOT COUNT /
+// SLOT PATTERN / COST REDUCTION so it can be grepped when a consumer exists:
+//
+//   Seeker         one weapon proficiency at 1st level
+//   Justifier      one nonweapon slot at 1st level; a mandatory specialization
+//   Giant Killer   one nonweapon proficiency at 1st level; 1st and every ODD
+//                  weapon slot must be a missile weapon
+//   Explorer       twice the normal languages from Intelligence
+//   Falconer       two of the INITIAL weapon slots from a list; rest free
+//   Forest Runner  an EXTRA weapon slot, then three of the first six from a list
+//   Pathfinder     one initial slot from machete / hand axe / any sword
+//   Seeker, Forest Runner   a proficiency at reduced slot cost
+//
+// NOT BUILT ON PURPOSE. Nothing in the app computes a slot budget from a kit, so
+// there is nothing to feed; the shapes are three different problems (a count cap,
+// an ordinal pattern, a partial fill); and designing all of them off fifteen
+// ranger kits before seeing how PHBR1's fourteen phrase the same ideas is the
+// design-up-front error this file already has a scar from. Add them when a
+// consumer exists AND a second book has shown the shape.
+//
+// The obvious next field is requiredChoice -- the paid mirror of bonusChoice,
+// which the Pathfinder needs. It is left out only because one kit is not enough
+// evidence to name a field after.
+//
+// KNOWN DUPLICATION, ACCEPTED: the ability cards repeat these names in prose.
+// The card is what the PLAYER READS; the field is what the APP COMPUTES FROM.
+// Two places to drift. The eventual fix is to generate the card from the field.
+//
+// ---------------------------------------------------------------------------
+// THREE THINGS ARE CALLED "WEAPON GROUP". DO NOT MERGE THEM.
+// ---------------------------------------------------------------------------
+//
+//   Group / WEAPON_GROUP_ORDER   core_wp.json, tables.js.  21 values.
+//       "What shelf is this weapon on?" Drives browse and filter, AND is the
+//       fallback for the related-weapons half-penalty when the PHB omits a
+//       weapon.  UNSOURCED -- a house taxonomy with no book behind it.
+//
+//   PHB_RELATED_WEAPONS          tables.js.  10 sets.
+//       "Does my proficiency partly cover this?"  NARROWER than Group: the sword
+//       set is only scimitar / bastard / long / broad.  PHB Ch.5, verbatim.
+//
+//   Tight Groups / Broad Groups  PHBR1 pp.58-60.  NOT YET BUILT.
+//       "What can one slot buy?"  A Tight Group costs TWO slots and grants
+//       proficiency in every weapon in it.
+//
+// allowedGroups and barredGroups point at THE FIRST of these, because it is the
+// only taxonomy that partitions the whole list -- every weapon has a Group,
+// where PHB_RELATED_WEAPONS covers about forty and leaves the rest unassigned. A
+// kit restriction has to answer "may I take this?" for every row in the browser,
+// including weapons from books not yet audited.
+//
+// The cost, recorded honestly: a printed kit restriction is resolving through
+// house data. Mitigated by keeping the check ADVISORY and by storing
+// allowedPrinted beside it.
+//
+// TWO CONTAINMENTS:
+//   - PHBR1's tight/broad system changes slot ARITHMETIC and is a separate
+//     build. Register it as TIGHT_GROUPS / BROAD_GROUPS so nobody later reads
+//     allowedGroups as a purchasable unit.
+//   - allowedGroups MUST NEVER REACH areWeaponsRelated. A kit restriction
+//     governs what you may LEARN; the related rule governs how well you SWING.
+//     Leaking one into the other silently widens a PHB rule.
+//
+// WHY GROUPS ARE STORED AND NOT RESOLVED TO NAMES. Alignment, terrain and race
+// resolve to sets at audit time because those domains are CLOSED -- nine, ten
+// and six values, fixed forever. The weapon list is NOT closed: 95 today, more
+// with every book. "axe (any)" resolved to four names in 2026 silently excludes
+// an axe printed in a book audited in 2027.
+//   RESOLVE AT AUDIT TIME WHEN THE DOMAIN IS CLOSED.
+//   STORE THE RULE WHEN THE DOMAIN IS OPEN.
+//
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
 // ADVISORY, NEVER BLOCKING -- do not "fix" this into a gate
 // ---------------------------------------------------------------------------
 //
@@ -275,10 +423,10 @@ const KITS = {
       name: "Archer",
       class: "fighter",
       source: {
-        status: "unverified",
-        work:   "PHBR1 The Complete Fighter's Handbook",
+        status: "house",
+        work:   null,
         pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+        note:   "NO PUBLISHED SOURCE. The August 2026 PHBR1 survey read the book's full kit list -- Amazon, Barbarian, Beast-Rider, Berserker, Cavalier, Gladiator, Myrmidon, Noble Warrior, Peasant Hero, Pirate/Outlaw, Samurai, Savage, Swashbuckler, Wilderness Warrior -- and Archer is not in it. Retained as deliberate house material at Chris's direction; the mechanics below remain unsourced paraphrase and are NOT a transcription of anything."
       },
       abilities: [
         { name: "Point Blank Range", notes: "+2 to hit at point blank range (6 ft or less)" },
@@ -361,10 +509,10 @@ const KITS = {
       name: "Pit Fighter",
       class: "fighter",
       source: {
-        status: "unverified",
-        work:   "PHBR1 The Complete Fighter's Handbook",
+        status: "house",
+        work:   null,
         pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+        note:   "NO PUBLISHED SOURCE. The August 2026 PHBR1 survey read the book's full kit list -- Amazon, Barbarian, Beast-Rider, Berserker, Cavalier, Gladiator, Myrmidon, Noble Warrior, Peasant Hero, Pirate/Outlaw, Samurai, Savage, Swashbuckler, Wilderness Warrior -- and Pit Fighter is not in it. Retained as deliberate house material at Chris's direction; the mechanics below remain unsourced paraphrase and are NOT a transcription of anything."
       },
       abilities: [
         { name: "Unarmed Combat", notes: "Improved unarmed fighting capability" },
@@ -422,6 +570,23 @@ const KITS = {
         note:   "Transcribed from the book."
       },
       thiefSkillMods: { hideInShadows: 5, moveSilently: 0 },
+      proficiencies: {
+        weapon: {
+          allowed: [
+            "Club", "Dagger", "Dart", "Javelin", "Knife", "Quarterstaff", "Sling", "Spear",
+          ],
+          allowedGroups: ["Axe"],
+          allowedPrinted: "Initially limited to weapons he can make himself: axe (any), club, dagger, dart, javelin, knife, quarterstaff, sling, spear"
+        },
+        nonweapon: {
+          recommended: [
+            "Agriculture", "Bowyer/Fletcher", "Endurance", "Hunting", "Leatherworking",
+            "Running", "Swimming", "Weather Sense", "Weaponsmithing, Crude",
+          ],
+          barred: ["Armorer", "Etiquette", "Heraldry", "Navigation", "Weaponsmithing"],
+          note: "The book prints no bonus proficiency (\"Bonus: none, but see Special Benefits\"). Weaponsmithing, Crude is printed separately as \"Optional\" rather than recommended -- it is PERMITTED even though plain Weaponsmithing is barred, and is described in the Mountain Man kit."
+        }
+      },
       abilities: [
         { name: "Stealth", notes: "+5% chance to hide in natural surroundings." },
         { name: "Animal Henchmen", notes: "Receives no special followers at high level, but may acquire normal or giant animals as henchmen at ANY level. Number depends on Charisma. Slain or driven-off animals may be replaced without penalty, though it may take time." },
@@ -454,6 +619,26 @@ const KITS = {
         note:   "Transcribed from the book."
       },
       thiefSkillMods: { hideInShadows: 0, moveSilently: 0 },
+      proficiencies: {
+        weapon: {
+          allowed: [
+            "Short Bow", "Light Crossbow", "Dagger", "Dart", "Knife", "Sling",
+            "Sword, Short",
+          ],
+          allowedPrinted: "Confined to short bow, light crossbow, dagger, dart, knife, sling, short sword"
+        },
+        nonweapon: {
+          required: ["Cartography", "Reading/Writing"],
+          recommended: [
+            "Ancient History", "Bowyer/Fletcher", "Camouflage", "Direction Sense",
+            "Distance Sense", "Endurance", "Fire-Building", "Fishing", "Foraging",
+            "Herbalism", "Hunting", "Languages, Ancient", "Languages, Modern",
+            "Mountaineering", "Navigation", "Rope Use", "Signaling", "Swimming",
+            "Trail Marking", "Weather Sense",
+          ],
+          note: "The book prints the two language entries as \"Languages (Ancient and Modern)\". SLOT RULE NOT MODELLED: an Explorer may learn twice the number of languages his Intelligence allows, each still costing a slot."
+        }
+      },
       abilities: [
         { name: "Languages", notes: "Can learn twice the normal number of languages allowed by his Intelligence score (PHB Table 4). An Explorer with Intelligence 12 can learn six languages instead of the usual three. All languages still cost a proficiency slot each." },
         { name: "Find the Path", notes: "Can sense the correct direction that will eventually lead to a desired geographical locale. Must be in an outdoor setting, and must have some clue, map, information, or body of research about the locale. Usable once per week, providing a day's worth of guidance." },
@@ -484,6 +669,20 @@ const KITS = {
         note:   "Transcribed from the book."
       },
       thiefSkillMods: { hideInShadows: 0, moveSilently: 0 },
+      proficiencies: {
+        weapon: {
+          allowedPrinted: "Must take two of his initial weapon proficiency slots in any of: bow (any), crossbow (light), dagger, knife, sling, spear",
+          note: "SLOT RULE, NOT AN ALLOW-LIST -- only TWO initial slots are constrained; remaining and all subsequent slots are free, so nothing here restricts the weapon list as a whole. Left unstructured deliberately; see the header on partial-fill rules."
+        },
+        nonweapon: {
+          bonus: ["Falconry"],
+          recommended: [
+            "Alertness", "Bowyer/Fletcher", "Endurance", "Hunting", "Leatherworking",
+            "Veterinary Healing",
+          ],
+          note: "The ability card prose says \"Veterinary Medicine\"; the proficiency is named Veterinary Healing in core_nwp.json and in every other kit here."
+        }
+      },
       abilities: [
         { name: "Enhanced Training", notes: "If a normal falcon has failed to learn a trick or task and become untrainable, the Falconer can try again after gaining a level." },
         { name: "Attuned Follower", notes: "May bond with a falcon follower. Attuning takes six weeks of at least an hour each day; he may forego his own training during this period. At the end he makes a Wisdom check -- on a failure the falcon continues as a normal follower and no second attempt may be made on that bird. On a success the falcon is attuned: it can learn a task or trick each time the FALCONER gains a level, training time is half that given in the falconry proficiency, it can learn tricks up to one per level of the falconer, and it never becomes untrainable. It also gains a one-time hit point bonus equal to twice the Falconer's level at the time of attuning; that bonus does not change as the Falconer advances." },
@@ -515,6 +714,26 @@ const KITS = {
         note:   "Transcribed from the book."
       },
       thiefSkillMods: { hideInShadows: 10, moveSilently: 10 },
+      proficiencies: {
+        weapon: {
+          required: ["Club", "Knife"],
+          allowed: ["Blowgun", "Dagger", "Short Bow", "Dart", "Hand Axe", "Sling", "Spear"],
+          allowedPrinted: "Club and knife are required. Remaining slots must be spent on primitive weapons: blowgun (rare), dagger, short bow, dart, hand axe, sling, spear",
+          note: "The book notes the blowgun is rare."
+        },
+        nonweapon: {
+          bonus: ["Trail Signs"],
+          bonusChoice: [["Hunting", "Fishing"]],
+          allowed: [
+            "Alertness", "Animal Handling", "Animal Lore", "Blind-Fighting",
+            "Direction Sense", "Endurance", "Fire-Building", "Fishing", "Foraging",
+            "Hunting", "Rope Use", "Running", "Set Snares", "Survival", "Swimming",
+            "Veterinary Healing", "Weather Sense",
+          ],
+          allowedPrinted: "His remaining initial proficiencies must be chosen from this list",
+          note: "The allow-list governs INITIAL proficiencies only."
+        }
+      },
       abilities: [
         { name: "Familial Species", notes: "At the beginning of his career the player chooses a familial species representing the type of animal that raised him. A Feralan has only a SINGLE familial species, which never changes. It must share his primary terrain and is subject to DM approval. Suitable animals include wild dogs, bears (any), wolves, great cats (any), and primates (any). It cannot be human, demihuman, humanoid, or of magical or supernatural origin." },
         { name: "Stealth", notes: "+10% chance to hide in natural surroundings and +10% chance to move silently." },
@@ -555,6 +774,21 @@ const KITS = {
         note:   "Transcribed from the book."
       },
       thiefSkillMods: { hideInShadows: 5, moveSilently: 5 },
+      proficiencies: {
+        weapon: {
+          allowedPrinted: "A bonus weapon slot must be filled with one of long bow, quarterstaff, long sword or dagger; three of his first six slots must then take the remaining weapons on that list",
+          note: "SLOT RULE, NOT AN ALLOW-LIST -- once the requirement is met, subsequent slots may be filled with any weapon. Also grants an EXTRA weapon slot, which no field here models."
+        },
+        nonweapon: {
+          required: ["Bowyer/Fletcher"],
+          recommended: [
+            "Alertness", "Blacksmithing", "Camouflage", "Disguise", "Endurance",
+            "Leatherworking", "Persuasion", "Riding, Land-Based", "Rope Use",
+            "Weaponsmithing",
+          ],
+          note: "COST REDUCTION NOT MODELLED: Disguise costs him one slot rather than its listed cost."
+        }
+      },
       abilities: [
         { name: "Stealth", notes: "+5% chance to hide in natural surroundings and +5% chance to move silently." },
         { name: "Inspire", notes: "Once per day, prior to making an attack, may spend 2-5 (1d4+1) rounds boosting the morale of his companions with flattering words and expressions of confidence. He can influence a number of companions equal to his level. If he makes a successful Charisma check, the companions enjoy a +2 bonus to their morale for the next 3-12 (3d4) rounds, and each also receives a +1 bonus to his first attack roll. The inspiring speech does not affect animals, other Forest Runners, or himself. He cannot attempt to inspire companions in the midst of battle or while they are occupied in any other activity." },
@@ -585,6 +819,21 @@ const KITS = {
         note:   "Transcribed from the book."
       },
       thiefSkillMods: { hideInShadows: 0, moveSilently: 0 },
+      proficiencies: {
+        weapon: {
+          allowedGroups: ["Bow", "Crossbow", "Sling"],
+          allowedPrinted: "The first weapon slot, and every odd slot thereafter, must be a missile weapon: bow (any), crossbow (any), sling, staff sling, or any melee weapon that can be hurled",
+          note: "SLOT PATTERN, NOT AN ALLOW-LIST -- even-numbered slots may take any weapon, so allowedGroups describes only what an ODD slot may hold and must not be read as a restriction on the whole list. \"Any melee weapon that can be hurled\" is an open tail with no field."
+        },
+        nonweapon: {
+          allowed: [
+            "Bowyer/Fletcher", "Cobbling", "Cooking", "Hunting", "Pottery",
+            "Riding, Land-Based", "Running", "Seamstress/Tailor", "Swimming", "Weaving",
+          ],
+          allowedPrinted: "Allowed only one nonweapon proficiency at first level, selected from: Bowyer/Fletcher, Cobbler, Cooking, Hunting, Pottery, Riding (Land-based), Running, Tailor, Swimming, Weaving",
+          note: "SLOT COUNT NOT MODELLED: only ONE nonweapon proficiency at 1st level. The book's \"Cobbler\" and \"Tailor\" are named Cobbling and Seamstress/Tailor in core_nwp.json."
+        }
+      },
       abilities: [
         { name: "Bonus Damage vs. Giants", notes: "Inflicts bonus damage against giants of +1 point of damage for every level of the Giant Killer. A 7th level Giant Killer who hits with a spear deals 1-8 from the spear plus 7." },
         { name: "Giants Suffer -4 to Hit Him", notes: "Giants have a base -4 to hit when attacking Giant Killers. A giant with THAC0 10 needs a 14 to hit a Giant Killer with AC 0." },
@@ -616,6 +865,31 @@ const KITS = {
         note:   "Transcribed from the book. Long entry with a staged transformation; the latency rules on p.59-60 are as important as the benefits."
       },
       thiefSkillMods: { hideInShadows: 0, moveSilently: -5 },
+      proficiencies: {
+        weapon: {
+          allowed: [
+            "Dagger", "Knife", "Quarterstaff", "Sling", "Spear", "Sword, Long",
+            "Sword, Short",
+          ],
+          allowedGroups: ["Axe", "Bow", "Crossbow"],
+          allowedPrinted: "Limited to axe (any), bow (any), crossbow (any), dagger, knife, quarterstaff, sling, spear, long sword, short sword"
+        },
+        nonweapon: {
+          bonus: ["Herbalism"],
+          required: ["Agriculture"],
+          recommended: [
+            "Carpentry", "Endurance", "Foraging", "Swimming", "Trail Marking",
+            "Weather Sense",
+          ],
+          barred: [
+            "Armorer", "Blacksmithing", "Fire-Building", "Engineering", "Leatherworking",
+            "Mining", "Mountaineering", "Navigation", "Riding, Land-Based",
+            "Riding, Airborne", "Seamanship", "Spelunking", "Stonemasonry",
+            "Weaponsmithing",
+          ],
+          note: "The book prints the two riding entries as \"Riding (Land-based and Airborne)\". Restrictions apply from 1st level, during latency, even though the kit's special abilities do not arrive until 4th."
+        }
+      },
       abilities: [
         { name: "Becoming a Greenwood Ranger", notes: "Must commit at 1st level, but the special abilities are not acquired until 4th level. From 1st through 3rd he is a LATENT Greenwood Ranger, operating as a standard ranger while following the secondary skill, weapon and nonweapon proficiency restrictions below and receiving the bonus proficiencies. He may wear any armor allowed a normal ranger and does NOT have the kit's special benefits or hindrances yet. During latency he must spend a minimum of three hours per week in silent prayer; the gods tolerate an occasional lapse, but a ranger who intentionally neglects his prayers on a regular basis is informed in a dream that he is no longer eligible, must abandon the kit, and may NOT take another. At 4th level the gods give him a simple task involving the protection or support of plant life; failing to complete it within a month means an additional 1-4 months of praying before a new task is granted. He then lies in an isolated area of forest or jungle covered in leaves and branches and sleeps for a full day -- if disturbed before 24 hours elapse the transformation is interrupted and he may try again another time." },
         { name: "Cannot Abandon the Kit", notes: "Once transformed, a Greenwood Ranger CANNOT abandon this kit, although actions that would normally cost a ranger his class result in the loss of spell use and other penalties determined by the DM." },
@@ -654,6 +928,16 @@ const KITS = {
         note:   "Transcribed from the book."
       },
       thiefSkillMods: { hideInShadows: 0, moveSilently: 0 },
+      proficiencies: {
+        nonweapon: {
+          bonusChoice: [["Hunting", "Fishing"]],
+          recommended: [
+            "Agriculture", "Bowyer/Fletcher", "Fire-Building", "Fishing", "Foraging",
+            "Herbalism", "Hunting", "Riding, Land-Based", "Rope Use", "Set Snares",
+            "Swimming", "Veterinary Healing", "Weather Sense",
+          ]
+        }
+      },
       abilities: [
         { name: "Domain", notes: "Every Guardian has a specific region he protects. The DM establishes the boundaries at the beginning of his career. There are no fixed rules, but in general a 1st level Guardian's domain should not exceed a few square miles; it expands by several square miles each time he gains a level. By 5th level it might encompass a region about 20-25 miles across, and by 15th level or higher it might comprise an area the size of a small country. It should correspond to his primary terrain and is typically in an uncivilized part of the world. Two or more Guardians may share an especially large domain, but such cases are rare." },
         { name: "Bonus Sphere: Protection", notes: "Minor access to the Protection sphere." },
@@ -683,6 +967,20 @@ const KITS = {
         note:   "Transcribed from the book."
       },
       thiefSkillMods: { hideInShadows: 5, moveSilently: 5 },
+      proficiencies: {
+        weapon: {
+          allowedPrinted: "Must use some of his initial proficiency slots to take one weapon specialization; the weapon of specialization is taken from his list of recommended weapons",
+          note: "SLOT RULE, NOT AN ALLOW-LIST -- a mandatory specialization, which no field here models. The book does not print the list of recommended weapons it refers to."
+        },
+        nonweapon: {
+          recommended: [
+            "Alertness", "Blind-Fighting", "Bowyer/Fletcher", "Camouflage", "Endurance",
+            "Falconry", "Hunting", "Mountaineering", "Navigation", "Riding, Land-Based",
+            "Rope Use", "Running", "Set Snares", "Swimming", "Weaponsmithing",
+          ],
+          note: "BONUS NOT EXPRESSIBLE AS A NAME: he receives Survival in one extra terrain of his choice, which is a second instance of a proficiency he already has, not a new one. SLOT COUNT NOT MODELLED: only ONE nonweapon slot at 1st level, in addition to that bonus."
+        }
+      },
       abilities: [
         { name: "Weapon Specialization", notes: "Because of his extensive combat training, the Justifier MUST use some of his initial proficiency slots to take one weapon specialization (PHB Chapter 5). The weapon of specialization is taken from his list of recommended weapons." },
         { name: "Stealth", notes: "+5% bonus to his chance of hiding in natural surroundings and to his chance of moving silently." },
@@ -716,6 +1014,31 @@ const KITS = {
         note:   "Transcribed from the book."
       },
       thiefSkillMods: { hideInShadows: -5, moveSilently: -5 },
+      proficiencies: {
+        weapon: {
+          allowed: [
+            "Club", "Dagger", "Dart", "Javelin", "Knife", "Quarterstaff", "Spear",
+            "Staff Sling", "War Hammer",
+          ],
+          allowedGroups: ["Axe", "Bow", "Crossbow"],
+          allowedPrinted: "Must choose his initial weapon proficiencies from: axe (any), bow (any), crossbow (any), club, dagger, dart, javelin, knife, quarterstaff, spear, staff sling, warhammer",
+          note: "Governs INITIAL weapon proficiencies."
+        },
+        nonweapon: {
+          bonus: ["Mountaineering", "Weaponsmithing, Crude"],
+          required: ["Hunting"],
+          recommended: [
+            "Alertness", "Endurance", "Fire-Building", "Foraging", "Mining", "Running",
+            "Set Snares", "Signaling", "Trail Marking", "Trail Signs", "Weather Sense",
+          ],
+          barred: [
+            "Agriculture", "Armorer", "Blacksmithing", "Boating", "Bowyer/Fletcher",
+            "Charioteering", "Engineering", "Etiquette", "Falconry", "Heraldry",
+            "Navigation", "Reading/Writing", "Seamanship", "Spellcraft",
+          ],
+          note: "Bowyer/Fletcher is barred because its function is included in the Weaponsmithing, Crude bonus, not because the skill is forbidden -- the book says so explicitly."
+        }
+      },
       abilities: [
         { name: "Will to Live", notes: "Where others would submit to death, the Mountain Man clings to life ferociously. If missing a saving throw vs. death magic would be fatal, he receives a +2 saving throw bonus. If a damage roll would reduce him to zero hit points or less, he makes a Constitution check; if it succeeds he is reduced to 1 hit point instead. He cannot use this ability if he has only 1 hit point remaining. If an encounter results in his death he may not die immediately -- he makes a system shock roll and fights on for another 1-4 rounds, or until he suffers damage below -10 hit points equal to his level, whichever occurs first, then drops dead." },
         { name: "Brew Healing Elixir (7th level)", notes: "Gains the ability to brew a special healing elixir. He must spend 1-4 hours gathering the necessary fresh herbs and mosses, usually available in any forest, jungle or mountain region as determined by the DM. It takes an hour to brew and remains potent for 24 hours. The elixir acts as one dose of a potion of healing. He may brew one per day." },
@@ -754,6 +1077,19 @@ const KITS = {
         note:   "Transcribed from the book."
       },
       thiefSkillMods: { hideInShadows: 0, moveSilently: 0 },
+      proficiencies: {
+        weapon: {
+          allowedPrinted: "Must fill an initial weapon slot with the machete, hand axe, or sword -- weapons useful for cutting away brush and clearing paths",
+          note: "SLOT RULE, NOT AN ALLOW-LIST -- one initial slot is constrained and subsequent slots may be filled with any weapon. This is a required CHOICE from Machete / Hand Axe / any sword; there is no field for that yet, so it is left as printed."
+        },
+        nonweapon: {
+          bonus: ["Direction Sense", "Distance Sense", "Trail Marking", "Alertness"],
+          recommended: [
+            "Camouflage", "Endurance", "Fire-Building", "Foraging", "Mountaineering",
+            "Navigation", "Signaling", "Trail Signs", "Weather Sense",
+          ]
+        }
+      },
       abilities: [
         { name: "Trail Sense", notes: "His chance of getting lost in any outdoor land setting is reduced by 10%. Further, his base chance of getting lost in his primary terrain -- the Surroundings column of Table 81 in the DUNGEON MASTER Guide -- will not exceed 20%. This is NOT cumulative with other benefits, such as the one for the direction sense proficiency. Applies only when the Pathfinder leads the party and at least 20 feet separates him from the rest of it." },
         { name: "Overland Guiding", notes: "Able to find the optimum trail through rough terrain, increasing the party's movement rate when traversing long distances. Use Table 49 in place of Table 74 in Chapter 14 of the DUNGEON MASTER Guide. Movement costs per mile: Barren/wasteland 1; Clear farmland 1/2; Desert, rocky 1; Desert, sand 2; Forest, light 1; Forest, medium 2; Forest, heavy 3; Glacier 1; Hills, rolling 1; Hills, steep (foothills) 3; Jungle, medium 4; Jungle, heavy 6; Marsh/swamp 6; Moor 3; Mountains, low 3; Mountains, medium 4; Mountains, high 6; Plains/grassland/heath 1; Scrub/brushland 1; Tundra 2. Applies only when the Pathfinder leads the party and at least 20 feet separates him from the rest of it." },
@@ -788,6 +1124,20 @@ const KITS = {
         moveSilently:  null,
         note: "N/A -- a Sea Ranger has NEITHER hide in shadows nor move silently, replacing them with Sea Legs and Aquatic Combat"
       },
+      proficiencies: {
+        nonweapon: {
+          bonus: ["Swimming"],
+          bonusChoice: [["Boating", "Seamanship"]],
+          recommended: [
+            "Cartography", "Direction Sense", "Distance Sense", "Endurance", "Fishing",
+            "Navigation", "Riding, Sea-based", "Rope Use",
+          ],
+          barred: [
+            "Agriculture", "Blacksmithing", "Charioteering", "Falconry", "Mining",
+            "Mountaineering", "Riding, Land-Based", "Spelunking", "Stonemasonry",
+          ]
+        }
+      },
       abilities: [
         { name: "Sea Tracking", notes: "Because of his knowledge of prevailing winds, currents and other general aquatic conditions, he can effectively track waterborne craft and aquatic creatures. This is not so much a reading of physical signs as an instinctive deduction of the probable course and destination of the quarry. For purposes of general play he uses the normal Tracking proficiency check rules." },
         { name: "Land Scent", notes: "When at sea, can smell the presence of land -- including islands -- within 50 miles. Further, if he has ever been to that land before, he has a 10% chance per level of identifying it precisely." },
@@ -820,6 +1170,26 @@ const KITS = {
         note:   "Transcribed from the book."
       },
       thiefSkillMods: { hideInShadows: 0, moveSilently: 0 },
+      proficiencies: {
+        weapon: {
+          allowed: [
+            "Club", "Light Crossbow", "Dagger", "Dart", "Knife", "Quarterstaff", "Sickle",
+            "Sling",
+          ],
+          barredGroups: ["Sword"],
+          allowedPrinted: "Receives only a single weapon proficiency at first level, which must be spent on one of: club, light crossbow, dagger, dart, knife, quarterstaff, sickle, or sling. He can never use a sword of any type.",
+          note: "THE ONE PLACE allowed AND barred COEXIST, because the book prints two different SCOPES: the allow-list governs his single 1st-level slot, while the sword prohibition is permanent and absolute. SLOT COUNT NOT MODELLED: one weapon proficiency at 1st level. The DM may impose further restrictions from the Seeker's religion."
+        },
+        nonweapon: {
+          bonus: ["Religion"],
+          recommended: [
+            "Agriculture", "Ancient History", "Artistic Ability", "Astrology", "Carpentry",
+            "Cobbling", "Etiquette", "Languages, Ancient", "Pottery", "Reading/Writing",
+            "Spellcraft", "Veterinary Healing", "Weaving",
+          ],
+          note: "COST REDUCTION NOT MODELLED: a Seeker takes PRIEST-group proficiencies at their listed cost rather than the doubled crossover cost."
+        }
+      },
       abilities: [
         { name: "Increased Access to Spells", notes: "Unlike other rangers, the Seeker acquires spells when he reaches 6th level, and can also cast 4th level spells. Table 51: no spells to 5th level; 6th casting level 1 (1/-/-/-); 7th casting level 2 (2/-/-/-); 8th casting level 3 (2/1/-/-); 9th casting level 4 (2/2/-/-); 10th casting level 5 (2/2/1/-); 11th casting level 6 (3/2/1/-); 12th casting level 7 (3/2/2/-); 13th casting level 8 (3/3/2/1); 14th casting level 9 (3/3/3/1); 15th casting level 10 (4/4/3/1); 16th and above casting level 11 (4/4/3/2)." },
         { name: "Extra Sphere", notes: "Has access to spells from an EXTRA sphere in addition to those of plant and animal. On reaching 6th level he chooses an extra sphere from divination, healing, protection, or weather. This extra sphere remains the same for the rest of his career." },
@@ -849,6 +1219,23 @@ const KITS = {
         note:   "Transcribed from the book."
       },
       thiefSkillMods: { hideInShadows: 10, moveSilently: 10 },
+      proficiencies: {
+        weapon: {
+          allowed: [
+            "Blowgun", "Dagger", "Dart", "Knife", "Sword, Short", "Quarterstaff", "Sling",
+          ],
+          allowedPrinted: "Becomes proficient only with weapons he can easily conceal: blowgun, dagger, dart, knife, short sword, staff, and sling",
+          note: "The book's \"staff\" is the Quarterstaff. The book also offers garrote, rapier (carried as a walking stick) and stiletto as DM options; Rapier and Stiletto exist in core_wp.json but are NOT added to the allow-list because the book prints them as optional, and there is no garrote record at all."
+        },
+        nonweapon: {
+          bonus: ["Alertness", "Camouflage"],
+          recommended: [
+            "Blind-Fighting", "Etiquette", "Languages, Modern", "Persuasion", "Signaling",
+            "Trail Marking", "Trail Signs",
+          ],
+          note: "The book prints \"Modern Languages\"; the proficiency is named Languages, Modern in core_nwp.json."
+        }
+      },
       abilities: [
         { name: "Urban Tracking", notes: "Normal ranger tracking abilities in outdoor land settings. In addition, he has FULL (not half) tracking capabilities in urban settings." },
         { name: "Stealth Abilities", notes: "+10% bonus to his base chance to hide in shadows / hide in natural surroundings and a +10% bonus to his chances to move silently. He has the FULL (not half) chance for success when attempting to hide in shadows or move silently in urban settings, or in non-natural constructions such as crypts or dungeons." },
@@ -922,6 +1309,19 @@ const KITS = {
       },
       thiefSkillMods: { hideInShadows: 0, moveSilently: 0,
         note: "DRAGON #234 states no stealth adjustment. Not in PHBR11 Table 12, which predates these kits." },
+      proficiencies: {
+        weapon: {
+          allowedPrinted: "One weapon proficiency must be taken in a bludgeoning weapon. No other weapon restrictions; he may choose from any weapon the ranger class can use.",
+          note: "NOT STRUCTURED: \"bludgeoning\" is not a value in WEAPON_GROUP_ORDER, which splits those weapons across Club, Flail, Hammer and Mace. Resolving it would mean inventing a group the taxonomy does not have."
+        },
+        nonweapon: {
+          bonus: ["Ancient History"],
+          recommended: [
+            "Alertness", "Blind-Fighting", "Endurance", "Hunting", "Persuasion",
+            "Reading/Writing",
+          ]
+        }
+      },
       abilities: [
         { name: "Protection from Evil", notes: "A special form of the 1st-level wizard spell. Undead opponents take -2 on any attack rolls against him, and he gains +1 to all saving throws." },
         { name: "Immunity to Fear and Scare Effects", notes: "Immune to fear and scare effects generated by creatures of the same level/hit dice or lower." },
@@ -965,6 +1365,19 @@ const KITS = {
       },
       thiefSkillMods: { hideInShadows: 0, moveSilently: 0,
         note: "DRAGON #234 states no stealth adjustment. Not in PHBR11 Table 12, which predates these kits." },
+      proficiencies: {
+        weapon: {
+          allowedPrinted: "One weapon proficiency slot must go to a weapon linked to his site -- a kopesh for a pyramid defender, a quarterstaff or mace for the catacombs of an abbey. He may use only weapons of a size appropriate to his locale.",
+          note: "NOT STRUCTURED: the linked weapon is chosen per character with the DM, and the size cap is a locale judgement, not a list. The article's \"kopesh\" is Sword, Khopesh in core_wp.json."
+        },
+        nonweapon: {
+          bonus: ["Local History"],
+          recommended: [
+            "Ancient History", "Blind-Fighting", "Endurance", "Etiquette", "Hunting",
+            "Persuasion", "Reading/Writing",
+          ]
+        }
+      },
       abilities: [
         { name: "Reaction Bonus", notes: "+2 to NPC encounter reaction rolls with anyone who knows he is a Crypt Defender. NOT scoped to his site -- the station is respected wherever he goes. Defenders of the dead are honoured by periodic visits from priests and noblemen, and a reasonable request is usually granted. The roll itself is the DM's." },
         { name: "Alertness and Area Knowledge", notes: "+2 to his own surprise roll while within the site he defends. He knows the place so well that anything out of the ordinary puts him on his guard -- air currents, smells and sounds in catacombs, for instance -- and he shifts into a defensive mode immediately. Does NOT stack with the Reaction Bonus above; the two are different subsystems with different scopes. See ambiguity below: the article prints this as a reaction bonus.",
