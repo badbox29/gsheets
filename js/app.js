@@ -5695,6 +5695,12 @@ function collectSheet(root){
       name: n.querySelector('.title').value,
       quantity: n.querySelector('.quantity').value,
       weightPerUnit: n.querySelector('.weight-per-unit').value,
+	  // Read back off the card's dataset rather than the DOM text, so the
+      // stored value stays the book's string even after ammoRefHtml has
+      // trimmed "+0" and "N/A" out of the display.
+      forWeapon:  n.dataset.forWeapon  || '',
+      rangeMod:   n.dataset.rangeMod   || '',
+      damageMod:  n.dataset.damageMod  || '',
       isMagical:  !!(n.querySelector('.is-magical') || {}).checked,
       identified: !!(n.querySelector('.is-identified') || {}).checked,
       trueName:   (n.querySelector('.true-name') || {}).value || '',
