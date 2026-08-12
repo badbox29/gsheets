@@ -4115,7 +4115,13 @@ function addAmmunitionFromBrowser(root, ammo) {
   const newAmmoNode = makeAmmunitionNode({
     name: ammo['Ammunition Name'],
     quantity: 20, // Default to 20 arrows/bolts
-    weightPerUnit: weightValue
+    weightPerUnit: weightValue,
+    // Carried onto the card for display. Previously dropped here: the browser
+    // read these from core_ammo.json to render the picker row, then threw them
+    // away when the card was built, so they never reached a character sheet.
+    forWeapon:  ammo.Weapon || '',
+    rangeMod:   ammo['Range Modifier'] || '',
+    damageMod:  ammo['Damage Modifier'] || ''
   }, () => {
     const activeTab = document.querySelector('.tab.active');
     if (activeTab) markUnsaved(activeTab, true, root);
