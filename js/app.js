@@ -4979,6 +4979,33 @@ function makeMagicItemNode(data={}, onChange){
   return el;
 }
 
+// The reference strip on an ammunition card: which weapon it is for, and its
+// range and damage modifiers as PRINTED. Deliberately not parsed -- the values
+// include "+1 vs unarmored", "2d4 vs undead", "1d3 + 2d6 fire (2 rds)" and
+// "Special", which are conditional or typed rather than arithmetic. Showing the
+// string is honest; computing it would need a conditional-damage model.
+//
+// "10/20/30" style values in Range Modifier are ABSOLUTE ranges for thrown
+// stones, not modifiers -- they have no base weapon to modify. Shown as-is.
+function ammoRefHtml(data) {
+  const bits = [];
+  const clean = v => {
+    const s = String(v == null ? '' : v).trim();
+    return (!s || s === 'N/A' || s === 'None' || s === '+0') ? '' : s;
+  };
+  if (data.forWeapon) bits.push('for ' + escapeHtml(String(data.forWeapon)));
+  const rng = clean(data.rangeMod);
+  const dmg = clean(data.damageMod);
+  if (rng) bits.push('range ' + escapeHtml(rng));
+  if (dmg) bits.push('dmg ' + escapeHtml(dmg));
+  if (!bits.length) return '';
+  return '<span class="ammo-ref" style="font-size:10px;color:var(--muted);' +
+         'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;' +
+         'align-self:center;margin-left:8px;" title="From the ammunition tables. ' +
+         'Reference only \u2014 apply these yourself.">' +
+         bits.join(' \u00B7 ') + '</span>';
+}
+
 function makeAmmunitionNode(data={}, onChange){
   const el = document.createElement('div');
   // 'gear' opts this card into the shared gear-card grammar in style.css --
@@ -5047,6 +5074,13 @@ function makeAmmunitionNode(data={}, onChange){
     // Row 2: the name alone, full card width, so it never truncates.
     '<div class="row2">' +
       '<input class="title" placeholder="e.g., Arrows, Bolts" value="'+escapeHtml(data.name||'')+'" style="flex:0 0 auto;min-width:0;">' +
+	  // Reference only, from core_ammo.json. NOT applied to any calculation:
+      // an ammunition card has no link to a weapon card -- the data says
+      // "Bow (any)", a category rather than a weapon, and a character may carry
+      // two bows and three arrow types. So the player reads these and applies
+      // them himself. Until this line existed the values sat in the JSON and
+      // reached nothing; the dead-field audit found them.
+      ammoRefHtml(data) +
       // Unidentified falls back to the dot: the bonus is recorded, but the
       // character does not know it, and the collapsed row must not announce a
       // number nobody has learned yet. refreshAmmoMagic applies the same rule
