@@ -5,8 +5,11 @@
 // - class:        Base class required
 // - source:       Provenance of this entry -- see PROVENANCE below
 // - abilities:    Special kit abilities, painted into the Kit Abilities list
+// - reaction:     Encounter-reaction adjustments -- see reaction below
+// - variants:     Per-race or per-orientation overrides -- see variants below
 // - proficiencies: Weapon / nonweapon proficiency rules -- see PROFICIENCIES below
 // - reaction:     Encounter-reaction adjustments -- see reaction below
+// - variants:     Per-race or per-orientation overrides -- see variants below
 // - requirements: Ability score / alignment / other requirements
 // - benefits:     Mechanical bonuses (prose)
 // - hindrances:   Restrictions and penalties (prose)
@@ -268,6 +271,81 @@
 // Two places to drift. The eventual fix is to generate the card from the field.
 //
 // ---------------------------------------------------------------------------
+// requiredChoice / requiredChoiceGroups -- a required pick from a set
+// ---------------------------------------------------------------------------
+//
+//   required:             ["Cutlass"],
+//   requiredChoice:       [["Belaying Pin", "Gaff/Hook, Held"]],
+//   requiredChoiceGroups: ["Lance", "Sword"]
+//
+// The PAID mirror of bonusChoice. `required` is "the kit forces a slot onto THIS
+// proficiency"; requiredChoice is "the kit forces a slot onto ONE OF these".
+// Array of groups, one pick from each, exactly like bonusChoice.
+//
+// requiredChoiceGroups is for when the book names a CATEGORY rather than a list
+// -- "Lance (any; player choice)", "Sword (any; player choice)". Stored as the
+// group for the same reason as allowedGroups: the weapon list is open, so
+// resolving "any sword" to today's six sword records would silently exclude the
+// seventh when a later book is audited.
+//
+// WHY THIS WAS BUILT. Four kits previously had a single name sitting in
+// `required` where the book offers a choice, because a choice had to resolve to
+// SOMETHING. That is worse than a blank: it invents a pick the book leaves to the
+// player and states it as a mandate. The Cavalier claimed to require a LONG sword
+// where the book says any; the Noble Warrior's three separate either-ors were
+// flattened to one arbitrary name; the Pirate's coin-flip between belaying pin
+// and gaff/hook was printed as a requirement; the Pathfinder's requirement was
+// invisible to the app entirely.
+//
+//   RECORD A BLANK RATHER THAN AN INVENTED ANSWER. A missing field is honest and
+//   a consumer can see it is missing. A plausible wrong value is neither.
+//
+// ---------------------------------------------------------------------------
+// variants -- per-race or per-orientation overrides of the kit's own values
+// ---------------------------------------------------------------------------
+//
+//   variants: {
+//     axis:        "orientation",
+//     axisPrinted: "...the book's own wording...",
+//     default:     null,
+//     options: [ { key, label, proficiencies?, note } ]
+//   }
+//
+// Some kits are ONE kit in the book that BRANCHES. PHBR1's Pirate/Outlaw prints a
+// single entry with one Description and one Role, then splits four mechanical
+// fields and labels the sub-blocks "Pirate's" and "Outlaw's" outright. The Amazon
+// does the same on race: dwarf, gnome and halfling Amazons have different
+// required weapons and different bonus nonweapon proficiencies from the human.
+//
+// An option's `proficiencies` OVERRIDES the kit's own block for the sections it
+// names; sections it omits are inherited. The Amazon's dwarf option replaces only
+// the weapon block, so the human bonus nonweapon proficiencies still apply; her
+// gnome option replaces both.
+//
+// `default` IS THE LOAD-BEARING FIELD. It distinguishes two genuinely different
+// situations that would otherwise look identical:
+//
+//   default: "human"  -- the book gives one option as the working default and the
+//                        rest as overrides. A player who ignores the axis still
+//                        gets a correct character. (Amazon.)
+//   default: null     -- neither option is the fallback and the choice is
+//                        MANDATORY. A player who ignores the axis has an
+//                        incoherent character. (Pirate/Outlaw.)
+//
+// NOTE WHAT WAS NOT DONE. Pirate/Outlaw was nearly split into two kits, which
+// would have invented a fifteenth kit the book does not have, in order to work
+// around a shape our schema could not hold. Splitting where the MECHANICS split
+// rather than where the BOOK splits is backwards; the book is the authority on
+// what a kit is. If a future entry genuinely is two kits, the book will print two
+// headings.
+//
+// STILL PROSE, awaiting a second book: p.13 says the Noble Dwarf-Warrior is
+// required to be proficient with axe and hammer rather than sword and lance and
+// is not required to be a rider. That is a third variant axis on a third kit and
+// will almost certainly want this same block.
+//
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
 // reaction -- encounter-reaction adjustments granted by a kit
 // ---------------------------------------------------------------------------
 //
@@ -449,6 +527,10 @@
 // abandoned kit may never be replaced with another. See the PHBR1 CHAPTER 2
 // section below. The two books differ; each governs its own kits.
 //
+// PHBR1 p.37 states a STRICTER rule for its own fourteen fighter kits: an
+// abandoned kit may never be replaced with another. See the PHBR1 CHAPTER 2
+// section below. The two books differ; each governs its own kits.
+//
 // ---------------------------------------------------------------------------
 // AMBIGUITY BLOCKS
 // ---------------------------------------------------------------------------
@@ -520,7 +602,7 @@ const KITS = {
           allowedPrinted:
             "Required: Spear, Long Bow. Recommended: Various axes, swords.",
           note:
-            "SPECIALIZATION: Amazon fighters can Specialize ONLY in Spear or Long Bow. RACIAL VARIANT: dwarf Amazons require Battle Axe and War Hammer instead, and ride swine; gnome Amazons require Throwing Axe and Short Sword; halfling Amazons require Javelin and Sling. The book prints \"various axes, swords\" without naming them -- the recommended list here is the resolvable reading and is NOT a verbatim transcription. THROWING AXE HAS NO RECORD in core_wp.json, so the gnome variant cannot be fully resolved."
+            "SPECIALIZATION: Amazon fighters can Specialize ONLY in Spear or Long Bow. The book prints \"various axes, swords\" without naming them -- the recommended list here is the resolvable reading and is NOT a verbatim transcription. RACIAL VARIANTS are in the `variants` block above."
         },
         nonweapon: {
           bonus: ["Riding, Land-Based", "Animal Training"],
@@ -529,8 +611,55 @@ const KITS = {
             "Survival", "Tracking"
           ],
           note:
-            "CROSSOVER COST: the book tags Animal Lore, Armorer, Bowyer/Fletcher, Hunting, Running, Survival and Tracking as Warrior-group entries and Animal Handling as General. RACIAL VARIANT: gnome Amazons take Tracking and Survival as their BONUS proficiencies; halfling Amazons take Endurance and Set Snares; dwarf Amazons keep Riding but substitute swine as the mount."
+            "CROSSOVER COST: the book tags Animal Lore, Armorer, Bowyer/Fletcher, Hunting, Running, Survival and Tracking as Warrior-group entries and Animal Handling as General. Racial variants are in the `variants` block above."
         }
+      },
+      variants: {
+        axis: "race",
+        axisPrinted:
+          "The Amazons from folklore and myth were humans. It is not difficult to envision elvish or half-elvish clans of Amazons either; they would follow the rules above for human Amazons. It is a little harder to envision dwarvish, gnomish, or halfling Amazons. But if you do use such civilizations:",
+        default: "human",
+        options: [
+          { key: "human", label: "Human, elf or half-elf",
+            note: "Follows the kit's own values above with no changes." },
+          { key: "dwarf", label: "Dwarf",
+            proficiencies: {
+              weapon: {
+                required: ["Battle Axe", "War Hammer"],
+                allowedPrinted:
+                  "Dwarf Amazons will have Axe and Hammer as their required weapon proficiencies",
+                note:
+                  "The book names the categories, not specific weapons; Battle Axe and War Hammer are the resolvable reading."
+              }
+            },
+            note: "Still Riders, but substitute SWINE for their mount of choice -- swine are very dangerous, and the prospect of a ferocious she-dwarf on the back of a biting boar is a daunting one. Bonus nonweapon proficiencies are unchanged." },
+          { key: "gnome", label: "Gnome",
+            proficiencies: {
+              weapon: {
+                required: ["Hand Axe", "Sword, Short"],
+                allowedPrinted:
+                  "Gnome Amazons will have Throwing Axe and Short Sword as their required weapon proficiencies",
+                note:
+                  "The book's \"Throwing Axe\" is the PHB's single line \"Axe, Hand or Throwing\", which is Hand Axe here."
+              },
+              nonweapon: {
+                bonus: ["Tracking", "Survival"]
+              }
+            },
+            note: "Replaces both the required weapons AND both bonus nonweapon proficiencies." },
+          { key: "halfling", label: "Halfling",
+            proficiencies: {
+              weapon: {
+                required: ["Javelin", "Sling"],
+                allowedPrinted:
+                  "Halfling Amazons will have Javelin and Sling as their required weapon proficiencies"
+              },
+              nonweapon: {
+                bonus: ["Endurance", "Set Snares"]
+              }
+            },
+            note: "Replaces both the required weapons AND both bonus nonweapon proficiencies. You will have to presume that these halflings are not as fond of ease and leisure as the more common sorts of halflings." }
+        ]
       },
       abilities: [
         { name: "First Blow Against an Unwary Male",
@@ -775,17 +904,16 @@ const KITS = {
       ],
       proficiencies: {
         weapon: {
-          required: ["Sword, Long"],
           recommended: [
             "Sword, Bastard", "Sword, Broad", "Sword, Short", "Sword, Two-Handed", "Scimitar",
             "Flail, Horseman's", "Mace, Horseman's", "Pick, Horseman's", "Dagger", "Spear",
             "Javelin"
           ],
-          allowedGroups: ["Lance"],
+          requiredChoiceGroups: ["Lance", "Sword"],
           allowedPrinted:
             "Required: Lance (any; player choice) and Sword (any; player choice). Recommended: All other Lances, all other Swords, all Horsemen's weapons, Dagger, Spear, Javelin.",
           note:
-            "Both required entries are player CHOICES from a category, which no field here models -- Lance is carried in allowedGroups and Sword, Long is recorded as the required sword only because a choice must resolve to something; the player may pick any sword. This is the case requiredChoice would solve."
+            "Both required entries are player choices from a whole category -- \"Lance (any; player choice) and Sword (any; player choice)\" -- so they are carried as requiredChoiceGroups rather than resolved to specific weapons, which would invent a pick the book leaves open."
         },
         nonweapon: {
           bonus: ["Riding, Land-Based", "Etiquette"],
@@ -961,13 +1089,12 @@ const KITS = {
       ],
       proficiencies: {
         weapon: {
-          required: ["Sword, Long"],
-          recommended: ["Sword, Bastard", "Flail, Horseman's", "Mace, Horseman's"],
-          allowedGroups: ["Lance"],
+          requiredChoice: [["Sword, Long", "Sword, Bastard"], ["Flail, Horseman's", "Mace, Horseman's"]],
+          requiredChoiceGroups: ["Lance"],
           allowedPrinted:
             "Unless the campaign deals with a culture unlike medieval Europe, all Noble Warriors must take the following proficiencies: long sword or bastard sword (player choice), lance (player choice of type, usually jousting lance), and horseman's flail or horseman's mace (player choice). The last proficiency may be used for a weapon of the warrior's choice or to specialize in one of the required choices.",
           note:
-            "ALL THREE required entries are player CHOICES from a pair or a category, which no field here models -- Sword, Long is recorded as the required sword only because a choice must resolve to something. RACIAL VARIANT: p.13 states the Noble Dwarf-Warrior is required to be proficient with axe and hammer rather than sword and lance, and is not required to be a rider. This is the case requiredChoice would solve."
+            "All three required entries are player choices -- long sword OR bastard sword, a lance of any type, and horseman's flail OR horseman's mace. The third may instead be spent on a weapon of the warrior's choice, or on specializing in one of the first two. RACIAL VARIANT, not yet structured: p.13 states the Noble Dwarf-Warrior is required to be proficient with axe and hammer rather than sword and lance, and is not required to be a rider. That is the same shape as the Amazon's variants and wants the same treatment when a second book confirms it."
         },
         nonweapon: {
           bonus: ["Etiquette", "Heraldry", "Riding, Land-Based"],
@@ -1053,26 +1180,57 @@ const KITS = {
         status: "verified",
         work:   "PHBR1 The Complete Fighter's Handbook",
         pages:  "30-31",
-        note:   "No ability-score requirements. One kit with TWO orientations -- Pirate (high seas) and Outlaw (wilderness) -- which differ in required weapon proficiencies, bonus proficiencies and secondary skills. Both are transcribed here; the Pirate's values are the structured ones and the Outlaw's are recorded in the notes, because a single entry cannot hold two sets."
+        note:   "No ability-score requirements. ONE KIT WITH TWO ORIENTATIONS. The book prints a single Pirate/Outlaw entry with one Description and one Role, then BRANCHES four mechanical fields, labelling the sub-blocks \"Pirate's\" and \"Outlaw's\" outright. Carried in `variants` with no default, because neither orientation is the fallback -- a character with no orientation chosen is not a valid Pirate/Outlaw."
       },
-      proficiencies: {
-        weapon: {
-          required: ["Cutlass", "Belaying Pin"],
-          recommended: ["Long Bow", "Sword, Long", "Quarterstaff"],
-          allowedPrinted:
-            "If the character is a Pirate, he must take the following proficiencies: Cutlass, and Belaying Pin or Gaff/Hook (player choice). If the character is an Outlaw, he can take any weapon proficiencies he chooses -- but the DM, if he's created this campaign so that the outlaws have a special motif weapon (such as Robin Hood's Merry Men and their longbows), may insist that all Outlaw characters take a specific weapon proficiency. Recommended to classic Merry Man-type outlaws: longbow, long sword and quarterstaff.",
-          note:
-            "The second Pirate requirement is a CHOICE between Belaying Pin and Gaff/Hook; Belaying Pin is recorded because a choice must resolve to something. Cutlass, Belaying Pin and Gaff/Hook are all flagged in the book as new weapons found in the Equipment chapter -- these are three of the eight PHBR1 weapons already reprinted in CRH Table 58. The Outlaw has NO required weapon proficiencies."
-        },
-        nonweapon: {
-          bonus: ["Rope Use", "Seamanship"],
-          recommended: [
-            "Swimming", "Weather Sense", "Navigation", "Engineering", "Reading/Writing",
-            "Appraising", "Set Snares"
-          ],
-          note:
-            "THESE ARE THE PIRATE'S. The OUTLAW's bonuses are Direction Sense and Fire-Building, and his recommended list is: General -- Riding (Land-Based). Warrior -- Animal Lore, Bowyer/Fletcher, Endurance, Hunting, Running, Set Snares, Survival, Tracking. Priest, double slots unless Paladin -- Healing, Herbalism, Local History. Rogue, double slots -- Disguise. CROSSOVER COST on the Pirate's own list: General -- Swimming, Weather Sense. Warrior -- Navigation. Priest, double slots unless Paladin -- Engineering (for shipbuilding), Reading/Writing (for mapmaking). Rogue, double slots -- Appraising, Set Snares (in association with Rope Use skill), Tightrope Walking, Tumbling. Wizard, double slots unless Ranger -- Engineering (for shipbuilding), Reading/Writing (for mapmaking). SPECIAL NOTE: the DM may be a fan of the very acrobatic pirate or outlaw movies of the past and prefer that Tumbling be one of the Bonus Proficiencies instead of one of the ones listed."
-        }
+      variants: {
+        axis: "orientation",
+        axisPrinted:
+          "In a campaign, the pirate or outlaw can belong to one of two orientations. Either he is a \"good guy\" and it is the law and the rulers who are evil, or he is a \"bad guy\" and simply takes what he wants from those who have it.",
+        default: null,
+        options: [
+          { key: "pirate", label: "Pirate",
+            proficiencies: {
+              weapon: {
+                required: ["Cutlass"],
+                requiredChoice: [["Belaying Pin", "Gaff/Hook, Held", "Gaff/Hook, Attached"]],
+                allowedPrinted:
+                  "If the character is a Pirate, he must take the following proficiencies: Cutlass, and Belaying Pin or Gaff/Hook (player choice).",
+                note:
+                  "Cutlass, Belaying Pin and Gaff/Hook are all flagged in the book as new weapons found in the Equipment chapter, and all three are among the eight PHBR1 weapons reprinted in CRH Table 58. Gaff/Hook has two records here, Attached and Held; the single proficiency covers both."
+              },
+              nonweapon: {
+                bonus: ["Rope Use", "Seamanship"],
+                recommended: [
+                  "Swimming", "Weather Sense", "Navigation", "Engineering", "Reading/Writing",
+                  "Appraising", "Set Snares", "Tightrope Walking", "Tumbling"
+                ],
+                note:
+                  "CROSSOVER COST: General -- Swimming, Weather Sense. Warrior -- Navigation. Priest, double slots unless Paladin -- Engineering (for shipbuilding), Reading/Writing (for mapmaking). Rogue, double slots -- Appraising, Set Snares (in association with Rope Use skill), Tightrope Walking, Tumbling. Wizard, double slots unless Ranger -- Engineering (for shipbuilding), Reading/Writing (for mapmaking). Engineering and Reading/Writing are each listed twice under two groups at different costs; transcribed as printed. SPECIAL NOTE: the DM may be a fan of the very acrobatic pirate movies of the past and prefer that Tumbling be one of the Bonus Proficiencies instead of one of those listed."
+              }
+            },
+            note: "SECONDARY SKILL: roll d100 -- 01-70 Sailor, 71-80 Shipwright, 81-00 Navigator. EQUIPMENT: it would be foolish to buy metal armor of any kind; a Pirate wearing it in naval combat will inevitably fall overboard and sink, and if he is lucky enough to get it off so he can swim, he has lost the armor." },
+          { key: "outlaw", label: "Outlaw",
+            proficiencies: {
+              weapon: {
+                recommended: ["Long Bow", "Sword, Long", "Quarterstaff"],
+                allowedPrinted:
+                  "If the character is an Outlaw, he can take any weapon proficiencies he chooses ... but the DM, if he has created this campaign so that the outlaws have a special motif weapon (such as Robin Hood's Merry Men and their longbows), may insist that all Outlaw characters take a specific weapon proficiency. Recommended to classic Merry Man-type outlaws: longbow, long sword and quarterstaff.",
+                note:
+                  "THE OUTLAW HAS NO REQUIRED WEAPON PROFICIENCIES. The motif weapon is a per-campaign DM decision, not a list."
+              },
+              nonweapon: {
+                bonus: ["Direction Sense", "Fire-Building"],
+                recommended: [
+                  "Riding, Land-Based", "Animal Lore", "Bowyer/Fletcher", "Endurance", "Hunting",
+                  "Running", "Set Snares", "Survival", "Tracking", "Healing", "Herbalism",
+                  "Local History", "Disguise"
+                ],
+                note:
+                  "CROSSOVER COST: General -- Riding (Land-Based). Warrior -- Animal Lore, Bowyer/Fletcher, Endurance, Hunting, Running, Set Snares, Survival, Tracking. Priest, double slots unless Paladin -- Healing, Herbalism, Local History. Rogue, double slots -- Disguise."
+              }
+            },
+            note: "SECONDARY SKILL: the character may choose between Bowyer/Fletcher, Forester, Hunter, and Trapper/Furrier. EQUIPMENT: it would be foolish to buy metal armor of any kind; an Outlaw living out in the wild has his belongings exposed to the elements and metal armor quickly corrodes." }
+        ]
       },
       abilities: [
         { name: "No Intrinsic Special Benefits",
@@ -1080,9 +1238,7 @@ const KITS = {
         { name: "The Law Is Always After Them",
           notes: "The major problem with being an outlaw or pirate is that the law is always after the characters. Though the authorities do not have to put in an appearance in every single play-session, they are always out there, plotting against the heroes. Many of them are quite clever; they probably have more money, ships and men than the heroes, and they will continue to plague the heroes until the campaign is done." },
         { name: "Equipment: Metal Armor Is Impractical",
-          notes: "EQUIPMENT: Pirates and Outlaws come from widely diverse backgrounds, so there is no real restriction on what they can buy with their starting money. However, it would be foolish for either type of character to buy metal armor of any kind (banded, brigandine, bronze plate, chain, field plate, full plate, plate mail, and ring mail). Pirates wearing such armor in naval combat will inevitably fall overboard and sink -- they cannot swim with such stuff on; if they are lucky enough to get it off so they can swim, they have lost the armor. Outlaws living out in the wild have their belongings exposed to the elements, and metal armor quickly corrodes; if a Pirate or Outlaw buys metal armor and keeps it stowed away for special occasions that is fine, but if they wear it all the time the DM should continually take it away from them through accidents, rust and corrosion." },
-        { name: "Secondary Skill: Rolled or Chosen",
-          notes: "SECONDARY SKILLS: if the character is a Pirate, roll d100 -- on 01-70 his Secondary Skill is Sailor; on 71-80 it is Shipwright; on 81-00 it is Navigator. If he is an Outlaw, the character may choose between Bowyer/Fletcher, Forester, Hunter, and Trapper/Furrier." },
+          notes: "EQUIPMENT: Pirates and Outlaws come from widely diverse backgrounds, so there is no real restriction on what they can buy with their starting money. However, it would be foolish for either type of character to buy metal armor of any kind (banded, brigandine, bronze plate, chain, field plate, full plate, plate mail, and ring mail). If a Pirate or Outlaw buys metal armor and keeps it stowed away for special occasions -- major land engagements, climactic battles -- that is fine, but if they wear it all the time the DM should continually take it away from them through accidents, rust and corrosion." },
         { name: "Going Straight; Privateers",
           notes: "In a Pirate campaign it could be that the player-characters will eventually come to terms with the authorities and \"go straight.\" This does not mean they have to abandon the Pirate Warrior Kit -- they could instead become Privateers, who are basically pirates sailing under the papers of (permission of) their ruler, and preying on the nation's enemies. At that point they can still behave just as they did previously, and the other nation's authorities become their specific enemy." }
       ],
@@ -1872,8 +2028,10 @@ const KITS = {
       thiefSkillMods: { hideInShadows: 0, moveSilently: 0 },
       proficiencies: {
         weapon: {
+          requiredChoice: [["Machete", "Hand Axe"]],
+          requiredChoiceGroups: ["Sword"],
           allowedPrinted: "Must fill an initial weapon slot with the machete, hand axe, or sword -- weapons useful for cutting away brush and clearing paths",
-          note: "SLOT RULE, NOT AN ALLOW-LIST -- one initial slot is constrained and subsequent slots may be filled with any weapon. This is a required CHOICE from Machete / Hand Axe / any sword; there is no field for that yet, so it is left as printed."
+          note: "SLOT RULE: exactly ONE initial slot is constrained and every subsequent slot may be filled with any weapon, so this is a required CHOICE rather than an allow-list. \"Sword\" is left as a group because the book names the category, not a weapon."
         },
         nonweapon: {
           bonus: ["Direction Sense", "Distance Sense", "Trail Marking", "Alertness"],
