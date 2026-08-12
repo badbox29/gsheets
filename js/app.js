@@ -5011,6 +5011,7 @@ function makeAmmunitionNode(data={}, onChange){
   // 'gear' opts this card into the shared gear-card grammar in style.css --
   // two-row grid, status rail, chips, spinner. The base 'item' class is left
   // alone because every other list in the app uses it.
+  el.className = 'item gear';
   // Stored on the ELEMENT, not just rendered, because collectSheet reads them
   // back from here on save. ammoRefHtml trims "+0" and "N/A" out of the
   // display, so reading the rendered text would round-trip a lossy version.
