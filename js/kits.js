@@ -6,6 +6,7 @@
 // - source:       Provenance of this entry -- see PROVENANCE below
 // - abilities:    Special kit abilities, painted into the Kit Abilities list
 // - proficiencies: Weapon / nonweapon proficiency rules -- see PROFICIENCIES below
+// - reaction:     Encounter-reaction adjustments -- see reaction below
 // - requirements: Ability score / alignment / other requirements
 // - benefits:     Mechanical bonuses (prose)
 // - hindrances:   Restrictions and penalties (prose)
@@ -267,6 +268,106 @@
 // Two places to drift. The eventual fix is to generate the card from the field.
 //
 // ---------------------------------------------------------------------------
+// reaction -- encounter-reaction adjustments granted by a kit
+// ---------------------------------------------------------------------------
+//
+//   reaction: [
+//     { modifier: -3,
+//       applies:  "NPCs from male-dominated societies",
+//       printed:  "The Amazon suffers a -3 reaction roll adjustment from..." }
+//   ]
+//
+// AN ARRAY, because a kit routinely grants more than one and they point in
+// opposite directions -- the Barbarian has +3 and -3, the Cavalier has +3, -3
+// and a third permanent -3 that only applies once he has abandoned his Kit.
+// `applies` is the condition in the transcriber's words, short enough to render
+// on a card; `printed` is the book's own sentence.
+//
+// APPLIED BACKWARDS. PHBR1 p.14, "An Important Note", governs every kit in the
+// book and is the reason this field cannot be a plain number added to a roll:
+//
+//   "When you roll the 2d10 for encounter reactions, DON'T add the bonus (+) or
+//    subtract the penalty (-) from the die roll. Do it the other way around. If
+//    the character has a Charisma of 16, and thus gets a +5 reaction adjustment,
+//    you SUBTRACT that number from the 2d10 die roll. (Otherwise the NPCs would
+//    be reacting even more badly because the character was charismatic!)"
+//
+// So a POSITIVE modifier here is stored as the book prints it, and a consumer
+// must SUBTRACT it from the 2d10 result. Storing the negated value instead would
+// make the data disagree with the page, and every future transcriber would have
+// to remember to flip it.
+//
+// The Barbarian and the Berserker make the direction unmistakable: the Barbarian
+// gets his +3 only on rolls of 8 or LESS (pushing an already-good reaction
+// better) and an extra -3 on rolls of 14 or MORE (pushing a bad one worse).
+//
+// NOT MODELLED, and recorded in `applies` rather than structured: the Noble
+// Warrior's +3 erodes at -1 per incident when he cannot afford to live well, and
+// collapses to -6 outright if he earns a bad reputation. Conditional, mutating
+// reaction values are a consumer problem, not a data-shape problem.
+//
+// ---------------------------------------------------------------------------
+// PHBR1 CHAPTER 2 -- rules that apply to all fourteen fighter kits
+// ---------------------------------------------------------------------------
+//
+// ONE KIT ONLY, CHOSEN AT CREATION. "You can only take one Warrior Kit for your
+// character," and only when the character is first created -- with one exception:
+// if a player and DM both want to integrate these rules into an existing
+// campaign, they may agree what Kit each existing PC most closely resembles.
+//
+// ABANDONING A KIT (p.37). PHBR1's rule is STRICTER than the CRH's and the
+// difference matters: "The character may not take another Warrior Kit to replace
+// the one he's abandoned. Once he gives up his Warrior Kit, he's an ordinary
+// Fighter, Paladin, or Ranger for the rest of his playing life." Bonus
+// proficiencies are handled the same way as the CRH -- not lost, but they must
+// be paid for out of the next free slots available.
+//
+// MULTI-CLASS (p.36): only SINGLE-CLASS warriors can take a Warrior Kit. With DM
+// permission a multi-class warrior may use his proficiency choices to SIMULATE
+// one, and be considered "one of their own" in the campaign, without the Kit.
+//
+// DUAL-CLASS (p.37): a character who starts as a warrior keeps the benefits and
+// hindrances of his Kit after changing class, and may NOT choose a new one. A
+// character who starts in another class and later switches to a warrior class may
+// choose a Kit then, though the DM may require campaign events first.
+//
+// MODIFYING KITS (p.37): the DM "can, and should" modify these to fit his own
+// setting. The book's own worked example swaps the Amazon's required Riding and
+// Animal Training for Seamanship and Navigation because that DM's Amazons are
+// sailors. This is why kit requirements WARN and never gate -- see
+// gsheets_project_notes.md, "Lock when the MODEL says so; warn when a BOOK says so".
+//
+// WHAT IS DELIBERATELY NOT STRUCTURED HERE. Five axes recur across these kits
+// that no field in this file can express. Every one is recorded in a note with a
+// grep-able prefix so a future consumer can find them all at once:
+//
+//   SPECIALIZATION   Amazons may specialize ONLY in Spear or Long Bow; Gladiators
+//                    and Myrmidons get a FREE Specialization from a fixed pool;
+//                    Samurai must specialize in Katana and Daikyu; Swashbucklers
+//                    must specialize in all four of their weapons before their
+//                    slots free up.
+//   EQUIPMENT        Restrictions on what may be BOUGHT at creation, which is a
+//                    different axis from what may be learned -- and which often
+//                    EXPIRES. The Beast-Rider is limited to Hide/Leather/Padded
+//                    at creation and may upgrade later; the Savage gets no gold
+//                    at all; the Noble Warrior has a minimum rather than a maximum.
+//   RACIAL VARIANT   Dwarf, gnome and halfling Amazons have DIFFERENT required
+//                    weapons and DIFFERENT bonus nonweapon proficiencies from the
+//                    human Amazon. p.13 says the same of the Noble Dwarf-Warrior.
+//   CROSSOVER COST   The books tag recommended entries by group with per-entry
+//                    cost multipliers -- "(Priest, double slots unless Paladin)".
+//                    Several kits list the SAME proficiency twice under two
+//                    groups at two different costs; that is transcribed as printed.
+//   SLOT COUNT /     Samurai get two free weapon slots with five of six already
+//   SLOT PATTERN     spent; Swashbucklers get two free slots and must then devote
+//                    half of all subsequent slots to four named weapons.
+//
+// Not built because no consumer computes a slot budget or an equipment budget
+// from a kit, and because a second book has not yet shown these shapes. Add them
+// when both are true.
+//
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
 // THREE THINGS ARE CALLED "WEAPON GROUP". DO NOT MERGE THEM.
 // ---------------------------------------------------------------------------
 //
@@ -344,6 +445,10 @@
 // EXCEPTION: a transformed Greenwood Ranger cannot abandon his kit.
 // NOT ENFORCED BY THE SHEET.
 //
+// PHBR1 p.37 states a STRICTER rule for its own fourteen fighter kits: an
+// abandoned kit may never be replaced with another. See the PHBR1 CHAPTER 2
+// section below. The two books differ; each governs its own kits.
+//
 // ---------------------------------------------------------------------------
 // AMBIGUITY BLOCKS
 // ---------------------------------------------------------------------------
@@ -385,40 +490,831 @@
 const KITS = {
   // ========== FIGHTER KITS ==========
   fighter: {
+    // ===== PHBR1, Chapter 2. All fourteen kits, transcribed August 2026. =====
+    amazon: {
+      name: "Amazon",
+      class: "fighter",
+      source: {
+        status: "verified",
+        work:   "PHBR1 The Complete Fighter's Handbook",
+        pages:  "14-16",
+        note:   "No ability-score requirements. The book is emphatic that the kit is NOT a gate on female warriors: \"you don't HAVE to be an Amazon to be a female warrior... the DM should try to accommodate the player whenever possible, and shouldn't have to resort to making the character an Amazon in order to allow her to be a warrior.\" Recorded because it settles a long-standing open question in this file's own terms."
+      },
+      requirements: {
+        race: ["human", "elf", "half-elf", "dwarf", "gnome", "halfling"],
+        gender: ["female"],
+        racePrinted:
+          "Amazons from folklore and myth were humans; elvish, half-elvish, dwarvish, gnomish and halfling clans are all explicitly allowed",
+        genderPrinted:
+          "Amazons are women warriors"
+      },
+      reaction: [
+        { modifier: -3,
+          applies: "NPCs from male-dominated societies",
+          printed: "The Amazon suffers a -3 reaction roll adjustment from NPCs who are from male-dominated societies. This reaction adjustment goes away for characters who come to respect her, such as (presumably) her PC allies." }
+      ],
+      proficiencies: {
+        weapon: {
+          required: ["Spear", "Long Bow"],
+          recommended: ["Battle Axe", "Hand Axe", "Sword, Long", "Sword, Short", "Sword, Broad"],
+          allowedPrinted:
+            "Required: Spear, Long Bow. Recommended: Various axes, swords.",
+          note:
+            "SPECIALIZATION: Amazon fighters can Specialize ONLY in Spear or Long Bow. RACIAL VARIANT: dwarf Amazons require Battle Axe and War Hammer instead, and ride swine; gnome Amazons require Throwing Axe and Short Sword; halfling Amazons require Javelin and Sling. The book prints \"various axes, swords\" without naming them -- the recommended list here is the resolvable reading and is NOT a verbatim transcription. THROWING AXE HAS NO RECORD in core_wp.json, so the gnome variant cannot be fully resolved."
+        },
+        nonweapon: {
+          bonus: ["Riding, Land-Based", "Animal Training"],
+          recommended: [
+            "Animal Handling", "Animal Lore", "Armorer", "Bowyer/Fletcher", "Hunting", "Running",
+            "Survival", "Tracking"
+          ],
+          note:
+            "CROSSOVER COST: the book tags Animal Lore, Armorer, Bowyer/Fletcher, Hunting, Running, Survival and Tracking as Warrior-group entries and Animal Handling as General. RACIAL VARIANT: gnome Amazons take Tracking and Survival as their BONUS proficiencies; halfling Amazons take Endurance and Set Snares; dwarf Amazons keep Riding but substitute swine as the mount."
+        }
+      },
+      abilities: [
+        { name: "First Blow Against an Unwary Male",
+          notes: "In any fight where the Amazon confronts a male who is not familiar with her personally or with female warriors in general, she gets +3 to hit and +3 damage on her FIRST BLOW ONLY, because her opponent's guard is down. This does NOT work on player-characters unless the player is role-playing honestly enough to declare that he, too, would underestimate her. An NPC wary enough not to underestimate her may, with a successful Intelligence check, see the attack coming and deny her the bonus. A seasoned veteran -- any Warrior of 5th level or higher, or any other character of 8th level or higher -- will realise she is moving like a trained warrior and keep his guard up in spite of his prejudice. If she hits an NPC with this attack he will never again be prey to it; if an NPC even SEES an Amazon hit someone with it, he will never fall for it himself. But if she misses that first strike, the target will continue to underestimate her and she can use those bonuses again on her next strike." },
+        { name: "Equipment Restricted at Creation",
+          notes: "EQUIPMENT: when first created she must buy her weapons and armor from among these choices only. Weapons -- Battle Axe, Bow (any), Club, Dagger/Dirk, Hand or Throwing Axe, Javelin, Knife, Lance, Spear, Sword (any). Armor -- Shield, Leather, Padded, Studded Leather, Brigandine, Scale Mail, Hide, Banded Mail, Bronze Plate Mail. Once she has adventured elsewhere in the world she may purchase weapons and armor from those regions." },
+        { name: "Secondary Skill: Groom",
+          notes: "SECONDARY SKILLS: Groom is required. Left as prose -- the app assumes the optional proficiency system is in play." }
+      ],
+      wealth:
+        "Ordinary 5d4x10 gp starting money."
+    },
+    barbarian: {
+      name: "Barbarian",
+      class: "fighter",
+      source: {
+        status: "verified",
+        work:   "PHBR1 The Complete Fighter's Handbook",
+        pages:  "16-17",
+        note:   "Transcribed from the book."
+      },
+      requirements: {
+        str: 15,
+        strPrinted:
+          "must have a Strength ability score of 15 or more"
+      },
+      reaction: [
+        { modifier: 3,
+          applies: "encounter rolls of 8 or less, from sheer strength, intensity and animal magnetism",
+          printed: "Barbarians are impressive because of sheer strength, intensity, and animal magnetism; this gives them a +3 reaction adjustment bonus in certain situations. Whenever the barbarian character achieves a reaction roll of 8 or less (including Charisma and racial bonuses), you SUBTRACT the modifier." },
+        { modifier: -3,
+          applies: "encounter rolls of 14 or more -- the barbarian is scary and the other person overreacts",
+          printed: "Whenever the barbarian character achieves a reaction roll of 14 or more, he takes an additional -3 modifier. If the reaction is negative at all, it will be even more negative than it otherwise would have been." }
+      ],
+      proficiencies: {
+        weapon: {
+          required: ["Battle Axe", "Sword, Bastard"],
+          recommended: ["Sling", "War Hammer", "Sword, Long", "Sword, Short", "Sword, Broad"],
+          allowedGroups: ["Bow"],
+          allowedPrinted:
+            "Required: Battle Axe, Bastard Sword. These are the classical fiction-barbarian weapons; the DM may decide to substitute others more appropriate to his own world. Recommended: Bow (any), Sling, Sword (any), War Hammer.",
+          note:
+            "SPECIALIZATION: Barbarian fighters may specialize in any weapon, but are not likely to encounter unusual weapons (lances, quarterstaves, flails, peculiar polearms) until they reach the outer world. \"Bow (any)\" and \"Sword (any)\" are group phrasings; the swords resolvable from core_wp.json are listed and the bows are carried in allowedGroups."
+        },
+        nonweapon: {
+          bonus: ["Endurance"],
+          recommended: [
+            "Animal Handling", "Animal Training", "Direction Sense", "Fire-Building",
+            "Riding, Land-Based", "Weather Sense", "Blind-Fighting", "Hunting", "Mountaineering",
+            "Running", "Set Snares", "Survival", "Tracking", "Herbalism", "Jumping"
+          ],
+          note:
+            "CROSSOVER COST, printed per group: General -- Animal Handling, Animal Training, Direction Sense, Fire-Building, Riding (Land-Based), Weather Sense. Warrior -- Blind-Fighting, Hunting, Mountaineering, Running, Set Snares, Survival, Tracking. Priest (costs TWICE the listed slots if Fighter or Ranger, or just the listed number if Paladin) -- Herbalism. Rogue (costs DOUBLE slots) -- Jumping. The DM is within his rights to insist the character also take a proficiency in the tribal specialty (Fishing, Agriculture, whatever)."
+        }
+      },
+      abilities: [
+        { name: "Equipment Restricted at Creation",
+          notes: "EQUIPMENT: when he spends his starting gold he may not buy armor heavier than splint mail, banded mail, or bronze plate mail, and must limit himself to weapons the DM says are appropriate for his tribe -- the usual group includes battle axe, bows (any), club, dagger or dirk, footman's flail, footman's mace, or pick, hand or throwing axe, sling, spear, or sword (any). Outside his tribe, once he has adventured in the outer world, he can use any type of armor without penalty." },
+        { name: "Secondary Skill: Tribal",
+          notes: "SECONDARY SKILLS: the DM decides based on the character's background. Most barbarian tribes have a required skill -- a tribe that makes its living by fishing would have Fisher as its required secondary skill." }
+      ],
+      wealth:
+        "5d4x10 gp, but he must spend it all before starting play except three gp or less. He can have some pocket change when he reaches civilization, but must be close to penniless.",
+      races:
+        "Demihuman Barbarians follow the same rules. Dwarves are perhaps the most admirably suited. The DM decides whether elves, half-elves and gnomes are brooding and menacing enough, and the question is harder still with halflings.",
+      finalNote:
+        "FINAL NOTE: most classic fantasy-fiction barbarians are male, but this Warrior Kit can certainly be taken by female characters, with all the Kit's requirements, benefits, and hindrances in effect."
+    },
+    beastrider: {
+      name: "Beast-Rider",
+      class: "fighter",
+      source: {
+        status: "verified",
+        work:   "PHBR1 The Complete Fighter's Handbook",
+        pages:  "18-19",
+        note:   "Transcribed from the book."
+      },
+      requirements: {
+        cha: 13,
+        chaPrinted:
+          "must have a Charisma of at least 13"
+      },
+      reaction: [
+        { modifier: 5,
+          applies: "the one type of animal he is attuned to",
+          printed: "The Beast-Rider gets a +5 positive reaction adjustment whenever dealing with these animals. On a die-roll result of 9 or less on the \"Hostile\" column of the Encounter Reactions Chart he can even persuade attacking animals of this sort to leave him and his allies alone." },
+        { modifier: -3,
+          applies: "NPCs from any culture but his own",
+          printed: "The Beast-Rider is out of place in most societies. He takes a -3 negative reaction adjustment when meeting NPCs from any culture but his own. The player-characters do not have to be hostile to the Beast-Rider if they do not wish, however." }
+      ],
+      proficiencies: {
+        weapon: {
+          recommended: [
+            "Composite Short Bow", "Short Bow", "Flail, Horseman's", "Mace, Horseman's",
+            "Pick, Horseman's", "Spear", "Sword, Bastard", "Sword, Long"
+          ],
+          allowedGroups: ["Lance"],
+          allowedPrinted:
+            "Required: None. Recommended: all the weapons commonly associated with mounted warriors -- Bow (composite short, and short), Horseman's flail, Horseman's mace, Horseman's pick, Lance (any, according to the size of the animal), Spear, Bastard Sword, Long Sword.",
+          note:
+            "Lance is recommended \"any, according to the size of the animal\" and is carried in allowedGroups rather than resolved to one of the four Lance records."
+        },
+        nonweapon: {
+          bonus: ["Animal Training", "Riding, Land-Based"],
+          recommended: [
+            "Animal Handling", "Direction Sense", "Fire-Building", "Healing", "Animal Lore",
+            "Hunting", "Mountaineering", "Set Snares", "Survival", "Tracking"
+          ],
+          note:
+            "The character MUST DECLARE which one sort of animal both bonus proficiencies pertain to. CROSSOVER COST: General -- Animal Handling, Direction Sense, Fire-building. Priest -- Healing (specifically veterinary). Warrior -- Animal Lore, Hunting, Mountaineering, Set Snares, Survival, Tracking. The book means the PHB Healing proficiency applied to animals, NOT the separate Veterinary Healing proficiency PHBR11 introduced two years later."
+        }
+      },
+      abilities: [
+        { name: "Bonded Mount",
+          notes: "Begins play with one animal as his personal friend and mount. The animal is devoted to him and will risk or even sacrifice its own life to save the character; the character is expected to behave the same way toward his mount. The animal must be of a species normally strong enough to carry him, and the DM decides what sort of animal it is -- he is encouraged to disallow anything that would give the Beast-Rider a great advantage in the campaign, such as a pegasus or griffon. The book lists appropriate mounts: bat (huge/mobat, gnomes and halflings only), bear, boar, buffalo, camel, dolphin, dragon (very high-powered heroic campaigns only), elephant, griffon, hippogriff, horse, hyaenodon, lizard (fire, giant or minotaur), giant lobster, pegasus, manta ray, giant sea-horse, smilodon, wild tiger, unicorn (traditionally only virgin lawful-good females may ride), dire wolf. Weight-bearing abilities are taken from the animal on PHB p.78 that most resembles it in size and mass." },
+        { name: "Telepathic Rapport",
+          notes: "When in contact or visual line of sight with his animal he can tell what the beast is feeling, even thinking if it has some intelligence; he and the animal can communicate with one another without appearing to. When out of sight of one another, each will know the other's emotional state and whether or not the other is hurt; each will know the direction to travel to find his friend, and the approximate distance." },
+        { name: "If the Animal Dies",
+          notes: "The Beast-Rider immediately takes 2d6 points of damage and must make a saving throw vs. spells. If he fails, he behaves as if he were a magic-user hit with feeblemind for the next 2d6 hours. He may choose another animal of the same type, but the DM must make the search part of the campaign story -- only the healthiest, strongest, greatest example will satisfy him, and there must be some sort of bonding ritual between beast and man before the character can have his new animal." },
+        { name: "Equipment Restricted at Creation",
+          notes: "EQUIPMENT: when first created he may only have Hide, Leather, or Padded armor, plus shield and helm. Later in the campaign he may switch to more advanced armor as long as his mount can carry him and the armor both. When first created he may have only weapons from the recommended list above; the DM may change or add to this list to reflect specific cultural details of the Beast-Rider's tribe." },
+        { name: "Secondary Skill: Groom",
+          notes: "SECONDARY SKILLS: Groom (Animal Handling) is required." }
+      ],
+      wealth:
+        "Ordinary 5d4x10 gp, but like the Barbarian he must spend it all before starting play except 3 gp or less.",
+      races:
+        "Especially appropriate for demihuman characters -- dwarves on boars, elves on dire wolves, sea-elves on giant sea-horses.",
+      finalNote:
+        "ABANDONMENT: if he does not role-play his attachment to his animal, the DM should decide that the character has abandoned this Warrior Kit."
+    },
     berserker: {
       name: "Berserker",
       class: "fighter",
       source: {
-        status: "unverified",
+        status: "verified",
         work:   "PHBR1 The Complete Fighter's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+        pages:  "19-22",
+        note:   "Transcribed from the book."
+      },
+      requirements: {
+        str: 15,
+        strPrinted:
+          "must have a Strength ability score of 15 or more"
+      },
+      reaction: [
+        { modifier: 3,
+          applies: "NPCs belonging to any tribe that also has Berserkers",
+          printed: "Berserkers receive a +3 reaction adjustment bonus from NPCs belonging to any tribe that also has Berserkers -- they recognize the Berserker instinctively and respect him, even if he is an enemy." },
+        { modifier: -3,
+          applies: "all other NPCs",
+          printed: "The Berserker character receives a -3 reaction from all NPCs except characters from tribes which have berserkers in them. Demihuman Berserkers would not advertise the fact that they were such; the DM can help preserve the secret by not publicizing the fact that all NPCs are taking a -3 reaction roll concerning the Berserker characters." }
+      ],
+      proficiencies: {
+        weapon: {
+          barredGroups: ["Bow", "Crossbow", "Dart", "Sling", "Blowgun"],
+          allowedPrinted:
+            "No specific weapon proficiencies are required of the Berserker -- but he may not start out play having a proficiency in a ranged weapon (no thrown axes or knives, no bows or crossbows, etc.). The Berserker lives to destroy things in hand-to-hand combat, so he cannot start play with any sort of ranged weapon proficiency. He can learn others during the course of the campaign, if he and his DM wish to allow it -- but it's a little out of character for the Berserker.",
+          note:
+            "BARRED AT CREATION ONLY, and the bar is wider than the groups shown: it covers any THROWN melee weapon too, which no group in WEAPON_GROUP_ORDER can express. The restriction lifts later in the campaign with DM permission, which no field here models."
+        },
+        nonweapon: {
+          bonus: ["Endurance"],
+          recommended: [
+            "Animal Handling", "Animal Training", "Direction Sense", "Fire-Building",
+            "Riding, Land-Based", "Weather Sense", "Blind-Fighting", "Hunting", "Mountaineering",
+            "Running", "Set Snares", "Survival", "Tracking", "Herbalism", "Jumping"
+          ],
+          note:
+            "CROSSOVER COST, printed per group exactly as the Barbarian's: General -- Animal Handling, Animal Training, Direction Sense, Fire-Building, Riding (Land-Based), Weather Sense. Warrior -- Blind-Fighting, Hunting, Mountaineering, Running, Set Snares, Survival, Tracking. Priest (twice the listed slots if Fighter or Ranger) -- Herbalism. Rogue (double slots) -- Jumping. As with the Barbarian, the DM may insist on a tribal-specialty proficiency."
+        }
       },
       abilities: [
-        { name: "Berserker Rage", notes: "Enter berserk state in combat: +2 to hit, +2 damage, -2 AC. Cannot retreat or use complex tactics while berserking." },
-        { name: "Fearless", notes: "Immune to fear effects" }
+        { name: "Going Berserk",
+          notes: "At any time the Berserker may choose to Go Berserk. This is NOT instantaneous -- he must spend a full turn (ten combat rounds) psyching himself up, during which he is growling, moaning and uttering imprecations, so it is impossible to be quiet while trying to Go Berserk. He may be fighting during that time, meaning he can start to Go Berserk on the round the fight begins, fight for ten full rounds, and then be Berserk on the eleventh round. If no enemy is in sight yet he can hold the Berserk until combat is engaged, but if no combat takes place within five more full turns he automatically reverts to normal and suffers the ordinary consequences for coming out of a Berserk. He can only come out of his Berserk once the last enemy is down -- he must literally be down on the ground, even if still alive and surrendering; the Berserker will stay berserk and continue fighting so long as there are enemies still on their feet." },
+        { name: "Berserk: Combat Bonuses",
+          notes: "While Berserk the character gets +1 to attack, +3 to damage, and +5 hp." },
+        { name: "Berserk: Spell Immunities",
+          notes: "While Berserk he is immune, with no saving throw necessary, to the wizard spells charm person, friends, hypnotism, sleep, irritation, ray of enfeeblement, scare, geas, and the clerical spells command, charm person or mammal, enthrall, cloak of bravery, and symbol." },
+        { name: "Berserk: Saving Throw Bonuses",
+          notes: "+4 to save against the wizard spells blindness, Tasha's uncontrollable hideous laughter, hold person, charm monster, and confusion, and the clerical spells hold person and hold animal." },
+        { name: "Berserk: Emotion and Fear",
+          notes: "The emotion spell has no effect unless the caster chose the fear result. If fear was chosen, the Berserker gets a normal saving throw; if he makes it he continues on as before, but if he fails he is prematurely snapped out of his Berserk with all the normal effects of coming out of one (though he does not suffer any other fear effect). The fear spell has exactly the same effect. If he fails a saving throw against charm monster, he simply counts the caster as one of his allies; he does not come out of the Berserk or obey the caster's commands." },
+        { name: "Berserk: Finger of Death",
+          notes: "Being Berserk offers no real protection from finger of death, except that the spell effects do not take place until the character has come out of his Berserk. If he saves, he does not suffer the 2d8+1 damage until immediately after he snaps out. If he fails to save, he does not die until he snaps out." },
+        { name: "Berserk: Unarmed Combat",
+          notes: "Immune to KO results from the Punching and Wrestling rules, and takes only half damage from bare-handed attacks under those rules." },
+        { name: "Berserk: Restrictions",
+          notes: "He cannot take cover against missile fire. He can use no ranged weapons and kills only in hand-to-hand or melee-weapon combat. He must fight each opponent until that opponent is down, then move to the nearest enemy -- he cannot choose to attack the enemy leader if that leader is behind seven ranks of spearmen -- and must keep fighting until all enemies are down. He is temporarily unaffected by the clerical spells bless, cure light wounds, aid, cure serious wounds, cure critical wounds, heal, regenerate and wither; he gains their benefits only AFTER he has come out and suffered any and all damages which occurred then. The taunt spell is automatically successful and will cause him to abandon his current enemy and rush to attack the taunter." },
+        { name: "Berserk: Attacking a Friend",
+          notes: "If another character tries something the Berserker can interpret as attack -- for instance, hitting him to move him out of the way of an incoming attack -- he must roll 1d20 vs. his Intelligence. If he succeeds he is dimly aware that his friend is not attacking him. If he fails he now thinks his friend is an enemy, and continues to think so until the fight is done and he is no longer Berserk." },
+        { name: "Coming Out of the Berserk",
+          notes: "He loses the 5 hp he gained when he became Berserk, which could drop him to or below 0 hp and kill him. He collapses in exhaustion exactly as if hit by a ray of enfeeblement, with no saving throw possible, for one round for every round he was Berserk. He suffers the effects of any spells which waited until he returned to normal before affecting him, such as finger of death. And only THEN can healing magics affect him." },
+        { name: "The DM Tracks Hit Points Secretly",
+          notes: "When the Berserker goes Berserk the DM should immediately say \"Tell me how many hit points you currently have.\" From that point until the fight is done and he has returned to normal, the DM keeps track. The player is not told how many hp he has left, nor how much damage he is taking with each attack -- the character feels no pain, so he cannot keep track of how close he is to death. The DM simply says something like \"The orc-captain hits you with his axe, a mighty blow which you barely feel...\" It is therefore very possible for a Berserker to be nickled and dimed to death and not know it until he drops dead. The DM can also, if he so chooses, roll all Saving Throws for the Berserker without telling the player whether they were failures or successes." },
+        { name: "Equipment Restricted at Creation",
+          notes: "EQUIPMENT: as with the Barbarian, he may not use his starting gold to buy armor heavier than splint mail, banded mail, or bronze plate mail; once he has adventured in the outer world he can use any type of armor without penalty. When he spends his starting gold he must limit himself to weapons known to his tribe, and may not choose missile weapons. Good choices include battle axe, club, dagger or dirk, footman's flail, mace, or pick, hand axe, spear, or sword (any)." },
+        { name: "Secondary Skill: Tribal",
+          notes: "SECONDARY SKILLS: as with the Barbarian, the DM decides what is most appropriate for that specific barbarian/berserker tribe." }
       ],
-      requirements: { str: 15, con: 15, alignment: "Any non-lawful" },
-      benefits: "+2 to saves vs poison and paralyzation while berserking",
-      hindrances: "Cannot use missile weapons. -3 reaction penalty with non-berserkers."
+      wealth:
+        "Ordinary 5d4x10 gp, but like the Barbarian he must spend it all before starting play except three gp or less.",
+      races:
+        "The DM's choice as to whether his demihuman characters can have Berserkers among them. Entirely appropriate for dwarves, not inappropriate for elves, gnomes and half-elves. Halfling Berserkers are not very likely.",
+      finalNote:
+        "THE BERSERKER PALADIN: the book notes it is a strange combination some DMs will not allow, but that a paladin deeply involved with an animal totem might even be REQUIRED to be a Berserker, since the DM may reason that it is the supernatural touch of the totem animal spirit that gives the paladin his other powers."
+    },
+    cavalier: {
+      name: "Cavalier",
+      class: "fighter",
+      source: {
+        status: "verified",
+        work:   "PHBR1 The Complete Fighter's Handbook",
+        pages:  "22-24",
+        note:   "Transcribed from the book."
+      },
+      requirements: {
+        str: 15,
+        dex: 15,
+        con: 15,
+        int: 10,
+        wis: 10,
+        alignment: ["lg", "ng", "cg"],
+        race: ["human", "elf", "half-elf"],
+        alignmentPrinted:
+          "must be of any good alignment (chaotic good, neutral good, lawful good)",
+        racePrinted:
+          "Only humans, elves, and half-elves may be Cavaliers",
+        classesPrinted:
+          "Fighters and Paladins may be Cavaliers; Rangers may not."
+      },
+      reaction: [
+        { modifier: 3,
+          applies: "anyone of his own culture, except criminals and characters of evil alignment",
+          printed: "The Cavalier receives a +3 reaction from anyone of his own culture (except criminals and characters of evil alignment, from whom he receives a -3)." },
+        { modifier: -3,
+          applies: "criminals and characters of evil alignment",
+          printed: "...except criminals and characters of evil alignment, from whom he receives a -3." },
+        { modifier: -3,
+          applies: "all members of his own culture, PERMANENTLY, if he breaks his vow a third time without repenting",
+          printed: "If the Cavalier breaks his vow a third time without repenting and undertaking that task, he has abandoned his Cavalier Warrior Kit. He permanently loses all the special benefits of the Kit. He receives a permanent -3 reaction adjustment from all members of his own culture, even those who do not know of his past." }
+      ],
+      proficiencies: {
+        weapon: {
+          required: ["Sword, Long"],
+          recommended: [
+            "Sword, Bastard", "Sword, Broad", "Sword, Short", "Sword, Two-Handed", "Scimitar",
+            "Flail, Horseman's", "Mace, Horseman's", "Pick, Horseman's", "Dagger", "Spear",
+            "Javelin"
+          ],
+          allowedGroups: ["Lance"],
+          allowedPrinted:
+            "Required: Lance (any; player choice) and Sword (any; player choice). Recommended: All other Lances, all other Swords, all Horsemen's weapons, Dagger, Spear, Javelin.",
+          note:
+            "Both required entries are player CHOICES from a category, which no field here models -- Lance is carried in allowedGroups and Sword, Long is recorded as the required sword only because a choice must resolve to something; the player may pick any sword. This is the case requiredChoice would solve."
+        },
+        nonweapon: {
+          bonus: ["Riding, Land-Based", "Etiquette"],
+          recommended: [
+            "Animal Handling", "Animal Training", "Dancing", "Heraldry", "Musical Instrument",
+            "Reading/Writing", "Blind-Fighting", "Endurance"
+          ],
+          note:
+            "Riding is specified as Land-based, horse. CROSSOVER COST: Priest, double slots unless Paladin -- Musical Instrument, Reading/Writing. Warrior -- Blind-Fighting, Endurance."
+        }
+      },
+      abilities: [
+        { name: "Lance Bonus",
+          notes: "At 1st level he gets +1 to hit with any lance for which he has proficiency, when using the lance from horseback. This goes up +1 every six experience levels: +2 at 7th, +3 at 13th, and so on." },
+        { name: "Sword Bonus",
+          notes: "At 3rd level he gets +1 to hit with any one type of sword he has proficiency with; most common are broad sword, long sword, bastard sword, and scimitar. This goes up +1 every six experience levels: +2 at 9th, +3 at 15th, and so on." },
+        { name: "Horseman's Weapon Bonus",
+          notes: "At 5th level he gets +1 to hit with either horseman's mace, horseman's flail, or horseman's pick (his choice from among those he has proficiency with). This goes up +1 every six experience levels: +2 at 11th, +3 at 17th, and so on." },
+        { name: "Bonuses Do Not Add to Damage",
+          notes: "These pluses to hit do NOT add to damage, and do not allow the Cavalier to hit a monster that can only be hit by magical weapons." },
+        { name: "Immune to Fear; Radiates Courage",
+          notes: "Completely immune to the fear spell. Because he is so brave, he inspires others to courage, and so while he is fighting he actually radiates an emotion spell in a 10' radius. This emotion spell radiates COURAGE (see the writeup for the 4th-level wizard spell emotion), but only to the extent that it negates fear; it does not bestow the berserk fury that the actual wizard spell provides." },
+        { name: "+4 to Save vs. Mind-Affecting Magic",
+          notes: "+4 to save vs. all magic which would affect his mind, such as the wizard spells charm person, friends, hypnotism, sleep, irritation, ray of enfeeblement, scare and geas, and the clerical spells command, charm person or mammal, enthrall, cloak of bravery and symbol." },
+        { name: "Free Warhorse",
+          notes: "Starts play with a horse which he does not have to pay for. This will be either a Heavy Warhorse, Medium Warhorse, or Light Warhorse; the player may choose what sort it is, subject to the DM's approval. If this horse dies the Cavalier has to acquire himself another through the usual campaign means, but will not be content with any horse which is not a Warhorse of Charger quality." },
+        { name: "Right to Demand Shelter",
+          notes: "When he travels he can demand shelter from anyone in his own nation who is of status lower than nobility. Most people of his own status or higher will be happy to offer him shelter when he is travelling." },
+        { name: "Must Close to Melee",
+          notes: "Cannot attack an opponent at range if he can instead charge ahead and attack him in melee or jousting combat. He cannot snipe on enemies with a bow or crossbow, cannot use a polearm from behind a shield wall, and has to be on the front line meeting his foes face-to-face. He could conceivably shoot an opponent with an arrow to stop that opponent from killing an innocent person -- that does not constitute a violation of his code -- but he could not shoot the enemy to protect a friend if his friend is fighting that enemy honorably, even if his friend is losing." },
+        { name: "Must Attack the Most Powerful Enemy",
+          notes: "In any combat he must attack the enemy who is the biggest and most powerful-looking. If he is held up by lesser troops he must dispatch them as quickly as possible and then get to his real opponent." },
+        { name: "Must Buy the Best Armor He Can Afford",
+          notes: "Must always have the highest-quality armor he can afford. As he goes through his early experience levels, if he has the money, he will constantly be selling his old armor and buying the next most protective set. His goal is a suit of full plate armor; the next step down is field plate, then plate mail, then bronze plate mail, then banded or splint, then chain, then scale or brigandine, then ring or studded. Magic bonuses do not mean as much to him as the type of armor: he prefers ordinary field plate to a set of banded mail +5. The DM must rigorously enforce this limitation if the player is inclined to ignore it." },
+        { name: "The Code of Chivalry",
+          notes: "He must cheerfully perform any noble service or quest asked of him; he must defend, to the death, any person or item placed in his charge; he must show courage and enterprise when obeying his rulers; he must show respect for all peers and equals; he must honor all those above his station (his social class); he must demand respect and obedience from those below his station; he must scorn those who are lowly and ignoble (he will not help the ill-mannered, the coarse, the crude; he will not use equipment which is badly-made or inferior; he will fight on foot before riding a nag; etc.); he must perform military service to his lord whenever asked; he must show courtesy to all ladies (if the Cavalier is male); he must regard war as the flowering of chivalry, and a noble enterprise; he must regard battle as the test of manhood, and combat as glory; he must achieve personal glory in battle; he must slay all those who oppose his cause; and he must choose death before dishonor." },
+        { name: "Breaking the Code",
+          notes: "The first time he breaks his vows the DM will warn the player that the Cavalier feels bad about violating his code. The second time, he loses ALL his special benefits until such time as he repents and undertakes a dangerous task to redeem himself; when performing this task he must behave according to his code and his hindrances. Only when the task is successfully accomplished does he regain his benefits. The third time, without repenting and undertaking that task, he has ABANDONED the Kit -- he permanently loses all the special benefits, no longer has to obey his knightly code, takes a permanent -3 reaction adjustment from all members of his own culture, and his horse, even if it is not the one he began play with, leaves him: it either rides off into the sunset without him, or attacks him again, even if he kills it trying to do so." },
+        { name: "Secondary Skill: Groom",
+          notes: "SECONDARY SKILLS: Groom is required." },
+        { name: "Must Belong to the Noble Class",
+          notes: "The character must belong to the noble social class in the campaign. It is up to the DM to determine whether this is possible. If his campaign uses a random die-roll to determine who is nobility and who is not, the character must first successfully roll to be noble in order to be a Cavalier. If it is more of a role-playing exercise, then any character who takes the Cavalier Warrior Kit will be presumed to be of the nobility. This does not mean that he has a lot of money." }
+      ],
+      wealth:
+        "Standard 5d4x10 gp starting gold."
+    },
+    gladiator: {
+      name: "Gladiator",
+      class: "fighter",
+      source: {
+        status: "verified",
+        work:   "PHBR1 The Complete Fighter's Handbook",
+        pages:  "24-25",
+        note:   "No ability-score requirements. The book explicitly leaves female gladiators to the DM and says he might as well allow it."
+      },
+      proficiencies: {
+        weapon: {
+          required: ["Sword, Short", "Trident", "Net"],
+          allowedPrinted:
+            "Required: short sword (gladius), trident, net. Gladiators should learn an even mix of normal and unusual weapons; the DM is within his rights to insist that the Gladiator learn one strange weapon proficiency (such as whip) for every \"normal\" proficiency (like sword, spear, axe, etc.).",
+          note:
+            "SPECIALIZATION: Gladiators get a FREE Weapon Specialization which costs none of their beginning weapon proficiencies -- they still get all four of those AND this Specialization free. It must be chosen from: bow (choice), cestus, dagger, drusus, lasso, net, scimitar, short sword, spear, trident, and whip. Cestus, drusus, lasso and net are flagged in the book as new weapons found in the Equipment chapter."
+        },
+        nonweapon: {
+          bonus: ["Charioteering", "Tumbling"],
+          recommended: [
+            "Animal Handling", "Animal Training", "Etiquette", "Riding, Land-Based", "Armorer",
+            "Blind-Fighting", "Endurance", "Gaming", "Weaponsmithing", "Healing"
+          ],
+          note:
+            "CROSSOVER COST: the bonuses are cross-group -- Charioteering is Warrior, Tumbling is Rogue, taken for the combat showmanship that characterises arena fighting. Recommended: General -- Animal Handling, Animal Training, Etiquette, Riding (Land-Based). Warrior -- Armorer, Blind-Fighting, Endurance, Gaming, Weaponsmithing. Priest (double slots unless Paladin) -- Healing."
+        }
+      },
+      abilities: [
+        { name: "Free Weapon Specialization",
+          notes: "Because of their intensive training, Gladiators get a FREE Weapon Specialization. This does not cost any of their beginning weapon proficiencies -- they still get all four of those, AND get this Specialization free. It must be chosen from: bow (choice), cestus, dagger, drusus, lasso, net, scimitar, short sword, spear, trident, and whip." },
+        { name: "Recognised Everywhere",
+          notes: "Gladiators tend to be recognized -- as Gladiators, at least, if not by their own names -- wherever they go. This makes it more difficult for them to do things in secret; some troublesome NPC is always remembering \"the tall, fair-haired gladiator\" who was at the scene of the action, which makes it very easy for the authorities to follow the heroes' trail. This is something the DM will have to enforce scrupulously if the Gladiator is to have hindrances offsetting his benefits." },
+        { name: "Promoters and Managers",
+          notes: "Strictly a role-playing consideration. Promoters and managers are always interfering in the Gladiator's life: trying to hire him to participate in certain-death events, to fight people the Gladiator does not want to fight, to force him to participate in events taking place at the exact time he needs to be somewhere else. They will go to any length to get their way; they may blackmail the character, kidnap his followers, use the time-honored bait of a gorgeous romantic interest (whom the Gladiator does not immediately realise is an employee of the promoter), and so forth. The DM should make it clear that these promoters are mostly of the sleazy variety who will cheat, rob and betray him at the drop of a hat." },
+        { name: "Equipment: Gladiator Armor Only",
+          notes: "EQUIPMENT: may buy any sort of nonmagical weapon or combination of weapons before beginning play. However, he must choose his armor from the listing of Gladiator Armor in the Equipment chapter, under \"New Armors.\"" },
+        { name: "Secondary Skill: The Pre-Arena Trade",
+          notes: "SECONDARY SKILLS: received through whatever means is usual for the campaign -- by choice or random die-roll. This skill probably represents the trade he learned before becoming a Gladiator." }
+      ],
+      wealth:
+        "Standard 5d4x10 gp to spend, and may spend it any way he chooses subject to the equipment restrictions above, or have it all unspent at the beginning of play.",
+      races:
+        "ANY demihuman warrior can be a Gladiator. Operators of the arenas try to acquire as many different, unusual fighters as they can, by hiring or enslaving them, and demihumans (when they can be acquired) are major attractions.",
+      finalNote:
+        "DMs take note: a Gladiator character is not likely to be a Ranger. You can permit it if you wish, but Rangers are very wilderness-oriented and Gladiators are very urban."
+    },
+    myrmidon: {
+      name: "Myrmidon",
+      class: "fighter",
+      source: {
+        status: "verified",
+        work:   "PHBR1 The Complete Fighter's Handbook",
+        pages:  "25-26",
+        note:   "Transcribed from the book."
+      },
+      requirements: {
+        str: 12,
+        con: 12,
+        strPrinted:
+          "must have scores of at least 12 in Strength and Constitution"
+      },
+      proficiencies: {
+        weapon: {
+          allowedPrinted:
+            "The Myrmidon may spend his Weapon Proficiency slots any way he chooses.",
+          note:
+            "SPECIALIZATION: he gets a FREE Weapon Specialization, which must be chosen from Battle axe, Bow (composite long bow, composite short bow, or long bow), Crossbow (heavy crossbow or light crossbow), Lance (choice), Polearm (choice), Spear, Sword (choice)."
+        },
+        nonweapon: {
+          bonus: ["Ancient History", "Fire-Building"],
+          recommended: [
+            "Animal Handling", "Cooking", "Heraldry", "Riding, Land-Based", "Seamanship",
+            "Swimming", "Weather Sense", "Reading/Writing", "Disguise", "Armorer",
+            "Blind-Fighting", "Bowyer/Fletcher", "Charioteering", "Endurance", "Navigation",
+            "Set Snares", "Survival", "Tracking", "Weaponsmithing"
+          ],
+          note:
+            "Ancient History is specifically MILITARY History. CROSSOVER COST: General -- Animal Handling, Cooking, Heraldry, Riding (Land-based), Seamanship, Swimming, Weather Sense. Priest, double slots unless Paladin -- Reading/Writing. Rogue, double slots -- Disguise. Warrior -- Armorer, Blind-Fighting, Bowyer/Fletcher, Charioteering, Endurance, Navigation, Set Snares, Survival, Tracking, Weaponsmithing. Wizard, double slots unless Ranger -- Reading/Writing. Reading/Writing is listed TWICE, under two different groups with different costs; the book prints it that way and it is transcribed as printed."
+        }
+      },
+      abilities: [
+        { name: "Free Weapon Specialization",
+          notes: "Gets a free Weapon Specialization, which must be chosen from the following group: Battle axe, Bow (composite long bow, composite short bow, or long bow), Crossbow (heavy crossbow or light crossbow), Lance (choice), Polearm (choice), Spear, Sword (choice)." },
+        { name: "Powerful Patron",
+          notes: "Usually in the employ of some powerful patron. The DM decides what immediate benefits this grants him; they vary with the type of employer. Working for a wealthy nobleman, he will not have to spend any money for room and board and will enjoy an upper-class existence. Part of a standing army, he may be immune to prosecution by the civilian authorities, though he can certainly face court martial for misdeeds." },
+        { name: "Standing Army or Mercenary",
+          notes: "When first created the player must decide whether his character is part of a standing army or a mercenary unit, and whether he is of non-commissioned rank (recruit, private, sergeant) or an officer's rank (such as captain) -- up to the DM, who will make his choice based on what works best in his campaign's current storyline. His employment can change over the course of the campaign." },
+        { name: "Instantly Recognisable",
+          notes: "Instantly recognizable by his military demeanor, erect posture, disciplined mannerisms, etc. Because he is distinctive he is easily remembered and described by witnesses to his adventures; this makes it easier for the enemy to identify him and follow his trail if he is trying to escape or travel through dangerous territory." },
+        { name: "Beholden to His Employer",
+          notes: "His employer makes many demands. If he is a bodyguard he must accompany his employer just about everywhere, regardless of any personal goals or interests. If he is a common soldier he is subject to the orders of his officers. If he is a military officer he is subject to the orders of his superiors or the local ruler, and bears the added stress of having to look out for his men whenever they are engaged in military action." },
+        { name: "Equipment: Specific Military Force",
+          notes: "EQUIPMENT: may spend his starting gold on whatever sort of arms, armor and equipment he chooses. If, when he is first created, it is agreed that he will be part of a specific military force with specific equipment requirements, he is required to buy that equipment, but the DM must give him extra gold in the amount of half that cost." },
+        { name: "Secondary Skill: From a Fixed List",
+          notes: "SECONDARY SKILLS: the Myrmidon may choose his Secondary Skill, but must choose it from Armorer, Bowyer/Fletcher, Forester, Groom, Hunter, Leatherworker, Navigator, Sailor, Scribe, Teamster/Freighter, Weaponsmith." }
+      ],
+      wealth:
+        "Standard 5d4x10 gp starting gold.",
+      races:
+        "Any demihuman race can have Myrmidons. Mercenary demihumans travel mostly in human-occupied lands, while Myrmidon demihumans in standing armies usually stick to their own race's territories."
+    },
+    noblewarrior: {
+      name: "Noble Warrior",
+      class: "fighter",
+      source: {
+        status: "verified",
+        work:   "PHBR1 The Complete Fighter's Handbook",
+        pages:  "26-29",
+        note:   "Transcribed from the book."
+      },
+      requirements: {
+        str: 13,
+        con: 13,
+        strPrinted:
+          "must have Strength and Constitution scores of 13 or better -- it is what comes of being forced to train in heavy plate armor for so many years"
+      },
+      reaction: [
+        { modifier: 3,
+          applies: "anyone of his own culture",
+          printed: "The Noble Warrior receives a +3 reaction from anyone of his own culture." },
+        { modifier: -1,
+          applies: "cumulative erosion of his +3 when he cannot afford to live well",
+          printed: "If the Noble Warrior is unable to spend this extra money because of lack of funds, and he can settle for lesser goods, his bonus to Reaction rolls will be reduced, at -1 per such incident, until it reaches +0, to reflect the fact that people are seeing that he is settling for shabbier goods and otherwise not living up to their expectations of how a noble warrior should live." },
+        { modifier: -6,
+          applies: "everybody who knows of the reputation, if he gets a bad reputation deservedly or undeservedly",
+          printed: "If a Noble Warrior gets a bad reputation, deservedly or undeservedly, his +3 reaction becomes a -6 reaction from everybody who knows of the reputation." }
+      ],
+      proficiencies: {
+        weapon: {
+          required: ["Sword, Long"],
+          recommended: ["Sword, Bastard", "Flail, Horseman's", "Mace, Horseman's"],
+          allowedGroups: ["Lance"],
+          allowedPrinted:
+            "Unless the campaign deals with a culture unlike medieval Europe, all Noble Warriors must take the following proficiencies: long sword or bastard sword (player choice), lance (player choice of type, usually jousting lance), and horseman's flail or horseman's mace (player choice). The last proficiency may be used for a weapon of the warrior's choice or to specialize in one of the required choices.",
+          note:
+            "ALL THREE required entries are player CHOICES from a pair or a category, which no field here models -- Sword, Long is recorded as the required sword only because a choice must resolve to something. RACIAL VARIANT: p.13 states the Noble Dwarf-Warrior is required to be proficient with axe and hammer rather than sword and lance, and is not required to be a rider. This is the case requiredChoice would solve."
+        },
+        nonweapon: {
+          bonus: ["Etiquette", "Heraldry", "Riding, Land-Based"],
+          recommended: [
+            "Animal Training", "Dancing", "Blind-Fighting", "Gaming", "Hunting", "Tracking",
+            "Local History", "Musical Instrument", "Reading/Writing"
+          ],
+          note:
+            "CROSSOVER COST: General -- Etiquette, Heraldry, Riding (Land-Based) as bonuses; Animal Training, Dancing recommended. Warrior -- Blind-Fighting, Gaming, Hunting, Tracking. Priest, cost double slots unless Paladin -- Local History, Musical Instrument, Reading/Writing."
+        }
+      },
+      abilities: [
+        { name: "Right to Demand Shelter",
+          notes: "When travelling he can demand shelter from anyone in his own nation who is of lower social status than his. Most people of his own status or higher will offer him shelter when he is travelling -- up to two persons times the Noble Warrior's experience level. If the Noble Warrior is fifth level, the patron will offer shelter for the Noble Warrior and up to nine of his companions." },
+        { name: "Low Justice",
+          notes: "In his own land, the Noble Warrior can administer low justice upon commoners -- acting as judge, jury and executioner for minor crimes he comes across. The definition of \"minor crimes\" is up to the DM, but in general should include things like assault, petty theft, etc." },
+        { name: "Oath of Loyalty",
+          notes: "In order to become a Noble Warrior he has sworn an oath of loyalty to some greater noble. If he is a squire to a knight, he has an oath to his knight. If he is a knight himself, he is sworn an oath to his king or some other noble -- or perhaps to both. He will be expected to live up to that oath from time to time: accompany his lord into combat, provide troops to his lord, even beggar his own household in order to support his lord's needs." },
+        { name: "Must Live Well: +10% on Everything",
+          notes: "Expected to live well. After he is created, he must add +10% to the base cost of goods, equipment, and services he is buying -- FOR EACH EXPERIENCE LEVEL HE HAS -- to reflect his noble tastes and requirements. This extra cost is NOT just a tip; the character is buying higher-quality goods. To retain his bonus, when he is once again in the money, he must do whatever it takes to upgrade his situation -- buy new clothes, go on a buying spree -- at the DM's discretion, and his +3 reaction will return." },
+        { name: "Expected to Extend Shelter",
+          notes: "Just as other nobles are expected to extend shelter to the Noble Warrior, he is expected to offer other nobles shelter when they are travelling through his territory -- or when they meet on the road while he is encamped and they are not. Whenever a Noble Warrior character is getting too cocky, the DM can have him visited by a nice, large crowd of nobles to whom he is expected to offer shelter and food, and who proceed to eat him out of house and home." },
+        { name: "Equipment: Minimum Standards",
+          notes: "EQUIPMENT: may spend his gold pretty much as he chooses, but there are certain minimum standards he cannot violate. He cannot buy armor less protective than brigandine or scale mail. Before starting play he MUST buy a suit of armor, a shield, at least one weapon larger than a dagger, a horse (at least a riding horse), riding saddle, bit and bridle, horseshoes and shoeing, halter and saddle blanket." },
+        { name: "Secondary Skill: Groom",
+          notes: "SECONDARY SKILLS: all Noble Warrior characters must take the Groom skill. Squires are expected to care for their knights' horses, and should not forget this skill when they themselves become knights." }
+      ],
+      wealth:
+        "Begins play with more gold than other Warrior Kits: 225 gp PLUS the standard 5d4x10 gp. But he is required to spend a large portion of that on the specific items described above.",
+      races:
+        "Appropriate for any sort of demihuman race to have a class of Noble Warriors."
+    },
+    peasanthero: {
+      name: "Peasant Hero",
+      class: "fighter",
+      source: {
+        status: "verified",
+        work:   "PHBR1 The Complete Fighter's Handbook",
+        pages:  "29-30",
+        note:   "No ability-score requirements."
+      },
+      reaction: [
+        { modifier: -2,
+          applies: "all the peasants in the land, if he turns away his home community's petitioners",
+          printed: "If he turns them away, he loses their respect and earns a -2 reaction from all of the peasants in the land until he is once again in his home community's good graces." }
+      ],
+      proficiencies: {
+        weapon: {
+          recommended: [
+            "Sword, Short", "Spear", "Short Bow", "Long Bow", "Flail, Footman's",
+            "Mace, Footman's", "Pick, Footman's"
+          ],
+          allowedPrinted:
+            "The player may choose his character's weapon proficiencies, but may not choose any that the DM feels would be unusual for his campaign-world's peasants. Short sword, spear, bow, footman's weapons and the like are all very appropriate; horseman's weapons, exotic polearms, lances, long swords, tridents and the like are not. This is only a restriction WHEN THE CHARACTER IS FIRST CREATED; afterwards, of course, he can learn any weapon he receives training with.",
+          note:
+            "AT CREATION ONLY, and the restriction lifts entirely once play begins -- so this is recorded as recommended rather than allowed. The book names the barred side too (horseman's weapons, exotic polearms, lances, long swords, tridents) but as examples of a DM judgement, not a closed list."
+        },
+        nonweapon: {
+          bonusChoice: [["Agriculture", "Fishing"], ["Weather Sense", "Animal Lore"]],
+          note:
+            "Both bonuses are PLAYER CHOICES between two named proficiencies. Recommended: any of the General proficiencies -- the book names no specific list."
+        }
+      },
+      abilities: [
+        { name: "Shelter and Aid in His Home Community",
+          notes: "No matter what he has done or what anyone thinks of him, the Peasant Hero always has shelter and often has other help when he is in his own community. Unless it is known that he has hurt people from his own community, he will always find people to put him up, hide him and companions from the law, supply them with food and drink and what little weaponry can be scraped together (usually daggers), and even provide them with helpers -- earnest 0-level youths who want to grow up to be like their hero." },
+        { name: "Petitioners",
+          notes: "Since the Peasant Hero is looked upon as a patron and hero by the people from his home, they will frequently come to him for help. Whenever the village is losing people to nocturnal predators, whenever a village overlord turns out to be a dangerous tyrant, whenever a local citizen is jailed and tried for something he did not do, the citizens turn to the Peasant Hero for help." },
+        { name: "Equipment: Nearly Penniless at Start",
+          notes: "EQUIPMENT: may spend his starting gold any way he sees fit, but may have no more than 3 gp left when he begins play." },
+        { name: "Secondary Skill: Player Choice",
+          notes: "SECONDARY SKILLS: the player may choose his character's secondary skill." }
+      ],
+      wealth:
+        "Standard 5d4x10 gp starting money.",
+      races:
+        "A distinctly human sort of character; also appropriate to halflings, and to half-elves living among humans. But no other demihumans should have Peasant Hero characters unless the DM decides that their cultures are very much like rural human society."
+    },
+    pirateoutlaw: {
+      name: "Pirate/Outlaw",
+      class: "fighter",
+      source: {
+        status: "verified",
+        work:   "PHBR1 The Complete Fighter's Handbook",
+        pages:  "30-31",
+        note:   "No ability-score requirements. One kit with TWO orientations -- Pirate (high seas) and Outlaw (wilderness) -- which differ in required weapon proficiencies, bonus proficiencies and secondary skills. Both are transcribed here; the Pirate's values are the structured ones and the Outlaw's are recorded in the notes, because a single entry cannot hold two sets."
+      },
+      proficiencies: {
+        weapon: {
+          required: ["Cutlass", "Belaying Pin"],
+          recommended: ["Long Bow", "Sword, Long", "Quarterstaff"],
+          allowedPrinted:
+            "If the character is a Pirate, he must take the following proficiencies: Cutlass, and Belaying Pin or Gaff/Hook (player choice). If the character is an Outlaw, he can take any weapon proficiencies he chooses -- but the DM, if he's created this campaign so that the outlaws have a special motif weapon (such as Robin Hood's Merry Men and their longbows), may insist that all Outlaw characters take a specific weapon proficiency. Recommended to classic Merry Man-type outlaws: longbow, long sword and quarterstaff.",
+          note:
+            "The second Pirate requirement is a CHOICE between Belaying Pin and Gaff/Hook; Belaying Pin is recorded because a choice must resolve to something. Cutlass, Belaying Pin and Gaff/Hook are all flagged in the book as new weapons found in the Equipment chapter -- these are three of the eight PHBR1 weapons already reprinted in CRH Table 58. The Outlaw has NO required weapon proficiencies."
+        },
+        nonweapon: {
+          bonus: ["Rope Use", "Seamanship"],
+          recommended: [
+            "Swimming", "Weather Sense", "Navigation", "Engineering", "Reading/Writing",
+            "Appraising", "Set Snares"
+          ],
+          note:
+            "THESE ARE THE PIRATE'S. The OUTLAW's bonuses are Direction Sense and Fire-Building, and his recommended list is: General -- Riding (Land-Based). Warrior -- Animal Lore, Bowyer/Fletcher, Endurance, Hunting, Running, Set Snares, Survival, Tracking. Priest, double slots unless Paladin -- Healing, Herbalism, Local History. Rogue, double slots -- Disguise. CROSSOVER COST on the Pirate's own list: General -- Swimming, Weather Sense. Warrior -- Navigation. Priest, double slots unless Paladin -- Engineering (for shipbuilding), Reading/Writing (for mapmaking). Rogue, double slots -- Appraising, Set Snares (in association with Rope Use skill), Tightrope Walking, Tumbling. Wizard, double slots unless Ranger -- Engineering (for shipbuilding), Reading/Writing (for mapmaking). SPECIAL NOTE: the DM may be a fan of the very acrobatic pirate or outlaw movies of the past and prefer that Tumbling be one of the Bonus Proficiencies instead of one of the ones listed."
+        }
+      },
+      abilities: [
+        { name: "No Intrinsic Special Benefits",
+          notes: "Pirates and Outlaws do not have any intrinsic special benefits, although the DM can bestow some campaign-based benefits on them if he chooses. In a powerful pirate city the PCs can trade their ill-gotten gains, a place where the law dares not enter; in a \"Merry Men\" type outlaw campaign, the heroes have the dubious benefit of knowing that they are on the right side if they can just oust the current rulers." },
+        { name: "The Law Is Always After Them",
+          notes: "The major problem with being an outlaw or pirate is that the law is always after the characters. Though the authorities do not have to put in an appearance in every single play-session, they are always out there, plotting against the heroes. Many of them are quite clever; they probably have more money, ships and men than the heroes, and they will continue to plague the heroes until the campaign is done." },
+        { name: "Equipment: Metal Armor Is Impractical",
+          notes: "EQUIPMENT: Pirates and Outlaws come from widely diverse backgrounds, so there is no real restriction on what they can buy with their starting money. However, it would be foolish for either type of character to buy metal armor of any kind (banded, brigandine, bronze plate, chain, field plate, full plate, plate mail, and ring mail). Pirates wearing such armor in naval combat will inevitably fall overboard and sink -- they cannot swim with such stuff on; if they are lucky enough to get it off so they can swim, they have lost the armor. Outlaws living out in the wild have their belongings exposed to the elements, and metal armor quickly corrodes; if a Pirate or Outlaw buys metal armor and keeps it stowed away for special occasions that is fine, but if they wear it all the time the DM should continually take it away from them through accidents, rust and corrosion." },
+        { name: "Secondary Skill: Rolled or Chosen",
+          notes: "SECONDARY SKILLS: if the character is a Pirate, roll d100 -- on 01-70 his Secondary Skill is Sailor; on 71-80 it is Shipwright; on 81-00 it is Navigator. If he is an Outlaw, the character may choose between Bowyer/Fletcher, Forester, Hunter, and Trapper/Furrier." },
+        { name: "Going Straight; Privateers",
+          notes: "In a Pirate campaign it could be that the player-characters will eventually come to terms with the authorities and \"go straight.\" This does not mean they have to abandon the Pirate Warrior Kit -- they could instead become Privateers, who are basically pirates sailing under the papers of (permission of) their ruler, and preying on the nation's enemies. At that point they can still behave just as they did previously, and the other nation's authorities become their specific enemy." }
+      ],
+      wealth:
+        "Standard 5d4x10 gp for starting gold.",
+      races:
+        "Unless your campaign is very human-oriented, Outlaws and Pirates will take just about anyone they can get, so it is perfectly appropriate for there to be Outlaws and Pirates of the demihuman races."
+    },
+    samurai: {
+      name: "Samurai",
+      class: "fighter",
+      source: {
+        status: "verified",
+        work:   "PHBR1 The Complete Fighter's Handbook",
+        pages:  "31-32",
+        note:   "Transcribed from the book."
+      },
+      requirements: {
+        str: 13,
+        con: 13,
+        int: 14,
+        wis: 13,
+        alignment: ["lg", "ln", "le"],
+        race: ["human"],
+        alignmentPrinted:
+          "may be of lawful alignment only, but still may be good, evil, or neutral",
+        racePrinted:
+          "The historical precedent for the samurai is strictly human; it is up to the individual DM if he wants to have an oriental-based demihuman culture with a samurai warrior class -- elves and half-elves are perhaps most visually appropriate, but a DM could allow it to any demihuman race in his campaign."
+      },
+      proficiencies: {
+        weapon: {
+          required: ["Katana"],
+          allowedPrinted:
+            "The samurai and ronin start play with two free extra weapon proficiency slots. But of his six initial weapon proficiencies, five are chosen for him. The samurai and ronin must specialize in katana (samurai sword, two proficiency slots) and daikyu (samurai great bow, three proficiency slots). The samurai or ronin may spend his last proficiency slot as he chooses -- but only from among the samurai weapons listed in the Equipment chapter of this book. After the character is in play in another culture, he may become proficient in weapons of that culture.",
+          note:
+            "SLOT COUNT AND SLOT PATTERN, neither modelled: two FREE extra weapon slots, then five of the six initial slots are pre-spent -- Katana specialization costs two and Daikyu specialization costs three -- leaving exactly one free, which must come from the Equipment chapter's samurai weapons. SPECIALIZATION: both are mandatory specializations, not mere proficiencies. DAIKYU HAS NO RECORD in core_wp.json and so cannot be listed in `required`, even though PHBR1 p.119 prints it (100 gp, 3 lb, size L, speed 7) along with its own Daikyu arrow (3 sp per 6, 1 lb, size M, type P, 1d8/1d6). It is the second missing-weapon finding of this chapter, after Throwing Axe. Katana exists but its values differ from p.119; see the PHBR notes."
+        },
+        nonweapon: {
+          bonus: ["Etiquette", "Riding, Land-Based"],
+          required: ["Reading/Writing"],
+          recommended: ["Artistic Ability", "Blind-Fighting", "Running"],
+          note:
+            "The book's phrasing on Reading/Writing is unusual and is transcribed as printed: \"Required (samurai/ronin must purchase these, but gets no extra slots to pay for them): (Priest and Wizard, costs double slots unless Paladin or Ranger) Reading/Writing.\" CROSSOVER COST: General -- Artistic Ability/Calligraphy, Artistic Ability/Painting. Warrior -- Blind-Fighting, Running. The book prints Artistic Ability twice with two different specializations; it is recorded once here and the specializations are named in this note."
+        }
+      },
+      abilities: [
+        { name: "Kiai: Temporary Strength 18/00",
+          notes: "The samurai and ronin are able to focus their vital energies to increase their Strength score temporarily. Once per day per experience level he can increase his Strength to 18/00 for one full round, and it must be preceded by a loud kiai shout, making it impossible for him to summon this strength silently or stealthily. For that one round, all his hit probability, damage adjustment, weight allowance, maximum press, open doors and bend bars/lift gates rolls and functions are calculated as if his Strength were 18/00." },
+        { name: "Absolute Devotion to His Lord",
+          notes: "The samurai is supposed to be absolutely devoted to his lord. He is expected to obey instantly every one of his lord's orders, up to and including killing himself or those he loves. If he refuses to obey an order, he is dishonored and is expected to kill himself; if he does not, he becomes ronin. The DM should make sure the samurai is acutely aware of this by having his lord occasionally issue orders which are difficult for him to keep. This does not always have to be \"Kill all of your allies,\" but the lord can issue orders which interfere with the samurai's personal goals and remind him that he is subservient to his lord." },
+        { name: "Ronin: Half Experience",
+          notes: "The ronin has all of the abilities of the samurai but operates under slightly different rules. A samurai can become a ronin at any time in a campaign; likewise, by swearing allegiance to a lord who will have him, a ronin can become a samurai again. A samurai can fall from his noble position within a greater lord's household -- the house may have perished in a war or other calamity, or the lord has rejected him, or ordered him to commit suicide and the samurai has refused, or the samurai has left his lord for some other point of honor. The ronin earns experience points at HALF the normal rate; when the DM awards experience, the ronin receives only half what he would if he were still a samurai. This hindrance goes away once he again swears allegiance to a lord and becomes a samurai -- at which point he is subject to the hindrances of the samurai again." },
+        { name: "The Code of Honor",
+          notes: "A code demanding: absolute obedience to his lord; readiness to die for honor or for his lord at any time; eagerness to avenge any dishonor to his lord, his family, or himself; willingness to repay all debts honorably; and unwillingness to demonstrate the most dishonorable trait of cowardice." },
+        { name: "Equipment: Samurai Gear Only; Free Katana",
+          notes: "EQUIPMENT: the samurai and ronin must buy all their starting equipment from the samurai weapons, armor and equipment listed in the Equipment chapter. They may have no more than 10 gp left when they have purchased their equipment. Samurai and ronin do NOT have to buy their katana; that is free to the character." },
+        { name: "Secondary Skill: Scribe",
+          notes: "SECONDARY SKILLS: a samurai or ronin must have the Scribe secondary skill." }
+      ],
+      wealth:
+        "Normal 5d4x10 gp beginning money.",
+      finalNote:
+        "Players and DMs wishing to have more game-oriented information on the samurai should read Oriental Adventures. The samurai presented here is a simplified version of the OA samurai. Ask your DM before creating a samurai or ronin whether such things exist on his world and whether you may play one."
+    },
+    savage: {
+      name: "Savage",
+      class: "fighter",
+      source: {
+        status: "verified",
+        work:   "PHBR1 The Complete Fighter's Handbook",
+        pages:  "32-34",
+        note:   "Transcribed from the book."
+      },
+      requirements: {
+        str: 11,
+        con: 15,
+        strPrinted:
+          "must have a minimum Strength score of 11 and a minimum Constitution score of 15"
+      },
+      proficiencies: {
+        weapon: {
+          recommended: [
+            "Blowgun", "Long Bow", "Short Bow", "Club", "Dagger", "Javelin", "Knife", "Sling",
+            "Spear"
+          ],
+          allowedPrinted:
+            "The DM should define a set of weapons which the PC can choose his beginning weapon proficiencies from. A typical set, for classic \"noble savages\": blowgun, long bow, short bow, club, dagger, javelin, knife, sling, spear. The character must make his first-level weapon proficiency selections from these choices. Once he begins play and begins adventuring in the outer world, he may learn any other weapon, of course... but it is better role-playing if he prefers to stick to the weapons of his tribe.",
+          note:
+            "AT CREATION ONLY, and the set is explicitly the DM's to define -- the list here is the book's example, not a rule, which is why it is recommended rather than allowed."
+        },
+        nonweapon: {
+          bonus: ["Direction Sense", "Weather Sense", "Endurance", "Survival"],
+          recommended: [
+            "Animal Handling", "Animal Training", "Fire-Building", "Fishing", "Riding, Land-Based",
+            "Rope Use", "Swimming", "Animal Lore", "Bowyer/Fletcher", "Hunting", "Mountaineering",
+            "Running", "Set Snares", "Tracking", "Healing", "Herbalism", "Local History",
+            "Religion", "Jumping", "Tightrope Walking", "Tumbling"
+          ],
+          note:
+            "The Savage receives MORE bonus nonweapon proficiencies than any other type of warrior. CROSSOVER COST: General -- Direction Sense, Weather Sense (bonuses); Animal Handling, Animal Training, Fire-Building, Fishing, Riding (Land-based), Rope Use, Swimming. Warrior -- Endurance, Survival (bonuses); Animal Lore, Bowyer/Fletcher, Hunting, Mountaineering, Running, Set Snares, Tracking. Priest, double slots unless Paladin -- Healing, Herbalism, Local History, Religion. Rogue, double slots -- Jumping, Tightrope Walking, Tumbling. Wizard, double slots unless Ranger -- Herbalism, Religion. Herbalism and Religion are each listed twice under two groups with different costs; transcribed as printed."
+        }
+      },
+      abilities: [
+        { name: "Spell-Like Ability, Once Per Day Per Level",
+          notes: "Has a special ability resembling a spell, which he may use once per day per experience level (a 5th-level savage could use his ability five times per day). The ability must be chosen from the list below, must be chosen when the character is first created, and may never be changed. It is NOT truly magic -- Detect Magic will not detect it -- and does not require verbal, somatic, or material components even if such are required from the normal spell. The DM can disallow any of the four, or introduce new ones, though he cannot add anything that resembles a magical spell above 1st level." },
+        { name: "Ability 1: Alarm",
+          notes: "Alarm (Wizard 1st Level). Only usable by the Savage when he is resting or sleeping in a quiet place. It does not sound an alarm like the spell; it merely alerts him to intrusion (if he is already awake) or awakens him (if he is asleep). It is not cast upon a particular place; it alerts him to activity within 10 feet of the place where he lies, as if he were at the center of the 20-foot cube of effect of the actual spell." },
+        { name: "Ability 2: Detect Magic",
+          notes: "Detect Magic (Wizard 1st Level). Reflects the fact that the Savage is in tune with nature and can feel when there is something unnatural (i.e., magical) in the air. Unless the Savage is also a Ranger, he CANNOT determine the type of magic present (alteration, conjuration, etc.)." },
+        { name: "Ability 3: Animal Friendship",
+          notes: "Animal Friendship (Priest 1st Level). Can only make friends of an animal which is not angry or threatened. It can be used to make an angry or threatened animal calm; to make friends with an angry or threatened animal, therefore, the Savage must be able to use the ability TWICE that day -- he must be of 2nd level or higher and must have two uses left. To use the ability he must confront the animal face to face, at no further away than the limits of the animal's attack range. As with the spell, he must actually have no ulterior motives, for such will be detected by the animal, and the ability will fail." },
+        { name: "Ability 4: Detect Evil",
+          notes: "Detect Evil (Priest 1st Level). Like the Detect Magic ability above, this Detect Evil cannot detect evil in a PC -- only in a monster, place, or magical item." },
+        { name: "Uncomfortable in Civilized Clothing",
+          notes: "When wearing any sort of clothing more cumbersome and concealing than his normal tribal dress, he suffers a -1 to all attack, damage and nonweapon proficiency rolls: he is uncomfortable, and it is affecting his actions and reactions." },
+        { name: "Uncomfortable in Armor",
+          notes: "He can wear any type of armor, but is so uncomfortable in it that he suffers a -3 to all attack, damage, and nonweapon proficiency rolls while wearing any sort of armor at all. If a player blatantly decides not to role-play his character's dislike of armor and simply wears armor continually, accepting that negative modifier, the DM should gradually increase the modifier: -3 in one play-session, -4 in the next, -5 in the next, and so on... with no limit. If the player asks why this is happening, the DM need merely reply that the character is growing more and more uncomfortable in his unnatural trappings and finding it harder and harder to concentrate on the job at hand." },
+        { name: "Equipment: No Gold at All",
+          notes: "EQUIPMENT: the Savage gets NO gold (0 gp) with which to purchase his weapons and equipment. Instead, he may take up to four of the weapons listed under \"New Savage Weapons\" in the Equipment chapter. He may assemble an equipment list of up to ten additional items, subject to the DM's approval, which he will have accumulated during his years with the tribe; they must be items which members of a savage tribe could have made -- pouches, clothing, food, rope, fishing gear, sheathes for weapons, and so forth; no mirrors, lanterns, iron cooking pots and the like. With the DM's permission, if the tribe is a river-tribe or a riding tribe, he may have either a riding horse (with saddle-blanket, halter, bit and bridle) or a small canoe." },
+        { name: "Secondary Skill: Outdoor Trade",
+          notes: "SECONDARY SKILLS: the Savage should have Fisher, Forester, Hunter, or Trapper/Furrier as his Secondary Skill (player choice)." }
+      ],
+      wealth:
+        "Starts out with NO gold. He gets his starting weapons as described above under Equipment. After the campaign starts, the character will inevitably come across the concepts of money; it is up to the player how he reacts to them.",
+      races:
+        "Most role-playing campaigns tend to think of the demihumans as being more civilized and cultured than humans, but it is perfectly all right to have Savage dwarves, elves, gnomes, half-elves, and even halflings in your campaign if the DM wishes them to be there."
     },
     swashbuckler: {
       name: "Swashbuckler",
       class: "fighter",
       source: {
-        status: "unverified",
+        status: "verified",
         work:   "PHBR1 The Complete Fighter's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+        pages:  "34-35",
+        note:   "Transcribed from the book."
+      },
+      requirements: {
+        dex: 13,
+        int: 13,
+        intPrinted:
+          "must have an Intelligence and Dexterity of 13 or better"
+      },
+      reaction: [
+        { modifier: 2,
+          applies: "NPC members of the opposite sex",
+          printed: "The Swashbuckler is such a romantic figure that he always receives a +2 adjustment on his reaction roll from NPC members of the opposite sex." }
+      ],
+      proficiencies: {
+        weapon: {
+          required: ["Stiletto", "Main-Gauche", "Rapier", "Sabre"],
+          allowedPrinted:
+            "The Swashbuckler receives two extra weapon proficiency slots which must be devoted to weapon proficiency with one of the following weapons: stiletto, main-gauche, rapier, and sabre. Throughout his career, he must devote half of his weapon proficiency slots to those four weapons. Once he has achieved specialization in all four of those weapons, he may freely choose where the rest of his weapon proficiency slots go.",
+          note:
+            "SLOT COUNT AND SLOT PATTERN, neither modelled: TWO free extra slots, then HALF of every subsequent slot must go to these four weapons until all four are specialized. The four are not required individually -- the two free slots go to one or more OF them -- so `required` here is the closed pool, not four mandatory picks. All four are flagged in the book as new weapons found in the Equipment chapter, and all four are among the eight PHBR1 weapons already reprinted in CRH Table 58."
+        },
+        nonweapon: {
+          bonus: ["Etiquette", "Tumbling"],
+          recommended: [
+            "Artistic Ability", "Dancing", "Heraldry", "Languages, Modern", "Riding, Land-Based",
+            "Seamanship", "Blind-Fighting", "Gaming", "Musical Instrument", "Reading/Writing",
+            "Appraising", "Disguise", "Forgery", "Juggling", "Tightrope Walking"
+          ],
+          note:
+            "CROSSOVER COST: General -- Etiquette (bonus); Artistic Ability, Dancing, Heraldry, Languages (Modern), Riding (Land-Based), Seamanship. Rogue -- Tumbling (bonus); Appraising, Disguise, Forgery, Juggling, Musical Instrument, Tightrope Walking. Warrior -- Blind-Fighting, Gaming. Priest, double slots unless Paladin -- Musical Instrument, Reading/Writing. Wizard, double slots unless Ranger -- Reading/Writing. Musical Instrument and Reading/Writing are each listed twice under different groups; transcribed as printed."
+        }
       },
       abilities: [
-        { name: "Lightly Armored Fighter", notes: "AC bonus improves with level when wearing light/no armor" },
-        { name: "Improved Initiative", notes: "+2 bonus to initiative" }
+        { name: "Nonweapon Proficiencies at Single Cost",
+          notes: "When using up his Nonweapon Proficiency slots, he does not have to devote double the normal number of slots when choosing Rogue proficiencies." },
+        { name: "-2 AC in Light or No Armor",
+          notes: "When he is wearing light or no armor -- no armor, leather armor, or padded armor -- he receives a -2 bonus to his AC. An AC of 7 would become a 5. He is so nimble that he is very hard to hit." },
+        { name: "Rivals Seek Him Out",
+          notes: "Trouble seeks out the Swashbuckler. This is something the DM will have to play very carefully if the Swashbuckler is to be as hindered as all the other Warrior Kits. When there is another Swashbuckler around, intent on proving that he is the best swordsman in the world, it is the PC Swashbuckler he settles upon and challenges. When a certain young lady is being pursued by the king's guards, who are intent on stopping her from revealing secrets in her possession, it is the Swashbuckler she stumbles across when fleeing. When a prince is too drunk to attend his own coronation, miraculously he looks just like the Swashbuckler. Life conspires to make things difficult for the Swashbuckler, and the DM should always throw just a little more good-natured bad luck at that Warrior Kit than at any other." },
+        { name: "Equipment: Must Buy His Specialty Weapon",
+          notes: "EQUIPMENT: the Swashbuckler MUST buy the weapon in which he has specialized, but except for that limitation may spend his gold precisely as he pleases." },
+        { name: "Secondary Skill: Player Choice",
+          notes: "SECONDARY SKILLS: the Swashbuckler can choose his own Secondary Skill. Good choices include Navigator (if he is in with a band of pirates, especially), Gambler, Jeweler, Scribe, and Weaponsmith." }
       ],
-      requirements: { str: 12, dex: 15, alignment: "Any" },
-      benefits: "+1 to AC at 1st level, improves every 5 levels (max +4 at 17th). +1 to saves vs breath weapons",
-      hindrances: "Cannot wear armor heavier than leather. Cannot use shields larger than buckler."
+      wealth:
+        "Standard 5d4x10 gp starting money allotment.",
+      races:
+        "Any demihuman who would look elegant in foppish dress, wielding a narrow blade, will work fine as a Swashbuckler -- especially elves, half-elves and halflings. Dwarves and gnomes are not entirely inappropriate, but are likely to have to defend themselves from plenty of jokes at the expense of their curious looks."
     },
+    wildernesswarrior: {
+      name: "Wilderness Warrior",
+      class: "fighter",
+      source: {
+        status: "verified",
+        work:   "PHBR1 The Complete Fighter's Handbook",
+        pages:  "35-36",
+        note:   "Transcribed from the book."
+      },
+      requirements: {
+        con: 13,
+        conPrinted:
+          "must have a Constitution score of at least 13"
+      },
+      proficiencies: {
+        weapon: {
+          allowedPrinted:
+            "The Wilderness Warrior may spend his Weapon Proficiencies any way he pleases. The DM may insist that he spend one or two on weapons appropriate to his culture: a desert nomad should have Scimitar and Short Composite Bow, while an arctic warrior should have Harpoon and Spear, for instance.",
+          note:
+            "No structured restriction -- the culture-appropriate weapons are a DM judgement and vary per character. Scimitar, Composite Short Bow, Harpoon and Spear are the book's worked examples, not a list."
+        },
+        nonweapon: {
+          bonus: ["Survival", "Endurance"],
+          recommended: [
+            "Animal Handling", "Animal Training", "Dancing", "Fire-Building", "Fishing",
+            "Riding, Land-Based", "Swimming", "Mountaineering", "Tracking"
+          ],
+          note:
+            "Survival is specifically IN HIS NATIVE ENVIRONMENT. The recommended list is explicitly open-ended -- \"any relating to the land of his birth\" -- and the entries here are the book's examples. Dancing is specified as HIS CULTURAL DANCES. CROSSOVER COST: Warrior -- Mountaineering, Tracking."
+        }
+      },
+      abilities: [
+        { name: "+5 to Survival in His Native Environment",
+          notes: "Gets a special bonus of +5 to his Survival proficiency roll. This only applies to the Survival proficiency pertaining to environments like that of his origin; if he later takes a second Survival proficiency for another type of territory, the bonus does not count toward it." },
+        { name: "Unfamiliar With Civilization",
+          notes: "In his early years he is occasionally hindered by his unfamiliarity with the player-characters' society, but this is a role-playing consideration: the DM must occasionally enforce it until he believes the character is sufficiently familiar with the usual culture." },
+        { name: "Equipment: Culture-Appropriate Only",
+          notes: "EQUIPMENT: may only spend his starting gold on items appropriate to his culture. The desert nomad could not buy any armor at all with his starting gold, while the arctic warrior could only have leather or hide armor. If the DM determines that his is a trading culture, he could have access to goods from all over the world. He does NOT have to spend all his starting gold before entering play, and once he begins play there are no restrictions on what sorts of equipment he may buy." },
+        { name: "Secondary Skill: Outdoor Trade",
+          notes: "SECONDARY SKILLS: may choose his skill from Fisher, Forester, Hunter, Sailor, Trapper/Furrier." },
+        { name: "Unusual Beliefs and Customs",
+          notes: "The player decides, with DM permission, what sort of tribe and environment the Wilderness Warrior comes from. Then, working with the DM, he must determine what sort of unusual beliefs and customs the character and his tribe possess. He may later abandon a few of these beliefs in the outer world, but should not abandon most of them; they are part of what makes him unique in the campaign. Examples the book gives: a desert nomad may be merely offended at the theft of his property but outraged by (and demand the death penalty for) theft of his water; he may believe that women should stay in camp and leave fighting to the men, an opinion he will find himself quickly disabused from when in the outer world; he may feel the need to prostrate himself whenever he passes the church or temple of the deity he worships." }
+      ],
+      wealth:
+        "The usual 5d4x10 gp in starting gold.",
+      races:
+        "A very appropriate Warrior Kit for demihuman warriors, and the DM may wish to create some unusual demihuman tribes to showcase it -- Dwarven Wilderness Warriors from the mountains, Elf and Gnome Wilderness Warriors from the tropical rain forest. But what about Desert Dwarves? Arctic Elves? Swamp Gnomes? Mountain Halflings?"
+    },
+    // ===== House material. Not in PHBR1's kit list. =====
     archer: {
       name: "Archer",
       class: "fighter",
@@ -435,75 +1331,6 @@ const KITS = {
       requirements: { str: 12, dex: 15, alignment: "Any" },
       benefits: "Specialization in bow costs 1 slot instead of 2. Starts with +1 to hit with bows.",
       hindrances: "Must specialize in a bow. -1 to hit with all melee weapons."
-    },
-    cavalier: {
-      name: "Cavalier",
-      class: "fighter",
-      source: {
-        status: "unverified",
-        work:   "PHBR1 The Complete Fighter's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Horsemanship", notes: "Expert rider, +3 to all riding checks" },
-        { name: "Mounted Combat", notes: "+1 to hit and damage when mounted" },
-        { name: "Code of Honor", notes: "Must follow strict code of conduct" }
-      ],
-      requirements: { str: 15, dex: 12, alignment: "Lawful Good" },
-      benefits: "Free weapon specialization in lance. Bonus followers at 9th level.",
-      hindrances: "Must own and maintain horse and expensive equipment. Must tithe 33% of income."
-    },
-    myrmidon: {
-      name: "Myrmidon",
-      class: "fighter",
-      source: {
-        status: "unverified",
-        work:   "PHBR1 The Complete Fighter's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Weapon Focus", notes: "Choose one weapon type - exceptional mastery" },
-        { name: "Signature Move", notes: "Develop unique combat technique with chosen weapon" }
-      ],
-      requirements: { str: 13, alignment: "Any" },
-      benefits: "Additional +1 to hit and damage with chosen weapon beyond specialization",
-      hindrances: "Must specialize in chosen weapon at 1st level. -1 to hit with all other weapons."
-    },
-    savage: {
-      name: "Savage",
-      class: "fighter",
-      source: {
-        status: "unverified",
-        work:   "PHBR1 The Complete Fighter's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Wilderness Warrior", notes: "Survival skills in wilderness, tracking ability" },
-        { name: "Intimidating Presence", notes: "+2 to intimidation in combat" }
-      ],
-      requirements: { str: 13, con: 13, alignment: "Any non-lawful" },
-      benefits: "Bonus to surprise opponents. Enhanced unarmed combat damage.",
-      hindrances: "Cannot use complex mechanical devices. -2 reaction in civilized areas."
-    },
-    gladiator: {
-      name: "Gladiator",
-      class: "fighter",
-      source: {
-        status: "unverified",
-        work:   "PHBR1 The Complete Fighter's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Arena Combat", notes: "Trained in showmanship and crowd-pleasing combat" },
-        { name: "Dirty Tricks", notes: "Can attempt dirty fighting maneuvers" }
-      ],
-      requirements: { str: 13, con: 13, alignment: "Any" },
-      benefits: "+1 to hit when fighting single opponent. Bonus to wrestling/grappling.",
-      hindrances: "Must seek glory and recognition. -1 to teamwork situations."
     },
     pitfighter: {
       name: "Pit Fighter",
@@ -522,40 +1349,6 @@ const KITS = {
       benefits: "Improved AC when unarmored. Double normal unarmed damage.",
       hindrances: "Cannot use shields. Distrusted in civilized society (-2 reaction)."
     },
-    peasanthero: {
-      name: "Peasant Hero",
-      class: "fighter",
-      source: {
-        status: "unverified",
-        work:   "PHBR1 The Complete Fighter's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Man of the People", notes: "+4 reaction bonus with common folk" },
-        { name: "Improvised Weapons", notes: "No penalty when using improvised weapons" }
-      ],
-      requirements: { str: 13, alignment: "Any good" },
-      benefits: "Can inspire common people to follow. Free weapon proficiency in improvised weapons.",
-      hindrances: "Cannot use expensive equipment. Must help common folk in need."
-    },
-    amazon: {
-      name: "Amazon",
-      class: "fighter",
-      source: {
-        status: "unverified",
-        work:   "PHBR1 The Complete Fighter's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Warrior Society", notes: "Trained in all-female warrior culture" },
-        { name: "Mounted Archery", notes: "Can use bow while mounted without penalty" }
-      ],
-      requirements: { str: 13, dex: 13, alignment: "Any", gender: "Female" },
-      benefits: "+1 to saves vs charm/fear. Free weapon proficiency in javelin and short bow.",
-      hindrances: "Cultural restrictions. May face prejudice in male-dominated societies."
-    }
   },
 
   // ========== RANGER KITS ==========
