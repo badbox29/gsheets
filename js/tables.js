@@ -4276,6 +4276,92 @@ const PHB_RELATED_WEAPONS = [
   ["Sling", "Staff Sling"]
 ];
 
+// === PHBR1 proficiency relationships (Complete Fighter's Handbook, Ch.5) ======
+//
+// PHBR1 states relationships PER WEAPON, in prose, where the PHB states them as
+// symmetric sets. It means three different things, and they are kept apart:
+//
+//   SAME               One proficiency covers both weapons. NOT the half
+//                      penalty -- full proficiency, no penalty, and
+//                      specialization transfers.
+//   RELATED            The ordinary half-penalty relationship, extended to
+//                      weapons the PHB never mentions.
+//   RELATED TO GROUP   "related to all other polearms" / "related to but not
+//                      identical to other bow proficiencies". Stored as the RULE
+//                      rather than resolved to names: the weapon list is open,
+//                      so a resolved list silently goes stale as books are
+//                      audited. (Alignment and terrain resolve; weapons do not.)
+//   UNRELATED          The book says outright the weapon is related to NOTHING.
+//                      This is a positive statement and must BEAT the Group
+//                      fallback, which would otherwise relate shuriken to darts
+//                      because both carry Group "Dart".
+//
+// KEPT OUT OF PHB_RELATED_WEAPONS ON PURPOSE. That constant is the PHB's own
+// list, transcribed verbatim; folding a supplement into it would make the data
+// claim the PHB says something it does not -- the same reason demiRanger is kept
+// out of `race` in kits.js.
+//
+// NO TOGGLE. Nothing here overrides a PHB statement: the PHB is silent on every
+// weapon involved. What it displaces is the unsourced core_wp.json Group
+// fallback -- house inference giving way to a printed rule.
+//
+// Verified August 2026 against 23 relationships the book states outright: 13 were
+// wrong before this change, 0 after, with six PHB-only pairs unchanged.
+
+const PHBR1_SAME_PROFICIENCY = [
+  ["Stiletto", "Knife"],         // p.104: Knife proficiency IS Stiletto proficiency
+  ["Bo Stick", "Quarterstaff"],  // p.100-101: "shares a proficiency with Quarterstaff"
+  ["Drusus", "Sword, Short"]     // p.98: same proficiency; specialization transfers
+];
+
+const PHBR1_RELATED_WEAPONS = [
+  ["Cutlass", "Sword, Short", "Dagger", "Dirk", "Knife", "Stiletto", "Main-Gauche"],
+  ["Belaying Pin", "Club", "Mace, Footman's", "Mace, Horseman's"],
+  ["Rapier", "Sabre"],           // p.104: explicitly NOT long sword or its relations
+  ["Main-Gauche", "Dagger", "Dirk"],
+  ["Katana", "Sword, Bastard", "Sword, Long"],
+  ["Wakizashi", "Sword, Short"]
+];
+
+const PHBR1_RELATED_TO_GROUP = {
+  "Naginata": "Polearm",
+  "Tetsubo":  "Polearm",
+  "Daikyu":   "Bow"
+};
+
+const PHBR1_UNRELATED = [
+  "Bola", "Cestus", "Chain", "Gaff/Hook, Attached", "Gaff/Hook, Held",
+  "Lasso", "Net", "Nunchaku", "Sai", "Shuriken"
+];
+
+// Every PHBR1 set a weapon belongs to. An array, not a single set: main-gauche
+// and stiletto each appear in two.
+function getPHBR1RelatedSets(weaponName) {
+  const n = (weaponName || "").trim().toLowerCase();
+  if (!n) return [];
+  return PHBR1_RELATED_WEAPONS.filter(set =>
+    set.some(w => w.toLowerCase() === n)
+  );
+}
+
+function isPHBR1Unrelated(weaponName) {
+  const n = (weaponName || "").trim().toLowerCase();
+  if (!n) return false;
+  return PHBR1_UNRELATED.some(w => w.toLowerCase() === n);
+}
+
+// Do these two weapons share ONE proficiency? Full proficiency, not the half
+// penalty -- see the note in getWeaponProficiencyStatus.
+function samePHBR1Proficiency(nameA, nameB) {
+  const a = (nameA || "").trim().toLowerCase();
+  const b = (nameB || "").trim().toLowerCase();
+  if (!a || !b) return false;
+  return PHBR1_SAME_PROFICIENCY.some(pair => {
+    const x = pair[0].toLowerCase(), y = pair[1].toLowerCase();
+    return (a === x && b === y) || (a === y && b === x);
+  });
+}
+
 // The PHB related set a weapon belongs to, or null if the book doesn't list it.
 function getPHBRelatedSet(weaponName) {
   const n = (weaponName || "").trim().toLowerCase();
@@ -4304,14 +4390,43 @@ function canonicalWeaponName(name, typeKey) {
 }
 
 function areWeaponsRelated(nameA, groupA, nameB, groupB, keyA, keyB) {
-  const setA = getPHBRelatedSet(canonicalWeaponName(nameA, keyA));
-  const setB = getPHBRelatedSet(canonicalWeaponName(nameB, keyB));
+  const cA = canonicalWeaponName(nameA, keyA);
+  const cB = canonicalWeaponName(nameB, keyB);
 
+  const setA = getPHBRelatedSet(cA);
+  const setB = getPHBRelatedSet(cB);
   if (setA && setB) return setA === setB;
-  if (setA || setB) return false;   // one is listed, the other isn't
+
+  // PHBR1's own sets, consulted BEFORE the old "one is listed, the other isn't"
+  // bail-out. That line was the bug: every PHBR1 weapon is absent from the PHB
+  // list, so pairing one with a PHB-listed weapon returned false before the
+  // Group fallback could run. Belaying pin vs club, cutlass vs dagger, katana vs
+  // long sword and nine others all failed that way.
+  const p1A = getPHBR1RelatedSets(cA);
+  const p1B = getPHBR1RelatedSets(cB);
+  if (p1A.some(s => p1B.indexOf(s) !== -1)) return true;
+
+  // "Related to nothing" is a POSITIVE statement in PHBR1 and must beat the
+  // Group fallback, which would otherwise relate shuriken to darts because both
+  // carry Group "Dart".
+  if (isPHBR1Unrelated(cA) || isPHBR1Unrelated(cB)) return false;
 
   const gA = (groupA || "").trim().toLowerCase();
   const gB = (groupB || "").trim().toLowerCase();
+
+  // A few weapons are related to a whole GROUP rather than a list -- "related to
+  // all other polearms", "related to but not identical to other bow
+  // proficiencies". Stored as the rule rather than resolved to names, because the
+  // weapon list is open and a resolved list goes stale as books are audited.
+  const tgA = PHBR1_RELATED_TO_GROUP[cA];
+  const tgB = PHBR1_RELATED_TO_GROUP[cB];
+  if (tgA && (tgA || "").toLowerCase() === gB) return true;
+  if (tgB && (tgB || "").toLowerCase() === gA) return true;
+
+  // A weapon named in ANY book's list has exhaustive relationships; it does not
+  // also pick up its whole Group.
+  if (setA || setB || p1A.length || p1B.length) return false;
+
   return !!gA && gA === gB;
 }
 
@@ -4334,6 +4449,18 @@ function getWeaponProficiencyStatus(weaponName, weaponGroup, weaponProfs, weapon
   //    i.e. anything not yet migrated, or a genuinely homebrew weapon with no
   //    equivalent in the book.
   if (n && profs.some(p => (p.name || "").trim().toLowerCase() === n)) return "proficient";
+
+  // 2b. SAME PROFICIENCY -- PHBR1 states outright that certain weapons share one
+  //     proficiency rather than merely resembling one another: knife/stiletto,
+  //     bo stick/quarterstaff, short sword/drusus. That is FULL proficiency, not
+  //     the half penalty, so it must be tested BEFORE the related check below --
+  //     otherwise a short-sword-proficient character wielding a drusus takes a
+  //     -1 the book does not impose.
+  if (profs.some(p => samePHBR1Proficiency(
+        canonicalWeaponName(weaponName, key),
+        canonicalWeaponName(p.name, p.weaponTypeKey)))) {
+    return "proficient";
+  }
 
   // 3. Related weapon -- half penalty.
   if (profs.some(p => areWeaponsRelated(weaponName, weaponGroup, p.name, p.group,
