@@ -4324,6 +4324,13 @@ function addArmorFromBrowser(root, armor) {
     // Bracers slot, which is the bracers-of-defense behaviour and competes with
     // body armor instead of stacking.
     'bracers': 'Supplemental Armor',
+    // PHBR1 gladiator armor is assembled from separate pieces -- belt, cuirass,
+    // fasciae, galerus, manica -- worn in combination rather than as a suit.
+    // Same shape as Dastana: they ADD to protection rather than replacing body
+    // armor, so without this a leather sleeve lands in the body armor slot and
+    // drives the character's AC. (Galea and Myrmillo are typed 'Helmet' in the
+    // data instead, because they genuinely are helmets.)
+    'gladiator piece': 'Supplemental Armor',
     // core_armor.json's barding rows (Chain, Full Scale, Banded Mail, Full
     // Plate, the half-bardings) carry Armor Type "Horse Armor". Without a
     // mapping they fell through to 'Armor' and sat in the character's own body
