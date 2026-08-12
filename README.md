@@ -2,7 +2,7 @@
 
 A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and no build step.
 
-**Version 11.2.3**
+**Version 11.2.7**
 
 ## Live Demo
 
@@ -40,6 +40,9 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 * Ten colour themes, each with its own light and dark mode, chosen from a swatch grid and remembered per browser
 * Card status colours fixed across every theme and checked against red-green and red-blind colour vision, so the legend means the same thing whichever theme you use
 * Optional-rules framework with live toggles for Player's Handbook options and house-rule overrides
+* Supplement support, one row per book, applying what a Complete Handbook states and staying quiet about the experiments it merely offers
+* The complete ranger kit list from the Complete Ranger's Handbook, transcribed from the book, with the two crypt kits from DRAGON #234
+* Ranger tracking, stealth and animal empathy worked out from your level, race, kit and armor, with every term shown
 * Multi-page printable character sheet with configurable sections, blank write-in lines, and color schemes
 * Import / export character data
 * JSON-based storage for portability
@@ -116,6 +119,13 @@ Second Edition marks a good deal of its content as optional, and different table
 **House Rules & Overrides** are checks the tool performs against rules the book states flatly — class ability minimums, legal class combinations, druid armor restrictions, non-proficiency attack penalties. These ship switched **on**, so unticking one is always the house rule. They exist so a DM who has already waived something doesn't have to look at a warning about it forever.
 
 **Table Rulings** are questions the Player's Handbook simply doesn't answer — how much a coin weighs, whether an enchanted arrow's bonus adds to an enchanted bow's. Neither setting is more correct than the other here; the default is only the more common reading. These are the ones to settle with your DM.
+
+**Supplement Rules** are the Complete Handbooks. One row per book rather than one per rule, because a table says "we use the Complete Ranger's Handbook", not "we use Table 11 but not Table 53". Each book expands into two toggles, and the split is the book's own:
+
+* **Apply the core rules** — things the book states as its own, which change how numbers are worked out. The Complete Ranger's Handbook, for instance, replaces the Player's Handbook's flat rule that a ranger simply cannot hide in anything heavier than studded leather with a sliding scale that runs from a bonus in no armor down to almost nothing in full plate.
+* **Apply the optional rules** — the experiments a book offers rather than asserts, usually in a sidebar or with an explicit "if your table wants to try this". These **suppress warnings** rather than enforcing anything. Ticking the ranger book's optional rules lets you build a dwarven Guardian or a half-elf ranger/druid without the sheet objecting on every render; it doesn't make the tool police the caps those rules suggest.
+
+Both ship switched **off**, so unticked is always the Player's Handbook. Each toggle lists what it changes, and says plainly where a rule is shown for reference but not enforced. Content a supplement merely *adds* — a new kit, proficiency or weapon — has no toggle at all, since it takes nothing away from a table using only the core book.
 
 For the first two groups the shipped state is the book as written. Toggles apply immediately to every open character with no reload.
 
@@ -213,6 +223,80 @@ Follow these steps **in order** to avoid overwriting your data:
 * I am not a developer.
 
 ### Recent Updates
+
+#### v11.2.7
+
+**Supplement support, starting with the Complete Ranger's Handbook**
+
+* Settings gains a **Supplement Rules** tab: one row per book, in publication
+  order, each expanding into two toggles. A book with anything switched on stays
+  expanded, because a supplement in force and out of sight is how a table loses
+  track of which rules it is playing.
+* The split between the two toggles is the book's own. A handbook states some
+  rules and merely offers others, usually in a sidebar, and the two deserve
+  different treatment — bundling an experiment into "apply this book" would make
+  a DM's judgement call automatic.
+* The optional toggle **suppresses warnings** and enforces nothing. It is scoped
+  rather than blanket: turning on the ranger book's optional rules quietens a
+  gnomish Stalker, which that book explicitly permits, and still objects to a
+  gnomish Paladin, which nothing does.
+
+**The ranger, from the Complete Ranger's Handbook**
+
+* All fifteen ranger kits transcribed from the book, five of which the tool
+  never had — Falconer, Forest Runner, Guardian, Seeker and Warden. Every one of
+  the ten that already existed was wrong: the Beastmaster carried ability score
+  minimums the book does not ask for, the Giant Killer's damage bonus was four
+  times what it should be, and the Stalker had a thief's backstab, which rangers
+  do not get.
+* The Crypt Ranger and Crypt Defender from DRAGON #234, whose author wrote them
+  to replace the version sketched in the handbook.
+* **Kits now affect stealth.** A Stalker's chance to hide in shadows was ten
+  points short, silently, because nothing read the kit adjustments — the
+  Feralan, Forest Runner, Justifier and Stalker all gain, the Mountain Man and
+  Greenwood Ranger lose, and a Sea Ranger has neither ability at all.
+* **Tracking** can use the handbook's tables in place of the Player's Handbook's
+  single list: eight kinds of ground rather than five, four degrees of light
+  rather than one blanket penalty, and modifiers the core book has no equivalent
+  for — your own experience, your primary terrain, an assisting tracker, an
+  animal follower. Terrain and light become a single choice each; the rest still
+  stack. The bonus for your own level is read off the sheet rather than typed.
+* **Animal empathy** gets a panel of its own. The number is a penalty to the
+  *animal's* saving throw rather than a bonus to yours, so the panel says whose
+  roll it is — a bare "−5" on a ranger's sheet reads as bad news otherwise.
+  Domestic animals get no save at all.
+* Thirteen nonweapon proficiencies the ranger kits referred to but the tool did
+  not have — camouflage, cartography, falconry, foraging, persuasion, signaling,
+  spelunking, trail marking, trail signs, veterinary healing and the rest.
+  Thirteen weapons, including the machete a Pathfinder is required to carry, and
+  thirty-six pieces of equipment, from falconry gear to bundle tents to the
+  waterproof tinderbox.
+
+**A movement band the Player's Handbook got wrong**
+
+* Table 40 lists one band as "7-14" and the next as "14 or greater". The tool
+  had to guess, and guessed the wrong way. The Complete Ranger's Handbook prints
+  the same table without the overlap, so a tracking score of exactly 14 now
+  slows the party to half speed rather than three-quarters. This one applies
+  whether or not you use the supplement — a later printing of the same table by
+  the same publisher is a correction, not an alternative.
+
+**Ammunition carries what the book says about it**
+
+* Arrow types now keep their range and damage modifiers and their notes, shown
+  on the card: an armor-piercing arrow tells you it ignores a point of armor,
+  and a sheaf arrow tells you it flies shorter than a flight arrow. All of it
+  was already in the tool's data and none of it reached the sheet.
+* These are shown for you to apply, not applied for you. An arrow does not know
+  which of your bows it is for, and a good many of the modifiers are conditional
+  — a point against unarmored opponents, extra dice against undead — which is a
+  judgement rather than a sum.
+
+**Kits in alphabetical order**
+
+* The kit dropdown showed kits in whatever order they sat in the file, which
+  looked alphabetical only by accident and stopped looking that way as soon as a
+  book's kits were added in the book's order.
 
 #### v11.2.0
 
