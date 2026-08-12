@@ -4121,7 +4121,12 @@ function addAmmunitionFromBrowser(root, ammo) {
     // away when the card was built, so they never reached a character sheet.
     forWeapon:  ammo.Weapon || '',
     rangeMod:   ammo['Range Modifier'] || '',
-    damageMod:  ammo['Damage Modifier'] || ''
+    damageMod:  ammo['Damage Modifier'] || '',
+    // Several rows carry their ENTIRE rule here while both modifier columns
+    // read "+0" -- armor-piercing arrows ignore 1 point of AC, poisoned and
+    // fire arrows, the bleed arrow. Dropping Notes left the most useful column
+    // in the file and off the sheet.
+    bookNotes:  ammo.Notes || ''
   }, () => {
     const activeTab = document.querySelector('.tab.active');
     if (activeTab) markUnsaved(activeTab, true, root);
