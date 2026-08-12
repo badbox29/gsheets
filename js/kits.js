@@ -1114,11 +1114,11 @@ const KITS = {
       },
       proficiencies: {
         weapon: {
-          required: ["Katana"],
+          required: ["Katana", "Daikyu"],
           allowedPrinted:
             "The samurai and ronin start play with two free extra weapon proficiency slots. But of his six initial weapon proficiencies, five are chosen for him. The samurai and ronin must specialize in katana (samurai sword, two proficiency slots) and daikyu (samurai great bow, three proficiency slots). The samurai or ronin may spend his last proficiency slot as he chooses -- but only from among the samurai weapons listed in the Equipment chapter of this book. After the character is in play in another culture, he may become proficient in weapons of that culture.",
           note:
-            "SLOT COUNT AND SLOT PATTERN, neither modelled: two FREE extra weapon slots, then five of the six initial slots are pre-spent -- Katana specialization costs two and Daikyu specialization costs three -- leaving exactly one free, which must come from the Equipment chapter's samurai weapons. SPECIALIZATION: both are mandatory specializations, not mere proficiencies. DAIKYU HAS NO RECORD in core_wp.json and so cannot be listed in `required`, even though PHBR1 p.119 prints it (100 gp, 3 lb, size L, speed 7) along with its own Daikyu arrow (3 sp per 6, 1 lb, size M, type P, 1d8/1d6). It is the second missing-weapon finding of this chapter, after Throwing Axe. Katana exists but its values differ from p.119; see the PHBR notes."
+            "SLOT COUNT AND SLOT PATTERN, neither modelled: two FREE extra weapon slots, then five of the six initial slots are pre-spent -- Katana specialization costs two and Daikyu specialization costs three -- leaving exactly one free, which must come from the Equipment chapter's samurai weapons. SPECIALIZATION: both are mandatory specializations, not mere proficiencies. Daikyu was ADDED to core_wp.json during the Ch.5 pass; before that this requirement could not be expressed. Katana already existed but its values differ from PHBR1 p.95/119 and were NOT overwritten -- the book says its oriental weapons are a simplified conversion of Oriental Adventures, so ours are more likely OA's. See the PHBR notes."
         },
         nonweapon: {
           bonus: ["Etiquette", "Riding, Land-Based"],

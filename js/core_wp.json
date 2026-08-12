@@ -87,7 +87,7 @@
     "Cost": "2 cp",
     "Weight": "2 lb",
     "Source": "PHBR1",
-    "Notes": "A short wooden rod used on ships, to which rigging lines are tied. Can be used as an improvised club. For related proficiencies, related to club and mace. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. Values here are the CRH reprint; the original PHBR1 entry has NOT been checked against them."
+    "Notes": "A short wooden rod used on ships, to which rigging lines are tied. Can be used as an improvised club. For related proficiencies, related to club and mace. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: matches PHBR1 pp.95 and 119 exactly, field for field. PROFICIENCY RELATIONSHIP (PHBR1 p.100): related to clubs and maces -- a character with club or mace proficiency takes only -1 with a belaying pin he is not proficient in."
   },
   {
     "Weapon Name": "Bill-Guisarme",
@@ -159,7 +159,7 @@
     "Cost": "1 sp",
     "Weight": "4 lb",
     "Source": "Unattributed",
-    "Notes": "Oriental weapon"
+    "Notes": "Oriental weapon PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Cost 2 cp, Speed Factor 4, Damage (L) 1d4. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.100-101): shares a proficiency with QUARTERSTAFF -- if you can use one you can use the other."
   },
   {
     "Weapon Name": "Bola",
@@ -176,8 +176,44 @@
     "Group": "Bola",
     "Cost": "5 sp",
     "Weight": "2 lb",
-    "Source": "Unattributed",
-    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Entangles on hit"
+    "Source": "PHBR1",
+    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Entangles on hit Attributed to PHBR1 (pp.95, 119) August 2026: every field matches the book exactly. PHBR1 spells it \"Bolas\". PROFICIENCY RELATIONSHIP (PHBR1 p.96): not related to any other proficiency."
+  },
+  {
+    "Weapon Name": "Cestus",
+    "Category": "Melee",
+    "Size": "S",
+    "Type": "S",
+    "Damage (S-M)": "1d4",
+    "Damage (L)": "1d3",
+    "Speed Factor": "2",
+    "ROF": "",
+    "Range (S)": "",
+    "Range (M)": "",
+    "Range (L)": "",
+    "Group": "Club",
+    "Cost": "1 gp",
+    "Weight": "2 lb",
+    "Source": "PHBR1",
+    "Notes": "A glovelike weapon studded with sharp spikes and edges across the knuckles and the back of the glove. Gladiators usually wear two, one on each hand (plural cesti). REQUIRES NO WEAPON PROFICIENCY -- it is simply a bonus to punching-type attacks and anyone may use cesti with no proficiency penalty, so Specialization with Cestus costs only one weapon proficiency slot. A character wearing cesti may still make a Grab maneuver with that hand, at -2 to hit and -2 to the attacker's Strength for holding on. Readily available from weaponsmiths in any culture with gladiatorial combat, but not exported; a foreign weaponsmith who has cesti described to him can make functional ones, but the first two cost twice the listed price. One-handed only. PHBR1 p.96."
+  },
+  {
+    "Weapon Name": "Chain",
+    "Category": "Melee",
+    "Size": "L",
+    "Type": "B",
+    "Damage (S-M)": "1d4+1",
+    "Damage (L)": "1d4",
+    "Speed Factor": "5",
+    "ROF": "",
+    "Range (S)": "",
+    "Range (M)": "",
+    "Range (L)": "",
+    "Group": "Flail",
+    "Cost": "5 sp",
+    "Weight": "3 lb",
+    "Source": "PHBR1",
+    "Notes": "A 6' or 10' length of chain with weights at both ends, whirled very fast so the weighted end inflicts the damage. Combines melee traits with the lasso's: usable for Called Shots, Disarm, Parry and Strike/Thrust, and for three of the lasso's five special functions -- Pull/Trip by striking at a target's legs, Dismount a Rider, and Snag a Rider's Head. Easy to conceal and, in western lands, not usually recognised as a weapon until wielded as one. Requires its OWN weapon proficiency, not related to any other. Two-handed only. Range is a function of the chain's length rather than a throw, so the book gives it S 1/2, M 1, L 2 with no fixed rate of fire. PHBR1 pp.94, 101."
   },
   {
     "Weapon Name": "Club",
@@ -249,7 +285,7 @@
     "Cost": "12 gp",
     "Weight": "4 lb",
     "Source": "PHBR1",
-    "Notes": "Short heavy slashing sword, sharp along one edge, with a basket hilt (+1 to parry, punch as an iron gauntlet). For related proficiencies, related to dagger, knife and short sword. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. Values here are the CRH reprint; the original PHBR1 entry has NOT been checked against them."
+    "Notes": "Short heavy slashing sword, sharp along one edge, with a basket hilt (+1 to parry, punch as an iron gauntlet). For related proficiencies, related to dagger, knife and short sword. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: matches PHBR1 pp.95 and 119 exactly, field for field. PROFICIENCY RELATIONSHIP (PHBR1 p.100): related to short sword, dagger/dirk, knife/stiletto and main-gauche."
   },
   {
     "Weapon Name": "Dagger",
@@ -268,6 +304,60 @@
     "Weight": "1 lb",
     "Source": "PHB",
     "Notes": ""
+  },
+  {
+    "Weapon Name": "Dagger, Bone",
+    "Category": "Melee",
+    "Size": "S",
+    "Type": "P",
+    "Damage (S-M)": "1d2",
+    "Damage (L)": "1d2",
+    "Speed Factor": "2",
+    "ROF": "",
+    "Range (S)": "",
+    "Range (M)": "",
+    "Range (L)": "",
+    "Group": "Dagger",
+    "Cost": "1 sp",
+    "Weight": "1 lb",
+    "Source": "PHBR1",
+    "Notes": "A dagger of bone rather than steel -- worth less money, doing less damage, and more prone to shattering. Bone weapons are worth even less than stone ones and can only be used for smaller stabbing weapons. SHATTERS on a roll of 1 or 2 on 1d6 every time it hits: the attack does its full damage regardless, but on that roll the weapon or weapon-head shatters and is useless. One-handed only. PHBR1 pp.95, 103, 119."
+  },
+  {
+    "Weapon Name": "Dagger, Stone",
+    "Category": "Melee",
+    "Size": "S",
+    "Type": "P",
+    "Damage (S-M)": "1d3",
+    "Damage (L)": "1d2",
+    "Speed Factor": "2",
+    "ROF": "",
+    "Range (S)": "",
+    "Range (M)": "",
+    "Range (L)": "",
+    "Group": "Dagger",
+    "Cost": "2 sp",
+    "Weight": "1 lb",
+    "Source": "PHBR1",
+    "Notes": "A dagger of stone rather than steel -- worth less money, doing less damage, and more prone to shattering. SHATTERS on a roll of 1 on 1d6 every time it hits: the attack does its full damage regardless, but on that roll the weapon or weapon-head shatters and is useless. One-handed only. PHBR1 pp.95, 103, 119."
+  },
+  {
+    "Weapon Name": "Daikyu",
+    "Category": "Missile",
+    "Size": "L",
+    "Type": "—",
+    "Damage (S-M)": "—",
+    "Damage (L)": "—",
+    "Speed Factor": "7",
+    "ROF": "2/1",
+    "Range (S)": "7",
+    "Range (M)": "14",
+    "Range (L)": "21",
+    "Group": "Bow",
+    "Cost": "100 gp",
+    "Weight": "3 lb",
+    "Source": "PHBR1",
+    "Notes": "The great samurai longbow, 7' long, with its hand-grip located below centre so it can be fired from horseback and from kneeling positions. Usable for Called Shot, Disarm, Hold Attack and Strike/Thrust maneuvers. Requires its OWN weapon proficiency, related to but NOT identical to other bow proficiencies. Not exported from eastern nations, though one may be commissioned there; a western bowyer would have to have studied in the east to make one. Two-handed only. Fires the Daikyu arrow, which is a separate record in core_ammo.json. Damage is the arrow's, not the bow's. PHBR1 pp.95, 101, 119."
   },
   {
     "Weapon Name": "Dart",
@@ -304,6 +394,24 @@
     "Weight": "1 lb",
     "Source": "PHB",
     "Notes": ""
+  },
+  {
+    "Weapon Name": "Drusus",
+    "Category": "Melee",
+    "Size": "M",
+    "Type": "S",
+    "Damage (S-M)": "1d6+1",
+    "Damage (L)": "1d8+1",
+    "Speed Factor": "3",
+    "ROF": "",
+    "Range (S)": "",
+    "Range (M)": "",
+    "Range (L)": "",
+    "Group": "Sword",
+    "Cost": "50 gp",
+    "Weight": "3 lb",
+    "Source": "PHBR1",
+    "Notes": "A gladius (short sword) of Exceptional quality per the weapon-quality rules in PHBR1's Character Creation chapter. Indistinguishable from an ordinary gladius except by testing the blade. Better-tempered metal, sharpened to a razor edge: +1 damage and a NON-MAGICAL +1 to hit over the normal gladius -- which does NOT confer the ability to hit monsters requiring magical weapons. DISADVANTAGE: after any day in which it has been fought with, even for one attack, someone with the Armorer or Weaponsmithing secondary skill, or the Blacksmithing, Armorer or Weaponsmithing nonweapon proficiency, must sharpen it for half an hour; otherwise it acts as an ordinary short sword, losing both bonuses, until it is sharpened. Exposure to high heat -- a forge, dragon's breath, lava -- ruins the temper PERMANENTLY, turning it into an ordinary short sword forever. Uses SHORT SWORD proficiency; specialization in one transfers to the other. Any weaponsmith in a gladiatorial culture with an ability check of 14 or better can make one. One-handed only. PHBR1 pp.95-96, 98, 119."
   },
   {
     "Weapon Name": "Falchion",
@@ -438,7 +546,7 @@
     "Type": "P",
     "Damage (S-M)": "1d4",
     "Damage (L)": "1d3",
-    "Speed Factor": "4",
+    "Speed Factor": "2",
     "ROF": "",
     "Range (S)": "",
     "Range (M)": "",
@@ -447,7 +555,7 @@
     "Cost": "2 gp",
     "Weight": "2 lb",
     "Source": "PHBR1",
-    "Notes": "A metal hook with a metal or wooden crossbar at the base. \"Attached\" means the hook has been used to replace a hand. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. Values here are the CRH reprint; the original PHBR1 entry has NOT been checked against them."
+    "Notes": "A metal hook with a metal or wooden crossbar at the base. \"Attached\" means the hook has been used to replace a hand. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: PHBR1 pp.95 and 119 print two IDENTICAL copies of this row and the in-chapter description adds no conflicting numbers. The values here are PHBR1's. THE CRH REPRINT DISAGREES: Speed Factor 2 (CRH reprint prints 4). The original is followed because a reprint should not silently rewrite its source -- the same call made for PHB Table 27 over CRH Table 54's transposed halfling row. Recorded, not resolved: the CRH page has not been re-read to confirm the reprint says what we transcribed. PROFICIENCY RELATIONSHIP (PHBR1 p.100): NOT related to any other proficiency."
   },
   {
     "Weapon Name": "Gaff/Hook, Held",
@@ -456,7 +564,7 @@
     "Type": "P",
     "Damage (S-M)": "1d4",
     "Damage (L)": "1d3",
-    "Speed Factor": "4",
+    "Speed Factor": "2",
     "ROF": "",
     "Range (S)": "",
     "Range (M)": "",
@@ -465,7 +573,7 @@
     "Cost": "5 cp",
     "Weight": "2 lb",
     "Source": "PHBR1",
-    "Notes": "A metal hook with a metal or wooden crossbar at the base, carried in the hand rather than replacing it. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. Values here are the CRH reprint; the original PHBR1 entry has NOT been checked against them."
+    "Notes": "A metal hook with a metal or wooden crossbar at the base, carried in the hand rather than replacing it. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: PHBR1 pp.95 and 119 print two IDENTICAL copies of this row and the in-chapter description adds no conflicting numbers. The values here are PHBR1's. THE CRH REPRINT DISAGREES: Speed Factor 2 (CRH reprint prints 4). The original is followed because a reprint should not silently rewrite its source -- the same call made for PHB Table 27 over CRH Table 54's transposed halfling row. Recorded, not resolved: the CRH page has not been re-read to confirm the reprint says what we transcribed. PROFICIENCY RELATIONSHIP (PHBR1 p.100): NOT related to any other proficiency."
   },
   {
     "Weapon Name": "Glaive",
@@ -720,6 +828,24 @@
     "Notes": ""
   },
   {
+    "Weapon Name": "Javelin, Stone",
+    "Category": "Melee",
+    "Size": "L",
+    "Type": "P",
+    "Damage (S-M)": "1d4",
+    "Damage (L)": "1d4",
+    "Speed Factor": "4",
+    "ROF": "1",
+    "Range (S)": "2",
+    "Range (M)": "4",
+    "Range (L)": "6",
+    "Group": "Spear",
+    "Cost": "5 cp",
+    "Weight": "2 lb",
+    "Source": "PHBR1",
+    "Notes": "A javelin with a stone head. ONE-HANDED: 1d4 / 1d4. TWO-HANDED: 1d4+1 / 1d6. SHATTERS on a roll of 1 on 1d6 every time it hits; the attack does its full damage regardless. When thrown, the damage is always the ONE-HANDED figure, never the two-handed one. PHBR1 pp.93-95, 103, 119."
+  },
+  {
     "Weapon Name": "Kama",
     "Category": "Melee",
     "Size": "S",
@@ -753,7 +879,7 @@
     "Cost": "200 gp",
     "Weight": "6 lb",
     "Source": "Unattributed",
-    "Notes": "Oriental weapon"
+    "Notes": "Oriental weapon PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Cost 100 gp, Type S/P. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.101): requires its own proficiency, related to the bastard sword / long sword group."
   },
   {
     "Weapon Name": "Knife",
@@ -774,6 +900,24 @@
     "Notes": ""
   },
   {
+    "Weapon Name": "Knife, Bone",
+    "Category": "Melee",
+    "Size": "S",
+    "Type": "P/S",
+    "Damage (S-M)": "1d2",
+    "Damage (L)": "1d2",
+    "Speed Factor": "2",
+    "ROF": "",
+    "Range (S)": "",
+    "Range (M)": "",
+    "Range (L)": "",
+    "Group": "Dagger",
+    "Cost": "3 cp",
+    "Weight": "0.5 lb",
+    "Source": "PHBR1",
+    "Notes": "A knife of bone rather than steel. SHATTERS on a roll of 1 or 2 on 1d6 every time it hits; the attack does its full damage regardless. One-handed only. PHBR1 pp.95, 103, 119."
+  },
+  {
     "Weapon Name": "Knife, Harness",
     "Category": "Melee",
     "Size": "S",
@@ -790,6 +934,24 @@
     "Weight": "0 lb",
     "Source": "PHBR11",
     "Notes": "The harness knife's cost is included as part of the cost of the wilderness harness (Table 57). The knife itself weighs only a few ounces. Damage is printed as 1-2 against S-M and 1 against L."
+  },
+  {
+    "Weapon Name": "Knife, Stone",
+    "Category": "Melee",
+    "Size": "S",
+    "Type": "P/S",
+    "Damage (S-M)": "1d2",
+    "Damage (L)": "1d2",
+    "Speed Factor": "2",
+    "ROF": "",
+    "Range (S)": "",
+    "Range (M)": "",
+    "Range (L)": "",
+    "Group": "Dagger",
+    "Cost": "5 cp",
+    "Weight": "0.5 lb",
+    "Source": "PHBR1",
+    "Notes": "A knife of stone rather than steel. SHATTERS on a roll of 1 on 1d6 every time it hits; the attack does its full damage regardless. One-handed only. PHBR1 pp.95, 103, 119."
   },
   {
     "Weapon Name": "Lance, Heavy",
@@ -862,6 +1024,24 @@
     "Weight": "10 lb",
     "Source": "PHB",
     "Notes": ""
+  },
+  {
+    "Weapon Name": "Lasso",
+    "Category": "Melee",
+    "Size": "L",
+    "Type": "—",
+    "Damage (S-M)": "—",
+    "Damage (L)": "—",
+    "Speed Factor": "10",
+    "ROF": "",
+    "Range (S)": "",
+    "Range (M)": "",
+    "Range (L)": "",
+    "Group": "Net",
+    "Cost": "5 sp",
+    "Weight": "3 lb",
+    "Source": "PHBR1",
+    "Notes": "A length of rope with a loop at the end; the wielder holds the slack in his off-hand, twirls the lasso in his other, and hurls the loop. ON A HIT THE ATTACKER MUST DECLARE WHAT HE IS TRYING TO ACCOMPLISH -- the book gives five uses. TRIP: a Called Shot to the legs; target makes a Dexterity check with Pull/Trip modifiers or falls. PIN ARMS: a Called Shot to the arms; target makes a Strength check with Pull/Trip modifiers or both arms are pinned as per the Pin maneuver, each additional lasso giving -4 to his Strength for struggling, and at Strength 0 he cannot escape. DISMOUNT A RIDER: no Called Shot needed, but both parties must make Strength rolls when the mount's movement reaches the end of the rope -- loser takes 1d2 (rope torn from hands) or 1d3 (yanked from the saddle); tie both. SNAG THE HEAD: a Called Shot to the head, 1d3 damage plus Strength bonus on the hit and 1 point plus Strength per round thereafter; if the wielder can hoist the victim into the air it becomes 1d4 STRANGULATION damage per round with no Strength bonus, and a strangling victim cannot shout or raise the alarm. Tying the rope to a stationary object wins the Strength contest automatically unless the rope breaks. Range is a function of the rope's length rather than a throw, so the book gives it S 1, M 2, L 3 with no fixed rate of fire. Two-handed only. PHBR1 pp.94-95, 98, 119."
   },
   {
     "Weapon Name": "Light Crossbow",
@@ -987,7 +1167,7 @@
     "Cost": "3 gp",
     "Weight": "2 lb",
     "Source": "PHBR1",
-    "Notes": "A large-bladed dagger with a basket hilt, used as a SECONDARY weapon in a two-weapon fighting style. Gives +1 to disarm attempts. The hilt gives +1 to parry and the effect of an iron gauntlet when punching. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. Values here are the CRH reprint; the original PHBR1 entry has NOT been checked against them."
+    "Notes": "A large-bladed dagger with a basket hilt, used as a SECONDARY weapon in a two-weapon fighting style. Gives +1 to disarm attempts. The hilt gives +1 to parry and the effect of an iron gauntlet when punching. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: matches PHBR1 pp.95 and 119 exactly, field for field. PROFICIENCY RELATIONSHIP (PHBR1 p.104): related to, but NOT identical to, dagger proficiency."
   },
   {
     "Weapon Name": "Mancatcher",
@@ -1044,6 +1224,24 @@
     "Notes": ""
   },
   {
+    "Weapon Name": "Naginata",
+    "Category": "Melee",
+    "Size": "L",
+    "Type": "P",
+    "Damage (S-M)": "1d8",
+    "Damage (L)": "1d10",
+    "Speed Factor": "7",
+    "ROF": "",
+    "Range (S)": "",
+    "Range (M)": "",
+    "Range (L)": "",
+    "Group": "Polearm",
+    "Cost": "8 gp",
+    "Weight": "10 lb",
+    "Source": "PHBR1",
+    "Notes": "A polearm, a 6' to 8' shaft with a curved, sword-like blade at the end. The favored weapon of the female fighters of the orient, but neither limited to them nor they to it. Proficiency is related to all other polearms; specialization confers the usual benefits. INFLICTS DOUBLE DAMAGE WHEN FIRMLY SET TO RECEIVE A CHARGE. Readily available in oriental ports and readily exported. Two-handed only. PHBR1 pp.95, 101-102, 119."
+  },
+  {
     "Weapon Name": "Net",
     "Category": "Thrown",
     "Size": "L",
@@ -1059,7 +1257,7 @@
     "Cost": "5 gp",
     "Weight": "10 lb",
     "Source": "Unattributed",
-    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Entangles, no damage"
+    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Entangles, no damage PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Size M. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures."
   },
   {
     "Weapon Name": "Nunchaku",
@@ -1077,7 +1275,7 @@
     "Cost": "3 gp",
     "Weight": "2 lb",
     "Source": "Unattributed",
-    "Notes": "Oriental weapon"
+    "Notes": "Oriental weapon PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Cost 1 gp, Weight 3 lb, Size M. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.102): its own proficiency, NOT related to any other, flails included."
   },
   {
     "Weapon Name": "Partisan",
@@ -1221,7 +1419,7 @@
     "Cost": "15 gp",
     "Weight": "4 lb",
     "Source": "PHBR1",
-    "Notes": "A long-bladed sword with a point only. Requires its OWN weapon proficiency. A basket hilt can be added for 2 gp (+1 to parry, +1 lb., punch as an iron gauntlet). For related proficiencies, related to sabre. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. Values here are the CRH reprint; the original PHBR1 entry has NOT been checked against them."
+    "Notes": "A long-bladed sword with a point only. Requires its OWN weapon proficiency. A basket hilt can be added for 2 gp (+1 to parry, +1 lb., punch as an iron gauntlet). For related proficiencies, related to sabre. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: matches PHBR1 pp.95 and 119 exactly, field for field. PROFICIENCY RELATIONSHIP (PHBR1 p.104): requires its own proficiency, related to SABRE -- explicitly NOT to long sword or its related weapons."
   },
   {
     "Weapon Name": "Ritiik",
@@ -1245,7 +1443,7 @@
     "Weapon Name": "Sabre",
     "Category": "Melee",
     "Size": "M",
-    "Type": "P",
+    "Type": "S",
     "Damage (S-M)": "1d6+1",
     "Damage (L)": "1d8+1",
     "Speed Factor": "4",
@@ -1254,10 +1452,10 @@
     "Range (M)": "",
     "Range (L)": "",
     "Group": "Sword",
-    "Cost": "15 gp",
+    "Cost": "17 gp",
     "Weight": "5 lb",
     "Source": "PHBR1",
-    "Notes": "A light slashing sword. Can be fitted with a basket hilt for 2 gp (+1 to parry, +1 lb., punch as an iron gauntlet). For related proficiencies, related to rapier. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. Values here are the CRH reprint; the original PHBR1 entry has NOT been checked against them."
+    "Notes": "A light slashing sword. Can be fitted with a basket hilt for 2 gp (+1 to parry, +1 lb., punch as an iron gauntlet). For related proficiencies, related to rapier. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: PHBR1 pp.95 and 119 print two IDENTICAL copies of this row and the in-chapter description adds no conflicting numbers. The values here are PHBR1's. THE CRH REPRINT DISAGREES: Cost 17 gp (CRH reprint prints 15 gp); Type S (CRH reprint prints P). The original is followed because a reprint should not silently rewrite its source -- the same call made for PHB Table 27 over CRH Table 54's transposed halfling row. Recorded, not resolved: the CRH page has not been re-read to confirm the reprint says what we transcribed. PROFICIENCY RELATIONSHIP (PHBR1 p.104): requires its own proficiency, related to RAPIER."
   },
   {
     "Weapon Name": "Sai",
@@ -1275,7 +1473,7 @@
     "Cost": "1 gp",
     "Weight": "1 lb",
     "Source": "Unattributed",
-    "Notes": "Oriental weapon, disarm bonus"
+    "Notes": "Oriental weapon, disarm bonus PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Cost 5 sp, Weight 2 lb, Type P/B, Speed Factor 2. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.102): its own proficiency, not related to any other. Confers +1 to hit on Pin and Disarm maneuvers."
   },
   {
     "Weapon Name": "Scimitar",
@@ -1365,7 +1563,7 @@
     "Cost": "3 sp",
     "Weight": "0.1 lb",
     "Source": "Unattributed",
-    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Oriental weapon"
+    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Oriental weapon PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Weight 1 lb. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.102): its own proficiency, not related to any other."
   },
   {
     "Weapon Name": "Sickle",
@@ -1440,6 +1638,42 @@
     "Notes": ""
   },
   {
+    "Weapon Name": "Spear, Long",
+    "Category": "Melee",
+    "Size": "L",
+    "Type": "P",
+    "Damage (S-M)": "1d8",
+    "Damage (L)": "1d8+1",
+    "Speed Factor": "8",
+    "ROF": "",
+    "Range (S)": "",
+    "Range (M)": "",
+    "Range (L)": "",
+    "Group": "Spear",
+    "Cost": "5 gp",
+    "Weight": "8 lb",
+    "Source": "PHBR1",
+    "Notes": "The ordinary spear mounted on a much longer (12'-18') shaft. Not especially suited to one-handed use, but inflicts a lot of damage when used two-handed. ONE-HANDED: 1d8 / 1d8+1. TWO-HANDED: 2d6 / 3d6, and INFLICTS DOUBLE DAMAGE WHEN FIRMLY SET TO RECEIVE A CHARGE. Like the other spear-like weapons it is as fast and maneuverable in two hands as in one, so its speed factor does NOT worsen when used two-handed. Not built for throwing. PHBR1 pp.93-95, 119."
+  },
+  {
+    "Weapon Name": "Spear, Stone",
+    "Category": "Melee",
+    "Size": "M",
+    "Type": "P",
+    "Damage (S-M)": "1d4",
+    "Damage (L)": "1d6",
+    "Speed Factor": "6",
+    "ROF": "1",
+    "Range (S)": "1",
+    "Range (M)": "2",
+    "Range (L)": "3",
+    "Group": "Spear",
+    "Cost": "8 cp",
+    "Weight": "5 lb",
+    "Source": "PHBR1",
+    "Notes": "A spear with a stone head. ONE-HANDED: 1d4 / 1d6. TWO-HANDED: 1d6 / 2d4. SHATTERS on a roll of 1 on 1d6 every time it hits; the attack does its full damage regardless. When thrown, the damage is always the ONE-HANDED figure. PHBR1 pp.93-95, 103, 119."
+  },
+  {
     "Weapon Name": "Spetum",
     "Category": "Melee",
     "Size": "L",
@@ -1491,7 +1725,7 @@
     "Cost": "5 sp",
     "Weight": "0.5 lb",
     "Source": "PHBR1",
-    "Notes": "A narrow-bladed knife with a sharpened point only. Non-magical +2 bonus against ring mail, chain mail and plate mail. Knife proficiency covers the stiletto. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. Values here are the CRH reprint; the original PHBR1 entry has NOT been checked against them."
+    "Notes": "A narrow-bladed knife with a sharpened point only. Non-magical +2 bonus against ring mail, chain mail and plate mail. Knife proficiency covers the stiletto. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: matches PHBR1 pp.95 and 119 exactly, field for field. PROFICIENCY RELATIONSHIP (PHBR1 p.104): Knife proficiency IS Stiletto proficiency -- know one and you know the other equally well, at no additional cost in slots."
   },
   {
     "Weapon Name": "Sword, Bastard",
@@ -1602,6 +1836,24 @@
     "Notes": ""
   },
   {
+    "Weapon Name": "Tetsubo",
+    "Category": "Melee",
+    "Size": "L",
+    "Type": "B",
+    "Damage (S-M)": "1d8",
+    "Damage (L)": "1d8",
+    "Speed Factor": "7",
+    "ROF": "",
+    "Range (S)": "",
+    "Range (M)": "",
+    "Range (L)": "",
+    "Group": "Polearm",
+    "Cost": "2 gp",
+    "Weight": "7 lb",
+    "Source": "PHBR1",
+    "Notes": "A long walking-staff, its upper end shod with studded iron strips. Proficiency is related to other polearms; specialization confers the usual benefits. Available in oriental markets but never exported, because it is a relatively simple weapon to make. Two-handed only. PHBR1 pp.95, 102, 119."
+  },
+  {
     "Weapon Name": "Three-Section Staff",
     "Category": "Melee",
     "Size": "L",
@@ -1671,7 +1923,7 @@
     "Cost": "50 gp",
     "Weight": "3 lb",
     "Source": "Unattributed",
-    "Notes": "Oriental weapon"
+    "Notes": "Oriental weapon PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Size M, Type S/P. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.102): related to short sword."
   },
   {
     "Weapon Name": "War Hammer",
