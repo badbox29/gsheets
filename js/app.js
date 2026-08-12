@@ -5017,6 +5017,7 @@ function makeAmmunitionNode(data={}, onChange){
   if (data.forWeapon) el.dataset.forWeapon = data.forWeapon;
   if (data.rangeMod)  el.dataset.rangeMod  = data.rangeMod;
   if (data.damageMod) el.dataset.damageMod = data.damageMod;
+  if (data.bookNotes) el.dataset.bookNotes = data.bookNotes;
   // The old inline flexDirection/alignItems are GONE, not just unused: an
   // inline style beats the stylesheet, and alignItems:stretch would override
   // the grid's align-items:center on every row.
@@ -5108,6 +5109,13 @@ function makeAmmunitionNode(data={}, onChange){
           '<input class="weight-per-unit" type="number" step="0.01" min="0" value="'+escapeHtml(data.weightPerUnit||0.1)+'" style="width:100%;">' +
         '</div>' +
       '</div>' +
+      // In the DETAILS panel, not row 2: the sheaf-arrow note runs to three
+      // sentences and would wreck the collapsed row. Read-only reference from
+      // core_ammo.json -- the player applies it himself.
+      (data.bookNotes
+        ? '<div style="font-size:11px;color:var(--muted);font-style:italic;' +
+          'margin-bottom:8px;line-height:1.4;">' + escapeHtml(data.bookNotes) + '</div>'
+        : '') +
     '<div class="ench-panel">' +
       '<div class="ench-head">' +
         '<label>' +
@@ -5706,6 +5714,7 @@ function collectSheet(root){
       forWeapon:  n.dataset.forWeapon  || '',
       rangeMod:   n.dataset.rangeMod   || '',
       damageMod:  n.dataset.damageMod  || '',
+      bookNotes:  n.dataset.bookNotes  || '',
       isMagical:  !!(n.querySelector('.is-magical') || {}).checked,
       identified: !!(n.querySelector('.is-identified') || {}).checked,
       trueName:   (n.querySelector('.true-name') || {}).value || '',
