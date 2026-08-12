@@ -5107,6 +5107,16 @@ function makeAmmunitionNode(data={}, onChange){
         '<div style="flex:1;">' +
           '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Weight per Unit (lbs)</label>' +
           '<input class="weight-per-unit" type="number" step="0.01" min="0" value="'+escapeHtml(data.weightPerUnit||0.1)+'" style="width:100%;">' +
+          // INSIDE this flex column, NOT a sibling of .ammo-details. .item.gear
+          // is a two-column grid (3px rail, 1fr content) with no grid-column on
+          // its children, so placement is automatic and depends entirely on the
+          // child COUNT. An extra top-level child shifts every element after it
+          // one cell and pushes content into the 3px rail column -- the card
+          // collapses into a vertical stack. See the comment above el.innerHTML.
+          (data.bookNotes
+            ? '<div style="font-size:11px;color:var(--muted);font-style:italic;' +
+              'margin-top:6px;line-height:1.4;">' + escapeHtml(data.bookNotes) + '</div>'
+            : '') +
         '</div>' +
       '</div>' +
     '<div class="ench-panel">' +
