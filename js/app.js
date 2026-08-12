@@ -5011,7 +5011,12 @@ function makeAmmunitionNode(data={}, onChange){
   // 'gear' opts this card into the shared gear-card grammar in style.css --
   // two-row grid, status rail, chips, spinner. The base 'item' class is left
   // alone because every other list in the app uses it.
-  el.className = 'item gear';
+  // Stored on the ELEMENT, not just rendered, because collectSheet reads them
+  // back from here on save. ammoRefHtml trims "+0" and "N/A" out of the
+  // display, so reading the rendered text would round-trip a lossy version.
+  if (data.forWeapon) el.dataset.forWeapon = data.forWeapon;
+  if (data.rangeMod)  el.dataset.rangeMod  = data.rangeMod;
+  if (data.damageMod) el.dataset.damageMod = data.damageMod;
   // The old inline flexDirection/alignItems are GONE, not just unused: an
   // inline style beats the stylesheet, and alignItems:stretch would override
   // the grid's align-items:center on every row.
