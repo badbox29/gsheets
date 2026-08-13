@@ -5503,6 +5503,21 @@ const OPTIONAL_RULES = {
              'The Justifier and Stalker kits both reference this table.',
     category: 'supplement',
     default: false
+  },
+  styleSpecializationPHBR1: {
+    label:   'Fighting styles: Style Specialization (Complete Fighter\\u2019s Handbook)',
+    detail:  'PHBR1 pp.61\\u201364. Four melee fighting styles \\u2014 Single-Weapon, ' +
+             'Two-Hander, Weapon and Shield, Two-Weapon \\u2014 which every character ' +
+             'already knows some of, by class, from the moment he is created. A weapon ' +
+             'proficiency slot may be spent to SPECIALIZE in one. Only single-class ' +
+             'Warriors may ever hold more than one specialization; only Warriors and ' +
+             'Rogues may specialize in Two-Weapon Style. Single-Weapon Style is the ' +
+             'only style that alters Armor Class, and only while one hand is empty; ' +
+             'the others change speed factor, damage, attack penalties, or grant an ' +
+             'extra attack usable solely for Shield-Punch and Parry. Turning this off ' +
+             'suspends the effects without disturbing anything the player entered.',
+    category: 'supplement',
+    default: false
   }
 };
 // ===== Supplements (the Complete Handbooks and friends) =====
@@ -5533,6 +5548,41 @@ const OPTIONAL_RULES = {
 // `order` is the publication number, so the list reads PHBR1, PHBR2, ... and
 // the Ranger's Handbook sits eleventh whenever the rest arrive.
 const SUPPLEMENTS = {
+  phbr1: {
+    code:  'PHBR1',
+    title: 'The Complete Fighter\u2019s Handbook',
+    order: 1,
+    // ONE BAND FOR NOW. The book's own second paragraph (p.57) says "everything
+    // in this chapter is an OPTIONAL rule; nothing recommended here can be
+    // implemented in your campaign without the DM's permission" -- so unlike
+    // PHBR11 there is no book-flagged experimental tier to separate out. The
+    // split here stays ours: `core` changes numbers. An `optional` band will be
+    // added if PHBR1 turns out to own anything that only suppresses warnings.
+    //
+    // NOT GATED, deliberately: the PHBR1 weapon proficiency RELATIONSHIPS in
+    // PHBR1_RELATED_WEAPONS. Every pairing they affect involves a weapon the PHB
+    // does not print -- cutlass, katana, belaying pin, daikyu and the rest -- so
+    // a PHB-only character cannot be holding one, and the change is inert for
+    // that table. What they displace is the unsourced core_wp.json Group
+    // fallback, i.e. house inference giving way to a printed rule.
+    core: {
+      rules: ['styleSpecializationPHBR1'],
+      changes: [
+        { text: 'Fighting Styles and Style Specialization (pp.61\\u201364). Every ' +
+                'character already knows some styles by class and can never learn more ' +
+                'after creation: Warriors know all four, Priests Single-Weapon, ' +
+                'Two-Hander and Weapon and Shield, Rogues Single-Weapon, Two-Hander and ' +
+                'Two-Weapon, Wizards Single-Weapon and Two-Hander. Specializing costs a ' +
+                'weapon proficiency slot. Single-Weapon Style Specialization is the only ' +
+                'one that changes Armor Class: \\u22121 for one slot and \\u22122 for two, ' +
+                'and only while wielding a one-handed weapon you are proficient with and ' +
+                'carrying nothing in the other hand \\u2014 no shield, no second weapon.',
+          caveat: 'Unticking SUSPENDS the bonus; it never refunds the slots or deletes ' +
+                  'the specialization. The purchase stays on the character, greyed, and ' +
+                  'returns intact when the book is switched back on.' }
+      ]
+    }
+  },
   phbr11: {
     code:  'PHBR11',
     title: 'The Complete Ranger\u2019s Handbook',
