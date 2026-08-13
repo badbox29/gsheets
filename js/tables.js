@@ -4552,6 +4552,22 @@ function getWeaponAttackPenalty(status, fullPenalty) {
 const TWO_WEAPON_MAIN_PENALTY = -2;
 const TWO_WEAPON_OFF_PENALTY  = -4;
 
+// PHBR1 p.64: "your attack penalty drops: before, it was a -2 with your primary
+// weapon and -4 with your secondary, but with Specialization in Two-Weapon Style
+// it becomes 0 with your primary weapon and a -2 with your secondary."
+//
+// These REPLACE the PHB pair rather than adding to it, and the Dexterity
+// Reaction Adjustment still applies on top afterwards -- a poor Dexterity
+// worsens a specialist's penalties exactly as it worsens anyone else's, and the
+// one-sided cap still forbids a positive modifier.
+//
+// NOT MODELLED YET: ambidexterity, which p.64 says takes a specialist to 0/0.
+// It costs its own weapon proficiency slot (p.60) and has no field on the sheet,
+// so a player who is ambidextrous should use the manual attack adjustment for
+// the remaining -2 until it is built.
+const TWO_WEAPON_SPEC_MAIN_PENALTY = 0;
+const TWO_WEAPON_SPEC_OFF_PENALTY  = -2;
+
 // Ch.3 Ranger: "When wearing studded leather or lighter armor, a ranger can
 // fight two-handed with no penalty to his attack rolls" -- the book's own typo
 // for two-WEAPON, since its cross-reference points straight at Ch.9. And:
@@ -4568,6 +4584,13 @@ function getTwoWeaponPenalties(root) {
   const dexRow = DEX_TABLE[dex];
   const reactionAdj = dexRow ? dexRow[0] : 0;
 
+  // PHBR1 p.64. Style Specialization in Two-Weapon Style takes the pair from
+  // -2/-4 to 0/-2. getFightingStyles returns zeros when PHBR1 is off, so a
+  // PHB-only table sees the PHB numbers untouched.
+  const styles = (typeof getFightingStyles === 'function')
+    ? getFightingStyles(root) : null;
+  const twoWeaponSpec = !!(styles && styles.active && styles.twoWeapon);
+
   const classes = (typeof getCharacterClassList === 'function')
     ? getCharacterClassList(root) : [];
   const isRanger = classes.some(c => (c || '').toLowerCase().includes('ranger'));
@@ -4583,24 +4606,47 @@ function getTwoWeaponPenalties(root) {
   }
 
   if (isRanger && armorOk) {
+    // PHBR1 p.64 addresses this overlap directly: "Though rangers don't suffer
+    // the off-hand penalties for two-weapons use, they do not get a bonus to hit
+    // if they devote a weapon proficiency slot to Two-Weapon Style. They do get
+    // the other benefit, of being able to use weapons of equal length."
+    //
+    // So the slot buys a ranger in light armour NOTHING on his attack rolls --
+    // he is already at 0/0 and the specialization cannot take him positive. It
+    // is worth saying so, because a player who spent the slot will otherwise
+    // assume the app has ignored it.
     return {
       main: 0, off: 0, exempt: true, reactionAdj: reactionAdj, armorName: armorName,
+      styleSpec: twoWeaponSpec,
       reason: 'Ranger in ' + (armorName || 'light armour') +
-              ': no two-weapon penalty (PHB Ch.3).'
+              ': no two-weapon penalty (PHB Ch.3).' +
+              (twoWeaponSpec
+                ? ' Two-Weapon Style Specialization adds nothing to hit here -- you' +
+                  ' are already at 0/0 -- but it does let you wield weapons of equal' +
+                  ' length (PHBR1 p.64).'
+                : '')
     };
   }
 
+  const mainBase = twoWeaponSpec ? TWO_WEAPON_SPEC_MAIN_PENALTY : TWO_WEAPON_MAIN_PENALTY;
+  const offBase  = twoWeaponSpec ? TWO_WEAPON_SPEC_OFF_PENALTY  : TWO_WEAPON_OFF_PENALTY;
+
   const cap = p => Math.min(0, p + reactionAdj);
   return {
-    main: cap(TWO_WEAPON_MAIN_PENALTY),
-    off:  cap(TWO_WEAPON_OFF_PENALTY),
+    main: cap(mainBase),
+    off:  cap(offBase),
     exempt: false,
     reactionAdj: reactionAdj,
     armorName: armorName,
-    reason: isRanger
+    styleSpec: twoWeaponSpec,
+    reason: (isRanger
       ? 'Ranger in ' + (armorName || 'heavy armour') +
         ': heavier than studded leather, so the standard penalties apply.'
-      : ''
+      : '') +
+      (twoWeaponSpec
+        ? (isRanger ? ' ' : '') +
+          'Two-Weapon Style Specialization: 0/-2 instead of -2/-4 (PHBR1 p.64).'
+        : '')
   };
 }
 
