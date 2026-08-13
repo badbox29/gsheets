@@ -6092,7 +6092,8 @@ function collectSheet(root){
       singleWeapon: val(root,'style_single_weapon'),
       twoHander:    val(root,'style_two_hander'),
       weaponShield: val(root,'style_weapon_shield'),
-      twoWeapon:    val(root,'style_two_weapon')
+      twoWeapon:    val(root,'style_two_weapon'),
+      ambidextrous: val(root,'style_ambidextrous')
     },
     selectedSpheres: selectedSpheres,
     selectedSchools: selectedSchools,
@@ -6496,6 +6497,7 @@ function loadSheet(root, data){
   val(root, 'style_two_hander',    styles.twoHander    || 0);
   val(root, 'style_weapon_shield', styles.weaponShield || 0);
   val(root, 'style_two_weapon',    styles.twoWeapon    || 0);
+  val(root, 'style_ambidextrous',  styles.ambidextrous || 0);
 
   root._weaponProfs = data.weaponProfs || [];
   
@@ -8144,7 +8146,7 @@ function bindSheet(root, tab){
   // listener like this one -- so a new field that feeds a derived number needs
   // its own branch or it only updates on save and reload.
   const fightingStyleFields =
-    /^style_(single_weapon|two_hander|weapon_shield|two_weapon)$/;
+    /^style_(single_weapon|two_hander|weapon_shield|two_weapon|ambidextrous)$/;
   root.addEventListener('change', (e) => {
     const f = (e.target && e.target.getAttribute) ? e.target.getAttribute('data-field') : null;
     if (f && fightingStyleFields.test(f)) {
