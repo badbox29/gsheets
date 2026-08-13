@@ -8,7 +8,7 @@
     "Damage (L)": "1d10",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "15",
     "Speed Factor 2H": "",
     "ROF": "1/3",
@@ -19,7 +19,7 @@
     "Cost": "500 gp",
     "Weight": "10 lb",
     "Source": "PHB",
-    "Notes": "Optional rule - Renaissance weapons"
+    "Notes": "Optional rule - Renaissance weapons TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Bardiche",
@@ -30,7 +30,7 @@
     "Damage (L)": "2d6",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "9",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -41,7 +41,7 @@
     "Cost": "7 gp",
     "Weight": "12 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Battle Axe",
@@ -52,7 +52,7 @@
     "Damage (L)": "1d8",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "flexible",
     "Speed Factor": "7",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -63,7 +63,7 @@
     "Cost": "5 gp",
     "Weight": "7 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "ONE-HANDED BUT CAN BE WIELDED TWO-HANDED (PHBR1 p.93): designed for one hand but with enough haft or hilt to take both. Confers NO benefit either way UNLESS the character has Two-Hander Style Specialization, which adds +1 damage when a one-handed weapon is used in two hands. Damage is otherwise unchanged, so there are no 2H columns."
   },
   {
     "Weapon Name": "Bec de Corbin",
@@ -74,7 +74,7 @@
     "Damage (L)": "1d6",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "9",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -85,7 +85,7 @@
     "Cost": "8 gp",
     "Weight": "10 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Belaying Pin",
@@ -96,7 +96,7 @@
     "Damage (L)": "1d3",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "4",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -107,7 +107,7 @@
     "Cost": "2 cp",
     "Weight": "2 lb",
     "Source": "PHBR1",
-    "Notes": "A short wooden rod used on ships, to which rigging lines are tied. Can be used as an improvised club. For related proficiencies, related to club and mace. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: matches PHBR1 pp.95 and 119 exactly, field for field. PROFICIENCY RELATIONSHIP (PHBR1 p.100): related to clubs and maces -- a character with club or mace proficiency takes only -1 with a belaying pin he is not proficient in."
+    "Notes": "A short wooden rod used on ships, to which rigging lines are tied. Can be used as an improvised club. For related proficiencies, related to club and mace. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: matches PHBR1 pp.95 and 119 exactly, field for field. PROFICIENCY RELATIONSHIP (PHBR1 p.100): related to clubs and maces -- a character with club or mace proficiency takes only -1 with a belaying pin he is not proficient in. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
   },
   {
     "Weapon Name": "Bill-Guisarme",
@@ -118,7 +118,7 @@
     "Damage (L)": "1d10",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "10",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -129,7 +129,7 @@
     "Cost": "7 gp",
     "Weight": "15 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Blowgun",
@@ -140,7 +140,7 @@
     "Damage (L)": "1d2",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "5",
     "Speed Factor 2H": "",
     "ROF": "2/1",
@@ -151,7 +151,7 @@
     "Cost": "5 gp",
     "Weight": "2 lb",
     "Source": "PHB",
-    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common barbed dart's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common barbed dart's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md. TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Blunderbuss",
@@ -184,7 +184,7 @@
     "Damage (L)": "1d6",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "3",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -195,7 +195,7 @@
     "Cost": "1 sp",
     "Weight": "4 lb",
     "Source": "Unattributed",
-    "Notes": "Oriental weapon PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Cost 2 cp, Speed Factor 4, Damage (L) 1d4. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.100-101): shares a proficiency with QUARTERSTAFF -- if you can use one you can use the other."
+    "Notes": "Oriental weapon PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Cost 2 cp, Speed Factor 4, Damage (L) 1d4. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.100-101): shares a proficiency with QUARTERSTAFF -- if you can use one you can use the other. TWO-HANDED ONLY (PHBR1 pp.95, 119, marked '&'): intended for two-handed use only."
   },
   {
     "Weapon Name": "Bola",
@@ -206,7 +206,7 @@
     "Damage (L)": "1d2",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "8",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -217,7 +217,7 @@
     "Cost": "5 sp",
     "Weight": "2 lb",
     "Source": "PHBR1",
-    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Entangles on hit Attributed to PHBR1 (pp.95, 119) August 2026: every field matches the book exactly. PHBR1 spells it \"Bolas\". PROFICIENCY RELATIONSHIP (PHBR1 p.96): not related to any other proficiency."
+    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Entangles on hit Attributed to PHBR1 (pp.95, 119) August 2026: every field matches the book exactly. PHBR1 spells it \"Bolas\". PROFICIENCY RELATIONSHIP (PHBR1 p.96): not related to any other proficiency. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
   },
   {
     "Weapon Name": "Cestus",
@@ -228,7 +228,7 @@
     "Damage (L)": "1d3",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "2",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -239,7 +239,7 @@
     "Cost": "1 gp",
     "Weight": "2 lb",
     "Source": "PHBR1",
-    "Notes": "A glovelike weapon studded with sharp spikes and edges across the knuckles and the back of the glove. Gladiators usually wear two, one on each hand (plural cesti). REQUIRES NO WEAPON PROFICIENCY -- it is simply a bonus to punching-type attacks and anyone may use cesti with no proficiency penalty, so Specialization with Cestus costs only one weapon proficiency slot. A character wearing cesti may still make a Grab maneuver with that hand, at -2 to hit and -2 to the attacker's Strength for holding on. Readily available from weaponsmiths in any culture with gladiatorial combat, but not exported; a foreign weaponsmith who has cesti described to him can make functional ones, but the first two cost twice the listed price. One-handed only. PHBR1 p.96."
+    "Notes": "A glovelike weapon studded with sharp spikes and edges across the knuckles and the back of the glove. Gladiators usually wear two, one on each hand (plural cesti). REQUIRES NO WEAPON PROFICIENCY -- it is simply a bonus to punching-type attacks and anyone may use cesti with no proficiency penalty, so Specialization with Cestus costs only one weapon proficiency slot. A character wearing cesti may still make a Grab maneuver with that hand, at -2 to hit and -2 to the attacker's Strength for holding on. Readily available from weaponsmiths in any culture with gladiatorial combat, but not exported; a foreign weaponsmith who has cesti described to him can make functional ones, but the first two cost twice the listed price. One-handed only. PHBR1 p.96. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
   },
   {
     "Weapon Name": "Chain",
@@ -250,7 +250,7 @@
     "Damage (L)": "1d4",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "5",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -261,7 +261,7 @@
     "Cost": "5 sp",
     "Weight": "3 lb",
     "Source": "PHBR1",
-    "Notes": "A 6' or 10' length of chain with weights at both ends, whirled very fast so the weighted end inflicts the damage. Combines melee traits with the lasso's: usable for Called Shots, Disarm, Parry and Strike/Thrust, and for three of the lasso's five special functions -- Pull/Trip by striking at a target's legs, Dismount a Rider, and Snag a Rider's Head. Easy to conceal and, in western lands, not usually recognised as a weapon until wielded as one. Requires its OWN weapon proficiency, not related to any other. Two-handed only. Range is a function of the chain's length rather than a throw, so the book gives it S 1/2, M 1, L 2 with no fixed rate of fire. PHBR1 pp.94, 101."
+    "Notes": "A 6' or 10' length of chain with weights at both ends, whirled very fast so the weighted end inflicts the damage. Combines melee traits with the lasso's: usable for Called Shots, Disarm, Parry and Strike/Thrust, and for three of the lasso's five special functions -- Pull/Trip by striking at a target's legs, Dismount a Rider, and Snag a Rider's Head. Easy to conceal and, in western lands, not usually recognised as a weapon until wielded as one. Requires its OWN weapon proficiency, not related to any other. Two-handed only. Range is a function of the chain's length rather than a throw, so the book gives it S 1/2, M 1, L 2 with no fixed rate of fire. PHBR1 pp.94, 101. TWO-HANDED ONLY (PHBR1 pp.95, 119, marked '&'): intended for two-handed use only."
   },
   {
     "Weapon Name": "Club",
@@ -272,7 +272,7 @@
     "Damage (L)": "1d3",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "flexible",
     "Speed Factor": "4",
     "Speed Factor 2H": "",
     "ROF": "1",
@@ -283,7 +283,7 @@
     "Cost": "-",
     "Weight": "3 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "ONE-HANDED BUT CAN BE WIELDED TWO-HANDED (PHBR1 p.93): designed for one hand but with enough haft or hilt to take both. Confers NO benefit either way UNLESS the character has Two-Hander Style Specialization, which adds +1 damage when a one-handed weapon is used in two hands. Damage is otherwise unchanged, so there are no 2H columns."
   },
   {
     "Weapon Name": "Composite Long Bow",
@@ -294,7 +294,7 @@
     "Damage (L)": "1d6",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "7",
     "Speed Factor 2H": "",
     "ROF": "2/1",
@@ -305,7 +305,7 @@
     "Cost": "100 gp",
     "Weight": "3 lb",
     "Source": "PHB",
-    "Notes": "Requires STR 18 for +2 bonus Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common sheaf arrow's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
+    "Notes": "Requires STR 18 for +2 bonus Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common sheaf arrow's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md. TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Composite Short Bow",
@@ -316,7 +316,7 @@
     "Damage (L)": "1d6",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "6",
     "Speed Factor 2H": "",
     "ROF": "2/1",
@@ -327,7 +327,7 @@
     "Cost": "75 gp",
     "Weight": "2 lb",
     "Source": "PHB",
-    "Notes": "Requires STR 6 for +1 bonus Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common flight arrow's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
+    "Notes": "Requires STR 6 for +1 bonus Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common flight arrow's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md. TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Cutlass",
@@ -338,7 +338,7 @@
     "Damage (L)": "1d8",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "5",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -349,7 +349,7 @@
     "Cost": "12 gp",
     "Weight": "4 lb",
     "Source": "PHBR1",
-    "Notes": "Short heavy slashing sword, sharp along one edge, with a basket hilt (+1 to parry, punch as an iron gauntlet). For related proficiencies, related to dagger, knife and short sword. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: matches PHBR1 pp.95 and 119 exactly, field for field. PROFICIENCY RELATIONSHIP (PHBR1 p.100): related to short sword, dagger/dirk, knife/stiletto and main-gauche."
+    "Notes": "Short heavy slashing sword, sharp along one edge, with a basket hilt (+1 to parry, punch as an iron gauntlet). For related proficiencies, related to dagger, knife and short sword. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: matches PHBR1 pp.95 and 119 exactly, field for field. PROFICIENCY RELATIONSHIP (PHBR1 p.100): related to short sword, dagger/dirk, knife/stiletto and main-gauche. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
   },
   {
     "Weapon Name": "Dagger",
@@ -360,7 +360,7 @@
     "Damage (L)": "1d3",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "2",
     "Speed Factor 2H": "",
     "ROF": "2/1",
@@ -371,7 +371,7 @@
     "Cost": "2 gp",
     "Weight": "1 lb",
     "Source": "PHB",
-    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 prints \"Dagger or dirk\" as one row; the separate Dirk record in this file is an ALIAS of this weapon, not a distinct one."
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 prints \"Dagger or dirk\" as one row; the separate Dirk record in this file is an ALIAS of this weapon, not a distinct one. ONE-HANDED ONLY (PHBR1 p.93): can be wielded in one hand only."
   },
   {
     "Weapon Name": "Dagger, Bone",
@@ -382,7 +382,7 @@
     "Damage (L)": "1d2",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "2",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -393,7 +393,7 @@
     "Cost": "1 sp",
     "Weight": "1 lb",
     "Source": "PHBR1",
-    "Notes": "A dagger of bone rather than steel -- worth less money, doing less damage, and more prone to shattering. Bone weapons are worth even less than stone ones and can only be used for smaller stabbing weapons. SHATTERS on a roll of 1 or 2 on 1d6 every time it hits: the attack does its full damage regardless, but on that roll the weapon or weapon-head shatters and is useless. One-handed only. PHBR1 pp.95, 103, 119."
+    "Notes": "A dagger of bone rather than steel -- worth less money, doing less damage, and more prone to shattering. Bone weapons are worth even less than stone ones and can only be used for smaller stabbing weapons. SHATTERS on a roll of 1 or 2 on 1d6 every time it hits: the attack does its full damage regardless, but on that roll the weapon or weapon-head shatters and is useless. One-handed only. PHBR1 pp.95, 103, 119. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
   },
   {
     "Weapon Name": "Dagger, Stone",
@@ -404,7 +404,7 @@
     "Damage (L)": "1d2",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "2",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -415,7 +415,7 @@
     "Cost": "2 sp",
     "Weight": "1 lb",
     "Source": "PHBR1",
-    "Notes": "A dagger of stone rather than steel -- worth less money, doing less damage, and more prone to shattering. SHATTERS on a roll of 1 on 1d6 every time it hits: the attack does its full damage regardless, but on that roll the weapon or weapon-head shatters and is useless. One-handed only. PHBR1 pp.95, 103, 119."
+    "Notes": "A dagger of stone rather than steel -- worth less money, doing less damage, and more prone to shattering. SHATTERS on a roll of 1 on 1d6 every time it hits: the attack does its full damage regardless, but on that roll the weapon or weapon-head shatters and is useless. One-handed only. PHBR1 pp.95, 103, 119. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
   },
   {
     "Weapon Name": "Daikyu",
@@ -426,7 +426,7 @@
     "Damage (L)": "—",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "7",
     "Speed Factor 2H": "",
     "ROF": "2/1",
@@ -437,7 +437,7 @@
     "Cost": "100 gp",
     "Weight": "3 lb",
     "Source": "PHBR1",
-    "Notes": "The great samurai longbow, 7' long, with its hand-grip located below centre so it can be fired from horseback and from kneeling positions. Usable for Called Shot, Disarm, Hold Attack and Strike/Thrust maneuvers. Requires its OWN weapon proficiency, related to but NOT identical to other bow proficiencies. Not exported from eastern nations, though one may be commissioned there; a western bowyer would have to have studied in the east to make one. Two-handed only. Fires the Daikyu arrow, which is a separate record in core_ammo.json. Damage is the arrow's, not the bow's. PHBR1 pp.95, 101, 119."
+    "Notes": "The great samurai longbow, 7' long, with its hand-grip located below centre so it can be fired from horseback and from kneeling positions. Usable for Called Shot, Disarm, Hold Attack and Strike/Thrust maneuvers. Requires its OWN weapon proficiency, related to but NOT identical to other bow proficiencies. Not exported from eastern nations, though one may be commissioned there; a western bowyer would have to have studied in the east to make one. Two-handed only. Fires the Daikyu arrow, which is a separate record in core_ammo.json. Damage is the arrow's, not the bow's. PHBR1 pp.95, 101, 119. TWO-HANDED ONLY (PHBR1 pp.95, 119, marked '&'): intended for two-handed use only."
   },
   {
     "Weapon Name": "Dart",
@@ -448,7 +448,7 @@
     "Damage (L)": "1d2",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "2",
     "Speed Factor 2H": "",
     "ROF": "3/1",
@@ -459,7 +459,7 @@
     "Cost": "5 sp",
     "Weight": "0.1 lb",
     "Source": "PHB",
-    "Notes": "Verified against a photograph of PHB Table 44, August 2026. WEIGHT CORRECTED per the PHB Table 44 footnote: \"These items weigh little individually. Ten of these weigh one pound.\" The table prints '*' rather than a number, which is 0.1 lb each. Was 0.5 lb here, which fed encumbrance wrongly."
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. WEIGHT CORRECTED per the PHB Table 44 footnote: \"These items weigh little individually. Ten of these weigh one pound.\" The table prints '*' rather than a number, which is 0.1 lb each. Was 0.5 lb here, which fed encumbrance wrongly. ONE-HANDED ONLY (PHBR1 p.93): can be wielded in one hand only."
   },
   {
     "Weapon Name": "Dirk",
@@ -470,7 +470,7 @@
     "Damage (L)": "1d3",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "2",
     "Speed Factor 2H": "",
     "ROF": "2/1",
@@ -481,7 +481,7 @@
     "Cost": "2 gp",
     "Weight": "1 lb",
     "Source": "PHB",
-    "Notes": "Verified against a photograph of PHB Table 44, August 2026. COST CORRECTED 3 gp -> 2 gp. PHB Table 44 prints this as a SINGLE ROW, \"Dagger or dirk\", 2 gp / 1 lb / S / P / speed 2 / 1d4 / 1d3 -- the same shape as \"Axe, hand or throwing\". A dirk is not a separate weapon sharing a proficiency with the dagger; it is the dagger under another name, and the 3 gp here was unsourced drift. Kept as its own record so characters already holding one are undisturbed, but it should be treated as an ALIAS of Dagger for proficiency, specialization and browser purposes."
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. COST CORRECTED 3 gp -> 2 gp. PHB Table 44 prints this as a SINGLE ROW, \"Dagger or dirk\", 2 gp / 1 lb / S / P / speed 2 / 1d4 / 1d3 -- the same shape as \"Axe, hand or throwing\". A dirk is not a separate weapon sharing a proficiency with the dagger; it is the dagger under another name, and the 3 gp here was unsourced drift. Kept as its own record so characters already holding one are undisturbed, but it should be treated as an ALIAS of Dagger for proficiency, specialization and browser purposes. ONE-HANDED ONLY (PHBR1 p.93): can be wielded in one hand only."
   },
   {
     "Weapon Name": "Drusus",
@@ -492,7 +492,7 @@
     "Damage (L)": "1d8+1",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "3",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -503,7 +503,7 @@
     "Cost": "50 gp",
     "Weight": "3 lb",
     "Source": "PHBR1",
-    "Notes": "A gladius (short sword) of Exceptional quality per the weapon-quality rules in PHBR1's Character Creation chapter. Indistinguishable from an ordinary gladius except by testing the blade. Better-tempered metal, sharpened to a razor edge: +1 damage and a NON-MAGICAL +1 to hit over the normal gladius -- which does NOT confer the ability to hit monsters requiring magical weapons. DISADVANTAGE: after any day in which it has been fought with, even for one attack, someone with the Armorer or Weaponsmithing secondary skill, or the Blacksmithing, Armorer or Weaponsmithing nonweapon proficiency, must sharpen it for half an hour; otherwise it acts as an ordinary short sword, losing both bonuses, until it is sharpened. Exposure to high heat -- a forge, dragon's breath, lava -- ruins the temper PERMANENTLY, turning it into an ordinary short sword forever. Uses SHORT SWORD proficiency; specialization in one transfers to the other. Any weaponsmith in a gladiatorial culture with an ability check of 14 or better can make one. One-handed only. PHBR1 pp.95-96, 98, 119. WEAPON QUALITY, AND A DOUBLE-COUNT TRAP. PHBR1 pp.10-11 make Exceptional quality +1 to hit AND +1 to damage. THE +1 DAMAGE IS ALREADY IN THE DICE ABOVE -- this row is 1d6+1/1d8+1 against Sword, Short's 1d6/1d8 -- but the +1 TO HIT IS NOT, because core_wp.json has no field for it. A Drusus should therefore carry hitAdj 1 and dmgAdj 0 on the character's weapon card, NOT an Exceptional quality preset, or the damage is counted twice. The hit bonus is explicitly NON-MAGICAL and does not let the weapon strike creatures requiring magical weapons."
+    "Notes": "A gladius (short sword) of Exceptional quality per the weapon-quality rules in PHBR1's Character Creation chapter. Indistinguishable from an ordinary gladius except by testing the blade. Better-tempered metal, sharpened to a razor edge: +1 damage and a NON-MAGICAL +1 to hit over the normal gladius -- which does NOT confer the ability to hit monsters requiring magical weapons. DISADVANTAGE: after any day in which it has been fought with, even for one attack, someone with the Armorer or Weaponsmithing secondary skill, or the Blacksmithing, Armorer or Weaponsmithing nonweapon proficiency, must sharpen it for half an hour; otherwise it acts as an ordinary short sword, losing both bonuses, until it is sharpened. Exposure to high heat -- a forge, dragon's breath, lava -- ruins the temper PERMANENTLY, turning it into an ordinary short sword forever. Uses SHORT SWORD proficiency; specialization in one transfers to the other. Any weaponsmith in a gladiatorial culture with an ability check of 14 or better can make one. One-handed only. PHBR1 pp.95-96, 98, 119. WEAPON QUALITY, AND A DOUBLE-COUNT TRAP. PHBR1 pp.10-11 make Exceptional quality +1 to hit AND +1 to damage. THE +1 DAMAGE IS ALREADY IN THE DICE ABOVE -- this row is 1d6+1/1d8+1 against Sword, Short's 1d6/1d8 -- but the +1 TO HIT IS NOT, because core_wp.json has no field for it. A Drusus should therefore carry hitAdj 1 and dmgAdj 0 on the character's weapon card, NOT an Exceptional quality preset, or the damage is counted twice. The hit bonus is explicitly NON-MAGICAL and does not let the weapon strike creatures requiring magical weapons. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
   },
   {
     "Weapon Name": "Falchion",
@@ -536,7 +536,7 @@
     "Damage (L)": "1d8",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "8",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -547,7 +547,7 @@
     "Cost": "5 gp",
     "Weight": "7 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Fauchard-Fork",
@@ -558,7 +558,7 @@
     "Damage (L)": "1d10",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "8",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -569,7 +569,7 @@
     "Cost": "8 gp",
     "Weight": "9 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Flail, Footman's",
@@ -580,7 +580,7 @@
     "Damage (L)": "2d4",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "flexible",
     "Speed Factor": "7",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -591,7 +591,7 @@
     "Cost": "15 gp",
     "Weight": "15 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "ONE-HANDED BUT CAN BE WIELDED TWO-HANDED (PHBR1 p.93): designed for one hand but with enough haft or hilt to take both. Confers NO benefit either way UNLESS the character has Two-Hander Style Specialization, which adds +1 damage when a one-handed weapon is used in two hands. Damage is otherwise unchanged, so there are no 2H columns."
   },
   {
     "Weapon Name": "Flail, Grain",
@@ -624,7 +624,7 @@
     "Damage (L)": "1d4+1",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "flexible",
     "Speed Factor": "6",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -635,7 +635,7 @@
     "Cost": "8 gp",
     "Weight": "5 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "ONE-HANDED BUT CAN BE WIELDED TWO-HANDED (PHBR1 p.93): designed for one hand but with enough haft or hilt to take both. Confers NO benefit either way UNLESS the character has Two-Hander Style Specialization, which adds +1 damage when a one-handed weapon is used in two hands. Damage is otherwise unchanged, so there are no 2H columns."
   },
   {
     "Weapon Name": "Fork, Military",
@@ -646,7 +646,7 @@
     "Damage (L)": "2d4",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "7",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -657,7 +657,7 @@
     "Cost": "5 gp",
     "Weight": "7 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Gaff/Hook, Attached",
@@ -668,7 +668,7 @@
     "Damage (L)": "1d3",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "2",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -679,7 +679,7 @@
     "Cost": "2 gp",
     "Weight": "2 lb",
     "Source": "PHBR1",
-    "Notes": "A metal hook with a metal or wooden crossbar at the base. \"Attached\" means the hook has been used to replace a hand. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: PHBR1 pp.95 and 119 print two IDENTICAL copies of this row and the in-chapter description adds no conflicting numbers. The values here are PHBR1's. THE CRH REPRINT DISAGREES: Speed Factor 2 (CRH reprint prints 4). The original is followed because a reprint should not silently rewrite its source -- the same call made for PHB Table 27 over CRH Table 54's transposed halfling row. Recorded, not resolved: the CRH page has not been re-read to confirm the reprint says what we transcribed. PROFICIENCY RELATIONSHIP (PHBR1 p.100): NOT related to any other proficiency."
+    "Notes": "A metal hook with a metal or wooden crossbar at the base. \"Attached\" means the hook has been used to replace a hand. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: PHBR1 pp.95 and 119 print two IDENTICAL copies of this row and the in-chapter description adds no conflicting numbers. The values here are PHBR1's. THE CRH REPRINT DISAGREES: Speed Factor 2 (CRH reprint prints 4). The original is followed because a reprint should not silently rewrite its source -- the same call made for PHB Table 27 over CRH Table 54's transposed halfling row. Recorded, not resolved: the CRH page has not been re-read to confirm the reprint says what we transcribed. PROFICIENCY RELATIONSHIP (PHBR1 p.100): NOT related to any other proficiency. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
   },
   {
     "Weapon Name": "Gaff/Hook, Held",
@@ -690,7 +690,7 @@
     "Damage (L)": "1d3",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "2",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -701,7 +701,7 @@
     "Cost": "5 cp",
     "Weight": "2 lb",
     "Source": "PHBR1",
-    "Notes": "A metal hook with a metal or wooden crossbar at the base, carried in the hand rather than replacing it. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: PHBR1 pp.95 and 119 print two IDENTICAL copies of this row and the in-chapter description adds no conflicting numbers. The values here are PHBR1's. THE CRH REPRINT DISAGREES: Speed Factor 2 (CRH reprint prints 4). The original is followed because a reprint should not silently rewrite its source -- the same call made for PHB Table 27 over CRH Table 54's transposed halfling row. Recorded, not resolved: the CRH page has not been re-read to confirm the reprint says what we transcribed. PROFICIENCY RELATIONSHIP (PHBR1 p.100): NOT related to any other proficiency."
+    "Notes": "A metal hook with a metal or wooden crossbar at the base, carried in the hand rather than replacing it. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: PHBR1 pp.95 and 119 print two IDENTICAL copies of this row and the in-chapter description adds no conflicting numbers. The values here are PHBR1's. THE CRH REPRINT DISAGREES: Speed Factor 2 (CRH reprint prints 4). The original is followed because a reprint should not silently rewrite its source -- the same call made for PHB Table 27 over CRH Table 54's transposed halfling row. Recorded, not resolved: the CRH page has not been re-read to confirm the reprint says what we transcribed. PROFICIENCY RELATIONSHIP (PHBR1 p.100): NOT related to any other proficiency. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
   },
   {
     "Weapon Name": "Glaive",
@@ -712,7 +712,7 @@
     "Damage (L)": "1d10",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "8",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -723,7 +723,7 @@
     "Cost": "6 gp",
     "Weight": "8 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Glaive-Guisarme",
@@ -734,7 +734,7 @@
     "Damage (L)": "2d6",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "9",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -745,7 +745,7 @@
     "Cost": "10 gp",
     "Weight": "10 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Guisarme",
@@ -756,7 +756,7 @@
     "Damage (L)": "1d8",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "8",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -767,7 +767,7 @@
     "Cost": "5 gp",
     "Weight": "8 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Guisarme-Voulge",
@@ -778,7 +778,7 @@
     "Damage (L)": "2d4",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "10",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -789,7 +789,7 @@
     "Cost": "8 gp",
     "Weight": "15 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Halberd",
@@ -800,7 +800,7 @@
     "Damage (L)": "2d6",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "9",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -811,7 +811,7 @@
     "Cost": "10 gp",
     "Weight": "15 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Hammer",
@@ -844,7 +844,7 @@
     "Damage (L)": "1d4",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "4",
     "Speed Factor 2H": "",
     "ROF": "1",
@@ -855,7 +855,7 @@
     "Cost": "1 gp",
     "Weight": "5 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "ONE-HANDED ONLY (PHBR1 p.93): can be wielded in one hand only."
   },
   {
     "Weapon Name": "Hand Crossbow",
@@ -866,7 +866,7 @@
     "Damage (L)": "1d2",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "5",
     "Speed Factor 2H": "",
     "ROF": "1",
@@ -877,7 +877,7 @@
     "Cost": "300 gp",
     "Weight": "3 lb",
     "Source": "PHB",
-    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common hand quarrel's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common hand quarrel's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md. TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Harpoon",
@@ -932,7 +932,7 @@
     "Damage (L)": "1d6+1",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "10",
     "Speed Factor 2H": "",
     "ROF": "1/2",
@@ -943,7 +943,7 @@
     "Cost": "50 gp",
     "Weight": "14 lb",
     "Source": "PHB",
-    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common heavy quarrel's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common heavy quarrel's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md. TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Hook Fauchard",
@@ -954,7 +954,7 @@
     "Damage (L)": "1d4",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "9",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -965,7 +965,7 @@
     "Cost": "10 gp",
     "Weight": "8 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Ice Pick",
@@ -1086,7 +1086,7 @@
     "Damage (L)": "1d2",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "2",
     "Speed Factor 2H": "",
     "ROF": "2/1",
@@ -1097,7 +1097,7 @@
     "Cost": "5 sp",
     "Weight": "0.5 lb",
     "Source": "PHB",
-    "Notes": "Verified against a photograph of PHB Table 44, August 2026. WEIGHT UNRESOLVED: the weight column on the photographed table is illegible for this row -- either an em-dash or the '*' footnote, which would make it 0.1 lb rather than the 0.5 lb stored here. NOT changed without a readable source. Worth settling, because 0.5 vs 0.1 lb matters to a thief counting ounces."
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. WEIGHT UNRESOLVED: the weight column on the photographed table is illegible for this row -- either an em-dash or the '*' footnote, which would make it 0.1 lb rather than the 0.5 lb stored here. NOT changed without a readable source. Worth settling, because 0.5 vs 0.1 lb matters to a thief counting ounces. ONE-HANDED ONLY (PHBR1 p.93): can be wielded in one hand only."
   },
   {
     "Weapon Name": "Knife, Bone",
@@ -1108,7 +1108,7 @@
     "Damage (L)": "1d2",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "2",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1119,7 +1119,7 @@
     "Cost": "3 cp",
     "Weight": "0.5 lb",
     "Source": "PHBR1",
-    "Notes": "A knife of bone rather than steel. SHATTERS on a roll of 1 or 2 on 1d6 every time it hits; the attack does its full damage regardless. One-handed only. PHBR1 pp.95, 103, 119."
+    "Notes": "A knife of bone rather than steel. SHATTERS on a roll of 1 or 2 on 1d6 every time it hits; the attack does its full damage regardless. One-handed only. PHBR1 pp.95, 103, 119. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
   },
   {
     "Weapon Name": "Knife, Harness",
@@ -1152,7 +1152,7 @@
     "Damage (L)": "1d2",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "2",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1163,7 +1163,7 @@
     "Cost": "5 cp",
     "Weight": "0.5 lb",
     "Source": "PHBR1",
-    "Notes": "A knife of stone rather than steel. SHATTERS on a roll of 1 on 1d6 every time it hits; the attack does its full damage regardless. One-handed only. PHBR1 pp.95, 103, 119."
+    "Notes": "A knife of stone rather than steel. SHATTERS on a roll of 1 on 1d6 every time it hits; the attack does its full damage regardless. One-handed only. PHBR1 pp.95, 103, 119. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
   },
   {
     "Weapon Name": "Lance, Heavy",
@@ -1174,7 +1174,7 @@
     "Damage (L)": "3d6",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "8",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1185,7 +1185,7 @@
     "Cost": "15 gp",
     "Weight": "15 lb",
     "Source": "PHB",
-    "Notes": "Mounted only"
+    "Notes": "Mounted only ONE-HANDED ONLY (PHBR1 p.93): can be wielded in one hand only."
   },
   {
     "Weapon Name": "Lance, Jousting",
@@ -1196,7 +1196,7 @@
     "Damage (L)": "1d2-1",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "10",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1207,7 +1207,7 @@
     "Cost": "20 gp",
     "Weight": "20 lb",
     "Source": "PHB",
-    "Notes": "Mounted only, tournament use"
+    "Notes": "Mounted only, tournament use ONE-HANDED ONLY (PHBR1 p.93): can be wielded in one hand only."
   },
   {
     "Weapon Name": "Lance, Light",
@@ -1218,7 +1218,7 @@
     "Damage (L)": "1d8",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "6",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1229,7 +1229,7 @@
     "Cost": "6 gp",
     "Weight": "5 lb",
     "Source": "PHB",
-    "Notes": "Mounted only"
+    "Notes": "Mounted only ONE-HANDED ONLY (PHBR1 p.93): can be wielded in one hand only."
   },
   {
     "Weapon Name": "Lance, Medium",
@@ -1240,7 +1240,7 @@
     "Damage (L)": "2d6",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "7",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1251,7 +1251,7 @@
     "Cost": "10 gp",
     "Weight": "10 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "ONE-HANDED ONLY (PHBR1 p.93): can be wielded in one hand only."
   },
   {
     "Weapon Name": "Lasso",
@@ -1262,7 +1262,7 @@
     "Damage (L)": "—",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "10",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1273,7 +1273,7 @@
     "Cost": "5 sp",
     "Weight": "3 lb",
     "Source": "PHBR1",
-    "Notes": "A length of rope with a loop at the end; the wielder holds the slack in his off-hand, twirls the lasso in his other, and hurls the loop. ON A HIT THE ATTACKER MUST DECLARE WHAT HE IS TRYING TO ACCOMPLISH -- the book gives five uses. TRIP: a Called Shot to the legs; target makes a Dexterity check with Pull/Trip modifiers or falls. PIN ARMS: a Called Shot to the arms; target makes a Strength check with Pull/Trip modifiers or both arms are pinned as per the Pin maneuver, each additional lasso giving -4 to his Strength for struggling, and at Strength 0 he cannot escape. DISMOUNT A RIDER: no Called Shot needed, but both parties must make Strength rolls when the mount's movement reaches the end of the rope -- loser takes 1d2 (rope torn from hands) or 1d3 (yanked from the saddle); tie both. SNAG THE HEAD: a Called Shot to the head, 1d3 damage plus Strength bonus on the hit and 1 point plus Strength per round thereafter; if the wielder can hoist the victim into the air it becomes 1d4 STRANGULATION damage per round with no Strength bonus, and a strangling victim cannot shout or raise the alarm. Tying the rope to a stationary object wins the Strength contest automatically unless the rope breaks. Range is a function of the rope's length rather than a throw, so the book gives it S 1, M 2, L 3 with no fixed rate of fire. Two-handed only. PHBR1 pp.94-95, 98, 119."
+    "Notes": "A length of rope with a loop at the end; the wielder holds the slack in his off-hand, twirls the lasso in his other, and hurls the loop. ON A HIT THE ATTACKER MUST DECLARE WHAT HE IS TRYING TO ACCOMPLISH -- the book gives five uses. TRIP: a Called Shot to the legs; target makes a Dexterity check with Pull/Trip modifiers or falls. PIN ARMS: a Called Shot to the arms; target makes a Strength check with Pull/Trip modifiers or both arms are pinned as per the Pin maneuver, each additional lasso giving -4 to his Strength for struggling, and at Strength 0 he cannot escape. DISMOUNT A RIDER: no Called Shot needed, but both parties must make Strength rolls when the mount's movement reaches the end of the rope -- loser takes 1d2 (rope torn from hands) or 1d3 (yanked from the saddle); tie both. SNAG THE HEAD: a Called Shot to the head, 1d3 damage plus Strength bonus on the hit and 1 point plus Strength per round thereafter; if the wielder can hoist the victim into the air it becomes 1d4 STRANGULATION damage per round with no Strength bonus, and a strangling victim cannot shout or raise the alarm. Tying the rope to a stationary object wins the Strength contest automatically unless the rope breaks. Range is a function of the rope's length rather than a throw, so the book gives it S 1, M 2, L 3 with no fixed rate of fire. Two-handed only. PHBR1 pp.94-95, 98, 119. TWO-HANDED ONLY (PHBR1 pp.95, 119, marked '&'): intended for two-handed use only."
   },
   {
     "Weapon Name": "Light Crossbow",
@@ -1284,7 +1284,7 @@
     "Damage (L)": "1d4",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "7",
     "Speed Factor 2H": "",
     "ROF": "1",
@@ -1295,7 +1295,7 @@
     "Cost": "35 gp",
     "Weight": "7 lb",
     "Source": "PHB",
-    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common light quarrel's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common light quarrel's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md. TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Long Bow",
@@ -1306,7 +1306,7 @@
     "Damage (L)": "1d6",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "8",
     "Speed Factor 2H": "",
     "ROF": "2/1",
@@ -1317,7 +1317,7 @@
     "Cost": "75 gp",
     "Weight": "3 lb",
     "Source": "PHB",
-    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common flight arrow's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common flight arrow's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md. TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Lucern Hammer",
@@ -1328,7 +1328,7 @@
     "Damage (L)": "1d6",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "9",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1339,7 +1339,7 @@
     "Cost": "7 gp",
     "Weight": "15 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Mace, Footman's",
@@ -1350,7 +1350,7 @@
     "Damage (L)": "1d6",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "7",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1361,7 +1361,7 @@
     "Cost": "8 gp",
     "Weight": "10 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "ONE-HANDED ONLY (PHBR1 p.93): can be wielded in one hand only."
   },
   {
     "Weapon Name": "Mace, Horseman's",
@@ -1372,7 +1372,7 @@
     "Damage (L)": "1d4",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "flexible",
     "Speed Factor": "6",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1383,7 +1383,7 @@
     "Cost": "5 gp",
     "Weight": "6 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "ONE-HANDED BUT CAN BE WIELDED TWO-HANDED (PHBR1 p.93): designed for one hand but with enough haft or hilt to take both. Confers NO benefit either way UNLESS the character has Two-Hander Style Specialization, which adds +1 damage when a one-handed weapon is used in two hands. Damage is otherwise unchanged, so there are no 2H columns."
   },
   {
     "Weapon Name": "Machete",
@@ -1416,7 +1416,7 @@
     "Damage (L)": "1d3",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "2",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1427,7 +1427,7 @@
     "Cost": "3 gp",
     "Weight": "2 lb",
     "Source": "PHBR1",
-    "Notes": "A large-bladed dagger with a basket hilt, used as a SECONDARY weapon in a two-weapon fighting style. Gives +1 to disarm attempts. The hilt gives +1 to parry and the effect of an iron gauntlet when punching. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: matches PHBR1 pp.95 and 119 exactly, field for field. PROFICIENCY RELATIONSHIP (PHBR1 p.104): related to, but NOT identical to, dagger proficiency."
+    "Notes": "A large-bladed dagger with a basket hilt, used as a SECONDARY weapon in a two-weapon fighting style. Gives +1 to disarm attempts. The hilt gives +1 to parry and the effect of an iron gauntlet when punching. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: matches PHBR1 pp.95 and 119 exactly, field for field. PROFICIENCY RELATIONSHIP (PHBR1 p.104): related to, but NOT identical to, dagger proficiency. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
   },
   {
     "Weapon Name": "Mancatcher",
@@ -1438,7 +1438,7 @@
     "Damage (L)": "-",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "7",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1449,7 +1449,7 @@
     "Cost": "30 gp",
     "Weight": "8 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Maul",
@@ -1482,7 +1482,7 @@
     "Damage (L)": "1d6+1",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "flexible",
     "Speed Factor": "7",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1493,7 +1493,7 @@
     "Cost": "10 gp",
     "Weight": "12 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "ONE-HANDED BUT CAN BE WIELDED TWO-HANDED (PHBR1 p.93): designed for one hand but with enough haft or hilt to take both. Confers NO benefit either way UNLESS the character has Two-Hander Style Specialization, which adds +1 damage when a one-handed weapon is used in two hands. Damage is otherwise unchanged, so there are no 2H columns."
   },
   {
     "Weapon Name": "Naginata",
@@ -1504,7 +1504,7 @@
     "Damage (L)": "1d10",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "7",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1515,7 +1515,7 @@
     "Cost": "8 gp",
     "Weight": "10 lb",
     "Source": "PHBR1",
-    "Notes": "A polearm, a 6' to 8' shaft with a curved, sword-like blade at the end. The favored weapon of the female fighters of the orient, but neither limited to them nor they to it. Proficiency is related to all other polearms; specialization confers the usual benefits. INFLICTS DOUBLE DAMAGE WHEN FIRMLY SET TO RECEIVE A CHARGE. Readily available in oriental ports and readily exported. Two-handed only. PHBR1 pp.95, 101-102, 119."
+    "Notes": "A polearm, a 6' to 8' shaft with a curved, sword-like blade at the end. The favored weapon of the female fighters of the orient, but neither limited to them nor they to it. Proficiency is related to all other polearms; specialization confers the usual benefits. INFLICTS DOUBLE DAMAGE WHEN FIRMLY SET TO RECEIVE A CHARGE. Readily available in oriental ports and readily exported. Two-handed only. PHBR1 pp.95, 101-102, 119. TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Net",
@@ -1526,7 +1526,7 @@
     "Damage (L)": "-",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "10",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1537,7 +1537,7 @@
     "Cost": "5 gp",
     "Weight": "10 lb",
     "Source": "Unattributed",
-    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Entangles, no damage PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Size M. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures."
+    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Entangles, no damage PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Size M. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. TWO-HANDED ONLY (PHBR1 pp.95, 119, marked '&'): intended for two-handed use only."
   },
   {
     "Weapon Name": "Nunchaku",
@@ -1548,7 +1548,7 @@
     "Damage (L)": "1d6",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "3",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1559,7 +1559,7 @@
     "Cost": "3 gp",
     "Weight": "2 lb",
     "Source": "Unattributed",
-    "Notes": "Oriental weapon PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Cost 1 gp, Weight 3 lb, Size M. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.102): its own proficiency, NOT related to any other, flails included."
+    "Notes": "Oriental weapon PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Cost 1 gp, Weight 3 lb, Size M. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.102): its own proficiency, NOT related to any other, flails included. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
   },
   {
     "Weapon Name": "Partisan",
@@ -1570,7 +1570,7 @@
     "Damage (L)": "1d6+1",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "9",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1581,7 +1581,7 @@
     "Cost": "10 gp",
     "Weight": "8 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Pick, Footman's",
@@ -1592,7 +1592,7 @@
     "Damage (L)": "2d4",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "flexible",
     "Speed Factor": "7",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1603,7 +1603,7 @@
     "Cost": "8 gp",
     "Weight": "6 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "ONE-HANDED BUT CAN BE WIELDED TWO-HANDED (PHBR1 p.93): designed for one hand but with enough haft or hilt to take both. Confers NO benefit either way UNLESS the character has Two-Hander Style Specialization, which adds +1 damage when a one-handed weapon is used in two hands. Damage is otherwise unchanged, so there are no 2H columns."
   },
   {
     "Weapon Name": "Pick, Horseman's",
@@ -1614,7 +1614,7 @@
     "Damage (L)": "1d4",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "flexible",
     "Speed Factor": "5",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1625,7 +1625,7 @@
     "Cost": "7 gp",
     "Weight": "4 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "ONE-HANDED BUT CAN BE WIELDED TWO-HANDED (PHBR1 p.93): designed for one hand but with enough haft or hilt to take both. Confers NO benefit either way UNLESS the character has Two-Hander Style Specialization, which adds +1 damage when a one-handed weapon is used in two hands. Damage is otherwise unchanged, so there are no 2H columns."
   },
   {
     "Weapon Name": "Pike, Awl",
@@ -1636,7 +1636,7 @@
     "Damage (L)": "1d8",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "13",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1647,7 +1647,7 @@
     "Cost": "5 gp",
     "Weight": "8 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Pilum",
@@ -1680,7 +1680,7 @@
     "Damage (L)": "1d6",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "4",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1691,7 +1691,7 @@
     "Cost": "-",
     "Weight": "4 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Ranseur",
@@ -1702,7 +1702,7 @@
     "Damage (L)": "2d4",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "8",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1713,7 +1713,7 @@
     "Cost": "6 gp",
     "Weight": "7 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Rapier",
@@ -1724,7 +1724,7 @@
     "Damage (L)": "1d8+1",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "4",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1735,7 +1735,7 @@
     "Cost": "15 gp",
     "Weight": "4 lb",
     "Source": "PHBR1",
-    "Notes": "A long-bladed sword with a point only. Requires its OWN weapon proficiency. A basket hilt can be added for 2 gp (+1 to parry, +1 lb., punch as an iron gauntlet). For related proficiencies, related to sabre. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: matches PHBR1 pp.95 and 119 exactly, field for field. PROFICIENCY RELATIONSHIP (PHBR1 p.104): requires its own proficiency, related to SABRE -- explicitly NOT to long sword or its related weapons."
+    "Notes": "A long-bladed sword with a point only. Requires its OWN weapon proficiency. A basket hilt can be added for 2 gp (+1 to parry, +1 lb., punch as an iron gauntlet). For related proficiencies, related to sabre. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: matches PHBR1 pp.95 and 119 exactly, field for field. PROFICIENCY RELATIONSHIP (PHBR1 p.104): requires its own proficiency, related to SABRE -- explicitly NOT to long sword or its related weapons. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
   },
   {
     "Weapon Name": "Ritiik",
@@ -1768,7 +1768,7 @@
     "Damage (L)": "1d8+1",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "4",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1779,7 +1779,7 @@
     "Cost": "17 gp",
     "Weight": "5 lb",
     "Source": "PHBR1",
-    "Notes": "A light slashing sword. Can be fitted with a basket hilt for 2 gp (+1 to parry, +1 lb., punch as an iron gauntlet). For related proficiencies, related to rapier. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: PHBR1 pp.95 and 119 print two IDENTICAL copies of this row and the in-chapter description adds no conflicting numbers. The values here are PHBR1's. THE CRH REPRINT DISAGREES: Cost 17 gp (CRH reprint prints 15 gp); Type S (CRH reprint prints P). The original is followed because a reprint should not silently rewrite its source -- the same call made for PHB Table 27 over CRH Table 54's transposed halfling row. Recorded, not resolved: the CRH page has not been re-read to confirm the reprint says what we transcribed. PROFICIENCY RELATIONSHIP (PHBR1 p.104): requires its own proficiency, related to RAPIER."
+    "Notes": "A light slashing sword. Can be fitted with a basket hilt for 2 gp (+1 to parry, +1 lb., punch as an iron gauntlet). For related proficiencies, related to rapier. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: PHBR1 pp.95 and 119 print two IDENTICAL copies of this row and the in-chapter description adds no conflicting numbers. The values here are PHBR1's. THE CRH REPRINT DISAGREES: Cost 17 gp (CRH reprint prints 15 gp); Type S (CRH reprint prints P). The original is followed because a reprint should not silently rewrite its source -- the same call made for PHB Table 27 over CRH Table 54's transposed halfling row. Recorded, not resolved: the CRH page has not been re-read to confirm the reprint says what we transcribed. PROFICIENCY RELATIONSHIP (PHBR1 p.104): requires its own proficiency, related to RAPIER. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
   },
   {
     "Weapon Name": "Sai",
@@ -1790,7 +1790,7 @@
     "Damage (L)": "1d2",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "3",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1801,7 +1801,7 @@
     "Cost": "1 gp",
     "Weight": "1 lb",
     "Source": "Unattributed",
-    "Notes": "Oriental weapon, disarm bonus PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Cost 5 sp, Weight 2 lb, Type P/B, Speed Factor 2. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.102): its own proficiency, not related to any other. Confers +1 to hit on Pin and Disarm maneuvers."
+    "Notes": "Oriental weapon, disarm bonus PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Cost 5 sp, Weight 2 lb, Type P/B, Speed Factor 2. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.102): its own proficiency, not related to any other. Confers +1 to hit on Pin and Disarm maneuvers. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
   },
   {
     "Weapon Name": "Scimitar",
@@ -1812,7 +1812,7 @@
     "Damage (L)": "1d8",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "5",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1823,7 +1823,7 @@
     "Cost": "15 gp",
     "Weight": "4 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "ONE-HANDED ONLY (PHBR1 p.93): can be wielded in one hand only."
   },
   {
     "Weapon Name": "Scourge",
@@ -1834,7 +1834,7 @@
     "Damage (L)": "1d2",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "5",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1845,7 +1845,7 @@
     "Cost": "1 gp",
     "Weight": "2 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "ONE-HANDED ONLY (PHBR1 p.93): can be wielded in one hand only."
   },
   {
     "Weapon Name": "Scythe",
@@ -1856,7 +1856,7 @@
     "Damage (L)": "1d8",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "8",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1867,7 +1867,7 @@
     "Cost": "5 gp",
     "Weight": "8 lb",
     "Source": "PHBR11",
-    "Notes": "A curved blade on a 5-ft wooden pole. This farm tool cuts grain at harvest and doubles as a weapon, wielded by holding the short wooden bars on the end opposite the blade. ALWAYS used two-handed. Improvised weapon"
+    "Notes": "A curved blade on a 5-ft wooden pole. This farm tool cuts grain at harvest and doubles as a weapon, wielded by holding the short wooden bars on the end opposite the blade. ALWAYS used two-handed. Improvised weapon TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Short Bow",
@@ -1878,7 +1878,7 @@
     "Damage (L)": "1d6",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "7",
     "Speed Factor 2H": "",
     "ROF": "2/1",
@@ -1889,7 +1889,7 @@
     "Cost": "30 gp",
     "Weight": "2 lb",
     "Source": "PHB",
-    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common flight arrow's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common flight arrow's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md. TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Shuriken",
@@ -1900,7 +1900,7 @@
     "Damage (L)": "1d4",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "2",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1911,7 +1911,7 @@
     "Cost": "3 sp",
     "Weight": "0.1 lb",
     "Source": "Unattributed",
-    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Oriental weapon PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Weight 1 lb. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.102): its own proficiency, not related to any other."
+    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Oriental weapon PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Weight 1 lb. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.102): its own proficiency, not related to any other. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
   },
   {
     "Weapon Name": "Sickle",
@@ -1922,7 +1922,7 @@
     "Damage (L)": "1d4",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "4",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -1933,7 +1933,7 @@
     "Cost": "6 sp",
     "Weight": "3 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "ONE-HANDED ONLY (PHBR1 p.93): can be wielded in one hand only."
   },
   {
     "Weapon Name": "Sling",
@@ -1944,7 +1944,7 @@
     "Damage (L)": "1d6+1",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "6",
     "Speed Factor 2H": "",
     "ROF": "1",
@@ -1955,7 +1955,7 @@
     "Cost": "5 cp",
     "Weight": "0.1 lb",
     "Source": "PHB",
-    "Notes": "Verified against a photograph of PHB Table 44, August 2026. WEIGHT CORRECTED per the PHB Table 44 footnote: \"These items weigh little individually. Ten of these weigh one pound.\" The table prints '*' rather than a number, which is 0.1 lb each. Was 0 lb here, which fed encumbrance wrongly. Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common sling bullet's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. WEIGHT CORRECTED per the PHB Table 44 footnote: \"These items weigh little individually. Ten of these weigh one pound.\" The table prints '*' rather than a number, which is 0.1 lb each. Was 0 lb here, which fed encumbrance wrongly. Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common sling bullet's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md. TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Snow Blade (Iuak)",
@@ -2054,7 +2054,7 @@
     "Damage (L)": "2d6",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "8",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -2065,7 +2065,7 @@
     "Cost": "5 gp",
     "Weight": "7 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Staff Sling",
@@ -2076,7 +2076,7 @@
     "Damage (L)": "1d6+1",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "11",
     "Speed Factor 2H": "",
     "ROF": "2/1",
@@ -2087,7 +2087,7 @@
     "Cost": "2 sp",
     "Weight": "2 lb",
     "Source": "PHB",
-    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common sling bullet's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common sling bullet's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md. TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Stiletto",
@@ -2098,7 +2098,7 @@
     "Damage (L)": "1d2",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "2",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -2109,7 +2109,7 @@
     "Cost": "5 sp",
     "Weight": "0.5 lb",
     "Source": "PHBR1",
-    "Notes": "A narrow-bladed knife with a sharpened point only. Non-magical +2 bonus against ring mail, chain mail and plate mail. Knife proficiency covers the stiletto. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: matches PHBR1 pp.95 and 119 exactly, field for field. PROFICIENCY RELATIONSHIP (PHBR1 p.104): Knife proficiency IS Stiletto proficiency -- know one and you know the other equally well, at no additional cost in slots."
+    "Notes": "A narrow-bladed knife with a sharpened point only. Non-magical +2 bonus against ring mail, chain mail and plate mail. Knife proficiency covers the stiletto. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: matches PHBR1 pp.95 and 119 exactly, field for field. PROFICIENCY RELATIONSHIP (PHBR1 p.104): Knife proficiency IS Stiletto proficiency -- know one and you know the other equally well, at no additional cost in slots. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
   },
   {
     "Weapon Name": "Sword, Bastard",
@@ -2153,7 +2153,7 @@
     "Cost": "10 gp",
     "Weight": "4 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "GRIP UNCLASSIFIED, and the omission is the BOOK'S. PHBR1 p.93 sorts every Player's Handbook weapon into one of four grip categories and the broad sword appears in NONE of them -- not one-handed only, not one-handed-but-usable-in-two, not either, not two-handed only. Left blank rather than guessed. By its company (long sword is 'one-handed but can be wielded two-handed') the most likely reading is `flexible`, but that is inference and the field stays empty until a source says so."
   },
   {
     "Weapon Name": "Sword, Khopesh",
@@ -2164,7 +2164,7 @@
     "Damage (L)": "1d6",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "9",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -2175,7 +2175,7 @@
     "Cost": "10 gp",
     "Weight": "7 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "ONE-HANDED ONLY (PHBR1 p.93): can be wielded in one hand only."
   },
   {
     "Weapon Name": "Sword, Long",
@@ -2186,7 +2186,7 @@
     "Damage (L)": "1d12",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "flexible",
     "Speed Factor": "5",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -2197,7 +2197,7 @@
     "Cost": "15 gp",
     "Weight": "4 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "ONE-HANDED BUT CAN BE WIELDED TWO-HANDED (PHBR1 p.93): designed for one hand but with enough haft or hilt to take both. Confers NO benefit either way UNLESS the character has Two-Hander Style Specialization, which adds +1 damage when a one-handed weapon is used in two hands. Damage is otherwise unchanged, so there are no 2H columns."
   },
   {
     "Weapon Name": "Sword, Short",
@@ -2208,7 +2208,7 @@
     "Damage (L)": "1d8",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "3",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -2219,7 +2219,7 @@
     "Cost": "10 gp",
     "Weight": "3 lb",
     "Source": "PHB",
-    "Notes": " WEAPON QUALITY (PHBR1 pp.10-11) applies to every weapon in this file and is NOT a property of the weapon TYPE -- it belongs to the individual item, so it is carried on the character's weapon card via hitAdj/dmgAdj rather than here. Poor: -1 hit, -1 damage, breaks on a natural 1-5 to hit. Average: no modifier; the DM may optionally break it on a natural 1, never automatically. Fine: +1 to hit OR +1 damage, chosen by the smith, never both. Exceptional: +1 to hit AND +1 damage. Fine and Exceptional break only in remarkable circumstances. All of these bonuses are NON-MAGICAL. Enchantments are typically made on weapons of at least Fine quality."
+    "Notes": "WEAPON QUALITY (PHBR1 pp.10-11) applies to every weapon in this file and is NOT a property of the weapon TYPE -- it belongs to the individual item, so it is carried on the character's weapon card via hitAdj/dmgAdj rather than here. Poor: -1 hit, -1 damage, breaks on a natural 1-5 to hit. Average: no modifier; the DM may optionally break it on a natural 1, never automatically. Fine: +1 to hit OR +1 damage, chosen by the smith, never both. Exceptional: +1 to hit AND +1 damage. Fine and Exceptional break only in remarkable circumstances. All of these bonuses are NON-MAGICAL. Enchantments are typically made on weapons of at least Fine quality. ONE-HANDED ONLY (PHBR1 p.93): can be wielded in one hand only."
   },
   {
     "Weapon Name": "Sword, Two-Handed",
@@ -2230,7 +2230,7 @@
     "Damage (L)": "3d6",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "10",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -2241,7 +2241,7 @@
     "Cost": "50 gp",
     "Weight": "15 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Tetsubo",
@@ -2252,7 +2252,7 @@
     "Damage (L)": "1d8",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "7",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -2263,7 +2263,7 @@
     "Cost": "2 gp",
     "Weight": "7 lb",
     "Source": "PHBR1",
-    "Notes": "A long walking-staff, its upper end shod with studded iron strips. Proficiency is related to other polearms; specialization confers the usual benefits. Available in oriental markets but never exported, because it is a relatively simple weapon to make. Two-handed only. PHBR1 pp.95, 102, 119."
+    "Notes": "A long walking-staff, its upper end shod with studded iron strips. Proficiency is related to other polearms; specialization confers the usual benefits. Available in oriental markets but never exported, because it is a relatively simple weapon to make. Two-handed only. PHBR1 pp.95, 102, 119. TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Three-Section Staff",
@@ -2318,7 +2318,7 @@
     "Damage (L)": "2d4",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "Speed Factor": "10",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -2329,7 +2329,7 @@
     "Cost": "5 gp",
     "Weight": "12 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
   },
   {
     "Weapon Name": "Wakizashi",
@@ -2340,7 +2340,7 @@
     "Damage (L)": "1d8",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "either",
+    "Grip": "flexible",
     "Speed Factor": "3",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -2351,7 +2351,7 @@
     "Cost": "50 gp",
     "Weight": "3 lb",
     "Source": "Unattributed",
-    "Notes": "Oriental weapon PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Size M, Type S/P. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.102): related to short sword. GRIP: PHBR1 p.95 marks this weapon '$' -- intended for one-handed use but MAY be used two-handed under the Two-Hander Style Specialization rules. Damage is unchanged either way, so no 2H columns are needed."
+    "Notes": "Oriental weapon PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Size M, Type S/P. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.102): related to short sword. GRIP flexible. PHBR1 p.95 marks this weapon '$' -- intended for one-handed use but MAY be used two-handed under the Two-Hander Style Specialization rules. Damage is unchanged either way, so no 2H columns are needed."
   },
   {
     "Weapon Name": "War Hammer",
@@ -2362,7 +2362,7 @@
     "Damage (L)": "1d4",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "flexible",
     "Speed Factor": "4",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -2373,7 +2373,7 @@
     "Cost": "2 gp",
     "Weight": "6 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "ONE-HANDED BUT CAN BE WIELDED TWO-HANDED (PHBR1 p.93): designed for one hand but with enough haft or hilt to take both. Confers NO benefit either way UNLESS the character has Two-Hander Style Specialization, which adds +1 damage when a one-handed weapon is used in two hands. Damage is otherwise unchanged, so there are no 2H columns."
   },
   {
     "Weapon Name": "Whip",
@@ -2384,7 +2384,7 @@
     "Damage (L)": "1",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "one-handed",
     "Speed Factor": "8",
     "Speed Factor 2H": "",
     "ROF": "",
@@ -2395,6 +2395,6 @@
     "Cost": "1 sp",
     "Weight": "2 lb",
     "Source": "PHB",
-    "Notes": "Cannot cause lethal damage Verified against a photograph of PHB Table 44, August 2026. SIZE CORRECTED M -> S."
+    "Notes": "Cannot cause lethal damage Verified against a photograph of PHB Table 44, August 2026. SIZE CORRECTED M -> S. ONE-HANDED ONLY (PHBR1 p.93): can be wielded in one hand only."
   }
 ]
