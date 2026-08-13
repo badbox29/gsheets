@@ -151,7 +151,7 @@
     "Cost": "5 gp",
     "Weight": "2 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common barbed dart's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
   },
   {
     "Weapon Name": "Blunderbuss",
@@ -305,7 +305,7 @@
     "Cost": "100 gp",
     "Weight": "3 lb",
     "Source": "PHB",
-    "Notes": "Requires STR 18 for +2 bonus"
+    "Notes": "Requires STR 18 for +2 bonus Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common sheaf arrow's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
   },
   {
     "Weapon Name": "Composite Short Bow",
@@ -327,7 +327,7 @@
     "Cost": "75 gp",
     "Weight": "2 lb",
     "Source": "PHB",
-    "Notes": "Requires STR 6 for +1 bonus"
+    "Notes": "Requires STR 6 for +1 bonus Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common flight arrow's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
   },
   {
     "Weapon Name": "Cutlass",
@@ -371,7 +371,7 @@
     "Cost": "2 gp",
     "Weight": "1 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 prints \"Dagger or dirk\" as one row; the separate Dirk record in this file is an ALIAS of this weapon, not a distinct one."
   },
   {
     "Weapon Name": "Dagger, Bone",
@@ -457,9 +457,9 @@
     "Range (L)": "40",
     "Group": "Dart",
     "Cost": "5 sp",
-    "Weight": "0.5 lb",
+    "Weight": "0.1 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. WEIGHT CORRECTED per the PHB Table 44 footnote: \"These items weigh little individually. Ten of these weigh one pound.\" The table prints '*' rather than a number, which is 0.1 lb each. Was 0.5 lb here, which fed encumbrance wrongly."
   },
   {
     "Weapon Name": "Dirk",
@@ -478,10 +478,10 @@
     "Range (M)": "20",
     "Range (L)": "30",
     "Group": "Dagger",
-    "Cost": "3 gp",
+    "Cost": "2 gp",
     "Weight": "1 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. COST CORRECTED 3 gp -> 2 gp. PHB Table 44 prints this as a SINGLE ROW, \"Dagger or dirk\", 2 gp / 1 lb / S / P / speed 2 / 1d4 / 1d3 -- the same shape as \"Axe, hand or throwing\". A dirk is not a separate weapon sharing a proficiency with the dagger; it is the dagger under another name, and the 3 gp here was unsourced drift. Kept as its own record so characters already holding one are undisturbed, but it should be treated as an ALIAS of Dagger for proficiency, specialization and browser purposes."
   },
   {
     "Weapon Name": "Drusus",
@@ -877,7 +877,7 @@
     "Cost": "300 gp",
     "Weight": "3 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common hand quarrel's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
   },
   {
     "Weapon Name": "Harpoon",
@@ -943,7 +943,7 @@
     "Cost": "50 gp",
     "Weight": "14 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common heavy quarrel's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
   },
   {
     "Weapon Name": "Hook Fauchard",
@@ -1097,7 +1097,7 @@
     "Cost": "5 sp",
     "Weight": "0.5 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. WEIGHT UNRESOLVED: the weight column on the photographed table is illegible for this row -- either an em-dash or the '*' footnote, which would make it 0.1 lb rather than the 0.5 lb stored here. NOT changed without a readable source. Worth settling, because 0.5 vs 0.1 lb matters to a thief counting ounces."
   },
   {
     "Weapon Name": "Knife, Bone",
@@ -1295,7 +1295,7 @@
     "Cost": "35 gp",
     "Weight": "7 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common light quarrel's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
   },
   {
     "Weapon Name": "Long Bow",
@@ -1317,7 +1317,7 @@
     "Cost": "75 gp",
     "Weight": "3 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common flight arrow's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
   },
   {
     "Weapon Name": "Lucern Hammer",
@@ -1889,7 +1889,7 @@
     "Cost": "30 gp",
     "Weight": "2 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common flight arrow's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
   },
   {
     "Weapon Name": "Shuriken",
@@ -1953,9 +1953,9 @@
     "Range (L)": "200",
     "Group": "Sling",
     "Cost": "5 cp",
-    "Weight": "0 lb",
+    "Weight": "0.1 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. WEIGHT CORRECTED per the PHB Table 44 footnote: \"These items weigh little individually. Ten of these weigh one pound.\" The table prints '*' rather than a number, which is 0.1 lb each. Was 0 lb here, which fed encumbrance wrongly. Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common sling bullet's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
   },
   {
     "Weapon Name": "Snow Blade (Iuak)",
@@ -2087,7 +2087,7 @@
     "Cost": "2 sp",
     "Weight": "2 lb",
     "Source": "PHB",
-    "Notes": ""
+    "Notes": "Verified against a photograph of PHB Table 44, August 2026. PHB Table 44 assigns this LAUNCHER no Type and no damage -- it prints '-' in all three columns, because damage belongs to the AMMUNITION, which has its own row in the table and its own record in core_ammo.json. The Type and damage stored here are the common sling bullet's, carried on the weapon as a CONVENIENCE so the weapon card shows a usable figure. DELIBERATE, not a transcription error. Revisit if ammunition selection is ever built: see the open items in gsheets_phbr_notes.md."
   },
   {
     "Weapon Name": "Stiletto",
@@ -2378,7 +2378,7 @@
   {
     "Weapon Name": "Whip",
     "Category": "Melee",
-    "Size": "M",
+    "Size": "S",
     "Type": "",
     "Damage (S-M)": "1d2",
     "Damage (L)": "1",
@@ -2395,6 +2395,6 @@
     "Cost": "1 sp",
     "Weight": "2 lb",
     "Source": "PHB",
-    "Notes": "Cannot cause lethal damage"
+    "Notes": "Cannot cause lethal damage Verified against a photograph of PHB Table 44, August 2026. SIZE CORRECTED M -> S."
   }
 ]
