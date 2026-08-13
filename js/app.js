@@ -4141,6 +4141,18 @@ function weaponSizeOptions(sel) {
 // Javelin and Bastard Sword held their two-handed figures, and the bastard sword
 // record was internally mixed, carrying a one-handed speed factor beside
 // two-handed damage.
+// A label and its control as ONE flex item, so a wrapping row can never leave a
+// heading stranded above the wrong control. Wrapping in a <label> also makes the
+// heading a hit target for its own field, which matters on a phone.
+function wpnField(label, width, inner) {
+  return '<label style="width:' + width + 'px;display:flex;flex-direction:column;' +
+           'gap:2px;align-items:center;">' +
+           '<span style="font-size:11px;color:var(--muted);white-space:nowrap;">' +
+             label +
+           '</span>' + inner +
+         '</label>';
+}
+
 function weaponGripOptions(sel) {
   const vals = [['', 'Auto'], ['1h', 'One-handed'], ['2h', 'Two-handed']];
   return vals.map(v =>
@@ -4305,37 +4317,42 @@ function makeWeaponNode(data={}, onChange){
     // flex-wrap so this degrades to two lines on a phone instead of overflowing
     // the card. Nothing here flexes any more -- Damage Type holds "B, P, S" and
     // was taking every pixel the row had left over.
-    '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:2px;font-size:11px;color:var(--muted);">' +
-      '<div style="width:60px;text-align:center;">Speed</div>' +
-      '<div style="width:90px;text-align:center;">Dmg (S-M)</div>' +
-      '<div style="width:90px;text-align:center;">Dmg (L)</div>' +
-      '<div style="width:80px;text-align:center;">Weight (lbs)</div>' +
-      '<div style="width:100px;text-align:center;">Damage Type</div>' +
-      '<div style="width:100px;text-align:center;">Attacks/Rd</div>' +
-      '<div style="width:90px;text-align:center;">Size</div>' +
-      '<div style="width:110px;text-align:center;">Grip</div>' +
-    '</div>' +
-    '<div style="display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;margin-bottom:6px;">' +
-      '<input class="speed" type="number" placeholder="" value="'+escapeHtml(data.speed||'')+'" style="width:60px;text-align:center;">' +
-      '<input class="damage-sm" placeholder="" value="'+escapeHtml(data.damageSM||'')+'" style="width:90px;text-align:center;">' +
-      '<input class="damage-l" placeholder="" value="'+escapeHtml(data.damageL||'')+'" style="width:90px;text-align:center;">' +
-      '<input class="weight" type="number" step="0.1" placeholder="" value="'+escapeHtml(data.weight||'')+'" style="width:80px;text-align:center;">' +
+    // ONE row of label+control PAIRS, not two parallel rows. The old markup had
+    // a headings row and a controls row wrapping independently: as soon as
+    // either wrapped, the headings' second line rendered directly above the
+    // controls' FIRST line, so "Size" and "Grip" sat above Speed and Dmg (S-M).
+    // That was already happening before Grip existed -- seven fields overflowed
+    // a narrow card and Size wrapped alone. Pairing kills the class of bug
+    // instead of tuning widths until it hides.
+    '<div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px;margin-bottom:6px;">' +
+      wpnField('Speed', 60,
+        '<input class="speed" type="number" placeholder="" value="'+escapeHtml(data.speed||'')+'" style="width:60px;text-align:center;">') +
+      wpnField('Dmg (S-M)', 90,
+        '<input class="damage-sm" placeholder="" value="'+escapeHtml(data.damageSM||'')+'" style="width:90px;text-align:center;">') +
+      wpnField('Dmg (L)', 90,
+        '<input class="damage-l" placeholder="" value="'+escapeHtml(data.damageL||'')+'" style="width:90px;text-align:center;">') +
+      wpnField('Weight (lbs)', 80,
+        '<input class="weight" type="number" step="0.1" placeholder="" value="'+escapeHtml(data.weight||'')+'" style="width:80px;text-align:center;">') +
+      wpnField('Damage Type', 100,
       '<input class="damage-type" placeholder="B, P, S" value="'+escapeHtml(data.damageType||'')+'" style="width:100px;text-align:center;" title="' +
         'Bludgeoning, Piercing or Slashing (PHB Table 44).&#10;' +
         'Some weapons carry two, e.g. P/S for a halberd.&#10;' +
-        'Filled from the weapon list when you pick a Type, if left blank.">' +
+        'Filled from the weapon list when you pick a Type, if left blank.">') +
+      wpnField('Attacks/Rd', 100,
       '<select class="weapon-attacks" style="width:100px;" title="' +
         'Attacks per round with THIS weapon.&#10;' +
         'Blank uses the character-level Attacks/Round on the Combat tab.&#10;' +
         '3/2 means three attacks every two rounds.">' +
         weaponAttacksOptions(data.attacks) +
-      '</select>' +
+      '</select>') +
+      wpnField('Size', 90,
       '<select class="weapon-size" style="width:90px;" title="' +
         'Weapon size (S/M/L).&#10;' +
         'Blank looks it up from the weapon list by name.&#10;' +
         'Set it for a custom weapon, or one whose name does not match the book.">' +
         weaponSizeOptions(data.size) +
-      '</select>' +
+      '</select>') +
+      wpnField('Grip', 110,
       '<select class="weapon-grip" style="width:110px;" title="' +
         'How this weapon is held (PHBR1 pp.62-63, 93).&#10;' +
         'Only ten weapons care: harpoon, javelin, spear, long spear, trident,&#10;' +
@@ -4345,7 +4362,7 @@ function makeWeaponNode(data={}, onChange){
         'Auto uses the one-handed line, which is how the records are stored.&#10;' +
         'Harmless on every other weapon.">' +
         weaponGripOptions(data.grip) +
-      '</select>' +
+      '</select>') +
     '</div>' +
     // Magic, Hit Adj and Dmg Adj were spread across two separate rows. Grouped
     // here they read as one idea and the card gets SHORTER, not taller.
