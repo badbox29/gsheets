@@ -486,8 +486,11 @@ function getTwoWeaponState(root) {
     ? getWeaponSizeAndWeight(el) : null;
   const main = mainRows.length ? sizeOf(mainRows[0]) : null;
   const off  = sizeOf(offRow);
+  // pen.styleSpec is set on BOTH return paths of getTwoWeaponPenalties, so a
+  // ranger gets the equal-length permission too -- PHBR1 p.64 says he gains no
+  // bonus to hit from the slot but does get this half of it.
   const legality = (main && off && typeof isLegalOffhandWeapon === 'function')
-    ? isLegalOffhandWeapon(main, off)
+    ? isLegalOffhandWeapon(main, off, !!pen.styleSpec)
     : { legal: null, reason: '' };
 
   // "Nor can the character use a shield, unless it is kept strapped onto his
