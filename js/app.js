@@ -4324,7 +4324,12 @@ function makeWeaponNode(data={}, onChange){
     // That was already happening before Grip existed -- seven fields overflowed
     // a narrow card and Size wrapped alone. Pairing kills the class of bug
     // instead of tuning widths until it hides.
-    '<div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px;margin-bottom:6px;">' +
+    //
+    // flex-START, not flex-end: number inputs carry a spinner and are taller than
+    // text inputs, so aligning the BOTTOMS left the headings sitting at different
+    // heights across the row. Aligning the tops lines the headings up, which is
+    // the element the eye scans.
+    '<div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:8px;margin-bottom:6px;">' +
       wpnField('Speed', 60,
         '<input class="speed" type="number" placeholder="" value="'+escapeHtml(data.speed||'')+'" style="width:60px;text-align:center;">') +
       wpnField('Dmg (S-M)', 90,
@@ -8125,6 +8130,20 @@ function bindSheet(root, tab){
       if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
       if (typeof renderAnimalEmpathy === 'function') renderAnimalEmpathy(root);
       if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
+    }
+  });
+
+  // PHBR1 pp.61-64. Style specializations are spend, so changing one has to
+  // repaint the weapon slot counter immediately. Nothing recalculates on a
+  // data-field change generically -- every field is named in some delegated
+  // listener like this one -- so a new field that feeds a derived number needs
+  // its own branch or it only updates on save and reload.
+  const fightingStyleFields =
+    /^style_(single_weapon|two_hander|weapon_shield|two_weapon)$/;
+  root.addEventListener('change', (e) => {
+    const f = (e.target && e.target.getAttribute) ? e.target.getAttribute('data-field') : null;
+    if (f && fightingStyleFields.test(f)) {
+      if (typeof renderProficiencySlots === 'function') renderProficiencySlots(root);
     }
   });
 
