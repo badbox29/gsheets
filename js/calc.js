@@ -5939,6 +5939,90 @@ function addWeaponProficiency(root, weapon) {
   if (tab) markUnsaved(tab, true, root);
 }
 
+// PHBR1 pp.61-62. Who may KNOW a style and who may SPECIALIZE in one are two
+// different questions, and the book answers them separately.
+//
+// KNOWN, fixed at creation and never expandable: "All Warriors start play
+// knowing how to use all four styles. Priests start play knowing how to use
+// Single-Weapon, Two-Hander, and Weapon and Shield styles. Rogues start play
+// knowing how to use Single-Weapon, Two-Hander, and Two-Weapon styles. Wizards
+// start play knowing how to use Single-Weapon and Two-Hander styles."
+const PHBR1_STYLES_KNOWN = {
+  warrior: ['singleWeapon', 'twoHander', 'weaponShield', 'twoWeapon'],
+  priest:  ['singleWeapon', 'twoHander', 'weaponShield'],
+  rogue:   ['singleWeapon', 'twoHander', 'twoWeapon'],
+  wizard:  ['singleWeapon', 'twoHander']
+};
+const PHBR1_STYLE_LABELS = {
+  singleWeapon: 'Single-Weapon',
+  twoHander:    'Two-Hander',
+  weaponShield: 'Weapon and Shield',
+  twoWeapon:    'Two-Weapon'
+};
+
+// Returns plain strings. Every one is a WARNING -- nothing here prevents a
+// selection or alters a number, because the DM may have ruled otherwise and
+// PHBR1 p.37 explicitly invites him to.
+function getFightingStyleAdvisories(root) {
+  const out = [];
+  const styles = (typeof getFightingStyles === 'function')
+    ? getFightingStyles(root) : null;
+  if (!styles || !styles.active) return out;
+
+  const classes = (typeof getCharacterClassList === 'function')
+    ? getCharacterClassList(root) : [];
+  const cats = classes
+    .map(c => (typeof getClassCategory === 'function') ? getClassCategory(c) : null)
+    .filter(Boolean);
+  const charType = ((typeof val === 'function' ? val(root, 'char_type') : '') || 'single')
+    .toLowerCase();
+
+  // A multi-class character knows the union of his classes' styles -- he is both
+  // things at once. Silent when the class is unrecognised or homebrew rather
+  // than guessing at a category.
+  const known = {};
+  cats.forEach(cat => (PHBR1_STYLES_KNOWN[cat] || []).forEach(k => { known[k] = true; }));
+
+  const taken = Object.keys(PHBR1_STYLE_LABELS).filter(k => styles[k] > 0);
+
+  if (cats.length) {
+    taken.filter(k => !known[k]).forEach(k => {
+      out.push(`${PHBR1_STYLE_LABELS[k]} is not a style your class knows, and styles ` +
+               `cannot be learned after creation (PHBR1 p.61).`);
+    });
+
+    // "Only Warriors, Rogues and Priests can buy Style Specializations. Only
+    // Warriors and Rogues can buy the Two-Weapon Style Specialization."
+    if (taken.length && cats.every(c => c === 'wizard')) {
+      out.push('Wizards cannot buy Style Specialization (PHBR1 p.62).');
+    }
+    if (styles.twoWeapon > 0 && !cats.some(c => c === 'warrior' || c === 'rogue')) {
+      out.push('Only Warriors and Rogues may specialize in Two-Weapon Style (PHBR1 p.62).');
+    }
+
+    // "A character may begin play with only one Style Specialization. If he is a
+    // single-class Warrior, may learn others as he gains new Weapon
+    // Proficiencies through experience."
+    const isSingleWarrior = charType === 'single' && cats.length === 1 && cats[0] === 'warrior';
+    if (taken.length > 1 && !isSingleWarrior) {
+      out.push('Only a single-class Warrior may hold more than one Style ' +
+               'Specialization (PHBR1 p.62).');
+    }
+  }
+
+  // NOT SILENTLY INERT. Weapon and Shield's main grant is an extra attack usable
+  // only for Shield-Punch and Parry, and neither maneuver exists in this tool
+  // yet, so a player who spent the slot would otherwise see nothing happen at
+  // all and reasonably conclude the app is broken.
+  if (styles.weaponShield > 0) {
+    out.push('Weapon and Shield grants an extra attack usable ONLY for ' +
+             'Shield-Punch and Parry (PHBR1 p.63) \u2014 neither maneuver is built ' +
+             'yet, so nothing is applied for it.');
+  }
+
+  return out;
+}
+
 // PHBR1 pp.61-64. THE ONE READER of the four style fields, so the slot counter
 // and the Armor Class term can never disagree about what the character bought --
 // two expressions of one rule is how the AC variants drifted in the first place.
@@ -5991,6 +6075,16 @@ function renderProficiencySlots(root) {
     stylesBox.style.display =
       (typeof isSupplementActive === 'function' && isSupplementActive('phbr1', 'core'))
         ? '' : 'none';
+    const noteEl = stylesBox.querySelector('.fighting-styles-note');
+    if (noteEl) {
+      const adv = (typeof getFightingStyleAdvisories === 'function')
+        ? getFightingStyleAdvisories(root) : [];
+      // ADVISORY, NEVER BLOCKING. The dropdowns stay fully selectable and the
+      // arithmetic keeps running -- PHBR1 p.37 tells DMs to modify these rules
+      // for their own campaigns, so a warning is the most the sheet may do.
+      noteEl.textContent = adv.length ? adv.join('  \u00B7  ') : '';
+      noteEl.style.color = adv.length ? 'var(--warning)' : '';
+    }
   }
 
   const wpTextEl  = root.querySelector('.wp-slot-text');
