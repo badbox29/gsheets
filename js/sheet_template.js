@@ -1837,6 +1837,13 @@ const SHEET_HTML = `
           <div class="row" style="margin-top:8px">
             <div class="col"><label>Hair</label><input data-field="hair" type="text"></div>
             <div class="col"><label>Eyes</label><input data-field="eyes" type="text"></div>
+            <div class="col">
+              <label>Handedness</label>
+              <select data-field="handedness" title="A physical characteristic, recorded here whatever rules your table uses.&#10;&#10;PHBR1 p.57 attaches a rule to it: a character forced to fight with his off hand -- good arm chained, injured, or holding something -- takes -2 to hit with ALL attacks that round. Ambidexterity, on the Skills tab, cancels it.&#10;&#10;The book's default is right-handed if the player does not choose.">
+                <option value="right">Right-handed</option>
+                <option value="left">Left-handed</option>
+              </select>
+            </div>
           </div>
           <label style="margin-top:8px">Appearance Notes</label>
           <textarea data-field="appearance_notes"></textarea>
