@@ -4786,6 +4786,68 @@ function makeWeaponNode(data={}, onChange){
     else          f.dataset.autoVal = v;
   };
 
+  // PHBR1 pp.62-63, 93. Ten weapons carry a second damage line for two-handed
+  // use, and the bastard sword a second speed factor as well. ONE resolver,
+  // called by both the Type listener and the Grip listener, so the two can never
+  // disagree about which line is current -- two expressions of one rule is
+  // exactly how the AC variants drifted.
+  //
+  // Falls back to the one-handed column whenever the two-handed one is empty,
+  // which covers every weapon that does not care about grip, and the wakizashi,
+  // which may be held either way for identical damage.
+  const gripStats = (stats) => {
+    const two  = ((el.querySelector('.weapon-grip') || {}).value || '') === '2h';
+    const pick = (one, second) => (two && second) ? second : one;
+    return {
+      speed: pick(stats['Speed Factor'], stats['Speed Factor 2H']),
+      sm:    pick(stats['Damage (S-M)'], stats['Damage (S-M) 2H']),
+      l:     pick(stats['Damage (L)'],   stats['Damage (L) 2H'])
+    };
+  };
+
+  // A DELIBERATE, NARROW EXCEPTION to the rule above fillAuto that a saved
+  // character's weapons are never rewritten. That rule exists because changing
+  // Type cascades across eight fields and could silently trash a custom weapon.
+  // Grip is different: it is an explicit action on ONE weapon, and it may only
+  // ever swap between the two values the BOOK prints for that weapon.
+  //
+  // So provenance is established by CONTENT rather than by dataset.autoVal:
+  // if the field holds exactly the one-handed or exactly the two-handed figure,
+  // it came from the book and is safe to swap. Anything else -- a house value, a
+  // hand-typed die -- is the player's and is left alone. Without this, grip would
+  // be a silent no-op on every character loaded from storage, because a saved
+  // weapon carries no autoVal at all.
+  const fillGrip = (selector, oneVal, twoVal, want) => {
+    const f = el.querySelector(selector);
+    if (!f) return;
+    const cur  = String(f.value).trim();
+    const book = [oneVal, twoVal]
+      .filter(v => v !== undefined && v !== null && String(v).trim() !== '')
+      .map(v => String(v).trim());
+    const ours = cur === '' ||
+                 (f.dataset.autoVal !== undefined && cur === f.dataset.autoVal) ||
+                 book.indexOf(cur) !== -1;
+    if (!ours) return;                            // player owns it -- leave alone
+    const v = (want === undefined || want === null) ? '' : String(want);
+    f.value = v;
+    if (v === '') delete f.dataset.autoVal;
+    else          f.dataset.autoVal = v;
+  };
+
+  const gripSel = el.querySelector('.weapon-grip');
+  if (gripSel && typeSel) {
+    gripSel.addEventListener('change', () => {
+      const stats = (typeof getWeaponTypeStats === 'function')
+        ? getWeaponTypeStats(typeSel.value) : null;
+      if (!stats) return;
+      const gs = gripStats(stats);
+      fillGrip('.speed',     stats['Speed Factor'], stats['Speed Factor 2H'], gs.speed);
+      fillGrip('.damage-sm', stats['Damage (S-M)'], stats['Damage (S-M) 2H'], gs.sm);
+      fillGrip('.damage-l',  stats['Damage (L)'],   stats['Damage (L) 2H'],   gs.l);
+      if (typeof onChange === 'function') onChange();
+    });
+  }
+
   if (typeSel) {
     typeSel.addEventListener('change', () => {
       const key = typeSel.value;
@@ -4800,9 +4862,10 @@ function makeWeaponNode(data={}, onChange){
         // so it is never duplicated and cannot drift from the book.
         const stats = (typeof getWeaponTypeStats === 'function') ? getWeaponTypeStats(key) : null;
         if (stats) {
-          fillAuto('.speed',       stats['Speed Factor']);
-          fillAuto('.damage-sm',   stats['Damage (S-M)']);
-          fillAuto('.damage-l',    stats['Damage (L)']);
+          const gs = gripStats(stats);
+          fillAuto('.speed',       gs.speed);
+          fillAuto('.damage-sm',   gs.sm);
+          fillAuto('.damage-l',    gs.l);
           fillAuto('.weapon-size', stats['Size']);
           // core_wp.json stores Table 45 ranges as three fields, not one string.
           // Compose them into the "S/M/L" form the Range field expects. A melee
