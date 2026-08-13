@@ -4131,6 +4131,24 @@ function weaponSizeOptions(sel) {
   ).join('');
 }
 
+// PHBR1 pp.62-63 and 93. Stored on the WEAPON, not the character: a fighter can
+// carry a spear he uses two-handed and a katana he uses in one, and the grip
+// belongs to each weapon independently. Same reasoning as `offhand`.
+//
+// Blank is AUTO, not "one-handed", so that a weapon which does not care about
+// grip stays untouched. core_wp.json was normalised in the same pass so that the
+// main Damage columns always hold the ONE-HANDED line -- before that, Harpoon,
+// Javelin and Bastard Sword held their two-handed figures, and the bastard sword
+// record was internally mixed, carrying a one-handed speed factor beside
+// two-handed damage.
+function weaponGripOptions(sel) {
+  const vals = [['', 'Auto'], ['1h', 'One-handed'], ['2h', 'Two-handed']];
+  return vals.map(v =>
+    '<option value="' + v[0] + '"' + (String(sel || '') === v[0] ? ' selected' : '') + '>' +
+    v[1] + '</option>'
+  ).join('');
+}
+
 // Fill a weapon Group filter dropdown from WEAPON_GROUP_ORDER.
 //
 // Both browsers' option lists were written by hand and had drifted badly: the
@@ -4295,6 +4313,7 @@ function makeWeaponNode(data={}, onChange){
       '<div style="width:100px;text-align:center;">Damage Type</div>' +
       '<div style="width:100px;text-align:center;">Attacks/Rd</div>' +
       '<div style="width:90px;text-align:center;">Size</div>' +
+      '<div style="width:110px;text-align:center;">Grip</div>' +
     '</div>' +
     '<div style="display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;margin-bottom:6px;">' +
       '<input class="speed" type="number" placeholder="" value="'+escapeHtml(data.speed||'')+'" style="width:60px;text-align:center;">' +
@@ -4316,6 +4335,16 @@ function makeWeaponNode(data={}, onChange){
         'Blank looks it up from the weapon list by name.&#10;' +
         'Set it for a custom weapon, or one whose name does not match the book.">' +
         weaponSizeOptions(data.size) +
+      '</select>' +
+      '<select class="weapon-grip" style="width:110px;" title="' +
+        'How this weapon is held (PHBR1 pp.62-63, 93).&#10;' +
+        'Only ten weapons care: harpoon, javelin, spear, long spear, trident,&#10;' +
+        '  stone javelin, stone spear, katana, bastard sword, wakizashi.&#10;' +
+        'They do DIFFERENT DAMAGE in one hand and in two, and the bastard&#10;' +
+        '  sword also changes speed factor -- 6 in one hand, 8 in two.&#10;' +
+        'Auto uses the one-handed line, which is how the records are stored.&#10;' +
+        'Harmless on every other weapon.">' +
+        weaponGripOptions(data.grip) +
       '</select>' +
     '</div>' +
     // Magic, Hit Adj and Dmg Adj were spread across two separate rows. Grouped
@@ -5696,6 +5725,11 @@ function collectSheet(root){
       dmgAdj: (n.querySelector('.weapon-dmg-adj') && n.querySelector('.weapon-dmg-adj').value) || '',
       attacks: (n.querySelector('.weapon-attacks') && n.querySelector('.weapon-attacks').value) || '',
       size: (n.querySelector('.weapon-size') && n.querySelector('.weapon-size').value) || '',
+      // PHBR1 pp.62-63, 93. Ten weapons have DIFFERENT damage in one hand and
+      // two, and the bastard sword also has a different speed factor. Blank
+      // means "as the record stands", which is the ONE-HANDED line -- core_wp
+      // was normalised so the main Damage columns are consistently one-handed.
+      grip: (n.querySelector('.weapon-grip') && n.querySelector('.weapon-grip').value) || '',
       // PHB Ch.9 two-weapon fighting. Stored ON THE WEAPON rather than as one
       // character-level "off-hand weapon" pointer, so renaming or reordering
       // the list cannot orphan it.
