@@ -4687,7 +4687,18 @@ function getWeaponSizeAndWeight(rowEl) {
 // than accusing the player of an illegal choice.
 const OFFHAND_SIZE_RANK = { S: 1, M: 2, L: 3 };
 
-function isLegalOffhandWeapon(main, off) {
+// equalLengthOk relaxes the test from STRICTLY smaller to smaller-or-equal, on
+// both size and weight. PHBR1 p.64, Two-Weapon Style Specialization: "you're
+// allowed to use weapons of the same length in each hand, so you can, for
+// example, wield two long swords."
+//
+// EQUAL, not larger. The relaxation turns < into <=; it does not permit an
+// off-hand weapon heavier or bigger than the main one, and two long swords --
+// same size M, same 4 lb -- are the book's own worked example of what it buys.
+//
+// Passed in rather than read from the sheet so this function stays pure; the
+// caller already has the style state from getTwoWeaponPenalties.
+function isLegalOffhandWeapon(main, off, equalLengthOk) {
   if (!main || !off) return { legal: null, reason: '' };
 
   if (/\bdagger\b/i.test(off.name)) {
@@ -4699,18 +4710,33 @@ function isLegalOffhandWeapon(main, off) {
     return { legal: null, reason: '' };
   }
 
-  const smaller = oR < mR;
-  const lighter = off.weight < main.weight;
-  if (smaller && lighter) return { legal: true, reason: '' };
+  const smaller = equalLengthOk ? (oR <= mR)            : (oR < mR);
+  const lighter = equalLengthOk ? (off.weight <= main.weight) : (off.weight < main.weight);
+  if (smaller && lighter) {
+    return {
+      legal: true,
+      reason: equalLengthOk && (oR === mR || off.weight === main.weight)
+        ? 'Legal because of Two-Weapon Style Specialization, which permits ' +
+          'weapons of equal length in each hand (PHBR1 p.64). Without it, PHB ' +
+          'Ch.9 would require the off-hand weapon to be strictly smaller and lighter.'
+        : ''
+    };
+  }
 
+  const cmp = equalLengthOk ? 'larger in size' : 'not smaller in size';
+  const wgt = equalLengthOk ? 'heavier'        : 'not lighter';
   const fails = [];
-  if (!smaller) fails.push('not smaller in size (' + off.size + ' vs ' + main.size + ')');
-  if (!lighter) fails.push('not lighter (' + off.weight + ' vs ' + main.weight + ' lb)');
+  if (!smaller) fails.push(cmp + ' (' + off.size + ' vs ' + main.size + ')');
+  if (!lighter) fails.push(wgt + ' (' + off.weight + ' vs ' + main.weight + ' lb)');
   return {
     legal: false,
     reason: (off.name || 'The off-hand weapon') + ' is ' + fails.join(' and ') +
-            ' than ' + (main.name || 'the main weapon') + '. PHB Ch.9 requires the ' +
-            'off-hand weapon to be smaller in size AND weight, unless it is a dagger.'
+            ' than ' + (main.name || 'the main weapon') + '. ' +
+            (equalLengthOk
+              ? 'Two-Weapon Style Specialization permits weapons of EQUAL length ' +
+                '(PHBR1 p.64), but not a heavier or larger one in the off hand.'
+              : 'PHB Ch.9 requires the off-hand weapon to be smaller in size AND ' +
+                'weight, unless it is a dagger.')
   };
 }
 
