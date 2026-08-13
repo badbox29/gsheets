@@ -6038,7 +6038,7 @@ function getFightingStyleAdvisories(root) {
 // should not be able to buy a third.
 function getFightingStyles(root) {
   const off = { singleWeapon: 0, twoHander: 0, weaponShield: 0, twoWeapon: 0,
-                total: 0, active: false };
+                ambidextrous: 0, total: 0, active: false };
   if (typeof isSupplementActive !== 'function') return off;
   if (!isSupplementActive('phbr1', 'core')) return off;
 
@@ -6052,9 +6052,13 @@ function getFightingStyles(root) {
     twoHander:    Math.min(1, n('style_two_hander')),
     weaponShield: Math.min(2, n('style_weapon_shield')),
     twoWeapon:    Math.min(1, n('style_two_weapon')),
+    // PHBR1 p.60. Not a style, but it costs one weapon proficiency slot from the
+    // same budget, so it belongs in the total the counter charges for.
+    ambidextrous: Math.min(1, n('style_ambidextrous')),
     active: true
   };
-  s.total = s.singleWeapon + s.twoHander + s.weaponShield + s.twoWeapon;
+  s.total = s.singleWeapon + s.twoHander + s.weaponShield + s.twoWeapon +
+            s.ambidextrous;
   return s;
 }
 
@@ -6203,6 +6207,7 @@ function renderProficiencySlots(root) {
       if (styles.twoHander)    bits.push(`Two-Hander`);
       if (styles.weaponShield) bits.push(`Weapon and Shield x${styles.weaponShield}`);
       if (styles.twoWeapon)    bits.push(`Two-Weapon`);
+      if (styles.ambidextrous) bits.push(`Ambidexterity`);
       t += `\n  (includes ${styles.total} slot${styles.total === 1 ? '' : 's'} on`;
       t += `\n   fighting styles -- ${bits.join(', ')};`;
       t += `\n   PHBR1 pp.61-64)`;
