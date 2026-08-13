@@ -6079,6 +6079,16 @@ function collectSheet(root){
       wp: val(root,'prof_wp_adj'),
       nwp: val(root,'prof_nwp_adj')
     },
+    // PHBR1 pp.61-64. Slot COUNTS, not booleans: Single-Weapon and Weapon and
+    // Shield can each take a second slot for a further benefit, and the others
+    // cannot. Saved unconditionally, whether or not PHBR1 is switched on --
+    // disabling the book suspends the EFFECT, never the purchase.
+    fightingStyles: {
+      singleWeapon: val(root,'style_single_weapon'),
+      twoHander:    val(root,'style_two_hander'),
+      weaponShield: val(root,'style_weapon_shield'),
+      twoWeapon:    val(root,'style_two_weapon')
+    },
     selectedSpheres: selectedSpheres,
     selectedSchools: selectedSchools,
 	languages: languages,
@@ -6473,6 +6483,14 @@ function loadSheet(root, data){
   const profAdj = data.profSlotAdj || {};
   val(root, 'prof_wp_adj',  profAdj.wp  || 0);
   val(root, 'prof_nwp_adj', profAdj.nwp || 0);
+
+  // Characters saved before PHBR1 existed have no fightingStyles key at all, so
+  // every style reads 0 and the block is inert. Nothing to migrate.
+  const styles = data.fightingStyles || {};
+  val(root, 'style_single_weapon', styles.singleWeapon || 0);
+  val(root, 'style_two_hander',    styles.twoHander    || 0);
+  val(root, 'style_weapon_shield', styles.weaponShield || 0);
+  val(root, 'style_two_weapon',    styles.twoWeapon    || 0);
 
   root._weaponProfs = data.weaponProfs || [];
   
