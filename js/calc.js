@@ -3211,7 +3211,12 @@ function renderArmorClass(root) {
       // punching. Worth saying out loud when the numbers are close.
       t += `\n\nIncludes Single-Weapon Style x${swStyle.slotsIfNoShield} `
          + `${magicSign(styleAdjNoShield)},\nwhich the shield is currently suppressing.`;
-      const net = shieldBonus + styleGain;
+      // The ACTUAL delta between this field and Normal AC, derived the same way
+      // the value above is: noShieldAC = finalAC - shieldBonus + styleGain, so
+      // the change is styleGain MINUS shieldBonus. Removing a -1 shield makes AC
+      // one WORSE, so its sign flips; adding it here reported a -1 shield and a
+      // -2 style as "3 better" when the field itself had correctly moved by 1.
+      const net = styleGain - shieldBonus;
       if (net === 0) {
         t += `\nDropping the shield is AC-neutral, and frees\nyour hand for Parry, grappling and punching.`;
       } else if (net > 0) {
