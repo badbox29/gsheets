@@ -6095,6 +6095,11 @@ function collectSheet(root){
       twoWeapon:    val(root,'style_two_weapon'),
       ambidextrous: val(root,'style_ambidextrous')
     },
+    // PHBR1 p.57. "When a character is first created, the player should specify
+    // his handedness (right or left). If he does not specify one, the DM should
+    // assume the character is right-handed." Stored with the styles because the
+    // rule is PHBR1's, though the trait itself is nobody's supplement.
+    handedness: val(root,'handedness'),
     selectedSpheres: selectedSpheres,
     selectedSchools: selectedSchools,
 	languages: languages,
@@ -6498,6 +6503,9 @@ function loadSheet(root, data){
   val(root, 'style_weapon_shield', styles.weaponShield || 0);
   val(root, 'style_two_weapon',    styles.twoWeapon    || 0);
   val(root, 'style_ambidextrous',  styles.ambidextrous || 0);
+  // Right by the book's own default, which also means every character saved
+  // before this field existed loads as right-handed rather than blank.
+  val(root, 'handedness', data.handedness || 'right');
 
   root._weaponProfs = data.weaponProfs || [];
   
