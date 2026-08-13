@@ -6010,6 +6010,22 @@ function getFightingStyleAdvisories(root) {
     }
   }
 
+  // PHBR1 p.57. The -2 for fighting with the wrong hand is SITUATIONAL -- the
+  // book's example is a character whose good hand is chained to a wall -- so it
+  // is stated here rather than applied to any number. It becomes computable only
+  // when hit locations exist and a Numbed or Useless arm forces the swap.
+  //
+  // This is also the ONLY thing ambidexterity does outside two-weapon fighting,
+  // so a player who spent the slot should be told what he bought.
+  const hand = ((typeof val === 'function' ? val(root, 'handedness') : '') || 'right');
+  if (styles.ambidextrous) {
+    out.push('Ambidextrous: no -2 for fighting with either hand, and equally adept ' +
+             'at noncombat tasks with both (PHBR1 p.61). This grants no extra attack.');
+  } else {
+    out.push(`${hand === 'left' ? 'Left' : 'Right'}-handed: -2 to hit with ALL attacks ` +
+             `on any round you are forced to fight with the other hand (PHBR1 p.57).`);
+  }
+
   // NOT SILENTLY INERT. Weapon and Shield's main grant is an extra attack usable
   // only for Shield-Punch and Parry, and neither maneuver exists in this tool
   // yet, so a player who spent the slot would otherwise see nothing happen at
