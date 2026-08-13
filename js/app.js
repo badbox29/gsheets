@@ -8143,7 +8143,14 @@ function bindSheet(root, tab){
   root.addEventListener('change', (e) => {
     const f = (e.target && e.target.getAttribute) ? e.target.getAttribute('data-field') : null;
     if (f && fightingStyleFields.test(f)) {
-      if (typeof renderProficiencySlots === 'function') renderProficiencySlots(root);
+      // recalculateAll, NOT a hand-picked list of renderers. A style touches the
+      // slot counter, Armor Class, the AC tooltip, the breakdown the Combat
+      // Quick Reference reads, and print -- and those have ORDER constraints
+      // between them (renderCombatQuickReference has to stay last). Naming three
+      // of them here would work today and rot the moment a fourth is added,
+      // which is exactly how this bug appeared: the listener repainted the slot
+      // counter and nothing else, so AC was only correct after a save and reload.
+      if (typeof recalculateAll === 'function') recalculateAll(root);
     }
   });
 
