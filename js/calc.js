@@ -1094,11 +1094,16 @@ function renderCombatQuickReference(root) {
         // row and only exists in this loop.
         ammo: (typeof getWeaponAmmoBonus === 'function')
           ? getWeaponAmmoBonus(root, el) : null,
+        twoHander: getTwoHanderStyleEffect(root, el),
         effSpeed: getEffectiveWeaponSpeed(
           (el.querySelector('.speed') || {}).value,
           // 0 when unticked -- an untracked enchantment must not keep reducing
           // the speed factor.
-          itemMagicBonus(el, '.magic-bonus')
+          itemMagicBonus(el, '.magic-bonus'),
+          // PHBR1 p.63: two-handed use with the specialization cuts speed factor
+          // by 3. Passed in rather than subtracted afterwards so the floor at 0
+          // is applied ONCE, to the final figure.
+          (getTwoHanderStyleEffect(root, el) || {}).speedReduction || 0
         )
       });
     }
@@ -1179,6 +1184,17 @@ function renderCombatQuickReference(root) {
       // Magical row must report the enchantment's own share, not the total.
       const magicHit = hitBase;
       const magicDmg = dmgBase;
+
+      // PHBR1 p.63. "If you specialize in Two-Hander Style and then use a
+      // one-handed weapon in two hands, you also get a bonus of +1 to damage."
+      //
+      // ONE-HANDED weapons only. A two-handed sword is always in two hands and
+      // gains nothing here -- it takes the speed factor cut instead. So this
+      // needs the grip DECLARED as 2h on a weapon that could have been held in
+      // one, which is what Grip 'flexible' and 'either' mean. Not magical, and
+      // folded in before the Magical row is reported, same as specialization.
+      const th = weapon.twoHander || null;
+      if (th && th.damageBonus) dmgBase += th.damageBonus;
 
       // Weapon specialization (PHB Ch.5). Melee specialists gain +1 to hit and
       // +2 damage ON TOP of Strength and magic. Bow and crossbow specialists
@@ -2836,6 +2852,54 @@ function renderKitAbilities(root) {
     }, () => markUnsaved(document.querySelector('.tab.active'), true, root));
     kitAbilitiesList.appendChild(node);
   });
+}
+
+// PHBR1 pp.62-63. Two-Hander Style Specialization, which grants TWO different
+// things to two different sets of weapons:
+//
+//   SPEED FACTOR -3, whenever the weapon is used two-handed at all. The book's
+//   worked example is the bastard sword: speed 6 in one hand, 8 in two, and 5
+//   in two for a specialist -- "a very quick weapon in his hands".
+//
+//   +1 DAMAGE, but ONLY for a one-handed weapon held in two. A two-handed sword
+//   is always in two hands and gains nothing; it takes the speed cut instead.
+//
+// Two-handedness is established from the row's DECLARED grip or from the
+// weapon's INHERENT grip in core_wp.json -- a two-handed sword is two-handed
+// whether or not the player touched the dropdown.
+//
+// The unclassified weapons (Grip empty -- the Unattributed ones, plus the broad
+// sword, which PHBR1 p.93 simply omits) are treated permissively: a declared 2h
+// grants both. Guessing wrong there costs +1 damage on a weapon nobody has a
+// source for, which is preferable to silently refusing a player's explicit
+// declaration.
+function getTwoHanderStyleEffect(root, el) {
+  const none = { active: false, twoHanded: false, speedReduction: 0, damageBonus: 0 };
+  const styles = (typeof getFightingStyles === 'function')
+    ? getFightingStyles(root) : null;
+  if (!styles || !styles.active || !styles.twoHander) return none;
+  if (!el) return none;
+
+  const declared = ((el.querySelector('.weapon-grip') || {}).value || '');
+  const wtypeEl  = el.querySelector('.weapon-wtype');
+  const stats    = (wtypeEl && wtypeEl.value && typeof getWeaponTypeStats === 'function')
+    ? getWeaponTypeStats(wtypeEl.value) : null;
+  const inherent = stats ? (stats['Grip'] || '') : '';
+
+  const twoHanded = (declared === '2h') || (inherent === 'two-handed');
+  if (!twoHanded) return none;
+
+  // Could this weapon have been held in ONE hand? Only then is it "a one-handed
+  // weapon used in two". Unset counts as yes, per the note above.
+  const couldBeOneHanded =
+    inherent === 'flexible' || inherent === 'either' || inherent === '';
+
+  return {
+    active: true,
+    twoHanded: true,
+    speedReduction: 3,
+    damageBonus: (declared === '2h' && couldBeOneHanded) ? 1 : 0
+  };
 }
 
 // PHBR1 p.62. Single-Weapon Style Specialization: -1 AC for one proficiency
