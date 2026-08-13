@@ -3187,9 +3187,40 @@ function renderArmorClass(root) {
   if (acNoShieldEl) {
     // No Shield AC. No longer "same as rear" -- a rear attack costs the
     // Dexterity bonus too, and this does not.
-    const noShieldAC = finalAC - shieldBonus;
+    //
+    // THE ONE VARIANT THAT ADDS A TERM RATHER THAN ONLY REMOVING ONE. Every
+    // other derives by backing something out of finalAC, which was safe while
+    // removing a term could only ever make things worse. PHBR1 p.62 breaks
+    // that: Single-Weapon Style Specialization pays out only when nothing is
+    // carried in the off hand, so putting the shield away is precisely the
+    // condition that ENABLES it. Backing out the shield alone would understate
+    // this number for exactly the character it matters most to.
+    //
+    // slotsIfNoShield comes from the SAME resolver as styleAdj, so the two
+    // cannot drift -- see the note above finalAC.
+    const styleAdjNoShield = -swStyle.slotsIfNoShield;
+    const styleGain        = styleAdjNoShield - styleAdj;
+    const noShieldAC       = finalAC - shieldBonus + styleGain;
     acNoShieldEl.value = noShieldAC;
-    acNoShieldEl.title = "Without shield\nAll other bonuses apply";
+
+    let t = "Without shield\nAll other bonuses apply";
+    if (styleGain !== 0) {
+      // The trade the rules actually present, stated rather than left for the
+      // player to work out: a shield is worth its AC, and an empty hand is
+      // worth the style bonus plus a free hand for Parry, grappling and
+      // punching. Worth saying out loud when the numbers are close.
+      t += `\n\nIncludes Single-Weapon Style x${swStyle.slotsIfNoShield} `
+         + `${magicSign(styleAdjNoShield)},\nwhich the shield is currently suppressing.`;
+      const net = shieldBonus + styleGain;
+      if (net === 0) {
+        t += `\nDropping the shield is AC-neutral, and frees\nyour hand for Parry, grappling and punching.`;
+      } else if (net > 0) {
+        t += `\nDropping the shield is a net ${net} WORSE on AC.`;
+      } else {
+        t += `\nDropping the shield is a net ${Math.abs(net)} BETTER on AC.`;
+      }
+    }
+    acNoShieldEl.title = t;
   }
   
   if (acUnarmoredEl) {
