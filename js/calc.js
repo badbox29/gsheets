@@ -5731,6 +5731,41 @@ function addWeaponProficiency(root, weapon) {
   if (tab) markUnsaved(tab, true, root);
 }
 
+// PHBR1 pp.61-64. THE ONE READER of the four style fields, so the slot counter
+// and the Armor Class term can never disagree about what the character bought --
+// two expressions of one rule is how the AC variants drifted in the first place.
+//
+// Returns zeros when PHBR1 is switched off, and that is the entire gate: with
+// the book off a style costs nothing and grants nothing, while the values the
+// player entered sit untouched on the sheet and come back the moment it is
+// switched on again. Suspended, never refunded, never deleted -- the same
+// treatment the Fallen Paladin spec gives a spellbook.
+//
+// Clamped to the printed maxima rather than trusted: Single-Weapon and Weapon
+// and Shield cap at two slots, the other two at one, and a hand-edited save
+// should not be able to buy a third.
+function getFightingStyles(root) {
+  const off = { singleWeapon: 0, twoHander: 0, weaponShield: 0, twoWeapon: 0,
+                total: 0, active: false };
+  if (typeof isSupplementActive !== 'function') return off;
+  if (!isSupplementActive('phbr1', 'core')) return off;
+
+  const n = f => {
+    const el = root.querySelector('[data-field="' + f + '"]');
+    const v  = el ? parseInt(el.value, 10) : 0;
+    return isNaN(v) ? 0 : Math.max(0, v);
+  };
+  const s = {
+    singleWeapon: Math.min(2, n('style_single_weapon')),
+    twoHander:    Math.min(1, n('style_two_hander')),
+    weaponShield: Math.min(2, n('style_weapon_shield')),
+    twoWeapon:    Math.min(1, n('style_two_weapon')),
+    active: true
+  };
+  s.total = s.singleWeapon + s.twoHander + s.weaponShield + s.twoWeapon;
+  return s;
+}
+
 // Render the weapon + nonweapon proficiency slot counters (PHB Table 34).
 function renderProficiencySlots(root) {
   // FIRST statement deliberately. This function has two early returns below --
@@ -5739,6 +5774,16 @@ function renderProficiencySlots(root) {
   // class. Threading the call through both branches would be fragile, so it
   // leads instead. Same reason renderWisGateNote leads renderSpellSlots.
   if (typeof renderProficiencyAbilities === 'function') renderProficiencyAbilities(root);
+
+  // PHBR1 pp.61-64. Shown only when the book is on; the four fields keep their
+  // values either way, so switching the book off and on again returns the
+  // character to exactly where he was.
+  const stylesBox = root.querySelector('.fighting-styles');
+  if (stylesBox) {
+    stylesBox.style.display =
+      (typeof isSupplementActive === 'function' && isSupplementActive('phbr1', 'core'))
+        ? '' : 'none';
+  }
 
   const wpTextEl  = root.querySelector('.wp-slot-text');
   const nwpTextEl = root.querySelector('.nwp-slot-text');
@@ -5771,6 +5816,12 @@ function renderProficiencySlots(root) {
       specCount++;
     }
   });
+
+  // PHBR1 pp.61-64. Style specializations are bought from THIS budget, one slot
+  // each, and Single-Weapon and Weapon and Shield may each take a second. Zero
+  // when the book is off, so a PHB-only table sees the number it always saw.
+  const styles = getFightingStyles(root);
+  wpSpent += styles.total;
 
   // --- Nonweapon slots spent ---
   // Base cost from core_nwp.json (some cost 2), PLUS the PHB Table 38 crossover
@@ -5805,7 +5856,15 @@ function renderProficiencySlots(root) {
   const overColor = 'var(--error, #ff6b6b)';
   const okColor   = 'var(--accent-light)';
 
-  wpTextEl.textContent = `${wpSpent} / ${budget.wpTotal} used`;
+  // Same reasoning as the language note below: style slots are spend that is not
+  // visible in the proficiency list, so "5 / 4 used" over a four-item list would
+  // read as a contradiction resolvable only by hovering -- and on a phone there
+  // is no hover at all.
+  let wpLabel = `${wpSpent} / ${budget.wpTotal} used`;
+  if (styles.total > 0) {
+    wpLabel += ` \u00B7 ${styles.total} on style${styles.total === 1 ? '' : 's'}`;
+  }
+  wpTextEl.textContent = wpLabel;
   wpTextEl.style.color = wpOver ? overColor : okColor;
 
   let nwpLabel = `${nwpSpent} / ${budget.nwpTotal} used`;
@@ -5835,6 +5894,16 @@ function renderProficiencySlots(root) {
     }
     if (!canSpecialize(root)) {
       t += `\n\nSpecialization is available to single-class\nfighters only (PHB).`;
+    }
+    if (styles.total > 0) {
+      const bits = [];
+      if (styles.singleWeapon) bits.push(`Single-Weapon x${styles.singleWeapon}`);
+      if (styles.twoHander)    bits.push(`Two-Hander`);
+      if (styles.weaponShield) bits.push(`Weapon and Shield x${styles.weaponShield}`);
+      if (styles.twoWeapon)    bits.push(`Two-Weapon`);
+      t += `\n  (includes ${styles.total} slot${styles.total === 1 ? '' : 's'} on`;
+      t += `\n   fighting styles -- ${bits.join(', ')};`;
+      t += `\n   PHBR1 pp.61-64)`;
     }
     if (wpOver) t += `\n\nOVER BUDGET by ${wpSpent - budget.wpTotal}`;
     wpBoxEl.title = t;
