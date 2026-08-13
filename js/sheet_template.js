@@ -773,6 +773,17 @@ const SHEET_HTML = `
                   <option value="1">1 slot</option>
                 </select>
               </label>
+              <!-- Not a fighting style, but bought from the same slot budget and
+                   only meaningful alongside them (PHBR1 pp.60-61, 64). A select
+                   rather than a checkbox so it collects through the same val()
+                   path as its neighbours. -->
+              <label style="display:flex;flex-direction:column;gap:2px;width:150px;">
+                <span style="font-size:11px;color:var(--muted);">Ambidexterity</span>
+                <select data-field="style_ambidextrous">
+                  <option value="0">Right- or left-handed</option>
+                  <option value="1">Ambidextrous (1 slot)</option>
+                </select>
+              </label>
             </div>
           </div>
         </section>
