@@ -2888,8 +2888,12 @@ function getSingleWeaponStyleState(root, shieldBonus) {
     const el   = melee[0];
     const name = ((el.querySelector('.title') || {}).value || 'that weapon').trim();
     const declared = ((el.querySelector('.weapon-grip') || {}).value || '');
-    const stats = (typeof getWeaponTypeStats === 'function' && typeof weaponTypeKeyOf === 'function')
-      ? getWeaponTypeStats(weaponTypeKeyOf(el)) : null;
+    // The row's stored TYPE KEY is the source of truth for what this weapon is
+    // -- the anchor rule, same as resolveWeaponProficiency. The class is
+    // .weapon-wtype, not .weapon-type: that one holds the Category.
+    const wtypeEl  = el.querySelector('.weapon-wtype');
+    const stats    = (wtypeEl && wtypeEl.value && typeof getWeaponTypeStats === 'function')
+      ? getWeaponTypeStats(wtypeEl.value) : null;
     const inherent = stats ? (stats['Grip'] || '') : '';
 
     if (declared === '2h' || inherent === 'two-handed') {
