@@ -4628,8 +4628,18 @@ function getTwoWeaponPenalties(root) {
     };
   }
 
+  // PHBR1 p.64: "(If you're already ambidextrous, as per 'Off-Hand Weapons Use'
+  // above, that penalty is 0 with primary weapon and 0 with secondary weapon.)"
+  //
+  // THE PARENTHETICAL MODIFIES THE SPECIALIZED CASE ONLY. Ambidexterity on its
+  // own does NOT improve the PHB's -2/-4 -- it cancels the -2 for fighting with
+  // the WRONG hand (p.57), which is a different penalty entirely and one this
+  // tool does not yet track, since there is no handedness field.
+  const ambi = !!(styles && styles.active && styles.ambidextrous);
   const mainBase = twoWeaponSpec ? TWO_WEAPON_SPEC_MAIN_PENALTY : TWO_WEAPON_MAIN_PENALTY;
-  const offBase  = twoWeaponSpec ? TWO_WEAPON_SPEC_OFF_PENALTY  : TWO_WEAPON_OFF_PENALTY;
+  const offBase  = (twoWeaponSpec && ambi) ? 0
+                 : twoWeaponSpec           ? TWO_WEAPON_SPEC_OFF_PENALTY
+                 :                           TWO_WEAPON_OFF_PENALTY;
 
   const cap = p => Math.min(0, p + reactionAdj);
   return {
@@ -4645,7 +4655,10 @@ function getTwoWeaponPenalties(root) {
       : '') +
       (twoWeaponSpec
         ? (isRanger ? ' ' : '') +
-          'Two-Weapon Style Specialization: 0/-2 instead of -2/-4 (PHBR1 p.64).'
+          (ambi
+            ? 'Two-Weapon Style Specialization with Ambidexterity: 0/0 instead of ' +
+              '-2/-4 (PHBR1 p.64).'
+            : 'Two-Weapon Style Specialization: 0/-2 instead of -2/-4 (PHBR1 p.64).')
         : '')
   };
 }
