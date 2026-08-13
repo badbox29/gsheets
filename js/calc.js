@@ -2835,6 +2835,82 @@ function renderKitAbilities(root) {
   });
 }
 
+// PHBR1 p.62. Single-Weapon Style Specialization: -1 AC for one proficiency
+// slot, -2 for two, capped there.
+//
+// The bonus is NOT a property of the character -- it is a property of how he is
+// standing right now: "the character wields a one-handed weapon in one hand and
+// nothing in the other." So every condition is tested against live equipment,
+// and the FIRST failure is reported, because the first one is the one the player
+// can act on.
+//
+// Conditions, in the order the book states them:
+//   - a shield is equipped              -> something is in the other hand
+//   - an off-hand weapon is declared    -> likewise
+//   - no melee weapon equipped          -> nothing to get the bonus with
+//   - that weapon is held two-handed    -> either declared, or inherently so
+//   - not PROFICIENT with it            -> p.62 requires proficiency, and
+//     "related" is not proficient, so a related weapon does not qualify
+//
+// Returns { slots, applies, blockedBy, slotsIfNoShield } -- the last so
+// No Shield AC can show what dropping the shield would actually buy.
+function getSingleWeaponStyleState(root, shieldBonus) {
+  const off = { slots: 0, applies: false, blockedBy: '', slotsIfNoShield: 0 };
+  const styles = (typeof getFightingStyles === 'function')
+    ? getFightingStyles(root) : null;
+  if (!styles || !styles.active || !styles.singleWeapon) return off;
+
+  const slots = styles.singleWeapon;
+  const isEquipped = el => {
+    const c = el.querySelector('.equipped');
+    return !!(c && c.checked);
+  };
+  const rows = qsa(root, '.weapons-list .item').filter(isEquipped);
+
+  // Everything EXCEPT the shield, so the caller can answer both "does it apply"
+  // and "would it apply if he put the shield away".
+  let blocked = '';
+  const offhand = rows.some(el => {
+    const c = el.querySelector('.weapon-offhand');
+    return !!(c && c.checked);
+  });
+  const melee = rows.filter(el => {
+    const cat = ((el.querySelector('.weapon-category') || {}).value || '').toLowerCase();
+    return !cat || cat.indexOf('melee') !== -1;
+  });
+
+  if (offhand)        blocked = 'a weapon is declared in your off hand';
+  else if (!melee.length) blocked = 'no melee weapon equipped';
+  else {
+    // The first equipped melee row, matching how getTwoWeaponState picks a main
+    // hand. With several equipped the choice is arbitrary; that ambiguity is
+    // already surfaced by the two-weapon advisory one step earlier.
+    const el   = melee[0];
+    const name = ((el.querySelector('.title') || {}).value || 'that weapon').trim();
+    const declared = ((el.querySelector('.weapon-grip') || {}).value || '');
+    const stats = (typeof getWeaponTypeStats === 'function' && typeof weaponTypeKeyOf === 'function')
+      ? getWeaponTypeStats(weaponTypeKeyOf(el)) : null;
+    const inherent = stats ? (stats['Grip'] || '') : '';
+
+    if (declared === '2h' || inherent === 'two-handed') {
+      blocked = `${name} is being held two-handed`;
+    } else {
+      const st = (typeof resolveWeaponProficiency === 'function')
+        ? resolveWeaponProficiency(root, el) : null;
+      const prof = st && (st.status === 'proficient' || st.status === 'specialized');
+      if (!prof) blocked = `you are not proficient with ${name}`;
+    }
+  }
+
+  const shielded = (shieldBonus || 0) !== 0;
+  return {
+    slots: slots,
+    applies: !blocked && !shielded,
+    blockedBy: blocked || (shielded ? 'a shield is equipped' : ''),
+    slotsIfNoShield: blocked ? 0 : slots
+  };
+}
+
 function renderArmorClass(root) {
   const acField = root.querySelector('[data-field="ac"]');
   if (!acField) return;
@@ -2963,7 +3039,18 @@ function renderArmorClass(root) {
   const manualAdj = parseInt(val(root, "ac_manual") || 0, 10);
   
   // Calculate final AC (remember: lower is better in AD&D)
-  let finalAC = baseAC + shieldBonus + ringBonus + cloakBonus + dexAdj + manualAdj + miscBonus;
+  // PHBR1 p.62. Single-Weapon Style Specialization is the ONLY thing in that
+  // book which alters Armor Class -- Parry, Shield-Punch and the rest are all
+  // attack-roll mechanics. It is a COMPUTATION, not compilation, so it belongs
+  // in this number rather than only in the Quick Reference: print.js renders
+  // finalAC, and the printout is what sits in front of the player in a fight.
+  //
+  // magicSign is not used here: finalAC ADDS every term and lower is better, so
+  // the book's "+1 AC bonus" is stored as -1.
+  const swStyle  = getSingleWeaponStyleState(root, shieldBonus);
+  const styleAdj = swStyle.applies ? -swStyle.slots : 0;
+
+  let finalAC = baseAC + shieldBonus + ringBonus + cloakBonus + dexAdj + manualAdj + miscBonus + styleAdj;
 
   // Structured breakdown for the Combat Quick Reference, built HERE rather than
   // recomputed there -- two copies of AC arithmetic is exactly how the sign and
@@ -2997,6 +3084,20 @@ function renderArmorClass(root) {
   });
   if (dexAdj)    acLines.push({ kind: 'stack', text: `Dexterity ${magicSign(dexAdj)} (included above)` });
   if (manualAdj) acLines.push({ kind: 'stack', text: `Manual adjustment ${magicSign(manualAdj)} (included above)` });
+
+  // PHBR1 p.62. A player who spent TWO proficiency slots on Single-Weapon Style
+  // and sees no change to his AC cannot tell whether the app is broken or he is
+  // holding a shield. Silent omission is the failure the advisory principle
+  // exists to catch -- so the line is shown either way, and says which.
+  if (swStyle.slots > 0) {
+    if (swStyle.applies) {
+      acLines.push({ kind: 'stack',
+        text: `Single-Weapon Style x${swStyle.slots} ${magicSign(styleAdj)} (included above)` });
+    } else {
+      acLines.push({ kind: 'blocked',
+        text: `Single-Weapon Style x${swStyle.slots} \u2014 not applying: ${swStyle.blockedBy}` });
+    }
+  }
   root._acBreakdown = acLines;
   
   // Set the normal AC field
