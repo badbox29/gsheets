@@ -6095,10 +6095,11 @@ function collectSheet(root){
       twoWeapon:    val(root,'style_two_weapon'),
       ambidextrous: val(root,'style_ambidextrous')
     },
-    // PHBR1 p.57. "When a character is first created, the player should specify
-    // his handedness (right or left). If he does not specify one, the DM should
-    // assume the character is right-handed." Stored with the styles because the
-    // rule is PHBR1's, though the trait itself is nobody's supplement.
+    // A physical characteristic, on the Details tab with height and hair, and
+    // UNGATED -- a character is right- or left-handed whatever books the table
+    // uses. Only the RULE attached to it is PHBR1's (p.57): -2 to hit with all
+    // attacks on a round he is forced to use the wrong hand. "If he does not
+    // specify one, the DM should assume the character is right-handed."
     handedness: val(root,'handedness'),
     selectedSpheres: selectedSpheres,
     selectedSchools: selectedSchools,
