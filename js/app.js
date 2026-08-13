@@ -7952,10 +7952,15 @@ function bindSheet(root, tab){
       // Attacks/Round stale at its pre-stance value while the weapon cards
       // below it correctly showed the stance in force. Unconditional now --
       // the function is cheap and re-derives everything it needs.
-      if (typeof renderAttacksPerRound === 'function') {
-        renderAttacksPerRound(root);
-      }
-      renderCombatQuickReference(root);
+      // recalculateAll rather than the hand-picked pair this used to call. PHBR1
+      // p.62 made a WEAPON change able to move ARMOR CLASS: Single-Weapon Style
+      // Specialization pays out only while one hand is empty, so equipping a
+      // weapon, ticking off-hand, or switching a grip to two-handed all suppress
+      // it -- and renderArmorClass was never in this list, so the Core tab kept
+      // the bonus until a save and reload while the quick reference below it
+      // correctly dropped it. The armor list already learned this lesson; see
+      // the comment on armorChanged.
+      if (typeof recalculateAll === 'function') recalculateAll(root);
     });
   }
   
