@@ -731,7 +731,50 @@ const SHEET_HTML = `
               <input data-field="prof_wp_adj" type="number" value="0">
             </span>
           </div>
-          <div class="list weapon-profs-list"></div>
+         <div class="list weapon-profs-list"></div>
+
+          <!-- PHBR1 pp.61-64. Placed HERE, under the weapon slot counter, because
+               style specializations are bought out of THAT budget -- putting them
+               on the Combat tab would separate the cost from the meter that
+               tracks it. Hidden entirely unless the book is switched on. -->
+          <div class="fighting-styles" style="display:none;margin-top:10px;">
+            <div class="stat-strip">
+              <span class="lab">FIGHTING STYLES</span>
+              <span class="prose fighting-styles-note"></span>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:12px;padding:6px 2px;">
+              <label style="display:flex;flex-direction:column;gap:2px;width:150px;">
+                <span style="font-size:11px;color:var(--muted);">Single-Weapon</span>
+                <select data-field="style_single_weapon">
+                  <option value="0">Not specialized</option>
+                  <option value="1">1 slot (-1 AC)</option>
+                  <option value="2">2 slots (-2 AC)</option>
+                </select>
+              </label>
+              <label style="display:flex;flex-direction:column;gap:2px;width:150px;">
+                <span style="font-size:11px;color:var(--muted);">Two-Hander</span>
+                <select data-field="style_two_hander">
+                  <option value="0">Not specialized</option>
+                  <option value="1">1 slot</option>
+                </select>
+              </label>
+              <label style="display:flex;flex-direction:column;gap:2px;width:150px;">
+                <span style="font-size:11px;color:var(--muted);">Weapon and Shield</span>
+                <select data-field="style_weapon_shield">
+                  <option value="0">Not specialized</option>
+                  <option value="1">1 slot</option>
+                  <option value="2">2 slots</option>
+                </select>
+              </label>
+              <label style="display:flex;flex-direction:column;gap:2px;width:150px;">
+                <span style="font-size:11px;color:var(--muted);">Two-Weapon</span>
+                <select data-field="style_two_weapon">
+                  <option value="0">Not specialized</option>
+                  <option value="1">1 slot</option>
+                </select>
+              </label>
+            </div>
+          </div>
         </section>
 		
 		</div>
