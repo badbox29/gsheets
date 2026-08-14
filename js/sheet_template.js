@@ -880,6 +880,13 @@ const SHEET_HTML = `
               <input data-field="prof_nwp_adj" type="number" value="0">
             </span>
           </div>
+          <!-- Kit advisories. A banner rather than an ability card, because a
+               card ASSERTS something the character has while a banner ASKS
+               something of the player, and those are different speech acts that
+               should not share a control. Placed here rather than on the
+               Abilities tab because everything it prompts for is resolved in the
+               list directly below it. Styled to match .armor-restriction-note. -->
+          <div class="kit-advisory-note" style="display:none;margin-bottom:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
           <div class="list nwp-list"></div>
         </section>
         </div>
