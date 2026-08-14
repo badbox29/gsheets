@@ -82,8 +82,11 @@ const SHEET_HTML = `
                  Pirate/Outlaw prints a single entry and then splits four
                  mechanical fields, labelling them "Pirate's" and "Outlaw's"; the
                  Amazon does the same on race. Hidden entirely unless the
-                 selected kit has a `variants` block, so it costs nothing on the
-                 ninety-one kits that do not. -->
+                 selected kit has a variants block, so it costs nothing on the
+                 ninety-one kits that do not.
+                 NOTE: no backticks or ${...} anywhere in this file -- the whole
+                 template is one JS template literal, so either one terminates it
+                 and SHEET_HTML silently becomes undefined. -->
             <div class="col single-class-field kit-variant-col" style="display:none;">
               <label class="kit-variant-label">Variant</label>
               <select data-field="kit_variant"></select>
