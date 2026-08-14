@@ -6813,6 +6813,8 @@ function renderWeaponProficiencies(root) {
     emptyDiv.style.cssText = 'color:var(--muted);font-size:12px;padding:8px;';
     emptyDiv.textContent = 'No weapon proficiencies yet.';
     listDiv.appendChild(emptyDiv);
+    // Same reasoning as the nonweapon list above.
+    if (typeof renderKitAdvisories === 'function') renderKitAdvisories(root);
     return;
   }
   
@@ -7199,6 +7201,12 @@ function renderNWProficiencies(root) {
     emptyDiv.style.cssText = 'color:var(--muted);font-size:12px;padding:8px;';
     emptyDiv.textContent = 'No non-weapon proficiencies yet.';
     listDiv.appendChild(emptyDiv);
+    // The advisory still has to run. An EMPTY list is precisely when a kit's
+    // required and bonusChoice entries are all unsatisfied, so returning before
+    // the call at the tail left the banner stale when the LAST proficiency was
+    // deleted -- while deleting one of several worked, because the function ran
+    // to completion.
+    if (typeof renderKitAdvisories === 'function') renderKitAdvisories(root);
     return;
   }
   
