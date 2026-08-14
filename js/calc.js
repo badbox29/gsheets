@@ -3326,8 +3326,36 @@ function getKitWeaponPermission(root, weaponName, typeKey, group) {
   const kitName = (kit && kit.name) || '';
 
   const nz = s => String(s || '').trim().toLowerCase();
+
+  // PHBR1 p.103: "Stone weapons are used just like their modern counterparts",
+  // and bone weapons "are likewise used like their modern counterparts". A
+  // stone dagger IS a dagger -- the book's general statement of the principle
+  // is that "the club is the same weapon regardless of technological
+  // advancement". So a kit permitting Dagger permits its variants, and one
+  // barring Dagger bars them too.
+  //
+  // WITHOUT THIS the Beastmaster -- whose restriction is literally "weapons he
+  // can make himself" -- was permitted a steel dagger and refused a bone one.
+  // Every whitelist kit in the book had the same hole, because all six variants
+  // are variants of Dagger, Knife, Javelin or Spear and every one of those
+  // appears on some kit's list.
+  //
+  // baseWeapon, NOT Group. The stone javelin's group is Spear and the bone
+  // knife's group is Dagger, so neither resolves by group -- and matching by
+  // group would wrongly admit Gaff/Hook and Kama, which sit in the Dagger group
+  // and are not daggers.
+  //
+  // CONTAINED TO PERMISSION. This answers "may I learn this?" and nothing else.
+  // It must never reach areWeaponsRelated or getWeaponSpecialization: whether
+  // one proficiency covers both materials is a separate question the p.59
+  // proficiency lists answer, and widening this quietly would repeat the
+  // allowedGroups leak the schema header warns about.
+  const wRec = (typeof lookupWeaponData === 'function') ? lookupWeaponData(weaponName) : null;
+  const wBase = (wRec && wRec.baseWeapon) ? wRec.baseWeapon : '';
+
   const nameHit = list => Array.isArray(list) && list.some(n =>
     nz(n) === nz(weaponName) ||
+    (wBase && nz(n) === nz(wBase)) ||
     (typeof samePHBR1Proficiency === 'function' && samePHBR1Proficiency(n, weaponName)));
   // The row's resolved Group, with the raw value as a fallback so a
   // pre-migration row carrying a coarse group still matches.
