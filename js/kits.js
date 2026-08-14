@@ -172,10 +172,12 @@
 // ---------------------------------------------------------------------------
 //
 //   proficiencies: {
-//     weapon:    { bonus, bonusChoice, required, recommended, allowed,
-//                  allowedGroups, barred, barredGroups, allowedPrinted, note },
+//     weapon:    { bonus, bonusChoice, required, requiredChoice,
+//                  requiredChoiceGroups, recommended, recommendedGroups,
+//                  allowed, allowedGroups, barred, barredGroups,
+//                  allowedScope, barredScope, allowedPrinted, note },
 //     nonweapon: { bonus, bonusChoice, required, recommended, allowed,
-//                  barred, allowedPrinted, note }
+//                  barred, allowedScope, barredScope, allowedPrinted, note }
 //   }
 //
 // Top level, a sibling of abilities and requirements -- NOT inside requirements,
@@ -191,6 +193,45 @@
 //   recommended  Flavour. No mechanical force whatsoever.
 //   allowed      Whitelist -- everything outside it is flagged.
 //   barred       Blacklist.
+//
+// GROUP-VALUED SIBLINGS. A book constantly writes "bow (any)" or "axe (any)",
+// which names a GROUP rather than a weapon. Each such phrase is carried in the
+// group field matching the relationship the sentence expressed:
+//
+//   recommendedGroups  flavour, exactly like recommended
+//   allowedGroups      widens the whitelist -- UNION with allowed, not a
+//                      separate list
+//   barredGroups       widens the blacklist
+//
+// Groups resolve against WEAPON_GROUP_ORDER (tables.js) and exist on the WEAPON
+// block only; no book has yet restricted nonweapon proficiencies by category.
+//
+// DO NOT PUT A RECOMMENDATION IN allowedGroups. This was the original mistake
+// and it was invisible, because the field name reads as permission whichever
+// list the phrase came from. The Barbarian's "Bow (any)" and the Beast-Rider's
+// "Lance (any)" are both from RECOMMENDED lists -- neither kit restricts weapons
+// at all -- and filed as allowedGroups they made a resolver grey out every
+// weapon but one group for two kits that may carry anything. Read which SENTENCE
+// the phrase came out of, not which words it contains.
+//
+// SCOPE -- when a restriction stops applying.
+//
+//   allowedScope / barredScope: "creation"
+//
+// Books restrict at two different times and say so plainly: "INITIALLY limited
+// to", "must choose his INITIAL weapon proficiencies", "may not START OUT PLAY
+// having" are creation-time; "Confined to", "Limited to", "becomes proficient
+// ONLY with", "can NEVER use" are for life. OMIT the key for the permanent case,
+// per Rule 1 -- absence means permanent, which is the stricter reading and the
+// commoner one.
+//
+// THE TWO SCOPES ARE SEPARATE FIELDS because one kit needs them to differ. The
+// Seeker's allow-list governs only his single 1st-level slot while his sword
+// prohibition is absolute, so a single scope on the block could not state him.
+//
+// A consumer that greys a weapon must check scope before it does. Greying a
+// battle axe for a 7th-level Mountain Man is wrong: he was limited when he was
+// built and is not limited now.
 //
 // ONLY ONE OF THESE HAS A PHB ANALOGUE. The PHB has exactly one relationship --
 // a slot was spent or it wasn't -- with Table 37 crossover as a PRICE, not a
@@ -214,7 +255,7 @@
 //    ONE EXCEPTION, and it is a real one: the Seeker carries BOTH, because his
 //    page prints two different SCOPES -- an allow-list governing his single
 //    1st-level slot, and a permanent absolute prohibition on swords. When a book
-//    does that, record both and say so in note.
+//    does that, record both, give each its own scope field, and say so in note.
 //
 // 3. WEAPON AND NONWEAPON ARE SEPARATE BLOCKS. Different slot pools, different
 //    name lists, restricted independently by the books.
@@ -248,7 +289,8 @@
 //   Seeker         one weapon proficiency at 1st level
 //   Justifier      one nonweapon slot at 1st level; a mandatory specialization
 //   Giant Killer   one nonweapon proficiency at 1st level; 1st and every ODD
-//                  weapon slot must be a missile weapon
+//                  weapon slot must be a missile weapon. He carries NO weapon
+//                  group field for exactly this reason -- see his note.
 //   Explorer       twice the normal languages from Intelligence
 //   Falconer       two of the INITIAL weapon slots from a list; rest free
 //   Forest Runner  an EXTRA weapon slot, then three of the first six from a list
@@ -698,11 +740,11 @@ const KITS = {
         weapon: {
           required: ["Battle Axe", "Sword, Bastard"],
           recommended: ["Sling", "War Hammer", "Sword, Long", "Sword, Short", "Sword, Broad"],
-          allowedGroups: ["Bow"],
+          recommendedGroups: ["Bow"],
           allowedPrinted:
             "Required: Battle Axe, Bastard Sword. These are the classical fiction-barbarian weapons; the DM may decide to substitute others more appropriate to his own world. Recommended: Bow (any), Sling, Sword (any), War Hammer.",
           note:
-            "SPECIALIZATION: Barbarian fighters may specialize in any weapon, but are not likely to encounter unusual weapons (lances, quarterstaves, flails, peculiar polearms) until they reach the outer world. \"Bow (any)\" and \"Sword (any)\" are group phrasings; the swords resolvable from core_wp.json are listed and the bows are carried in allowedGroups."
+            "SPECIALIZATION: Barbarian fighters may specialize in any weapon, but are not likely to encounter unusual weapons (lances, quarterstaves, flails, peculiar polearms) until they reach the outer world. \"Bow (any)\" and \"Sword (any)\" are group phrasings from the RECOMMENDED list; the swords resolvable from core_wp.json are listed and the bows are carried in recommendedGroups. THE BARBARIAN HAS NO WEAPON RESTRICTION AT ALL -- nothing here is an allow-list."
         },
         nonweapon: {
           bonus: ["Endurance"],
@@ -756,11 +798,11 @@ const KITS = {
             "Composite Short Bow", "Short Bow", "Flail, Horseman's", "Mace, Horseman's",
             "Pick, Horseman's", "Spear", "Sword, Bastard", "Sword, Long"
           ],
-          allowedGroups: ["Lance"],
+          recommendedGroups: ["Lance"],
           allowedPrinted:
             "Required: None. Recommended: all the weapons commonly associated with mounted warriors -- Bow (composite short, and short), Horseman's flail, Horseman's mace, Horseman's pick, Lance (any, according to the size of the animal), Spear, Bastard Sword, Long Sword.",
           note:
-            "Lance is recommended \"any, according to the size of the animal\" and is carried in allowedGroups rather than resolved to one of the four Lance records."
+            "Lance is recommended \"any, according to the size of the animal\" and is carried in recommendedGroups rather than resolved to one of the four Lance records. THE BEAST-RIDER HAS NO WEAPON RESTRICTION AT ALL -- required is None and everything here is recommendation."
         },
         nonweapon: {
           bonus: ["Animal Training", "Riding, Land-Based"],
@@ -816,6 +858,7 @@ const KITS = {
       proficiencies: {
         weapon: {
           barredGroups: ["Bow", "Crossbow", "Dart", "Sling", "Blowgun"],
+          barredScope: "creation",
           allowedPrinted:
             "No specific weapon proficiencies are required of the Berserker -- but he may not start out play having a proficiency in a ranged weapon (no thrown axes or knives, no bows or crossbows, etc.). The Berserker lives to destroy things in hand-to-hand combat, so he cannot start play with any sort of ranged weapon proficiency. He can learn others during the course of the campaign, if he and his DM wish to allow it -- but it's a little out of character for the Berserker.",
           note:
@@ -1525,6 +1568,7 @@ const KITS = {
             "Club", "Dagger", "Dart", "Javelin", "Knife", "Quarterstaff", "Sling", "Spear",
           ],
           allowedGroups: ["Axe"],
+          allowedScope: "creation",
           allowedPrinted: "Initially limited to weapons he can make himself: axe (any), club, dagger, dart, javelin, knife, quarterstaff, sling, spear"
         },
         nonweapon: {
@@ -1679,6 +1723,7 @@ const KITS = {
             "Hunting", "Rope Use", "Running", "Set Snares", "Survival", "Swimming",
             "Veterinary Healing", "Weather Sense",
           ],
+          allowedScope: "creation",
           allowedPrinted: "His remaining initial proficiencies must be chosen from this list",
           note: "The allow-list governs INITIAL proficiencies only."
         }
@@ -1770,15 +1815,15 @@ const KITS = {
       thiefSkillMods: { hideInShadows: 0, moveSilently: 0 },
       proficiencies: {
         weapon: {
-          allowedGroups: ["Bow", "Crossbow", "Sling"],
           allowedPrinted: "The first weapon slot, and every odd slot thereafter, must be a missile weapon: bow (any), crossbow (any), sling, staff sling, or any melee weapon that can be hurled",
-          note: "SLOT PATTERN, NOT AN ALLOW-LIST -- even-numbered slots may take any weapon, so allowedGroups describes only what an ODD slot may hold and must not be read as a restriction on the whole list. \"Any melee weapon that can be hurled\" is an open tail with no field."
+          note: "SLOT PATTERN, NOT AN ALLOW-LIST, AND DELIBERATELY CARRIES NO GROUP FIELD. Even-numbered slots may take any weapon, so no whitelist is true of this kit: an allowedGroups of bow/crossbow/sling would grey out every melee weapon for a character who may freely buy them. Recorded in prose until a consumer tracks slot PURCHASE ORDER, which nothing does. \"Any melee weapon that can be hurled\" is an open tail with no field either."
         },
         nonweapon: {
           allowed: [
             "Bowyer/Fletcher", "Cobbling", "Cooking", "Hunting", "Pottery",
             "Riding, Land-Based", "Running", "Seamstress/Tailor", "Swimming", "Weaving",
           ],
+          allowedScope: "creation",
           allowedPrinted: "Allowed only one nonweapon proficiency at first level, selected from: Bowyer/Fletcher, Cobbler, Cooking, Hunting, Pottery, Riding (Land-based), Running, Tailor, Swimming, Weaving",
           note: "SLOT COUNT NOT MODELLED: only ONE nonweapon proficiency at 1st level. The book's \"Cobbler\" and \"Tailor\" are named Cobbling and Seamstress/Tailor in core_nwp.json."
         }
@@ -1970,6 +2015,7 @@ const KITS = {
             "Staff Sling", "War Hammer",
           ],
           allowedGroups: ["Axe", "Bow", "Crossbow"],
+          allowedScope: "creation",
           allowedPrinted: "Must choose his initial weapon proficiencies from: axe (any), bow (any), crossbow (any), club, dagger, dart, javelin, knife, quarterstaff, spear, staff sling, warhammer",
           note: "Governs INITIAL weapon proficiencies."
         },
@@ -2128,6 +2174,7 @@ const KITS = {
             "Sling",
           ],
           barredGroups: ["Sword"],
+          allowedScope: "creation",
           allowedPrinted: "Receives only a single weapon proficiency at first level, which must be spent on one of: club, light crossbow, dagger, dart, knife, quarterstaff, sickle, or sling. He can never use a sword of any type.",
           note: "THE ONE PLACE allowed AND barred COEXIST, because the book prints two different SCOPES: the allow-list governs his single 1st-level slot, while the sword prohibition is permanent and absolute. SLOT COUNT NOT MODELLED: one weapon proficiency at 1st level. The DM may impose further restrictions from the Seeker's religion."
         },
