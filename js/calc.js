@@ -6464,7 +6464,13 @@ function renderWeaponProficiencies(root) {
     const specCost = getSpecializationCost(prof.group);
     // Only charge for specialization when the rule is actually in play. The
     // flag is left alone so ticking the rule back on restores it intact.
-    const totalSlots = (parseInt(prof.slots, 10) || 1) +
+    // Same trap as the counter in renderProficiencySlots: `|| 1` cannot tell an
+    // ABSENT slots value from a deliberate ZERO, and 0 is falsy. The cestus
+    // (PHBR1 p.96, no proficiency required) stores 0 and was displaying 1, so
+    // the rows added up to more than the counter reported. isNaN is the test
+    // that means "absent"; `|| 1` means "absent OR zero".
+    const profSlots = parseInt(prof.slots, 10);
+    const totalSlots = (isNaN(profSlots) ? 1 : profSlots) +
                        ((prof.specialized && specAllowed) ? specCost : 0);
 
     let specHTML = '';
