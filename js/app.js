@@ -6543,10 +6543,14 @@ function loadSheet(root, data){
   // Right by the book's own default, which also means every character saved
   // before this field existed loads as right-handed rather than blank.
   val(root, 'handedness', data.handedness || 'right');
-  // Set BEFORE populateKitDropdown runs, so the restore path in
-  // populateKitVariantDropdown finds it. A character saved before variants
-  // existed has none, and falls through to race or the book's default.
-  val(root, 'kit_variant', data.kitVariant || '');
+  // STASHED ON root, not written to the select. At this point the variant
+  // <select> has no options at all -- populateKitVariantDropdown has not run --
+  // and assigning .value to a select with no matching option silently yields "".
+  // The old code set it here and then populateKitVariantDropdown read the field
+  // back, got "", and fell through to race-or-default, so the choice never
+  // survived a load. The comment claiming this ordering was deliberate had it
+  // exactly backwards.
+  root._pendingKitVariant = data.kitVariant || '';
 
   root._weaponProfs = data.weaponProfs || [];
   
