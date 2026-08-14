@@ -4028,6 +4028,35 @@ function lookupWeaponData(name) {
 // label is display only -- nothing parses it, so relabelling can never break a
 // rule. Change a label freely; never change a key, or saved records orphan.
 const WEAPON_TYPES = {
+  // --- Supplement weapons (PHBR1, PHBR11) ---
+  // A weapon in core_wp.json with NO entry here loses its mechanical identity
+  // silently. inferWeaponTypeKey is built ENTIRELY from this object, so without
+  // a key: getWeaponSpecialization bails at `if (!wtype) return null` and the
+  // weapon can never be specialized; resolveWeaponProficiency cannot canonicalise
+  // it, so PHBR1_SAME_PROFICIENCY and PHBR1_RELATED_WEAPONS cannot fire on it;
+  // and getTwoHanderStyleEffect cannot read its inherent grip. The only visible
+  // symptom is a Type dropdown showing an em-dash.
+  //
+  // Rapier, Sabre and Main-Gauche are all named in PHBR1_RELATED_WEAPONS, so
+  // that relation table was PARTLY DEAD from the day it was written -- the
+  // swashbuckler pairings had no type key to resolve through.
+  //
+  // ADDING A WEAPON TO core_wp.json IS HALF THE JOB. It needs an entry here too.
+  // Generated from core_wp.json's own Group and Category so the two cannot
+  // disagree; keys and display names were both checked against the existing 89.
+  belaying_pin:            { label: 'Belaying Pin',          group: 'Club',      category: 'Melee',         wpName: "Belaying Pin" },
+  flail_grain:             { label: 'Grain Flail',           group: 'Flail',     category: 'Melee',         wpName: "Flail, Grain" },
+  gaff_attached:           { label: 'Gaff/Hook (Attached)',  group: 'Dagger',    category: 'Melee',         wpName: "Gaff/Hook, Attached" },
+  gaff_held:               { label: 'Gaff/Hook (Held)',      group: 'Dagger',    category: 'Melee',         wpName: "Gaff/Hook, Held" },
+  hatchet:                 { label: 'Hatchet',               group: 'Axe',       category: 'Melee',         wpName: "Hatchet" },
+  ice_pick:                { label: 'Ice Pick',              group: 'Pick',      category: 'Melee',         wpName: "Ice Pick" },
+  machete:                 { label: 'Machete',               group: 'Sword',     category: 'Melee',         wpName: "Machete" },
+  main_gauche:             { label: 'Main-Gauche',           group: 'Dagger',    category: 'Melee',         wpName: "Main-Gauche" },
+  rapier:                  { label: 'Rapier',                group: 'Sword',     category: 'Melee',         wpName: "Rapier" },
+  ritiik:                  { label: 'Ritiik',                group: 'Spear',     category: 'Melee',         wpName: "Ritiik" },
+  sabre:                   { label: 'Sabre',                 group: 'Sword',     category: 'Melee',         wpName: "Sabre" },
+  snow_blade:              { label: 'Snow Blade (Iuak)',     group: 'Sword',     category: 'Melee',         wpName: "Snow Blade (Iuak)" },
+
   // --- Sword ---
   sword_bastard:           { label: 'Bastard Sword',       group: 'Sword',     category: 'Melee',         wpName: "Sword, Bastard" },
   sword_broad:             { label: 'Broad Sword',         group: 'Sword',     category: 'Melee',         wpName: "Sword, Broad" },
