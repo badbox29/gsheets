@@ -2996,18 +2996,11 @@ function renderKitAbilities(root) {
         notes:  bits.join(' '),
         isAuto: true
       }, () => markUnsaved(document.querySelector('.tab.active'), true, root)));
-    } else if (v.default === null || v.default === undefined) {
-      addVariantCard(makeAbilityNode({
-        name:   'Choose an ' + axis,
-        notes:  'This kit branches: ' +
-                v.options.map(o => o.label || o.key).join(' or ') +
-                '. They differ in required weapons, bonus proficiencies and ' +
-                'secondary skill, and neither is the default -- until you choose ' +
-                'one on the Core tab, this kit grants nothing. ' +
-                (v.axisPrinted || ''),
-        isAuto: true
-      }, () => markUnsaved(document.querySelector('.tab.active'), true, root)));
     }
+    // The unmade-choice prompt used to live here as an ability card. It is now
+    // the kit advisory banner above the nonweapon proficiency list: a card
+    // asserts what the character HAS, and this asserted what he has not. The
+    // card for a CHOSEN variant stays, because that one is a genuine ability.
   }
 }
 
@@ -3110,10 +3103,23 @@ function syncKitGrantedNWPs(root) {
   const want = (prof && prof.nonweapon && Array.isArray(prof.nonweapon.bonus))
     ? prof.nonweapon.bonus.slice() : [];
 
-  // bonusChoice is a CHOICE the player has not been asked to make yet -- "Bonus:
-  // Hunting or Fishing" is one free proficiency, not two -- so nothing is
-  // granted from it automatically. It surfaces as an advisory instead.
   const norm = s => String(s || '').trim().toLowerCase();
+
+  // bonusChoice is a CHOICE, and the app must never make it -- "Bonus: Hunting
+  // or Fishing" is one free proficiency, not two, and the pick is permanent.
+  // So nothing is granted until the player adds one of the named proficiencies
+  // himself; then it becomes free, via the same adoption path as a bonus he
+  // happened to already own.
+  //
+  // FIRST LISTED wins if he owns several. Deterministic, and it never silently
+  // swaps which one is free when he later buys the other -- a player who owns
+  // both Hunting and Fishing gets Hunting free today and tomorrow.
+  const ownedNames = (list || []).map(n => norm(n && n.name));
+  ((prof && prof.nonweapon && prof.nonweapon.bonusChoice) || []).forEach(group => {
+    const picked = group.find(g => ownedNames.indexOf(norm(g)) !== -1);
+    if (picked) want.push(picked);
+  });
+
   const wanted = new Set(want.map(norm));
 
   // Sweep: drop records WE created that are no longer wanted; hand back records
