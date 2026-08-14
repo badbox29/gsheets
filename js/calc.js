@@ -4569,10 +4569,39 @@ async function renderWeaponInventoryBrowser(root) {
     const infoDiv = document.createElement('div');
     infoDiv.style.flex = '1';
     
+    // Kit permission, MARKING ONLY -- the Add button is never disabled here.
+    //
+    // This browser sells WEAPONS; the proficiency picker sells PROFICIENCIES,
+    // and almost every kit restriction is written about the latter: "Must
+    // choose his initial weapon PROFICIENCIES from", "Receives only a single
+    // weapon PROFICIENCY at first level", "may not start out play having a
+    // PROFICIENCY in a ranged weapon". Nothing stops a character carrying a
+    // weapon he is untrained with -- he takes the Table 34 penalty, which the
+    // weapon card already reports on its own.
+    //
+    // So the tag is a heads-up before he spends the money, not a gate. Muted
+    // rather than red for the same reason: red here would claim a prohibition
+    // the book does not make.
+    const invPerm = (typeof getKitWeaponPermission === 'function')
+      ? getKitWeaponPermission(root, weapon['Weapon Name'],
+          (typeof inferWeaponTypeKey === 'function') ? inferWeaponTypeKey(weapon['Weapon Name']) : '',
+          weapon.Group || '')
+      : { state: 'unrestricted', active: false, recommended: false };
+
+    let invTag = '';
+    if (invPerm.state === 'barred' && invPerm.active) {
+      invTag = '<span style="margin-left:8px;font-size:10px;color:var(--muted);">' +
+               escapeHtml(invPerm.kitName) + ': no proficiency ' +
+               (invPerm.scope === 'creation' ? 'yet' : 'for this') + '</span>';
+    } else if (invPerm.recommended) {
+      invTag = '<span style="margin-left:8px;font-size:10px;color:var(--accent-light);">' +
+               escapeHtml(invPerm.kitName) + ': recommended</span>';
+    }
+
     // Build info display
     let infoHTML = `
       <div>
-        <strong>${weapon['Weapon Name']}</strong>
+        <strong>${weapon['Weapon Name']}</strong>${invTag}
         <span style="margin-left:8px;font-size:11px;color:var(--muted);">${weapon.Category || ''} - ${weapon.Group || ''}</span>
       </div>
     `;
