@@ -81,12 +81,11 @@ const SHEET_HTML = `
             <!-- Some kits are ONE kit in the book that BRANCHES. PHBR1's
                  Pirate/Outlaw prints a single entry and then splits four
                  mechanical fields, labelling them "Pirate's" and "Outlaw's"; the
-                 Amazon does the same on race. Hidden entirely unless the
-                 selected kit has a variants block, so it costs nothing on the
-                 ninety-one kits that do not.
-                 NOTE: no backticks or ${...} anywhere in this file -- the whole
-                 template is one JS template literal, so either one terminates it
-                 and SHEET_HTML silently becomes undefined. -->
+                 Amazon does the same on race. Hidden entirely unless theNOTE: this whole file is ONE JS template literal. A backtick
+                 anywhere terminates it, and a dollar sign followed by a brace
+                 starts an interpolation. Either one breaks the file, and the
+                 error surfaces in app.js as "SHEET_HTML is not defined" rather
+                 than pointing here. -->
             <div class="col single-class-field kit-variant-col" style="display:none;">
               <label class="kit-variant-label">Variant</label>
               <select data-field="kit_variant"></select>
