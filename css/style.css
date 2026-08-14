@@ -638,7 +638,14 @@
       color:inherit;
       transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
     }
-    textarea{min-height:80px;resize:vertical}
+    textarea{min-height:80px;resize:vertical;font:inherit}
+    /* Auto-expanding textareas size themselves to their content, so the 80px
+       floor above just pads short ones with dead space. These carry transcribed
+       book prose that runs from one line to a thousand characters, and the
+       height is set in JS by autoExpand -- a min-height here fights it.
+       font:inherit because a bare textarea falls back to the browser's
+       MONOSPACE default while input does not, which made prose read as code. */
+    .item textarea.notes{min-height:0}
     .row{display:flex;gap:8px}
     .row .col{flex:1}
     .buttons{display:flex;gap:8px;flex-wrap:wrap}
