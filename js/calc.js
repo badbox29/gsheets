@@ -5916,14 +5916,27 @@ async function renderWeaponBrowser(root) {
     const learnBtn = document.createElement('button');
     learnBtn.style.cssText = 'padding:4px 12px;font-size:12px;margin-left:8px;flex-shrink:0;';
 
-    if (noProf) {
-      learnBtn.textContent = 'No prof.';
-      learnBtn.disabled = true;
-      learnBtn.title = 'The cestus requires no weapon proficiency -- it enhances ' +
-                       'punching damage, and everyone knows how to punch ' +
-                       '(PHBR1 p.96). Specializing in it costs one slot; ' +
-                       'becoming proficient costs nothing because there is ' +
-                       'nothing to become proficient in.';
+    if (noProf && !haveIt) {
+      // NOT disabled. PHBR1 p.96: "Cestus ... does not require weapon
+      // proficiency; anyone can use cesti with no proficiency penalty.
+      // Therefore, Specialization with Cestus costs only one weapon proficiency
+      // slot." The entry is still needed -- it is what the Specialized checkbox
+      // hangs on, and p.25 lists Cestus among the weapons a Gladiator may take
+      // his free Weapon Specialization in. Disabling this made a legal purchase
+      // unreachable.
+      //
+      // The row it adds should be worth ZERO slots until Specialized is ticked,
+      // which is the `slots` field on the proficiency record.
+      learnBtn.textContent = 'Add (0 slots)';
+      learnBtn.title = 'The cestus requires no weapon proficiency -- everyone can ' +
+                       'use one with no penalty (PHBR1 p.96). Adding it here costs ' +
+                       'NOTHING; it exists so you can tick Specialized, which costs ' +
+                       'one slot instead of the usual two, precisely because there ' +
+                       'is no proficiency to buy first.';
+      learnBtn.onclick = (e) => {
+        e.stopPropagation();
+        addWeaponProficiency(root, weapon);
+      };
     } else if (haveIt) {
       learnBtn.textContent = 'Known';
       learnBtn.disabled = true;
@@ -5991,6 +6004,19 @@ function addWeaponProficiency(root, weapon) {
     ? (inferWeaponTypeKey(weapon['Weapon Name']) || '')
     : '';
 
+  // PHBR1 p.96: "Cestus, because it is simply a bonus to punching-type attacks,
+  // does not require weapon proficiency; anyone can use cesti with no
+  // proficiency penalty. Therefore, Specialization with Cestus costs only one
+  // weapon proficiency slot."
+  //
+  // The row still has to EXIST -- it is what the Specialized checkbox hangs on,
+  // and PHBR1 p.25 lists Cestus among the weapons a Gladiator may take his free
+  // Weapon Specialization in. It just costs nothing by itself, so a specialist
+  // pays 1 rather than the usual 1 + 1. Kept here rather than in the browser so
+  // it holds however the row was added.
+  const freeProficiency =
+    String(weapon['Weapon Name'] || '').trim().toLowerCase() === 'cestus';
+
   root._weaponProfs.push({
     name: weapon['Weapon Name'],
     weaponTypeKey: profTypeKey,
@@ -5999,7 +6025,7 @@ function addWeaponProficiency(root, weapon) {
     group: (typeof getWeaponGroup === 'function')
       ? getWeaponGroup(profTypeKey, weapon.Group || '')
       : (weapon.Group || ''),
-    slots: 1
+    slots: freeProficiency ? 0 : 1
   });
   
   renderWeaponProficiencies(root);
