@@ -5908,10 +5908,11 @@ async function renderWeaponBrowser(root) {
       p && typeof samePHBR1Proficiency === 'function' &&
       samePHBR1Proficiency(wName, p.name));
 
-    //  (3) REQUIRES NO PROFICIENCY AT ALL. PHBR1 p.96, restated in the p.60
-    //      Non-Groups list: "The Cestus doesn't require any Proficiency. It
-    //      enhances punching damage, and everyone knows how to punch."
-    const noProf = norm(wName) === 'cestus';
+    //  (3) REQUIRES NO PROFICIENCY AT ALL. Read from the DATA, not matched by
+    //      name -- the flag is a column in core_wp.json so the next handbook
+    //      that prints such a weapon needs no code change. Today only the cestus
+    //      carries it (PHBR1 p.96, restated in the p.60 Non-Groups list).
+    const noProf = String(weapon['No Proficiency'] || '').trim().toLowerCase() === 'yes';
 
     const learnBtn = document.createElement('button');
     learnBtn.style.cssText = 'padding:4px 12px;font-size:12px;margin-left:8px;flex-shrink:0;';
@@ -6015,7 +6016,7 @@ function addWeaponProficiency(root, weapon) {
   // pays 1 rather than the usual 1 + 1. Kept here rather than in the browser so
   // it holds however the row was added.
   const freeProficiency =
-    String(weapon['Weapon Name'] || '').trim().toLowerCase() === 'cestus';
+    String(weapon['No Proficiency'] || '').trim().toLowerCase() === 'yes';
 
   root._weaponProfs.push({
     name: weapon['Weapon Name'],
