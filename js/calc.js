@@ -13,8 +13,8 @@ function renderWisdomPriestEffects(root) {
   // Magical Defense Adj.
   mdaEl.value = (WIS_MDA[wis] !== undefined ? (WIS_MDA[wis] >=0 ? "+" : "")+WIS_MDA[wis] : "—");
 
- // Spell Immunity — PHB Table 5. Keys off the WIS score ALONE, no class gate...
-  // A WIS 19 fighter is just as immune to charm person as a WIS 19 cleric...
+ // Spell Immunity — PHB Table 5. Keys off the WIS score ALONE, no class gate.
+  // A WIS 19 fighter is just as immune to charm person as a WIS 19 cleric.
   if (wis >= 19) {
     immunityEl.value = WIS_IMMUNITIES[wis] || "—";
   } else {
