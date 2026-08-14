@@ -8172,9 +8172,18 @@ function bindSheet(root, tab){
       // the last class change left it: hidden, because the kit was empty then.
       // recalculateAll does not touch the kit dropdowns either.
       if (typeof populateKitVariantDropdown === 'function') populateKitVariantDropdown(root);
+      if (typeof renderKitAbilities === 'function') renderKitAbilities(root);
       if (typeof recalculateAll === 'function') recalculateAll(root);
     }
-    if (f === 'kit_variant' && typeof recalculateAll === 'function') recalculateAll(root);
+    if (f === 'kit_variant') {
+      // renderKitAbilities EXPLICITLY. recalculateAll does not touch the kit
+      // renderers at all -- the same reason the variant dropdown itself needed
+      // an explicit populate call on a kit change. The ability cards are the
+      // only visible consequence of choosing an orientation, so without this the
+      // dropdown appears to do nothing until a save and reload.
+      if (typeof renderKitAbilities === 'function') renderKitAbilities(root);
+      if (typeof recalculateAll === 'function') recalculateAll(root);
+    }
   });
 
   const fightingStyleFields =
