@@ -86,7 +86,14 @@ const SHEET_HTML = `
                  starts an interpolation. Either one breaks the file, and the
                  error surfaces in app.js as "SHEET_HTML is not defined" rather
                  than pointing here. -->
-            <div class="col single-class-field kit-variant-col" style="display:none;">
+            <!-- NOT single-class-field, deliberately. handleCharacterTypeChange
+                 sweeps that class and writes style.display on every match, which
+                 blew away the inline none and showed an empty "Variant" column on
+                 any blank single-class sheet. Visibility here has ONE owner,
+                 populateKitVariantDropdown, and a multi-class character cannot
+                 take a kit anyway, so getSelectedKit returns null and the column
+                 hides by the same path. -->
+            <div class="col kit-variant-col" style="display:none;">
               <label class="kit-variant-label">Variant</label>
               <select data-field="kit_variant"></select>
             </div>
