@@ -6507,6 +6507,10 @@ function loadSheet(root, data){
   // Right by the book's own default, which also means every character saved
   // before this field existed loads as right-handed rather than blank.
   val(root, 'handedness', data.handedness || 'right');
+  // Set BEFORE populateKitDropdown runs, so the restore path in
+  // populateKitVariantDropdown finds it. A character saved before variants
+  // existed has none, and falls through to race or the book's default.
+  val(root, 'kit_variant', data.kitVariant || '');
 
   root._weaponProfs = data.weaponProfs || [];
   
@@ -8154,6 +8158,19 @@ function bindSheet(root, tab){
   // data-field change generically -- every field is named in some delegated
   // listener like this one -- so a new field that feeds a derived number needs
   // its own branch or it only updates on save and reload.
+  // A stale variant key surviving a kit change is silent and wrong -- an Amazon
+  // whose orientation is "outlaw". Cleared before the dropdown repopulates so
+  // the fallback chain runs fresh.
+  root.addEventListener('change', (e) => {
+    const f = (e.target && e.target.getAttribute) ? e.target.getAttribute('data-field') : null;
+    if (f === 'kit') {
+      const sel = root.querySelector('[data-field="kit_variant"]');
+      if (sel) sel.value = '';
+      if (typeof recalculateAll === 'function') recalculateAll(root);
+    }
+    if (f === 'kit_variant' && typeof recalculateAll === 'function') recalculateAll(root);
+  });
+
   const fightingStyleFields =
     /^style_(single_weapon|two_hander|weapon_shield|two_weapon|ambidextrous)$/;
   root.addEventListener('change', (e) => {
