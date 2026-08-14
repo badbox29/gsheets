@@ -5890,13 +5890,65 @@ async function renderWeaponBrowser(root) {
       </div>
     `;
     
+    // Three reasons a Learn button should not be offered, all of them cases
+    // where clicking it would waste a proficiency slot on nothing.
+    const wName = weapon['Weapon Name'];
+    const norm  = s => String(s || '').trim().toLowerCase();
+    const known = (root._weaponProfs || []);
+
+    //  (1) ALREADY KNOWN. On a 109-row list the only way to check was to scroll
+    //      back to the proficiency list and compare by eye.
+    const haveIt = known.some(p => p && norm(p.name) === norm(wName));
+
+    //  (2) COVERED BY A SAME-PROFICIENCY PAIR. Knife/Stiletto, Quarterstaff/Bo
+    //      Stick and Short Sword/Drusus are ONE proficiency with two names --
+    //      PHBR1 p.59 prints each as a single slash-joined entry. Buying the
+    //      second name spends a slot on something already owned.
+    const coveredBy = haveIt ? null : known.find(p =>
+      p && typeof samePHBR1Proficiency === 'function' &&
+      samePHBR1Proficiency(wName, p.name));
+
+    //  (3) REQUIRES NO PROFICIENCY AT ALL. PHBR1 p.96, restated in the p.60
+    //      Non-Groups list: "The Cestus doesn't require any Proficiency. It
+    //      enhances punching damage, and everyone knows how to punch."
+    const noProf = norm(wName) === 'cestus';
+
     const learnBtn = document.createElement('button');
-    learnBtn.textContent = 'Learn';
     learnBtn.style.cssText = 'padding:4px 12px;font-size:12px;margin-left:8px;flex-shrink:0;';
-    learnBtn.onclick = (e) => {
-      e.stopPropagation();
-      addWeaponProficiency(root, weapon);
-    };
+
+    if (noProf) {
+      learnBtn.textContent = 'No prof.';
+      learnBtn.disabled = true;
+      learnBtn.title = 'The cestus requires no weapon proficiency -- it enhances ' +
+                       'punching damage, and everyone knows how to punch ' +
+                       '(PHBR1 p.96). Specializing in it costs one slot; ' +
+                       'becoming proficient costs nothing because there is ' +
+                       'nothing to become proficient in.';
+    } else if (haveIt) {
+      learnBtn.textContent = 'Known';
+      learnBtn.disabled = true;
+      learnBtn.title = 'Already in your weapon proficiencies.';
+    } else if (coveredBy) {
+      learnBtn.textContent = 'Covered';
+      learnBtn.disabled = true;
+      learnBtn.title = `Covered by your ${coveredBy.name} proficiency -- these are ` +
+                       `one proficiency with two names (PHBR1 p.59), so there is ` +
+                       `nothing further to buy.`;
+    } else {
+      learnBtn.textContent = 'Learn';
+      learnBtn.onclick = (e) => {
+        e.stopPropagation();
+        addWeaponProficiency(root, weapon);
+      };
+    }
+
+    if (learnBtn.disabled) {
+      learnBtn.style.opacity = '0.55';
+      learnBtn.style.cursor  = 'not-allowed';
+      // The ROW dims too, so a scan down the list reads as a column of
+      // availability rather than requiring the button text to be read on each.
+      weaponDiv.style.opacity = '0.65';
+    }
     
     weaponDiv.appendChild(infoDiv);
     weaponDiv.appendChild(learnBtn);
