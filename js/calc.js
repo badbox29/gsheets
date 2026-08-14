@@ -3017,10 +3017,18 @@ function renderKitAbilities(root) {
 // list would never clear, which is why recommendations are marked at the point
 // of choice instead and are not here.
 function renderKitAdvisories(root) {
-  const el = root.querySelector('.kit-advisory-note');
-  if (!el) return;
+  const el    = root.querySelector('.kit-advisory-note');
+  const elWpn = root.querySelector('.kit-advisory-note-wpn');
+  if (!el && !elWpn) return;
 
-  const items = [];
+  // nz, not norm. The previous version called a `norm` that is not declared in
+  // this function and is not global -- it threw partway through, AFTER the items
+  // were built but BEFORE the banner was written, so the banner silently kept
+  // its previous contents and looked merely stale rather than broken.
+  const nz = s => String(s || '').trim().toLowerCase();
+
+  const items    = [];
+  const itemsWpn = [];
   const kit   = (typeof getSelectedKit === 'function') ? getSelectedKit(root) : null;
 
   // 1. An unmade MANDATORY variant choice. Moved off the Abilities tab, but it
@@ -3067,11 +3075,11 @@ function renderKitAdvisories(root) {
   const wpn   = (prof && prof.weapon) || {};
   const wOwn  = (root._weaponProfs || []).map(w => String(w && w.name || ''));
   const hasW  = n => wOwn.some(o =>
-    norm(o) === norm(n) ||
+    nz(o) === nz(n) ||
     (typeof samePHBR1Proficiency === 'function' && samePHBR1Proficiency(o, n)));
 
   (wpn.required || []).filter(n => !hasW(n)).forEach(n => {
-    items.push('<b>' + n + '</b> is a required weapon PROFICIENCY for this kit \u2014 ' +
+    itemsWpn.push('<b>' + n + '</b> is a required weapon PROFICIENCY for this kit \u2014 ' +
                'add it under Weapon Proficiencies above. Owning the weapon is not ' +
                'the same thing; an Amazon carrying a spear she is not trained with ' +
                'still fights at the non-proficiency penalty.');
@@ -3082,29 +3090,33 @@ function renderKitAdvisories(root) {
   // player owns one.
   (wpn.requiredChoice || []).forEach(group => {
     if (group.some(hasW)) return;
-    items.push('Required weapon proficiency, choose one: <b>' +
+    itemsWpn.push('Required weapon proficiency, choose one: <b>' +
                group.join('</b> or <b>') + '</b> \u2014 add it under Weapon ' +
                'Proficiencies above.');
   });
 
   (wpn.requiredChoiceGroups || []).forEach(g => {
     const inGroup = (root._weaponProfs || []).some(w =>
-      w && norm(w.group) === norm(g));
+      w && nz(w.group) === nz(g));
     if (inGroup) return;
-    items.push('This kit requires a weapon proficiency from the <b>' + g +
+    itemsWpn.push('This kit requires a weapon proficiency from the <b>' + g +
                '</b> group, your choice of which \u2014 add it under Weapon ' +
                'Proficiencies above.');
   });
 
-  if (!items.length) { el.style.display = 'none'; el.innerHTML = ''; return; }
-
-  el.innerHTML =
-    '<strong style="color:var(--warning, #e0a34a);">\u26A0 Kit</strong>' +
-    items.map(t => '<div style="margin-top:4px;">\u2022 ' + t + '</div>').join('') +
-    '<div style="margin-top:6px;color:var(--muted);font-size:11px;">' +
-      'Advisory only \u2014 nothing is blocked. A DM may modify any kit; PHBR1 p.37 ' +
-      'says outright that he can and should.</div>';
-  el.style.display = '';
+  const paint = (node, list) => {
+    if (!node) return;
+    if (!list.length) { node.style.display = 'none'; node.innerHTML = ''; return; }
+    node.innerHTML =
+      '<strong style="color:var(--warning, #e0a34a);">\u26A0 Kit</strong>' +
+      list.map(t => '<div style="margin-top:4px;">\u2022 ' + t + '</div>').join('') +
+      '<div style="margin-top:6px;color:var(--muted);font-size:11px;">' +
+        'Advisory only \u2014 nothing is blocked. A DM may modify any kit; PHBR1 p.37 ' +
+        'says outright that he can and should.</div>';
+    node.style.display = '';
+  };
+  paint(el,    items);
+  paint(elWpn, itemsWpn);
 }
 
 // Bring the character's nonweapon proficiency list into line with what his kit
@@ -6920,6 +6932,8 @@ function renderWeaponProficiencies(root) {
       if (tab) markUnsaved(tab, true, root);
     };
   });
+
+  if (typeof renderKitAdvisories === 'function') renderKitAdvisories(root);
 }
 
 // Delete a weapon proficiency
@@ -7307,6 +7321,11 @@ function renderNWProficiencies(root) {
       if (tab) markUnsaved(tab, true, root);
     };
   });
+
+  // The advisory is wired HERE rather than at each mutation site. Add, delete
+  // and add-custom are three chances to forget, and I forgot. Everything that
+  // changes this list already ends up here.
+  if (typeof renderKitAdvisories === 'function') renderKitAdvisories(root);
 }
 
 // Render the PHB Chapter 5 proficiency check as a TARGET NUMBER rather than the
