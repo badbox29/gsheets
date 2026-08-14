@@ -3282,6 +3282,94 @@ function getKitProficiencies(root) {
   return out;
 }
 
+// May this character take a weapon proficiency in THIS weapon, given his kit?
+//
+// ONE RESOLVER, the way isOptionalRule is one read point. Both the weapon
+// browser and the weapon proficiency picker ask it, so neither reimplements the
+// precedence -- and there is precedence to get wrong: the Seeker carries an
+// allow-list AND a bar, at two different scopes.
+//
+// Returns { state, via, kitName, scope, active, recommended, printed }.
+//
+//   state        'unrestricted' | 'allowed' | 'barred'
+//   via          'whitelist' | 'blacklist' | null -- WHICH rule decided
+//   scope        'creation' | 'permanent' -- when that rule applies
+//   active       whether it applies to this character RIGHT NOW
+//   recommended  flavour only; independent of state, and never restricts
+//
+// ACTIVE IS SEPARATE FROM STATE on purpose. A creation-scope restriction is
+// still TRUE of the kit at 7th level -- it explains why the character's early
+// proficiencies look the way they do -- it simply no longer forbids anything.
+// Collapsing the two would either grey a battle axe for a 7th-level Mountain
+// Man (wrong) or erase the rule from the card entirely (also wrong). The caller
+// greys on `active` and labels on `state`.
+//
+// BLACKLIST BEATS WHITELIST. Only the Seeker carries both and the book is
+// unambiguous about him: the allow-list governs his single 1st-level slot,
+// while "he can never use a sword of any type" is permanent and absolute. So a
+// long sword must come back barred rather than merely off-list, and it must
+// stay barred at 12th level when the allow-list has lapsed.
+//
+// Name matching goes through samePHBR1Proficiency, so a Stalker who bought
+// Knife is not told his Stiletto is off-list -- they are one proficiency with
+// two names (PHBR1 p.59). Group matching uses the weapon's resolved Group.
+function getKitWeaponPermission(root, weaponName, typeKey, group) {
+  const none = { state: 'unrestricted', via: null, kitName: '', scope: 'permanent',
+                 active: false, recommended: false, printed: '' };
+  if (!root) return none;
+
+  const prof = (typeof getKitProficiencies === 'function') ? getKitProficiencies(root) : null;
+  const w = prof && prof.weapon;
+  if (!w) return none;
+
+  const kit = (typeof getSelectedKit === 'function') ? getSelectedKit(root) : null;
+  const kitName = (kit && kit.name) || '';
+
+  const nz = s => String(s || '').trim().toLowerCase();
+  const nameHit = list => Array.isArray(list) && list.some(n =>
+    nz(n) === nz(weaponName) ||
+    (typeof samePHBR1Proficiency === 'function' && samePHBR1Proficiency(n, weaponName)));
+  // The row's resolved Group, with the raw value as a fallback so a
+  // pre-migration row carrying a coarse group still matches.
+  const g = (typeof getWeaponGroup === 'function') ? (getWeaponGroup(typeKey, group) || group) : group;
+  const groupHit = list => Array.isArray(list) && list.some(x => nz(x) === nz(g));
+
+  // A creation-scope rule binds only while the character is being built. Level
+  // is read from the whole character rather than the `level` field, which is a
+  // display string for multi- and dual-class sheets.
+  const lvl = (typeof getAllClassComponents === 'function')
+    ? (getAllClassComponents(root) || []).reduce((m, c) => Math.max(m, parseInt(c.level, 10) || 0), 0)
+    : (parseInt(val(root, 'level'), 10) || 0);
+  const bindsNow = scope => scope !== 'creation' || lvl <= 1;
+
+  const recommended = nameHit(w.recommended) || groupHit(w.recommendedGroups);
+  const printed = w.allowedPrinted || '';
+
+  // 1. Blacklist first -- see the note above.
+  if (nameHit(w.barred) || groupHit(w.barredGroups)) {
+    const scope = w.barredScope === 'creation' ? 'creation' : 'permanent';
+    return { state: 'barred', via: 'blacklist', kitName: kitName, scope: scope,
+             active: bindsNow(scope), recommended: recommended, printed: printed };
+  }
+
+  // 2. Whitelist, if the kit prints one. allowed and allowedGroups are a UNION:
+  //    "axe (any), club, dagger" is one list wearing two fields.
+  const hasWhitelist = (Array.isArray(w.allowed) && w.allowed.length) ||
+                       (Array.isArray(w.allowedGroups) && w.allowedGroups.length);
+  if (hasWhitelist) {
+    const scope = w.allowedScope === 'creation' ? 'creation' : 'permanent';
+    const on = nameHit(w.allowed) || groupHit(w.allowedGroups);
+    return { state: on ? 'allowed' : 'barred', via: 'whitelist', kitName: kitName,
+             scope: scope, active: bindsNow(scope), recommended: recommended,
+             printed: printed };
+  }
+
+  // 3. No rule. recommended still rides along -- the Barbarian and the
+  //    Beast-Rider land here, and both have recommendations and no restriction.
+  return { state: 'unrestricted', via: null, kitName: kitName, scope: 'permanent',
+           active: false, recommended: recommended, printed: printed };
+}
+
 // PHBR1 pp.62-63. Two-Hander Style Specialization, which grants TWO different
 // things to two different sets of weapons:
 //
@@ -6313,11 +6401,40 @@ async function renderWeaponBrowser(root) {
     weaponDiv.className = 'weapon-result-item';
     weaponDiv.style.cssText = 'padding:8px;margin-bottom:4px;border:1px solid var(--border);border-radius:4px;display:flex;justify-content:space-between;align-items:center;transition:background 0.2s;';
     
+    // Kit permission for THIS weapon. Resolved once and used twice -- for the
+    // tag below and for the Learn button further down -- so the row's label and
+    // its button can never disagree about whether the kit permits it.
+    //
+    // An INLINE TAG NAMING THE KIT, not a rail colour. --st-forbidden already
+    // means "not proficient", "restricted", "opposition school" and "deceased
+    // follower"; a fifth meaning would make the vocabulary unreadable, and the
+    // one thing the player needs here is WHICH KIT said so.
+    const perm = (typeof getKitWeaponPermission === 'function')
+      ? getKitWeaponPermission(root, weapon['Weapon Name'],
+          (typeof inferWeaponTypeKey === 'function') ? inferWeaponTypeKey(weapon['Weapon Name']) : '',
+          weapon.Group || '')
+      : { state: 'unrestricted', active: false, recommended: false };
+
+    // A LAPSED creation-scope rule still gets a tag, muted. It is why his early
+    // proficiencies look the way they do, and going silent at 2nd level would
+    // read as the restriction never having existed.
+    let permTag = '';
+    if (perm.state === 'barred' && perm.active) {
+      permTag = '<span style="margin-left:8px;font-size:10px;color:var(--error, #ff6b6b);">' +
+                escapeHtml(perm.kitName) + ': not permitted</span>';
+    } else if (perm.state === 'barred') {
+      permTag = '<span style="margin-left:8px;font-size:10px;color:var(--muted);">' +
+                escapeHtml(perm.kitName) + ': not at creation</span>';
+    } else if (perm.recommended) {
+      permTag = '<span style="margin-left:8px;font-size:10px;color:var(--accent-light);">' +
+                escapeHtml(perm.kitName) + ': recommended</span>';
+    }
+
     const infoDiv = document.createElement('div');
     infoDiv.style.flex = '1';
     infoDiv.innerHTML = `
       <div>
-        <strong>${weapon['Weapon Name']}</strong>
+        <strong>${weapon['Weapon Name']}</strong>${permTag}
         <span style="margin-left:8px;font-size:11px;color:var(--muted);">${weapon.Group || ''}</span>
       </div>
       <div style="font-size:11px;color:var(--muted);margin-top:2px;">
@@ -6384,6 +6501,20 @@ async function renderWeaponBrowser(root) {
       learnBtn.title = `Covered by your ${coveredBy.name} proficiency -- these are ` +
                        `one proficiency with two names (PHBR1 p.59), so there is ` +
                        `nothing further to buy.`;
+    } else if (perm.active && perm.state === 'barred') {
+      // AFTER haveIt and coveredBy on purpose. A proficiency already owned is
+      // reported as Known whatever the kit says -- the DM may have allowed it,
+      // or it may predate the kit, and neither is the browser's business to
+      // relitigate. This branch only declines to SELL something new.
+      learnBtn.textContent = 'Not for this kit';
+      learnBtn.disabled = true;
+      learnBtn.title =
+        (perm.via === 'whitelist'
+          ? 'Not on the ' + perm.kitName + '\u2019s permitted weapon list.'
+          : 'Barred by the ' + perm.kitName + ' kit.') +
+        (perm.printed ? '\u000a\u000aThe book says: \u201c' + perm.printed + '\u201d' : '') +
+        '\u000a\u000aAdvisory only \u2014 PHBR1 p.37 says a DM may modify any kit. If yours ' +
+        'has, add it with the custom button below.';
     } else {
       learnBtn.textContent = 'Learn';
       learnBtn.onclick = (e) => {
