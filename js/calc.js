@@ -3184,16 +3184,34 @@ function syncKitGrantedNWPs(root) {
     }
   }
 
+  // DECLINED GRANTS. A player may delete a proficiency his kit gives him -- PHBR1
+  // p.37 tells DMs to modify kits, and this tool warns rather than blocks. Before
+  // this list existed the sync simply put it back, at the bottom of the list,
+  // undoing the deletion in front of him.
+  //
+  // Keyed by NAME and persisted, so it survives a reload and a kit change. Adding
+  // the proficiency back by hand un-declines it and it becomes granted again --
+  // which is the only way to reverse the decision, and a deliberate one.
+  if (!Array.isArray(root._declinedGrants)) root._declinedGrants = [];
+  const declined = root._declinedGrants;
+  const isDeclined = n => declined.some(d => norm(d) === norm(n));
+
   // Add or adopt.
   want.forEach(name => {
     const existing = list.find(n => n && norm(n.name) === norm(name));
     if (existing) {
+      // Present again, so the decline is spent. Re-granting here is what makes
+      // the GRANTED flip immediate when a bonusChoice is satisfied from the
+      // browser, rather than waiting for the next kit render.
+      const di = declined.findIndex(d => norm(d) === norm(name));
+      if (di !== -1) declined.splice(di, 1);
       if (!existing.isKitGranted) {
         existing.wasPlayerOwned = true;
         existing.isKitGranted   = true;
       }
       return;
     }
+    if (isDeclined(name)) return;
     const rec = (typeof NWP_DATA !== 'undefined' && Array.isArray(NWP_DATA))
       ? NWP_DATA.find(r => norm(r['Proficiency Name']) === norm(name))
       : null;
@@ -8262,6 +8280,17 @@ function deleteNWProficiency(root, index) {
   const nwpName = root._nwps[index].name;
   
   if (confirm(`Remove ${nwpName} proficiency?`)) {
+    // Record the decline BEFORE the splice, while the record is still readable.
+    // Only a GRANTED record needs it -- deleting one the player bought himself
+    // is just a deletion.
+    const gone = root._nwps[index];
+    if (gone && gone.isKitGranted) {
+      if (!Array.isArray(root._declinedGrants)) root._declinedGrants = [];
+      if (!root._declinedGrants.some(d =>
+            String(d).trim().toLowerCase() === String(gone.name).trim().toLowerCase())) {
+        root._declinedGrants.push(gone.name);
+      }
+    }
     root._nwps.splice(index, 1);
     // Removal can UN-satisfy a bonusChoice or a required entry, so the banner
     // has to come back. Same call as the add paths.
