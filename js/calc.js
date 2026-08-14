@@ -6418,13 +6418,20 @@ async function renderWeaponBrowser(root) {
     // A LAPSED creation-scope rule still gets a tag, muted. It is why his early
     // proficiencies look the way they do, and going silent at 2nd level would
     // read as the restriction never having existed.
+    // THREE STATES, NOT TWO. A creation-scope restriction that is currently
+    // binding is not the same claim as a permanent one, and must not borrow its
+    // wording -- "not permitted" reads as never, which is exactly what the same
+    // row denies at 2nd level.
     let permTag = '';
-    if (perm.state === 'barred' && perm.active) {
+    if (perm.state === 'barred' && perm.active && perm.scope === 'creation') {
+      permTag = '<span style="margin-left:8px;font-size:10px;color:var(--error, #ff6b6b);">' +
+                escapeHtml(perm.kitName) + ': not at 1st level</span>';
+    } else if (perm.state === 'barred' && perm.active) {
       permTag = '<span style="margin-left:8px;font-size:10px;color:var(--error, #ff6b6b);">' +
                 escapeHtml(perm.kitName) + ': not permitted</span>';
     } else if (perm.state === 'barred') {
       permTag = '<span style="margin-left:8px;font-size:10px;color:var(--muted);">' +
-                escapeHtml(perm.kitName) + ': not at creation</span>';
+                escapeHtml(perm.kitName) + ': restricted at creation</span>';
     } else if (perm.recommended) {
       permTag = '<span style="margin-left:8px;font-size:10px;color:var(--accent-light);">' +
                 escapeHtml(perm.kitName) + ': recommended</span>';
@@ -6513,12 +6520,22 @@ async function renderWeaponBrowser(root) {
       // reported as Known whatever the kit says -- the DM may have allowed it,
       // or it may predate the kit, and neither is the browser's business to
       // relitigate. This branch only declines to SELL something new.
-      learnBtn.textContent = 'Not for this kit';
+      // TWO DIFFERENT FACTS, and one label for both was a lie. A permanent bar
+      // means never; a creation-scope bar means NOT YET, and the same row says
+      // so itself one level later when the tag goes grey. "Not for this kit" on
+      // a Beastmaster's long sword told him his kit forbids it outright, when
+      // the book only forbids it while he is being built.
+      const permCreation = (perm.scope === 'creation');
+      learnBtn.textContent = permCreation ? 'Not yet' : 'Not for this kit';
       learnBtn.disabled = true;
       learnBtn.title =
-        (perm.via === 'whitelist'
-          ? 'Not on the ' + perm.kitName + '\u2019s permitted weapon list.'
-          : 'Barred by the ' + perm.kitName + ' kit.') +
+        (permCreation
+          ? 'Restricted while this character is being built. The ' + perm.kitName +
+            ' limits what he STARTS with, not what he may ever learn \u2014 this ' +
+            'opens up above 1st level.'
+          : (perm.via === 'whitelist'
+              ? 'Not on the ' + perm.kitName + '\u2019s permitted weapon list.'
+              : 'Barred by the ' + perm.kitName + ' kit.')) +
         (perm.printed ? '\u000a\u000aThe book says: \u201c' + perm.printed + '\u201d' : '') +
         '\u000a\u000aAdvisory only \u2014 PHBR1 p.37 says a DM may modify any kit. If yours ' +
         'has, add it with the custom button below.';
