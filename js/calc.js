@@ -2880,7 +2880,15 @@ function populateKitVariantDropdown(root) {
   // Race only PRESELECTS -- it never locks. A DM may perfectly well allow a
   // human raised among dwarven Amazons, and the same reasoning that makes the
   // Fallen Paladin's alignment a prompt rather than a gate applies here.
-  const stored = val(root, 'kit_variant') || current;
+  // The pending value from loadSheet wins, and is consumed once -- it exists
+  // only because the select had no options when the character was loaded. After
+  // that the field itself is the source of truth, so a later kit change is not
+  // overridden by a stale load-time value.
+  let stored = val(root, 'kit_variant') || current;
+  if (root._pendingKitVariant) {
+    stored = root._pendingKitVariant;
+    root._pendingKitVariant = '';
+  }
   const race   = (val(root, 'race') || '').trim().toLowerCase();
   if (stored && has(stored))                                sel.value = stored;
   else if (v.axis === 'race' && has(race))                  sel.value = race;
