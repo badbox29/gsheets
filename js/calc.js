@@ -2815,6 +2815,77 @@ function populateKitDropdown(root) {
   if (currentKit && Array.from(kitSelect.options).some(opt => opt.value === currentKit)) {
     kitSelect.value = currentKit;
   }
+
+  if (typeof populateKitVariantDropdown === 'function') populateKitVariantDropdown(root);
+}
+
+// The kit object currently selected, or null. Both the variant dropdown and
+// renderKitAbilities need it, and resolving it twice from the same three fields
+// is how two renderers start disagreeing about which kit is selected.
+function getSelectedKit(root) {
+  const clazz    = (val(root, "clazz") || "").trim().toLowerCase();
+  const kitValue = (val(root, "kit") || "").trim();
+  if (!clazz || !kitValue || typeof getKitsForClass !== 'function') return null;
+  return getKitsForClass(clazz)
+    .find(k => k.name.toLowerCase().replace(/\s+/g, '') === kitValue) || null;
+}
+
+// PHBR1. A few kits are ONE kit in the book that BRANCHES -- Pirate/Outlaw on
+// orientation, the Amazon on race -- so the column appears only when the
+// selected kit carries a `variants` block, and vanishes otherwise.
+//
+// `default: null` means the choice is MANDATORY and the character is incomplete
+// until it is made (Pirate/Outlaw: neither orientation is the fallback). A
+// non-null default means the axis is refinement and ignoring it still yields a
+// correct character (Amazon: human).
+function populateKitVariantDropdown(root) {
+  const col = root.querySelector('.kit-variant-col');
+  const sel = root.querySelector('[data-field="kit_variant"]');
+  if (!col || !sel) return;
+
+  const kit = getSelectedKit(root);
+  const v   = kit && kit.variants;
+  if (!v || !Array.isArray(v.options) || !v.options.length) {
+    col.style.display = 'none';
+    sel.innerHTML = '';
+    return;
+  }
+
+  col.style.display = '';
+  const label = col.querySelector('.kit-variant-label');
+  if (label) {
+    label.textContent = v.axis
+      ? v.axis.charAt(0).toUpperCase() + v.axis.slice(1)
+      : 'Variant';
+  }
+  sel.title = v.axisPrinted || '';
+
+  const current = sel.value;
+  sel.innerHTML = (v.default === null || v.default === undefined)
+    ? '<option value="">\u2014 choose \u2014</option>'
+    : '';
+  v.options.forEach(o => {
+    const opt = document.createElement('option');
+    opt.value = o.key;
+    opt.textContent = o.label || o.key;
+    if (o.note) opt.title = o.note;
+    sel.appendChild(opt);
+  });
+
+  const has = k => Array.from(sel.options).some(o => o.value === k);
+
+  // Restore, then fall back through: the character's stored choice, then the
+  // RACE if that is what the axis is about, then the book's default.
+  //
+  // Race only PRESELECTS -- it never locks. A DM may perfectly well allow a
+  // human raised among dwarven Amazons, and the same reasoning that makes the
+  // Fallen Paladin's alignment a prompt rather than a gate applies here.
+  const stored = val(root, 'kit_variant') || current;
+  const race   = (val(root, 'race') || '').trim().toLowerCase();
+  if (stored && has(stored))                                sel.value = stored;
+  else if (v.axis === 'race' && has(race))                  sel.value = race;
+  else if (v.default && has(v.default))                     sel.value = v.default;
+  else                                                      sel.value = sel.options[0].value;
 }
 
 function renderKitAbilities(root) {
