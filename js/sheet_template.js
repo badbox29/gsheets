@@ -754,6 +754,10 @@ const SHEET_HTML = `
               <input data-field="prof_wp_adj" type="number" value="0">
             </span>
           </div>
+         <!-- Weapon-side kit advisories. A SEPARATE banner from the nonweapon
+               one: each sits above the list that resolves it, so the prompt and
+               the action are never on different parts of the page. -->
+          <div class="kit-advisory-note-wpn" style="display:none;margin-bottom:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
          <div class="list weapon-profs-list"></div>
 
           <!-- PHBR1 pp.61-64. Placed HERE, under the weapon slot counter, because
