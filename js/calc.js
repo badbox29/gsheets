@@ -3002,6 +3002,82 @@ function renderKitAbilities(root) {
   }
 }
 
+// Bring the character's nonweapon proficiency list into line with what his kit
+// GRANTS. Called whenever the kit, the variant or the class changes.
+//
+// AUTO-MANAGED RECORDS, the same contract as the kit ability cards: anything
+// this function added, it may remove. A record is marked isKitGranted and is
+// swept on every run, so switching kits never leaves a previous kit's free
+// proficiencies behind.
+//
+// THREE CASES, and the middle one is the reason this cannot be a simple add:
+//
+//   not present            -> add it, granted, 0 slots
+//   present and granted    -> leave it; it is ours and still correct
+//   present and NOT granted -> the player bought it himself before taking the
+//                             kit. Do NOT add a duplicate and do NOT silently
+//                             seize his record: mark it granted so he stops
+//                             being charged, and remember that he owned it, so
+//                             that abandoning the kit hands it back rather than
+//                             deleting a proficiency he paid for.
+//
+// PHBR11 p.77 and PHBR1 p.37 both say bonus proficiencies are NOT lost when a
+// kit is abandoned -- "the character doesn't lose those, but he must pay for
+// them from the next free slots he has available". Removing a granted record
+// outright would break that rule, so a record the player owned first is only
+// ever un-granted, never deleted.
+function syncKitGrantedNWPs(root) {
+  if (!root._nwps) root._nwps = [];
+  const list = root._nwps;
+
+  const prof = (typeof getKitProficiencies === 'function') ? getKitProficiencies(root) : null;
+  const want = (prof && prof.nonweapon && Array.isArray(prof.nonweapon.bonus))
+    ? prof.nonweapon.bonus.slice() : [];
+
+  // bonusChoice is a CHOICE the player has not been asked to make yet -- "Bonus:
+  // Hunting or Fishing" is one free proficiency, not two -- so nothing is
+  // granted from it automatically. It surfaces as an advisory instead.
+  const norm = s => String(s || '').trim().toLowerCase();
+  const wanted = new Set(want.map(norm));
+
+  // Sweep: drop records WE created that are no longer wanted; hand back records
+  // the player owned first.
+  for (let i = list.length - 1; i >= 0; i--) {
+    const n = list[i];
+    if (!n || !n.isKitGranted) continue;
+    if (wanted.has(norm(n.name))) continue;
+    if (n.wasPlayerOwned) {
+      delete n.isKitGranted;
+      delete n.wasPlayerOwned;
+    } else {
+      list.splice(i, 1);
+    }
+  }
+
+  // Add or adopt.
+  want.forEach(name => {
+    const existing = list.find(n => n && norm(n.name) === norm(name));
+    if (existing) {
+      if (!existing.isKitGranted) {
+        existing.wasPlayerOwned = true;
+        existing.isKitGranted   = true;
+      }
+      return;
+    }
+    const rec = (typeof NWP_DATA !== 'undefined' && Array.isArray(NWP_DATA))
+      ? NWP_DATA.find(r => norm(r['Proficiency Name']) === norm(name))
+      : null;
+    list.push({
+      name:         rec ? rec['Proficiency Name'] : name,
+      category:     rec ? (rec.Category || '') : '',
+      slots:        0,
+      abilityCheck: rec ? (rec['Ability Check'] || '') : '',
+      notes:        rec ? (rec.Notes || '') : '',
+      isKitGranted: true
+    });
+  });
+}
+
 // The kit's proficiency block with the selected variant's overrides applied.
 // THE ONE READER, for when consumers are built -- the four-way schema has none
 // yet, and resolving the merge separately in each would be how they start
