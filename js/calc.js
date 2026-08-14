@@ -6750,7 +6750,32 @@ function getFightingStyles(root) {
 }
 
 // Render the weapon + nonweapon proficiency slot counters (PHB Table 34).
+// The weapon proficiency browser answers questions ABOUT THE CHARACTER -- is
+// this already Known, is it Covered by a paired proficiency, does his kit permit
+// it, and has a creation-scope restriction lapsed -- but it is rendered only by
+// its own Refresh button and its three filter dropdowns. So every one of those
+// answers went stale the moment anything changed, and the player had to know to
+// press Refresh to see the truth. Learning a weapon did not flip its row to
+// Known either; that predates the kit work.
+//
+// HOOKED IN renderProficiencySlots, ONE PLACE, because everything that can
+// change an answer already reaches it: recalculateAll for level, class, kit and
+// char_type; renderWeaponProficiencies for learn and delete; loadSheet and
+// bindSheet on the way in. A list of individual call sites is what rots -- see
+// the drift the class/level listener accumulated.
+//
+// GUARDED ON VISIBILITY. This runs from recalculateAll, which fires on every
+// keystroke anywhere on the sheet, and a rebuild is ~109 rows. Closed panel,
+// no work. Fire-and-forget: renderWeaponBrowser is async and nothing here
+// depends on its result.
+function refreshWeaponBrowserIfOpen(root) {
+  const panel = root && root.querySelector('.weapon-browser-content');
+  if (!panel || panel.style.display === 'none') return;
+  if (typeof renderWeaponBrowser === 'function') renderWeaponBrowser(root);
+}
+
 function renderProficiencySlots(root) {
+  refreshWeaponBrowserIfOpen(root);
   // FIRST statement deliberately. This function has two early returns below --
   // missing elements, and an unrecognized class whose budget cannot be computed
   // -- and the Proficiency Abilities section must still render for a homebrew
