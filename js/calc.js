@@ -3060,6 +3060,38 @@ function renderKitAdvisories(root) {
                'a slot like any other proficiency.');
   });
 
+  // 4. REQUIRED WEAPONS. Six kits have them and NONE has bonus weapons, so this
+  //    side is advisory only -- nothing is ever granted free. Matched through
+  //    samePHBR1Proficiency so a Stalker who bought Knife is not told to go and
+  //    buy Stiletto: they are one proficiency with two names.
+  const wpn   = (prof && prof.weapon) || {};
+  const wOwn  = (root._weaponProfs || []).map(w => String(w && w.name || ''));
+  const hasW  = n => wOwn.some(o =>
+    norm(o) === norm(n) ||
+    (typeof samePHBR1Proficiency === 'function' && samePHBR1Proficiency(o, n)));
+
+  (wpn.required || []).filter(n => !hasW(n)).forEach(n => {
+    items.push('<b>' + n + '</b> is a required WEAPON proficiency for this kit ' +
+               '(Weapons &amp; Armor tab).');
+  });
+
+  // A required CHOICE -- "Lance (any; player choice)", "Belaying Pin or
+  // Gaff/Hook". Satisfied by any one of the group, so it clears as soon as the
+  // player owns one.
+  (wpn.requiredChoice || []).forEach(group => {
+    if (group.some(hasW)) return;
+    items.push('Required weapon proficiency, choose one: <b>' +
+               group.join('</b> or <b>') + '</b> (Weapons &amp; Armor tab).');
+  });
+
+  (wpn.requiredChoiceGroups || []).forEach(g => {
+    const inGroup = (root._weaponProfs || []).some(w =>
+      w && norm(w.group) === norm(g));
+    if (inGroup) return;
+    items.push('This kit requires a weapon proficiency from the <b>' + g +
+               '</b> group, your choice of which (Weapons &amp; Armor tab).');
+  });
+
   if (!items.length) { el.style.display = 'none'; el.innerHTML = ''; return; }
 
   el.innerHTML =
@@ -6374,6 +6406,7 @@ function addWeaponProficiency(root, weapon) {
   });
   
   renderWeaponProficiencies(root);
+  if (typeof renderKitAdvisories === 'function') renderKitAdvisories(root);
   
   // Mark as unsaved
   const tab = document.querySelector('.tab.active');
@@ -6894,6 +6927,8 @@ function deleteWeaponProficiency(root, index) {
   if (confirm(`Remove ${weaponName} proficiency?`)) {
     root._weaponProfs.splice(index, 1);
     renderWeaponProficiencies(root);
+    // Removal can UN-satisfy a required weapon, so the banner line comes back.
+    if (typeof renderKitAdvisories === 'function') renderKitAdvisories(root);
     
     // Mark as unsaved
     const tab = document.querySelector('.tab.active');
@@ -6940,6 +6975,10 @@ function addCustomWeaponProficiency(root) {
   });
   
   renderWeaponProficiencies(root);
+  // A weapon proficiency can satisfy a kit's required list, which clears a line
+  // from the advisory banner. Neither renderWeaponProficiencies nor
+  // recalculateAll reaches the kit renderers.
+  if (typeof renderKitAdvisories === 'function') renderKitAdvisories(root);
   
   // Mark as unsaved
   const tab = document.querySelector('.tab.active');
