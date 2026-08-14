@@ -4026,6 +4026,7 @@ const WEAPON_TYPES = {
   sword_khopesh:           { label: 'Khopesh',             group: 'Sword',     category: 'Melee',         wpName: "Sword, Khopesh" },
   sword_long:              { label: 'Long Sword',          group: 'Sword',     category: 'Melee',         wpName: "Sword, Long" },
   sword_scimitar:          { label: 'Scimitar',            group: 'Sword',     category: 'Melee',         wpName: "Scimitar" },
+  sword_drusus:            { label: 'Drusus',              group: 'Sword',     category: 'Melee',         wpName: "Drusus" },
   sword_short:             { label: 'Short Sword',         group: 'Sword',     category: 'Melee',         wpName: "Sword, Short" },
   sword_two_handed:        { label: 'Two-Handed Sword',    group: 'Sword',     category: 'Melee',         wpName: "Sword, Two-Handed" },
   sword_wakizashi:         { label: 'Wakizashi',           group: 'Sword',     category: 'Melee',         wpName: "Wakizashi" },
@@ -4041,8 +4042,10 @@ const WEAPON_TYPES = {
   axe_battle:              { label: 'Battle Axe',          group: 'Axe',       category: 'Melee',         wpName: "Battle Axe" },
   axe_hand:                { label: 'Hand Axe',            group: 'Axe',       category: 'Melee/Thrown',  wpName: "Hand Axe" },
   // --- Club ---
+  cestus:                  { label: 'Cestus',              group: 'Club',      category: 'Melee',         wpName: "Cestus" },
   club:                    { label: 'Club',                group: 'Club',      category: 'Melee',         wpName: "Club" },
   // --- Flail ---
+  chain:                   { label: 'Chain',               group: 'Flail',     category: 'Melee',         wpName: "Chain" },
   flail_footmans:          { label: 'Footman\'s Flail',    group: 'Flail',     category: 'Melee',         wpName: "Flail, Footman's" },
   flail_horsemans:         { label: 'Horseman\'s Flail',   group: 'Flail',     category: 'Melee',         wpName: "Flail, Horseman's" },
   flail_nunchaku:          { label: 'Nunchaku',            group: 'Flail',     category: 'Melee',         wpName: "Nunchaku" },
@@ -4076,6 +4079,8 @@ const WEAPON_TYPES = {
   polearm_guisarme:        { label: 'Guisarme',            group: 'Polearm',   category: 'Melee',         wpName: "Guisarme" },
   polearm_guisarme_voulge: { label: 'Guisarme-Voulge',     group: 'Polearm',   category: 'Melee',         wpName: "Guisarme-Voulge" },
   polearm_halberd:         { label: 'Halberd',             group: 'Polearm',   category: 'Melee',         wpName: "Halberd" },
+  polearm_naginata:        { label: 'Naginata',            group: 'Polearm',   category: 'Melee',         wpName: "Naginata" },
+  polearm_tetsubo:         { label: 'Tetsubo',             group: 'Polearm',   category: 'Melee',         wpName: "Tetsubo" },
   polearm_hook_fauchard:   { label: 'Hook Fauchard',       group: 'Polearm',   category: 'Melee',         wpName: "Hook Fauchard" },
   polearm_lucern_hammer:   { label: 'Lucern Hammer',       group: 'Polearm',   category: 'Melee',         wpName: "Lucern Hammer" },
   polearm_mancatcher:      { label: 'Mancatcher',          group: 'Polearm',   category: 'Melee',         wpName: "Mancatcher" },
@@ -4102,6 +4107,7 @@ const WEAPON_TYPES = {
   // --- Whip ---
   whip:                    { label: 'Whip',                group: 'Whip',      category: 'Melee',         wpName: "Whip" },
   // --- Net ---
+  lasso:                   { label: 'Lasso',               group: 'Net',       category: 'Melee',         wpName: "Lasso" },
   net:                     { label: 'Net',                 group: 'Net',       category: 'Thrown',        wpName: "Net" },
   // --- Bola ---
   bola:                    { label: 'Bola',                group: 'Bola',      category: 'Thrown',        wpName: "Bola" },
@@ -4109,6 +4115,7 @@ const WEAPON_TYPES = {
   bow_composite_long:      { label: 'Composite Long Bow',  group: 'Bow',       category: 'Ranged',        wpName: "Composite Long Bow" },
   bow_composite_short:     { label: 'Composite Short Bow', group: 'Bow',       category: 'Ranged',        wpName: "Composite Short Bow" },
   bow_long:                { label: 'Long Bow',            group: 'Bow',       category: 'Ranged',        wpName: "Long Bow" },
+  bow_daikyu:              { label: 'Daikyu',              group: 'Bow',       category: 'Ranged',        wpName: "Daikyu" },
   bow_short:               { label: 'Short Bow',           group: 'Bow',       category: 'Ranged',        wpName: "Short Bow" },
   // --- Crossbow ---
   crossbow_hand:           { label: 'Hand Crossbow',       group: 'Crossbow',  category: 'Ranged',        wpName: "Hand Crossbow" },
