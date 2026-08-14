@@ -2462,8 +2462,26 @@ function getWeaponSpecialization(root, weaponEl) {
   const norm = s => String(s || '').trim().toLowerCase();
   const names = [td && td.wpName, td && td.label, wtype].filter(Boolean).map(norm);
 
+  // SAME-PROFICIENCY PAIRS. Knife/Stiletto, Quarterstaff/Bo Stick and Short
+  // Sword/Drusus are ONE proficiency with two names, not two proficiencies that
+  // resemble each other -- PHBR1 p.59 prints each as a single slash-joined entry
+  // in its weapon-group lists, exactly as it prints "Dagger/Dirk". There is only
+  // ever one slot to have spent, so a specialist in either name is a specialist
+  // in both.
+  //
+  // UNIFORM across all three pairs. p.98 states the transfer explicitly for the
+  // Drusus and is silent for the other two, which looks like a distinction until
+  // you notice the Drusus is a genuinely different weapon -- 50 gp, size M,
+  // type S -- that a reader would reasonably ask about, while a stiletto costs
+  // the same as a knife and differs only in damage type. Do NOT add a per-pair
+  // flag for this; the asymmetry is in the prose, not in the rules.
   const profs = root._weaponProfs || [];
-  const specialized = profs.some(p => p && p.specialized && names.indexOf(norm(p.name)) !== -1);
+  const specialized = profs.some(p => {
+    if (!p || !p.specialized) return false;
+    if (names.indexOf(norm(p.name)) !== -1) return true;
+    return (typeof samePHBR1Proficiency === 'function') &&
+           names.some(n => samePHBR1Proficiency(n, p.name));
+  });
 
   return { specialized, wtype, category, group, level };
 }
