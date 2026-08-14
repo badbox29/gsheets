@@ -6255,7 +6255,14 @@ function renderProficiencySlots(root) {
   let wpSpent = 0;
   let specCount = 0;
   weaponProfs.forEach(w => {
-    wpSpent += (parseInt(w.slots, 10) || 1);
+    // `|| 1` cannot distinguish an ABSENT slots value from a deliberate ZERO,
+    // and 0 is falsy -- so a free proficiency was charged a slot anyway. The
+    // cestus is the first weapon to need it (PHBR1 p.96: no proficiency
+    // required, which is why specializing costs one slot rather than two), and
+    // core_wp.json now carries a `No Proficiency` column so others can follow
+    // without code changes.
+    const wSlots = parseInt(w.slots, 10);
+    wpSpent += isNaN(wSlots) ? 1 : wSlots;
     if (w.specialized) {
       wpSpent += getSpecializationCost(w.group);
       specCount++;
