@@ -6120,6 +6120,16 @@ function collectSheet(root){
     // attacks on a round he is forced to use the wrong hand. "If he does not
     // specify one, the DM should assume the character is right-handed."
     handedness: val(root,'handedness'),
+    // PHBR1. The branching-kit choice — Pirate/Outlaw orientation, Amazon race.
+    // TOP LEVEL, not inside meta, because that is where loadSheet reads it from.
+    // It was written NOWHERE until now: loadSheet has always read data.kitVariant
+    // and collectSheet has never produced it, so every variant silently reset to
+    // the race-or-default fallback on the next load.
+    kitVariant: val(root,'kit_variant'),
+    // Kit-granted proficiencies the player has deliberately deleted. Without
+    // this the next syncKitGrantedNWPs puts every one of them straight back, so
+    // the decision survived only until the character was reloaded.
+    declinedGrants: root._declinedGrants || [],
     selectedSpheres: selectedSpheres,
     selectedSchools: selectedSchools,
 	languages: languages,
@@ -6377,6 +6387,13 @@ function loadSheet(root, data){
   // is deliberately left outside that window: a call with no data renders
   // nothing, so it must not invalidate a sheet that already rendered fine.
   root._renderComplete = false;
+
+  // Declined kit grants. Set HERE, at the very top, because syncKitGrantedNWPs
+  // reads it on the FIRST kit render -- set it any later and that first sync
+  // re-adds every grant the player deleted, which is the bug this fixes.
+  // Absent on records saved before this existed, which reads as an empty list:
+  // nothing declined, every grant restored exactly as before.
+  root._declinedGrants = Array.isArray(data.declinedGrants) ? data.declinedGrants : [];
 
   // Twelve list builders below pass ()=>markUnsaved(tab,true,root) as their
   // onChange, but this function's signature is (root, data) -- there has never
