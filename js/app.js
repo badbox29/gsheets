@@ -8166,6 +8166,12 @@ function bindSheet(root, tab){
     if (f === 'kit') {
       const sel = root.querySelector('[data-field="kit_variant"]');
       if (sel) sel.value = '';
+      // Repopulate EXPLICITLY. populateKitVariantDropdown is called from inside
+      // populateKitDropdown, which only runs when the CLASS changes -- so on a
+      // kit change it was never reached, and the column stayed in whatever state
+      // the last class change left it: hidden, because the kit was empty then.
+      // recalculateAll does not touch the kit dropdowns either.
+      if (typeof populateKitVariantDropdown === 'function') populateKitVariantDropdown(root);
       if (typeof recalculateAll === 'function') recalculateAll(root);
     }
     if (f === 'kit_variant' && typeof recalculateAll === 'function') recalculateAll(root);
