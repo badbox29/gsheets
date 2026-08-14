@@ -2950,6 +2950,13 @@ function renderKitAbilities(root) {
   // shares one Description and one Role but branches its weapons, bonus
   // proficiencies and secondary skill, so a character with no orientation is
   // not half-built -- he is un-built, and silence would hide that.
+  // Kit-granted proficiencies are part of what the kit IS, so they sync wherever
+  // the kit's abilities render -- one call site, firing on class change, kit
+  // change, variant change and load. renderNWProficiencies afterwards, because
+  // the sync mutates root._nwps and the list is already on screen.
+  if (typeof syncKitGrantedNWPs === 'function') syncKitGrantedNWPs(root);
+  if (typeof renderNWProficiencies === 'function') renderNWProficiencies(root);
+
   // PREPENDED, not appended -- the branching choice is what defines the
   // character, so it reads first rather than after four cards that are true of
   // both branches. `insertBefore(..., firstChild)` rather than a second loop,
@@ -7074,7 +7081,16 @@ function renderNWProficiencies(root) {
 
     const baseSlots = parseInt(nwp.slots, 10) || 1;
     const effCost   = getNWPSlotCost(nwp, nwpAllowedGroups);
-    const slotText  = effCost > baseSlots
+    // A proficiency that costs nothing must SAY why, or it reads as a bug.
+    // GRANTED in words rather than a colour alone: the status vocabulary is full
+    // at five tokens, and this is a claim about where a proficiency CAME FROM,
+    // not a rules state of the character.
+    const slotText  = nwp.isKitGranted
+      ? `<span style="color:var(--accent-light);" title="Granted free by your kit ` +
+        `(PHBR11 p.77, PHBR1 p.37). Bonus proficiencies are NOT lost if you abandon ` +
+        `the kit -- you keep them, but must pay for them out of the next free slots ` +
+        `you have available.">GRANTED \u00B7 0 slots</span>`
+      : effCost > baseSlots
       ? `<span style="color:var(--error, #ff6b6b);" title="Out-of-group proficiency: +1 slot (PHB Table 38)">Slots: ${effCost} (${baseSlots} +1 out-of-group)</span>`
       : `Slots: ${effCost}`;
 
