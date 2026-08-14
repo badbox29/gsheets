@@ -6422,7 +6422,6 @@ function addWeaponProficiency(root, weapon) {
   });
   
   renderWeaponProficiencies(root);
-  if (typeof renderKitAdvisories === 'function') renderKitAdvisories(root);
   
   // Mark as unsaved
   const tab = document.querySelector('.tab.active');
@@ -6945,8 +6944,6 @@ function deleteWeaponProficiency(root, index) {
   if (confirm(`Remove ${weaponName} proficiency?`)) {
     root._weaponProfs.splice(index, 1);
     renderWeaponProficiencies(root);
-    // Removal can UN-satisfy a required weapon, so the banner line comes back.
-    if (typeof renderKitAdvisories === 'function') renderKitAdvisories(root);
     
     // Mark as unsaved
     const tab = document.querySelector('.tab.active');
@@ -6992,11 +6989,8 @@ function addCustomWeaponProficiency(root) {
     slots: parseInt(slots) || 1
   });
   
+  // renderWeaponProficiencies fires renderKitAdvisories itself, at its tail.
   renderWeaponProficiencies(root);
-  // A weapon proficiency can satisfy a kit's required list, which clears a line
-  // from the advisory banner. Neither renderWeaponProficiencies nor
-  // recalculateAll reaches the kit renderers.
-  if (typeof renderKitAdvisories === 'function') renderKitAdvisories(root);
   
   // Mark as unsaved
   const tab = document.querySelector('.tab.active');
