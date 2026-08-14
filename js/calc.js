@@ -2941,6 +2941,89 @@ function renderKitAbilities(root) {
     }, () => markUnsaved(document.querySelector('.tab.active'), true, root));
     kitAbilitiesList.appendChild(node);
   });
+
+  // THE VARIANT CARD. Without this the orientation dropdown is inert -- the
+  // choice changes proficiency data that has no consumer yet, so a player would
+  // pick Pirate or Outlaw and watch nothing happen.
+  //
+  // An unmade MANDATORY choice (default: null) gets a card too. Pirate/Outlaw
+  // shares one Description and one Role but branches its weapons, bonus
+  // proficiencies and secondary skill, so a character with no orientation is
+  // not half-built -- he is un-built, and silence would hide that.
+  const kit = (typeof getSelectedKit === 'function') ? getSelectedKit(root) : null;
+  const v   = kit && kit.variants;
+  if (v && Array.isArray(v.options) && v.options.length) {
+    const chosen = (val(root, 'kit_variant') || '').trim();
+    const opt    = v.options.find(o => o.key === chosen);
+    const axis   = v.axis || 'variant';
+
+    if (opt) {
+      const bits = [];
+      if (opt.note) bits.push(opt.note);
+      const p = opt.proficiencies || {};
+      ['weapon', 'nonweapon'].forEach(sec => {
+        const d = p[sec];
+        if (!d) return;
+        const parts = [];
+        ['bonus', 'required', 'recommended', 'allowed', 'barred'].forEach(f => {
+          if (Array.isArray(d[f]) && d[f].length) {
+            parts.push(f.charAt(0).toUpperCase() + f.slice(1) + ': ' + d[f].join(', '));
+          }
+        });
+        if (d.allowedPrinted) parts.push(d.allowedPrinted);
+        if (parts.length) {
+          bits.push((sec === 'weapon' ? 'Weapon proficiencies. ' : 'Nonweapon proficiencies. ')
+                    + parts.join('. ') + '.');
+        }
+      });
+      kitAbilitiesList.appendChild(makeAbilityNode({
+        name:   (opt.label || opt.key) + ' (' + axis + ')',
+        notes:  bits.join(' '),
+        isAuto: true
+      }, () => markUnsaved(document.querySelector('.tab.active'), true, root)));
+    } else if (v.default === null || v.default === undefined) {
+      kitAbilitiesList.appendChild(makeAbilityNode({
+        name:   'Choose an ' + axis,
+        notes:  'This kit branches: ' +
+                v.options.map(o => o.label || o.key).join(' or ') +
+                '. They differ in required weapons, bonus proficiencies and ' +
+                'secondary skill, and neither is the default -- until you choose ' +
+                'one on the Core tab, this kit grants nothing. ' +
+                (v.axisPrinted || ''),
+        isAuto: true
+      }, () => markUnsaved(document.querySelector('.tab.active'), true, root)));
+    }
+  }
+}
+
+// The kit's proficiency block with the selected variant's overrides applied.
+// THE ONE READER, for when consumers are built -- the four-way schema has none
+// yet, and resolving the merge separately in each would be how they start
+// disagreeing about what a Pirate is proficient with.
+//
+// An option's `proficiencies` overrides the kit's own block PER SECTION: the
+// Amazon's dwarf variant replaces only `weapon`, so the human bonus nonweapon
+// proficiencies still apply, while her gnome variant replaces both. A section
+// the variant does not name is inherited whole, never merged field by field --
+// a variant that names `weapon` is stating what that weapon block IS.
+function getKitProficiencies(root) {
+  const kit = (typeof getSelectedKit === 'function') ? getSelectedKit(root) : null;
+  if (!kit) return null;
+
+  const base = kit.proficiencies || null;
+  const v    = kit.variants;
+  if (!v || !Array.isArray(v.options) || !v.options.length) return base;
+
+  const chosen = (val(root, 'kit_variant') || '').trim() ||
+                 (v.default || '');
+  const opt = v.options.find(o => o.key === chosen);
+  if (!opt || !opt.proficiencies) return base;
+
+  const out = Object.assign({}, base || {});
+  ['weapon', 'nonweapon'].forEach(sec => {
+    if (opt.proficiencies[sec]) out[sec] = opt.proficiencies[sec];
+  });
+  return out;
 }
 
 // PHBR1 pp.62-63. Two-Hander Style Specialization, which grants TWO different
