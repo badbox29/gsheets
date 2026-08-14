@@ -6470,7 +6470,14 @@ async function renderWeaponBrowser(root) {
     const learnBtn = document.createElement('button');
     learnBtn.style.cssText = 'padding:4px 12px;font-size:12px;margin-left:8px;flex-shrink:0;';
 
-    if (noProf && !haveIt) {
+    // The barred test is deliberately allowed to PRE-EMPT this branch. A cestus
+    // costs no proficiency slot (PHBR1 p.96), so the zero-cost Add is normally
+    // right -- but a kit that restricts which weapons the character may use
+    // still has something to say about it, and a row showing a red "not
+    // permitted" tag beside a live Add button is incoherent whichever way the
+    // rule falls. haveIt still wins over both: a cestus already owned reads
+    // Known regardless of what the kit says.
+    if (noProf && !haveIt && !(perm.active && perm.state === 'barred')) {
       // NOT disabled. PHBR1 p.96: "Cestus ... does not require weapon
       // proficiency; anyone can use cesti with no proficiency penalty.
       // Therefore, Specialization with Cestus costs only one weapon proficiency
