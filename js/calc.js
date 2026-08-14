@@ -1,4 +1,4 @@
-// ===== Utilities =====
+// ===== Utilities =====.
 function renderWisdomPriestEffects(root) {
   const clazz = (val(root,"clazz")||"").toLowerCase();
   const wis = parseInt(val(root,"wis")||0,10);
