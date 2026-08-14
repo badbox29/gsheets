@@ -2115,7 +2115,15 @@ function makeAbilityNode(data={}, onChange){
     '</div>' +
     '<div style="margin-top:6px;">' +
       '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Notes</label>' +
-      '<input class="notes val" placeholder="" value="'+escapeHtml(data.notes||'')+'" style="width:100%">' +
+      // TEXTAREA, not input. Kit ability notes are transcribed book prose and
+      // routinely run to several hundred characters -- the Berserker's Going
+      // Berserk card is over a thousand -- so a one-line input made every one of
+      // them a horizontal scroll. The value goes BETWEEN the tags here, not in a
+      // value attribute.
+      '<textarea class="notes val" placeholder="" rows="1" ' +
+        'style="width:100%;resize:vertical;overflow:hidden;">' +
+        escapeHtml(data.notes||'') +
+      '</textarea>' +
     '</div>';
   
   el.querySelector('.rm').onclick=()=>{ el.remove(); onChange && onChange(); };
@@ -2124,6 +2132,17 @@ function makeAbilityNode(data={}, onChange){
       onChange && onChange();
     });
   });
+
+  // Grow to fit on load and on every edit. autoExpand needs the element to be
+  // laid out to measure scrollHeight, and this node is built BEFORE it is
+  // appended, so the initial call is deferred a tick. The two existing sweeps
+  // (on tab switch and after load) will re-fit anything that was hidden at the
+  // time, which is what makes a card on an inactive tab come out right.
+  const notesEl = el.querySelector('.notes');
+  if (notesEl && typeof autoExpand === 'function') {
+    notesEl.addEventListener('input', () => autoExpand(notesEl));
+    setTimeout(() => autoExpand(notesEl), 0);
+  }
   return el;
 }
 function makeSpellNode(data={}, onChange){
