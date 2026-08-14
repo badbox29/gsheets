@@ -3071,8 +3071,10 @@ function renderKitAdvisories(root) {
     (typeof samePHBR1Proficiency === 'function' && samePHBR1Proficiency(o, n)));
 
   (wpn.required || []).filter(n => !hasW(n)).forEach(n => {
-    items.push('<b>' + n + '</b> is a required WEAPON proficiency for this kit ' +
-               '(Weapons &amp; Armor tab).');
+    items.push('<b>' + n + '</b> is a required weapon PROFICIENCY for this kit \u2014 ' +
+               'add it under Weapon Proficiencies above. Owning the weapon is not ' +
+               'the same thing; an Amazon carrying a spear she is not trained with ' +
+               'still fights at the non-proficiency penalty.');
   });
 
   // A required CHOICE -- "Lance (any; player choice)", "Belaying Pin or
@@ -3081,7 +3083,8 @@ function renderKitAdvisories(root) {
   (wpn.requiredChoice || []).forEach(group => {
     if (group.some(hasW)) return;
     items.push('Required weapon proficiency, choose one: <b>' +
-               group.join('</b> or <b>') + '</b> (Weapons &amp; Armor tab).');
+               group.join('</b> or <b>') + '</b> \u2014 add it under Weapon ' +
+               'Proficiencies above.');
   });
 
   (wpn.requiredChoiceGroups || []).forEach(g => {
@@ -3089,7 +3092,8 @@ function renderKitAdvisories(root) {
       w && norm(w.group) === norm(g));
     if (inGroup) return;
     items.push('This kit requires a weapon proficiency from the <b>' + g +
-               '</b> group, your choice of which (Weapons &amp; Armor tab).');
+               '</b> group, your choice of which \u2014 add it under Weapon ' +
+               'Proficiencies above.');
   });
 
   if (!items.length) { el.style.display = 'none'; el.innerHTML = ''; return; }
