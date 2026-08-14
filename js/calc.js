@@ -3061,6 +3061,24 @@ function renderKitAdvisories(root) {
                '</b>. Add it below and it becomes free.');
   });
 
+  // 2a. DECLINED GRANTS. A player may delete a proficiency his kit gives him --
+  //     PHBR1 p.37 tells DMs to modify kits -- and that decision now persists.
+  //     Say so: a granted proficiency silently absent from the list below is
+  //     indistinguishable from a bug, and this is the only advisory that
+  //     reports something the player has taken away rather than not yet bought.
+  //
+  //     UNCONDITIONAL BONUSES ONLY. A declined bonusChoice pick must NEVER
+  //     appear here: deleting one is how you SWITCH, and the choose-one line
+  //     above correctly reappears at that same moment. Two banner lines for one
+  //     deliberate act, one of them telling him to undo it, is worse than none.
+  const declined = Array.isArray(root._declinedGrants) ? root._declinedGrants : [];
+  (nwp.bonus || [])
+    .filter(n => !has(n) && declined.some(d => nz(d) === nz(n)))
+    .forEach(n => {
+      items.push('<b>' + n + '</b> is granted free by this kit and you have ' +
+                 'removed it. Add it back below to restore it, or leave it as it is.');
+    });
+
   // 3. REQUIRED proficiencies not yet bought. The kit forces a slot onto these,
   //    so they are the player's to buy -- never auto-added, unlike bonuses.
   (nwp.required || []).filter(n => !has(n)).forEach(n => {
