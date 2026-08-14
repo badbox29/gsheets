@@ -2950,6 +2950,12 @@ function renderKitAbilities(root) {
   // shares one Description and one Role but branches its weapons, bonus
   // proficiencies and secondary skill, so a character with no orientation is
   // not half-built -- he is un-built, and silence would hide that.
+  // PREPENDED, not appended -- the branching choice is what defines the
+  // character, so it reads first rather than after four cards that are true of
+  // both branches. `insertBefore(..., firstChild)` rather than a second loop,
+  // because the shared cards were just appended above.
+  const addVariantCard = node => kitAbilitiesList.insertBefore(node, kitAbilitiesList.firstChild);
+
   const kit = (typeof getSelectedKit === 'function') ? getSelectedKit(root) : null;
   const v   = kit && kit.variants;
   if (v && Array.isArray(v.options) && v.options.length) {
@@ -2976,13 +2982,13 @@ function renderKitAbilities(root) {
                     + parts.join('. ') + '.');
         }
       });
-      kitAbilitiesList.appendChild(makeAbilityNode({
+      addVariantCard(makeAbilityNode({
         name:   (opt.label || opt.key) + ' (' + axis + ')',
         notes:  bits.join(' '),
         isAuto: true
       }, () => markUnsaved(document.querySelector('.tab.active'), true, root)));
     } else if (v.default === null || v.default === undefined) {
-      kitAbilitiesList.appendChild(makeAbilityNode({
+      addVariantCard(makeAbilityNode({
         name:   'Choose an ' + axis,
         notes:  'This kit branches: ' +
                 v.options.map(o => o.label || o.key).join(' or ') +
