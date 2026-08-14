@@ -932,7 +932,18 @@ function getAllowedNWPGroups(root) {
 // Slot cost of a single nonweapon proficiency, including the Table 38 crossover
 // surcharge. `nwp` is an entry from root._nwps.
 function getNWPSlotCost(nwp, allowedGroups) {
-  const base = parseInt(nwp.slots || nwp.Slots, 10) || 1;
+  // A kit-GRANTED proficiency is free and cannot become unfree -- the crossover
+  // surcharge below must not apply to it either. The Stalker's Alertness and
+  // Camouflage are Rogue-group proficiencies granted to a Ranger; charging the
+  // out-of-group +1 on something the kit hands over would be worse than
+  // charging the base cost.
+  if (nwp && nwp.isKitGranted) return 0;
+
+  // `|| 1` cannot tell an ABSENT slots value from a deliberate ZERO, and 0 is
+  // falsy. Same trap as the weapon proficiency counter and the row label.
+  const parsed = parseInt(nwp.slots !== undefined && nwp.slots !== null && nwp.slots !== ''
+    ? nwp.slots : nwp.Slots, 10);
+  const base = isNaN(parsed) ? 1 : parsed;
 
   const groups = getNWPGroups(nwp);
 
