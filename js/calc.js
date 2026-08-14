@@ -2927,6 +2927,14 @@ function renderKitAbilities(root) {
     if (nm && autoNames.has(nm)) node.remove();
   });
 
+  // Kit-granted proficiencies are part of what the kit IS, so they sync wherever
+  // the kit's abilities render. ABOVE the early return below, deliberately:
+  // clearing the kit leaves `abilities` null, and that is exactly the case where
+  // grants must be REMOVED. Placed after it, the un-grant never ran and a
+  // Standard Class character kept showing GRANTED rows until a save and reload.
+  if (typeof syncKitGrantedNWPs === 'function') syncKitGrantedNWPs(root);
+  if (typeof renderNWProficiencies === 'function') renderNWProficiencies(root);
+
   // No kit, unknown class, or a kit carrying no abilities: manual entries are
   // preserved and nothing is added.
   if (!abilities) return;
@@ -2950,13 +2958,6 @@ function renderKitAbilities(root) {
   // shares one Description and one Role but branches its weapons, bonus
   // proficiencies and secondary skill, so a character with no orientation is
   // not half-built -- he is un-built, and silence would hide that.
-  // Kit-granted proficiencies are part of what the kit IS, so they sync wherever
-  // the kit's abilities render -- one call site, firing on class change, kit
-  // change, variant change and load. renderNWProficiencies afterwards, because
-  // the sync mutates root._nwps and the list is already on screen.
-  if (typeof syncKitGrantedNWPs === 'function') syncKitGrantedNWPs(root);
-  if (typeof renderNWProficiencies === 'function') renderNWProficiencies(root);
-
   // PREPENDED, not appended -- the branching choice is what defines the
   // character, so it reads first rather than after four cards that are true of
   // both branches. `insertBefore(..., firstChild)` rather than a second loop,
