@@ -57,15 +57,6 @@ const SHEET_HTML = `
                 <option value="Female">Female</option>
               </select>
             </div>
-            <div class="col single-class-field"><label>Class</label><input data-field="clazz" type="text" list="class-options" autocomplete="off" title="Suggestions only — this stays a free-text field. Multi and dual-class characters store a formatted display string here, which no dropdown could hold. Prefix homebrew with hb_."></div>
-            <div class="col single-class-field">
-              <label>Kit</label>
-              <select data-field="kit">
-                <option value="">Standard Class</option>
-              </select>
-            </div>
-          </div>
-          <div class="row" style="margin-top:8px">
             <div class="col">
               <label>Alignment</label>
               <select data-field="alignment" title="PHB Chapter 4. Alignment pairs an ethos - lawful, neutral or chaotic - with a moral outlook - good, neutral or evil. Some classes restrict the choice: a paladin must be lawful good, a druid true neutral, a bard partially neutral, and a thief may be anything except lawful good."></select>
@@ -73,6 +64,29 @@ const SHEET_HTML = `
             <div class="col">
               <label>XP <span class="xp-note" style="font-size:10px;color:var(--muted);font-weight:normal;"></span></label>
               <input data-field="xp" type="number">
+            </div>
+          </div>
+          <!-- CLASS MECHANICS, on their own row. Every column here is
+               single-class-field, so a multi or dual-class character loses the
+               whole row cleanly instead of leaving gaps mid-row where Class and
+               Kit used to sit beside Race and Gender. -->
+          <div class="row" style="margin-top:8px">
+            <div class="col single-class-field"><label>Class</label><input data-field="clazz" type="text" list="class-options" autocomplete="off" title="Suggestions only — this stays a free-text field. Multi and dual-class characters store a formatted display string here, which no dropdown could hold. Prefix homebrew with hb_."></div>
+            <div class="col single-class-field">
+              <label>Kit</label>
+              <select data-field="kit">
+                <option value="">Standard Class</option>
+              </select>
+            </div>
+            <!-- Some kits are ONE kit in the book that BRANCHES. PHBR1's
+                 Pirate/Outlaw prints a single entry and then splits four
+                 mechanical fields, labelling them "Pirate's" and "Outlaw's"; the
+                 Amazon does the same on race. Hidden entirely unless the
+                 selected kit has a `variants` block, so it costs nothing on the
+                 ninety-one kits that do not. -->
+            <div class="col single-class-field kit-variant-col" style="display:none;">
+              <label class="kit-variant-label">Variant</label>
+              <select data-field="kit_variant"></select>
             </div>
             <div class="col single-class-field"><label>Level</label><input data-field="level" type="number" min="1" value="1"></div>
           </div>
