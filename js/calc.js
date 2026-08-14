@@ -2933,8 +2933,9 @@ function renderKitAbilities(root) {
   // grants must be REMOVED. Placed after it, the un-grant never ran and a
   // Standard Class character kept showing GRANTED rows until a save and reload.
   if (typeof syncKitGrantedNWPs === 'function') syncKitGrantedNWPs(root);
+  if (typeof renderKitAdvisories === 'function') renderKitAdvisories(root);
   if (typeof renderNWProficiencies === 'function') renderNWProficiencies(root);
-
+	
   // No kit, unknown class, or a kit carrying no abilities: manual entries are
   // preserved and nothing is added.
   if (!abilities) return;
@@ -3008,6 +3009,73 @@ function renderKitAbilities(root) {
       }, () => markUnsaved(document.querySelector('.tab.active'), true, root)));
     }
   }
+}
+
+// Every kit advisory, in one banner above the nonweapon proficiency list.
+//
+// A BANNER, NOT AN ABILITY CARD. A card asserts a fact about the character; a
+// banner asks something of the player. The "Choose an orientation" card was
+// formatted identically to the abilities beside it and sat in a list of things
+// the character HAS, while saying he does not have them.
+//
+// Each entry must be CLEARABLE by the player -- the test from the project notes
+// for whether a persistent advisory is legitimate. An unmade choice clears when
+// it is made; a required proficiency clears when it is bought. A recommended
+// list would never clear, which is why recommendations are marked at the point
+// of choice instead and are not here.
+function renderKitAdvisories(root) {
+  const el = root.querySelector('.kit-advisory-note');
+  if (!el) return;
+
+  const items = [];
+  const kit   = (typeof getSelectedKit === 'function') ? getSelectedKit(root) : null;
+
+  // 1. An unmade MANDATORY variant choice. Moved off the Abilities tab, but it
+  //    is resolved on the CORE tab, so the banner has to say where to go.
+  const v = kit && kit.variants;
+  if (v && Array.isArray(v.options) && v.options.length) {
+    const chosen = (val(root, 'kit_variant') || '').trim();
+    const known  = v.options.some(o => o.key === chosen);
+    if (!known && (v.default === null || v.default === undefined)) {
+      items.push('Choose ' + (v.axis === 'orientation' ? 'an' : 'a') + ' ' +
+                 (v.axis || 'variant') + ' for this kit on the Core tab: ' +
+                 v.options.map(o => o.label || o.key).join(' or ') +
+                 '. They differ in required weapons, bonus proficiencies and ' +
+                 'secondary skill, and neither is the default \u2014 until you ' +
+                 'choose, this kit grants nothing.');
+    }
+  }
+
+  // 2. Unmade bonus CHOICES. "Bonus: Hunting or Fishing" is ONE free
+  //    proficiency, not two, so nothing can be granted automatically. Adding
+  //    either from the browser satisfies it and the sync marks it GRANTED.
+  const prof   = (typeof getKitProficiencies === 'function') ? getKitProficiencies(root) : null;
+  const nwp    = (prof && prof.nonweapon) || {};
+  const owned  = (root._nwps || []).map(n => String(n && n.name || '').trim().toLowerCase());
+  const has    = n => owned.indexOf(String(n).trim().toLowerCase()) !== -1;
+
+  (nwp.bonusChoice || []).forEach(group => {
+    if (group.some(has)) return;
+    items.push('Bonus proficiency, choose one: <b>' + group.join('</b> or <b>') +
+               '</b>. Add it below and it becomes free.');
+  });
+
+  // 3. REQUIRED proficiencies not yet bought. The kit forces a slot onto these,
+  //    so they are the player's to buy -- never auto-added, unlike bonuses.
+  (nwp.required || []).filter(n => !has(n)).forEach(n => {
+    items.push('<b>' + n + '</b> is required by this kit. Add it below; it costs ' +
+               'a slot like any other proficiency.');
+  });
+
+  if (!items.length) { el.style.display = 'none'; el.innerHTML = ''; return; }
+
+  el.innerHTML =
+    '<strong style="color:var(--warning, #e0a34a);">\u26A0 Kit</strong>' +
+    items.map(t => '<div style="margin-top:4px;">\u2022 ' + t + '</div>').join('') +
+    '<div style="margin-top:6px;color:var(--muted);font-size:11px;">' +
+      'Advisory only \u2014 nothing is blocked. A DM may modify any kit; PHBR1 p.37 ' +
+      'says outright that he can and should.</div>';
+  el.style.display = '';
 }
 
 // Bring the character's nonweapon proficiency list into line with what his kit
