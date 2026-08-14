@@ -3314,10 +3314,36 @@ function renderArmorClass(root) {
   }
   
   if (acUnarmoredEl) {
-    // Unarmored AC: 10 + DEX + manual only
-    const unarmoredAC = 10 + dexAdj + manualAdj;
+    // THE ONE VARIANT THAT NEVER FOLLOWED THE DERIVATION RULE. It was built from
+    // scratch as 10 + dexAdj + manualAdj, which silently dropped miscBonus,
+    // ringBonus and cloakBonus -- the exact class of bug the rule was introduced
+    // to kill, still live in the variant nobody converted.
+    //
+    // Building it by BACKING TERMS OUT of finalAC instead makes the omissions
+    // explicit and makes each one a decision:
+    //
+    //   baseAC - 10   armour itself. Out. This is the whole point of the field.
+    //   shieldBonus   a shield. Out.
+    //   miscBonus     Supplemental Armor -- bracers, greaves, gladiator belt and
+    //                 fasciae. ARMOUR, so out. The old code dropped this one and
+    //                 was accidentally right.
+    //   ringBonus     a ring of protection. STAYS. It plainly still works when
+    //                 you are naked, and the old code was wrong to drop it.
+    //   cloakBonus    a cloak of protection. STAYS, same reasoning.
+    //   dexAdj        stays.
+    //   manualAdj     stays -- the DM's override survives being stripped.
+    //   styleAdj      STAYS. PHBR1 p.62's Single-Weapon Style bonus is
+    //                 nimbleness and a free hand, not equipment; a naked fencer
+    //                 still fences.
+    const unarmoredAC = finalAC - (baseAC - 10) - shieldBonus - miscBonus;
     acUnarmoredEl.value = unarmoredAC;
-    acUnarmoredEl.title = "No armor or accessories\nBase 10 + DEX + manual adj.";
+
+    let t = "No armor, shield, or supplemental armor pieces\n" +
+            "Base 10 + DEX + manual adj.";
+    if (ringBonus)  t += `\nRing ${ringBonus >= 0 ? "+" : ""}${ringBonus} still applies`;
+    if (cloakBonus) t += `\nCloak ${cloakBonus >= 0 ? "+" : ""}${cloakBonus} still applies`;
+    if (styleAdj)   t += `\nSingle-Weapon Style ${magicSign(styleAdj)} still applies`;
+    acUnarmoredEl.title = t;
   }
   
   if (acVsMissilesEl) {
