@@ -7119,7 +7119,12 @@ function addNWProficiency(root, nwp) {
     notes: nwp.Notes || ''
   });
   
-  renderNWProficiencies(root);
+  // The browser's Learn path. Adding a proficiency can satisfy a kit's
+  // bonusChoice or required entry, which changes whether it is granted and
+  // whether the advisory still applies -- and neither renderNWProficiencies nor
+  // recalculateAll reaches the kit renderers.
+  if (typeof renderKitAbilities === 'function') renderKitAbilities(root);
+  else renderNWProficiencies(root);
   
   // Mark as unsaved
   const tab = document.querySelector('.tab.active');
@@ -8194,7 +8199,10 @@ function deleteNWProficiency(root, index) {
   
   if (confirm(`Remove ${nwpName} proficiency?`)) {
     root._nwps.splice(index, 1);
-    renderNWProficiencies(root);
+    // Removal can UN-satisfy a bonusChoice or a required entry, so the banner
+    // has to come back. Same call as the add paths.
+    if (typeof renderKitAbilities === 'function') renderKitAbilities(root);
+    else renderNWProficiencies(root);
     
     // Mark as unsaved
     const tab = document.querySelector('.tab.active');
@@ -8232,7 +8240,12 @@ function addCustomNWProficiency(root) {
     notes: '(Custom)'
   });
   
-  renderNWProficiencies(root);
+  // renderKitAbilities, not renderNWProficiencies: it calls syncKitGrantedNWPs,
+  // renderKitAdvisories and renderNWProficiencies in the right order. A custom
+  // proficiency can satisfy a kit's bonusChoice or required entry by name, so
+  // the grant and the banner both have to be re-evaluated.
+  if (typeof renderKitAbilities === 'function') renderKitAbilities(root);
+  else renderNWProficiencies(root);
   
   // Mark as unsaved
   const tab = document.querySelector('.tab.active');
