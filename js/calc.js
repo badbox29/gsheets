@@ -7347,7 +7347,51 @@ function renderWeaponProficiencies(root) {
   const specRuleOn = (typeof isOptionalRule !== 'function') || isOptionalRule('weaponSpecialization');
   const specAllowed = specRuleOn && canSpecialize(root);
 
-  weaponProfs.forEach((prof, index) => {
+  // DISPLAY ORDER ONLY -- a group card, then the specialization cards it covers,
+  // then everything else in the order it was bought. `_weaponProfs` is NOT
+  // reordered: the delete buttons carry the ARRAY index, so a display sort that
+  // renumbered them would delete the wrong record. Hence pairs of {p, i}.
+  //
+  // Only slots:0 specialization cards tuck. A weapon bought normally that later
+  // fell inside a group was still paid for on its own and keeps its place.
+  const wpDisplay = (function () {
+    const items = weaponProfs.map((p, i) => ({ p: p, i: i }));
+    if (typeof getPHBR1GroupMembers !== 'function') return items;
+    const groups = items.filter(x => x.p && x.p.groupTier);
+    if (!groups.length) return items;
+
+    const nz = s => String(s || '').trim().toLowerCase();
+    // FIRST covering group wins when several apply -- a dagger held through both
+    // Short Blades and Blades tucks under whichever was bought first, and stays
+    // there. Deterministic beats clever.
+    const coverOf = x => {
+      if (!x.p || x.p.groupTier) return -1;
+      if (parseInt(x.p.slots, 10) !== 0 || !x.p.specialized) return -1;
+      const g = groups.find(gr => {
+        const m = getPHBR1GroupMembers(gr.p.name) || [];
+        return m.some(w => nz(w) === nz(x.p.name) ||
+          (typeof samePHBR1Proficiency === 'function' && samePHBR1Proficiency(w, x.p.name)));
+      });
+      return g ? g.i : -1;
+    };
+
+    const tucked = {};
+    const rest = [];
+    items.forEach(x => {
+      const gi = coverOf(x);
+      if (gi >= 0) (tucked[gi] = tucked[gi] || []).push(x);
+      else rest.push(x);
+    });
+
+    const out = [];
+    rest.forEach(x => {
+      out.push(x);
+      if (x.p && x.p.groupTier && tucked[x.i]) out.push.apply(out, tucked[x.i]);
+    });
+    return out;
+  })();
+
+  wpDisplay.forEach(({ p: prof, i: index }) => {
     const profDiv = document.createElement('div');
     profDiv.className = 'weapon-prof-item';
     profDiv.style.cssText = 'padding:8px;margin-bottom:8px;border:1px solid var(--border);border-radius:4px;background:var(--glass);display:flex;justify-content:space-between;align-items:center;';
@@ -7443,10 +7487,30 @@ function renderWeaponProficiencies(root) {
       ? weaponTypeOptions(prof.weaponTypeKey || '')
       : '';
 
+    // A slots:0 specialization card looks like a bug without this -- the
+    // proficiency was paid for by a group, and the card must say which one or
+    // the zero is unexplained. Also drives the indent that tucks it under its
+    // group in the list.
+    const coveringGroup = (function () {
+      if (prof.groupTier || parseInt(prof.slots, 10) !== 0) return '';
+      if (typeof getPHBR1GroupMembers !== 'function') return '';
+      const nz = s => String(s || '').trim().toLowerCase();
+      const g = weaponProfs.find(q => {
+        if (!q || !q.groupTier) return false;
+        const m = getPHBR1GroupMembers(q.name) || [];
+        return m.some(w => nz(w) === nz(prof.name) ||
+          (typeof samePHBR1Proficiency === 'function' && samePHBR1Proficiency(w, prof.name)));
+      });
+      return g ? g.name : '';
+    })();
+    if (coveringGroup) profDiv.style.marginLeft = '18px';
+
     profDiv.innerHTML = `
       <div style="flex:1;">
         <strong>${escapeHtml(prof.name)}</strong>
         <span style="margin-left:8px;font-size:11px;color:var(--muted);">${profGroup || '\u2014'}</span>
+        ${coveringGroup ? `<span style="margin-left:8px;font-size:11px;color:var(--accent-light);"
+            title="Proficiency comes from the ${escapeHtml(coveringGroup)} group, so it cost no slot of its own. Only the specialization was paid for.">covered by ${escapeHtml(coveringGroup)}</span>` : ''}
         <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
           <label style="font-size:11px;color:var(--muted);margin:0;">Type</label>
           <select class="weapon-prof-type" data-index="${index}" style="width:170px;font-size:11px;padding:2px;"
