@@ -4634,6 +4634,66 @@ function getWeaponBreak(weaponName, typeKey) {
   return { on: on, dieSides: 6, when: rec.breakWhen || '' };
 }
 
+// === PHBR1 weapon quality (pp.11-13) ===
+//
+// ENTIRELY NON-MAGICAL. The +1 is a plain arithmetic term, the same shape as a
+// specialization bonus: it never lets a weapon strike a creature that can only
+// be harmed by magical weapons, and it does not touch speed factor. Only the
+// ENCHANTMENT LEVEL does those, which is why quality lives outside the
+// enchantment panel entirely.
+//
+// FIVE KEYS FOR FOUR QUALITIES. The book gives Fine "either a +1 to hit or +1 to
+// damage, not both", which is a CHOICE, not a level -- so it is two selectable
+// states rather than one state plus a hidden sub-field. A quality key with a
+// separate variant key stored beside it is the kit_variant shape, and that field
+// was read on load and written nowhere for months without anyone noticing.
+//
+// AVERAGE IS ABSENCE. An untouched weapon stores no quality at all and reads as
+// average, so every character predating this change is unaffected. Absence means
+// not-applicable throughout this codebase.
+//
+// BREAKS: only POOR is automatic. The table marks Average with an asterisk
+// reading "This isn't an automatic break; it breaks only if the DM feels like
+// it", and Fine and Exceptional break "only in remarkable circumstances, as
+// dictated by the DM". So three of the four rows are advisory prose, not a
+// mechanic, and only Poor gets a note on the card.
+//
+// Read off the ATTACK ROLL, so there is no roller: a natural 1-5 is already on
+// the die the player just threw. Same reasoning that gave crude weapons no
+// roller either.
+const WEAPON_QUALITIES = {
+  poor:        { label: 'Poor',        hit: -1, dmg: -1, breakOn: 5, craft:  2,
+                 blurb: 'Shabbily made, and it looks it.' },
+  fine_hit:    { label: 'Fine',        hit:  1, dmg:  0, breakOn: 0, craft: -2,
+                 blurb: 'Fine work. The book allows +1 to hit OR +1 damage, not both.' },
+  fine_dmg:    { label: 'Fine',        hit:  0, dmg:  1, breakOn: 0, craft: -2,
+                 blurb: 'Fine work. The book allows +1 to hit OR +1 damage, not both.' },
+  exceptional: { label: 'Exceptional', hit:  1, dmg:  1, breakOn: 0, craft: -4,
+                 blurb: 'Exceptional work \u2014 like a fine weapon, but with both bonuses.' }
+};
+
+// The dropdown's own order and wording. Built here rather than in the renderer
+// so the labels state the numbers -- "Fine" alone cannot tell you which of the
+// two Fine weapons you are looking at.
+const WEAPON_QUALITY_OPTIONS = [
+  { key: '',            text: 'Average' },
+  { key: 'poor',        text: 'Poor (\u22121 hit, \u22121 dmg, breaks on 1\u20135)' },
+  { key: 'fine_hit',    text: 'Fine (+1 hit)' },
+  { key: 'fine_dmg',    text: 'Fine (+1 damage)' },
+  { key: 'exceptional', text: 'Exceptional (+1 hit, +1 dmg)' }
+];
+
+// Returns { key, label, hit, dmg, breakOn, craft, blurb } or null for average.
+// Gated on PHBR1 core: with the book off a stored quality grants nothing and
+// costs nothing, and the value stays on the weapon untouched -- the same
+// suspension getFightingStyles and the weapon groups already use.
+function getWeaponQuality(key) {
+  if (!key) return null;
+  if (typeof isSupplementActive === 'function' && !isSupplementActive('phbr1', 'core')) return null;
+  const q = WEAPON_QUALITIES[key];
+  return q ? Object.assign({ key: key }, q) : null;
+}
+
 // Do these two weapons share ONE proficiency? Full proficiency, not the half
 // penalty -- see the note in getWeaponProficiencyStatus.
 function samePHBR1Proficiency(nameA, nameB) {
