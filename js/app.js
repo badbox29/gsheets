@@ -4280,7 +4280,8 @@ function makeWeaponNode(data={}, onChange){
     const h  = num(data.hitAdj), d = num(data.dmgAdj);
     const eh = (h === null) ? m : h, ed = (d === null) ? m : d;
     if (m === 0 && eh === 0 && ed === 0) return '';
-    if (eh === m && ed === m) return '(' + magicSign(m) + ')';
+    // Keep in step with weaponBadgeText -- see the note there.
+    if ((eh === m && ed === m) || (eh === 0 && ed === 0)) return '(' + magicSign(m) + ')';
     return '(' + magicSign(m) + ': ' + magicSign(eh) + '/' + magicSign(ed) + ')';
   })();
 
@@ -4649,7 +4650,12 @@ function makeWeaponNode(data={}, onChange){
     const h  = num('.weapon-hit-adj'), d = num('.weapon-dmg-adj');
     const eh = (h === null) ? m : h, ed = (d === null) ? m : d;
     if (m === 0 && eh === 0 && ed === 0) return '';        // -> falls back to the dot
-    if (eh === m && ed === m) return '(' + magicSign(m) + ')';
+    // BOTH ADJUSTMENTS AT ZERO IS NOT A DIVERGENCE WORTH SHOWING. A +5 weapon
+    // granting no combat bonus is still a +5 weapon for what it can strike and
+    // for speed factor, which is what the badge reports. "(+5: +0/+0)" is three
+    // zeros saying what "(+5)" says. The divergence form is kept for what it was
+    // built for -- effects that differ AND are non-zero, like +5 granting +1.
+    if ((eh === m && ed === m) || (eh === 0 && ed === 0)) return '(' + magicSign(m) + ')';
     return '(' + magicSign(m) + ': ' + magicSign(eh) + '/' + magicSign(ed) + ')';
   };
 
@@ -5237,7 +5243,8 @@ function makeAmmunitionNode(data={}, onChange){
     const h  = num(data.hitAdj), d = num(data.dmgAdj);
     const eh = (h === null) ? m : h, ed = (d === null) ? m : d;
     if (m === 0 && eh === 0 && ed === 0) return '';
-    if (eh === m && ed === m) return '(' + magicSign(m) + ')';
+    // Keep in step with ammoBadgeText -- see the note there.
+    if ((eh === m && ed === m) || (eh === 0 && ed === 0)) return '(' + magicSign(m) + ')';
     return '(' + magicSign(m) + ': ' + magicSign(eh) + '/' + magicSign(ed) + ')';
   })();
   
@@ -5502,7 +5509,12 @@ el.querySelector('.ammo-minus-10').onclick = ()=>{
     const h  = num('.ammo-hit-adj'), d = num('.ammo-dmg-adj');
     const eh = (h === null) ? m : h, ed = (d === null) ? m : d;
     if (m === 0 && eh === 0 && ed === 0) return '';        // -> falls back to the dot
-    if (eh === m && ed === m) return '(' + magicSign(m) + ')';
+    // BOTH ADJUSTMENTS AT ZERO IS NOT A DIVERGENCE WORTH SHOWING. "(+2: +0/+0)"
+    // is three zeros to say what "(+2)" says: the enchantment level, which is
+    // what the badge is for. The Quick Reference already reports "no hit or
+    // damage bonus" in words. The divergence form is kept for the case it was
+    // built for -- effects that differ AND are non-zero, like +5 granting +1.
+    if ((eh === m && ed === m) || (eh === 0 && ed === 0)) return '(' + magicSign(m) + ')';
     return '(' + magicSign(m) + ': ' + magicSign(eh) + '/' + magicSign(ed) + ')';
   };
 
