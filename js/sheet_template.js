@@ -2524,6 +2524,39 @@ const SHEET_HTML = `
         -->
         <!-- PHBR1. Populated by renderWeaponBreakage; hidden entirely unless the
              character is carrying a weapon that can shatter or break. -->
+        <!-- PHBR1 p.109. A lookup, not a character property: it answers "does
+             this looted breastplate fit me" once, and nothing persists. Every
+             control is .ephemeral and collectSheet never sees it. -->
+        <section class="section armor-fitting-section">
+          <h3>Armor Fitting</h3>
+          <p class="prose">Armor made for one race rarely fits another. Pick who it was made for.</p>
+          <div class="armor-fitting-controls" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px;">
+            <label style="display:flex;flex-direction:column;gap:2px;">
+              <span style="font-size:11px;color:var(--muted);">Trying to wear it</span>
+              <select class="ephemeral af-wearer" style="width:130px;"></select>
+            </label>
+            <label style="display:flex;flex-direction:column;gap:2px;">
+              <span style="font-size:11px;color:var(--muted);">Made for</span>
+              <select class="ephemeral af-builtfor" style="width:130px;"></select>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+              <input type="checkbox" class="ephemeral af-othersex" style="width:auto;">
+              <span>Made for the other sex</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+              <input type="checkbox" class="ephemeral af-fullplate" style="width:auto;">
+              <span>Full plate</span>
+            </label>
+            <label style="display:flex;flex-direction:column;gap:2px;">
+              <span style="font-size:11px;color:var(--muted);">Build adj. %</span>
+              <input type="number" class="ephemeral af-build" step="5" value="0" style="width:80px;">
+            </label>
+          </div>
+          <div class="armor-fitting-result" style="margin-bottom:10px;"></div>
+          <div class="armor-fitting-table"></div>
+          <p class="prose armor-fitting-note"></p>
+        </section>
+
         <section class="section weapon-breakage-section" style="display:none;">
           <h3>Weapon Breakage</h3>
           <p class="prose weapon-breakage-intro"></p>
