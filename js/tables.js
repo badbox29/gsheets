@@ -4044,6 +4044,24 @@ const WEAPON_TYPES = {
   // ADDING A WEAPON TO core_wp.json IS HALF THE JOB. It needs an entry here too.
   // Generated from core_wp.json's own Group and Category so the two cannot
   // disagree; keys and display names were both checked against the existing 89.
+  // PHBR1 p.101 primitive weapons. THESE SIX WERE MISSING and the omission was
+  // silent, exactly as the header above warns. inferWeaponTypeKey substring-
+  // matched "Dagger, Stone" to plain `dagger`, canonicalWeaponName then rewrote
+  // the name to "Dagger", and every rule keyed on the record's own identity
+  // looked up the wrong weapon: no shatter rule, no specialization, no
+  // same-proficiency or related resolution, and no inherent GRIP -- which the
+  // grip tooltip names "stone javelin, stone spear" among the ten weapons that
+  // care about it. Found when the shatter note appeared on lances and not on
+  // stone daggers; the lances had entries and these did not.
+  //
+  // Group and category mirror core_wp.json so the two cannot disagree.
+  dagger_stone:            { label: 'Stone Dagger',          group: 'Dagger',    category: 'Melee',         wpName: "Dagger, Stone" },
+  dagger_bone:             { label: 'Bone Dagger',           group: 'Dagger',    category: 'Melee',         wpName: "Dagger, Bone" },
+  dagger_knife_stone:      { label: 'Stone Knife',           group: 'Dagger',    category: 'Melee',         wpName: "Knife, Stone" },
+  dagger_knife_bone:       { label: 'Bone Knife',            group: 'Dagger',    category: 'Melee',         wpName: "Knife, Bone" },
+  spear_javelin_stone:     { label: 'Stone Javelin',         group: 'Spear',     category: 'Melee',         wpName: "Javelin, Stone" },
+  spear_stone:             { label: 'Stone Spear',           group: 'Spear',     category: 'Melee',         wpName: "Spear, Stone" },
+
   belaying_pin:            { label: 'Belaying Pin',          group: 'Club',      category: 'Melee',         wpName: "Belaying Pin" },
   flail_grain:             { label: 'Grain Flail',           group: 'Flail',     category: 'Melee',         wpName: "Flail, Grain" },
   gaff_attached:           { label: 'Gaff/Hook (Attached)',  group: 'Dagger',    category: 'Melee',         wpName: "Gaff/Hook, Attached" },
