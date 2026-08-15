@@ -4561,6 +4561,34 @@ function isPHBR1NonGroupWeapon(weaponName) {
     (typeof samePHBR1Proficiency === 'function' && samePHBR1Proficiency(w, weaponName)));
 }
 
+// PHBR1 p.103. Stone and bone weapons shatter in use:
+//
+//   "Stone weapons are used just like their modern counterparts, but are worth
+//    less money, do less damage, and are more prone to shattering."
+//   Bone weapons "shatter even more readily".
+//
+// Every time the weapon HITS, roll 1d6; on `shatterOn` or less the weapon (or
+// its head) shatters and is useless. THE ATTACK STILL DOES ITS FULL DAMAGE --
+// the shatter is what happens to the weapon, not to the blow.
+//
+// READ FROM THE RECORD, never parsed out of Notes and never inferred from the
+// name. The prose in Notes says the same thing in English; `shatterOn` is the
+// number, and the two were cross-checked against each other when the field was
+// added. A name test would also miss a house weapon called "Bonecrusher".
+//
+// Returns { material, on, dieSides } or null. NOT GATED on the supplement:
+// these six weapons exist only because PHBR1 prints them, so a table not using
+// the book cannot be holding one, and gating would only hide a rule from
+// somebody who had already chosen to carry the weapon.
+function getWeaponShatter(weaponName, typeKey) {
+  const rec = (typeof lookupWeaponData === 'function')
+    ? lookupWeaponData(canonicalWeaponName(weaponName, typeKey)) : null;
+  if (!rec) return null;
+  const on = parseInt(rec.shatterOn, 10);
+  if (isNaN(on) || on < 1) return null;
+  return { material: rec.material || '', on: on, dieSides: 6 };
+}
+
 // Do these two weapons share ONE proficiency? Full proficiency, not the half
 // penalty -- see the note in getWeaponProficiencyStatus.
 function samePHBR1Proficiency(nameA, nameB) {
