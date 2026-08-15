@@ -768,6 +768,25 @@ const SHEET_HTML = `
                style specializations are bought out of THAT budget -- putting them
                on the Combat tab would separate the cost from the meter that
                tracks it. Hidden entirely unless the book is switched on. -->
+          <!-- PHBR1 pp.58-60. Weapon groups are bought from the WEAPON slot
+               budget, so they sit beside the counter that tracks it, exactly as
+               the fighting styles below do. Hidden entirely unless the book is
+               on; the records themselves survive untouched underneath. -->
+          <div class="weapon-groups-box" style="display:none;margin-top:10px;">
+            <div class="stat-strip">
+              <span class="lab">WEAPON GROUPS</span>
+              <span class="prose weapon-groups-note"></span>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-end;padding:6px 2px;flex-wrap:wrap;">
+              <label style="display:flex;flex-direction:column;gap:2px;min-width:280px;flex:1;">
+                <span style="font-size:11px;color:var(--muted);">Buy proficiency in an entire group</span>
+                <select class="weapon-group-picker"></select>
+              </label>
+              <button class="add-weapon-group">+ Add Group</button>
+            </div>
+            <div class="weapon-group-members" style="font-size:11px;color:var(--muted);padding:0 2px 8px;line-height:1.5;"></div>
+          </div>
+
           <div class="fighting-styles" style="display:none;margin-top:10px;">
             <div class="stat-strip">
               <span class="lab">FIGHTING STYLES</span>
