@@ -7270,6 +7270,55 @@ function renderWeaponProficiencies(root) {
     profDiv.className = 'weapon-prof-item';
     profDiv.style.cssText = 'padding:8px;margin-bottom:8px;border:1px solid var(--border);border-radius:4px;background:var(--glass);display:flex;justify-content:space-between;align-items:center;';
 
+    // A GROUP RECORD IS A DIFFERENT KIND OF THING and gets its own card. The
+    // Type dropdown asks which specific weapon this is -- a group is not one --
+    // and the Specialized checkbox contradicts PHBR1 p.60 outright. Ticking it
+    // would also be silently inert, since renderProficiencySlots returns before
+    // the specialization branch for group records.
+    if (prof.groupTier) {
+      const gOn = (typeof isSupplementActive === 'function') &&
+                  isSupplementActive('phbr1', 'core');
+      const gMembers = (typeof getPHBR1GroupMembers === 'function')
+        ? (getPHBR1GroupMembers(prof.name) || []) : [];
+      const gCost = gOn
+        ? ((typeof PHBR1_GROUP_SLOT_COST === 'object' &&
+            PHBR1_GROUP_SLOT_COST[prof.groupTier]) || prof.slots || 0)
+        : 0;
+
+      // SUSPENDED, NOT HIDDEN, when the book is off. Hiding it would take the
+      // Delete button with it and leave an unreachable record on the character.
+      // Same treatment as the stale "Specialized (N/A)" flag below.
+      const gSuspended = !gOn
+        ? '<span style="font-size:11px;color:var(--warning, #e0a34a);margin-left:8px;" ' +
+          'title="PHBR1 core rules are switched off in Settings, so this group grants ' +
+          'nothing and costs nothing. It is kept exactly as bought -- switch the book ' +
+          'back on and it applies again.">suspended \u2014 PHBR1 off</span>'
+        : '';
+
+      profDiv.innerHTML =
+        '<div style="flex:1;">' +
+          '<strong>' + escapeHtml(prof.name) + '</strong>' +
+          '<span style="margin-left:8px;font-size:11px;color:var(--muted);">' +
+            escapeHtml(prof.groupTier) + ' group' +
+          '</span>' + gSuspended +
+          '<div style="font-size:11px;color:var(--muted);margin-top:2px;">' +
+            'Slots: ' + gCost + ' \u00b7 ' + gMembers.length + ' weapons' +
+          '</div>' +
+          (gMembers.length
+            ? '<details class="disclosure" style="font-size:11px;margin-top:4px;">' +
+              '<summary>weapons covered</summary>' +
+              '<div style="color:var(--muted);margin-top:4px;line-height:1.5;">' +
+                escapeHtml(gMembers.join(' \u00b7 ')) +
+              '</div></details>'
+            : '') +
+        '</div>' +
+        '<button class="delete-weapon-prof" data-index="' + index + '" ' +
+          'style="padding:4px 8px;font-size:11px;margin-left:8px;">Delete</button>';
+
+      listDiv.appendChild(profDiv);
+      return;
+    }
+
     const specCost = getSpecializationCost(prof.group);
     // Only charge for specialization when the rule is actually in play. The
     // flag is left alone so ticking the rule back on restores it intact.
