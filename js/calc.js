@@ -6901,6 +6901,7 @@ function renderProficiencySlots(root) {
   const weaponProfs = root._weaponProfs || [];
   let wpSpent = 0;
   let specCount = 0;
+  let groupCount = 0;
   weaponProfs.forEach(w => {
     // `|| 1` cannot distinguish an ABSENT slots value from a deliberate ZERO,
     // and 0 is falsy -- so a free proficiency was charged a slot anyway. The
@@ -6909,6 +6910,33 @@ function renderProficiencySlots(root) {
     // core_wp.json now carries a `No Proficiency` column so others can follow
     // without code changes.
     const wSlots = parseInt(w.slots, 10);
+
+    // PHBR1 pp.58-60. A GROUP record is priced by its tier, not by the stored
+    // slots value -- 2 for tight, 3 for broad -- so a costing change in a later
+    // printing is one edit to PHBR1_GROUP_SLOT_COST rather than a migration of
+    // every saved character. The stored value is the fallback.
+    //
+    // COSTS NOTHING WHEN THE BOOK IS OFF, because it GRANTS nothing when the
+    // book is off -- getWeaponProficiencyStatus gates identically. Charging for
+    // a suspended benefit would be the worst of both. Same treatment
+    // getFightingStyles gives a style: suspended, never refunded, never deleted.
+    if (w.groupTier) {
+      const phbr1On = (typeof isSupplementActive === 'function') &&
+                      isSupplementActive('phbr1', 'core');
+      if (phbr1On) {
+        const tierCost = (typeof PHBR1_GROUP_SLOT_COST === 'object')
+          ? PHBR1_GROUP_SLOT_COST[w.groupTier] : undefined;
+        wpSpent += (tierCost !== undefined) ? tierCost : (isNaN(wSlots) ? 2 : wSlots);
+        groupCount++;
+      }
+      // A GROUP IS NEVER SPECIALIZED (p.60): "this doesn't mean a character can
+      // specialize in an entire group of weapons... He'd have to take one-slot
+      // Specializations individually." Returning here rather than guarding the
+      // branch below, so a stray `specialized` flag on a group record -- which
+      // the UI must never produce -- cannot silently charge for it either.
+      return;
+    }
+
     wpSpent += isNaN(wSlots) ? 1 : wSlots;
     if (w.specialized) {
       wpSpent += getSpecializationCost(w.group);
@@ -6993,6 +7021,13 @@ function renderProficiencySlots(root) {
     }
     if (!canSpecialize(root)) {
       t += `\n\nSpecialization is available to single-class\nfighters only (PHB).`;
+    }
+    if (groupCount > 0) {
+      t += `\n  (includes ${groupCount} weapon group${groupCount > 1 ? 's' : ''};`;
+      t += `\n   tight ${PHBR1_GROUP_SLOT_COST.tight} slots, broad ${PHBR1_GROUP_SLOT_COST.broad};`;
+      t += `\n   PHBR1 pp.58-60. A group grants proficiency in`;
+      t += `\n   every weapon in it, but can never be specialized`;
+      t += `\n   in -- specialize the individual weapon instead.)`;
     }
     if (styles.total > 0) {
       const bits = [];
