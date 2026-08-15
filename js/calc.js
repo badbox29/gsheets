@@ -8397,13 +8397,32 @@ PROF_ABILITY_BUILDERS['riding, land-based'] = function (root, entry, panelEl) {
     { check: 'no',  name: 'Hang alongside the steed',
       text: 'Armor Class improved by 6, and any attack that would have struck your normal AC strikes the mount instead. You cannot attack or wear armor while doing it.' },
     { check: 'penalty', name: 'Leap down and attack',
-      text: 'Melee attack against anything within 10 ft, at &minus;4 to the check. Failure means landing badly for 1d3 damage.' }
+      text: 'Melee attack against anything within 10 ft, at &minus;4 to the check. Failure means landing badly for 1d3 damage.' },
+    // PHBR1 p.85, "Lances and Dismounting". THE ONLY DEFENSIVE ENTRY on this
+    // panel -- every other feat is something the rider CHOOSES to attempt; this
+    // one is forced on him by being hit, which is why it carries its own tag
+    // rather than reading as a seventh trick he can pull.
+    //
+    // "AFTER DOUBLING" is load-bearing and easy to miss: the DMG doubles lance
+    // damage on a charge, so the 8-point threshold is measured against the
+    // DOUBLED figure. A medium lance at 1d6+1 doubled averages 9, so this fires
+    // far more often than the number suggests.
+    //
+    // No modifier is stated, so it is the plain Riding check shown above.
+    { check: 'defend', name: 'Staying in the saddle when lanced',
+      text: 'Anytime a lance hits you while mounted and does <strong>8 or more points ' +
+            'of damage after doubling</strong>, you must make this check or be ' +
+            'dismounted, falling for an additional 1&ndash;2 damage. The lance is designed ' +
+            'to unhorse as much as to wound. In a joust both riders strike at once, so ' +
+            'both can fail and land together.' }
   ];
 
   const tag = f => f.check === 'no'
     ? '<span style="color:var(--success, #6fbf73);">automatic</span>'
     : f.check === 'penalty'
     ? '<span style="color:var(--warning, #e0a34a);">check at &minus;4</span>'
+    : f.check === 'defend'
+    ? '<span style="color:var(--error, #ff6b6b);">check or fall</span>'
     : '<span style="color:var(--info, #6fb3d2);">check</span>';
 
   panelEl.innerHTML = `
