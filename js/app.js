@@ -4316,6 +4316,20 @@ function makeWeaponNode(data={}, onChange){
       '<div class="spacer"></div>' +
       '<div class="stat wpn-damage"></div>' +
       '<div class="stat wpn-weight"></div>' +
+      // PHBR1 p.13. POOR IS THE ONLY AUTOMATIC BREAK of the four qualities --
+      // Average, Fine and Exceptional are all explicitly the DM's discretion, so
+      // they get no note. Read off the ATTACK ROLL, so no roller: the natural
+      // 1-5 is already on the die the player just threw.
+      (function () {
+        const q = (typeof getWeaponQuality === 'function')
+          ? getWeaponQuality(data.quality || '') : null;
+        if (!q || !q.breakOn) return '';
+        return '<div class="stat" title="' + escapeHtml(
+          'PHBR1 p.13. A poor-quality weapon breaks on a natural attack roll of 1 to ' +
+          q.breakOn + '. Shabbily made, and it looks it. No separate roll \u2014 read it ' +
+          'off the attack die.') + '">breaks on 1\u2013' + q.breakOn + '</div>';
+      })() +
+
       // REFERENCE ONLY, no roller. The card lives on the Equipment tab and the
       // roll is wanted mid-combat, so the button belongs with the other rollers
       // on Tools -- putting it here would send the player to a different tab on
@@ -4331,6 +4345,7 @@ function makeWeaponNode(data={}, onChange){
         if (!sh && !br) return '';
         const rule = sh || br;
         const thr = rule.on === 1 ? '1' : '1 or 2';
+        void thr;
         // NO MATERIAL PREFIX. "BONE \u00b7 shatters on 1 or 2" was the longest label of
         // the set and wrapped row1, pushing Details and Remove onto a second line
         // and making one card taller than its neighbours. The card is titled
@@ -4404,6 +4419,21 @@ function makeWeaponNode(data={}, onChange){
         'Blank looks it up from the weapon list by name.&#10;' +
         'Set it for a custom weapon, or one whose name does not match the book.">' +
         weaponSizeOptions(data.size) +
+      '</select>') +
+      wpnField('Quality', 190,
+      '<select class="weapon-quality" style="width:190px;" title="' +
+        'Weapon quality (PHBR1 pp.11-13).&#10;' +
+        'NOT MAGICAL: quality never lets a weapon strike a creature that can only&#10;' +
+        '  be harmed by magical weapons, and it does not reduce speed factor.&#10;' +
+        '  Only the enchantment level does those.&#10;' +
+        'Fine is listed twice because the book grants EITHER +1 to hit OR +1 to&#10;' +
+        '  damage, not both. Exceptional gets both.&#10;' +
+        'Poor breaks on a natural attack roll of 1-5; the other grades break only&#10;' +
+        '  at the DM\u2019s discretion.">' +
+        ((typeof WEAPON_QUALITY_OPTIONS !== 'undefined' ? WEAPON_QUALITY_OPTIONS : [])
+          .map(o => '<option value="' + o.key + '"' +
+                    ((data.quality || '') === o.key ? ' selected' : '') + '>' +
+                    escapeHtml(o.text) + '</option>').join('')) +
       '</select>') +
       wpnField('Grip', 110,
       '<select class="weapon-grip" style="width:110px;" title="' +
@@ -5863,6 +5893,9 @@ function collectSheet(root){
       // means "as the record stands", which is the ONE-HANDED line -- core_wp
       // was normalised so the main Damage columns are consistently one-handed.
       grip: (n.querySelector('.weapon-grip') && n.querySelector('.weapon-grip').value) || '',
+      // PHBR1 pp.11-13. Blank IS average -- absence means not-applicable, so a
+      // weapon predating this field reads as average and nothing migrates.
+      quality: (n.querySelector('.weapon-quality') && n.querySelector('.weapon-quality').value) || '',
       // PHB Ch.9 two-weapon fighting. Stored ON THE WEAPON rather than as one
       // character-level "off-hand weapon" pointer, so renaming or reordering
       // the list cannot orphan it.
