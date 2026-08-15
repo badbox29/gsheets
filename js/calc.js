@@ -11203,14 +11203,33 @@ function renderArmorFitting(root) {
   // Built ONCE. This renders from recalculateAll, so rebuilding would discard
   // the player's selection mid-lookup -- the same reason buildClimbingControls
   // separates build from render.
+  // OPTIONS ARE BUILT ONCE; THE DEFAULT IS APPLIED EVERY RENDER UNTIL TOUCHED.
+  // Doing both in one "build once" block was wrong: bindSheet renders this panel
+  // BEFORE loadSheet fills the race field, so the first pass saw an empty race,
+  // fell through to the first option, and the guard then stopped the default
+  // ever being reapplied. Every character defaulted to Dwarf.
+  //
+  // The same shape as the populateKitDropdown ordering bug, mirrored -- there a
+  // value was set before its options existed; here options were built before the
+  // value existed.
   if (!wearerSel.options.length) {
     ARMOR_FITTING_RACES.forEach(r => {
       wearerSel.appendChild(new Option(nice(r), r));
       builtSel.appendChild(new Option(nice(r), r));
     });
+  }
+
+  // Follows the character's race until the player picks a wearer himself, so
+  // changing the race on the sheet moves it too. Once he chooses, it is his.
+  if (!sec._afWearerTouched) {
     const own = (typeof getRaceKey === 'function') ? getRaceKey(val(root, 'race')) : '';
-    if (own && ARMOR_FITTING[own]) wearerSel.value = own;
-    builtSel.value = wearerSel.value;
+    if (own && ARMOR_FITTING[own]) {
+      wearerSel.value = own;
+      // "Made for" starts matched to the wearer as a neutral opening position,
+      // but only until it has been set once -- it must not be dragged along
+      // afterwards, since the looted armor is the whole question.
+      if (!sec._afBuiltInit) { builtSel.value = own; sec._afBuiltInit = true; }
+    }
   }
 
   const opts = {
