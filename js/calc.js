@@ -7295,8 +7295,11 @@ function renderWeaponProficiencies(root) {
           'back on and it applies again.">suspended \u2014 PHBR1 off</span>'
         : '';
 
+      // Dim the TEXT, never the button. A suspended card is inert and should
+      // read that way, but Delete is the only way to remove it and must stay
+      // legible -- the lesson makeMemSpellNode records about row-wide opacity.
       profDiv.innerHTML =
-        '<div style="flex:1;">' +
+        '<div style="flex:1;' + (gOn ? '' : 'opacity:0.55;') + '">' +
           '<strong>' + escapeHtml(prof.name) + '</strong>' +
           '<span style="margin-left:8px;font-size:11px;color:var(--muted);">' +
             escapeHtml(prof.groupTier) + ' group' +
