@@ -4589,6 +4589,33 @@ function getWeaponShatter(weaponName, typeKey) {
   return { material: rec.material || '', on: on, dieSides: 6 };
 }
 
+// PHBR1 p.85, "Lances and Dismounting" -- NOT the Jousting section above it:
+//
+//   "Lances often break. Any lance that hits and does more than 12 points of
+//    damage, and any lance that has been successfully Parried by a shield, may
+//    break. The player rolls 1d6: on a 1 or 2, the lance breaks and is useless
+//    (except as a club)."
+//
+// "ANY LANCE", so all four records carry it, not just the jousting lance. The
+// rule sits under a general mounted-combat heading; reading it as tournament-only
+// would exempt a heavy lance in an ordinary charge, which the sentence does not.
+//
+// A SEPARATE FIELD FROM shatterOn, deliberately, and no record carries both.
+// They are different mechanics that happen to share a die: shattering is rolled
+// on EVERY hit, this only on a CONDITIONAL one. A single shared field would
+// invite a later reader to collapse them, and the trigger is the whole
+// difference -- which is why breakWhen travels with the number.
+//
+// The book's own vocabulary is kept: stone and bone SHATTER, lances BREAK.
+function getWeaponBreak(weaponName, typeKey) {
+  const rec = (typeof lookupWeaponData === 'function')
+    ? lookupWeaponData(canonicalWeaponName(weaponName, typeKey)) : null;
+  if (!rec) return null;
+  const on = parseInt(rec.breakOn, 10);
+  if (isNaN(on) || on < 1) return null;
+  return { on: on, dieSides: 6, when: rec.breakWhen || '' };
+}
+
 // Do these two weapons share ONE proficiency? Full proficiency, not the half
 // penalty -- see the note in getWeaponProficiencyStatus.
 function samePHBR1Proficiency(nameA, nameB) {
