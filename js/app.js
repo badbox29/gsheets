@@ -4331,11 +4331,15 @@ function makeWeaponNode(data={}, onChange){
         if (!sh && !br) return '';
         const rule = sh || br;
         const thr = rule.on === 1 ? '1' : '1 or 2';
-        const lab = sh
-          ? (sh.material ? sh.material.toUpperCase() + ' \u00b7 ' : '') + 'shatters on ' + thr
-          : 'breaks on ' + thr;
+        // NO MATERIAL PREFIX. "BONE \u00b7 shatters on 1 or 2" was the longest label of
+        // the set and wrapped row1, pushing Details and Remove onto a second line
+        // and making one card taller than its neighbours. The card is titled
+        // "Dagger, Bone", so the prefix restated the name; it moves to the
+        // tooltip, which is also where a RENAMED weapon can still report it.
+        const lab = sh ? 'shatters on ' + thr : 'breaks on ' + thr;
         const tip = sh
-          ? 'PHBR1 p.101. Roll 1d6 on EVERY hit; on ' + thr + ' the weapon shatters and is ' +
+          ? 'PHBR1 p.101. ' + (sh.material ? 'A ' + sh.material + ' weapon. ' : '') +
+            'Roll 1d6 on EVERY hit; on ' + thr + ' the weapon shatters and is ' +
             'useless. The attack still does its full damage. Roll it on the Tools tab.'
           : 'PHBR1 p.85. Roll 1d6 after ' + (br.when || 'a qualifying hit') + '; on ' + thr +
             ' the lance breaks and is useless, except as a club. Roll it on the Tools tab.';
