@@ -4675,6 +4675,107 @@ const WEAPON_QUALITIES = {
 // The dropdown's own order and wording. Built here rather than in the renderer
 // so the labels state the numbers -- "Fine" alone cannot tell you which of the
 // two Fine weapons you are looking at.
+// === PHBR1 Armor Fitting (p.109, table reprinted p.118) ===
+//
+// "Armor made for one race rarely fits another: it may be too big, too small, or
+// proportioned too strangely."
+//
+// ROW = the race TRYING TO WEAR it. COLUMN = the race it was BUILT FOR. The
+// percentage is the chance it fits; the symbol says which way a failure goes.
+//
+//   '+'  too big   -- baggy, or so long it interferes with walking
+//   '-'  too small -- not broad enough across the chest, or comically short
+//   ''   even odds, 50/50 either way
+//
+// TRANSCRIBED AS PRINTED, INCLUDING THE ODD-LOOKING CELLS. Half-Elf wearing
+// Gnome armor is 10% '+' -- too BIG, for armor made for someone half his height
+// -- and Halfling wearing Elf armor is 30% '-', too SMALL, for armor made for
+// someone far taller. Both are correct: the book defines "too large" to include
+// BAGGY and "too small" to include NOT BROAD ENOUGH, so a gnome's proportionally
+// wide breastplate hangs loose on a slim half-elf, and an elf's narrow one will
+// not close over a halfling's chest. Do not "fix" these.
+//
+// Race keys match getRaceKey's output so the panel can default to the
+// character's own race.
+const ARMOR_FITTING = {
+  dwarf:      { dwarf:{p:80,s:''},  elf:{p:0,s:'-'},  gnome:{p:10,s:'-'},
+                'half-elf':{p:10,s:'-'}, halfling:{p:35,s:'-'}, human:{p:40,s:''} },
+  elf:        { dwarf:{p:10,s:'+'}, elf:{p:90,s:''},  gnome:{p:50,s:'-'},
+                'half-elf':{p:70,s:'+'}, halfling:{p:35,s:'+'}, human:{p:50,s:'+'} },
+  gnome:      { dwarf:{p:40,s:'+'}, elf:{p:40,s:'+'}, gnome:{p:75,s:''},
+                'half-elf':{p:25,s:'+'}, halfling:{p:60,s:'+'}, human:{p:20,s:'+'} },
+  'half-elf': { dwarf:{p:20,s:'+'}, elf:{p:45,s:''},  gnome:{p:10,s:'+'},
+                'half-elf':{p:70,s:''},  halfling:{p:35,s:''},  human:{p:50,s:''} },
+  halfling:   { dwarf:{p:75,s:'+'}, elf:{p:30,s:'-'}, gnome:{p:35,s:'-'},
+                'half-elf':{p:35,s:'+'}, halfling:{p:70,s:''},  human:{p:20,s:'+'} },
+  human:      { dwarf:{p:50,s:'-'}, elf:{p:20,s:'-'}, gnome:{p:5,s:'-'},
+                'half-elf':{p:30,s:'-'}, halfling:{p:10,s:'-'}, human:{p:65,s:''} }
+};
+
+const ARMOR_FITTING_RACES = ['dwarf', 'elf', 'gnome', 'half-elf', 'halfling', 'human'];
+
+// FULL PLATE IGNORES THE TABLE ENTIRELY (p.109): "it has only a 20% chance to fit
+// another member of the same race (10% if the new wearer is of the other sex). A
+// character cannot wear full plate made for a character of another race, period."
+const ARMOR_FITTING_FULL_PLATE = { sameRace: 20, sameRaceOtherSex: 10, otherRace: 0 };
+
+// Different sex costs 10%, "but never goes below 5%". On a failure caused by
+// that modifier specifically, "the woman found the man's armor too big, or the
+// man found the woman's too small".
+const ARMOR_FITTING_SEX_MOD = -10;
+const ARMOR_FITTING_FLOOR   = 5;
+
+// Returns { pct, symbol, verdict, fullPlate, floored, parts } or null.
+// `build` is the DM's role-played adjustment -- the book's example is +15% for a
+// short, stocky human trying dwarven armor -- so it is a free number, not a
+// dropdown: the book leaves the size entirely to the DM.
+function getArmorFitting(wearerRace, builtForRace, opts) {
+  const o = opts || {};
+  const w = (wearerRace || '').trim().toLowerCase();
+  const b = (builtForRace || '').trim().toLowerCase();
+  if (!ARMOR_FITTING[w] || !ARMOR_FITTING[w][b]) return null;
+
+  const parts = [];
+
+  if (o.fullPlate) {
+    let pct;
+    if (w !== b) {
+      pct = ARMOR_FITTING_FULL_PLATE.otherRace;
+      parts.push('Full plate never fits across races');
+    } else if (o.otherSex) {
+      pct = ARMOR_FITTING_FULL_PLATE.sameRaceOtherSex;
+      parts.push('Full plate, same race, other sex');
+    } else {
+      pct = ARMOR_FITTING_FULL_PLATE.sameRace;
+      parts.push('Full plate, same race');
+    }
+    return { pct: pct, symbol: '', verdict: '', fullPlate: true, floored: false, parts: parts };
+  }
+
+  const cell = ARMOR_FITTING[w][b];
+  let pct = cell.p;
+  parts.push('Base ' + cell.p + '%');
+
+  if (o.otherSex) { pct += ARMOR_FITTING_SEX_MOD; parts.push('Other sex ' + ARMOR_FITTING_SEX_MOD + '%'); }
+
+  const build = parseInt(o.build, 10) || 0;
+  if (build) { pct += build; parts.push('Build ' + (build > 0 ? '+' : '') + build + '%'); }
+
+  // The floor applies to the SEX modifier by the book's wording. Applied to the
+  // whole figure here because nothing else can drive it below 5 except a DM's
+  // negative build adjustment, and floor-then-ignore would be stranger.
+  let floored = false;
+  if (pct < ARMOR_FITTING_FLOOR) { pct = ARMOR_FITTING_FLOOR; floored = true; }
+  if (pct > 100) pct = 100;
+
+  const verdict = cell.s === '+' ? 'too big'
+                : cell.s === '-' ? 'too small'
+                : 'even odds either way';
+
+  return { pct: pct, symbol: cell.s, verdict: verdict, fullPlate: false,
+           floored: floored, parts: parts };
+}
+
 const WEAPON_QUALITY_OPTIONS = [
   { key: '',            text: 'Average' },
   { key: 'poor',        text: 'Poor (\u22121 hit, \u22121 dmg, breaks on 1\u20135)' },
