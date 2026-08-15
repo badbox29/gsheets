@@ -6531,6 +6531,46 @@ async function renderWeaponBrowser(root) {
     //      carries it (PHBR1 p.96, restated in the p.60 Non-Groups list).
     const noProf = String(weapon['No Proficiency'] || '').trim().toLowerCase() === 'yes';
 
+    //  (4) COVERED BY A WEAPON GROUP he has bought (PHBR1 pp.58-60). Without
+    //      this the browser offered a live Learn button for a weapon he was
+    //      already proficient with -- `haveIt` matches on p.name, and a group
+    //      record is named "Blades", not "Sword, Long" -- and clicking it
+    //      charged a redundant slot. A silent overcharge.
+    //
+    //      Gated on the supplement: with PHBR1 off the group grants nothing, so
+    //      the weapon genuinely is unlearned and Learn is correct again.
+    const groupCover = (function () {
+      if (haveIt || coveredBy) return null;
+      if (!(typeof isSupplementActive === 'function' &&
+            isSupplementActive('phbr1', 'core'))) return null;
+      if (typeof getPHBR1GroupMembers !== 'function') return null;
+
+      const hit = known.find(p => {
+        if (!p || !p.groupTier) return false;
+        const members = getPHBR1GroupMembers(p.name) || [];
+        return members.some(m => norm(m) === norm(wName) ||
+          (typeof samePHBR1Proficiency === 'function' && samePHBR1Proficiency(m, wName)));
+      });
+      if (!hit) return null;
+
+      // Already specialized through a slots:0 record? Then there is nothing
+      // left to sell and the row should read Known, not Specialize.
+      const alreadySpec = known.some(p =>
+        p && p.specialized && norm(p.name) === norm(wName));
+      if (alreadySpec) return null;
+
+      const specRuleOn = (typeof isOptionalRule !== 'function') ||
+                         isOptionalRule('weaponSpecialization');
+      const canSpec = specRuleOn && (typeof canSpecialize === 'function') &&
+                      canSpecialize(root);
+      return {
+        groupName: hit.name,
+        canSpec: canSpec,
+        specCost: (typeof getSpecializationCost === 'function')
+          ? getSpecializationCost(weapon.Group || '') : 1
+      };
+    })();
+
     const learnBtn = document.createElement('button');
     learnBtn.style.cssText = 'padding:4px 12px;font-size:12px;margin-left:8px;flex-shrink:0;';
 
@@ -6572,6 +6612,48 @@ async function renderWeaponBrowser(root) {
       learnBtn.title = `Covered by your ${coveredBy.name} proficiency -- these are ` +
                        `one proficiency with two names (PHBR1 p.59), so there is ` +
                        `nothing further to buy.`;
+    } else if (groupCover && groupCover.canSpec) {
+      // COVERED BY A GROUP, SPECIALIZATION AVAILABLE. PHBR1 p.60's own worked
+      // example: three slots for the Blades broad group, the fourth to
+      // specialize Long Sword. So this must be reachable, and there is no
+      // per-weapon card to tick because the group record names the GROUP.
+      //
+      // THE CESTUS SHAPE. A record with slots:0 whose only cost is the
+      // specialization -- 1 for a melee weapon, 2 for a bow, straight out of
+      // getSpecializationCost. getWeaponSpecialization already reads
+      // `specialized` off _weaponProfs, so nothing downstream needs changing.
+      learnBtn.textContent = 'Specialize (' + groupCover.specCost +
+                             (groupCover.specCost === 1 ? ' slot)' : ' slots)');
+      learnBtn.title =
+        'You are already proficient with this weapon through the ' +
+        groupCover.groupName + ' group, so proficiency costs nothing further.' +
+        '\u000a\u000aPHBR1 p.60: a group can never be specialized in as a whole \u2014 ' +
+        'specializations are taken one weapon at a time, at the normal cost.';
+      learnBtn.onclick = (e) => {
+        e.stopPropagation();
+        if (!root._weaponProfs) root._weaponProfs = [];
+        root._weaponProfs.push({
+          name: wName,
+          weaponTypeKey: (typeof inferWeaponTypeKey === 'function')
+            ? (inferWeaponTypeKey(wName) || '') : '',
+          group: weapon.Group || '',
+          // ZERO, not 1. The proficiency is already paid for by the group; only
+          // the specialization is being bought here.
+          slots: 0,
+          specialized: true
+        });
+        if (typeof renderWeaponProficiencies === 'function') renderWeaponProficiencies(root);
+        const tab = document.querySelector('.tab.active');
+        if (tab && typeof markUnsaved === 'function') markUnsaved(tab, true, root);
+      };
+    } else if (groupCover) {
+      // Covered, but specialization is not on the table -- it is single-class
+      // fighters only and itself an optional rule. Say what covers him and offer
+      // nothing; a Learn button here would sell a slot for what he already owns.
+      learnBtn.textContent = 'Covered';
+      learnBtn.disabled = true;
+      learnBtn.title = 'Already proficient through the ' + groupCover.groupName +
+                       ' group (PHBR1 pp.58-60). There is nothing further to buy.';
     } else if (perm.active && perm.state === 'barred') {
       // AFTER haveIt and coveredBy on purpose. A proficiency already owned is
       // reported as Known whatever the kit says -- the DM may have allowed it,
