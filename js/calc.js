@@ -11308,10 +11308,21 @@ function renderArmorFitting(root) {
   // markUnsaved: a lookup is not an edit to the character.
   if (!sec._afBound) {
     sec._afBound = true;
-    sec.addEventListener('change', () => renderArmorFitting(root));
-    sec.addEventListener('input',  () => renderArmorFitting(root));
+    const onEdit = (e) => {
+      // Touching EITHER select is a deliberate choice, so the wearer stops
+      // following the character's race from then on. Checking the target rather
+      // than setting the flag on any event keeps the build-adjustment box and
+      // the tickboxes from counting as an override.
+      if (e.target && (e.target.classList.contains('af-wearer') ||
+                       e.target.classList.contains('af-builtfor'))) {
+        sec._afWearerTouched = true;
+        sec._afBuiltInit = true;
+      }
+      renderArmorFitting(root);
+    };
+    sec.addEventListener('change', onEdit);
+    sec.addEventListener('input',  onEdit);
   }
-}
 
 function renderWeaponBreakage(root) {
   const sec = root && root.querySelector('.weapon-breakage-section');
