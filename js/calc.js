@@ -11122,6 +11122,118 @@ function renderVisionLightPanel(root) {
 
 // Cover and concealment (PHB Table 59). Same shape as the vision panel: pure
 // reference, no character state, rendered once from bindSheet.
+// PHBR1 breakage rollers. TWO MECHANICS, deliberately not merged: stone and
+// bone SHATTER on every hit (p.101); a lance BREAKS only on a hit doing more
+// than 12 damage or one parried by a shield (p.85). The book uses those two
+// verbs and the panel keeps them.
+//
+// Lists only weapons the character is ACTUALLY CARRYING, equipped or not -- a
+// spare stone spear in the pack still shatters when you draw it. Hides itself
+// when there are none, which is what gates the Tools tab.
+//
+// The sheet does not resolve attacks, so this is the player saying "I hit --
+// did it survive?". Nothing is destroyed automatically; removing the weapon
+// stays his, deliberately.
+function renderWeaponBreakage(root) {
+  const sec = root && root.querySelector('.weapon-breakage-section');
+  if (!sec) return;
+
+  const rows = [];
+  Array.from(root.querySelectorAll('.weapons-list .item')).forEach(el => {
+    const nm = ((el.querySelector('.title') || {}).value || '').trim();
+    const key = (el.querySelector('.weapon-wtype') || {}).value || '';
+    if (!nm && !key) return;
+    const sh = (typeof getWeaponShatter === 'function') ? getWeaponShatter(nm, key) : null;
+    const br = sh ? null
+      : ((typeof getWeaponBreak === 'function') ? getWeaponBreak(nm, key) : null);
+    if (!sh && !br) return;
+    const eq = el.querySelector('.equipped');
+    rows.push({
+      name: nm || 'Unnamed weapon',
+      kind: sh ? 'shatter' : 'break',
+      rule: sh || br,
+      material: sh ? (sh.material || '') : '',
+      equipped: !!(eq && eq.checked)
+    });
+  });
+
+  if (!rows.length) { sec.style.display = 'none'; return; }
+  sec.style.display = '';
+
+  const intro = sec.querySelector('.weapon-breakage-intro');
+  if (intro) {
+    intro.textContent =
+      'Roll after a hit to see whether the weapon survived it. Nothing is removed ' +
+      'for you \u2014 delete the weapon on the Equipment tab if it goes.';
+  }
+
+  const list = sec.querySelector('.weapon-breakage-list');
+  if (!list) return;
+
+  list.innerHTML = rows.map((r, i) => {
+    const thr = r.rule.on === 1 ? '1' : '1 or 2';
+    const when = (r.kind === 'shatter')
+      ? 'every hit'
+      : 'over 12 damage, or parried by a shield';
+    return '<div style="display:flex;align-items:center;gap:10px;padding:6px 8px;' +
+             'border:1px solid var(--border);border-radius:var(--radius);margin-bottom:6px;">' +
+             '<div style="flex:1;min-width:0;">' +
+               '<div style="font-weight:600;">' + escapeHtml(r.name) +
+                 (r.equipped ? '' : ' <span style="font-size:11px;color:var(--muted);">stowed</span>') +
+               '</div>' +
+               '<div style="font-size:11px;color:var(--muted);">' +
+                 (r.material ? escapeHtml(r.material) + ' \u00b7 ' : '') +
+                 (r.kind === 'shatter' ? 'shatters' : 'breaks') +
+                 ' on ' + thr + ' (1d' + r.rule.dieSides + ') \u00b7 ' + escapeHtml(when) +
+               '</div>' +
+             '</div>' +
+             '<div class="wb-result" data-i="' + i + '" style="font-weight:600;font-size:12px;' +
+               'min-width:120px;text-align:right;"></div>' +
+             '<button class="wb-roll" data-i="' + i + '" style="padding:4px 12px;font-size:12px;">' +
+               (r.kind === 'shatter' ? 'Shatters?' : 'Breaks?') +
+             '</button>' +
+           '</div>';
+  }).join('');
+
+  // Rebound on every render because the list is rebuilt; onclick assignment
+  // rather than addEventListener, so a re-render cannot stack handlers.
+  Array.from(list.querySelectorAll('.wb-roll')).forEach(btn => {
+    btn.onclick = () => {
+      const r = rows[parseInt(btn.dataset.i, 10)];
+      if (!r) return;
+      const roll = Math.floor(Math.random() * r.rule.dieSides) + 1;
+      const gone = roll <= r.rule.on;
+      const verb = r.kind === 'shatter' ? 'SHATTERS' : 'BREAKS';
+      const thr = r.rule.on === 1 ? '1' : '1 or 2';
+
+      const out = list.querySelector('.wb-result[data-i="' + btn.dataset.i + '"]');
+      if (out) {
+        out.textContent = roll + ' \u2014 ' + (gone ? verb : 'holds');
+        out.style.color = gone ? 'var(--error, #ff6b6b)' : 'var(--success, #4ade80)';
+      }
+
+      if (typeof addRollToHistory === 'function') {
+        addRollToHistory(root, {
+          formula: r.name + (r.kind === 'shatter' ? ' \u2014 shatter check' : ' \u2014 break check'),
+          rolls: [roll],
+          modifier: 0,
+          total: roll,
+          modifierInfo:
+            (gone
+              ? verb + ' \u2014 the weapon is useless' +
+                (r.kind === 'break' ? ', except as a club' : '')
+              : 'Holds \u2014 no damage to the weapon') +
+            '\n\nBreaks on ' + thr + ' on 1d' + r.rule.dieSides + '.' +
+            (r.kind === 'shatter'
+              ? '\nRolled on EVERY hit. The attack still does its full damage (PHBR1 p.101).'
+              : '\nRolled only after a hit doing more than 12 damage, or one parried by a ' +
+                'shield (PHBR1 p.85).')
+        });
+      }
+    };
+  });
+}
+
 function renderCoverReference(root) {
   const host = root.querySelector('.cover-modifiers-table');
   if (!host || typeof COVER_MODIFIERS === 'undefined') return;
