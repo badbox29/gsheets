@@ -4608,6 +4608,33 @@ function areWeaponsRelated(nameA, groupA, nameB, groupB, keyA, keyB) {
   if (tgA && (tgA || "").toLowerCase() === gB) return true;
   if (tgB && (tgB || "").toLowerCase() === gA) return true;
 
+  // PHBR1 p.59, DM's option: "These categories are very close to the related
+  // weapon groups from page 52 of the Player's Handbook, and your DM can, if he
+  // wishes, use these categories as related groups."
+  //
+  // ABOVE the exhaustive bail-out below, and that placement is the whole point.
+  // The cutlass is named in a PHBR1 related set and the khopesh is named in
+  // none, so the bail-out would refuse the pair -- yet both are Medium Blades,
+  // which is exactly the relation this option exists to grant. The option adds a
+  // BASIS for relatedness; it does not extend an existing list.
+  //
+  // BELOW isPHBR1Unrelated, equally deliberately: "related to nothing" is a
+  // positive statement in PHBR1 and no group may overturn it.
+  //
+  // TIGHT ONLY. p.60, of the broad groups: "These groups may not be used to
+  // calculate weapon similarity for determining whether a character receives the
+  // full or partial attack penalty." getPHBR1WeaponGroups returns both tiers, so
+  // the filter is not optional -- without it a dagger and a two-handed sword
+  // would come back related through Blades.
+  if (typeof isOptionalRule === 'function' && isOptionalRule('tightGroupsAsRelatedPHBR1') &&
+      typeof getPHBR1WeaponGroups === 'function') {
+    const tight = n => getPHBR1WeaponGroups(n)
+      .filter(g => g.tier === 'tight')
+      .map(g => g.name);
+    const tA = tight(cA), tB = tight(cB);
+    if (tA.length && tB.length && tA.some(g => tB.indexOf(g) !== -1)) return true;
+  }
+
   // A weapon named in ANY book's list has exhaustive relationships; it does not
   // also pick up its whole Group.
   if (setA || setB || p1A.length || p1B.length) return false;
@@ -5884,6 +5911,28 @@ const SUPPLEMENTS = {
           caveat: 'Unticking SUSPENDS the bonus; it never refunds the slots or deletes ' +
                   'the specialization. The purchase stays on the character, greyed, and ' +
                   'returns intact when the book is switched back on.' }
+      ]
+    },
+    // A SECOND BAND, and it does NOT mean what PHBR11's optional band means --
+    // which is why the hint is carried here rather than left to the renderer's
+    // default. PHBR11's optional rules suppress warnings and enforce nothing;
+    // this one changes a to-hit penalty. What makes both "optional" is that the
+    // BOOK marks them so: p.59 says "your DM CAN, IF HE WISHES, use these
+    // categories as related groups."
+    optional: {
+      rules: ['tightGroupsAsRelatedPHBR1'],
+      hint:  'A rule PHBR1 offers as the DM\u2019s choice rather than stating flatly. ' +
+             'This one DOES change numbers.',
+      changes: [
+        { text: 'Tight weapon groups count as RELATED weapons (p.59). Two weapons in ' +
+                'the same tight group \u2014 khopesh and cutlass, both Medium Blades \u2014 ' +
+                'cost half the non-proficiency penalty instead of the full one. ' +
+                'Applies whether or not you have bought the group; the categories are ' +
+                'being used as a similarity table, not as a purchase.',
+          caveat: 'BROAD groups are NOT used, ever. p.60 says outright: "These groups ' +
+                  'may not be used to calculate weapon similarity for determining ' +
+                  'whether a character receives the full or partial attack penalty." ' +
+                  'A weapon explicitly related to nothing stays related to nothing.' }
       ]
     }
   },
