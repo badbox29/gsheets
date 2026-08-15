@@ -8129,6 +8129,25 @@ function bindSheet(root, tab){
       markUnsaved(tab, true, root);
 	  renderNWProficiencies(root);
       renderProficiencySlots(root);
+
+      // This listener kept its own hand-written list of eighteen renderers and
+      // had DRIFTED, exactly as the class/level listener above did. Nothing
+      // added to recalculateAll since the list was written was reached on a race
+      // change: Armor Fitting was the symptom that exposed it -- the wearer
+      // dropdown follows the character's race and only updated after a save and
+      // reload -- but ranger stealth, armour restrictions and the Tools sub-tab
+      // strip all read race too, and only recalculated by luck.
+      //
+      // Note the multi- and dual-class branches at the top already reach
+      // recalculateAll through updateMultiClassCalculations and
+      // updateDualClassCalculations, so ONLY SINGLE-CLASS CHARACTERS were
+      // affected -- which is the hardest kind of bug to notice, since it works
+      // on half your test characters.
+      //
+      // recalculateAll is the maintained list. The overlapping calls above are
+      // idempotent renders; the cost is waste, not error, and the alternative is
+      // this list drifting again the next time a panel is added.
+      if (typeof recalculateAll === 'function') recalculateAll(root);
     });
   }
   
