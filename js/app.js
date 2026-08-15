@@ -9661,6 +9661,14 @@ function renderSupplements(root) {
                          'warnings so your table can build them \u2014 they enforce nothing.' }
     };
 
+    // A BAND MAY OVERRIDE ITS OWN HINT, because "optional" does not mean the
+    // same thing in every book. PHBR11's optional rules suppress warnings and
+    // enforce nothing, which is what the default says. PHBR1's optional band
+    // holds one rule that changes a to-hit penalty -- both are optional in the
+    // sense that matters, namely that the BOOK marks them so, but a shared hint
+    // would have to lie about one of them. The registry knows which it is.
+    const bandHint = (band, meta) => (book[band] && book[band].hint) || meta.hint;
+
     ['core', 'optional'].forEach(band => {
       const grp = book[band];
       if (!grp) return;
@@ -9683,7 +9691,8 @@ function renderSupplements(root) {
       text.style.flex = '1';
       text.innerHTML =
         '<div style="font-size:12px;">' + meta.label + '</div>' +
-        '<div style="font-size:10px;color:var(--muted);margin-top:2px;">' + meta.hint + '</div>' +
+        '<div style="font-size:10px;color:var(--muted);margin-top:2px;">' +
+          bandHint(band, meta) + '</div>' +
         (changes ? '<ul style="font-size:10px;color:var(--muted);margin:4px 0 0;' +
                    'padding-left:14px;">' + changes + '</ul>' : '');
 
