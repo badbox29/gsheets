@@ -2522,6 +2522,14 @@ const SHEET_HTML = `
           is now rendered from RACIAL_CHECKS in tables.js -- there is no game
           data in this markup and none should ever be added back.
         -->
+        <!-- PHBR1. Populated by renderWeaponBreakage; hidden entirely unless the
+             character is carrying a weapon that can shatter or break. -->
+        <section class="section weapon-breakage-section" style="display:none;">
+          <h3>Weapon Breakage</h3>
+          <p class="prose weapon-breakage-intro"></p>
+          <div class="weapon-breakage-list"></div>
+        </section>
+
         <section class="section racial-checks-section" style="display:none;">
           <div class="section-group-head">
             <span class="grp-name racial-checks-title">Racial Abilities</span>
