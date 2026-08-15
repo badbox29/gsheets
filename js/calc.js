@@ -1094,6 +1094,7 @@ function renderCombatQuickReference(root) {
         // row and only exists in this loop.
         ammo: (typeof getWeaponAmmoBonus === 'function')
           ? getWeaponAmmoBonus(root, el) : null,
+        quality: (el.querySelector('.weapon-quality') || {}).value || '',
         twoHander: getTwoHanderStyleEffect(root, el),
         effSpeed: getEffectiveWeaponSpeed(
           (el.querySelector('.speed') || {}).value,
@@ -1195,6 +1196,18 @@ function renderCombatQuickReference(root) {
       // folded in before the Magical row is reported, same as specialization.
       const th = weapon.twoHander || null;
       if (th && th.damageBonus) dmgBase += th.damageBonus;
+
+      // PHBR1 weapon quality. Folded in AFTER the magicHit/magicDmg snapshot
+      // above and BEFORE specialization, alongside the two-hander bonus -- it is
+      // a plain arithmetic term of exactly that kind. Putting it above the
+      // snapshot would make a Fine +5 sword report its ENCHANTMENT as +6, which
+      // is the bug the snapshot exists to prevent.
+      //
+      // It never touches `enchant`, so quality can never let a weapon strike a
+      // creature that only a magical weapon can harm.
+      const wq = (typeof getWeaponQuality === 'function')
+        ? getWeaponQuality(weapon.quality || '') : null;
+      if (wq) { hitBase += wq.hit; dmgBase += wq.dmg; }
 
       // Weapon specialization (PHB Ch.5). Melee specialists gain +1 to hit and
       // +2 damage ON TOP of Strength and magic. Bow and crossbow specialists
@@ -1413,6 +1426,23 @@ function renderCombatQuickReference(root) {
                     : 'breaks on ' + bThr + ' (1d6) if over 12 damage or parried') +
                   '</span><br>';
         }
+      }
+
+      // Quality reported on its OWN line, like specialization and enchantment.
+      // Poor is the only grade whose break is automatic, so it is the only one
+      // that says anything about breaking.
+      if (wq) {
+        const qBits = [];
+        if (wq.hit) qBits.push((wq.hit > 0 ? '+' : '') + wq.hit + ' hit');
+        if (wq.dmg) qBits.push((wq.dmg > 0 ? '+' : '') + wq.dmg + ' damage');
+        html += '<span style="color:var(--info, #6fb3d2);" ' +
+                'title="' + escapeHtml(wq.blurb + ' Quality is NOT magical: it does not let ' +
+                  'this weapon harm a creature that only magical weapons can hurt, and it ' +
+                  'does not reduce speed factor.') + '">' +
+                escapeHtml(wq.label) + ': ' +
+                (qBits.length ? qBits.join(', ') + ' (included above)' : 'no adjustment') +
+                (wq.breakOn ? ' \u00b7 breaks on a natural 1\u2013' + wq.breakOn : '') +
+                '</span><br>';
       }
 
       // Magical enchantment. Reported whether or not the bonuses are uniform:
