@@ -8243,6 +8243,7 @@ function bindSheet(root, tab){
   // Runs after renderRacialChecks and renderThiefSkills above, which is what it
   // reads to decide the strip's contents.
   if (typeof renderWeaponBreakage === 'function') renderWeaponBreakage(root);
+  if (typeof renderArmorFitting === 'function') renderArmorFitting(root);
   if (typeof renderToolsSubtabs === 'function') renderToolsSubtabs(root);
   if (typeof renderSectionGroups === 'function') renderSectionGroups(root);
 
@@ -14965,6 +14966,7 @@ function recalculateAll(root) {
   // it belongs in recalculateAll rather than bindSheet alone -- adding, removing
   // or renaming a weapon must be able to make the tab appear and disappear.
   if (typeof renderWeaponBreakage === 'function') renderWeaponBreakage(root);
+  if (typeof renderArmorFitting === 'function') renderArmorFitting(root);
 
   // DEAD LAST, and deliberately after the Quick Reference. This does not break
   // the "Quick Reference stays last" rule -- that rule is about reading THAC0,
