@@ -1388,6 +1388,33 @@ function renderCombatQuickReference(root) {
                 'Specialized: +1 hit, +2 damage (included above)</span><br>';
       }
 
+      // PHBR1 breakage. THE mid-combat surface -- the weapon card is on the
+      // Equipment tab and this panel is in the sidebar, so a rule that fires on
+      // every hit belongs here. A REMINDER, never a roll: this function renders,
+      // it does not resolve, and the roller lives on Tools with the others.
+      if (typeof getWeaponShatter === 'function' || typeof getWeaponBreak === 'function') {
+        const bSh = (typeof getWeaponShatter === 'function')
+          ? getWeaponShatter(weapon.name, weapon.weaponTypeKey) : null;
+        const bBr = bSh ? null
+          : ((typeof getWeaponBreak === 'function')
+              ? getWeaponBreak(weapon.name, weapon.weaponTypeKey) : null);
+        const bRule = bSh || bBr;
+        if (bRule) {
+          const bThr = bRule.on === 1 ? '1' : '1 or 2';
+          html += '<span style="color:var(--warning, #e0a34a);" ' +
+                  'title="' + (bSh
+                    ? 'PHBR1 p.101. Rolled on EVERY hit. The attack still does its full damage.'
+                    : 'PHBR1 p.85. Rolled only after ' + escapeHtml(bBr.when || 'a qualifying hit') +
+                      '. Breaks to a club.') +
+                  ' Roll it on the Tools tab.">' +
+                  (bSh
+                    ? (bSh.material ? escapeHtml(bSh.material) + ': ' : '') +
+                      'shatters on ' + bThr + ' (1d6) each hit'
+                    : 'breaks on ' + bThr + ' (1d6) if over 12 damage or parried') +
+                  '</span><br>';
+        }
+      }
+
       // Magical enchantment. Reported whether or not the bonuses are uniform:
       // a Swordchucks +5 granting only +1 to hit and nothing to damage should
       // say exactly that, because the enchantment LEVEL and its EFFECTS are
