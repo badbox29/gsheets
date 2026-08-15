@@ -4316,6 +4316,31 @@ function makeWeaponNode(data={}, onChange){
       '<div class="spacer"></div>' +
       '<div class="stat wpn-damage"></div>' +
       '<div class="stat wpn-weight"></div>' +
+      // REFERENCE ONLY, no roller. The card lives on the Equipment tab and the
+      // roll is wanted mid-combat, so the button belongs with the other rollers
+      // on Tools -- putting it here would send the player to a different tab on
+      // every hit anyway. The note stays because this is where the weapon is
+      // defined, and a rule that fires on every hit must not sit behind a
+      // disclosure.
+      (function () {
+        const k = wTypeKey || '';
+        const sh = (typeof getWeaponShatter === 'function')
+          ? getWeaponShatter(data.name || '', k) : null;
+        const br = sh ? null
+          : ((typeof getWeaponBreak === 'function') ? getWeaponBreak(data.name || '', k) : null);
+        if (!sh && !br) return '';
+        const rule = sh || br;
+        const thr = rule.on === 1 ? '1' : '1 or 2';
+        const lab = sh
+          ? (sh.material ? sh.material.toUpperCase() + ' \u00b7 ' : '') + 'shatters on ' + thr
+          : 'breaks on ' + thr;
+        const tip = sh
+          ? 'PHBR1 p.101. Roll 1d6 on EVERY hit; on ' + thr + ' the weapon shatters and is ' +
+            'useless. The attack still does its full damage. Roll it on the Tools tab.'
+          : 'PHBR1 p.85. Roll 1d6 after ' + (br.when || 'a qualifying hit') + '; on ' + thr +
+            ' the lance breaks and is useless, except as a club. Roll it on the Tools tab.';
+        return '<div class="stat" title="' + escapeHtml(tip) + '">' + escapeHtml(lab) + '</div>';
+      })() +
       '<div class="btns">' +
         '<button class="toggle-details">Details</button>' +
         '<button class="rm">Remove</button>' +
