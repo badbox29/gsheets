@@ -4403,6 +4403,138 @@ function isPHBR1Unrelated(weaponName) {
   return PHBR1_UNRELATED.some(w => w.toLowerCase() === n);
 }
 
+// === PHBR1 weapon groups (pp.58-60) — TIGHT, BROAD and NON-GROUP ===
+//
+// A FOURTH THING CALLED A WEAPON GROUP, and the one that finally breaks the
+// pattern. WEAPON_GROUP_ORDER's 21 values are a PARTITION -- every weapon has
+// exactly one Group. These OVERLAP: Dagger is in Fencing Blades, Short Blades,
+// Blades and Small Throwing Weapons, all at once. So this can never be a field
+// on a weapon record; it has to be a registry read the other way round.
+//
+// Buying a group grants proficiency in EVERY weapon in it, with no unfamiliarity
+// penalty. Tight costs 2 slots, broad costs 3.
+//
+// TIGHT MAY BE USED AS RELATED GROUPS; BROAD MAY NOT. The book says both, in
+// opposite directions, one page apart. p.59: "your DM can, if he wishes, use
+// these categories as related groups." p.60, of the broad groups: "These groups
+// may not be used to calculate weapon similarity for determining whether a
+// character receives the full or partial attack penalty." The first is a DM
+// OPTION and ships as an optional rule defaulting OFF; the second is a
+// prohibition and is simply never consulted for similarity.
+//
+// YOU CAN NEVER SPECIALIZE IN A GROUP (p.60). Group proficiency DOES satisfy the
+// "already proficient" prerequisite -- the book's worked example has a 1st-level
+// warrior spend 3 slots on Blades and his 4th specializing Long Sword -- but the
+// specialization itself is always in ONE weapon at the normal cost.
+//
+// SLASH-JOINED ENTRIES ARE ONE PROFICIENCY, NOT TWO. The book prints
+// "Dagger/Dirk", "Knife/Stiletto", "Short sword/Drusus" and "Quarterstaff/Bo
+// stick"; all four are in PHBR1_SAME_PROFICIENCY. Only the first name of each
+// pair is listed below -- the pair table supplies the other. So Fencing Blades
+// offers FIVE specializations, not seven.
+//
+// Names are core_wp.json `Weapon Name` values, not the book's phrasing, and all
+// 140 were validated against it. The book writes "Long spear"; the record is
+// "Spear, Long".
+const PHBR1_TIGHT_GROUPS = {
+  'Axes':             ["Battle Axe", "Hand Axe"],
+  'Bows':             ["Composite Long Bow", "Composite Short Bow", "Daikyu",
+                       "Long Bow", "Short Bow"],
+  'Clubbing Weapons': ["Belaying Pin", "Club", "Mace, Footman's",
+                       "Mace, Horseman's", "Morning Star", "War Hammer"],
+  'Crossbows':        ["Hand Crossbow", "Heavy Crossbow", "Light Crossbow"],
+  'Fencing Blades':   ["Dagger", "Knife", "Main-Gauche", "Rapier", "Sabre"],
+  'Flails':           ["Flail, Footman's", "Flail, Horseman's"],
+  'Lances':           ["Lance, Heavy", "Lance, Light", "Lance, Jousting",
+                       "Lance, Medium"],
+  'Long Blades':      ["Sword, Bastard", "Katana", "Sword, Long", "Scimitar",
+                       "Sword, Two-Handed"],
+  'Medium Blades':    ["Cutlass", "Sword, Khopesh", "Wakizashi"],
+  'Picks':            ["Pick, Footman's", "Pick, Horseman's"],
+  'Polearms':         ["Pike, Awl", "Bardiche", "Bec de Corbin", "Bill-Guisarme",
+                       "Fauchard", "Fauchard-Fork", "Glaive", "Glaive-Guisarme",
+                       "Guisarme", "Guisarme-Voulge", "Halberd", "Hook Fauchard",
+                       "Lucern Hammer", "Mancatcher", "Fork, Military",
+                       "Naginata", "Partisan", "Ranseur", "Spetum", "Tetsubo",
+                       "Voulge"],
+  'Short Blades':     ["Dagger", "Knife", "Main-Gauche", "Sword, Short"],
+  'Sickles':          ["Sickle", "Scythe"],
+  'Slings':           ["Sling", "Staff Sling"],
+  'Spears':           ["Harpoon", "Javelin", "Spear, Long", "Spear", "Trident"],
+  'Whips':            ["Scourge", "Whip"]
+};
+
+// p.60. Note Sickle and Scythe appear here as POLE WEAPONS as well as forming
+// their own tight group -- the book files them both ways and so do we.
+const PHBR1_BROAD_GROUPS = {
+  'Blades':                 ["Sword, Bastard", "Cutlass", "Dagger", "Katana",
+                             "Sword, Khopesh", "Knife", "Sword, Long",
+                             "Main-Gauche", "Rapier", "Sabre", "Scimitar",
+                             "Sword, Short", "Sword, Two-Handed", "Wakizashi"],
+  'Cleaving/Crushing Weapons': ["Battle Axe", "Belaying Pin", "Club",
+                             "Mace, Footman's", "Pick, Footman's", "Hand Axe",
+                             "Mace, Horseman's", "Pick, Horseman's",
+                             "Morning Star", "War Hammer"],
+  'Pole Weapons':           ["Pike, Awl", "Bardiche", "Bec de Corbin",
+                             "Bill-Guisarme", "Fauchard", "Fauchard-Fork",
+                             "Glaive", "Glaive-Guisarme", "Guisarme",
+                             "Guisarme-Voulge", "Halberd", "Harpoon",
+                             "Hook Fauchard", "Javelin", "Lucern Hammer",
+                             "Spear, Long", "Mancatcher", "Fork, Military",
+                             "Naginata", "Partisan", "Ranseur", "Sickle",
+                             "Scythe", "Spear", "Spetum", "Tetsubo", "Trident",
+                             "Voulge"],
+  'Small Throwing Weapons': ["Dagger", "Dart", "Hand Axe", "Knife", "Shuriken"]
+};
+
+// p.60: "the following weapons do not belong in any sort of group whatsoever...
+// none of these is similar in use to any other weapon."
+//
+// DELIBERATELY NOT MERGED WITH PHBR1_UNRELATED, which they overlap but do not
+// match. That list answers the RELATED-WEAPON half-penalty question and holds
+// Cestus and Shuriken; this one answers the GROUP-PROFICIENCY question and holds
+// neither -- the cestus because it needs no proficiency at all, and the shuriken
+// because it IS in a broad group. Both can be true at once precisely because
+// broad groups may not be read as similarity. Two questions, two lists.
+const PHBR1_NON_GROUP_WEAPONS = [
+  "Arquebus", "Blowgun", "Bola", "Chain", "Gaff/Hook, Held",
+  "Gaff/Hook, Attached", "Lasso", "Net", "Quarterstaff", "Nunchaku", "Sai"
+];
+
+const PHBR1_GROUP_SLOT_COST = { tight: 2, broad: 3 };
+
+// Every group a weapon belongs to. Returns [{ name, tier }], possibly several --
+// Dagger comes back with four. Empty for a non-group weapon.
+function getPHBR1WeaponGroups(weaponName) {
+  const n = (weaponName || "").trim().toLowerCase();
+  if (!n) return [];
+  const hit = list => list.some(w =>
+    w.toLowerCase() === n ||
+    (typeof samePHBR1Proficiency === 'function' && samePHBR1Proficiency(w, weaponName)));
+  const out = [];
+  Object.keys(PHBR1_TIGHT_GROUPS).forEach(g => {
+    if (hit(PHBR1_TIGHT_GROUPS[g])) out.push({ name: g, tier: 'tight' });
+  });
+  Object.keys(PHBR1_BROAD_GROUPS).forEach(g => {
+    if (hit(PHBR1_BROAD_GROUPS[g])) out.push({ name: g, tier: 'broad' });
+  });
+  return out;
+}
+
+// The members of a named group, whichever tier it is. Null for an unknown name.
+function getPHBR1GroupMembers(groupName) {
+  if (!groupName) return null;
+  return PHBR1_TIGHT_GROUPS[groupName] || PHBR1_BROAD_GROUPS[groupName] || null;
+}
+
+function isPHBR1NonGroupWeapon(weaponName) {
+  const n = (weaponName || "").trim().toLowerCase();
+  if (!n) return false;
+  return PHBR1_NON_GROUP_WEAPONS.some(w =>
+    w.toLowerCase() === n ||
+    (typeof samePHBR1Proficiency === 'function' && samePHBR1Proficiency(w, weaponName)));
+}
+
 // Do these two weapons share ONE proficiency? Full proficiency, not the half
 // penalty -- see the note in getWeaponProficiencyStatus.
 function samePHBR1Proficiency(nameA, nameB) {
