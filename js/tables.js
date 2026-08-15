@@ -5636,6 +5636,11 @@ const TOOLS_SUBTABS = [
     labelFrom: '.racial-checks-title' },
   { key: 'thief',    label: 'Thief Skills',      section: 'thief-skills-section',   band: 'class',     gated: true },
   { key: 'turning',  label: 'Turn Undead',       section: 'turn-undead-section',    band: 'class',     gated: true },
+  // GATED on carrying a qualifying weapon, not on class or race -- at most ten
+  // weapons in the book have a breakage rule and most characters carry none.
+  // renderWeaponBreakage hides the section when the list is empty, which is
+  // what toolsSubtabApplies reads.
+  { key: 'breakage', label: 'Weapon Breakage',   section: 'weapon-breakage-section', band: 'class',    gated: true },
   { key: 'climbing', label: 'Climbing',          section: 'climbing-section',       band: 'reference', gated: false },
   { key: 'vision',   label: 'Vision & Light',    section: 'vision-light-section',   band: 'reference', gated: false },
   { key: 'cover',    label: 'Cover',             section: 'cover-reference-section',band: 'reference', gated: false },
