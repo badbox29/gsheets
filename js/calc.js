@@ -6848,6 +6848,129 @@ function refreshWeaponBrowserIfOpen(root) {
   if (typeof renderWeaponBrowser === 'function') renderWeaponBrowser(root);
 }
 
+// PHBR1 pp.58-60. The buying control for whole-group proficiencies.
+//
+// A SEPARATE CONTROL, not a row in the weapon browser, because a group is not a
+// weapon -- there is nothing to search for, filter by category, or read a damage
+// die off. Sixteen tight groups and four broad ones fit in one dropdown.
+//
+// HIDDEN WHEN THE BOOK IS OFF, like the fighting styles box. Records already
+// bought stay in _weaponProfs untouched, cost nothing and grant nothing; see the
+// gates in getWeaponProficiencyStatus and renderProficiencySlots.
+function renderWeaponGroups(root) {
+  const box = root && root.querySelector('.weapon-groups-box');
+  if (!box) return;
+
+  const on = (typeof isSupplementActive === 'function') &&
+             isSupplementActive('phbr1', 'core');
+  box.style.display = on ? '' : 'none';
+  if (!on) return;
+  if (typeof PHBR1_TIGHT_GROUPS === 'undefined') return;
+
+  const sel = box.querySelector('.weapon-group-picker');
+  const membersEl = box.querySelector('.weapon-group-members');
+  const noteEl = box.querySelector('.weapon-groups-note');
+  if (!sel) return;
+
+  // Built ONCE. Rebuilding on every render would discard the player's selection
+  // mid-decision -- the same reason buildClimbingControls separates build from
+  // render, and the opposite of renderToolsSubtabs, whose selection lives on the
+  // root rather than in the DOM.
+  if (!sel.options.length) {
+    const opt = (g, tier, cost) => {
+      const n = (getPHBR1GroupMembers(g) || []).length;
+      const o = document.createElement('option');
+      o.value = g;
+      o.dataset.tier = tier;
+      o.textContent = g + ' \u2014 ' + cost + ' slots (' + n + ' weapons)';
+      return o;
+    };
+    const mk = (label, obj, tier) => {
+      const og = document.createElement('optgroup');
+      og.label = label;
+      Object.keys(obj).sort().forEach(g =>
+        og.appendChild(opt(g, tier, PHBR1_GROUP_SLOT_COST[tier])));
+      sel.appendChild(og);
+    };
+    mk('Tight groups \u2014 2 slots', PHBR1_TIGHT_GROUPS, 'tight');
+    mk('Broad groups \u2014 3 slots', PHBR1_BROAD_GROUPS, 'broad');
+  }
+
+  // What he is about to buy. Pole Weapons has 28 members and Blades 14; nobody
+  // should have to commit three slots to find out which.
+  const showMembers = () => {
+    if (!membersEl) return;
+    const members = getPHBR1GroupMembers(sel.value) || [];
+    membersEl.textContent = members.length
+      ? members.join(' \u00b7 ')
+      : '';
+  };
+  showMembers();
+
+  if (noteEl) {
+    noteEl.textContent =
+      'Grants proficiency in every weapon listed, with no unfamiliarity penalty. ' +
+      'A group can never be specialized in \u2014 buy the group, then specialize the ' +
+      'individual weapon at its normal cost.';
+  }
+
+  // Bound once, flagged on the box. This renders from renderProficiencySlots,
+  // which runs from recalculateAll on every keystroke, so an unguarded
+  // addEventListener would stack a listener per keypress.
+  if (!box._wgBound) {
+    box._wgBound = true;
+    sel.addEventListener('change', showMembers);
+
+    const addBtn = box.querySelector('.add-weapon-group');
+    if (addBtn) addBtn.onclick = () => {
+      const name = sel.value;
+      const tier = sel.options[sel.selectedIndex] &&
+                   sel.options[sel.selectedIndex].dataset.tier;
+      if (!name || !tier) return;
+      if (!root._weaponProfs) root._weaponProfs = [];
+
+      const nz = s => String(s || '').trim().toLowerCase();
+      if (root._weaponProfs.some(p => p && p.groupTier && nz(p.name) === nz(name))) {
+        alert('You already have proficiency in the ' + name + ' group.');
+        return;
+      }
+
+      // ADVISORY, NEVER BLOCKING. Buying Blades when you already hold Long
+      // Blades is wasteful rather than illegal, and a DM may have his own view.
+      // Say so and let him decide -- the same treatment kit restrictions get.
+      const members = getPHBR1GroupMembers(name) || [];
+      const covered = root._weaponProfs.filter(p => {
+        if (!p) return false;
+        if (p.groupTier) {
+          const sub = getPHBR1GroupMembers(p.name) || [];
+          return sub.length && sub.every(w =>
+            members.some(m => nz(m) === nz(w)));
+        }
+        return members.some(m => nz(m) === nz(p.name) ||
+          (typeof samePHBR1Proficiency === 'function' && samePHBR1Proficiency(m, p.name)));
+      }).map(p => p.name);
+
+      if (covered.length) {
+        const ok = confirm(
+          'The ' + name + ' group already covers what you have paid for separately:\n\n  ' +
+          covered.join(', ') +
+          '\n\nThose slots are not refunded and nothing is removed. Add the group anyway?');
+        if (!ok) return;
+      }
+
+      root._weaponProfs.push({
+        name: name,
+        groupTier: tier,
+        slots: PHBR1_GROUP_SLOT_COST[tier]
+      });
+
+      if (typeof renderWeaponProficiencies === 'function') renderWeaponProficiencies(root);
+      const tab = document.querySelector('.tab.active');
+      if (tab && typeof markUnsaved === 'function') markUnsaved(tab, true, root);
+    };
+  }
+}
+
 function renderProficiencySlots(root) {
   refreshWeaponBrowserIfOpen(root);
   // FIRST statement deliberately. This function has two early returns below --
@@ -6860,6 +6983,8 @@ function renderProficiencySlots(root) {
   // PHBR1 pp.61-64. Shown only when the book is on; the four fields keep their
   // values either way, so switching the book off and on again returns the
   // character to exactly where he was.
+  renderWeaponGroups(root);
+
   const stylesBox = root.querySelector('.fighting-styles');
   if (stylesBox) {
     stylesBox.style.display =
