@@ -3130,6 +3130,30 @@ function makeArmorNode(data={}, onChange){
           '</div>' +
         '</div>' +
       '</div>' +
+      // PHBR1 pp.110-111. OUTSIDE the enchantment panel deliberately: high
+      // quality is visible on inspection, like Type and Weight, and gating it
+      // behind Enchanted would force the player to tick a lie to record it.
+      '<div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:6px;">' +
+        '<label style="display:flex;flex-direction:column;gap:2px;">' +
+          '<span style="font-size:11px;color:var(--muted);">High-quality racial armor</span>' +
+          '<select class="armor-hq-race" style="width:170px;" title="' +
+            'PHBR1 pp.110-111. Armor found as treasure has a 10% chance of being&#10;' +
+            '  high-quality (25% if magical) \u2014 the DM\u2019s roll, not yours.&#10;' +
+            'Each race adds something different: elven is half weight, half-elven&#10;' +
+            '  10% lighter, gnomish takes no thieving penalties, halfling leather&#10;' +
+            '  counts as No Armor, and human plate gives the WEARER +2 vs Rod,&#10;' +
+            '  Staff or Wand and vs Breath Weapon.&#10;' +
+            'Shields gain nothing from being high-quality.">' +
+            '<option value="">Ordinary</option>' +
+            ((typeof HIGH_QUALITY_RACIAL_ARMOR !== 'undefined'
+              ? Object.keys(HIGH_QUALITY_RACIAL_ARMOR) : [])
+              .map(k => '<option value="' + k + '"' +
+                        ((data.highQualityRace || '') === k ? ' selected' : '') + '>' +
+                        escapeHtml(HIGH_QUALITY_RACIAL_ARMOR[k].label) + '</option>').join('')) +
+          '</select>' +
+        '</label>' +
+        '<div class="armor-hq-note" style="flex:1;font-size:11px;color:var(--muted);line-height:1.4;"></div>' +
+      '</div>' +
       '<div class="armor-type-note" style="display:none;font-size:11px;line-height:1.4;padding:6px 8px;background:var(--glass);border-radius:4px;"></div>' +
       // Notes lives here rather than on the collapsed row. At flex:2 up there it
       // truncated to uselessness -- "Interlocking metal plates covering most of
@@ -5850,6 +5874,10 @@ function collectSheet(root){
       identified: !!(n.querySelector('.is-identified') || {}).checked,
       trueName: (n.querySelector('.true-name') || {}).value || '',
       effects: (n.querySelector('.ench-effects-text') || {}).value || '',
+      // PHBR1 pp.110-111. The race that MADE it, blank for ordinary armour.
+      // Absence means not-applicable, so armour predating this field is
+      // untouched and nothing migrates.
+      highQualityRace: (n.querySelector('.armor-hq-race') || {}).value || '',
       equipped: n.querySelector('.equipped').checked,
       weight: (n.querySelector('.weight') && n.querySelector('.weight').value) || '',
       notes: n.querySelector('.notes').value
