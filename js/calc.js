@@ -11183,6 +11183,117 @@ function renderVisionLightPanel(root) {
 // The sheet does not resolve attacks, so this is the player saying "I hit --
 // did it survive?". Nothing is destroyed automatically; removing the weapon
 // stays his, deliberately.
+// PHBR1 p.109. A LOOKUP, not a character property -- it answers "does this
+// looted breastplate fit me" once and nothing persists. Every control is
+// .ephemeral, so collectSheet never sees it and no answer is ever saved.
+//
+// Defaults the wearer to the character's own race, which is the common case and
+// costs nothing. The armor is something he does not own yet, so "made for" is
+// left for him to pick.
+function renderArmorFitting(root) {
+  const sec = root && root.querySelector('.armor-fitting-section');
+  if (!sec || typeof ARMOR_FITTING === 'undefined') return;
+
+  const wearerSel = sec.querySelector('.af-wearer');
+  const builtSel  = sec.querySelector('.af-builtfor');
+  if (!wearerSel || !builtSel) return;
+
+  const nice = r => r.split('-').map(x => x.charAt(0).toUpperCase() + x.slice(1)).join('-');
+
+  // Built ONCE. This renders from recalculateAll, so rebuilding would discard
+  // the player's selection mid-lookup -- the same reason buildClimbingControls
+  // separates build from render.
+  if (!wearerSel.options.length) {
+    ARMOR_FITTING_RACES.forEach(r => {
+      wearerSel.appendChild(new Option(nice(r), r));
+      builtSel.appendChild(new Option(nice(r), r));
+    });
+    const own = (typeof getRaceKey === 'function') ? getRaceKey(val(root, 'race')) : '';
+    if (own && ARMOR_FITTING[own]) wearerSel.value = own;
+    builtSel.value = wearerSel.value;
+  }
+
+  const opts = {
+    otherSex:  !!(sec.querySelector('.af-othersex') || {}).checked,
+    fullPlate: !!(sec.querySelector('.af-fullplate') || {}).checked,
+    build:     (sec.querySelector('.af-build') || {}).value || 0
+  };
+  const fit = (typeof getArmorFitting === 'function')
+    ? getArmorFitting(wearerSel.value, builtSel.value, opts) : null;
+
+  const resEl = sec.querySelector('.armor-fitting-result');
+  if (resEl && fit) {
+    const colour = fit.pct >= 60 ? 'var(--success, #4ade80)'
+                 : fit.pct >= 25 ? 'var(--warning, #e0a34a)'
+                 : 'var(--error, #ff6b6b)';
+    resEl.innerHTML =
+      '<div style="font-size:20px;font-weight:600;color:' + colour + ';">' + fit.pct + '%</div>' +
+      '<div style="font-size:12px;color:var(--muted);">chance it fits \u2014 roll percentile equal or under' +
+        (fit.fullPlate ? '' : ', a failure means it is <strong>' + escapeHtml(fit.verdict) + '</strong>') +
+      '</div>' +
+      '<div style="font-size:11px;color:var(--muted);margin-top:4px;">' +
+        escapeHtml(fit.parts.join(' \u00b7 ')) +
+        (fit.floored ? ' \u00b7 floored at ' + ARMOR_FITTING_FLOOR + '%' : '') +
+      '</div>';
+  }
+
+  // The whole table, with the active row and column marked. A player deciding
+  // whether to haul a suit back to town wants to see the alternatives, not just
+  // the one cell he asked about.
+  const tblEl = sec.querySelector('.armor-fitting-table');
+  if (tblEl) {
+    const th = 'padding:4px 8px;border-bottom:1px solid var(--border);font-size:11px;';
+    let h = '<table style="width:100%;border-collapse:collapse;"><thead><tr>' +
+            '<th style="text-align:left;' + th + '">Trying to wear</th>';
+    ARMOR_FITTING_RACES.forEach(c => {
+      const on = c === builtSel.value;
+      h += '<th style="text-align:right;' + th + (on ? 'color:var(--accent-light);' : '') + '">' +
+           escapeHtml(nice(c)) + '</th>';
+    });
+    h += '</tr></thead><tbody>';
+    ARMOR_FITTING_RACES.forEach(r => {
+      const rowOn = r === wearerSel.value;
+      h += '<tr' + (rowOn ? ' style="background:var(--glass);"' : '') + '>' +
+           '<td style="padding:3px 8px;' + (rowOn ? 'color:var(--accent-light);font-weight:600;' : '') + '">' +
+           escapeHtml(nice(r)) + '</td>';
+      ARMOR_FITTING_RACES.forEach(c => {
+        const cell = ARMOR_FITTING[r][c];
+        const hot = rowOn && c === builtSel.value;
+        h += '<td style="padding:3px 8px;text-align:right;font-variant-numeric:tabular-nums;' +
+             (hot ? 'color:var(--accent-light);font-weight:700;' : '') + '">' +
+             cell.p + '%' + (cell.s ? ' ' + cell.s : '') + '</td>';
+      });
+      h += '</tr>';
+    });
+    tblEl.innerHTML = h + '</tbody></table>';
+  }
+
+  const noteEl = sec.querySelector('.armor-fitting-note');
+  if (noteEl) {
+    noteEl.innerHTML =
+      '<strong>+</strong> too big \u2014 baggy, or so long it interferes with walking. ' +
+      '<strong>\u2212</strong> too small \u2014 not broad enough across the chest, or comically short. ' +
+      'No symbol means even odds either way.<br>' +
+      'Some cells read oddly and are as printed: gnome armor can be <em>too big</em> for a ' +
+      'half-elf because it is proportionally broad, and elven armor <em>too small</em> for a ' +
+      'halfling because it is narrow.<br>' +
+      'A different sex costs 10%, never below 5%; on such a failure a woman finds a man\u2019s ' +
+      'armor too big and a man finds a woman\u2019s too small. <strong>Full plate ignores the table ' +
+      'entirely</strong> \u2014 20% within your own race, 10% across sexes, and never across races. ' +
+      'The DM may adjust for a character\u2019s role-played build; the book\u2019s example is +15% for a ' +
+      'short, stocky human trying dwarven armor.';
+  }
+
+  // Bound once, flagged on the section. This renders from recalculateAll, so an
+  // unguarded addEventListener would stack a listener per keystroke. Never calls
+  // markUnsaved: a lookup is not an edit to the character.
+  if (!sec._afBound) {
+    sec._afBound = true;
+    sec.addEventListener('change', () => renderArmorFitting(root));
+    sec.addEventListener('input',  () => renderArmorFitting(root));
+  }
+}
+
 function renderWeaponBreakage(root) {
   const sec = root && root.querySelector('.weapon-breakage-section');
   if (!sec) return;
