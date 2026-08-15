@@ -11,7 +11,7 @@
 // values. Several call sites interpolate into title="…", where the & < > variant
 // was silently under-escaping.
 //
-// DO NOT add a local esc() helper. If this one is missing something, fix it here..
+// DO NOT add a local esc() helper. If this one is missing something, fix it here.
 function escapeHtml(s) {
   return String(s == null ? '' : s)
     .replace(/&/g, '&amp;')
@@ -4382,9 +4382,35 @@ const PHBR1_RELATED_TO_GROUP = {
   "Daikyu":   "Bow"
 };
 
+// PHBR1 p.60 Non-Groups: "none of these is similar in use to any other weapon.
+// When a character picks one up and uses it without being proficient in it
+// already, he suffers the full penalty." That is a statement about THIS rule --
+// full penalty versus half -- so the list belongs here.
+//
+// BLOWGUN AND QUARTERSTAFF ARE INERT TODAY and are recorded anyway. Blowgun is
+// the sole member of its Group, and Quarterstaff shares Staff only with Bo
+// Stick, which is its same-proficiency pair and resolves as fully proficient one
+// step earlier. Neither can reach the Group fallback. They are here so that a
+// later book adding a second blowgun or a third staff weapon does not silently
+// relate them -- which is precisely the drift the fallback gets wrong.
+//
+// ARQUEBUS IS DELIBERATELY ABSENT, and this is the one entry with a live
+// consequence. It shares Group "Firearm" with Blunderbuss, so adding it would
+// break that pairing. Blunderbuss is Unattributed and is not in PHBR1's
+// Non-Groups list because PHBR1 does not know it exists; the book's "similar to
+// no other weapon" was written about a world containing an arquebus and no
+// blunderbuss, so reading it as a bar on that pair extends the statement past
+// its evidence. Two firearms relating to each other is a house inference PHBR1
+// was not ruling on.
+//
+// It also matters that this list is UNGATED. Its justification is that every
+// pairing it affects involves a weapon the PHB does not print -- and Arquebus,
+// Blowgun and Quarterstaff are all PHB weapons. The two added above cannot
+// change any outcome, so the rationale survives; Arquebus would break it.
 const PHBR1_UNRELATED = [
   "Bola", "Cestus", "Chain", "Gaff/Hook, Attached", "Gaff/Hook, Held",
-  "Lasso", "Net", "Nunchaku", "Sai", "Shuriken"
+  "Lasso", "Net", "Nunchaku", "Sai", "Shuriken",
+  "Blowgun", "Quarterstaff"
 ];
 
 // Every PHBR1 set a weapon belongs to. An array, not a single set: main-gauche
