@@ -4647,6 +4647,36 @@ function getWeaponProficiencyStatus(weaponName, weaponGroup, weaponProfs, weapon
     return "proficient";
   }
 
+  // 2c. GROUP PROFICIENCY (PHBR1 pp.58-60). A group record carries `groupTier`
+  //     and its `name` is a GROUP, not a weapon -- "Fencing Blades", not
+  //     "Rapier". Buying it grants FULL proficiency in every member, so this
+  //     belongs here with the other proficient outcomes and above the related
+  //     check: a Fencing Blades character wielding a rapier takes no penalty at
+  //     all, not a halved one.
+  //
+  //     GATED ON THE SUPPLEMENT. With PHBR1 core switched off the record stays
+  //     on the character untouched and simply grants nothing, the same treatment
+  //     getFightingStyles gives a style -- suspended, never refunded, never
+  //     deleted. The slot counter must gate identically or the two will disagree
+  //     about what the character paid for.
+  //
+  //     Membership goes through samePHBR1Proficiency as well as the name, so a
+  //     Dirk is covered by the Dagger listed in four groups, and through
+  //     canonicalWeaponName so a flavour-named weapon resolves by its type key.
+  if (typeof isSupplementActive === 'function' && isSupplementActive('phbr1', 'core') &&
+      typeof getPHBR1GroupMembers === 'function') {
+    const cName = canonicalWeaponName(weaponName, key);
+    const cn = (cName || "").trim().toLowerCase();
+    const inGroup = profs.some(p => {
+      if (!p || !p.groupTier) return false;
+      const members = getPHBR1GroupMembers(p.name);
+      if (!members) return false;
+      return members.some(m =>
+        m.toLowerCase() === cn || samePHBR1Proficiency(m, cName));
+    });
+    if (inGroup) return "proficient";
+  }
+
   // 3. Related weapon -- half penalty.
   if (profs.some(p => areWeaponsRelated(weaponName, weaponGroup, p.name, p.group,
                                         key, p.weaponTypeKey))) {
