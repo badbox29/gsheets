@@ -4055,12 +4055,12 @@ const WEAPON_TYPES = {
   // stone daggers; the lances had entries and these did not.
   //
   // Group and category mirror core_wp.json so the two cannot disagree.
-  dagger_stone:            { label: 'Stone Dagger',          group: 'Dagger',    category: 'Melee',         wpName: "Dagger, Stone" },
-  dagger_bone:             { label: 'Bone Dagger',           group: 'Dagger',    category: 'Melee',         wpName: "Dagger, Bone" },
-  dagger_knife_stone:      { label: 'Stone Knife',           group: 'Dagger',    category: 'Melee',         wpName: "Knife, Stone" },
-  dagger_knife_bone:       { label: 'Bone Knife',            group: 'Dagger',    category: 'Melee',         wpName: "Knife, Bone" },
-  spear_javelin_stone:     { label: 'Stone Javelin',         group: 'Spear',     category: 'Melee',         wpName: "Javelin, Stone" },
-  spear_stone:             { label: 'Stone Spear',           group: 'Spear',     category: 'Melee',         wpName: "Spear, Stone" },
+  dagger_stone:            { label: 'Stone Dagger',          group: 'Dagger',    category: 'Melee/Thrown',  wpName: "Dagger, Stone" },
+  dagger_bone:             { label: 'Bone Dagger',           group: 'Dagger',    category: 'Melee/Thrown',  wpName: "Dagger, Bone" },
+  dagger_knife_stone:      { label: 'Stone Knife',           group: 'Dagger',    category: 'Melee/Thrown',  wpName: "Knife, Stone" },
+  dagger_knife_bone:       { label: 'Bone Knife',            group: 'Dagger',    category: 'Melee/Thrown',  wpName: "Knife, Bone" },
+  spear_javelin_stone:     { label: 'Stone Javelin',         group: 'Spear',     category: 'Thrown',        wpName: "Javelin, Stone" },
+  spear_stone:             { label: 'Stone Spear',           group: 'Spear',     category: 'Melee/Thrown',  wpName: "Spear, Stone" },
 
   belaying_pin:            { label: 'Belaying Pin',          group: 'Club',      category: 'Melee',         wpName: "Belaying Pin" },
   flail_grain:             { label: 'Grain Flail',           group: 'Flail',     category: 'Melee',         wpName: "Flail, Grain" },
