@@ -7756,6 +7756,13 @@ function bindSheet(root, tab){
       renderSavingThrows(root); // Re-render to update poison save tooltip
 	  renderRacialChecks(root);  // Update dwarven save bonuses
 	  renderCharacterBonuses(root);
+      // Both read CON and were missing. renderHitDice for the Table 3 hit-die
+      // FLOOR note ("Constitution 19: every Hit Die counts a result below 3 as
+      // 3"), and renderMovementRate for the breath-holding line, a third of
+      // Constitution in rounds. Notes rather than headline figures, which is why
+      // the staleness went unseen.
+      if (typeof renderHitDice === 'function') renderHitDice(root);
+      if (typeof renderMovementRate === 'function') renderMovementRate(root);
       markUnsaved(tab, true, root);
     });
   }
