@@ -11323,6 +11323,7 @@ function renderArmorFitting(root) {
     sec.addEventListener('change', onEdit);
     sec.addEventListener('input',  onEdit);
   }
+}
 
 function renderWeaponBreakage(root) {
   const sec = root && root.querySelector('.weapon-breakage-section');
