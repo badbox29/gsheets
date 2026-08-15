@@ -5821,6 +5821,9 @@ const TOOLS_SUBTABS = [
   // what toolsSubtabApplies reads.
   { key: 'breakage', label: 'Weapon Breakage',   section: 'weapon-breakage-section', band: 'class',    gated: true },
   { key: 'climbing', label: 'Climbing',          section: 'climbing-section',       band: 'reference', gated: false },
+  // UNGATED. Anyone can loot armor, so there is nothing to gate on -- unlike the
+  // class and race panels above. Reference, like Climbing and Cover.
+  { key: 'fitting',  label: 'Armor Fitting',     section: 'armor-fitting-section',  band: 'reference', gated: false },
   { key: 'vision',   label: 'Vision & Light',    section: 'vision-light-section',   band: 'reference', gated: false },
   { key: 'cover',    label: 'Cover',             section: 'cover-reference-section',band: 'reference', gated: false },
   { key: 'overland', label: 'Overland',          section: 'overland-section',       band: 'reference', gated: false }
