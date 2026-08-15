@@ -4714,6 +4714,141 @@ const ARMOR_FITTING = {
 
 const ARMOR_FITTING_RACES = ['dwarf', 'elf', 'gnome', 'half-elf', 'halfling', 'human'];
 
+// === PHBR1 High-Quality Racial Armor (pp.110-111) ===
+//
+// "Armor found as treasure has a chance to be high-quality armor. Ordinary armor
+// has a 10% chance on percentile dice; magical armor has a 25% chance. Each race
+// adds something different to its armor if it is high quality."
+//
+// The 10%/25% generation figures are the DM's roll and are recorded here as
+// prose only -- nothing on a character sheet rolls them.
+//
+// FOUR OF THE SIX RACES CHANGE SOMETHING THE SHEET COMPUTES. Dwarven adds only
+// item saving throws (a DMG table, DM-side) and damage points (parked), so a
+// dwarven entry currently does nothing at all -- it is carried so the dropdown
+// is complete and so the DP work later has somewhere to land.
+//
+// `dpMult` HAS NO CONSUMER and is deliberately stored anyway. The "Damage to
+// Armor" rules are provisionally decided against (see the PHBR notes), but the
+// dwarven "twice the number of damage points", human plate's "one and a half
+// times", and the high-quality shield's "twice as many" are all stated HERE, in
+// this section. Recording them now means building DP later is purely additive:
+// a base-DP table and a consumer, with nothing in this registry to revisit.
+//
+// `itemSaveBonus` is recorded on the same principle. Item saving throws are a
+// DMG chart and DM-side by the standing scope rule, so nothing reads it.
+//
+// `allows` is the list of ARMOR_TYPES keys a race can make as high-quality.
+// null means all types. This is a REAL restriction the book states -- gnomes
+// make only studded and padded leather, halflings only leather, half-elves
+// everything except the soft armours and bronze plate -- so it drives an
+// advisory rather than being decoration.
+const HIGH_QUALITY_RACIAL_ARMOR = {
+  dwarf: {
+    label: 'Dwarven', allows: null,
+    weightMult: 1, thiefRule: null, wearerSaves: null,
+    itemSaveBonus: 6, dpMult: 2,
+    blurb: 'Very, very resistant to damage. +6 to item saving throws, on top of any ' +
+           'magical bonus.'
+  },
+  elf: {
+    label: 'Elven', allows: null,
+    weightMult: 0.5, thiefRule: null, wearerSaves: null,
+    itemSaveBonus: 0, dpMult: 1,
+    blurb: 'Elven steel \u2014 half the weight of ordinary armor. Elvish craftsmen never ' +
+           'make it to order for outsiders; a piece is bestowed by elven royalty for ' +
+           'deeds of exceptional valor.'
+  },
+  gnome: {
+    label: 'Gnomish', allows: ['studded', 'padded'],
+    weightMult: 1, thiefRule: 'noPenalty', wearerSaves: null,
+    itemSaveBonus: 0, dpMult: 1,
+    blurb: 'Very quiet studded and padded leather \u2014 the only high-quality armors ' +
+           'gnomes make. Takes NO penalties at all on the Thieving Skill Armor ' +
+           'Adjustment table.'
+  },
+  'half-elf': {
+    // Stated as an exclusion list in the book; resolved to the inclusion list
+    // here because every consumer asks "may this type be high-quality?" and an
+    // exclusion would have to be inverted at each call site.
+    label: 'Half-elven',
+    allows: ['ring', 'brigandine', 'scale', 'chain', 'elven_chain', 'banded',
+             'splint', 'plate', 'field_plate', 'full_plate'],
+    weightMult: 0.9, thiefRule: null, wearerSaves: null,
+    itemSaveBonus: 2, dpMult: 1,
+    blurb: 'Fine steel at normal thickness \u2014 10% lighter than ordinary armor, and +2 ' +
+           'to item saving throws. Half-elves make no high-quality leather, padded, ' +
+           'studded leather, hide or bronze plate mail.'
+  },
+  halfling: {
+    label: 'Halfling', allows: ['leather'],
+    weightMult: 1, thiefRule: 'countsAsNone', wearerSaves: null,
+    itemSaveBonus: 0, dpMult: 1,
+    blurb: 'Leather only. Counts as "No Armor" on the Thieving Skill Armor ' +
+           'Adjustment table.'
+  },
+  human: {
+    label: 'Human', allows: null,
+    weightMult: 1, thiefRule: null, wearerSaves: null,
+    itemSaveBonus: 2, dpMult: 1,
+    blurb: 'Especially tough \u2014 +2 to item saving throws whatever it is made of.',
+    // THE ONE TYPE-SPECIFIC SUB-RULE IN THE SECTION. Plate mail, field plate and
+    // full plate -- explicitly NOT bronze plate -- are made of fine steel but
+    // built THICKER rather than lighter, so they stay normal weight and instead
+    // give the WEARER a saving throw bonus. That is the only effect in the whole
+    // subsystem that touches the character's own saves rather than the item's.
+    plateRule: {
+      types: ['plate', 'field_plate', 'full_plate'],
+      weightMult: 1, itemSaveBonus: 4, dpMult: 1.5,
+      wearerSaves: { rodStaffWand: 2, breathWeapon: 2 },
+      blurb: 'Fine steel built thicker rather than lighter: normal weight, +4 to item ' +
+             'saving throws, and the wearer gains +2 to saving throws vs. Rod, Staff ' +
+             'or Wand and vs. Breath Weapon attacks.'
+    }
+  }
+};
+
+// High-quality SHIELDS grant nothing at all unless the Damage to Armor rules are
+// in use, in which case they have twice the damage points. Recorded for the same
+// forward-compatibility reason as dpMult above; no consumer today.
+const HIGH_QUALITY_SHIELD_DP_MULT = 2;
+
+// What a given piece actually grants. `makerRace` is the race that MADE it,
+// `armorTypeKey` its ARMOR_TYPES key. Returns null when the piece is not marked
+// high-quality or the race is unknown.
+//
+// Gated on PHBR1 core, like every other rule from this book: with the supplement
+// off the flag stays on the armour untouched and grants nothing.
+function getHighQualityArmor(makerRace, armorTypeKey) {
+  const r = (makerRace || '').trim().toLowerCase();
+  if (!r) return null;
+  if (typeof isSupplementActive === 'function' && !isSupplementActive('phbr1', 'core')) return null;
+  const base = HIGH_QUALITY_RACIAL_ARMOR[r];
+  if (!base) return null;
+
+  const key = (armorTypeKey || '').trim();
+  const out = {
+    race: r, label: base.label, allows: base.allows,
+    weightMult: base.weightMult, thiefRule: base.thiefRule,
+    wearerSaves: base.wearerSaves, itemSaveBonus: base.itemSaveBonus,
+    dpMult: base.dpMult, blurb: base.blurb,
+    // TRUE when this race cannot make THIS type as high-quality. Advisory only:
+    // a DM may rule otherwise, and PHBR1 p.37's licence to modify applies here
+    // as everywhere else.
+    typeNotMade: !!(base.allows && key && base.allows.indexOf(key) === -1)
+  };
+
+  if (base.plateRule && key && base.plateRule.types.indexOf(key) !== -1) {
+    out.weightMult    = base.plateRule.weightMult;
+    out.itemSaveBonus = base.plateRule.itemSaveBonus;
+    out.dpMult        = base.plateRule.dpMult;
+    out.wearerSaves   = base.plateRule.wearerSaves;
+    out.blurb         = base.plateRule.blurb;
+    out.plate         = true;
+  }
+  return out;
+}
+
 // FULL PLATE IGNORES THE TABLE ENTIRELY (p.109): "it has only a 20% chance to fit
 // another member of the same race (10% if the new wearer is of the other sex). A
 // character cannot wear full plate made for a character of another race, period."
