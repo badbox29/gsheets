@@ -4358,7 +4358,13 @@ const PHB_RELATED_WEAPONS = [
 const PHBR1_SAME_PROFICIENCY = [
   ["Stiletto", "Knife"],         // p.104: Knife proficiency IS Stiletto proficiency
   ["Bo Stick", "Quarterstaff"],  // p.100-101: "shares a proficiency with Quarterstaff"
-  ["Drusus", "Sword, Short"]     // p.98: same proficiency; specialization transfers
+  ["Drusus", "Sword, Short"],    // p.98: same proficiency; specialization transfers
+  // pp.59-60 print "Dagger/Dirk" in the same slash form as the three above,
+  // across Fencing Blades, Short Blades and Small Throwing Weapons. PHB Table 44
+  // independently prints "Dagger or dirk" as a SINGLE ROW. Two weapons, one
+  // proficiency -- they are not one weapon under two names, since Dagger is
+  // Melee/Thrown and Dirk is Melee only.
+  ["Dirk", "Dagger"]
 ];
 
 const PHBR1_RELATED_WEAPONS = [
