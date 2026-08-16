@@ -8175,7 +8175,18 @@ function bindSheet(root, tab){
       if (e.target.classList.contains('equipped')   ||
           e.target.classList.contains('armor-type') ||
           e.target.classList.contains('armor-slot') ||
-          e.target.classList.contains('is-magical')) {
+          e.target.classList.contains('is-magical')  ||
+          // PHBR1 high-quality racial armor. Reaches encumbrance (elven half
+          // weight, half-elven -10%), getThiefArmorCategory (gnome takes no
+          // penalty, halfling leather counts as No Armor) and saving throws
+          // (human plate gives the wearer +2 vs Rod/Staff/Wand and Breath
+          // Weapon) -- so it needs the full recalculateAll, not a local render.
+          //
+          // THIS WHITELIST IS THE THIRD TIME THIS BUG HAS APPEARED. Adding a
+          // control to an armour card is only half the job: if its class is not
+          // listed here, nothing recalculates until a save and reload. See the
+          // note above about .base-ac and .ac-bonus.
+          e.target.classList.contains('armor-hq-race')) {
         armorChanged();
       }
     });
