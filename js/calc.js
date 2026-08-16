@@ -11188,6 +11188,38 @@ function renderVisionLightPanel(root) {
   renderLightSources(root);
 }
 
+// PHBR1-ONLY CONTROLS. Weapon quality and high-quality racial armour are both
+// PHBR1 INVENTIONS -- unlike a magic bonus, which exists in the core rules, a DM
+// running without the book is not handing out Fine weapons or gnomish
+// high-quality studded leather. So with the supplement off there is nothing for
+// either field to record, and they hide, exactly as the fighting-styles box and
+// the weapon-groups picker already do.
+//
+// HIDDEN, NEVER REMOVED. collectSheet reads the DOM, so a removed control is a
+// LOST VALUE. The stored quality and maker-race survive untouched underneath and
+// return intact when the book is switched back on -- suspend, never delete, the
+// same treatment a suspended fighting style gets.
+//
+// ONE FUNCTION FOR BOTH, called from recalculateAll, because the supplement
+// toggle does NOT rebuild weapon and armour cards: a hook that only ran when a
+// card was built would leave every existing card showing a control the setting
+// had just switched off. Two separate hooks would be two things to keep in step.
+function renderPHBR1OnlyControls(root) {
+  if (!root) return;
+  const on = (typeof isSupplementActive === 'function') &&
+             isSupplementActive('phbr1', 'core');
+  Array.from(root.querySelectorAll('.phbr1-only')).forEach(el => {
+    // The weapon wrapper uses display:contents so the field stays in the same
+    // flex row as Size and Grip; restoring '' would make it a block and break
+    // that row. Read the intent off the element rather than storing a second
+    // flag on it.
+    if (!el._phbr1Display) {
+      el._phbr1Display = (el.style.display === 'none') ? '' : (el.style.display || '');
+    }
+    el.style.display = on ? el._phbr1Display : 'none';
+  });
+}
+
 // Cover and concealment (PHB Table 59). Same shape as the vision panel: pure
 // reference, no character state, rendered once from bindSheet.
 // PHBR1 breakage rollers. TWO MECHANICS, deliberately not merged: stone and
