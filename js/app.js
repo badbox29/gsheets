@@ -12649,8 +12649,59 @@ function makeCharacterJournalEntry(data = {}, onChange) {
   return el;
 }
 
+// Open IndexedDB, load the character map into the cache, and migrate the
+// existing localStorage copy across on first run.
+//
+// NEVER THROWS. Every failure path leaves _charStore at 'localStorage' and
+// _charCache at null, which is exactly the behaviour before any of this existed
+// -- reads fall through to localStorage and writes take the original path. A
+// browser with IndexedDB disabled loses nothing but the extra room.
+//
+// MIGRATION IS COPY, NOT MOVE. The localStorage copy is deliberately left in
+// place here: it is the only backup during the one boot where the data lives in
+// two stores, and deleting it before confirming a successful read back is how a
+// migration eats a character collection. It is cleared later, on the boot AFTER
+// IndexedDB has been shown to hold the data.
+async function loadCharacterStore(){
+  try {
+    _charDb = await idbOpen();
+
+    const stored = await idbGetMap(_charDb);
+    if (stored && typeof stored === 'object' && Object.keys(stored).length) {
+      _charCache = stored;
+      _charStore = 'idb';
+      return;
+    }
+
+    // Nothing in IndexedDB yet -- first run, or a genuinely empty collection.
+    let legacy = {};
+    try { legacy = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}') || {}; }
+    catch(_) { legacy = {}; }
+
+    if (Object.keys(legacy).length) {
+      // Write BEFORE switching mode, so a failed migration falls through to the
+      // catch below and leaves the app on localStorage with its data intact.
+      await idbPutMap(_charDb, legacy);
+      console.log('[store] Migrated ' + Object.keys(legacy).length +
+                  ' character record(s) to IndexedDB.');
+    }
+    _charCache = legacy;
+    _charStore = 'idb';
+  } catch (err) {
+    console.warn('[store] IndexedDB unavailable, using localStorage.', err);
+    _charDb    = null;
+    _charCache = null;
+    _charStore = 'localStorage';
+  }
+}
+
 // ===== Bootstrap the default tab =====
-(function init(){
+(async function init(){
+  // THE STORE LOADS FIRST, before anything reads it. bindSheet below reaches
+  // readCharacterMap, and every read before this resolves would fall through to
+  // localStorage and then be overwritten by the cache -- so the await is not
+  // optional and must stay the first statement.
+  await loadCharacterStore();
   // The inline script in index.html sets the attributes before the stylesheet
   // loads, to avoid a flash -- but it cannot validate them, because the
   // stylesheet is not parsed yet. This is the first chance to check, and it
