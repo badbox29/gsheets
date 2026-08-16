@@ -3170,6 +3170,22 @@ function inferArmorTypeKey(name) {
 function getThiefArmorCategory(root) {
   const items = Array.from(root.querySelectorAll('.armor-list .item'));
   let worn = '', typeKey = '', hqRace = '';
+ // MOST RESTRICTIVE PIECE WORN, not the heaviest. Chris's ruling, and the right
+  // axis: Table 29 columns are ordered by PENALTY, and weight does not determine
+  // the column. Padded armour is the lightest body armour in the game at 10 lb
+  // and sits in the WORST column at -30% Pick Pockets, while leather at 15 lb
+  // takes no penalty at all -- so "heaviest" would have picked leather over
+  // padded and produced a BETTER result for the MORE restrictive armour.
+  //
+  // OUR INFERENCE, NOT THE BOOK'S. PHBR1 never says how piecemeal armour meets
+  // Table 29. Recorded as ours so nobody later mistakes it for RAW.
+  //
+  // Unrelated and already handled elsewhere: PHB Ch.3's rule that a MULTI-CLASS
+  // thief removes gauntlets to open locks and helmet to detect noise. That reads
+  // the Gauntlets and Helmet slots, which are not piecemeal locations, so the two
+  // systems do not collide.
+  const RANK = ['none', 'leather', 'elven', 'padded'];   // best to worst
+  let bestRank = -1;
   items.forEach(item => {
     const cb = item.querySelector('.equipped');
     if (!cb || !cb.checked) return;
@@ -3177,17 +3193,44 @@ function getThiefArmorCategory(root) {
     // rendered by the pre-rewrite card, where that class held the slot.
     const slotEl = item.querySelector('.armor-slot') || item.querySelector('.armor-type');
     const slot = (slotEl || {}).value || 'Armor';
-    if (slot !== 'Armor') return;                 // shields and worn items are not body armor
+
+    // A PIECEMEAL PIECE COUNTS. Previously anything but "Armor" was skipped, so
+    // a character in splint plates read as UNARMOURED and took no penalty at
+    // all. Shields, helmets and the rest are still skipped: they are not body
+    // armour and Table 29 does not describe them.
+    const isPiece = (typeof PIECEMEAL_SLOTS !== 'undefined') &&
+                    PIECEMEAL_SLOTS.some(s => s.label === slot);
+    if (slot !== 'Armor' && !isPiece) return;
+
     const name = ((item.querySelector('.title') || {}).value || '').trim();
     const stored = item.querySelector('.armor-slot')
       ? ((item.querySelector('.armor-type') || {}).value || '')
       : '';
-    if (name || stored) {
-      worn = name;
-      typeKey = stored || inferArmorTypeKey(name);
-      // Captured from the SAME piece, so it cannot describe armour the
-      // character is not wearing.
-      hqRace = (item.querySelector('.armor-hq-race') || {}).value || '';
+    if (!name && !stored) return;
+
+    const thisKey = stored || inferArmorTypeKey(name);
+    const thisHq  = (item.querySelector('.armor-hq-race') || {}).value || '';
+
+    // Resolve THIS piece to its own Table 29 column, honouring the high-quality
+    // racial rules per piece -- one gnomish sleeve must not erase the penalty
+    // from a plate breastplate, and it cannot: 'none' loses to anything worse.
+    let col = 'padded';
+    const hqP = (thisHq && typeof getHighQualityArmor === 'function')
+      ? getHighQualityArmor(thisHq, thisKey) : null;
+    if (hqP && (hqP.thiefRule === 'noPenalty' || hqP.thiefRule === 'countsAsNone')) {
+      col = 'none';
+    } else {
+      const td = (typeof ARMOR_TYPES !== 'undefined') ? ARMOR_TYPES[thisKey] : null;
+      col = (td && td.thiefColumn) || 'padded';   // no column = outside Table 29 = worst
+    }
+
+    const rank = RANK.indexOf(col);
+    if (rank > bestRank) {
+      bestRank = rank;
+      worn = name || ((typeof ARMOR_TYPES !== 'undefined' && ARMOR_TYPES[thisKey])
+        ? ARMOR_TYPES[thisKey].label : '');
+      typeKey = thisKey;
+      hqRace = thisHq;
     }
   });
 
