@@ -4745,6 +4745,78 @@ const ARMOR_FITTING = {
 
 const ARMOR_FITTING_RACES = ['dwarf', 'elf', 'gnome', 'half-elf', 'halfling', 'human'];
 
+// === PHBR1 Piecemeal Armor (pp.111-112, table p.118) ===
+//
+// "Characters can wear armor assembled out of the remnants of other,
+// mismatched sets of armor. It's not as good, and certainly not as
+// good-looking, as wearing a matched suit. But sometimes necessity dictates
+// that characters wear what's on hand."
+//
+// NOT A REPLACEMENT FOR THE STANDARD SYSTEM -- A STRICT SUPERSET. The `full`
+// column IS the standard system: every one of the 14 rows equals 10 minus that
+// armour's base AC, verified against core_armor.json. A character in a matched
+// suit gets the same number by the same arithmetic whether this is switched on
+// or off. Switching it on only unlocks the other five columns.
+//
+// AC = 10 - (sum of the pieces worn) - shield - Dex - everything else.
+//
+// FOURTEEN TYPES, WHICH IS EXACTLY ARMOR_TYPES MINUS `none` AND `elven_chain`.
+// Elven chain is absent because it is inherently magical, and split magical
+// armour "grants none of its magical bonus" (p.112) -- so there is no number to
+// give it. The UI therefore offers the partial slots ONLY for the types below:
+// this is a LOCK rather than a warning, because the combination is not
+// forbidden, it is UNCOMPUTABLE. Warn when a book says so; lock when the model
+// says so.
+//
+// Columns: full suit, breastplate, two arms, one arm, two legs, one leg.
+const PIECEMEAL_ARMOR = {
+  banded:       { full: 6, breastplate: 3, two_arms: 2, one_arm: 1, two_legs: 1, one_leg: 0 },
+  brigandine:   { full: 4, breastplate: 2, two_arms: 1, one_arm: 0, two_legs: 1, one_leg: 0 },
+  bronze_plate: { full: 6, breastplate: 3, two_arms: 2, one_arm: 1, two_legs: 1, one_leg: 0 },
+  chain:        { full: 5, breastplate: 2, two_arms: 2, one_arm: 1, two_legs: 1, one_leg: 0 },
+  field_plate:  { full: 8, breastplate: 4, two_arms: 2, one_arm: 1, two_legs: 2, one_leg: 1 },
+  full_plate:   { full: 9, breastplate: 4, two_arms: 3, one_arm: 1, two_legs: 2, one_leg: 1 },
+  hide:         { full: 4, breastplate: 2, two_arms: 1, one_arm: 0, two_legs: 1, one_leg: 0 },
+  leather:      { full: 2, breastplate: 1, two_arms: 1, one_arm: 0, two_legs: 0, one_leg: 0 },
+  padded:       { full: 2, breastplate: 1, two_arms: 1, one_arm: 0, two_legs: 0, one_leg: 0 },
+  plate:        { full: 7, breastplate: 3, two_arms: 2, one_arm: 1, two_legs: 2, one_leg: 1 },
+  ring:         { full: 3, breastplate: 1, two_arms: 1, one_arm: 0, two_legs: 1, one_leg: 0 },
+  scale:        { full: 4, breastplate: 2, two_arms: 1, one_arm: 0, two_legs: 1, one_leg: 0 },
+  splint:       { full: 6, breastplate: 3, two_arms: 2, one_arm: 1, two_legs: 1, one_leg: 0 },
+  studded:      { full: 3, breastplate: 1, two_arms: 1, one_arm: 0, two_legs: 1, one_leg: 0 }
+};
+
+// The five PARTIAL slots, in display order. `full` is deliberately absent: a
+// full suit is the existing "Armor" slot and needs no new value.
+//
+// Weight is DERIVED, not entered (p.112): "The breastplate is 1/2 the weight of
+// the original suit. Each arm and leg is 1/8 the weight of the original suit."
+// So two arms or two legs is 1/4. Applied at the encumbrance walk rather than by
+// rewriting the weight FIELD -- same anchor rule as elven half-weight.
+const PIECEMEAL_SLOTS = [
+  { key: 'breastplate', label: 'Breastplate', weightMult: 0.5   },
+  { key: 'two_arms',    label: 'Two Arms',    weightMult: 0.25  },
+  { key: 'one_arm',     label: 'One Arm',     weightMult: 0.125 },
+  { key: 'two_legs',    label: 'Two Legs',    weightMult: 0.25  },
+  { key: 'one_leg',     label: 'One Leg',     weightMult: 0.125 }
+];
+
+// May this armour type be worn piecemeal at all?
+function isPiecemealType(armorTypeKey) {
+  return !!(armorTypeKey && PIECEMEAL_ARMOR[armorTypeKey]);
+}
+
+// What a piece contributes. Returns { bonus, weightMult, label } or null.
+// Gated on PHBR1 core: with the book off the stored slot survives untouched and
+// the piece contributes nothing, like a suspended fighting style.
+function getPiecemealPiece(armorTypeKey, slotKey) {
+  if (typeof isSupplementActive === 'function' && !isSupplementActive('phbr1', 'core')) return null;
+  const row = PIECEMEAL_ARMOR[armorTypeKey];
+  const slot = PIECEMEAL_SLOTS.find(s => s.key === slotKey);
+  if (!row || !slot) return null;
+  return { bonus: row[slotKey] || 0, weightMult: slot.weightMult, label: slot.label };
+}
+
 // === PHBR1 High-Quality Racial Armor (pp.110-111) ===
 //
 // "Armor found as treasure has a chance to be high-quality armor. Ordinary armor
