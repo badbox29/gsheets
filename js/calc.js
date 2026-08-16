@@ -4120,6 +4120,29 @@ function renderEncumbrance(root) {
       if (hq && hq.weightMult !== 1) weight = weight * hq.weightMult;
     }
 
+    // PHBR1 p.112: "The breastplate is 1/2 the weight of the original suit. Each
+    // arm and leg is 1/8 the weight of the original suit." So two arms or two
+    // legs is 1/4.
+    //
+    // MULTIPLIED, NOT STORED, for the same reason as the elven half-weight
+    // above: the weight FIELD holds what the book prints for the whole suit,
+    // and a stored fraction would drift from core_armor.json and could not be
+    // undone by changing the slot back.
+    //
+    // AFTER the racial multiplier deliberately -- a half-weight elven breastplate
+    // is half of half. Both are proportions of the same original suit, so they
+    // compose.
+    const pmSlotW = (typeof PIECEMEAL_SLOTS !== 'undefined')
+      ? PIECEMEAL_SLOTS.find(s => s.label ===
+          ((item.querySelector('.armor-slot') || {}).value || '')) : null;
+    if (pmSlotW && typeof getPiecemealPiece === 'function') {
+      const pmW = getPiecemealPiece(
+        (item.querySelector('.armor-type') || {}).value || '', pmSlotW.key);
+      // null with PHBR1 off, and the full weight then applies -- consistent with
+      // the piece granting no AC either. Suspended, not half-suspended.
+      if (pmW) weight = weight * pmW.weightMult;
+    }
+
     const chk = item.querySelector('.is-magical');
     totalWeight += weight;
     if (chk && chk.checked) magicArmorWeight += weight;
