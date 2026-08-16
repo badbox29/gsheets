@@ -881,8 +881,11 @@ const _flattenDecisions = {};
 
 function passesFlattenCheck(map, context){
   let prevMap;
-  try { prevMap = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}'); }
-  catch(_) { return true; }   // no readable previous state: nothing to compare
+  // readCharacterMap already swallows a parse failure and returns {}. An empty
+  // previous map means every section reads as newly-populated rather than
+  // emptied, so the flatten check passes -- the same outcome the old catch
+  // produced, by a different route.
+  prevMap = readCharacterMap();
 
   const hits = [];
   Object.keys(map || {}).forEach(name => {
@@ -995,7 +998,7 @@ function performAutosave(tab, root){
 
   // Overwrite last saved slot (stick to the last manual save/load key if present)
   const key = getTabSaveKey(tab) || currentTypedName;
-  const map = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
+  const map = readCharacterMap();
   map[key] = data;
   if(!writeCharacterMap(map, 'autosave')) return;
 
@@ -7795,7 +7798,7 @@ function saveAsDialog(root, tab){
   if(!name) return false;
 
   // Save and keep the "slot" consistent (remove old key if renamed)
-  const map = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
+  const map = readCharacterMap();
   const oldKey = getTabSaveKey(tab);
   map[name] = data;
   if(oldKey && oldKey !== name){
@@ -7828,7 +7831,7 @@ function saveAsDialog(root, tab){
 }
 
 function openPicker(){
-  const map = JSON.parse(localStorage.getItem(CHAR_MAP_KEY)||'{}');
+  const map = readCharacterMap();
   // Deleted characters are kept as tombstones so the deletion can sync to other
   // devices. They must never appear in the picker.
   const names = Object.keys(map).filter(n => !map[n] || !map[n]._deletedAt);
@@ -9616,7 +9619,7 @@ function bindSheet(root, tab){
     // from the remote copy on the next sync. The tombstone carries a newer
     // timestamp than the record it replaces, so the deletion propagates.
     // Note: the character DATA is discarded -- this is not an undelete feature.
-    const map = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
+    const map = readCharacterMap();
     if(map[name]){
       map[name] = {
         _deletedAt: Date.now(),
@@ -10582,7 +10585,7 @@ function kvMergeChars(localMap, remoteMap) {
 async function kvPush(force = false) {
   const cfg = getKvConfig();
   if (!cfg.workerUrl) return;
-  const rawMap   = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
+  const rawMap   = readCharacterMap();
   const charMap  = {};
   Object.entries(rawMap).forEach(([name, data]) => {
     // Tombstones must sync -- that is the whole point of them -- so they are
@@ -10652,7 +10655,7 @@ async function kvPull(overwrite = false) {
     const { found, data } = await res.json();
     if (!found || !data || !data.payload) return 0;
     const remoteChars = data.payload.characters || {};
-    const localMap    = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
+    const localMap    = readCharacterMap();
     let added = 0;
     let finalMap;
 
@@ -11751,7 +11754,7 @@ function performRest(root, tab, restType) {
   const data = collectSheet(root);
   const currentTypedName = (data.meta.name && data.meta.name.trim()) || 'Unnamed';
   const key = getTabSaveKey(tab) || currentTypedName;
-  const map = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
+  const map = readCharacterMap();
   map[key] = data;
   if(!writeCharacterMap(map, 'auto-save after resting')) return;
   
@@ -12008,7 +12011,7 @@ function openStudyModal(root, tab) {
     const data = collectSheet(root);
     const key = getTabSaveKey(tab) ||
                 ((data.meta.name && data.meta.name.trim()) || 'Unnamed');
-    const map = JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}');
+    const map = readCharacterMap();
     map[key] = data;
     if (writeCharacterMap(map, 'auto-save after studying')) {
       markUnsaved(tab, false, root);
