@@ -1018,7 +1018,19 @@ function idbPutMap(db, map){
 // A corrupt or unparseable map returns {} rather than throwing. That matches
 // what the inline reads did via `|| '{}'`, and a throw here would take down
 // autosave, deletion and KV sync together.
+// THE CACHE IS THE MAP once loadCharacterStore has run. Reads stay synchronous
+// -- which is the whole reason this refactor was worth doing -- while the
+// durable store behind it is async.
+//
+// null means NOT YET LOADED, which is different from "loaded and empty": an
+// empty map is {}. Before the boot load resolves, and whenever IndexedDB is
+// unavailable, reads fall through to localStorage exactly as before.
+let _charCache = null;
+let _charStore = 'localStorage';   // becomes 'idb' once the store opens
+let _charDb    = null;
+
 function readCharacterMap(){
+  if (_charCache) return _charCache;
   try {
     return JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}') || {};
   } catch(_) {
@@ -1043,6 +1055,33 @@ function writeCharacterMap(map, context){
   // propagated the flattened copy to other devices in the original incident.
   if (!passesFlattenCheck(map, context)) return false;
 
+  // The cache is updated SYNCHRONOUSLY and first, so a read immediately after a
+  // write sees the new map whether or not the durable write has landed yet.
+  _charCache = map;
+
+  if (_charStore === 'idb' && _charDb) {
+    // THE RETURN VALUE WEAKENS HERE, deliberately and unavoidably. With
+    // localStorage, `true` meant "durably stored". With IndexedDB the write is
+    // async, so `true` means "accepted, and in memory". Callers use the result
+    // to decide whether to proceed, and proceeding is correct: the data IS in
+    // the cache and every subsequent read will see it.
+    //
+    // A genuine IDB failure is therefore reported asynchronously rather than by
+    // return value -- which is why it alerts. Quota is not a plausible cause
+    // here the way it was for localStorage, so this path is for the unexpected.
+    idbPutMap(_charDb, map).catch(err => {
+      console.error('IndexedDB write failed' + (context ? ' (' + context + ')' : ''), err);
+      alert('SAVE FAILED — the browser refused to store your characters.' +
+            (context ? '\n\n(' + context + ')' : '') +
+            '\n\nYour work is still on screen and nothing has been lost, but it is ' +
+            'NOT stored. Do not close this tab yet.\n\nSee the browser console for details.');
+    });
+    return true;
+  }
+
+  // FALLBACK: IndexedDB unavailable, or the boot load has not run yet. Byte for
+  // byte the original path, including the quota alert -- which is still the
+  // right message here, because this branch really is the 5MB store.
   try {
     localStorage.setItem(CHAR_MAP_KEY, JSON.stringify(map));
     return true;
