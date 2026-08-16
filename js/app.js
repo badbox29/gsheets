@@ -3114,7 +3114,20 @@ function makeArmorNode(data={}, onChange){
   const curSlot = data.armorType || 'Armor';
   if (curSlot && slots.indexOf(curSlot) === -1) slots.push(curSlot);
 
-  const slotOpts = slots.map(s => opt(s, s, curSlot)).join('');
+  // GROUPED, NOT RENAMED. The stored slot value IS the label string, so
+  // renaming these to "PM - Breastplate" would orphan every card already saved
+  // as "Breastplate". An optgroup separates them visually and changes no data.
+  // The type dropdown above already uses optgroups, so this matches.
+  const pmLabels = (typeof PIECEMEAL_SLOTS !== 'undefined')
+    ? PIECEMEAL_SLOTS.map(s => s.label) : [];
+  const plain = slots.filter(s => pmLabels.indexOf(s) === -1);
+  const pieces = slots.filter(s => pmLabels.indexOf(s) !== -1);
+  let slotOpts = plain.map(s => opt(s, s, curSlot)).join('');
+  if (pieces.length) {
+    slotOpts += '<optgroup label="Piecemeal (PHBR1)">' +
+                pieces.map(s => opt(s, s, curSlot)).join('') +
+                '</optgroup>';
+  }
 
   // MIGRATION -- NOT OPTIONAL. Records written before the Enchanted checkbox
   // existed carry a bonus but no isMagical flag. Without this, every magic item
@@ -3278,7 +3291,65 @@ function makeArmorNode(data={}, onChange){
     }
     if (wtEl) {
       const w = val('.weight');
-      wtEl.textContent = w === '' ? '' : w + ' lb';
+      if (w === '') { wtEl.textContent = ''; wtEl.title = ''; }
+      else {
+        // THE FIELD HOLDS THE WHOLE SUIT'S WEIGHT and always will -- that is the
+        // anchor rule, and core_armor.json is its source. But a chip reading
+        // "40 lb" beside a breastplate is a lie about what the character is
+        // carrying, and encumbrance was already counting 20. Show what he
+        // actually bears; keep the printed figure in the tooltip.
+        const raw = parseFloat(w) || 0;
+        let eff = raw, why = [];
+        const hqR = val('.armor-hq-race');
+        if (hqR && typeof getHighQualityArmor === 'function') {
+          const hqW = getHighQualityArmor(hqR, val('.armor-type'));
+          if (hqW && hqW.weightMult !== 1) { eff *= hqW.weightMult; why.push(hqW.label); }
+        }
+        const pmS = (typeof PIECEMEAL_SLOTS !== 'undefined')
+          ? PIECEMEAL_SLOTS.find(s => s.label === (val('.armor-slot') || 'Armor')) : null;
+        if (pmS && typeof getPiecemealPiece === 'function') {
+          const pmP = getPiecemealPiece(val('.armor-type'), pmS.key);
+          if (pmP) { eff *= pmP.weightMult; why.push(pmS.label); }
+        }
+        // MUST MATCH renderEncumbrance's arithmetic exactly, in the same order.
+        // Two places computing one number is the drift risk here; if either
+        // changes, change both.
+        const round = n => (Math.round(n * 100) / 100);
+        wtEl.textContent = round(eff) + ' lb';
+        wtEl.title = (eff !== raw)
+          ? round(eff) + ' lb carried \u2014 ' + why.join(', ') +
+            '.\nThe field holds ' + raw + ' lb, the printed weight of the full suit.'
+          : '';
+      }
+    }
+
+    // PHBR1. A note on the COLLAPSED row, so a piecemeal piece announces itself
+    // without expanding the card -- the AC it contributes is not its base AC and
+    // that needs saying where it is read.
+    const pmNoteEl = el.querySelector('.arm-pm-note');
+    if (pmNoteEl) {
+      const pmS2 = (typeof PIECEMEAL_SLOTS !== 'undefined')
+        ? PIECEMEAL_SLOTS.find(s => s.label === (val('.armor-slot') || 'Armor')) : null;
+      if (!pmS2) { pmNoteEl.textContent = ''; pmNoteEl.title = ''; }
+      else {
+        const pmP2 = (typeof getPiecemealPiece === 'function')
+          ? getPiecemealPiece(val('.armor-type'), pmS2.key) : null;
+        if (!pmP2) {
+          // PHBR1 off, or a type with no row. The piece stays and grants nothing.
+          pmNoteEl.textContent = 'piecemeal \u2014 no value';
+          pmNoteEl.title = 'This piece contributes no AC: either PHBR1 is switched off ' +
+                           'in Settings, or this armour type has no piecemeal values ' +
+                           '(elven chain is magical and cannot be split).';
+        } else {
+          pmNoteEl.textContent = 'piecemeal \u00b7 ' + pmS2.label + ' \u00b7 ' +
+                                 (pmP2.bonus ? '\u2212' + pmP2.bonus + ' AC' : 'no AC');
+          pmNoteEl.title = 'PHBR1 pp.111-112. Worn as ' + pmS2.label.toLowerCase() +
+                           ', this piece contributes ' + pmP2.bonus + ' to your armour ' +
+                           'total rather than setting your AC.' +
+                           (pmP2.bonus ? '' : ' The table gives this type 0 in that column ' +
+                           '\u2014 leather sleeves only help if you have both.');
+        }
+      }
     }
   };
   syncArmorLine();
@@ -3291,6 +3362,13 @@ function makeArmorNode(data={}, onChange){
   // next keystroke.
   const armorTypeSelEl = el.querySelector('.armor-type');
   if (armorTypeSelEl) armorTypeSelEl.addEventListener('change', syncArmorLine);
+  // The slot and the high-quality race both change the effective weight and the
+  // piecemeal note, so both must refresh the line. Shipping the wiring with the
+  // feature -- this is the failure recorded at the top of section 7.
+  const slotSelEl = el.querySelector('.armor-slot');
+  if (slotSelEl) slotSelEl.addEventListener('change', syncArmorLine);
+  const hqSelEl = el.querySelector('.armor-hq-race');
+  if (hqSelEl) hqSelEl.addEventListener('change', syncArmorLine);
 
   // Enchanted toggle. HIDES, NEVER CLEARS -- unticking must not destroy a bonus
   // the player recorded. What makes an unticked item mundane is the calculation
