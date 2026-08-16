@@ -3159,6 +3159,11 @@ function makeArmorNode(data={}, onChange){
       '<div class="spacer"></div>' +
       '<div class="stat arm-ac"></div>' +
       '<div class="stat arm-weight"></div>' +
+      // PHBR1 piecemeal note. Filled by syncArmorLine and empty for ordinary
+      // armour, so it costs nothing on a card that is not a piece. Sits with the
+      // other at-a-glance chips because the AC a piece contributes is NOT its
+      // base AC, and that has to be visible without expanding the card.
+      '<div class="stat arm-pm-note" style="font-size:10px;color:var(--accent-light);"></div>' +
       '<div class="btns">' +
         '<button class="toggle-details">Details</button>' +
         '<button class="rm">Remove</button>' +
