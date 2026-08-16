@@ -3082,7 +3082,39 @@ function makeArmorNode(data={}, onChange){
   // "Bracers" REPLACES body armor (bracers of defense -- they do not stack).
   // "Supplemental Armor" ADDS to it (dastana, vambraces worn over armor).
   const slots = ['Armor','Shield','Helmet','Bracers','Supplemental Armor','Gauntlets','Boots','Cloak','Belt','Ring','Other'];
-  const slotOpts = slots.map(s => opt(s, s, data.armorType || 'Armor')).join('');
+
+  // PHBR1 pp.111-112. The five PARTIAL slots are offered only when this card's
+  // armour type actually has a row in the piecemeal table -- fourteen types,
+  // everything except elven chain.
+  //
+  // A LOCK, NOT A WARNING, and the distinction matters. Elsewhere this tool
+  // warns and lets the player proceed, because a DM may overrule the book. Here
+  // there is nothing to overrule: elven chain has NO ROW, so a piecemeal elven
+  // sleeve has no value at all. Offering a control that can only produce a blank
+  // is worse than not offering it.
+  //
+  // Gated on PHBR1 too, via getPiecemealPiece returning null with the book off.
+  // An ALREADY-STORED partial slot is preserved regardless -- see the append
+  // below -- so switching the book off, or changing the type out from under a
+  // piece, never silently rewrites the player's card.
+  const pmType = data.armorTypeKey || (typeof inferArmorTypeKey === 'function'
+    ? inferArmorTypeKey(data.name || '') : '');
+  const pmOn = (typeof getPiecemealPiece === 'function') &&
+               !!getPiecemealPiece(pmType, 'breastplate');
+  if (pmOn && typeof PIECEMEAL_SLOTS !== 'undefined') {
+    PIECEMEAL_SLOTS.forEach(s => slots.push(s.label));
+  }
+
+  // KEEP A STORED VALUE THAT IS NO LONGER OFFERED. A card saved as
+  // "Splint Mail / One Arm" whose type is later switched to elven chain, or
+  // loaded with PHBR1 switched off, would otherwise silently snap back to
+  // "Armor" -- mutating data the player never asked to change. The option is
+  // re-added so the select can still show it; the piece contributes 0 and the
+  // card says why.
+  const curSlot = data.armorType || 'Armor';
+  if (curSlot && slots.indexOf(curSlot) === -1) slots.push(curSlot);
+
+  const slotOpts = slots.map(s => opt(s, s, curSlot)).join('');
 
   // MIGRATION -- NOT OPTIONAL. Records written before the Enchanted checkbox
   // existed carry a bonus but no isMagical flag. Without this, every magic item
