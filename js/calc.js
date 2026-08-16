@@ -4067,7 +4067,26 @@ function renderEncumbrance(root) {
   const armor = Array.from(root.querySelectorAll('.armor-list .item'));
   let magicArmorWeight = 0;
   armor.forEach(item => {
-    const weight = parseFloat(item.querySelector('.weight')?.value) || 0;
+    let weight = parseFloat(item.querySelector('.weight')?.value) || 0;
+
+    // PHBR1 pp.110-111. Elven high-quality armour is "1/2 the weight of ordinary
+    // armor" and half-elven "-10% the weight of ordinary armor of the same
+    // kind". Applied HERE rather than by rewriting the weight FIELD, because the
+    // field holds what the book prints for that armour type -- the anchor rule.
+    // A stored lighter figure would drift from core_armor.json and could not be
+    // undone by unticking.
+    //
+    // Human high-quality plate is explicitly NORMAL weight: "instead of being
+    // lighter than usual, it is built thicker". Its weightMult is 1, so it falls
+    // through this untouched, which is the correct behaviour rather than an
+    // omission.
+    const hqRace = (item.querySelector('.armor-hq-race') || {}).value || '';
+    if (hqRace && typeof getHighQualityArmor === 'function') {
+      const hq = getHighQualityArmor(hqRace,
+        (item.querySelector('.armor-type') || {}).value || '');
+      if (hq && hq.weightMult !== 1) weight = weight * hq.weightMult;
+    }
+
     const chk = item.querySelector('.is-magical');
     totalWeight += weight;
     if (chk && chk.checked) magicArmorWeight += weight;
