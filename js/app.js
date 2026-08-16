@@ -1342,6 +1342,46 @@ function renderSavingThrows(root) {
     saveClassNames = [clazz];
   }
 
+// PHBR1 p.110. Human high-quality plate mail, field plate and full plate --
+  // NOT bronze plate -- is "made of fine steel, but instead of being lighter
+  // than usual, it is built thicker in order to make it more resistant to
+  // damage ... Also, it gives the wearer a +2 to saving throws vs. Rod, Staff,
+  // or Wand and Breath Weapon attacks."
+  //
+  // THE ONLY EFFECT IN THE WHOLE SUBSYSTEM THAT REACHES THE CHARACTER'S OWN
+  // SAVES. Everything else racial armour does is item saving throws (a DMG
+  // chart, DM-side), weight, or the thieving table.
+  //
+  // APPLIED, not merely displayed, unlike renderMagicalArmorSaveNote above. That
+  // note stays display-only because Chapter 10's bonus is SITUATIONAL -- it
+  // applies against attacks the armour would physically turn, which is the DM's
+  // call. This one is flat and unconditional while the armour is worn, so it
+  // belongs in the number, like the paladin's +2 below.
+  //
+  // SIGN: saves are TARGET numbers where lower is better, so a +2 to the roll is
+  // stored as -2. Same convention the paladin bonus uses.
+  //
+  // Indices 1 and 3 are Rod/Staff/Wand and Breath Weapon.
+  Array.from(root.querySelectorAll('.armor-list .item')).forEach(item => {
+    const eq = item.querySelector('.equipped');
+    if (!eq || !eq.checked) return;
+    const hqRace = (item.querySelector('.armor-hq-race') || {}).value || '';
+    if (!hqRace || typeof getHighQualityArmor !== 'function') return;
+    const hq = getHighQualityArmor(hqRace, (item.querySelector('.armor-type') || {}).value || '');
+    if (!hq || !hq.wearerSaves) return;
+    const nm = ((item.querySelector('.title') || {}).value || '').trim() || (hq.label + ' plate');
+    if (hq.wearerSaves.rodStaffWand) {
+      totalAdj[1] -= hq.wearerSaves.rodStaffWand;
+      notes[1].push(nm + ' -' + hq.wearerSaves.rodStaffWand +
+                    ' (+' + hq.wearerSaves.rodStaffWand + ' to roll)');
+    }
+    if (hq.wearerSaves.breathWeapon) {
+      totalAdj[3] -= hq.wearerSaves.breathWeapon;
+      notes[3].push(nm + ' -' + hq.wearerSaves.breathWeapon +
+                    ' (+' + hq.wearerSaves.breathWeapon + ' to roll)');
+    }
+  });
+
   if (saveClassNames.some(c => hasPaladinSaveBonus(c))) {
     for (let i = 0; i < 5; i++) {
       totalAdj[i] += PALADIN_SAVE_BONUS;
@@ -3333,7 +3373,58 @@ function makeArmorNode(data={}, onChange){
     }
   };
   applyTypeDefaults(false);
-  typeSel.addEventListener('change', () => { applyTypeDefaults(true); onChange && onChange(); });
+
+  // PHBR1 pp.110-111. The note beside the dropdown. Refreshed on BOTH controls,
+  // because the answer depends on the pair: gnomish is fine on studded leather
+  // and impossible on chain, so changing either the race or the armour TYPE can
+  // turn the advisory on or off.
+  //
+  // ADVISORY, NEVER BLOCKING. A race that cannot make this type as high-quality
+  // is warned about and nothing is prevented -- PHBR1 p.37's licence to modify
+  // applies here as everywhere, and a DM may simply have decided otherwise.
+  const hqSel  = el.querySelector('.armor-hq-race');
+  const hqNote = el.querySelector('.armor-hq-note');
+  function syncHqNote() {
+    if (!hqNote) return;
+    const race = hqSel ? hqSel.value : '';
+    if (!race || typeof getHighQualityArmor !== 'function') {
+      hqNote.innerHTML = ''; return;
+    }
+    const hq = getHighQualityArmor(race, (typeSel || {}).value || '');
+    if (!hq) {
+      // The supplement is switched off. Say so rather than going silent, or the
+      // stored race reads as having no effect for no visible reason.
+      hqNote.innerHTML = '<span style="color:var(--warning, #e0a34a);">' +
+        'PHBR1 is switched off in Settings, so this grants nothing. The marking is kept.' +
+        '</span>';
+      return;
+    }
+    let h = escapeHtml(hq.blurb);
+    if (hq.typeNotMade) {
+      const allowed = (hq.allows || []).map(k =>
+        (typeof ARMOR_TYPES !== 'undefined' && ARMOR_TYPES[k]) ? ARMOR_TYPES[k].label : k);
+      h = '<span style="color:var(--warning, #e0a34a);">' + escapeHtml(hq.label) +
+          ' armorers do not make this type as high-quality' +
+          (allowed.length ? ' \u2014 only ' + escapeHtml(allowed.join(', ')) : '') +
+          '.</span> ' + h;
+    }
+    // Shields gain nothing at all from being high-quality (p.111), unless the
+    // Damage to Armor rules are in use -- and those are not built.
+    const slotNow = ((el.querySelector('.armor-slot') || {}).value) || 'Armor';
+    if (slotNow === 'Shield') {
+      h = '<span style="color:var(--muted);">A high-quality shield grants no bonus ' +
+          'at all (PHBR1 p.111).</span> ' + h;
+    }
+    hqNote.innerHTML = h;
+  }
+  syncHqNote();
+  if (hqSel) hqSel.addEventListener('change', () => { syncHqNote(); onChange && onChange(); });
+
+  typeSel.addEventListener('change', () => {
+    applyTypeDefaults(true);
+    syncHqNote();
+    onChange && onChange();
+  });
 
   el.querySelector('.rm').onclick = ()=>{
     // Capture the parent BEFORE removing -- afterwards el is detached and
@@ -3350,7 +3441,11 @@ function makeArmorNode(data={}, onChange){
     inp.addEventListener('input', ()=>onChange && onChange())
   );
   el.querySelector('.equipped').addEventListener('change', ()=>onChange && onChange());
-  el.querySelector('.armor-slot').addEventListener('change', ()=>onChange && onChange());
+  el.querySelector('.armor-slot').addEventListener('change', ()=>{
+    // The shield caveat in the high-quality note depends on the SLOT, not the type.
+    syncHqNote();
+    onChange && onChange();
+  });
   return el;
 }
 
