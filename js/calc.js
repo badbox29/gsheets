@@ -3628,6 +3628,39 @@ function renderArmorClass(root) {
 
     if (!name) return;
 
+    // PHBR1 pp.111-112. A piecemeal piece ADDS to AC, the same shape as
+    // supplemental armour, shields, rings and cloaks -- it never sets a base.
+    // So a character wearing nothing but pieces gets exactly AC = 10 - (sum),
+    // which is the book's arithmetic.
+    //
+    // The slot is stored as the LABEL ("One Arm"), matching how every other
+    // slot value is stored, so it is resolved back to a key here.
+    //
+    // SPLIT MAGICAL ARMOUR GRANTS NOTHING (p.112): "once the magical armor is
+    // split into little bits, or pieces are merely separated and not worn
+    // together, the magical bonus doesn't work." So magicBonus is deliberately
+    // NOT applied to a piece -- the one place in this walk that ignores it.
+    //
+    // SIGN: finalAC adds every term and lower is better, so an improvement is
+    // NEGATIVE. The table stores positive protection values, hence the subtract.
+    const pmSlot = (typeof PIECEMEAL_SLOTS !== 'undefined')
+      ? PIECEMEAL_SLOTS.find(s => s.label === type) : null;
+    if (pmSlot) {
+      const pmKey = (item.querySelector('.armor-type') || {}).value ||
+        (typeof inferArmorTypeKey === 'function' ? inferArmorTypeKey(name) : '');
+      const pm = (typeof getPiecemealPiece === 'function')
+        ? getPiecemealPiece(pmKey, pmSlot.key) : null;
+      // null when PHBR1 is off, or when the type has no row (elven chain). The
+      // piece stays on the character and contributes zero rather than vanishing.
+      if (pm && pm.bonus) {
+        miscBonus -= pm.bonus;
+        miscNames.push(name + ' (' + pmSlot.label + ')');
+        acStackers.push({ label: 'Piecemeal', name: name + ' \u2014 ' + pmSlot.label,
+          baseACValue: -pm.bonus, magicBonus: 0 });
+      }
+      return;
+    }
+
     // SIGN: finalAC ADDS every term and lower is better, so an improvement must
     // be NEGATIVE. Shields work because core_armor.json stores their AC as -1.
     // The player types a PLUS -- "2" for plate mail +2 -- so the enchantment is
