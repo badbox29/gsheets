@@ -3122,7 +3122,13 @@ function makeArmorNode(data={}, onChange){
     ? PIECEMEAL_SLOTS.map(s => s.label) : [];
   const plain = slots.filter(s => pmLabels.indexOf(s) === -1);
   const pieces = slots.filter(s => pmLabels.indexOf(s) !== -1);
-  let slotOpts = plain.map(s => opt(s, s, curSlot)).join('');
+  // BOTH groups get a heading, or the ungrouped entries sit flush left against
+  // an indented group and read as an accident. "Standard" rather than "Full
+  // suits": this group holds Shield, Helmet, Ring, Cloak and Belt, none of which
+  // are suits. The distinction is worn-whole versus a fragment of a suit.
+  let slotOpts = '<optgroup label="Standard">' +
+                 plain.map(s => opt(s, s, curSlot)).join('') +
+                 '</optgroup>';
   if (pieces.length) {
     slotOpts += '<optgroup label="Piecemeal (PHBR1)">' +
                 pieces.map(s => opt(s, s, curSlot)).join('') +
