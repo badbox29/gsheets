@@ -928,6 +928,29 @@ function passesFlattenCheck(map, context){
   return proceed;
 }
 
+// THE ONE PLACE THE CHARACTER MAP IS READ, paired with writeCharacterMap below.
+//
+// Introduced as a pure refactor ahead of moving this store off localStorage: the
+// map had NINE identical inline reads scattered from the autosave flatten guard
+// to the KV merge, so swapping the backing store would have meant nine edits and
+// nine chances to miss one. Now it is two functions.
+//
+// Deliberately SYNCHRONOUS and returning a plain object, because every caller
+// expects both. When this moves to IndexedDB the body becomes a read of an
+// in-memory cache populated once at boot -- the signature does not change and no
+// call site is touched.
+//
+// A corrupt or unparseable map returns {} rather than throwing. That matches
+// what the inline reads did via `|| '{}'`, and a throw here would take down
+// autosave, deletion and KV sync together.
+function readCharacterMap(){
+  try {
+    return JSON.parse(localStorage.getItem(CHAR_MAP_KEY) || '{}') || {};
+  } catch(_) {
+    return {};
+  }
+}
+
 // Every write to the character map goes through here. localStorage throws
 // QuotaExceededError when the origin's ~5MB budget is full, and an uncaught
 // throw skips whatever follows -- which in saveAsDialog meant no "Saved" alert
