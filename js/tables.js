@@ -3169,7 +3169,7 @@ function inferArmorTypeKey(name) {
 // Returns { key, typeKey, name, illegal }.
 function getThiefArmorCategory(root) {
   const items = Array.from(root.querySelectorAll('.armor-list .item'));
-  let worn = '', typeKey = '';
+  let worn = '', typeKey = '', hqRace = '';
   items.forEach(item => {
     const cb = item.querySelector('.equipped');
     if (!cb || !cb.checked) return;
@@ -3185,8 +3185,39 @@ function getThiefArmorCategory(root) {
     if (name || stored) {
       worn = name;
       typeKey = stored || inferArmorTypeKey(name);
+      // Captured from the SAME piece, so it cannot describe armour the
+      // character is not wearing.
+      hqRace = (item.querySelector('.armor-hq-race') || {}).value || '';
     }
   });
+
+  // PHBR1 pp.110-111, the two racial rules that reach this table.
+  //
+  //   GNOME  "High-Quality gnome armor does not take any penalties on the
+  //          Thieving Skill Armor Adjustment table ... thus a gnome thief or
+  //          dual-class thief does not suffer a -30% when picking pockets, or
+  //          -20% when moving silently, etc."
+  //   HALFLING  "Their High-Quality leather armor counts as 'No Armor' on the
+  //          Thieving Skill Armor Adjustment table."
+  //
+  // BOTH RESOLVE TO THE SAME COLUMN and are kept as two named rules anyway,
+  // because they say different things and a later book may separate them: the
+  // gnome takes no penalty from armour he IS wearing, the halfling's leather is
+  // treated as though he were wearing none. Collapsing them to one flag would
+  // lose that, and the note the card shows differs accordingly.
+  //
+  // Returned with the real typeKey intact, so the armour still reports as
+  // studded or leather everywhere else -- only the ADJUSTMENT COLUMN changes.
+  if (hqRace && typeof getHighQualityArmor === 'function') {
+    const hq = getHighQualityArmor(hqRace, typeKey);
+    if (hq && (hq.thiefRule === 'noPenalty' || hq.thiefRule === 'countsAsNone')) {
+      return {
+        key: 'none', typeKey: typeKey || 'none',
+        name: worn || (hq.label + ' armor'),
+        illegal: false, hqThiefRule: hq.thiefRule, hqLabel: hq.label
+      };
+    }
+  }
 
   if (!typeKey) return { key: 'none', typeKey: 'none', name: worn || 'No armor', illegal: false };
 
