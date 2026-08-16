@@ -8410,6 +8410,7 @@ function bindSheet(root, tab){
   // reads to decide the strip's contents.
   if (typeof renderWeaponBreakage === 'function') renderWeaponBreakage(root);
   if (typeof renderArmorFitting === 'function') renderArmorFitting(root);
+  if (typeof renderPHBR1OnlyControls === 'function') renderPHBR1OnlyControls(root);
   if (typeof renderToolsSubtabs === 'function') renderToolsSubtabs(root);
   if (typeof renderSectionGroups === 'function') renderSectionGroups(root);
 
@@ -15133,6 +15134,7 @@ function recalculateAll(root) {
   // or renaming a weapon must be able to make the tab appear and disappear.
   if (typeof renderWeaponBreakage === 'function') renderWeaponBreakage(root);
   if (typeof renderArmorFitting === 'function') renderArmorFitting(root);
+  if (typeof renderPHBR1OnlyControls === 'function') renderPHBR1OnlyControls(root);
 
   // DEAD LAST, and deliberately after the Quick Reference. This does not break
   // the "Quick Reference stays last" rule -- that rule is about reading THAC0,
