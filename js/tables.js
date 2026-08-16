@@ -11,7 +11,7 @@
 // values. Several call sites interpolate into title="…", where the & < > variant
 // was silently under-escaping.
 //
-// DO NOT add a local esc() helper. If this one is missing something, fix it here..
+// DO NOT add a local esc() helper. If this one is missing something, fix it here.
 function escapeHtml(s) {
   return String(s == null ? '' : s)
     .replace(/&/g, '&amp;')
