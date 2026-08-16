@@ -3173,7 +3173,7 @@ function makeArmorNode(data={}, onChange){
       // PHBR1 pp.110-111. OUTSIDE the enchantment panel deliberately: high
       // quality is visible on inspection, like Type and Weight, and gating it
       // behind Enchanted would force the player to tick a lie to record it.
-      '<div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:6px;">' +
+      '<div class="phbr1-only" style="display:flex;gap:8px;align-items:flex-end;margin-bottom:6px;">' +
         '<label style="display:flex;flex-direction:column;gap:2px;">' +
           '<span style="font-size:11px;color:var(--muted);">High-quality racial armor</span>' +
           '<select class="armor-hq-race" style="width:170px;" title="' +
@@ -4540,6 +4540,11 @@ function makeWeaponNode(data={}, onChange){
         'Set it for a custom weapon, or one whose name does not match the book.">' +
         weaponSizeOptions(data.size) +
       '</select>') +
+      // PHBR1-ONLY CONTROL. Weapon quality is a PHBR1 invention -- with the book
+      // off, a DM is not handing out Fine or Exceptional weapons, so there is
+      // nothing for the field to record. Wrapped rather than removed: the value
+      // must survive, and collectSheet reads the DOM.
+      '<div class="phbr1-only" style="display:contents;">' +
       wpnField('Quality', 190,
       '<select class="weapon-quality" style="width:190px;" title="' +
         'Weapon quality (PHBR1 pp.11-13).&#10;' +
@@ -4555,6 +4560,7 @@ function makeWeaponNode(data={}, onChange){
                     ((data.quality || '') === o.key ? ' selected' : '') + '>' +
                     escapeHtml(o.text) + '</option>').join('')) +
       '</select>') +
+      '</div>' +
       wpnField('Grip', 110,
       '<select class="weapon-grip" style="width:110px;" title="' +
         'How this weapon is held (PHBR1 pp.62-63, 93).&#10;' +
