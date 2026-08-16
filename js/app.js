@@ -928,6 +928,81 @@ function passesFlattenCheck(map, context){
   return proceed;
 }
 
+// === INDEXEDDB BACKING STORE ===
+//
+// localStorage caps at roughly 5MB per ORIGIN, and badbox29.github.io is one
+// origin shared by every project hosted there -- salty_v2, pwgen, resc-ruleset
+// and the rest all draw on the same 5MB. The character map alone reached 2.9M
+// characters, 84% of it base64 portraits, and a full quota makes
+// writeCharacterMap fail in the way section 7 records as reading like a no-op.
+//
+// IndexedDB has no comparable limit -- typically hundreds of MB, often a share
+// of free disk -- so the constraint disappears rather than being managed.
+// Portraits stay at AVATAR_SRC_MAX 1024 / quality 0.82 instead of being squeezed
+// to fit a ceiling.
+//
+// ONE RECORD HOLDING THE WHOLE MAP, matching what localStorage did. Per-
+// character records would let a save rewrite only what changed, but that is a
+// different data model and this change is already large enough. Noted as the
+// obvious next improvement if writes ever feel slow.
+//
+// These three helpers are promise wrappers around the callback-style IDB API and
+// nothing else. No caching, no migration, no fallback logic -- that is Step B.
+const CHAR_DB_NAME    = 'gsheets';
+const CHAR_DB_VERSION = 1;
+const CHAR_DB_STORE   = 'characters';
+const CHAR_DB_RECORD  = 'map';
+
+function idbOpen(){
+  return new Promise((resolve, reject) => {
+    if (typeof indexedDB === 'undefined' || !indexedDB) {
+      reject(new Error('IndexedDB unavailable'));
+      return;
+    }
+    let req;
+    try { req = indexedDB.open(CHAR_DB_NAME, CHAR_DB_VERSION); }
+    catch (e) { reject(e); return; }
+    // Fires on first open and on any version bump. createObjectStore throws if
+    // the store already exists, so the guard is not optional.
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(CHAR_DB_STORE)) {
+        db.createObjectStore(CHAR_DB_STORE);
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror   = () => reject(req.error || new Error('IndexedDB open failed'));
+    // Private browsing in some browsers hangs rather than erroring. Without a
+    // timeout the boot await never settles and the app never starts.
+    setTimeout(() => reject(new Error('IndexedDB open timed out')), 4000);
+  });
+}
+
+function idbGetMap(db){
+  return new Promise((resolve, reject) => {
+    try {
+      const tx  = db.transaction(CHAR_DB_STORE, 'readonly');
+      const req = tx.objectStore(CHAR_DB_STORE).get(CHAR_DB_RECORD);
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror   = () => reject(req.error);
+    } catch (e) { reject(e); }
+  });
+}
+
+function idbPutMap(db, map){
+  return new Promise((resolve, reject) => {
+    try {
+      const tx = db.transaction(CHAR_DB_STORE, 'readwrite');
+      tx.objectStore(CHAR_DB_STORE).put(map, CHAR_DB_RECORD);
+      // Resolve on the TRANSACTION, not the request: the request succeeding
+      // only means it was queued, while oncomplete means it is durable.
+      tx.oncomplete = () => resolve(true);
+      tx.onerror    = () => reject(tx.error);
+      tx.onabort    = () => reject(tx.error || new Error('IndexedDB write aborted'));
+    } catch (e) { reject(e); }
+  });
+}
+
 // THE ONE PLACE THE CHARACTER MAP IS READ, paired with writeCharacterMap below.
 //
 // Introduced as a pure refactor ahead of moving this store off localStorage: the
