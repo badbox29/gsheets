@@ -12670,6 +12670,24 @@ async function loadCharacterStore(){
     if (stored && typeof stored === 'object' && Object.keys(stored).length) {
       _charCache = stored;
       _charStore = 'idb';
+
+      // THE MIGRATION COMPLETES ON THE BOOT AFTER IT STARTED, and only here --
+      // inside the branch that has just READ REAL RECORDS BACK OUT of
+      // IndexedDB. That read is the proof. Clearing on the same boot as the
+      // copy would delete the backup on the word of a write that had not yet
+      // been verified, which is how a migration eats a character collection.
+      //
+      // This is what actually frees the quota: until now the map existed in
+      // BOTH stores, so localStorage was still full.
+      if (localStorage.getItem(CHAR_MAP_KEY) !== null) {
+        try {
+          localStorage.removeItem(CHAR_MAP_KEY);
+          console.log('[store] IndexedDB verified with ' + Object.keys(stored).length +
+                      ' record(s); localStorage copy released.');
+        } catch (e) {
+          console.warn('[store] Could not clear the localStorage copy.', e);
+        }
+      }
       return;
     }
 
