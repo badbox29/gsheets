@@ -3561,6 +3561,13 @@ function makeArmorNode(data={}, onChange){
       }
     }
   };
+  // PUBLISHED ON THE ELEMENT so a render pass can reach it. syncArmorLine is a
+  // closure over this card's fields, so it cannot be a global function -- but
+  // the collapsed-row chips it maintains (the piecemeal note, the effective
+  // weight) depend on SETTINGS as well as on this card's own inputs, and a
+  // supplement toggle fires no input event here. Without this the chips only
+  // refreshed when the player touched the card.
+  el._syncArmorLine = syncArmorLine;
   syncArmorLine();
   ['.base-ac', '.weight'].forEach(sel => {
     const f = el.querySelector(sel);
