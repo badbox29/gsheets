@@ -11408,7 +11408,7 @@ function renderManeuvers(root) {
       return '<div style="padding:6px 8px;border:1px solid var(--border);' +
                'border-radius:var(--radius);margin-bottom:5px;' +
                (ok ? '' : 'opacity:0.5;') + '">' +
-challenge      '<div style="display:flex;gap:8px;align-items:baseline;">' +
+               '<div style="display:flex;gap:8px;align-items:baseline;">' +
                '<strong style="flex:1;">' + escapeHtml(m.name) + '</strong>' +
                (bonus ? '<span style="font-size:11px;color:var(--success, #4ade80);">' +
                         sign(bonus) + ' this weapon</span>' : '') +
