@@ -11394,7 +11394,10 @@ function renderManeuvers(root) {
   // missing row conveys nothing.
   const listEl = sec.querySelector('.maneuvers-list');
   if (listEl) {
-    listEl.innerHTML = COMBAT_MANEUVERS.map(m => {
+    // Built as a named row so the list can be PARTITIONED without duplicating
+    // the markup: available first, unavailable below, each keeping the book's
+    // own alphabetical order.
+    const rowHtml = m => {
       const ok    = rules.allowed.indexOf(m.key) !== -1;
       const bonus = rules.bonus[m.key] || 0;
       const total = m.mod + bonus;
@@ -11431,7 +11434,32 @@ function renderManeuvers(root) {
                  escapeHtml(m.text) + '</div>' +
              '</details>' +
            '</div>';
-    }).join('');
+    };
+
+    // SORTED INTO TWO BLOCKS, not filtered. What a weapon CANNOT do is the
+    // useful fact -- a lasso never Parries -- so the unavailable rows stay
+    // visible with their reason; they simply stop interrupting the list of
+    // things the character can actually attempt.
+    //
+    // Order WITHIN each block is unchanged, which is alphabetical because the
+    // book's own form lists them that way. Two stable partitions rather than a
+    // sort, so nothing reorders when a weapon is picked beyond the split itself.
+    const avail   = COMBAT_MANEUVERS.filter(m => rules.allowed.indexOf(m.key) !== -1);
+    const unavail = COMBAT_MANEUVERS.filter(m => rules.allowed.indexOf(m.key) === -1);
+
+    listEl.innerHTML =
+      avail.map(rowHtml).join('') +
+      // No divider when nothing is excluded, so an unrestricted weapon -- and
+      // the no-weapon-selected default -- looks exactly as it did before.
+      (unavail.length
+        ? '<div style="display:flex;align-items:center;gap:8px;margin:10px 0 6px;">' +
+            '<div style="flex:1;height:1px;background:var(--border);"></div>' +
+            '<span style="font-size:10px;color:var(--muted);text-transform:uppercase;' +
+              'letter-spacing:0.08em;">Not with this weapon</span>' +
+            '<div style="flex:1;height:1px;background:var(--border);"></div>' +
+          '</div>' +
+          unavail.map(rowHtml).join('')
+        : '');
   }
 
   const locEl = sec.querySelector('.maneuvers-locations');
