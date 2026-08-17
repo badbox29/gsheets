@@ -3185,6 +3185,88 @@ function updateMagicBadge(el, isMagical, text) {
 // A cursed item must not render as "+-1".
 function magicSign(n) { return (n >= 0 ? '+' : '') + n; }
 
+// The armour slot dropdown's options, built from the card's CURRENT armour type
+// and the CURRENT toggle state.
+//
+// EXTRACTED FROM makeArmorNode so it can be rebuilt rather than only built.
+// These options were constructed once at card creation, so unticking Piecemeal
+// armor in Settings left the five partial slots sitting in every open dropdown
+// until the sheet was reloaded -- and changing a card's type from Splint Mail to
+// Elven Chain did not re-derive them either. Same failure the top of section 7
+// records: the feature shipped without the wiring that refreshes it.
+//
+// "Bracers" REPLACES body armor (bracers of defense -- they do not stack).
+// "Supplemental Armor" ADDS to it (dastana, vambraces worn over armor).
+function armorSlotOptionsHtml(typeKey, curSlot) {
+  const esc = (typeof escapeHtml === 'function') ? escapeHtml : (x => x);
+  const opt = (v, sel) => '<option value="' + esc(v) + '"' +
+                          (v === sel ? ' selected' : '') + '>' + esc(v) + '</option>';
+
+  const slots = ['Armor','Shield','Helmet','Bracers','Supplemental Armor',
+                 'Gauntlets','Boots','Cloak','Belt','Ring','Other'];
+
+  // PHBR1 pp.111-112. The five PARTIAL slots are offered only when this card's
+  // armour type actually has a row in the piecemeal table -- fourteen types,
+  // everything except elven chain -- and only while the band is ticked.
+  //
+  // A LOCK, NOT A WARNING. Elsewhere this tool warns and lets the player
+  // proceed, because a DM may overrule a book. Here there is nothing to
+  // overrule: elven chain has NO ROW, so a piecemeal elven sleeve has no value
+  // at all, and a control that can only produce a blank is worse than none.
+  const pmOn = (typeof getPiecemealPiece === 'function') &&
+               !!getPiecemealPiece(typeKey, 'breastplate');
+  if (pmOn && typeof PIECEMEAL_SLOTS !== 'undefined') {
+    PIECEMEAL_SLOTS.forEach(s => slots.push(s.label));
+  }
+
+  // KEEP A STORED VALUE THAT IS NO LONGER OFFERED, rather than snapping the card
+  // back to "Armor" and mutating data the player never touched. It is labelled
+  // so the reason is visible: an orphaned "Breastplate" alone under its heading
+  // reads as a bug, where "Breastplate (piecemeal off)" reads as a setting.
+  const cur = curSlot || 'Armor';
+  let orphanNote = '';
+  if (cur && slots.indexOf(cur) === -1) {
+    slots.push(cur);
+    const isPm = (typeof PIECEMEAL_SLOTS !== 'undefined') &&
+                 PIECEMEAL_SLOTS.some(s => s.label === cur);
+    orphanNote = isPm
+      ? (pmOn ? ' \u2014 not available for this armor type' : ' \u2014 piecemeal off')
+      : '';
+  }
+
+  // GROUPED, NOT RENAMED. The stored slot value IS the label string, so
+  // renaming these would orphan every card already saved under the old name.
+  const pmLabels = (typeof PIECEMEAL_SLOTS !== 'undefined')
+    ? PIECEMEAL_SLOTS.map(s => s.label) : [];
+  const plain  = slots.filter(s => pmLabels.indexOf(s) === -1);
+  const pieces = slots.filter(s => pmLabels.indexOf(s) !== -1);
+
+  let html = '<optgroup label="Standard">' +
+             plain.map(s => opt(s, cur)).join('') + '</optgroup>';
+  if (pieces.length) {
+    // The heading says whether the band is on, so a group that is one item long
+    // because the feature is switched off explains itself.
+    html += '<optgroup label="Piecemeal (PHBR1' + (pmOn ? '' : ' \u2014 off') + ')">' +
+            pieces.map(s =>
+              '<option value="' + esc(s) + '"' + (s === cur ? ' selected' : '') + '>' +
+              esc(s) + (s === cur ? orphanNote : '') + '</option>').join('') +
+            '</optgroup>';
+  }
+  return html;
+}
+
+// Rebuild one card's slot dropdown in place, preserving its current value.
+function refreshArmorSlotOptions(el) {
+  const sel = el && el.querySelector('.armor-slot');
+  if (!sel) return;
+  const cur = sel.value || 'Armor';
+  const typeKey = (el.querySelector('.armor-type') || {}).value || '';
+  sel.innerHTML = armorSlotOptionsHtml(typeKey, cur);
+  // innerHTML alone does not restore the selection when the value is an option
+  // that was just re-added, so set it explicitly.
+  sel.value = cur;
+}
+
 function makeArmorNode(data={}, onChange){
   const el = document.createElement('div');
   // See makeAmmunitionNode for what 'gear' opts into. The inline
@@ -3219,61 +3301,13 @@ function makeArmorNode(data={}, onChange){
     typeOpts += '</optgroup>';
   }
 
-  // "Bracers" REPLACES body armor (bracers of defense -- they do not stack).
-  // "Supplemental Armor" ADDS to it (dastana, vambraces worn over armor).
-  const slots = ['Armor','Shield','Helmet','Bracers','Supplemental Armor','Gauntlets','Boots','Cloak','Belt','Ring','Other'];
-
-  // PHBR1 pp.111-112. The five PARTIAL slots are offered only when this card's
-  // armour type actually has a row in the piecemeal table -- fourteen types,
-  // everything except elven chain.
-  //
-  // A LOCK, NOT A WARNING, and the distinction matters. Elsewhere this tool
-  // warns and lets the player proceed, because a DM may overrule the book. Here
-  // there is nothing to overrule: elven chain has NO ROW, so a piecemeal elven
-  // sleeve has no value at all. Offering a control that can only produce a blank
-  // is worse than not offering it.
-  //
-  // Gated on PHBR1 too, via getPiecemealPiece returning null with the book off.
-  // An ALREADY-STORED partial slot is preserved regardless -- see the append
-  // below -- so switching the book off, or changing the type out from under a
-  // piece, never silently rewrites the player's card.
-  const pmType = data.armorTypeKey || (typeof inferArmorTypeKey === 'function'
-    ? inferArmorTypeKey(data.name || '') : '');
-  const pmOn = (typeof getPiecemealPiece === 'function') &&
-               !!getPiecemealPiece(pmType, 'breastplate');
-  if (pmOn && typeof PIECEMEAL_SLOTS !== 'undefined') {
-    PIECEMEAL_SLOTS.forEach(s => slots.push(s.label));
-  }
-
-  // KEEP A STORED VALUE THAT IS NO LONGER OFFERED. A card saved as
-  // "Splint Mail / One Arm" whose type is later switched to elven chain, or
-  // loaded with PHBR1 switched off, would otherwise silently snap back to
-  // "Armor" -- mutating data the player never asked to change. The option is
-  // re-added so the select can still show it; the piece contributes 0 and the
-  // card says why.
-  const curSlot = data.armorType || 'Armor';
-  if (curSlot && slots.indexOf(curSlot) === -1) slots.push(curSlot);
-
-  // GROUPED, NOT RENAMED. The stored slot value IS the label string, so
-  // renaming these to "PM - Breastplate" would orphan every card already saved
-  // as "Breastplate". An optgroup separates them visually and changes no data.
-  // The type dropdown above already uses optgroups, so this matches.
-  const pmLabels = (typeof PIECEMEAL_SLOTS !== 'undefined')
-    ? PIECEMEAL_SLOTS.map(s => s.label) : [];
-  const plain = slots.filter(s => pmLabels.indexOf(s) === -1);
-  const pieces = slots.filter(s => pmLabels.indexOf(s) !== -1);
-  // BOTH groups get a heading, or the ungrouped entries sit flush left against
-  // an indented group and read as an accident. "Standard" rather than "Full
-  // suits": this group holds Shield, Helmet, Ring, Cloak and Belt, none of which
-  // are suits. The distinction is worn-whole versus a fragment of a suit.
-  let slotOpts = '<optgroup label="Standard">' +
-                 plain.map(s => opt(s, s, curSlot)).join('') +
-                 '</optgroup>';
-  if (pieces.length) {
-    slotOpts += '<optgroup label="Piecemeal (PHBR1)">' +
-                pieces.map(s => opt(s, s, curSlot)).join('') +
-                '</optgroup>';
-  }
+  // Built by armorSlotOptionsHtml so the SAME code runs at card creation and on
+  // every later rebuild. Two copies of this logic would drift the first time a
+  // slot was added.
+  const slotOpts = armorSlotOptionsHtml(
+    data.armorTypeKey || (typeof inferArmorTypeKey === 'function'
+      ? inferArmorTypeKey(data.name || '') : ''),
+    data.armorType || 'Armor');
 
   // MIGRATION -- NOT OPTIONAL. Records written before the Enchanted checkbox
   // existed carry a bonus but no isMagical flag. Without this, every magic item
