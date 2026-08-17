@@ -3546,7 +3546,13 @@ function makeArmorNode(data={}, onChange){
   // than 'input', so the row would otherwise show the old numbers until the
   // next keystroke.
   const armorTypeSelEl = el.querySelector('.armor-type');
-  if (armorTypeSelEl) armorTypeSelEl.addEventListener('change', syncArmorLine);
+  if (armorTypeSelEl) armorTypeSelEl.addEventListener('change', () => {
+    // The piecemeal slots depend on the TYPE -- splint mail has them, elven
+    // chain has no row and so cannot be worn in pieces. Rebuild before
+    // syncArmorLine, which reads the slot to decide what the note says.
+    if (typeof refreshArmorSlotOptions === 'function') refreshArmorSlotOptions(el);
+    syncArmorLine();
+  });
   // The slot and the high-quality race both change the effective weight and the
   // piecemeal note, so both must refresh the line. Shipping the wiring with the
   // feature -- this is the failure recorded at the top of section 7.
