@@ -6738,6 +6738,22 @@ function isSupplementActive(bookKey, band) {
     const saved = JSON.parse(localStorage.getItem(SUPPLEMENTS_STORAGE_KEY) || '{}');
     const id = bookKey + '.' + band;
     if (Object.prototype.hasOwnProperty.call(saved, id)) return !!saved[id];
+
+    // THE MIGRATION PATH FOR THE BAND SPLIT. PHBR1 was one `core` toggle and is
+    // now six named bands, so a table that ticked "core" has a stored value
+    // under `phbr1.core` and nothing under `phbr1.weaponGroups`. A band with no
+    // key of its own falls back to the band it used to live in, so the split
+    // changes nobody's rules.
+    //
+    // REACHED ONLY WHEN THE BAND'S OWN KEY IS ABSENT -- the hasOwnProperty check
+    // above has already returned for an explicit true OR false. So the first
+    // time the player touches an individual toggle, that band gets its own key
+    // and stops consulting the legacy one, including when he unticks it.
+    const legacy = book[band].legacyBand;
+    if (legacy && legacy !== band) {
+      const legacyId = bookKey + '.' + legacy;
+      if (Object.prototype.hasOwnProperty.call(saved, legacyId)) return !!saved[legacyId];
+    }
   } catch (e) { /* corrupt storage -- fall through */ }
 
   // Legacy per-rule settings, read directly rather than through
