@@ -6964,9 +6964,18 @@ function getSupplementRuleOwner(key) {
   if (!_supplementRuleOwner) {
     _supplementRuleOwner = {};
     if (typeof SUPPLEMENTS !== 'undefined') {
-      Object.keys(SUPPLEMENTS).forEach(bookKey => {
-        ['core', 'optional'].forEach(band => {
-          const grp = SUPPLEMENTS[bookKey][band];
+            Object.keys(SUPPLEMENTS).forEach(bookKey => {
+        const book = SUPPLEMENTS[bookKey] || {};
+        // A book may declare its own bands via `bandOrder` -- PHBR1 has seven.
+        // Indexing only core/optional meant every band-style key fell through
+        // to OPTIONAL_RULES, where it does not exist, so isOptionalRule()
+        // returned false forever and the toggle did nothing.
+        // UNION, not replacement: a book may one day carry both shapes, and
+        // bandOrder is listed last so a declared band wins any collision.
+        const bands = ['core', 'optional'].concat(book.bandOrder || [])
+          .filter((b, i, a) => a.indexOf(b) === i);
+        bands.forEach(band => {
+          const grp = book[band];
           if (!grp || !grp.rules) return;
           grp.rules.forEach(r => { _supplementRuleOwner[r] = { book: bookKey, band: band }; });
         });
