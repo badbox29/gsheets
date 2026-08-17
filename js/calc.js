@@ -6674,7 +6674,7 @@ async function renderWeaponBrowser(root) {
     const groupCover = (function () {
       if (haveIt || coveredBy) return null;
       if (!(typeof isSupplementActive === 'function' &&
-            isSupplementActive('phbr1', 'core'))) return null;
+            isSupplementActive('phbr1', 'weaponGroups'))) return null;
       if (typeof getPHBR1GroupMembers !== 'function') return null;
 
       const hit = known.find(p => {
@@ -7015,7 +7015,7 @@ function getFightingStyles(root) {
   const off = { singleWeapon: 0, twoHander: 0, weaponShield: 0, twoWeapon: 0,
                 ambidextrous: 0, total: 0, active: false };
   if (typeof isSupplementActive !== 'function') return off;
-  if (!isSupplementActive('phbr1', 'core')) return off;
+  if (!isSupplementActive('phbr1', 'fightingStyles')) return off;
 
   const n = f => {
     const el = root.querySelector('[data-field="' + f + '"]');
@@ -7076,7 +7076,7 @@ function renderWeaponGroups(root) {
   if (!box) return;
 
   const on = (typeof isSupplementActive === 'function') &&
-             isSupplementActive('phbr1', 'core');
+             isSupplementActive('phbr1', 'weaponGroups');
   box.style.display = on ? '' : 'none';
   if (!on) return;
   if (typeof PHBR1_TIGHT_GROUPS === 'undefined') return;
@@ -7202,7 +7202,7 @@ function renderProficiencySlots(root) {
   const stylesBox = root.querySelector('.fighting-styles');
   if (stylesBox) {
     stylesBox.style.display =
-      (typeof isSupplementActive === 'function' && isSupplementActive('phbr1', 'core'))
+      (typeof isSupplementActive === 'function' && isSupplementActive('phbr1', 'fightingStyles'))
         ? '' : 'none';
     const noteEl = stylesBox.querySelector('.fighting-styles-note');
     if (noteEl) {
@@ -7261,7 +7261,7 @@ function renderProficiencySlots(root) {
     // getFightingStyles gives a style: suspended, never refunded, never deleted.
     if (w.groupTier) {
       const phbr1On = (typeof isSupplementActive === 'function') &&
-                      isSupplementActive('phbr1', 'core');
+                      isSupplementActive('phbr1', 'weaponGroups');
       if (phbr1On) {
         const tierCost = (typeof PHBR1_GROUP_SLOT_COST === 'object')
           ? PHBR1_GROUP_SLOT_COST[w.groupTier] : undefined;
@@ -7535,7 +7535,7 @@ function renderWeaponProficiencies(root) {
     // the specialization branch for group records.
     if (prof.groupTier) {
       const gOn = (typeof isSupplementActive === 'function') &&
-                  isSupplementActive('phbr1', 'core');
+                  isSupplementActive('phbr1', 'weaponGroups');
       const gMembers = (typeof getPHBR1GroupMembers === 'function')
         ? (getPHBR1GroupMembers(prof.name) || []) : [];
       const gCost = gOn
