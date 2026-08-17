@@ -4984,8 +4984,16 @@ function getManeuverWeaponRules(weaponName, category) {
   // The missile restriction applies FIRST and a weapon's own list narrows
   // further, never widens: a thrown weapon with its own `only` gets the
   // intersection. Nothing in the book grants a missile weapon a Parry.
+  // MELEE/THROWN IS A MELEE WEAPON. The first version matched "thrown" anywhere
+  // and so restricted the dagger, hand axe, spear, javelin and trident -- eleven
+  // weapons that are melee arms which HAPPEN to be throwable. In hand they Parry
+  // and Pin like anything else; the book's restriction is about a weapon being
+  // USED as a missile, not about whether it could be.
+  //
+  // core_wp.json has exactly four categories: Melee, Melee/Thrown, Thrown,
+  // Ranged. Anything containing "melee" keeps the full list.
   const cat = (category || '').toLowerCase();
-  if (cat.indexOf('thrown') !== -1 || cat.indexOf('missile') !== -1 || cat === 'ranged') {
+  if (cat.indexOf('melee') === -1 && (cat.indexOf('thrown') !== -1 || cat === 'ranged')) {
     allowed = allowed.filter(k => MANEUVER_MISSILE_ONLY.indexOf(k) !== -1);
     reason = 'missile and thrown weapons perform only Called Shot, Disarm, Hold Attack ' +
              'and Strike/Thrust';
