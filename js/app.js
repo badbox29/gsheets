@@ -3520,12 +3520,36 @@ function makeArmorNode(data={}, onChange){
         const pmP2 = (typeof getPiecemealPiece === 'function')
           ? getPiecemealPiece(val('.armor-type'), pmS2.key) : null;
         if (!pmP2) {
-          // PHBR1 off, or a type with no row. The piece stays and grants nothing.
-          pmNoteEl.textContent = 'piecemeal \u2014 no value';
-          pmNoteEl.title = 'This piece contributes no AC: either PHBR1 is switched off ' +
-                           'in Settings, or this armour type has no piecemeal values ' +
-                           '(elven chain is magical and cannot be split).';
+          // TWO DIFFERENT REASONS, and they deserve different words. A switched
+          // off band is a SETTING and reads amber "suspended", matching the
+          // weapon group card -- the vocabulary this codebase already uses for
+          // "real, but not applying". A type with no piecemeal row is a fact
+          // about the armour and is not amber, because nothing is wrong.
+          //
+          // "no value" said neither, and read as a data fault.
+          const bandOff = (typeof isSupplementActive === 'function') &&
+                          !isSupplementActive('phbr1', 'piecemealArmor');
+          if (bandOff) {
+            pmNoteEl.textContent = 'suspended \u2014 piecemeal off';
+            pmNoteEl.style.color = 'var(--warning, #e0a34a)';
+            pmNoteEl.title =
+              'Piecemeal armor is unticked in Settings \u2192 Supplements \u2192 PHBR1, so this ' +
+              'piece contributes no AC and its weight is counted in full.\n\n' +
+              'Nothing has been changed on the card. Re-tick the band and it applies ' +
+              'again exactly as before.';
+          } else {
+            pmNoteEl.textContent = 'no piecemeal values';
+            pmNoteEl.style.color = 'var(--muted)';
+            pmNoteEl.title =
+              'This armour type has no row in the piecemeal table, so it cannot be worn ' +
+              'in pieces and contributes no AC. Elven chain is the case that matters: it ' +
+              'is inherently magical, and split magical armour grants none of its bonus ' +
+              '(PHBR1 p.112).\n\nChange the type, or the wear location, to fix it.';
+          }
         } else {
+          // Reset explicitly: the branch above may have left this amber or muted
+          // on a previous render, and a stale colour outlives the text.
+          pmNoteEl.style.color = 'var(--accent-light)';
           pmNoteEl.textContent = 'piecemeal \u00b7 ' + pmS2.label + ' \u00b7 ' +
                                  (pmP2.bonus ? '\u2212' + pmP2.bonus + ' AC' : 'no AC');
           pmNoteEl.title = 'PHBR1 pp.111-112. Worn as ' + pmS2.label.toLowerCase() +
