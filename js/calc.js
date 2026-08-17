@@ -11280,6 +11280,24 @@ function renderPHBR1OnlyControls(root) {
     }
     el.style.display = on ? el._phbr1Display : 'none';
   });
+
+  // ARMOUR SLOT DROPDOWNS ARE REBUILT, not toggled. The wrappers above only
+  // needed hiding because they already exist; the five piecemeal slots are
+  // OPTIONS, and options built once at card creation cannot react to a setting
+  // changing afterwards. Without this, unticking Piecemeal armor left them in
+  // every open dropdown until the sheet was reloaded.
+  //
+  // Hung here rather than in a function of its own because this already runs
+  // from recalculateAll and bindSheet and already exists to answer "a PHBR1
+  // toggle may have moved". A second hook would be a second thing to keep in
+  // step -- the drift recorded at the top of section 7.
+  //
+  // refreshArmorSlotOptions preserves each card's current value, including one
+  // that is no longer offered, so nothing is rewritten behind the player.
+  if (typeof refreshArmorSlotOptions === 'function') {
+    Array.from(root.querySelectorAll('.armor-list .item'))
+      .forEach(el => refreshArmorSlotOptions(el));
+  }
 }
 
 // Cover and concealment (PHB Table 59). Same shape as the vision panel: pure
