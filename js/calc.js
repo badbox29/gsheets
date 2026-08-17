@@ -11305,24 +11305,156 @@ function renderPHBR1OnlyControls(root) {
   }
 }
 
-// Cover and concealment (PHB Table 59). Same shape as the vision panel: pure
-// reference, no character state, rendered once from bindSheet.
-// PHBR1 breakage rollers. TWO MECHANICS, deliberately not merged: stone and
-// bone SHATTER on every hit (p.101); a lance BREAKS only on a hit doing more
-// than 12 damage or one parried by a shield (p.85). The book uses those two
-// verbs and the panel keeps them.
+// PHBR1 Ch.4. A REFERENCE PANEL, not a calculator: it reports rules, derives two
+// thresholds from the character's hit points, and says which maneuvers the
+// weapon in question can actually perform. Nothing is rolled or enforced.
 //
-// Lists only weapons the character is ACTUALLY CARRYING, equipped or not -- a
-// spare stone spear in the pack still shatters when you draw it. Hides itself
-// when there are none, which is what gates the Tools tab.
-//
-// The sheet does not resolve attacks, so this is the player saying "I hit --
-// did it survive?". Nothing is destroyed automatically; removing the weapon
-// stays his, deliberately.
-// PHBR1 p.109. A LOOKUP, not a character property -- it answers "does this
-// looted breastplate fit me" once and nothing persists. Every control is
-// .ephemeral, so collectSheet never sees it and no answer is ever saved.
-//
+// Lists EVERY weapon carried, equipped or not. A player asks "what could I do if
+// I drew the sai?" as often as "what can I do now", and the answer differs
+// sharply -- a lasso can never Parry, a nunchaku is limited to four maneuvers.
+function renderManeuvers(root) {
+  const sec = root && root.querySelector('.maneuvers-section');
+  if (!sec) return;
+
+  const on = (typeof isSupplementActive === 'function') &&
+             isSupplementActive('phbr1', 'meleeManeuvers');
+  sec.style.display = on ? '' : 'none';
+  if (!on || typeof COMBAT_MANEUVERS === 'undefined') return;
+
+  const intro = sec.querySelector('.maneuvers-intro');
+  if (intro) {
+    intro.textContent =
+      'Anyone may attempt these \u2014 not warriors alone. Each maneuver costs one of ' +
+      'your attacks, so a character with two attacks can mix them freely.';
+  }
+
+  // Numbed and Useless, from MAX hit points. Recomputed every render, so they
+  // follow a level-up without anything else being wired.
+  const thEl = sec.querySelector('.maneuvers-thresholds');
+  if (thEl) {
+    const maxHp = val(root, 'hp_max') || val(root, 'hp_total') || '';
+    const t = (typeof maneuverThresholds === 'function') ? maneuverThresholds(maxHp) : null;
+    thEl.innerHTML = t
+      ? '<div style="display:flex;gap:18px;align-items:baseline;">' +
+          '<div><span style="font-size:11px;color:var(--muted);">Numbed</span> ' +
+            '<span style="font-size:18px;font-weight:600;color:var(--warning, #e0a34a);">' +
+            t.numbed + '</span></div>' +
+          '<div><span style="font-size:11px;color:var(--muted);">Useless</span> ' +
+            '<span style="font-size:18px;font-weight:600;color:var(--error, #ff6b6b);">' +
+            t.useless + '</span></div>' +
+          '<div style="font-size:11px;color:var(--muted);flex:1;">25% and 50% of your ' +
+            t.hp + ' hit points, rounded up. Damage to a body location reaching these ' +
+            'triggers the effects below.</div>' +
+        '</div>'
+      : '<div style="font-size:11px;color:var(--muted);">Set your maximum hit points to ' +
+        'see your Numbed and Useless thresholds.</div>';
+  }
+
+  // Weapon picker. Built once so a selection survives a re-render, but the
+  // OPTIONS are rebuilt when the carried weapons change -- the lesson from the
+  // armour slot dropdown, which could not react to anything after construction.
+  const sel  = sec.querySelector('.maneuvers-weapon');
+  const noteEl = sec.querySelector('.maneuvers-weapon-note');
+  const carried = Array.from(root.querySelectorAll('.weapons-list .item')).map(el => ({
+    name: ((el.querySelector('.title') || {}).value || '').trim(),
+    cat:  ((el.querySelector('.weapon-category') || {}).value || ''),
+    eq:   !!(el.querySelector('.equipped') || {}).checked
+  })).filter(w => w.name);
+
+  if (sel) {
+    const want = ['|Bare hands or an unlisted weapon'].concat(
+      carried.map(w => w.name + '|' + w.name + (w.eq ? '' : ' (stowed)')));
+    const have = Array.from(sel.options).map(o => o.value + '|' + o.textContent);
+    if (want.join('\u0001') !== have.join('\u0001')) {
+      const keep = sel.value;
+      sel.innerHTML = want.map(s => {
+        const i = s.indexOf('|');
+        return '<option value="' + escapeHtml(s.slice(0, i)) + '">' +
+               escapeHtml(s.slice(i + 1)) + '</option>';
+      }).join('');
+      if (Array.from(sel.options).some(o => o.value === keep)) sel.value = keep;
+    }
+  }
+
+  const pickName = sel ? sel.value : '';
+  const pick = carried.find(w => w.name === pickName) || null;
+  const rules = (typeof getManeuverWeaponRules === 'function')
+    ? getManeuverWeaponRules(pickName, pick ? pick.cat : '')
+    : { allowed: COMBAT_MANEUVERS.map(m => m.key), bonus: {}, note: '', reason: '' };
+
+  if (noteEl) {
+    noteEl.innerHTML = rules.note
+      ? escapeHtml(rules.note)
+      : (pickName ? 'No special maneuver rules for this weapon \u2014 the book lists ' +
+                    'restrictions only where they exist.' : '');
+  }
+
+  // The maneuver list. Disallowed rows are SHOWN AND GREYED rather than hidden,
+  // with the reason, because "a lasso cannot Parry" is the useful fact and a
+  // missing row conveys nothing.
+  const listEl = sec.querySelector('.maneuvers-list');
+  if (listEl) {
+    listEl.innerHTML = COMBAT_MANEUVERS.map(m => {
+      const ok    = rules.allowed.indexOf(m.key) !== -1;
+      const bonus = rules.bonus[m.key] || 0;
+      const total = m.mod + bonus;
+      const sign  = n => (n > 0 ? '+' : '') + n;
+      const shield = m.needsShield
+        ? Array.from(root.querySelectorAll('.armor-list .item')).some(el =>
+            ((el.querySelector('.armor-slot') || {}).value === 'Shield') &&
+            (el.querySelector('.equipped') || {}).checked)
+        : true;
+
+      return '<div style="padding:6px 8px;border:1px solid var(--border);' +
+               'border-radius:var(--radius);margin-bottom:5px;' +
+               (ok ? '' : 'opacity:0.5;') + '">' +
+challenge      '<div style="display:flex;gap:8px;align-items:baseline;">' +
+               '<strong style="flex:1;">' + escapeHtml(m.name) + '</strong>' +
+               (bonus ? '<span style="font-size:11px;color:var(--success, #4ade80);">' +
+                        sign(bonus) + ' this weapon</span>' : '') +
+               '<span style="font-variant-numeric:tabular-nums;font-weight:600;">' +
+                 (total === 0 ? '\u20130' : sign(total)) + '</span>' +
+             '</div>' +
+             '<div style="font-size:11px;color:var(--muted);margin-top:2px;">' +
+               escapeHtml(m.result) +
+               (m.calledShot ? ' \u00b7 announce before initiative, +1 to your initiative roll' : '') +
+             '</div>' +
+             (!ok ? '<div style="font-size:11px;color:var(--error, #ff6b6b);margin-top:2px;">' +
+                    'Not with this weapon' + (rules.reason ? ' \u2014 ' + escapeHtml(rules.reason) : '') +
+                    '</div>' : '') +
+             (m.needsShield && !shield
+                ? '<div style="font-size:11px;color:var(--warning, #e0a34a);margin-top:2px;">' +
+                  'Needs an equipped shield.</div>' : '') +
+             '<details class="disclosure" style="font-size:11px;margin-top:4px;">' +
+               '<summary>details</summary>' +
+               '<div style="color:var(--muted);margin-top:4px;line-height:1.5;">' +
+                 escapeHtml(m.text) + '</div>' +
+             '</details>' +
+           '</div>';
+    }).join('');
+  }
+
+  const locEl = sec.querySelector('.maneuvers-locations');
+  if (locEl && typeof MANEUVER_BODY_LOCATIONS !== 'undefined') {
+    locEl.innerHTML = MANEUVER_BODY_LOCATIONS.map(l =>
+      '<div style="display:flex;gap:10px;padding:4px 8px;border-bottom:1px solid var(--border);">' +
+        '<strong style="width:100px;">' + escapeHtml(l.name) + '</strong>' +
+        '<span style="width:70px;font-variant-numeric:tabular-nums;">' +
+          (l.mod === 0 ? '\u20130' : l.mod) + '</span>' +
+        '<span style="flex:1;font-size:11px;color:var(--muted);">' +
+          escapeHtml(l.effect) +
+          (l.extra ? ' <em>(Called Shot \u22124, plus a further ' + l.extra +
+                     ' for a small target.)</em>' : '') +
+        '</span>' +
+      '</div>').join('');
+  }
+
+  if (!sec._mvBound) {
+    sec._mvBound = true;
+    sec.addEventListener('change', () => renderManeuvers(root));
+  }
+}
+
 // Defaults the wearer to the character's own race, which is the common case and
 // costs nothing. The armor is something he does not own yet, so "made for" is
 // left for him to pick.
