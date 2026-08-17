@@ -2527,6 +2527,24 @@ const SHEET_HTML = `
         <!-- PHBR1 p.109. A lookup, not a character property: it answers "does
              this looted breastplate fit me" once, and nothing persists. Every
              control is .ephemeral and collectSheet never sees it. -->
+        <!-- PHBR1 Ch.4. Populated by renderManeuvers; hidden entirely unless the
+             Melee maneuvers band is ticked. -->
+        <section class="maneuvers-section section" style="display:none;">
+          <h3>Melee Maneuvers</h3>
+          <p class="prose maneuvers-intro"></p>
+          <div class="maneuvers-thresholds" style="margin-bottom:12px;"></div>
+          <div class="maneuvers-weapon-row" style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px;">
+            <label style="display:flex;flex-direction:column;gap:2px;min-width:220px;">
+              <span style="font-size:11px;color:var(--muted);">Show what this weapon can do</span>
+              <select class="ephemeral maneuvers-weapon" style="width:220px;"></select>
+            </label>
+            <div class="maneuvers-weapon-note" style="flex:1;min-width:200px;font-size:11px;color:var(--muted);line-height:1.5;"></div>
+          </div>
+          <div class="maneuvers-list" style="margin-bottom:14px;"></div>
+          <h4 style="font-size:12px;margin:0 0 6px;">Body Locations</h4>
+          <div class="maneuvers-locations"></div>
+        </section>
+
         <section class="section armor-fitting-section">
           <h3>Armor Fitting</h3>
           <p class="prose">Armor made for one race rarely fits another. Pick who it was made for.</p>
