@@ -2,7 +2,7 @@
 
 A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and no build step.
 
-**Version 11.2.7**
+**Version 11.3.0**
 
 ## Live Demo
 
@@ -40,9 +40,19 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 * Ten colour themes, each with its own light and dark mode, chosen from a swatch grid and remembered per browser
 * Card status colours fixed across every theme and checked against red-green and red-blind colour vision, so the legend means the same thing whichever theme you use
 * Optional-rules framework with live toggles for Player's Handbook options and house-rule overrides
-* Supplement support, one row per book, applying what a Complete Handbook states and staying quiet about the experiments it merely offers
+* Supplement support, one row per book and one checkbox per rule group, applying what a Complete Handbook states and staying quiet about the experiments it merely offers — switching a group off suspends what it granted rather than deleting it, and switching it back on restores it untouched
 * The complete ranger kit list from the Complete Ranger's Handbook, transcribed from the book, with the two crypt kits from DRAGON #234
 * Ranger tracking, stealth and animal empathy worked out from your level, race, kit and armor, with every term shown
+* The Complete Fighter's Handbook in full, split into seven rule groups you can switch on one at a time rather than all together
+* Fighting styles bought with proficiency slots, including the Single-Weapon armor class bonus and its conditions
+* Tight and broad weapon groups — two slots buys every axe in the game, three buys every blade — with specialization still taken one weapon at a time, offered directly in the browser on anything a group already covers
+* Weapon quality from poor to exceptional, kept separate from enchantment so a fine blade never counts as a magical one
+* Weapons that break in use: stone and bone shatter on every hit, lances break on a heavy hit or a shield parry, with the rollers in Tools and a reminder on the weapon card
+* Kit weapon restrictions marked in the browser, telling you which kit forbids a weapon and whether it does so only while the character is being built
+* Armor fitting — whether a breastplate looted from a dwarf will fit an elf, with the chance, which way it will fail, and the full table alongside
+* High-quality racial armor: elven steel at half weight, gnomish leather that takes no thieving penalty, human plate that guards against breath weapons
+* Piecemeal armor worn as separate pieces, with armor class summed from what covers you, piece weights worked out from the suit, and the thieving penalty taken from the most restrictive piece
+* A melee maneuvers reference covering all eleven maneuvers, the five body locations, and your numbed and useless thresholds — filtered to what each weapon you carry can actually do, because a lasso never parries and a bow does only four of them
 * Multi-page printable character sheet with configurable sections, blank write-in lines, and color schemes
 * Import / export character data
 * JSON-based storage for portability
@@ -103,10 +113,19 @@ Everything else — the rules data, the calculations, the stylesheet, the print 
 
 ## Data Storage
 
-* Characters are stored in your browser using local storage
+* Characters are stored in your browser using IndexedDB
 * Exporting creates a portable backup file
 * Clearing browser data will remove saved characters
 * Optional cloud sync is available via Cloudflare KV (see below)
+
+Characters moved from local storage to IndexedDB in version 11.3.0, and existing
+characters migrate themselves the first time you open the tool afterwards.
+
+The reason is portraits. Local storage caps at about 5MB **per site**, and every
+project hosted under the same GitHub Pages account shares that one allowance —
+so a dozen characters with artwork could fill it, and once full, saving fails.
+IndexedDB has no comparable limit, which is why portraits are kept at full
+quality rather than being squeezed to fit.
 
 ---
 
@@ -223,6 +242,65 @@ Follow these steps **in order** to avoid overwriting your data:
 * I am not a developer.
 
 ### Recent Updates
+
+#### v11.3.0
+
+**The Complete Fighter’s Handbook, in full**
+
+* Seven rule groups under PHBR1 rather than one switch. A table that wants
+  weapon groups should not also get piecemeal armor, and the old single toggle
+  gave it no choice. Anything already switched on stays on — the split reads
+  your old setting and inherits from it — and the moment you touch an
+  individual group it becomes yours to set.
+* **Weapon groups.** Two proficiency slots buys every axe in the game, three
+  buys every blade. A group can never be specialized in as a whole, so the
+  browser offers specialization directly on any weapon a group already covers,
+  at its normal cost. Ten weapons belong to no group and must each be bought
+  alone — the arquebus, blowgun, bola, chain, gaff, lasso, net, quarterstaff,
+  nunchaku and sai.
+* **Weapon quality**, poor through exceptional, kept firmly apart from
+  enchantment: a fine blade gets its +1 and still cannot wound something that
+  only magic can hurt. Fine grants +1 to hit *or* +1 damage, never both, so it
+  is offered as two choices rather than one.
+* **Weapons that break.** Stone and bone shatter on a roll of one or two on
+  every hit that lands; lances break on a hit doing more than twelve or one
+  turned by a shield. The rollers are in Tools beside the dice, because that is
+  where you are when it matters, and the weapon card carries the reminder.
+* **Kit weapon restrictions** marked in the browser, naming the kit and saying
+  whether it forbids the weapon outright or only while the character is being
+  built — a Beastmaster who could not carry a long sword at first level can
+  carry one at second.
+* **Armor fitting.** Whether the breastplate you took from a dwarf will fit an
+  elf: the chance, which way it will fail, and the whole table alongside with
+  your row and column marked.
+* **High-quality racial armor.** Elven steel at half the weight, gnomish leather
+  that takes no thieving penalty at all, halfling leather that counts as no
+  armor, human plate built thicker instead of lighter that guards its wearer
+  against rods, staves, wands and breath weapons.
+* **Piecemeal armor.** Wear a splint breastplate over chain sleeves and hide
+  leggings; armor class is summed from what covers you, each piece’s weight is
+  worked out from the suit it came from, and the thieving penalty comes from the
+  most restrictive piece you have on. This adds to the normal system rather than
+  replacing it — a matched suit gives the same armor class either way.
+* **Melee maneuvers.** All eleven, with their modifiers, results and the full
+  rules behind each; the five body locations and what a hit to each does; and
+  your numbed and useless thresholds worked out from your hit points. The list
+  is filtered to what the weapon in your hand can actually perform, which is the
+  part no printed card can do: a lasso never parries, a nunchaku manages four of
+  the eleven, and every missile weapon is limited to called shots, disarms, held
+  attacks and simply shooting.
+
+**Characters moved to IndexedDB**
+
+* Local storage caps at roughly 5MB per site, and every project hosted under the
+  same account shares that one allowance. A dozen characters with portraits
+  filled it, and a full store makes saving fail quietly — the worst way for it
+  to fail.
+* Existing characters migrate themselves the first time you open the tool.
+  The old copy is kept until the new store has been read back successfully, so
+  the changeover survives being interrupted.
+* Portraits stay at full quality as a result, rather than being compressed to
+  fit a limit that no longer applies.
 
 #### v11.2.7
 
