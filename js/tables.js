@@ -4853,7 +4853,7 @@ function isPiecemealType(armorTypeKey) {
 // Gated on PHBR1 core: with the book off the stored slot survives untouched and
 // the piece contributes nothing, like a suspended fighting style.
 function getPiecemealPiece(armorTypeKey, slotKey) {
-  if (typeof isSupplementActive === 'function' && !isSupplementActive('phbr1', 'core')) return null;
+  if (typeof isSupplementActive === 'function' && !isSupplementActive('phbr1', 'piecemealArmor')) return null;
   const row = PIECEMEAL_ARMOR[armorTypeKey];
   const slot = PIECEMEAL_SLOTS.find(s => s.key === slotKey);
   if (!row || !slot) return null;
@@ -4968,7 +4968,7 @@ const HIGH_QUALITY_SHIELD_DP_MULT = 2;
 function getHighQualityArmor(makerRace, armorTypeKey) {
   const r = (makerRace || '').trim().toLowerCase();
   if (!r) return null;
-  if (typeof isSupplementActive === 'function' && !isSupplementActive('phbr1', 'core')) return null;
+  if (typeof isSupplementActive === 'function' && !isSupplementActive('phbr1', 'armorQuality')) return null;
   const base = HIGH_QUALITY_RACIAL_ARMOR[r];
   if (!base) return null;
 
@@ -5071,7 +5071,7 @@ const WEAPON_QUALITY_OPTIONS = [
 // suspension getFightingStyles and the weapon groups already use.
 function getWeaponQuality(key) {
   if (!key) return null;
-  if (typeof isSupplementActive === 'function' && !isSupplementActive('phbr1', 'core')) return null;
+  if (typeof isSupplementActive === 'function' && !isSupplementActive('phbr1', 'weaponQuality')) return null;
   const q = WEAPON_QUALITIES[key];
   return q ? Object.assign({ key: key }, q) : null;
 }
@@ -5231,7 +5231,7 @@ function getWeaponProficiencyStatus(weaponName, weaponGroup, weaponProfs, weapon
   //     Membership goes through samePHBR1Proficiency as well as the name, so a
   //     Dirk is covered by the Dagger listed in four groups, and through
   //     canonicalWeaponName so a flavour-named weapon resolves by its type key.
-  if (typeof isSupplementActive === 'function' && isSupplementActive('phbr1', 'core') &&
+  if (typeof isSupplementActive === 'function' && isSupplementActive('phbr1', 'weaponGroups') &&
       typeof getPHBR1GroupMembers === 'function') {
     const cName = canonicalWeaponName(weaponName, key);
     const cn = (cName || "").trim().toLowerCase();
