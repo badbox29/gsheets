@@ -10135,7 +10135,11 @@ function renderSupplements(root) {
 
   getSupplementKeys().forEach(bookKey => {
     const book = SUPPLEMENTS[bookKey];
-    const active = ['core', 'optional'].some(b => isSupplementActive(bookKey, b));
+    // A book declares its own bands via `bandOrder`; without it, the original
+    // core/optional pair. That default is what leaves PHBR11 untouched by the
+    // PHBR1 split.
+    const bands = book.bandOrder || ['core', 'optional'];
+    const active = bands.some(b => isSupplementActive(bookKey, b));
     // A book with anything switched on is ALWAYS open, whatever the saved
     // state. A live supplement collapsed out of sight is how a table loses
     // track of which rules it is playing.
@@ -10171,12 +10175,18 @@ function renderSupplements(root) {
     // holds one rule that changes a to-hit penalty -- both are optional in the
     // sense that matters, namely that the BOOK marks them so, but a shared hint
     // would have to lie about one of them. The registry knows which it is.
-    const bandHint = (band, meta) => (book[band] && book[band].hint) || meta.hint;
+    const bandHint = (band, meta) => (book[band] && book[band].hint) || (meta && meta.hint) || '';
 
-    ['core', 'optional'].forEach(band => {
+    // Named bands supply their own label; core and optional keep the generated
+    // "Apply PHBR1 core rules" form. A band with neither falls back to its key,
+    // which is ugly but visible -- better than an unlabelled checkbox.
+    const bandLabel = (band, meta) =>
+      (book[band] && book[band].label) || (meta && meta.label) || band;
+
+    bands.forEach(band => {
       const grp = book[band];
       if (!grp) return;
-      const meta = BANDS[band];
+      const meta = BANDS[band];   // undefined for a named band -- both helpers cope
 
       const row = document.createElement('label');
       row.style.cssText = 'display:flex;align-items:flex-start;gap:8px;cursor:pointer;margin:0 0 8px;';
@@ -10194,7 +10204,10 @@ function renderSupplements(root) {
       const text = document.createElement('div');
       text.style.flex = '1';
       text.innerHTML =
-        '<div style="font-size:12px;">' + meta.label + '</div>' +
+        // Through the helper, not `meta.label` directly: `meta` is undefined for
+        // a named band, since BANDS only carries the generated core/optional
+        // labels. Four of PHBR1's six bands would throw here otherwise.
+        '<div style="font-size:12px;">' + escapeHtml(bandLabel(band, meta)) + '</div>' +
         '<div style="font-size:10px;color:var(--muted);margin-top:2px;">' +
           bandHint(band, meta) + '</div>' +
         (changes ? '<ul style="font-size:10px;color:var(--muted);margin:4px 0 0;' +
