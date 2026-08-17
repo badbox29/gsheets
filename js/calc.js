@@ -11295,8 +11295,13 @@ function renderPHBR1OnlyControls(root) {
   // refreshArmorSlotOptions preserves each card's current value, including one
   // that is no longer offered, so nothing is rewritten behind the player.
   if (typeof refreshArmorSlotOptions === 'function') {
-    Array.from(root.querySelectorAll('.armor-list .item'))
-      .forEach(el => refreshArmorSlotOptions(el));
+    Array.from(root.querySelectorAll('.armor-list .item')).forEach(el => {
+      refreshArmorSlotOptions(el);
+      // The chips depend on the same toggles as the dropdown -- the piecemeal
+      // note and the effective weight both change when a band moves -- so they
+      // are refreshed in the same pass rather than by a second hook.
+      if (typeof el._syncArmorLine === 'function') el._syncArmorLine();
+    });
   }
 }
 
