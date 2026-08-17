@@ -11262,9 +11262,15 @@ function renderVisionLightPanel(root) {
 // had just switched off. Two separate hooks would be two things to keep in step.
 function renderPHBR1OnlyControls(root) {
   if (!root) return;
-  const on = (typeof isSupplementActive === 'function') &&
-             isSupplementActive('phbr1', 'core');
+  // EACH WRAPPER NAMES ITS OWN BAND via data-phbr1-band, because weapon quality
+  // and high-quality racial armour are now separate toggles and one gate cannot
+  // serve both. A wrapper with no attribute falls back to the whole book being
+  // off, which is the safe reading for anything added later and not yet tagged.
   Array.from(root.querySelectorAll('.phbr1-only')).forEach(el => {
+    const band = el.dataset.phbr1Band || '';
+    const on = (typeof isSupplementActive === 'function') &&
+               (band ? isSupplementActive('phbr1', band)
+                     : (SUPPLEMENTS.phbr1.bandOrder || []).some(b => isSupplementActive('phbr1', b)));
     // The weapon wrapper uses display:contents so the field stays in the same
     // flex row as Size and Grip; restoring '' would make it a block and break
     // that row. Read the intent off the element rather than storing a second
