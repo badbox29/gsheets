@@ -6432,55 +6432,148 @@ const SUPPLEMENTS = {
     code:  'PHBR1',
     title: 'The Complete Fighter\u2019s Handbook',
     order: 1,
-    // ONE BAND FOR NOW. The book's own second paragraph (p.57) says "everything
-    // in this chapter is an OPTIONAL rule; nothing recommended here can be
-    // implemented in your campaign without the DM's permission" -- so unlike
-    // PHBR11 there is no book-flagged experimental tier to separate out. The
-    // split here stays ours: `core` changes numbers. An `optional` band will be
-    // added if PHBR1 turns out to own anything that only suppresses warnings.
+
+    // SIX BANDS, NOT ONE. This book adds six independent systems, and an
+    // all-or-nothing toggle made a table that wanted weapon groups also take
+    // piecemeal armour. `bandOrder` lets a book declare its own bands; a book
+    // without it falls back to ['core','optional'], so PHBR11 is untouched.
     //
-    // NOT GATED, deliberately: the PHBR1 weapon proficiency RELATIONSHIPS in
-    // PHBR1_RELATED_WEAPONS. Every pairing they affect involves a weapon the PHB
-    // does not print -- cutlass, katana, belaying pin, daikyu and the rest -- so
-    // a PHB-only character cannot be holding one, and the change is inert for
-    // that table. What they displace is the unsourced core_wp.json Group
-    // fallback, i.e. house inference giving way to a printed rule.
-    core: {
+    // Every band carries `legacyBand`, which is what stops this change altering
+    // any existing table's rules: a band with no stored value of its own reads
+    // the old `phbr1.core` or `phbr1.optional` key instead. Somebody who ticked
+    // "core" gets all five on, exactly as before.
+    //
+    // NOT GATED BY ANY BAND, deliberately: the PHBR1 weapon proficiency
+    // RELATIONSHIPS, the same-proficiency pairs, baseWeapon variants, kit weapon
+    // permission, the stone/bone and lance breakage notes, and the Armor Fitting
+    // panel. All are CONTENT THE BOOK ADDS rather than rules that change core
+    // arithmetic -- a stone dagger only exists because PHBR1 prints it, so a
+    // table not using the book cannot be holding one.
+    bandOrder: ['fightingStyles', 'weaponGroups', 'weaponQuality',
+                'armorQuality', 'piecemealArmor', 'tightGroupsAsRelated'],
+
+    fightingStyles: {
+      label: 'Fighting styles',
+      hint:  'Style specialization bought with weapon proficiency slots.',
       rules: ['styleSpecializationPHBR1'],
+      legacyBand: 'core',
       changes: [
-        { text: 'Fighting Styles and Style Specialization (pp.61\\u201364). Every ' +
+        { text: 'Fighting Styles and Style Specialization (pp.61\u201364). Every ' +
                 'character already knows some styles by class and can never learn more ' +
                 'after creation: Warriors know all four, Priests Single-Weapon, ' +
                 'Two-Hander and Weapon and Shield, Rogues Single-Weapon, Two-Hander and ' +
                 'Two-Weapon, Wizards Single-Weapon and Two-Hander. Specializing costs a ' +
                 'weapon proficiency slot. Single-Weapon Style Specialization is the only ' +
-                'one that changes Armor Class: \\u22121 for one slot and \\u22122 for two, ' +
+                'one that changes Armor Class: \u22121 for one slot and \u22122 for two, ' +
                 'and only while wielding a one-handed weapon you are proficient with and ' +
-                'carrying nothing in the other hand \\u2014 no shield, no second weapon.',
+                'carrying nothing in the other hand \u2014 no shield, no second weapon.',
           caveat: 'Unticking SUSPENDS the bonus; it never refunds the slots or deletes ' +
                   'the specialization. The purchase stays on the character, greyed, and ' +
                   'returns intact when the book is switched back on.' }
       ]
     },
-    // A SECOND BAND, and it does NOT mean what PHBR11's optional band means --
-    // which is why the hint is carried here rather than left to the renderer's
-    // default. PHBR11's optional rules suppress warnings and enforce nothing;
-    // this one changes a to-hit penalty. What makes both "optional" is that the
-    // BOOK marks them so: p.59 says "your DM CAN, IF HE WISHES, use these
-    // categories as related groups."
-    optional: {
-      rules: ['tightGroupsAsRelatedPHBR1'],
+
+    weaponGroups: {
+      label: 'Weapon groups',
+      hint:  'Buy proficiency in a whole category of weapons at once.',
+      rules: ['weaponGroupsPHBR1'],
+      legacyBand: 'core',
+      changes: [
+        { text: 'Tight and Broad weapon groups (pp.58\u201360). A TIGHT group costs 2 ' +
+                'proficiency slots and a BROAD group 3, and either grants full ' +
+                'proficiency in every weapon it lists \u2014 sixteen tight groups from Axes ' +
+                'to Whips, and four broad ones. A group can never be specialized in as a ' +
+                'whole: buy the group, then specialize the individual weapon at its ' +
+                'normal cost. The weapon browser offers that directly on any weapon a ' +
+                'group already covers.' },
+        { text: 'Ten weapons belong to no group at all and must each be bought ' +
+                'separately: arquebus, blowgun, bola, chain, gaff/hook, lasso, net, ' +
+                'quarterstaff, nunchaku and sai.',
+          caveat: 'Unticking SUSPENDS a group: the record stays on the character, costs ' +
+                  'nothing and grants nothing, and returns intact when switched back on.' }
+      ]
+    },
+
+    weaponQuality: {
+      label: 'Weapon quality',
+      hint:  'Poor, Fine and Exceptional craftsmanship on individual weapons.',
+      rules: ['weaponQualityPHBR1'],
+      legacyBand: 'core',
+      changes: [
+        { text: 'Weapon quality (pp.11\u201313), as a dropdown on each weapon. Poor is ' +
+                '\u22121 to hit and damage and breaks on a natural attack roll of 1\u20135. ' +
+                'Fine grants +1 to hit OR +1 damage, not both. Exceptional grants both. ' +
+                'Quality is NOT magical: it never lets a weapon harm a creature only ' +
+                'magical weapons can hurt, and it does not reduce speed factor.',
+          caveat: 'The control disappears when this is off, because quality is a PHBR1 ' +
+                  'invention \u2014 a DM not using the book is not handing out Fine weapons. ' +
+                  'Any quality already recorded is kept and returns when switched on.' }
+      ]
+    },
+
+    armorQuality: {
+      label: 'High-quality racial armor',
+      hint:  'Elven, dwarven, gnomish and other racially-made armor.',
+      rules: ['armorQualityPHBR1'],
+      legacyBand: 'core',
+      changes: [
+        { text: 'High-quality racial armor (pp.110\u2013111), as a dropdown on each armor ' +
+                'card. Elven is half weight and half-elven 10% lighter. Gnomish studded ' +
+                'and padded leather takes NO penalties on the thieving skill table, and ' +
+                'halfling leather counts as \u201cNo Armor\u201d there. Human plate, field ' +
+                'plate and full plate is built thicker rather than lighter and gives the ' +
+                'WEARER +2 to saving throws vs. Rod, Staff or Wand and vs. Breath Weapon.',
+          caveat: 'Each race only makes certain types this way, and marking one that it ' +
+                  'does not is warned about rather than blocked. Dwarven adds only item ' +
+                  'saving throws, which are the DM\u2019s chart, so it changes nothing here. ' +
+                  'The control disappears when this is off; the marking is kept.' }
+      ]
+    },
+
+    piecemealArmor: {
+      label: 'Piecemeal armor',
+      hint:  'Mismatched pieces worn on separate parts of the body.',
+      rules: ['piecemealArmorPHBR1'],
+      legacyBand: 'core',
+      changes: [
+        { text: 'Piecemeal armor (pp.111\u2013112). Adds five wear locations to each ' +
+                'armor card \u2014 breastplate, two arms, one arm, two legs, one leg \u2014 ' +
+                'and your Armor Class becomes 10 minus the sum of the pieces. A breastplate ' +
+                'weighs half the suit and each limb an eighth, calculated for you. This ' +
+                'ADDS to the normal system rather than replacing it: a matched suit gives ' +
+                'exactly the same AC either way.' },
+        { text: 'Split magical armor grants none of its magical bonus, and elven chain ' +
+                'cannot be worn in pieces at all, so those locations are not offered for ' +
+                'it. For thieving skills the MOST RESTRICTIVE piece worn sets the column.',
+          caveat: 'The thieving rule is this app\u2019s inference \u2014 PHBR1 does not say how ' +
+                  'piecemeal armor meets the thieving skill table.' }
+      ]
+    },
+
+    // NOT WHAT PHBR11's OPTIONAL BAND MEANS, which is why the hint is carried
+    // here. PHBR11's optional rules suppress warnings and enforce nothing; this
+    // one changes a to-hit penalty. What makes both "optional" is that the BOOK
+    // marks them so: p.59 says "your DM CAN, IF HE WISHES, use these categories
+    // as related groups."
+    //
+    // Independent of weaponGroups on purpose. A DM may reasonably use the
+    // categories as a similarity table without letting anyone buy groups, or buy
+    // groups while keeping PHB Table 32 for unfamiliar weapons.
+    tightGroupsAsRelated: {
+      label: 'Tight groups as related weapons',
       hint:  'A rule PHBR1 offers as the DM\u2019s choice rather than stating flatly. ' +
              'This one DOES change numbers.',
+      rules: ['tightGroupsAsRelatedPHBR1'],
+      legacyBand: 'optional',
       changes: [
         { text: 'Tight weapon groups count as RELATED weapons (p.59). Two weapons in ' +
                 'the same tight group \u2014 khopesh and cutlass, both Medium Blades \u2014 ' +
                 'cost half the non-proficiency penalty instead of the full one. ' +
                 'Applies whether or not you have bought the group; the categories are ' +
                 'being used as a similarity table, not as a purchase.',
-          caveat: 'BROAD groups are NOT used, ever. p.60 says outright: "These groups ' +
+          caveat: 'BROAD groups are NOT used, ever. p.60 says outright: \u201cThese groups ' +
                   'may not be used to calculate weapon similarity for determining ' +
-                  'whether a character receives the full or partial attack penalty." ' +
+                  'whether a character receives the full or partial attack penalty.\u201d ' +
                   'A weapon explicitly related to nothing stays related to nothing.' }
       ]
     }
