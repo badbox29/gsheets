@@ -4788,6 +4788,218 @@ const ARMOR_FITTING = {
 
 const ARMOR_FITTING_RACES = ['dwarf', 'elf', 'gnome', 'half-elf', 'halfling', 'human'];
 
+// === PHBR1 Chapter 4: Melee Maneuvers (pp.64-74, form p.122) ===
+//
+// "These maneuvers aren't limited to warrior-classes alone. ANYONE CAN PERFORM
+// ANY OF THESE MANEUVERS, provided he has the right weapon or equipment. Any
+// priest with a shield can perform a Shield-Punch or Shield-Rush; any rogue or
+// mage with a good attack can Disarm a foe." So the panel is gated on the BOOK,
+// never on class.
+//
+// Each maneuver constitutes one Attack. A character with multiple attacks can
+// mix and match -- one Strike and one Parry, one Called Shot and one Disarm.
+//
+// `calledShot: true` means the full Called Shot protocol: announce before
+// initiative, +1 penalty to the initiative roll, -4 to hit. NOTE PIN IS NOT ONE
+// despite its -4: p.71 says "you don't have to announce it before initiative and
+// you don't suffer a +1 to initiative. You do still suffer the -4 attack
+// penalty." That distinction is invisible in the p.122 form's modifier column
+// and is exactly the sort of thing a reference panel exists to carry.
+const COMBAT_MANEUVERS = [
+  { key: 'calledShot', name: 'Called Shot', mod: -4, calledShot: true,
+    result: 'Varies',
+    text: 'Strike a specific body part, disarm, smash something held, bypass armor, ' +
+          'or attempt a special result. Announce before initiative; +1 penalty to the ' +
+          'initiative roll.' },
+  { key: 'disarm', name: 'Disarm', mod: -4, calledShot: true,
+    result: 'One-handed weapon flies 2d6 feet; two-handed weapon or shield out of position',
+    text: 'A Called Shot at the weapon itself. Roll 2d6 for feet flown and 1d6 for ' +
+          'direction (1 straight ahead, 2 ahead-right, 3 behind-right, 4 straight ' +
+          'behind, 5 behind-left, 6 ahead-left). Against a TWO-HANDED weapon it only ' +
+          'knocks the weapon out of alignment and the wielder loses initiative next ' +
+          'round \u2014 two Disarms in the same round are needed to knock it free. ' +
+          'Against a SHIELD it draws the shield out of position: the wielder loses its ' +
+          'AC bonus and any magical benefit for the rest of the round, regaining it at ' +
+          'the start of the next. Worn items cannot be Disarmed.' },
+  { key: 'grab', name: 'Grab', mod: -4, calledShot: true,
+    result: 'Gets hand(s) on object',
+    text: 'Needs at least one free hand; two are better for holding a person. Getting ' +
+          'hold is not control: both parties roll 1d20 against Strength and whoever ' +
+          'beats his own score by more wins the tug-of-war. A tie is re-rolled in the ' +
+          'same round. One-handed Grabs are treated as Strength 3 lower.' },
+  { key: 'holdAttack', name: 'Hold Attack', mod: 0,
+    result: 'Attack waits until later in the round',
+    text: 'Delay your attack until later in the round, hoping circumstances change. ' +
+          'Announce on your turn; the DM asks again once everyone has gone. If you ' +
+          'still do not act, you forfeit that attack. Archers use this a great deal.' },
+  { key: 'parry', name: 'Parry', mod: 0, announce: true,
+    result: 'Announce before initiative; a successful parry stops the enemy attack',
+    text: 'Announce before initiative is rolled, and how many of your attacks are ' +
+          'Parries. Roll to hit your attacker against his AC; a hit means his attack ' +
+          'does you no damage. You need not parry the first attack made against you \u2014 ' +
+          'you may choose which attacker. Thrown weapons can be parried; missiles ' +
+          '(quarrels, arrows, sling stones, magic missiles) cannot.' },
+  { key: 'pin', name: 'Pin', mod: -4,
+    result: 'Enemy\u2019s weapon pinned against him',
+    text: 'Move right up to your enemy and use a weapon or shield to pin or trap his ' +
+          'weapon. UNLIKE a Called Shot this needs no announcement and carries no ' +
+          'initiative penalty \u2014 but it does take the \u22124 to hit. While pinned, ' +
+          'neither of you can use the weapon involved. The victim gets one struggle ' +
+          'attempt immediately (a Strength roll as for Grab) and one each round after; ' +
+          'the first struggle of each later round does not cost him an attack.' },
+  { key: 'pullTrip', name: 'Pull/Trip', mod: 0,
+    result: 'A successful attack knocks the enemy down',
+    text: 'Describe how you are doing it; the DM may rule it impossible. Roll against ' +
+          'AC as normal, then the target rolls 1d20 against Dexterity to stay upright: ' +
+          '+6 if he was not moving, \u22123 if he was unaware. Best used on someone ' +
+          'moving and unaware. Polearms and other long-hafted weapons are good at it, ' +
+          'and reach a mounted rider.' },
+  { key: 'sap', name: 'Sap', mod: -8, calledShot: true,
+    result: 'Damage \u00d7 5% = knockout chance (40% max)',
+    text: 'Hit him over the head to knock him out rather than kill him. A Called Shot ' +
+          'at a FURTHER \u22124, so \u22128 in total. 5% knockout chance per point of ' +
+          'damage, to a maximum of 40%. Only 25% of the damage is permanent. Melee ' +
+          'weapons or bare hands only; Small or Medium targets only. Against a sleeping ' +
+          'or held target it hits automatically and the chance rises to 10% per point ' +
+          'to a maximum of 80% \u2014 but a failed roll of 81 or higher wakes him.' },
+  { key: 'shieldPunch', name: 'Shield-Punch', mod: 0, needsShield: true,
+    result: '1\u20133 points of damage (+ Strength bonus)',
+    text: 'Slam a buckler, small or medium shield into your target. No attack bonus ' +
+          'from the shield whatever its size or enchantment. You lose the shield\u2019s ' +
+          'AC bonus from now until your next attack. A good maneuver when you have ' +
+          'dropped your weapon \u2014 it beats a bare hand.' },
+  { key: 'shieldRush', name: 'Shield-Rush', mod: 0, needsShield: true,
+    result: 'As Shield-Punch, plus a knockdown chance',
+    text: 'Start at least 10 feet away with a medium or body shield and run full-tilt ' +
+          'into him. Damage as Shield-Punch; the target rolls 1d20 against Dexterity ' +
+          'with +3 if moving toward you, +3 if not moving, \u22123 if hit from behind, ' +
+          '\u22123 if unaware. More reliable than Pull/Trip \u2014 but if you MISS you ' +
+          'must make a Dexterity check at \u22126 or go down yourself, and even on a hit ' +
+          'you check unmodified.' },
+  { key: 'strikeThrust', name: 'Strike/Thrust', mod: 0,
+    result: 'Basic attack with weapon or empty hand',
+    text: 'The basic combat maneuver, included for completeness. Firing or throwing a ' +
+          'missile weapon is a Strike \u2014 usually you just say "Shoot".' }
+];
+
+// p.81, "The Locations". The p.122 form prints a single to-hit figure per
+// location; these are the two components, because -8 is not a magic number but
+// the Called Shot -4 PLUS a further -4 for a small target. A player who knows
+// that can reason about it when other modifiers apply.
+const MANEUVER_BODY_LOCATIONS = [
+  { key: 'torso', name: 'Torso', mod: 0, extra: 0, calledShot: false,
+    effect: 'No effect. The torso is hit by any attack that is not a Called Shot.' },
+  { key: 'head', name: 'Head', mod: -8, extra: -4, calledShot: true,
+    effect: 'DM chooses, or rolls 1d6: 1 Blind (attackers get +4 to hit), 2 Deaf, ' +
+            '3 Dizzy (check Dexterity at \u22124), 4 Knockdown, 5 Blind and Deaf, ' +
+            '6 Dizzy and Knockdown.' },
+  { key: 'arms', name: 'Arms', mod: -4, extra: 0, calledShot: true,
+    effect: 'Drops the held weapon, and a shield no longer helps AC. One right, one left.' },
+  { key: 'legs', name: 'Legs', mod: -4, extra: 0, calledShot: true,
+    effect: 'Check Dexterity to stay upright. One right, one left.' },
+  { key: 'stun', name: 'Stun-Points', mod: -8, extra: -4, calledShot: true,
+    effect: 'Movement is halved and attackers get +2 to hit. A broad category covering ' +
+            'the solar plexus and other nerve centres which cause a great deal of pain ' +
+            'when struck.' }
+];
+
+// The p.122 form: "Numbed" is 25% of the character's hit points and "Useless"
+// 50%, each ROUNDED UP FROM .5. Damage to a location is tracked against these.
+const MANEUVER_NUMBED_PCT  = 0.25;
+const MANEUVER_USELESS_PCT = 0.50;
+
+function maneuverThresholds(maxHp) {
+  const hp = parseInt(maxHp, 10) || 0;
+  if (hp <= 0) return null;
+  const up = n => Math.round(n);   // .5 rounds up, which is Math.round for positives
+  return { hp: hp, numbed: up(hp * MANEUVER_NUMBED_PCT),
+           useless: up(hp * MANEUVER_USELESS_PCT) };
+}
+
+// Weapon-specific maneuver rules, gathered from the weapon descriptions in
+// Chapter 5 rather than from the maneuver chapter -- which is why they are easy
+// to miss and worth surfacing. Keys are core_wp.json `Weapon Name` values.
+//
+// `bonus`   { maneuverKey: modifier } applied on top of the maneuver's own.
+// `only`    an EXCLUSIVE list: this weapon can perform no other maneuver.
+// `barred`  maneuvers this weapon specifically cannot perform.
+// `note`    prose shown on the maneuver row when this weapon is in hand.
+const MANEUVER_WEAPON_RULES = {
+  'Sai':          { bonus: { pin: 1, disarm: 1 },
+                    note: 'Sai confer +1 to hit with Pin and Disarm (p.102).' },
+  'Main-Gauche':  { bonus: { disarm: 1, parry: 1 },
+                    note: 'Main-gauche confers +1 to hit with Disarm and Parry, and its ' +
+                          'basket hilt counts as an iron gauntlet for Punching (p.104).' },
+  'Cutlass':      { bonus: { parry: 1 },
+                    note: 'The basket hilt gives +1 to hit with Parry and counts as an ' +
+                          'iron gauntlet for Punching (p.100).' },
+  'Sabre':        { bonus: { parry: 1 },
+                    note: 'The basket hilt gives +1 to hit with Parry and counts as an ' +
+                          'iron gauntlet for Punching (p.104).' },
+  'Cestus':       { bonus: { grab: -2 },
+                    note: 'A hand wearing a cestus may still Grab, at \u22122 to hit for ' +
+                          'clumsiness AND \u22122 to your Strength for holding on (p.96).' },
+  'Nunchaku':     { only: ['calledShot', 'disarm', 'parry', 'strikeThrust'],
+                    note: 'The nunchaku performs Called Shots, Disarm, Parry and ' +
+                          'Strike/Thrust only (p.102).' },
+  'Chain':        { only: ['calledShot', 'disarm', 'parry', 'strikeThrust', 'pullTrip'],
+                    note: 'The chain performs Called Shots, Disarm, Parry and ' +
+                          'Strike/Thrust, plus three of the lasso\u2019s functions: ' +
+                          'Pull/Trip by striking the legs, Dismount a Rider, and Snag a ' +
+                          'Rider\u2019s Head (p.101).' },
+  'Lasso':        { only: ['pullTrip', 'pin'], barred: ['parry', 'disarm'],
+                    note: 'RANGE ONLY \u2014 the lasso cannot Parry or Disarm at all, and ' +
+                          'cannot Pin in melee. Trip is a Called Shot to the legs then a ' +
+                          'Dexterity roll; pinning both arms is a Called Shot to the arms ' +
+                          'then a Strength roll. Each extra lasso is \u22124 to the ' +
+                          'target\u2019s Strength for struggling, and at 0 he cannot escape ' +
+                          '(pp.98\u201399).' },
+  'Net':          { only: ['disarm', 'parry', 'pin'],
+                    note: 'A properly folded net performs Disarm, Parry and Pin; once ' +
+                          'unfolded all such attacks are at \u22123 to hit. A hit IS a Pin, ' +
+                          'and the netted character may make NO attack on the netter at ' +
+                          'all until he wins a Strength check and throws the net off ' +
+                          '(p.99).' },
+  'Gaff/Hook, Attached': { note: 'A gaff fixed to a stump cannot be dropped or Disarmed ' +
+                                 '(p.100).' }
+};
+
+// "AS WITH OTHER BOWS, the daikyu can be used to perform the Called Shot,
+// Disarm, Hold Attack, and Strike/Thrust maneuvers" (p.101). The phrasing makes
+// this a rule about MISSILE WEAPONS GENERALLY, not about the daikyu -- and it is
+// the single most useful line in the chapter for a filtered list, since nothing
+// in the maneuver chapter itself says it.
+const MANEUVER_MISSILE_ONLY = ['calledShot', 'disarm', 'holdAttack', 'strikeThrust'];
+
+// What this weapon can do, and at what modifier. Returns
+// { allowed: [keys], bonus: {key: mod}, note, reason } -- `reason` naming
+// whatever narrowed the list, so the panel can say why rather than just hiding
+// rows.
+function getManeuverWeaponRules(weaponName, category) {
+  const all = COMBAT_MANEUVERS.map(m => m.key);
+  const rule = MANEUVER_WEAPON_RULES[(weaponName || '').trim()] || {};
+  let allowed = all.slice();
+  let reason = '';
+
+  // The missile restriction applies FIRST and a weapon's own list narrows
+  // further, never widens: a thrown weapon with its own `only` gets the
+  // intersection. Nothing in the book grants a missile weapon a Parry.
+  const cat = (category || '').toLowerCase();
+  if (cat.indexOf('thrown') !== -1 || cat.indexOf('missile') !== -1 || cat === 'ranged') {
+    allowed = allowed.filter(k => MANEUVER_MISSILE_ONLY.indexOf(k) !== -1);
+    reason = 'missile and thrown weapons perform only Called Shot, Disarm, Hold Attack ' +
+             'and Strike/Thrust';
+  }
+  if (rule.only) {
+    allowed = allowed.filter(k => rule.only.indexOf(k) !== -1);
+    reason = rule.note || reason;
+  }
+  if (rule.barred) allowed = allowed.filter(k => rule.barred.indexOf(k) === -1);
+
+  return { allowed: allowed, bonus: rule.bonus || {}, note: rule.note || '',
+           reason: reason };
+}
+
 // === PHBR1 Piecemeal Armor (pp.111-112, table p.118) ===
 //
 // "Characters can wear armor assembled out of the remnants of other,
@@ -6105,6 +6317,9 @@ const TOOLS_SUBTABS = [
   // UNGATED. Anyone can loot armor, so there is nothing to gate on -- unlike the
   // class and race panels above. Reference, like Climbing and Cover.
   { key: 'fitting',  label: 'Armor Fitting',     section: 'armor-fitting-section',  band: 'reference', gated: false },
+  // Gated: the renderer hides the section when the band is off, and
+  // toolsSubtabApplies reads that display to decide whether the tab exists.
+  { key: 'maneuvers', label: 'Maneuvers',        section: 'maneuvers-section',      band: 'reference', gated: true },
   { key: 'vision',   label: 'Vision & Light',    section: 'vision-light-section',   band: 'reference', gated: false },
   { key: 'cover',    label: 'Cover',             section: 'cover-reference-section',band: 'reference', gated: false },
   { key: 'overland', label: 'Overland',          section: 'overland-section',       band: 'reference', gated: false }
@@ -6450,7 +6665,8 @@ const SUPPLEMENTS = {
     // arithmetic -- a stone dagger only exists because PHBR1 prints it, so a
     // table not using the book cannot be holding one.
     bandOrder: ['fightingStyles', 'weaponGroups', 'weaponQuality',
-                'armorQuality', 'piecemealArmor', 'tightGroupsAsRelated'],
+                'armorQuality', 'piecemealArmor', 'meleeManeuvers',
+                'tightGroupsAsRelated'],
 
     fightingStyles: {
       label: 'Fighting styles',
@@ -6559,6 +6775,35 @@ const SUPPLEMENTS = {
     // Independent of weaponGroups on purpose. A DM may reasonably use the
     // categories as a similarity table without letting anyone buy groups, or buy
     // groups while keeping PHB Table 32 for unfamiliar weapons.
+    // REFERENCE, NOT ARITHMETIC. This band changes no number the sheet
+    // calculates -- it adds a Tools panel that reports rules and shows which
+    // maneuvers the character's weapons allow. Gated because Chapter 4 is
+    // optional in the book's own voice, and a table not using it should not have
+    // a tab for it.
+    meleeManeuvers: {
+      label: 'Melee maneuvers',
+      hint:  'A Tools reference for the eleven combat maneuvers, body locations ' +
+             'and hit-location thresholds.',
+      rules: ['meleeManeuversPHBR1'],
+      legacyBand: 'core',
+      changes: [
+        { text: 'Melee maneuvers (pp.64\u201374). Adds a Tools panel listing all eleven ' +
+                'maneuvers with their attack modifiers and results \u2014 Called Shot, ' +
+                'Disarm, Grab, Hold Attack, Parry, Pin, Pull/Trip, Sap, Shield-Punch, ' +
+                'Shield-Rush and Strike/Thrust. ANYONE may attempt these, not only ' +
+                'warriors: any priest with a shield can Shield-Punch, any rogue or mage ' +
+                'with a good attack can Disarm.' },
+        { text: 'Also shows the five body locations with their to-hit modifiers and ' +
+                'effects, your \u201cNumbed\u201d and \u201cUseless\u201d thresholds at 25% ' +
+                'and 50% of your hit points, and which maneuvers each weapon you carry ' +
+                'can actually perform \u2014 a lasso can never Parry, a nunchaku is limited ' +
+                'to four, and missile weapons to Called Shot, Disarm, Hold Attack and ' +
+                'Strike/Thrust.',
+          caveat: 'Reference only. Nothing here is enforced or rolled for you; each ' +
+                  'maneuver still costs one of your attacks.' }
+      ]
+    },
+
     tightGroupsAsRelated: {
       label: 'Tight groups as related weapons',
       hint:  'A rule PHBR1 offers as the DM\u2019s choice rather than stating flatly. ' +
