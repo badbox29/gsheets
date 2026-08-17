@@ -8742,6 +8742,11 @@ function bindSheet(root, tab){
   // reads to decide the strip's contents.
   if (typeof renderWeaponBreakage === 'function') renderWeaponBreakage(root);
   if (typeof renderArmorFitting === 'function') renderArmorFitting(root);
+  // Before renderToolsSubtabs, which reads this section's display to decide
+  // whether the tab exists. Depends on hit points, carried weapons and the
+  // supplement band, so it belongs in recalculateAll rather than bindSheet
+  // alone -- drawing a weapon must be able to change what the panel offers.
+  if (typeof renderManeuvers === 'function') renderManeuvers(root);
   if (typeof renderPHBR1OnlyControls === 'function') renderPHBR1OnlyControls(root);
   if (typeof renderToolsSubtabs === 'function') renderToolsSubtabs(root);
   if (typeof renderSectionGroups === 'function') renderSectionGroups(root);
@@ -15548,6 +15553,11 @@ function recalculateAll(root) {
   // or renaming a weapon must be able to make the tab appear and disappear.
   if (typeof renderWeaponBreakage === 'function') renderWeaponBreakage(root);
   if (typeof renderArmorFitting === 'function') renderArmorFitting(root);
+  // Before renderToolsSubtabs, which reads this section's display to decide
+  // whether the tab exists. Depends on hit points, carried weapons and the
+  // supplement band, so it belongs in recalculateAll rather than bindSheet
+  // alone -- drawing a weapon must be able to change what the panel offers.
+  if (typeof renderManeuvers === 'function') renderManeuvers(root);
   if (typeof renderPHBR1OnlyControls === 'function') renderPHBR1OnlyControls(root);
 
   // DEAD LAST, and deliberately after the Quick Reference. This does not break
