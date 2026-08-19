@@ -3184,7 +3184,15 @@ function getThiefArmorCategory(root) {
   // thief removes gauntlets to open locks and helmet to detect noise. That reads
   // the Gauntlets and Helmet slots, which are not piecemeal locations, so the two
   // systems do not collide.
-  const RANK = ['none', 'leather', 'elven', 'padded'];   // best to worst
+    // 'chain' MUST appear here. It is the bard column (elven -5%, derived near the
+  // top of this file). Omitting it made RANK.indexOf('chain') return -1, which
+  // never beats the initial bestRank of -1 -- so a chain mail piece was silently
+  // skipped. A character whose ONLY body armour was chain mail fell through with
+  // typeKey blank and was reported as "No armor", collecting the No-Armor
+  // BONUSES instead of a penalty.
+  // Position is fixed by the numbers, not by preference: chain is -25% Pick
+  // Pockets, between elven's -20% and padded's -30%.
+  const RANK = ['none', 'leather', 'elven', 'chain', 'padded'];   // best to worst
   let bestRank = -1;
   items.forEach(item => {
     const cb = item.querySelector('.equipped');
