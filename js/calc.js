@@ -2249,10 +2249,19 @@ function renderThiefSkills(root) {
       const shown = armorAdj
         .map((v, i) => (v !== 0 && !(isBard && i >= 1 && i <= 4)) ? labels[i] + ' ' + sgn(v) + '%' : null)
         .filter(Boolean);
-      let html = '<strong>Armor: ' + escapeHtml(armorInfo.name) + '</strong> (PHB Table 29)';
+            let html = '<strong>Armor: ' + escapeHtml(armorInfo.name) + '</strong> ' +
+                 (armorInfo.phbr2 ? '(PHBR2 Table 38)' : '(PHB Table 29)');
       if (shown.length) html += '<div style="margin-top:4px;">' + shown.join(' &middot; ') + '</div>';
       if (armorInfo.key === 'chain') {
         html += '<div style="margin-top:4px;">Includes the additional \u22125% bards suffer in non-elven chain mail.</div>';
+      }
+      // Stated outright because it is INVISIBLE in the percentages above: the
+      // forfeit removes a bonus rather than adding a penalty, so nothing in the
+      // breakdown accounts for it and a player would see his Dexterity silently
+      // stop counting.
+      if (forfeitDex) {
+        html += '<div style="margin-top:4px;">No Dexterity bonus applies to thief skills in armor ' +
+                'other than simple leather (Table 37, General Notes). Penalties still apply.</div>';
       }
       if (armorInfo.illegal) {
         // Says only what is now true. The old text also claimed "Table 29 does
