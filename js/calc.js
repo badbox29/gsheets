@@ -2226,8 +2226,13 @@ function renderThiefSkills(root) {
         html += '<div style="margin-top:4px;">Includes the additional \u22125% bards suffer in non-elven chain mail.</div>';
       }
       if (armorInfo.illegal) {
-        html += '<div style="margin-top:6px;color:var(--warning, #e0a34a);">This armor is heavier than your class may wear. ' +
-                'Table 29 does not cover it, so the worst column is applied \u2014 check with your DM.</div>';
+        // Says only what is now true. The old text also claimed "Table 29 does
+        // not cover it", fusing class legality with table coverage -- the very
+        // conflation getThiefArmorCategory was just fixed to separate. It was
+        // already wrong for a thief in chain mail (covered by the table, but
+        // forbidden to him), and PHBR2's Table 38 covers every type there is.
+        html += '<div style="margin-top:6px;color:var(--warning, #e0a34a);">Your class may not wear this armor ' +
+                '(PHB Ch.3). The worst column is applied \u2014 check with your DM.</div>';
       }
       armorNoteEl.innerHTML = html;
       armorNoteEl.style.color = armorInfo.illegal ? '' : 'var(--muted)';
