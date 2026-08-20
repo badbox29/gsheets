@@ -3123,6 +3123,55 @@ const THIEF_ARMOR_ADJUSTMENTS = {
 THIEF_ARMOR_ADJUSTMENTS.chain =
   THIEF_ARMOR_ADJUSTMENTS.elven.map(v => (v === 0 ? 0 : v - 5));
 
+// === PHBR2 Table 38: Effects of Armor on Thief Skills (p.115) ===
+// Same eight-skill order as THIEF_ARMOR_ADJUSTMENTS above.
+//
+// Table 38 EXTENDS Table 29 rather than replacing it: its first three columns
+// are identical to the PHB's, value for value. What it adds is the six armour
+// types the PHB leaves out. Read from two independent printings -- in place at
+// p.115 and reprinted in Selected Tables at p.128 -- which agree throughout.
+//
+// THE NON-MONOTONIC ENTRIES ARE REAL, NOT TRANSCRIPTION SLIPS. Hide is worse
+// than ring/chain at Pick Pockets (-60 vs -40), Open Locks and Find/Remove
+// Traps (-50 vs -15); brigandine is worse than scale at Find/Remove Traps
+// (-25 vs -20). Both printings agree. DO NOT "correct" them.
+//
+// 'leather' is not a Table 38 column. Table 37's General Notes make it the
+// standard that adjusts nothing, exactly as Table 29 does.
+const THIEF_ARMOR_ADJUSTMENTS_PHBR2 = {
+  none:              [  5,   0,   0,  10,   5,   0,  10, 0],
+  leather:           [  0,   0,   0,   0,   0,   0,   0, 0],
+  elven:             [-20,  -5,  -5, -10, -10,  -5, -20, 0],
+  studded_padded:    [-30, -10, -10, -20, -20, -10, -30, 0],
+  hide:              [-60, -50, -50, -30, -20, -10, -60, 0],
+  ring_chain:        [-40, -15, -15, -40, -30, -20, -40, 0],
+  brigandine_splint: [-40, -15, -25, -40, -30, -25, -50, 0],
+  scale_banded:      [-50, -20, -20, -60, -50, -30, -90, 0],
+  plate_mail:        [-75, -40, -40, -80, -75, -50, -95, 0],
+  plate_armor:       [-95, -80, -80, -95, -95, -70, -95, 0]
+};
+
+// ARMOR_TYPES key -> Table 38 column. Footnote 2 files bronze plate under plate
+// mail; footnote 3 puts field and full plate together as "plate armor".
+// Bracers and cloaks need no entry: they are not body armour, so
+// getThiefArmorCategory never resolves to them, and footnote 1 places a
+// character wearing only those in the No Armor column -- where he already lands.
+const PHBR2_THIEF_COLUMN = {
+  none:        'none',              leather:      'leather',
+  studded:     'studded_padded',    padded:       'studded_padded',
+  hide:        'hide',              elven_chain:  'elven',
+  ring:        'ring_chain',        chain:        'ring_chain',
+  brigandine:  'brigandine_splint', splint:       'brigandine_splint',
+  scale:       'scale_banded',      banded:       'scale_banded',
+  plate:       'plate_mail',        bronze_plate: 'plate_mail',
+  field_plate: 'plate_armor',       full_plate:   'plate_armor'
+};
+
+// PHBR2's floor, not the PHB's: "a character can always have a 1% chance of
+// success, even when trying to pick pockets in full plate armor." Applies only
+// when the band is active; under Table 29 the app clamps at 0.
+const THIEF_SKILL_MIN_PHBR2 = 1;
+
 // PHB Ch.3, Thief: "no skill can be raised above 95 percent, including all
 // adjustments for Dexterity, race, and armor."
 const THIEF_SKILL_MAX = 95;
