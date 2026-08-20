@@ -6858,6 +6858,47 @@ const SUPPLEMENTS = {
       ]
     }
   },
+  phbr2: {
+    code:  'PHBR2',
+    title: 'The Complete Thief\u2019s Handbook',
+    order: 2,
+
+    // FIVE BANDS PLANNED, ONE BUILT. The rest are registered as they ship, so
+    // the Supplements tab never shows a checkbox that does nothing. Planned:
+    // kitSkillAdjustments (Table 4), kitProficiencyCost (the +1 slot for an
+    // off-kit proficiency), equipmentSkillMods (Ch.5 per-item modifiers),
+    // advancedThiefRules (mugging, advanced locks and traps, antidotes).
+    //
+    // NO legacyBand ANYWHERE, unlike PHBR1. The book is new, so no table has a
+    // stored phbr2.core or phbr2.optional value for a band to inherit.
+    bandOrder: ['armorThiefSkills'],
+
+    armorThiefSkills: {
+      label: 'Armor and thief skills',
+      hint:  'Table 38 extends PHB Table 29 to every armor type.',
+      rules: ['armorThiefSkillsPHBR2'],
+      changes: [
+        { text: 'Thief skills use Table 38 (p.115) in place of PHB Table 29. Its ' +
+                'first three columns \u2014 no armor, elfin chain, studded or padded \u2014 ' +
+                'are IDENTICAL to Table 29, so nothing changes for armor the PHB ' +
+                'already covered. What it adds is the six types the PHB leaves out: ' +
+                'hide, ring or chain, brigandine or splint, scale or banded, plate ' +
+                'mail and plate armor. This app currently lumps all six into the ' +
+                'studded/padded column, so a thief in chain mail reads -30% Pick ' +
+                'Pockets where the book says -40%, and one in plate armor -30% ' +
+                'where the book says -95%.',
+          caveat: 'Table 38 assumes the armor is covered by another garment (note 4). ' +
+                  'Elfin chain hides under normal clothing; everything else needs a ' +
+                  'full body cloak. Not modelled.' },
+        { text: 'No Dexterity BONUS applies to thief skills in any armor other than ' +
+                'simple leather \u2014 penalties still do (Table 37, General Notes). ' +
+                'Leather remains the baseline that adjusts nothing.' },
+        { text: 'No skill falls below 1%. Table 38: a character \u201ccan always have a ' +
+                '1% chance of success, even when trying to pick pockets in full plate ' +
+                'armor.\u201d The 95% ceiling is unchanged.' }
+      ]
+    }
+  },
   phbr11: {
     code:  'PHBR11',
     title: 'The Complete Ranger\u2019s Handbook',
