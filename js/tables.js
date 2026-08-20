@@ -3172,6 +3172,48 @@ const PHBR2_THIEF_COLUMN = {
 // when the band is active; under Table 29 the app clamps at 0.
 const THIEF_SKILL_MIN_PHBR2 = 1;
 
+// === PHBR2 Chapter 7 reference (pp.111-114) ===
+// Content only -- nothing here is rolled, computed or enforced. Read from
+// 300dpi page images, August 2026.
+// NOT INCLUDED YET: "Animal Assistants" (p.112, dogs/ferrets/monkeys), which the
+// survey missed and the band text does not mention.
+const PHBR2_ADVANCED_RULES = [
+  { title: 'Mugging \u2014 the thief\u2019s KO', page: 'p.114', lines: [
+    'Strike from behind with a BLUNT instrument.',
+    'The target must already be eligible for a backstab (PHB p.40), and no more than twice the thief\u2019s height.',
+    'The thief gains his +4 backstab bonus; the victim loses shield and Dexterity bonuses.',
+    'Where helmets are detailed, the victim is AC 10 unless the head is protected.',
+    'On a hit the victim saves versus petrification or falls unconscious for 2d8 rounds.',
+    'Modify that save by the difference in level or Hit Dice between mugger and victim.'
+  ]},
+  { title: 'Lock and trap difficulty', page: 'p.111', lines: [
+    '+15%  Typical latch \u2014 small house, inn guest room, storage closet.',
+    '0  Merchant\u2019s house, weapons locker, wine cellar of a large inn.',
+    '\u221215%  Cell or keep door, dungeon security checkpoint, gem cutter\u2019s or moneychanger\u2019s shop.',
+    '\u221230%  Major vault, or the most intricately designed cell doors.',
+    'The same principle applies to traps; the DM sets the figure.'
+  ]},
+  { title: 'Superior locks', page: 'p.111', lines: [
+    'A locksmith makes a proficiency check per lock; 1 or less means superior craftsmanship.',
+    'Subtract 1 from the roll for every locksmith slot BEYOND THE FIRST \u2014 three slots means superior on 1, 2 or 3.',
+    'The lock\u2019s modifier is 1d10%. Re-roll anything lower than that smith\u2019s previous best.',
+    'Once he is making 10% locks he rolls 2d10; at 20% he rolls 3d10 until he gets 20 or more, but is no longer guaranteed to beat his own record.'
+  ]},
+  { title: 'Silent lockpicking and trap removal', page: 'p.112', lines: [
+    '\u221210% to the ability rating, but the work is silent on any roll except 01\u201310%.',
+    'On 01\u201310% the lock or trap makes a sharp click or snap, audible to anyone within earshot.',
+    'A thief who FAILS a silent attempt cannot then try the same lock normally.'
+  ]},
+  { title: 'Producing an antidote', page: 'p.113', lines: [
+    'Herbalism proficiency. With materials already to hand, 1d6+4 minutes.',
+    'Gathering them first takes at least half an hour, and is usually impossible in a dungeon.',
+    'If the total time exceeds the poison\u2019s onset, the effort is wasted whatever the roll.',
+    'Then a proficiency check, at \u221210 if the poison was never identified.',
+    'Applied before onset, an antidote either negates the poison entirely (where a successful save would have) or reduces its effect to saving-throw level.',
+    'Identifying a poison is an ASSASSIN KIT ability (pp.27\u201328), not a Chapter 7 rule.'
+  ]}
+];
+
 // PHB Ch.3, Thief: "no skill can be raised above 95 percent, including all
 // adjustments for Dexterity, race, and armor."
 const THIEF_SKILL_MAX = 95;
