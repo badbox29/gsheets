@@ -2545,6 +2545,16 @@ const SHEET_HTML = `
           <div class="maneuvers-locations"></div>
         </section>
 
+        <!-- PHBR2 Ch.7. Populated by renderAdvancedThiefRules; hidden entirely
+             unless the Advanced rules for thieves band is ticked. Reference
+             only: nothing here is rolled, computed or stored, so it carries no
+             controls and collectSheet never sees it. -->
+        <section class="advanced-thief-section section" style="display:none;">
+          <h3>Advanced Rules for Thieves</h3>
+          <p class="prose advanced-thief-intro"></p>
+          <div class="advanced-thief-list"></div>
+        </section>
+
         <section class="section armor-fitting-section">
           <h3>Armor Fitting</h3>
           <p class="prose">Armor made for one race rarely fits another. Pick who it was made for.</p>
