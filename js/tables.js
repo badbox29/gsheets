@@ -3347,6 +3347,29 @@ function getThiefArmorCategory(root) {
 // bard-specific row.
 function getThiefArmorAdjustments(root, isBard) {
   const cat = getThiefArmorCategory(root);
+
+  // PHBR2 Table 38. NOT FOR BARDS: the Complete Bard's Handbook prints its own
+  // armour table (PHBR7 p.11) with materially lighter penalties -- ring mail
+  // -25/-10/-25 against Table 38's -40/-20/-40 -- so applying the thief table
+  // to a bard would contradict his own book. Bards stay on Table 29 plus its
+  // footnote until a PHBR7 band exists. PHBR7 independently prints -25/-10/-25
+  // for chain, which is exactly what the footnote derivation above produces.
+  //
+  // Keyed off cat.key === 'none' FIRST, not off typeKey. The PHBR1
+  // high-quality branch above returns key 'none' while keeping the real
+  // typeKey, so mapping from typeKey would charge a gnome in gnomish studded
+  // leather -30% and silently cancel a PHBR1 benefit.
+  if (!isBard && typeof isSupplementActive === 'function' &&
+      isSupplementActive('phbr2', 'armorThiefSkills') &&
+      typeof PHBR2_THIEF_COLUMN !== 'undefined') {
+    const col = (cat.key === 'none')
+      ? 'none'
+      : (PHBR2_THIEF_COLUMN[cat.typeKey] || 'studded_padded');
+    return { adj: THIEF_ARMOR_ADJUSTMENTS_PHBR2[col] || THIEF_ARMOR_ADJUSTMENTS_PHBR2.leather,
+             key: col, name: cat.name, illegal: cat.illegal,
+             hqThiefRule: cat.hqThiefRule, hqLabel: cat.hqLabel, phbr2: true };
+  }
+
   let key = cat.key;
   // COLUMN CHOICE ONLY. Legality is decided in getThiefArmorCategory from
   // CLASS_ARMOR_ALLOWED. Forcing it true here also flagged a multi-classed
