@@ -3275,24 +3275,34 @@ function getThiefArmorCategory(root) {
   const data = (typeof ARMOR_TYPES !== 'undefined') ? ARMOR_TYPES[typeKey] : null;
   if (!data) return { key: 'none', typeKey: '', name: worn || 'No armor', illegal: false };
 
-  // thiefColumn null means the armor sits outside Table 29 entirely -- the
-  // worst column applies and it is flagged, never blocked.
+    // Table COVERAGE and CLASS LEGALITY are different questions. They coincide
+  // under Table 29 and come apart twice: a BARD legally wears ring, hide,
+  // brigandine or scale, none of which Table 29 covers; and PHBR2's Table 38
+  // gives every type a column, so `!col` would be false everywhere and the
+  // class warning would vanish the moment that band was ticked.
+  // `every`, not the rail's `some`: a multi-classed fighter/thief may wear
+  // plate -- he loses thief skills, which is a separate rule handled elsewhere.
   const col = data.thiefColumn;
-  return {
-    key: col || 'padded',
-    typeKey: typeKey,
-    name: worn || data.label,
-    illegal: !col && typeKey !== 'none'
-  };
+  const comps = (typeof getAllClassComponents === 'function')
+    ? (getAllClassComponents(root) || []) : [];
+  const illegal = typeKey !== 'none' && comps.length > 0 && comps.every(cp => {
+    const allowed = (typeof getArmorAllowedList === 'function')
+      ? getArmorAllowedList(cp.clazz) : null;
+    return allowed && allowed.indexOf(typeKey) === -1;
+  });
+  return { key: col || 'padded', typeKey: typeKey, name: worn || data.label, illegal: illegal };
 }
 
 // The adjustment row for a character. Bards take the extra -5% in ordinary
-// chain mail; a thief in chain mail is already illegal, so he lands on the
-// worst column instead of the bard-specific row.
+// chain mail; anyone else lands on the worst column instead of the
+// bard-specific row.
 function getThiefArmorAdjustments(root, isBard) {
   const cat = getThiefArmorCategory(root);
   let key = cat.key;
-  if (key === 'chain' && !isBard) { key = 'padded'; cat.illegal = true; }
+  // COLUMN CHOICE ONLY. Legality is decided in getThiefArmorCategory from
+  // CLASS_ARMOR_ALLOWED. Forcing it true here also flagged a multi-classed
+  // fighter/thief, for whom chain mail is perfectly legal.
+  if (key === 'chain' && !isBard) { key = 'padded'; }
   return { adj: THIEF_ARMOR_ADJUSTMENTS[key] || THIEF_ARMOR_ADJUSTMENTS.leather,
            key: key, name: cat.name, illegal: cat.illegal };
 }
