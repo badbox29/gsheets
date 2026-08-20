@@ -2148,31 +2148,39 @@ function renderThiefSkills(root) {
   // Two PHBR2 rules ride on Table 38. Both live only when armorInfo.phbr2 is
   // set, which never happens for a bard -- see getThiefArmorAdjustments.
   //
-  // THE FLOOR: "a character can always have a 1% chance of success, even when
-  // trying to pick pockets in full plate armor." Under Table 29 the clamp
-  // stays 0.
-  //
   // THE DEXTERITY FORFEIT (Table 37, General Notes): "No dexterity bonuses
   // apply to thief functions (though penalties do) when wearing armor other
-  // than simple leather." Same beneficial-only shape as dexForfeit in Ch.11 --
-  // negatives survive, positives are dropped. Only skills 0-4 take Dexterity.
-  // READ AS "heavier than leather", so NO ARMOUR KEEPS ITS BONUS: the literal
-  // words would strip an unarmoured thief, which cannot be meant when Table
-  // 38's No Armor column is the best in the table.
+  // than simple leather." Beneficial-only, like dexForfeit in Ch.11: negatives
+  // survive, positives drop. STUDDED AND PADDED ARE "OTHER" -- Table 37 has no
+  // leather column because leather is the baseline, while Studded or Padded is
+  // a named column at -30%, and footnote 4 uses the same phrase the same way.
+  // NO ARMOUR keeps its bonus: Table 38's No Armor column is the best there is.
   const floor = armorInfo.phbr2
     ? ((typeof THIEF_SKILL_MIN_PHBR2 !== 'undefined') ? THIEF_SKILL_MIN_PHBR2 : 1) : 0;
   const forfeitDex = !!armorInfo.phbr2 &&
     armorInfo.key !== 'leather' && armorInfo.key !== 'none';
   const dexUse = forfeitDex ? dexAdj.map(v => (v < 0 ? v : 0)) : dexAdj;
 
-  const pickpockets = Math.max(floor, Math.min(cap, baseSkills[0] + racialAdj[0] + dexUse[0] + armorAdj[0] + pointsPP));
-  const openlocks = isBard ? '' : Math.max(floor, Math.min(cap, baseSkills[1] + racialAdj[1] + dexUse[1] + armorAdj[1] + pointsOL));
-  const traps = isBard ? '' : Math.max(floor, Math.min(cap, baseSkills[2] + racialAdj[2] + dexUse[2] + armorAdj[2] + pointsTR));
-  const movesilently = isBard ? '' : Math.max(floor, Math.min(cap, baseSkills[3] + racialAdj[3] + dexUse[3] + armorAdj[3] + pointsMS));
-  const hide = isBard ? '' : Math.max(floor, Math.min(cap, baseSkills[4] + racialAdj[4] + dexUse[4] + armorAdj[4] + pointsHI));
-  const detectnoise = Math.max(floor, Math.min(cap, baseSkills[5] + racialAdj[5] + armorAdj[5] + pointsDN));
-  const climb = Math.max(floor, Math.min(cap, baseSkills[6] + racialAdj[6] + armorAdj[6] + pointsCW));
-  const readlang = Math.max(floor, Math.min(cap, baseSkills[7] + racialAdj[7] + armorAdj[7] + pointsRL));
+  // THE 1% FLOOR "even when trying to pick pockets in full plate armor" exists
+  // to stop ARMOUR reducing a real chance to nothing. It must never CREATE one.
+  // A thief with 0% Read Languages cannot read them at all -- base index 7 is 0
+  // at every level -- and a 1% would let a d100 roll of 01 succeed at something
+  // impossible. So the floor applies only where the pre-armour chance was
+  // already above zero.
+  const skillVal = (i, points, useDex) => {
+    const preArmor = baseSkills[i] + racialAdj[i] + (useDex ? dexUse[i] : 0) + points;
+    const lo = (floor && preArmor > 0) ? floor : 0;
+    return Math.max(lo, Math.min(cap, preArmor + armorAdj[i]));
+  };
+
+  const pickpockets  = skillVal(0, pointsPP, true);
+  const openlocks    = isBard ? '' : skillVal(1, pointsOL, true);
+  const traps        = isBard ? '' : skillVal(2, pointsTR, true);
+  const movesilently = isBard ? '' : skillVal(3, pointsMS, true);
+  const hide         = isBard ? '' : skillVal(4, pointsHI, true);
+  const detectnoise  = skillVal(5, pointsDN, false);
+  const climb        = skillVal(6, pointsCW, false);
+  const readlang     = skillVal(7, pointsRL, false);
   
   // PHB Ch.3: a MULTI-CLASSED thief in armor not normally allowed to thieves
   // loses every thieving ability except open locks and detect noise -- and even
