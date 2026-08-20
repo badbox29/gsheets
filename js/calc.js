@@ -11520,10 +11520,44 @@ function renderManeuvers(root) {
       '</div>').join('');
   }
 
-  if (!sec._mvBound) {
+    if (!sec._mvBound) {
     sec._mvBound = true;
     sec.addEventListener('change', () => renderManeuvers(root));
   }
+}
+
+// PHBR2 Ch.7 reference panel. Unlike renderManeuvers this depends on NOTHING
+// about the character -- the content is static. It stays a render function so
+// the band toggle can show and hide it live, like every other supplement panel,
+// rather than being baked into the template where it could never be hidden.
+function renderAdvancedThiefRules(root) {
+  const sec = root && root.querySelector('.advanced-thief-section');
+  if (!sec) return;
+
+  const on = (typeof isSupplementActive === 'function') &&
+             isSupplementActive('phbr2', 'advancedThiefRules');
+  sec.style.display = on ? '' : 'none';
+  if (!on || typeof PHBR2_ADVANCED_RULES === 'undefined') return;
+
+  const intro = sec.querySelector('.advanced-thief-intro');
+  if (intro) {
+    intro.textContent =
+      'Chapter 7 calls itself \u201crules of advanced complexity that players and DMs ' +
+      'may wish to use\u201d. Reference only \u2014 nothing here is rolled, computed or ' +
+      'enforced.';
+  }
+
+  const list = sec.querySelector('.advanced-thief-list');
+  if (!list) return;
+  list.innerHTML = PHBR2_ADVANCED_RULES.map(blk =>
+    '<div style="margin-bottom:14px;">' +
+      '<h4 style="font-size:12px;margin:0 0 4px;">' + escapeHtml(blk.title) +
+        ' <span style="font-weight:400;color:var(--muted);">' + escapeHtml(blk.page) + '</span></h4>' +
+      '<ul style="margin:0;padding-left:18px;font-size:11px;line-height:1.6;color:var(--muted);">' +
+        blk.lines.map(l => '<li>' + escapeHtml(l) + '</li>').join('') +
+      '</ul>' +
+    '</div>'
+  ).join('');
 }
 
 // Defaults the wearer to the character's own race, which is the common case and
