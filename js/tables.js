@@ -6943,7 +6943,7 @@ const SUPPLEMENTS = {
     //
     // NO legacyBand ANYWHERE, unlike PHBR1. The book is new, so no table has a
     // stored phbr2.core or phbr2.optional value for a band to inherit.
-    bandOrder: ['armorThiefSkills'],
+    bandOrder: ['armorThiefSkills', 'advancedThiefRules'],
 
     armorThiefSkills: {
       label: 'Armor and thief skills',
@@ -6968,6 +6968,36 @@ const SUPPLEMENTS = {
         { text: 'No skill falls below 1%. Table 38: a character \u201ccan always have a ' +
                 '1% chance of success, even when trying to pick pockets in full plate ' +
                 'armor.\u201d The 95% ceiling is unchanged.' }
+      ]
+    },
+
+    advancedThiefRules: {
+      label: 'Advanced rules for thieves',
+      hint:  'Chapter 7 reference: mugging, locks and traps, antidotes.',
+      rules: ['advancedThiefRulesPHBR2'],
+      changes: [
+        { text: 'Adds a Chapter 7 reference panel on the Tools tab. Chapter 7 calls ' +
+                'itself \u201crules of advanced complexity that players and DMs may wish ' +
+                'to use\u201d, so it is optional in the book\u2019s own voice.',
+          caveat: 'REFERENCE ONLY. Nothing is rolled, computed or enforced \u2014 the ' +
+                  'app does not model backstab or lockpicking attempts.' },
+        { text: 'Mugging, the thief\u2019s KO (p.114). A thief may knock out a victim by ' +
+                'striking from behind with a BLUNT instrument. The target must already ' +
+                'be backstab-eligible and no more than twice the thief\u2019s height. He ' +
+                'gains the +4 backstab bonus, the victim loses shield and Dexterity ' +
+                'bonuses, and a helmeted victim is AC 10 unless the head is protected. ' +
+                'On a hit the victim saves versus petrification or falls unconscious for ' +
+                '2d8 rounds, the save modified by the difference in level or Hit Dice.' },
+        { text: 'Advanced locks and traps (pp.111\u2013112). Devices carry their own ' +
+                'modifier to the thief\u2019s chance, locksmiths can build superior locks, ' +
+                'multiple locks compound, and a failed SILENT picking attempt bars a ' +
+                'normal retry on the same lock.' },
+        { text: 'Poison antidotes (p.113), which the book marks optional in its own ' +
+                'right. Producing one takes 1d6+4 minutes with materials to hand, at ' +
+                '-10 if the poison was never identified, and fails outright if the total ' +
+                'time exceeds the poison\u2019s onset.',
+          caveat: 'Identifying a poison is an ASSASSIN KIT ability (pp.27\u201328), not a ' +
+                  'Chapter 7 rule, so it is not gated here.' }
       ]
     }
   },
