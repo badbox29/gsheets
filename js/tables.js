@@ -3595,12 +3595,17 @@ function getArmorLegality(item, root) {
   const key = typeKey || (typeof inferArmorTypeKey === 'function' ? inferArmorTypeKey(name) : '');
   if (!key || key === 'none') return 'allowed';
 
-  // Hard prohibition first: a class limit outranks a suspended ability.
-  const barred = comps.some(cp => {
+    // A class limit outranks a suspended ability -- but ONLY when EVERY class the
+  // character has forbids the armour. `some` used to be enough, which made a
+  // fighter/thief in plate 'restricted' though he breaks no rule: the fighter
+  // permits plate and he merely loses six of his eight thief skills. That is
+  // this rail's own definition of 'advisory', and it now matches
+  // getThiefArmorCategory, which decides the same question with `every`.
+  const barring = comps.filter(cp => {
     const allowed = getArmorAllowedList(cp.clazz);
     return allowed && allowed.indexOf(key) === -1;
   });
-  if (barred) return 'restricted';
+  if (barring.length && barring.length === comps.length) return 'restricted';
 
   // Ranger stealth. RANGER_STEALTH_MAX_ARMOR is reused rather than restated so
   // the rail and the stealth panel can never disagree about elven chain.
@@ -3609,6 +3614,10 @@ function getArmorLegality(item, root) {
       RANGER_STEALTH_MAX_ARMOR.indexOf(key) === -1) {
     return 'advisory';
   }
+
+  // Barred by one class but permitted by another: no rule broken, an ability
+  // suspended.
+  if (barring.length) return 'advisory';
 
   return 'allowed';
 }
