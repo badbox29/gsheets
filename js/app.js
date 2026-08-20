@@ -8747,6 +8747,7 @@ function bindSheet(root, tab){
   // supplement band, so it belongs in recalculateAll rather than bindSheet
   // alone -- drawing a weapon must be able to change what the panel offers.
   if (typeof renderManeuvers === 'function') renderManeuvers(root);
+  if (typeof renderAdvancedThiefRules === 'function') renderAdvancedThiefRules(root);
   if (typeof renderPHBR1OnlyControls === 'function') renderPHBR1OnlyControls(root);
   if (typeof renderToolsSubtabs === 'function') renderToolsSubtabs(root);
   if (typeof renderSectionGroups === 'function') renderSectionGroups(root);
@@ -15558,6 +15559,7 @@ function recalculateAll(root) {
   // supplement band, so it belongs in recalculateAll rather than bindSheet
   // alone -- drawing a weapon must be able to change what the panel offers.
   if (typeof renderManeuvers === 'function') renderManeuvers(root);
+  if (typeof renderAdvancedThiefRules === 'function') renderAdvancedThiefRules(root);
   if (typeof renderPHBR1OnlyControls === 'function') renderPHBR1OnlyControls(root);
 
   // DEAD LAST, and deliberately after the Quick Reference. This does not break
