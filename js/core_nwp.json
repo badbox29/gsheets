@@ -14,12 +14,12 @@
     "Slots": "1",
     "Ability Check": "Wis / +1",
     "Modifier": "+1",
-    "Source": "PHBR2",
-    "Notes": "PHBR2 p.16, Table 1, NEW THIEF PROFICIENCIES -- with a full entry. WAS MIS-SOURCED TO PHBR1, which has no proficiency section at all and no occurrence of the word in 128 pages. Reduces the chance of being surprised by 1 in 10 on a successful check. Marked *** in Table 1: THE DM MAY TREAT THIS AS A GENERAL PROFICIENCY, available to any class at no additional slot cost.",
     "Required Kits": [
       "burglar"
     ],
-    "Recommended Kits": "ALL"
+    "Recommended Kits": "ALL",
+    "Source": "PHBR2",
+    "Notes": "PHBR2 p.16, Table 1, NEW THIEF PROFICIENCIES -- with a full entry. WAS MIS-SOURCED TO PHBR1, which has no proficiency section at all and no occurrence of the word in 128 pages. Reduces the chance of being surprised by 1 in 10 on a successful check. Marked *** in Table 1: THE DM MAY TREAT THIS AS A GENERAL PROFICIENCY, available to any class at no additional slot cost."
   },
   {
     "Proficiency Name": "Ancient History",
@@ -54,13 +54,13 @@
     "Slots": "1",
     "Ability Check": "Wis / -1",
     "Modifier": "-1",
-    "Source": "PHBR2",
-    "Notes": "PHBR2 p.16. Imitates noises made by various animals. A successful check means only magic can distinguish the noise from that of the actual animal; a failed roll means the sound varies from the correct noise in some slight way. A FAILED ROLL DOES NOT MEAN ALL CREATURES HEARING IT KNOW THE SOUND IS FAKE -- creatures and humanoids very familiar with the noise know automatically, others in earshot may require Wisdom checks to detect the fake. Bandits and Smugglers often use it for communication on the job, almost as a variant dialect of thieves’ cant.",
     "Recommended Kits": [
       "bandit",
       "bountyhunter",
       "smuggler"
-    ]
+    ],
+    "Source": "PHBR2",
+    "Notes": "PHBR2 p.16. Imitates noises made by various animals. A successful check means only magic can distinguish the noise from that of the actual animal; a failed roll means the sound varies from the correct noise in some slight way. A FAILED ROLL DOES NOT MEAN ALL CREATURES HEARING IT KNOW THE SOUND IS FAKE -- creatures and humanoids very familiar with the noise know automatically, others in earshot may require Wisdom checks to detect the fake. Bandits and Smugglers often use it for communication on the job, almost as a variant dialect of thieves’ cant."
   },
   {
     "Proficiency Name": "Animal Training",
@@ -68,6 +68,7 @@
     "Slots": "1",
     "Ability Check": "Wis / 0",
     "Modifier": "0",
+    "Specialization": "animal",
     "Source": "PHB",
     "Notes": "Train one type of animal (must specialize). Takes 2d6 weeks per animal."
   },
@@ -95,8 +96,9 @@
     "Slots": "1",
     "Ability Check": "Wis / 0",
     "Modifier": "0",
+    "Specialization": "art form",
     "Source": "PHB",
-    "Notes": "Create works of art in one field (painting, sculpture, poetry, etc.). Must specialize."
+    "Notes": "Create works of art in one field (painting, sculpture, poetry, etc.). Must specialize. PHB p.79: \"must select one art form (painting, sculpture, composition, etc.) to be proficient in.\""
   },
   {
     "Proficiency Name": "Astrology",
@@ -113,8 +115,6 @@
     "Slots": "1",
     "Ability Check": "Cha / special",
     "Modifier": "special",
-    "Source": "PHBR2",
-    "Notes": "PHBR2 pp.16-17. TWO FUNCTIONS. First, posing convincingly as a beggar: SUCCESS IS AUTOMATIC, no check needed -- used most by Assassins, Bounty Hunters and Spies in pursuit of assignments. Second, procuring minimal daily income: a successful check panhandles enough money, goods or services for that day’s basic needs (a little food and drink, a place to sleep). Success requires people with money to beg from; an abandoned castle or recently pillaged village is virtually assured failure. MODIFIER IS BY LOCALE, Table 2: uninhabited/wilderness AUTOMATIC FAILURE; countryside -7; hamlet or village -5; town -2; city 0. Considers POPULATION DENSITY, not wealth -- impoverished regions might have greater negative modifiers, but so might affluent areas with traditions of stinginess. MAY NOT BE USED TO FORCE PLAYER CHARACTERS to give money away; players always decide how their characters respond to supplications.",
     "Required Kits": [
       "beggar"
     ],
@@ -124,7 +124,9 @@
       "burglar",
       "cutpurse",
       "spy"
-    ]
+    ],
+    "Source": "PHBR2",
+    "Notes": "PHBR2 pp.16-17. TWO FUNCTIONS. First, posing convincingly as a beggar: SUCCESS IS AUTOMATIC, no check needed -- used most by Assassins, Bounty Hunters and Spies in pursuit of assignments. Second, procuring minimal daily income: a successful check panhandles enough money, goods or services for that day’s basic needs (a little food and drink, a place to sleep). Success requires people with money to beg from; an abandoned castle or recently pillaged village is virtually assured failure. MODIFIER IS BY LOCALE, Table 2: uninhabited/wilderness AUTOMATIC FAILURE; countryside -7; hamlet or village -5; town -2; city 0. Considers POPULATION DENSITY, not wealth -- impoverished regions might have greater negative modifiers, but so might affluent areas with traditions of stinginess. MAY NOT BE USED TO FORCE PLAYER CHARACTERS to give money away; players always decide how their characters respond to supplications."
   },
   {
     "Proficiency Name": "Blacksmithing",
@@ -150,13 +152,13 @@
     "Slots": "1",
     "Ability Check": "Wis / +1",
     "Modifier": "+1",
-    "Source": "PHBR2, PHBR11",
-    "Notes": "PRINTED IN BOTH BOOKS, with identical values: PHBR2 p.17 (1 slot, Wisdom, +1) and PHBR11 Ch.5. Sources are listed EARLIEST PUBLICATION FIRST -- PHBR2 is 1989, PHBR11 is 1993. Needed to guide a boat down a rapid stream or to reduce the dangers of capsizing a canoe or kayak; a proficient character can also ensure a boat is propelled at its maximum speed. DISTINCT FROM NAVIGATION AND SEAMANSHIP, which apply to ships on oceans, seas or at least large lakes, rather than small craft on smaller lakes and rivers. Marked *** in PHBR2 Table 1: the DM may treat this as a GENERAL proficiency, available to any class at no additional slot cost.",
     "Recommended Kits": [
       "adventurer",
       "bountyhunter",
       "smuggler"
-    ]
+    ],
+    "Source": "PHBR2, PHBR11",
+    "Notes": "PRINTED IN BOTH BOOKS, with identical values: PHBR2 p.17 (1 slot, Wisdom, +1) and PHBR11 Ch.5. Sources are listed EARLIEST PUBLICATION FIRST -- PHBR2 is 1989, PHBR11 is 1993. Needed to guide a boat down a rapid stream or to reduce the dangers of capsizing a canoe or kayak; a proficient character can also ensure a boat is propelled at its maximum speed. DISTINCT FROM NAVIGATION AND SEAMANSHIP, which apply to ships on oceans, seas or at least large lakes, rather than small craft on smaller lakes and rivers. Marked *** in PHBR2 Table 1: the DM may treat this as a GENERAL proficiency, available to any class at no additional slot cost."
   },
   {
     "Proficiency Name": "Bowyer/Fletcher",
@@ -272,11 +274,11 @@
     "Slots": "2",
     "Ability Check": "Con / 0",
     "Modifier": "0",
-    "Source": "PHB",
-    "Notes": "Perform strenuous activity longer. Resist effects of heat, cold, hunger. PHBR2 Ch.2 OPENS THIS TO THIEVES: it is normally restricted to another class, and PHBR2 lists it among the proficiencies a thief may take, with kit recommendations. The DESCRIPTION remains the PHB’s, at p.58; SOURCE STAYS PHB because PHBR2 adds availability, not the proficiency.",
     "Recommended Kits": [
       "thug"
-    ]
+    ],
+    "Source": "PHB",
+    "Notes": "Perform strenuous activity longer. Resist effects of heat, cold, hunger. PHBR2 Ch.2 OPENS THIS TO THIEVES: it is normally restricted to another class, and PHBR2 lists it among the proficiencies a thief may take, with kit recommendations. The DESCRIPTION remains the PHB’s, at p.58; SOURCE STAYS PHB because PHBR2 adds availability, not the proficiency."
   },
   {
     "Proficiency Name": "Engineering",
@@ -311,8 +313,6 @@
     "Slots": "1",
     "Ability Check": "Cha / special",
     "Modifier": "special",
-    "Source": "PHBR2",
-    "Notes": "PHBR2 p.17. The art of distraction and conning. On a successful check the fast-talker gets away with whatever scam he is attempting. MODIFIERS ARE BASED ON THE TARGET, Table 3, and are CUMULATIVE across both abilities. Target Intelligence: 3 or less n/a; 4-5 -3; 6-8 -1; 9-12 0; 13-15 +1; 16-17 +2; 18 +3; 19 +5; 20 n/a. Target Wisdom: 3 -5; 4-5 -3; 6-8 -1; 9-12 0; 13-15 +1; 16-17 +3; 18 +5; 19+ n/a. TARGETS OF INTELLIGENCE 3 OR LESS FAIL AUTOMATICALLY because they cannot follow what is being said (creatures that stupid are easy to fool in other ways). TARGETS OF INTELLIGENCE 20+ OR WISDOM 19+ ARE IMPERVIOUS. The DM may also modify for the difficulty or plausibility of what is attempted.",
     "Required Kits": [
       "swindler"
     ],
@@ -323,7 +323,9 @@
       "investigator",
       "smuggler",
       "troubleshooter"
-    ]
+    ],
+    "Source": "PHBR2",
+    "Notes": "PHBR2 p.17. The art of distraction and conning. On a successful check the fast-talker gets away with whatever scam he is attempting. MODIFIERS ARE BASED ON THE TARGET, Table 3, and are CUMULATIVE across both abilities. Target Intelligence: 3 or less n/a; 4-5 -3; 6-8 -1; 9-12 0; 13-15 +1; 16-17 +2; 18 +3; 19 +5; 20 n/a. Target Wisdom: 3 -5; 4-5 -3; 6-8 -1; 9-12 0; 13-15 +1; 16-17 +3; 18 +5; 19+ n/a. TARGETS OF INTELLIGENCE 3 OR LESS FAIL AUTOMATICALLY because they cannot follow what is being said (creatures that stupid are easy to fool in other ways). TARGETS OF INTELLIGENCE 20+ OR WISDOM 19+ ARE IMPERVIOUS. The DM may also modify for the difficulty or plausibility of what is attempted."
   },
   {
     "Proficiency Name": "Fire-Building",
@@ -367,11 +369,11 @@
     "Slots": "2",
     "Ability Check": "Cha / +2",
     "Modifier": "+2",
-    "Source": "PHBR2",
-    "Notes": "PHBR2 p.18. Knowledge of a variety of methods of divination -- ALL OF THEM FAKE. Tarot cards, palm reading, interpreting the flight of sparrows, the arrangement of a sacrificed animal’s entrails. CONFERS NO MAGICAL POWERS: even in a campaign where fortune telling can make accurate predictions, this proficiency does not enable the thief to do so. He makes up the prediction he wishes to tell. A successful check indicates the customer BELIEVES the fortune is authentic; on a failure the sham is discovered in some way, or the prediction is simply not believed. The DM may apply the same Intelligence and Wisdom modifiers as fast-talking, based on the subject and the believability of the fortune. OPTIONAL RULE: on a natural 1 (or another number secretly chosen by the DM before the die is rolled), the event the thief predicted ACTUALLY COMES TRUE.",
     "Recommended Kits": [
       "swindler"
-    ]
+    ],
+    "Source": "PHBR2",
+    "Notes": "PHBR2 p.18. Knowledge of a variety of methods of divination -- ALL OF THEM FAKE. Tarot cards, palm reading, interpreting the flight of sparrows, the arrangement of a sacrificed animal’s entrails. CONFERS NO MAGICAL POWERS: even in a campaign where fortune telling can make accurate predictions, this proficiency does not enable the thief to do so. He makes up the prediction he wishes to tell. A successful check indicates the customer BELIEVES the fortune is authentic; on a failure the sham is discovered in some way, or the prediction is simply not believed. The DM may apply the same Intelligence and Wisdom modifiers as fast-talking, based on the subject and the believability of the fortune. OPTIONAL RULE: on a natural 1 (or another number secretly chosen by the DM before the die is rolled), the event the thief predicted ACTUALLY COMES TRUE."
   },
   {
     "Proficiency Name": "Gaming",
@@ -415,12 +417,12 @@
     "Slots": "2",
     "Ability Check": "Int / -2",
     "Modifier": "-2",
-    "Source": "PHB",
-    "Notes": "Identify plants. Create healing salves and poultices. PHBR2 Ch.2 OPENS THIS TO THIEVES: it is normally restricted to another class, and PHBR2 lists it among the proficiencies a thief may take, with kit recommendations. The DESCRIPTION remains the PHB’s, at p.59; SOURCE STAYS PHB because PHBR2 adds availability, not the proficiency.",
     "Recommended Kits": [
       "assassin",
       "bountyhunter"
-    ]
+    ],
+    "Source": "PHB",
+    "Notes": "Identify plants. Create healing salves and poultices. PHBR2 Ch.2 OPENS THIS TO THIEVES: it is normally restricted to another class, and PHBR2 lists it among the proficiencies a thief may take, with kit recommendations. The DESCRIPTION remains the PHB’s, at p.59; SOURCE STAYS PHB because PHBR2 adds availability, not the proficiency."
   },
   {
     "Proficiency Name": "Hiding",
@@ -437,11 +439,11 @@
     "Slots": "1",
     "Ability Check": "Wis / -1",
     "Modifier": "-1",
-    "Source": "PHB",
-    "Notes": "Track and hunt wild game. Provides food for several people. PHBR2 Ch.2 OPENS THIS TO THIEVES: it is normally restricted to another class, and PHBR2 lists it among the proficiencies a thief may take, with kit recommendations. The DESCRIPTION remains the PHB’s, at p.59; SOURCE STAYS PHB because PHBR2 adds availability, not the proficiency.",
     "Recommended Kits": [
       "bountyhunter"
-    ]
+    ],
+    "Source": "PHB",
+    "Notes": "Track and hunt wild game. Provides food for several people. PHBR2 Ch.2 OPENS THIS TO THIEVES: it is normally restricted to another class, and PHBR2 lists it among the proficiencies a thief may take, with kit recommendations. The DESCRIPTION remains the PHB’s, at p.59; SOURCE STAYS PHB because PHBR2 adds availability, not the proficiency."
   },
   {
     "Proficiency Name": "Information Gathering",
@@ -449,8 +451,6 @@
     "Slots": "1",
     "Ability Check": "Int / 0",
     "Modifier": "0",
-    "Source": "PHBR2",
-    "Notes": "Find rumors, gossip, and information in settlements",
     "Required Kits": [
       "beggar",
       "fence",
@@ -465,7 +465,9 @@
       "cutpurse",
       "smuggler",
       "troubleshooter"
-    ]
+    ],
+    "Source": "PHBR2",
+    "Notes": "Find rumors, gossip, and information in settlements"
   },
   {
     "Proficiency Name": "Intimidation",
@@ -473,8 +475,6 @@
     "Slots": "1",
     "Ability Check": "Str or Cha / 0",
     "Modifier": "0",
-    "Source": "PHBR2",
-    "Notes": "PHBR2 p.19. WAS MIS-SOURCED TO PHBR1. A talent for bending people to your will by scaring the living daylights out of them. ATTEMPTED WITH ONE OF TWO ABILITIES: STRENGTH if the thief is threatening immediate, personal bodily harm; CHARISMA if the intimidation consists of more subtle threats which need not be physical. On success the NPC is convinced the thief is ready and capable of making his life miserable. Intimidated NPCs are likely to do what they are told out of fear, but ALSO LIKELY TO HARBOR RESENTMENT, kept hidden until the first chance to avenge their pride arises. PLAYER CHARACTERS ARE NEVER FORCED TO SUBMIT to intimidation -- it would detract from the players’ freedom to role-play.",
     "Required Kits": [
       "thug"
     ],
@@ -482,7 +482,9 @@
       "bandit",
       "bountyhunter",
       "buccaneer"
-    ]
+    ],
+    "Source": "PHBR2",
+    "Notes": "PHBR2 p.19. WAS MIS-SOURCED TO PHBR1. A talent for bending people to your will by scaring the living daylights out of them. ATTEMPTED WITH ONE OF TWO ABILITIES: STRENGTH if the thief is threatening immediate, personal bodily harm; CHARISMA if the intimidation consists of more subtle threats which need not be physical. On success the NPC is convinced the thief is ready and capable of making his life miserable. Intimidated NPCs are likely to do what they are told out of fear, but ALSO LIKELY TO HARBOR RESENTMENT, kept hidden until the first chance to avenge their pride arises. PLAYER CHARACTERS ARE NEVER FORCED TO SUBMIT to intimidation -- it would detract from the players’ freedom to role-play."
   },
   {
     "Proficiency Name": "Juggling",
@@ -517,6 +519,7 @@
     "Slots": "1",
     "Ability Check": "Int / 0",
     "Modifier": "0",
+    "Specialization": "language",
     "Source": "PHB",
     "Notes": "Learn to SPEAK one modern language. Does not include reading or writing -- literacy requires the separate Reading/Writing proficiency."
   },
@@ -535,6 +538,7 @@
     "Slots": "1",
     "Ability Check": "Cha / 0",
     "Modifier": "0",
+    "Specialization": "region",
     "Source": "PHB",
     "Notes": "Know details about a specific region: rulers, legends, events, etc."
   },
@@ -544,11 +548,11 @@
     "Slots": "1",
     "Ability Check": "Dex / 0",
     "Modifier": "0",
-    "Source": "PHBR2",
-    "Notes": "PHBR2 p.19. The specialized skill of MAKING locks, treated like other \"craft\" proficiencies when checking for success. THIEVES WITH THIS PROFICIENCY GAIN A 10% BONUS TO THEIR LOCKPICKING SKILL, being intimately familiar with the internal structure and working of so many locks. RECOMMENDED FOR TROUBLESHOOTERS, and besides them DWARF AND GNOME THIEVES OF ANY KIT may take locksmithing to fill one slot, because of the tradition of craftsmanship and mechanical things in their cultural heritages -- a RACIAL recommendation, not a kit one. See also PHBR2 pp.111-112, where a locksmith with this proficiency can build superior locks.",
     "Recommended Kits": [
       "troubleshooter"
-    ]
+    ],
+    "Source": "PHBR2",
+    "Notes": "PHBR2 p.19. The specialized skill of MAKING locks, treated like other \"craft\" proficiencies when checking for success. THIEVES WITH THIS PROFICIENCY GAIN A 10% BONUS TO THEIR LOCKPICKING SKILL, being intimately familiar with the internal structure and working of so many locks. RECOMMENDED FOR TROUBLESHOOTERS, and besides them DWARF AND GNOME THIEVES OF ANY KIT may take locksmithing to fill one slot, because of the tradition of craftsmanship and mechanical things in their cultural heritages -- a RACIAL recommendation, not a kit one. See also PHBR2 pp.111-112, where a locksmith with this proficiency can build superior locks."
   },
   {
     "Proficiency Name": "Looting",
@@ -556,8 +560,6 @@
     "Slots": "1",
     "Ability Check": "Dex / 0",
     "Modifier": "0",
-    "Source": "PHBR2",
-    "Notes": "PHBR2 p.19. A knack for grabbing the best loot in the shortest time. On a successful check the thief recognizes and stuffs into his pack the most valuable combination of items that is feasible, given his limitations of time and space.",
     "Required Kits": [
       "burglar"
     ],
@@ -566,7 +568,9 @@
       "bandit",
       "buccaneer",
       "thug"
-    ]
+    ],
+    "Source": "PHBR2",
+    "Notes": "PHBR2 p.19. A knack for grabbing the best loot in the shortest time. On a successful check the thief recognizes and stuffs into his pack the most valuable combination of items that is feasible, given his limitations of time and space."
   },
   {
     "Proficiency Name": "Mining",
@@ -592,6 +596,7 @@
     "Slots": "1",
     "Ability Check": "Dex / -1",
     "Modifier": "-1",
+    "Specialization": "instrument",
     "Source": "PHB",
     "Notes": "Play one type of musical instrument. Must specialize."
   },
@@ -601,14 +606,14 @@
     "Slots": "1",
     "Ability Check": "Int / -2",
     "Modifier": "-2",
-    "Source": "PHB",
-    "Notes": "Plot course using instruments and charts. Reduce chance of getting lost. PHBR2 Ch.2 OPENS THIS TO THIEVES: it is normally restricted to another class, and PHBR2 lists it among the proficiencies a thief may take, with kit recommendations. The DESCRIPTION remains the PHB’s, at p.61; SOURCE STAYS PHB because PHBR2 adds availability, not the proficiency.",
     "Required Kits": [
       "buccaneer"
     ],
     "Recommended Kits": [
       "smuggler"
-    ]
+    ],
+    "Source": "PHB",
+    "Notes": "Plot course using instruments and charts. Reduce chance of getting lost. PHBR2 Ch.2 OPENS THIS TO THIEVES: it is normally restricted to another class, and PHBR2 lists it among the proficiencies a thief may take, with kit recommendations. The DESCRIPTION remains the PHB’s, at p.61; SOURCE STAYS PHB because PHBR2 adds availability, not the proficiency."
   },
   {
     "Proficiency Name": "Observation",
@@ -616,8 +621,6 @@
     "Slots": "1",
     "Ability Check": "Int / 0",
     "Modifier": "0",
-    "Source": "PHBR2",
-    "Notes": "Notice small details and remember them accurately",
     "Required Kits": [
       "beggar",
       "cutpurse",
@@ -632,7 +635,9 @@
       "burglar",
       "fence",
       "smuggler"
-    ]
+    ],
+    "Source": "PHBR2",
+    "Notes": "Notice small details and remember them accurately"
   },
   {
     "Proficiency Name": "Persuasion",
@@ -667,12 +672,12 @@
     "Slots": "1",
     "Ability Check": "Int / +1",
     "Modifier": "+1",
-    "Source": "PHB",
-    "Notes": "Literate in ONE language you can speak. Reading and writing are a single purchase -- one slot covers both. PHBR2 Ch.2 OPENS THIS TO THIEVES: it is normally restricted to another class, and PHBR2 lists it among the proficiencies a thief may take, with kit recommendations. The DESCRIPTION remains the PHB’s, at p.61; SOURCE STAYS PHB because PHBR2 adds availability, not the proficiency.",
     "Recommended Kits": [
       "investigator",
       "spy"
-    ]
+    ],
+    "Source": "PHB",
+    "Notes": "Literate in ONE language you can speak. Reading and writing are a single purchase -- one slot covers both. PHBR2 Ch.2 OPENS THIS TO THIEVES: it is normally restricted to another class, and PHBR2 lists it among the proficiencies a thief may take, with kit recommendations. The DESCRIPTION remains the PHB’s, at p.61; SOURCE STAYS PHB because PHBR2 adds availability, not the proficiency."
   },
   {
     "Proficiency Name": "Religion",
@@ -698,6 +703,7 @@
     "Slots": "1",
     "Ability Check": "Wis / +3",
     "Modifier": "+3",
+    "Specialization": "mount",
     "Source": "PHB",
     "Notes": "Ride horses and similar land mounts. Covers one type of animal."
   },
@@ -707,6 +713,7 @@
     "Slots": "2",
     "Ability Check": "Dex / -2",
     "Modifier": "-2",
+    "Specialization": "mount",
     "Source": "PHBR11",
     "Notes": "Handle a particular species of sea-based mount, specified when the proficiency is acquired; additional slots add other species. The rider may leap onto a surfaced mount and spur it in the same round with no check, and urge it over obstacles under 3 ft high and 5 ft across with no check. Greater jumps need a check, with DM-assigned modifiers; failure means the mount balks and a second check determines whether the rider stays on. Spurring to speed needs an initial check, after which the mount moves up to 2d6 feet per round beyond its normal rate, with checks every five rounds, for up to two turns; it then drops to two-thirds rate and can move no faster until rested a full hour. A failed later check drops it to half rate until rested. An attacked surfaced mount submerges unless it makes its morale roll; the rider may command it to re-surface with a successful check, retrying each round while physically able, and risks drowning meanwhile -- exerting himself, he can hold his breath for rounds equal to half his Constitution. Crossover groups: General"
   },
@@ -761,6 +768,7 @@
     "Slots": "1",
     "Ability Check": "Int / -2",
     "Modifier": "-2",
+    "Specialization": "method",
     "Source": "PHBR11",
     "Notes": "Send messages over long distances by a designated preferred method -- smoke signals, whistling, waving flags, drums, reflecting mirrors. Each additional slot adds another method. Signaling is essentially a language: messages of reasonable complexity can be sent, and a practised signaller transmits about 10 words per combat round. The recipient must be able to see or hear it, have the proficiency, and know the same method; both parties check. If one fails the message is distorted and may be re-sent the following round. If both fail, or either rolls a natural 20, an incorrect message was sent and received and the message has the OPPOSITE of its intended meaning. Crossover groups: General"
   },
@@ -815,14 +823,15 @@
     "Slots": "2",
     "Ability Check": "Int / 0",
     "Modifier": "0",
-    "Source": "PHB",
-    "Notes": "Find food, water, shelter in wilderness. Must specialize by terrain type. PHBR2 Ch.2 OPENS THIS TO THIEVES: it is normally restricted to another class, and PHBR2 lists it among the proficiencies a thief may take, with kit recommendations. The DESCRIPTION remains the PHB’s, at p.63; SOURCE STAYS PHB because PHBR2 adds availability, not the proficiency.",
+    "Specialization": "terrain",
     "Required Kits": [
       "bandit"
     ],
     "Recommended Kits": [
       "bountyhunter"
-    ]
+    ],
+    "Source": "PHB",
+    "Notes": "Find food, water, shelter in wilderness. Must specialize by terrain type. PHBR2 Ch.2 OPENS THIS TO THIEVES: it is normally restricted to another class, and PHBR2 lists it among the proficiencies a thief may take, with kit recommendations. The DESCRIPTION remains the PHB’s, at p.63; SOURCE STAYS PHB because PHBR2 adds availability, not the proficiency. PHB p.85: \"must be applied to a specific environment -- i.e., a specific type of terrain and weather factors. Typical environments include arctic, woodland, desert, steppe, mountain, or tropical.\" ADDITIONAL SLOTS BUY ADDITIONAL TERRAINS, so PHBR2 p.21’s \"Survival (Hills, Mountains)\" for dwarves is a recommendation of TWO SEPARATE PICKS, not one proficiency covering both."
   },
   {
     "Proficiency Name": "Swimming",
@@ -848,14 +857,14 @@
     "Slots": "2",
     "Ability Check": "Wis / 0",
     "Modifier": "0",
-    "Source": "PHB",
-    "Notes": "Follow tracks and trail of creatures. Identify tracks. PHBR2 Ch.2 OPENS THIS TO THIEVES: it is normally restricted to another class, and PHBR2 lists it among the proficiencies a thief may take, with kit recommendations. The DESCRIPTION remains the PHB’s, at p.64; SOURCE STAYS PHB because PHBR2 adds availability, not the proficiency.",
     "Required Kits": [
       "bountyhunter"
     ],
     "Recommended Kits": [
       "assassin"
-    ]
+    ],
+    "Source": "PHB",
+    "Notes": "Follow tracks and trail of creatures. Identify tracks. PHBR2 Ch.2 OPENS THIS TO THIEVES: it is normally restricted to another class, and PHBR2 lists it among the proficiencies a thief may take, with kit recommendations. The DESCRIPTION remains the PHB’s, at p.64; SOURCE STAYS PHB because PHBR2 adds availability, not the proficiency."
   },
   {
     "Proficiency Name": "Trail Marking",
@@ -881,8 +890,6 @@
     "Slots": "1",
     "Ability Check": "Dex / 0",
     "Modifier": "0",
-    "Source": "PHBR2",
-    "Notes": "Follow someone in urban areas without being noticed",
     "Required Kits": [
       "assassin",
       "cutpurse"
@@ -894,7 +901,9 @@
       "spy",
       "thug",
       "troubleshooter"
-    ]
+    ],
+    "Source": "PHBR2",
+    "Notes": "Follow someone in urban areas without being noticed"
   },
   {
     "Proficiency Name": "Tumbling",
@@ -929,12 +938,12 @@
     "Slots": "2",
     "Ability Check": "Cha / special",
     "Modifier": "special",
-    "Source": "PHBR2",
-    "Notes": "PHBR2 p.21. The art of convincingly imitating the voices of other people. Very demanding, needing intense training and practice with the vocal cords, WHICH IS WHY IT COSTS TWO SLOTS. ACCENTS: a character can imitate any accent he has heard, and SUCCESS IS AUTOMATIC unless people who themselves speak in that accent are listeners, in which case a check is required AT +2. A SPECIFIC PERSON’S VOICE is harder and requires familiarity with the voice; a check determines whether the imitation is detected, with modifiers by how well the listeners know the voice being mimicked: a stranger who has never heard the original is certain success, no modifier; a close acquaintance -2; a close friend -5; someone extremely close such as a parent or spouse -7. WITH DISGUISE: which proficiency is checked first depends on whether the character is SEEN or HEARD first. If the disguise succeeds first, voice mimicry gets +5 -- the listeners have already accepted the appearance. IF THE DISGUISE FAILS, IT DOES NOT MATTER HOW GOOD THE VOICE IMITATION IS. If the voice is successfully mimicked first, the disguise check gets +1.",
     "Recommended Kits": [
       "assassin",
       "spy"
-    ]
+    ],
+    "Source": "PHBR2",
+    "Notes": "PHBR2 p.21. The art of convincingly imitating the voices of other people. Very demanding, needing intense training and practice with the vocal cords, WHICH IS WHY IT COSTS TWO SLOTS. ACCENTS: a character can imitate any accent he has heard, and SUCCESS IS AUTOMATIC unless people who themselves speak in that accent are listeners, in which case a check is required AT +2. A SPECIFIC PERSON’S VOICE is harder and requires familiarity with the voice; a check determines whether the imitation is detected, with modifiers by how well the listeners know the voice being mimicked: a stranger who has never heard the original is certain success, no modifier; a close acquaintance -2; a close friend -5; someone extremely close such as a parent or spouse -7. WITH DISGUISE: which proficiency is checked first depends on whether the character is SEEN or HEARD first. If the disguise succeeds first, voice mimicry gets +5 -- the listeners have already accepted the appearance. IF THE DISGUISE FAILS, IT DOES NOT MATTER HOW GOOD THE VOICE IMITATION IS. If the voice is successfully mimicked first, the disguise check gets +1."
   },
   {
     "Proficiency Name": "Weaponsmithing",
@@ -942,6 +951,7 @@
     "Slots": "3",
     "Ability Check": "Int / -3",
     "Modifier": "-3",
+    "Specialization": "weapon type",
     "Source": "PHB",
     "Notes": "Make and repair weapons. Must specialize by weapon type. Requires forge."
   },
