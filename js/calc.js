@@ -6559,6 +6559,99 @@ function addCustomLanguage(root) {
 }
 
 // ===== WEAPON PROFICIENCIES BROWSER =====
+// ===== MAGICAL ITEMS BROWSER =====
+// Ungated: the books ADD this content, so no supplement toggle guards it.
+// The Add button is labelled by DESTINATION, because this is the one browser
+// whose items land on other tabs -- see addMagicFromBrowser.
+function populateMagicFilters(root) {
+  if (typeof MAGIC_DATA === 'undefined' || !MAGIC_DATA.length) return;
+  // REBUILT from the data, never hand-maintained: every new supplement can
+  // introduce a displayGroup or a book, and a hardcoded list would silently
+  // omit it. Idempotent, so calling twice is safe.
+  const fill = (sel, values) => {
+    if (!sel) return;
+    const first = sel.querySelector('option[value=""]');
+    const allLabel = first ? first.textContent : 'All';
+    const current = sel.value;
+    sel.innerHTML = '<option value="">' + escapeHtml(allLabel) + '</option>' +
+      values.map(v => '<option value="' + escapeHtml(v) + '">' + escapeHtml(v) + '</option>').join('');
+    sel.value = current;
+  };
+  const uniq = arr => [...new Set(arr)].sort();
+  fill(root.querySelector('.magic-group-filter'), uniq(MAGIC_DATA.map(i => i.displayGroup).filter(Boolean)));
+  fill(root.querySelector('.magic-book-filter'),  uniq(MAGIC_DATA.map(i => i.source && i.source.book).filter(Boolean)));
+}
+
+// Where an item goes when added, and what the button therefore says.
+function magicDestination(item) {
+  if (item.category === 'weapon') return { list: 'weapons', label: 'Add to Weapons' };
+  if (item.category === 'worn' && item.slot) return { list: 'armor', label: 'Add to Armor' };
+  return { list: 'magic', label: 'Add' };
+}
+
+async function renderMagicBrowser(root) {
+  const resultsDiv = root.querySelector('.magic-results');
+  if (!resultsDiv) return;
+
+  if (typeof MAGIC_DATA === 'undefined' || !MAGIC_DATA.length) {
+    await new Promise(resolve => setTimeout(resolve, 100));
+    if (typeof MAGIC_DATA === 'undefined' || !MAGIC_DATA.length) {
+      resultsDiv.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px;">Magical items not loaded. Please refresh the page.</p>';
+      return;
+    }
+  }
+  populateMagicFilters(root);
+
+  const term  = (root.querySelector('.magic-search')?.value || '').toLowerCase();
+  const group = root.querySelector('.magic-group-filter')?.value;
+  const book  = root.querySelector('.magic-book-filter')?.value;
+
+  let list = MAGIC_DATA.slice();
+  if (group) list = list.filter(i => i.displayGroup === group);
+  if (book)  list = list.filter(i => i.source && i.source.book === book);
+  if (term)  list = list.filter(i =>
+    i.name.toLowerCase().includes(term) ||
+    (i.effects || '').toLowerCase().includes(term) ||
+    (i.baseType || '').toLowerCase().includes(term));
+
+  if (!list.length) {
+    resultsDiv.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px;">No magical items match those filters.</p>';
+    return;
+  }
+
+  const RESTRICT = {
+    thief:          'Thieves only',
+    thiefPreferred: 'Best for thieves',
+    warrior:        'Warriors only',
+    warriorPriest:  'Warriors or priests only',
+    rangerPreferred:'Best for rangers'
+  };
+
+  list.sort((a, b) => a.name.localeCompare(b.name));
+  resultsDiv.innerHTML = list.map(i => {
+    const d = magicDestination(i);
+    const tags = [];
+    if (RESTRICT[i.restriction]) tags.push(RESTRICT[i.restriction]);
+    if (i.xp === 'U') tags.push('Unique'); else if (i.xp) tags.push(i.xp + ' XP');
+    if (i.baseType) tags.push(escapeHtml(i.baseType));
+    return '<div style="border-bottom:1px solid var(--border);padding:8px 4px;">' +
+      '<div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start;">' +
+        '<div style="flex:1;">' +
+          '<strong>' + escapeHtml(i.name) + '</strong> ' +
+          '<span style="font-size:11px;color:var(--muted);">' +
+            escapeHtml(i.displayGroup || '') +
+            (i.source ? ' &middot; ' + escapeHtml(i.source.book) + ' p.' + escapeHtml(String(i.source.page)) : '') +
+          '</span>' +
+          (tags.length ? '<div style="font-size:11px;color:var(--muted);margin-top:2px;">' + tags.join(' &middot; ') + '</div>' : '') +
+        '</div>' +
+        '<button class="add-magic-from-browser" data-magic-name="' + escapeHtml(i.name) + '" style="flex-shrink:0;">' +
+          escapeHtml(d.label) + '</button>' +
+      '</div>' +
+      '<div style="font-size:11px;line-height:1.5;color:var(--muted);margin-top:4px;">' + escapeHtml(i.effects || '') + '</div>' +
+    '</div>';
+  }).join('');
+}
+
 async function renderWeaponBrowser(root) {
   const resultsDiv = root.querySelector('.weapon-results');
   
