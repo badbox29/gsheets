@@ -10080,6 +10080,28 @@ function bindSheet(root, tab){
   // Auto-expand all textareas in this sheet, and keep watching for new ones.
   root.querySelectorAll('textarea').forEach(wireAutoExpand);
   observeTextareas(root);
+
+  // RE-MEASURE WHEN A CARD'S DETAILS PANEL OPENS. Ten card factories build their
+  // details block display:none -- equipment, valuables, armor, mounts, henchmen,
+  // hirelings, companions, weapons, magic items and ammunition. A textarea in a
+  // hidden panel has scrollHeight 0, so autoExpand refuses to size it, and the
+  // MutationObserver above is no help: it catches textareas APPEARING, not
+  // panels UNHIDING.
+  // Delegated rather than added to each of the ten toggles, for the same reason
+  // the observer exists -- ten edits is ten chances to miss one, and does
+  // nothing for the eleventh card added later. Runs AFTER the card's own
+  // onclick, so the panel is already open by the time this fires.
+  if (!root._detailsExpandBound) {
+    root._detailsExpandBound = true;
+    root.addEventListener('click', (e) => {
+      const btn = e.target.closest('.toggle-details');
+      if (!btn) return;
+      const card = btn.closest('.item') || btn.parentElement;
+      if (!card || typeof autoExpand !== 'function') return;
+      requestAnimationFrame(() =>
+        card.querySelectorAll('textarea').forEach(ta => autoExpand(ta)));
+    });
+  }
   
   // Setup spellbook tabs system
   setupSpellbookTabs(root);
