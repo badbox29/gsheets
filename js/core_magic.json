@@ -4,7 +4,7 @@
     "category": "potion | weapon | worn | misc -- what the thing IS, not which table it was printed in.",
     "slot": "For category 'worn': the Armor tab's Worn As slot. AMULET and ROBE were ADDED to ARMOR_TYPES for PHBR2 -- the standing rule is that new supplement content may require new field values, and they are added as the need is discovered rather than forced into 'Other'.",
     "baseType": "Name EXACTLY as it appears in core_wp.json / core_armor.json, for the anchor rule -- the card stores this key and reads damage, speed and weight live. Verified against those files, not written from memory: it is 'Light Crossbow' and 'Sword, Short', not 'Crossbow, light' or 'Sword, short'. null when the item has no mundane base.",
-    "restriction": "none | thief | thiefPreferred | warrior | warriorPriest. thiefPreferred is PHBR2's (T*): usable by others, of most value to thieves.",
+    "restriction": "none | thief | thiefPreferred | warrior | warriorPriest | rangerPreferred. The *Preferred values are PREFERENCES, NOT LIMITS: PHBR2's (T*) means usable by others but of most value to thieves, and PHBR11 p.92 says its items are 'intended for rangers, but if the DM so chooses, he may allow fighters, wizards, and other character classes to use them, too'. warrior / warriorPriest ARE hard class limits, stated as such by PHBR1.",
     "xp": "Integer, the string 'U' (unique, not magically reproducible), or null where the book prints no XP value.",
     "magicBonus/hitAdj/dmgAdj": "Mirror the weapon card's Magic / Hit Adj / Damage Adj fields. null where the book gives no flat bonus.",
     "acBonus": "Mirrors the armor card's AC Bonus field. null where the item grants no AC.",
@@ -12,6 +12,274 @@
     "table": "Optional structured sub-table where the book prints one."
   },
   "items": [
+    {
+      "name": "Amulet of Dramatic Death",
+      "category": "worn",
+      "slot": "Amulet",
+      "restriction": "thief",
+      "xp": "U",
+      "detectionResistance": true,
+      "source": {
+        "book": "PHBR2",
+        "page": 105
+      },
+      "effects": "Only a few exist, each created for a high-level thief by a mage and an illusionist working together; six are known. Activates when the wearer suffers one particular attack form which would be sufficient to kill or wholly disable him. Damage from the killing attack is wholly negated, and a special attack such as petrification likewise negated. The thief is at once made invisible, and a programmed illusion makes him appear to have been slain or disabled -- complete and dramatic, e.g. an amulet protecting against magical fire shows the victim of a fireball as a burned corpse, complete with the smell of roasted flesh. Only direct, tactile checks or a powerful divination will reveal the illusion. Functions once per day. Roll 1d6 for the single attack form protected against.",
+      "table": {
+        "label": "Specific protection (1d6)",
+        "rows": [
+          [
+            "1",
+            "Magical fire (including red dragon breath, etc.)"
+          ],
+          [
+            "2",
+            "Lightning and electrical attacks"
+          ],
+          [
+            "3",
+            "Cold-based attacks"
+          ],
+          [
+            "4",
+            "Petrification"
+          ],
+          [
+            "5",
+            "Edged weapons"
+          ],
+          [
+            "6",
+            "Blunt weapons"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Bag of Vanishing",
+      "category": "misc",
+      "restriction": "thief",
+      "xp": 5000,
+      "detectionResistance": true,
+      "source": {
+        "book": "PHBR2",
+        "page": 106
+      },
+      "effects": "Appears to be a simple pouch capable of carrying some 2-3 lbs. In fact it operates as a bag of holding capable of carrying up to 50 lbs. weight while having an encumbrance of only 3 lbs. Further, the drawstrings can be tugged tightly once per day and it will simply disappear for six turns; the equivalent of a rope trick spell operates on the bag (although it will stay with its owner) and it will also have detection resistance operating upon it. Invaluable for smuggling. The only problem is that each time the rope trick function is used there is a 5% chance that the contents will vanish into the Ethereal Plane and the bag will be empty when it is checked later."
+    },
+    {
+      "name": "Boots of Balance",
+      "category": "worn",
+      "slot": "Boots",
+      "restriction": "thiefPreferred",
+      "xp": 1000,
+      "detectionResistance": true,
+      "source": {
+        "book": "PHBR2",
+        "page": 106
+      },
+      "effects": "Soft, low-heeled supple leather boots granting a magically enhanced sense of balance. A thief gains +10% to all move silently rolls and to all climb walls rolls. The Dexterity of any character wearing the boots is increased by one point for all purposes where the hands are not involved -- so no bonus to skills such as open locks, but a bonus to Armor Class may apply, and likewise to Dexterity checks in certain situations (e.g. to avoid a fall). The wearer gains the tightrope walking proficiency; if already possessed, a -4 bonus modifier applies to all proficiency check die rolls when wearing the boots. A wearer cannot also claim a further bonus for moving silently from mundane aids such as leather strapping to cross creaky floorboards, and the bonuses cannot be added to the bonus gained if the wearer also uses gauntlets of dexterity."
+    },
+    {
+      "name": "Boxes of Delightful Transport",
+      "category": "misc",
+      "restriction": "none",
+      "xp": 2500,
+      "detectionResistance": false,
+      "source": {
+        "book": "PHBR2",
+        "page": 107
+      },
+      "effects": "Wooden boxes, 6-inch cubes, coming in identical pairs, often decorated with great attention to detail. When a nonliving object of suitable size is placed in one and the lid closed and a command word spoken, the object will disappear, to reappear (effectively teleported) in the matching box. Operates up to three times per day. Limitations: the object-teleport cannot cross any planar barriers; and while the distance between the boxes is not important in affecting the teleport range, there is always a 5% chance that the object dispatched will not reach its destination, instead appearing at some random location 10d10 miles away -- so dispatch of valuables is not recommended. No enchanted object can be teleported using them; even the placing of a simple Nystul's Magic Aura on an object will prevent it. Messages, which can always be sent in duplicate, are the most often used to send."
+    },
+    {
+      "name": "Bracelet of Charms",
+      "category": "worn",
+      "slot": null,
+      "restriction": "warrior",
+      "xp": null,
+      "detectionResistance": false,
+      "source": {
+        "book": "PHBR1",
+        "page": 113
+      },
+      "effects": "A nicely-crafted bracelet of sturdy gold links, looking like any other bracelet to which small charms and mementos are attached. When a warrior (only a warrior, multi-class warrior, or dual-class warrior) slides the bracelet around the blade or haft of a weapon and speaks the command word engraved on the clasp, the weapon disappears and a gold charm matching the weapon appears on the bracelet. Thereafter, when the warrior speaks the command word and the name of the weapon, the weapon magically appears in the hand on whose wrist the bracelet rested, and the bracelet disappears. Holds up to four weapons/charms, normal or magical. Shields and miscellaneous equipment cannot be held; only weapons built as weapons. Siege weapons cannot be held. The change takes no time at all, but only once per turn; the bracelet can be used only eight times in a day, turning the bracelet into a weapon counting as one use and turning the weapon back into a bracelet as one use. If the weapon held in the bracelet's enchantment is called on, and wielded, and then disarmed, the character cannot call on another weapon from the bracelet -- the bracelet is within the weapon and must be retrieved first. A weapon can be taken out of the array: take the bracelet off the wrist, speak the name of the weapon and then the command word, a reversal of the previous procedure. The bracelet does not magically know its owner; anyone who steals it and discovers what it is can use it. Quivers count as part of the weapon they carry arrows for. If a weapon is broken the bracelet isn't; the user separates the broken weapon from it. Quivers are not magically replenished. MAY NOT BE USED ON THE SAME WEAPON AS A SET OF RINGS OF READINESS."
+    },
+    {
+      "name": "Cage of Shelter",
+      "category": "misc",
+      "restriction": "none",
+      "xp": null,
+      "detectionResistance": false,
+      "source": {
+        "book": "PHBR1",
+        "page": 114
+      },
+      "effects": "Looks like a large bird-cage that has been neatly folded down into a package about the size of a medium shield. The user, who can be of any character class, places it upon the ground, steps back from it, and claps his hands loudly either two or three times. TWO CLAPS: the cage grows into a sturdy metal-framed tent housing eight people (substitute one horse for four people). The tent confers no magical blessing but by using it and huddling together for warmth a party can survive a snowstorm that would kill an unprotected party; erected in the desert it avoids the danger and discomfort of a sandstorm. THREE CLAPS: the cage grows into a strong 10' by 10' cell. The door to the cell has the equivalent of a wizard lock; the cage's owner can open it any time he wishes, and any magician with the knock spell can open it by using that spell. A person in the cell would have to make his Bend Bars/Lift Gates roll successfully (or use a knock) to escape; the door's lock cannot be picked. To return the cage to its original form the owner claps again, twice if it is in tent form, three times if it is in cage form. If someone is in it when it is a tent and begins collapsing, it opens up around the person inside; both he and it are unhurt. If someone is in it when it is a cage and begins collapsing, it collapses around him, inflicting 2d6 damage before it breaks open; thereafter it is ruined forever. The cage knows its owner. If someone finds it in a treasure, he must carry it in his gear for a month for the cage to attune itself to him. If its true owner sells it to someone else in the cage's presence, the cage will obey the claps of its new owner immediately."
+    },
+    {
+      "name": "Chameleon Cloak",
+      "category": "worn",
+      "slot": "Cloak",
+      "baseType": null,
+      "restriction": "rangerPreferred",
+      "xp": null,
+      "detectionResistance": false,
+      "source": {
+        "book": "PHBR11",
+        "page": 92
+      },
+      "effects": "A lightweight cloak covering the wearer from neck to foot, including a hood. MAY BE WORN COMFORTABLY OVER STUDDED LEATHER OR LIGHTER ARMOR. The color changes automatically and instantaneously to blend with the surrounding terrain -- mottled green and brown in jungle, white on a plain of snow, black at night. Allows a character to be personally camouflaged, as if using the camouflage proficiency, IN ANY TERRAIN. Conceals ONE PERSON ONLY, with an effective Wisdom equal to its rating. XP value varies with the rating; roll 1d20.",
+      "table": {
+        "label": "Rating (1d20)",
+        "cols": [
+          "d20 roll",
+          "Wisdom rating",
+          "XP"
+        ],
+        "rows": [
+          [
+            "1-6",
+            "15",
+            "750"
+          ],
+          [
+            "7-15",
+            "16",
+            "800"
+          ],
+          [
+            "16-19",
+            "17",
+            "850"
+          ],
+          [
+            "20",
+            "18",
+            "900"
+          ]
+        ]
+      },
+      "magicBonus": null,
+      "hitAdj": null,
+      "dmgAdj": null
+    },
+    {
+      "name": "Charm of Favor",
+      "category": "misc",
+      "restriction": "none",
+      "xp": null,
+      "detectionResistance": false,
+      "source": {
+        "book": "PHBR1",
+        "page": 114
+      },
+      "effects": "Given by deities and other powerful beings when they are pleased with the deed of a mortal. A small charm or statuette, usually of semiprecious material, two or three inches in size, representing the god or one of his aspects. Rather like a limited wish: it represents a favor which the deity will do for the character at some time in the future. To use it, the owner must throw the item on the ground so hard that it breaks, and then call out his request. The request must have something to do with the attributes of the god. The god hears it when the favor is requested and, in the guise of the DM, evaluates the favor; if it pertains to one of his attributes, and if the god does not think that the character is making the request out of mere greed or selfishness, and if bestowing the favor will not conflict with any of the god's other aims or desires, he will grant it. Because the deity is evaluating the request, the asking character cannot expect an outrageous favor to be granted. Most enemies who steal the charm from the PC cannot use it successfully; one might take it, hurl it to the ground and break it with his request, and find the cranky god stomping on him and freeing the faithful PC -- this, however, constitutes using up the favor. An NPC friend of the owner might be able to get the item and ask the god to help the charm's true owner, particularly if he is ill or kidnapped and cannot do so for himself. Any character of any class can receive such a charm as a favor, but when they are found in treasure they are useless -- they were not intended for the character who finds them. THE CHARM OF FAVOR DOES NOT RADIATE MAGIC."
+    },
+    {
+      "name": "Crossbow of Angling",
+      "category": "weapon",
+      "baseType": "Light Crossbow",
+      "restriction": "none",
+      "xp": 750,
+      "magicBonus": null,
+      "hitAdj": null,
+      "dmgAdj": null,
+      "detectionResistance": false,
+      "source": {
+        "book": "PHBR2",
+        "page": 107
+      },
+      "effects": "Appears to be a quite normal light crossbow, although it has a thick wrist strap attached which is of unusual design and toughness. On command it can fire bolts with special properties up to three times per day. THE MAGICAL BOLT COUNTS AS A +2 BOLT for determination of attack rolls (and damage if appropriate) -- the crossbow itself carries no bonus. When fired, the special bolt is trailed by a pencil-thin snaking line of faint blue light (which radiates magic fairly strongly) which connects it to the crossbow. When the bolt impacts, the head expands into a small claw which embeds itself in the target, such that the bolt grips it strongly. By the use of a second command word the user can 'reel in' the target, the thin cord of magical energy shrinking to drag the target to the archer. The speed at which the target is retrieved depends on its weight, friction, etc.; the maximum speed is 60 feet per round. If the target is heavier than the archer or is immovable or braced in some way, then the crossbowman may actually be dragged to the target rather than the reverse applying. The magical cord is AC -2 and takes 15 points of damage (nonmagical weapons do no damage) to destroy."
+    },
+    {
+      "name": "Dagger of Impaling",
+      "category": "weapon",
+      "baseType": "Dagger",
+      "restriction": "thief",
+      "xp": 300,
+      "magicBonus": 2,
+      "hitAdj": 2,
+      "dmgAdj": 2,
+      "detectionResistance": false,
+      "source": {
+        "book": "PHBR2",
+        "page": 107
+      },
+      "effects": "+2 to hit and damage. On a natural roll of 20 (and also of 19 if this is sufficient to score a hit) on a BACKSTAB attack they impale the target, inflicting an additional 1d4+2/1d3+2 points of damage and also staying in the wound, where they cause an additional 1d4+2/1d3+2 points of damage each round until removed."
+    },
+    {
+      "name": "Dagger of Resource",
+      "category": "weapon",
+      "baseType": "Dagger",
+      "restriction": "thief",
+      "xp": 500,
+      "magicBonus": null,
+      "hitAdj": null,
+      "dmgAdj": null,
+      "detectionResistance": false,
+      "source": {
+        "book": "PHBR2",
+        "page": 108
+      },
+      "effects": "Handles of ebony or ivory, or some similarly valuable and exotic substance, with 1d3+1 small studs in the cross guards. The dagger has attack and damage bonuses, but also has additional tools located within it; depressing one of the studs will cause the corresponding item to spring from the hilt, ready for use (only one tool at a time can be used). BONUSES AND TOOLS DEPEND ON THE NUMBER OF STUDS -- roll 1d3+1 and read the table.",
+      "table": {
+        "label": "By number of studs (1d3+1)",
+        "cols": [
+          "No. of studs",
+          "Hit/damage bonus",
+          "Tools avail.",
+          "Description of tools"
+        ],
+        "rows": [
+          [
+            "2",
+            "+4",
+            "2",
+            "Lock picks adding +5% to Open Locks rolls, plus tool for removing stones from horses' hooves"
+          ],
+          [
+            "3",
+            "+3",
+            "3",
+            "As above, plus Lens of Detection (see DMG p.173)"
+          ],
+          [
+            "4",
+            "+2",
+            "4",
+            "As above, plus Gem of Brightness with 3d10 charges"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Dagger of Sounding",
+      "category": "weapon",
+      "baseType": "Dagger",
+      "restriction": "thief",
+      "xp": 300,
+      "magicBonus": 1,
+      "hitAdj": 1,
+      "dmgAdj": 1,
+      "detectionResistance": false,
+      "source": {
+        "book": "PHBR2",
+        "page": 108
+      },
+      "effects": "+1 for attack and damage determination, but it has a peculiar, hollow bronze bulb at the end of its pommel. If this is gently tapped against a hollow surface, it gives a resounding ring quite different from the dull tone emitted if struck against solid stone. Tapping it gently against walls allows the thief a 5 in 6 chance for finding a secret door, rising to 11 in 12 if the thief is elven or half-elven. Also, the thief can search for secret doors at twice the normal rate when using this dagger. In other cases, the thief is 80% likely to be able to determine successfully the approximate thickness and nature of the material the dagger is used to sound."
+    },
+    {
+      "name": "Dust of Trail Dispersion",
+      "category": "misc",
+      "restriction": "thiefPreferred",
+      "xp": 500,
+      "detectionResistance": false,
+      "source": {
+        "book": "PHBR2",
+        "page": 107
+      },
+      "effects": "A generous pinch of this magical dust, when scattered over the beginning or origin of a trail (such as at the bottom of a wall surrounding a house the thief has burgled, at the point he reaches the ground) will prevent its being followed by all normal sensory means -- rangers, bloodhounds, etc. Usually found in a small box, or packets, with one 'find' usually being sufficient for 1d4+4 uses."
+    },
     {
       "name": "Essence of Darkness",
       "category": "potion",
@@ -46,6 +314,90 @@
       }
     },
     {
+      "name": "Gloves of Evasion",
+      "category": "worn",
+      "slot": "Gauntlets",
+      "restriction": "thiefPreferred",
+      "xp": 1000,
+      "detectionResistance": true,
+      "source": {
+        "book": "PHBR2",
+        "page": 106
+      },
+      "effects": "Made of exceptionally supple, thin calfskin; when put on they blend with the skin and become virtually undetectable, and are detection resistant. A thief wearing them gains +10% to open locks skill and can undo almost any knot automatically in one round. Any character wearing the gloves gains a proficiency in escapology, being able to manipulate his hands so as to escape from manacles, chains, irons or similar restraints if a Dexterity check (with a +2 bonus if the character is a thief) is made."
+    },
+    {
+      "name": "Horn of Animal Calls",
+      "category": "misc",
+      "slot": null,
+      "baseType": null,
+      "restriction": "rangerPreferred",
+      "xp": 1200,
+      "detectionResistance": false,
+      "source": {
+        "book": "PHBR11",
+        "page": 92
+      },
+      "effects": "A wooden instrument painted bright red with tiny silhouettes of various animals along the sides, resembling a recorder about six inches long. It can duplicate the cries and calls of ANY animal: the user closes his eyes, pictures the animal in his mind, then blows into the instrument, and the sound is indistinguishable from the cry of the actual animal. It can be used to CALL particular animals or FRIGHTEN THEM AWAY. The DM determines the effect of any particular use -- for example, summoning 2d4 animals might be 80% likely in an animal's home terrain, with an arrival time of 1-4 rounds.",
+      "magicBonus": null,
+      "hitAdj": null,
+      "dmgAdj": null
+    },
+    {
+      "name": "Ice Box",
+      "category": "misc",
+      "slot": null,
+      "baseType": null,
+      "restriction": "rangerPreferred",
+      "xp": 800,
+      "detectionResistance": false,
+      "source": {
+        "book": "PHBR11",
+        "page": 93
+      },
+      "effects": "An airtight box one foot square, made of black metal with a single hinged panel; opening the panel reveals the hollow interior. Centered on the outside of the panel is a white metal pointer resembling a small arrow, which can be rotated in any direction to regulate the temperature inside. POINTED STRAIGHT UP (toward the hinges) the temperature remains at 70 degrees F. Every complete CLOCKWISE rotation drops the temperature inside by 1 degree -- so 30 rotations gives 40 degrees F. Rotating COUNTER-CLOCKWISE raises it 1 degree per rotation. The temperature cannot be lowered below zero degrees or raised beyond 70. Useful for making ice and preventing food spoilage.",
+      "magicBonus": null,
+      "hitAdj": null,
+      "dmgAdj": null
+    },
+    {
+      "name": "Lens of Remote Viewing",
+      "category": "misc",
+      "restriction": "thief",
+      "xp": 1000,
+      "detectionResistance": true,
+      "source": {
+        "book": "PHBR2",
+        "page": 107
+      },
+      "effects": "Small, clear gems ('lens' is a slight misnomer) that appear to be worthless quartz but possess a powerful dweomer. If the owner attunes himself to a lens -- a process taking four hours of meditation -- he can then 'see' through the lens whatever scene is happening in front of the lens and within its field of vision, wherever the lens may later be. There is no range limit, save that no perception across the planes is possible. No auditory information is detected through the lens, and no spells can be cast through it. At any one time, any thief may be attuned with a number of such lenses not exceeding one-half his Intelligence score (round fractions down). These items are usually found singly, and are of obvious value in spying."
+    },
+    {
+      "name": "Lens of Valuation",
+      "category": "misc",
+      "restriction": "thief",
+      "xp": 1000,
+      "detectionResistance": false,
+      "source": {
+        "book": "PHBR2",
+        "page": 107
+      },
+      "effects": "A lens some 3 inches in diameter with a handle some 6 inches long. Allows the viewer to estimate the true worth of any nonmagical object to within 5%, on studying it for five rounds or longer. This will be an average price, and special conditions of supply or demand may make this valuation wildly inaccurate. Merchants usually go to considerable lengths to prevent any lens of valuation from being used on their goods; in the thieving community, it is most sought-after by fences."
+    },
+    {
+      "name": "Mantle of the Mundane",
+      "category": "worn",
+      "slot": "Cloak",
+      "restriction": "thiefPreferred",
+      "xp": 1500,
+      "detectionResistance": true,
+      "source": {
+        "book": "PHBR2",
+        "page": 106
+      },
+      "effects": "A very ordinary, even shabby, brown or grey cloak that makes its wearer utterly unmemorable. Gives a 5% bonus to hide in shadows in all circumstances and makes the wearer 80% undetectable if in a crowd (detection resistance applies here also). It also makes the wearer almost impossible to recognize after having been seen -- very useful in avoiding identification after a crime. Unless a witness (and it must be an eye witness) makes a check against one-fourth of his Intelligence, the wearer of the mantle will have appeared so mundane and boring in appearance that the witness will be unable to relate him to the thief, regardless of whether the thief is wearing the mantle the next time the witness sees him."
+    },
+    {
       "name": "Oil of Slickness",
       "category": "potion",
       "restriction": "thief",
@@ -56,6 +408,23 @@
         "page": 105
       },
       "effects": "Rubbed into the skin of the hands, taking one turn. Improves the speed and coordination of the hands so that all manually-based thieving skills -- pick pockets, open locks, find/remove traps -- are improved by 10%. A vial or pot holds 1d4+4 applications; the effect lasts 1d4+4 turns. The bonuses can be claimed by any thief wearing gauntlets or gloves of any kind, including magical ones."
+    },
+    {
+      "name": "Portable Shadow",
+      "category": "misc",
+      "slot": null,
+      "baseType": null,
+      "restriction": "rangerPreferred",
+      "xp": 1000,
+      "detectionResistance": false,
+      "source": {
+        "book": "PHBR11",
+        "page": 93
+      },
+      "effects": "Similar in appearance to a portable hole: a gauzy black circle about 10 feet in diameter that can be folded up into a packet about 6 inches square. Unfolded and laid on any horizontal surface, it looks like any normal area of shade, as dark as a shadow cast by a tree or other solid object under a midday sun. Useful for concealment and as good a hiding place as any naturally shaded area: RANGERS, THIEVES AND OTHERS HAVE THEIR NORMAL CHANCE OF HIDING IN SHADOWS when standing in a portable shadow. It is picked up by lifting the edge and folding it like a tablecloth. DMs should use common sense: a 'black hole' attached to nothing in the middle of a featureless plain is more likely to attract attention than to divert it -- though it can still provide a shady place to cool off away from the desert sun.",
+      "magicBonus": null,
+      "hitAdj": null,
+      "dmgAdj": null
     },
     {
       "name": "Potion of Master Thievery",
@@ -170,85 +539,17 @@
       }
     },
     {
-      "name": "Amulet of Dramatic Death",
+      "name": "Rings of Readiness",
       "category": "worn",
-      "slot": "Amulet",
-      "restriction": "thief",
-      "xp": "U",
-      "detectionResistance": true,
+      "slot": "Ring",
+      "restriction": "none",
+      "xp": null,
+      "detectionResistance": false,
       "source": {
-        "book": "PHBR2",
-        "page": 105
+        "book": "PHBR1",
+        "page": 115
       },
-      "effects": "Only a few exist, each created for a high-level thief by a mage and an illusionist working together; six are known. Activates when the wearer suffers one particular attack form which would be sufficient to kill or wholly disable him. Damage from the killing attack is wholly negated, and a special attack such as petrification likewise negated. The thief is at once made invisible, and a programmed illusion makes him appear to have been slain or disabled -- complete and dramatic, e.g. an amulet protecting against magical fire shows the victim of a fireball as a burned corpse, complete with the smell of roasted flesh. Only direct, tactile checks or a powerful divination will reveal the illusion. Functions once per day. Roll 1d6 for the single attack form protected against.",
-      "table": {
-        "label": "Specific protection (1d6)",
-        "rows": [
-          [
-            "1",
-            "Magical fire (including red dragon breath, etc.)"
-          ],
-          [
-            "2",
-            "Lightning and electrical attacks"
-          ],
-          [
-            "3",
-            "Cold-based attacks"
-          ],
-          [
-            "4",
-            "Petrification"
-          ],
-          [
-            "5",
-            "Edged weapons"
-          ],
-          [
-            "6",
-            "Blunt weapons"
-          ]
-        ]
-      }
-    },
-    {
-      "name": "Boots of Balance",
-      "category": "worn",
-      "slot": "Boots",
-      "restriction": "thiefPreferred",
-      "xp": 1000,
-      "detectionResistance": true,
-      "source": {
-        "book": "PHBR2",
-        "page": 106
-      },
-      "effects": "Soft, low-heeled supple leather boots granting a magically enhanced sense of balance. A thief gains +10% to all move silently rolls and to all climb walls rolls. The Dexterity of any character wearing the boots is increased by one point for all purposes where the hands are not involved -- so no bonus to skills such as open locks, but a bonus to Armor Class may apply, and likewise to Dexterity checks in certain situations (e.g. to avoid a fall). The wearer gains the tightrope walking proficiency; if already possessed, a -4 bonus modifier applies to all proficiency check die rolls when wearing the boots. A wearer cannot also claim a further bonus for moving silently from mundane aids such as leather strapping to cross creaky floorboards, and the bonuses cannot be added to the bonus gained if the wearer also uses gauntlets of dexterity."
-    },
-    {
-      "name": "Gloves of Evasion",
-      "category": "worn",
-      "slot": "Gauntlets",
-      "restriction": "thiefPreferred",
-      "xp": 1000,
-      "detectionResistance": true,
-      "source": {
-        "book": "PHBR2",
-        "page": 106
-      },
-      "effects": "Made of exceptionally supple, thin calfskin; when put on they blend with the skin and become virtually undetectable, and are detection resistant. A thief wearing them gains +10% to open locks skill and can undo almost any knot automatically in one round. Any character wearing the gloves gains a proficiency in escapology, being able to manipulate his hands so as to escape from manacles, chains, irons or similar restraints if a Dexterity check (with a +2 bonus if the character is a thief) is made."
-    },
-    {
-      "name": "Mantle of the Mundane",
-      "category": "worn",
-      "slot": "Cloak",
-      "restriction": "thiefPreferred",
-      "xp": 1500,
-      "detectionResistance": true,
-      "source": {
-        "book": "PHBR2",
-        "page": 106
-      },
-      "effects": "A very ordinary, even shabby, brown or grey cloak that makes its wearer utterly unmemorable. Gives a 5% bonus to hide in shadows in all circumstances and makes the wearer 80% undetectable if in a crowd (detection resistance applies here also). It also makes the wearer almost impossible to recognize after having been seen -- very useful in avoiding identification after a crime. Unless a witness (and it must be an eye witness) makes a check against one-fourth of his Intelligence, the wearer of the mantle will have appeared so mundane and boring in appearance that the witness will be unable to relate him to the thief, regardless of whether the thief is wearing the mantle the next time the witness sees him."
+      "effects": "TWO plain iron rings, one suitable to be worn on a finger and one larger, some 2 inches in diameter. The larger ring is placed on some item: sewn into or bolted onto a set of armor, placed upon the pommel of a weapon (in which case it shrinks until it fits snugly), or attached to any item of personal gear weighing less than 100 lbs. When the larger ring is attached to an object, and the smaller is worn by a character, the character needs only to utter the magical word inscribed on the inside of the smaller ring. If the other ring is within 10 miles, it will instantaneously transport that object to the character. If the item attached to the other ring is a weapon, it will appear in his hand; a suit of armor appears on the character, or next to him if he is already wearing armor; anything else appears in a fashion dictated by the DM. If the item is more than 10 miles away, nothing happens. Use of the rings must be announced before initiative in the combat turn; the character calls out the magic word before initiative, then later in the turn when his actions come up, the item appears. If a character finds the smaller ring without the larger one, he can summon whatever object the larger one is attached to, even if it is not his. The magic only works if the item attached to the larger ring is inanimate -- living things are not transported. Once summoned, objects may not be sent back: this is a one-way trip. The rings may be used any number of times; they do not wear out. Usable by characters of any class. MAY NOT BE USED ON THE SAME WEAPON AS A BRACELET OF CHARMS."
     },
     {
       "name": "Robe of Vanishing",
@@ -264,182 +565,16 @@
       "effects": "A simple and innocent-looking robe, a boon for a thief needing to elude pursuers quickly. The thief grasps the hems of the robe and clutches it tightly about him and he will simply seem to vanish, although he will just have been affected as per a rope trick spell (no rope is visible, of course) and also made invisible. Detection resistance applies to the extradimensional space created. The rope trick effect lasts up to six turns; the invisibility is of the normal sort, permanent until some offensive action is undertaken. Wise thieves will make sure that other magical aids to escape -- notably a potion of flying -- are on hand to maximize the value of this robe. Usable up to three times per day."
     },
     {
-      "name": "Shadowcloak",
-      "category": "worn",
-      "slot": "Cloak",
-      "restriction": "thiefPreferred",
-      "xp": 3000,
-      "detectionResistance": true,
-      "source": {
-        "book": "PHBR2",
-        "page": 106
-      },
-      "effects": "A large, cowled cloak made from pure black velvet. Worn by a thief it improves hide in shadows chances by 25% and makes the thief 50% likely to be invisible in near-darkness, even to infravision, ultravision and the like. It can also be used to cast darkness, darkness 15' radius, and continual darkness once each per day at 12th level of magic use. Finally, once per day the wearer can transform into a shadow for up to 12 turns, becoming a shadow in all respects save for mental ones -- thus the wearer cannot be damaged by nonmagical weapons, undead take the wearer for a shadow and ignore him. Saves against light-based attacks (e.g. a light spell cast into the eyes) are always made at -2 by the wearer. If a cleric successfully makes a turning attempt against the wearer in shadowform, the cloak wearer is permitted a saving throw, at -4 if the cleric is actually able to damn/destroy shadows. If the save fails, the wearer suffers 1d6 points of damage per level of the cleric and the shadowcloak is destroyed. If the save is made, the character takes half damage and must flee in fear from the cleric at maximum rate for one turn."
-    },
-    {
-      "name": "Bag of Vanishing",
+      "name": "Saddle of the Spirit-Horse",
       "category": "misc",
-      "restriction": "thief",
-      "xp": 5000,
-      "detectionResistance": true,
-      "source": {
-        "book": "PHBR2",
-        "page": 106
-      },
-      "effects": "Appears to be a simple pouch capable of carrying some 2-3 lbs. In fact it operates as a bag of holding capable of carrying up to 50 lbs. weight while having an encumbrance of only 3 lbs. Further, the drawstrings can be tugged tightly once per day and it will simply disappear for six turns; the equivalent of a rope trick spell operates on the bag (although it will stay with its owner) and it will also have detection resistance operating upon it. Invaluable for smuggling. The only problem is that each time the rope trick function is used there is a 5% chance that the contents will vanish into the Ethereal Plane and the bag will be empty when it is checked later."
-    },
-    {
-      "name": "Boxes of Delightful Transport",
-      "category": "misc",
-      "restriction": "none",
-      "xp": 2500,
+      "restriction": "warrior",
+      "xp": null,
       "detectionResistance": false,
       "source": {
-        "book": "PHBR2",
-        "page": 107
+        "book": "PHBR1",
+        "page": 116
       },
-      "effects": "Wooden boxes, 6-inch cubes, coming in identical pairs, often decorated with great attention to detail. When a nonliving object of suitable size is placed in one and the lid closed and a command word spoken, the object will disappear, to reappear (effectively teleported) in the matching box. Operates up to three times per day. Limitations: the object-teleport cannot cross any planar barriers; and while the distance between the boxes is not important in affecting the teleport range, there is always a 5% chance that the object dispatched will not reach its destination, instead appearing at some random location 10d10 miles away -- so dispatch of valuables is not recommended. No enchanted object can be teleported using them; even the placing of a simple Nystul's Magic Aura on an object will prevent it. Messages, which can always be sent in duplicate, are the most often used to send."
-    },
-    {
-      "name": "Dust of Trail Dispersion",
-      "category": "misc",
-      "restriction": "thiefPreferred",
-      "xp": 500,
-      "detectionResistance": false,
-      "source": {
-        "book": "PHBR2",
-        "page": 107
-      },
-      "effects": "A generous pinch of this magical dust, when scattered over the beginning or origin of a trail (such as at the bottom of a wall surrounding a house the thief has burgled, at the point he reaches the ground) will prevent its being followed by all normal sensory means -- rangers, bloodhounds, etc. Usually found in a small box, or packets, with one 'find' usually being sufficient for 1d4+4 uses."
-    },
-    {
-      "name": "Lens of Remote Viewing",
-      "category": "misc",
-      "restriction": "thief",
-      "xp": 1000,
-      "detectionResistance": true,
-      "source": {
-        "book": "PHBR2",
-        "page": 107
-      },
-      "effects": "Small, clear gems ('lens' is a slight misnomer) that appear to be worthless quartz but possess a powerful dweomer. If the owner attunes himself to a lens -- a process taking four hours of meditation -- he can then 'see' through the lens whatever scene is happening in front of the lens and within its field of vision, wherever the lens may later be. There is no range limit, save that no perception across the planes is possible. No auditory information is detected through the lens, and no spells can be cast through it. At any one time, any thief may be attuned with a number of such lenses not exceeding one-half his Intelligence score (round fractions down). These items are usually found singly, and are of obvious value in spying."
-    },
-    {
-      "name": "Lens of Valuation",
-      "category": "misc",
-      "restriction": "thief",
-      "xp": 1000,
-      "detectionResistance": false,
-      "source": {
-        "book": "PHBR2",
-        "page": 107
-      },
-      "effects": "A lens some 3 inches in diameter with a handle some 6 inches long. Allows the viewer to estimate the true worth of any nonmagical object to within 5%, on studying it for five rounds or longer. This will be an average price, and special conditions of supply or demand may make this valuation wildly inaccurate. Merchants usually go to considerable lengths to prevent any lens of valuation from being used on their goods; in the thieving community, it is most sought-after by fences."
-    },
-    {
-      "name": "Tallin's Tightrope",
-      "category": "misc",
-      "restriction": "none",
-      "xp": 1250,
-      "detectionResistance": false,
-      "source": {
-        "book": "PHBR2",
-        "page": 107
-      },
-      "effects": "A modified rope of climbing which will only snake forward at an angle of up to 45 degrees upward or downward, but which also enables its owner and up to five man-sized or smaller creatures touched by its owner to walk upon it as if they had the tightrope walking proficiency, with a +4 bonus to any proficiency checks required. Anyone not touched by the rope owner attempting to walk on it will suffer a -4 penalty to any saves or checks made while on the rope. In all other ways, this item is identical to a normal rope of climbing."
-    },
-    {
-      "name": "Crossbow of Angling",
-      "category": "weapon",
-      "baseType": "Light Crossbow",
-      "restriction": "none",
-      "xp": 750,
-      "magicBonus": null,
-      "hitAdj": null,
-      "dmgAdj": null,
-      "detectionResistance": false,
-      "source": {
-        "book": "PHBR2",
-        "page": 107
-      },
-      "effects": "Appears to be a quite normal light crossbow, although it has a thick wrist strap attached which is of unusual design and toughness. On command it can fire bolts with special properties up to three times per day. THE MAGICAL BOLT COUNTS AS A +2 BOLT for determination of attack rolls (and damage if appropriate) -- the crossbow itself carries no bonus. When fired, the special bolt is trailed by a pencil-thin snaking line of faint blue light (which radiates magic fairly strongly) which connects it to the crossbow. When the bolt impacts, the head expands into a small claw which embeds itself in the target, such that the bolt grips it strongly. By the use of a second command word the user can 'reel in' the target, the thin cord of magical energy shrinking to drag the target to the archer. The speed at which the target is retrieved depends on its weight, friction, etc.; the maximum speed is 60 feet per round. If the target is heavier than the archer or is immovable or braced in some way, then the crossbowman may actually be dragged to the target rather than the reverse applying. The magical cord is AC -2 and takes 15 points of damage (nonmagical weapons do no damage) to destroy."
-    },
-    {
-      "name": "Dagger of Impaling",
-      "category": "weapon",
-      "baseType": "Dagger",
-      "restriction": "thief",
-      "xp": 300,
-      "magicBonus": 2,
-      "hitAdj": 2,
-      "dmgAdj": 2,
-      "detectionResistance": false,
-      "source": {
-        "book": "PHBR2",
-        "page": 107
-      },
-      "effects": "+2 to hit and damage. On a natural roll of 20 (and also of 19 if this is sufficient to score a hit) on a BACKSTAB attack they impale the target, inflicting an additional 1d4+2/1d3+2 points of damage and also staying in the wound, where they cause an additional 1d4+2/1d3+2 points of damage each round until removed."
-    },
-    {
-      "name": "Dagger of Resource",
-      "category": "weapon",
-      "baseType": "Dagger",
-      "restriction": "thief",
-      "xp": 500,
-      "magicBonus": null,
-      "hitAdj": null,
-      "dmgAdj": null,
-      "detectionResistance": false,
-      "source": {
-        "book": "PHBR2",
-        "page": 108
-      },
-      "effects": "Handles of ebony or ivory, or some similarly valuable and exotic substance, with 1d3+1 small studs in the cross guards. The dagger has attack and damage bonuses, but also has additional tools located within it; depressing one of the studs will cause the corresponding item to spring from the hilt, ready for use (only one tool at a time can be used). BONUSES AND TOOLS DEPEND ON THE NUMBER OF STUDS -- roll 1d3+1 and read the table.",
-      "table": {
-        "label": "By number of studs (1d3+1)",
-        "cols": [
-          "No. of studs",
-          "Hit/damage bonus",
-          "Tools avail.",
-          "Description of tools"
-        ],
-        "rows": [
-          [
-            "2",
-            "+4",
-            "2",
-            "Lock picks adding +5% to Open Locks rolls, plus tool for removing stones from horses' hooves"
-          ],
-          [
-            "3",
-            "+3",
-            "3",
-            "As above, plus Lens of Detection (see DMG p.173)"
-          ],
-          [
-            "4",
-            "+2",
-            "4",
-            "As above, plus Gem of Brightness with 3d10 charges"
-          ]
-        ]
-      }
-    },
-    {
-      "name": "Dagger of Sounding",
-      "category": "weapon",
-      "baseType": "Dagger",
-      "restriction": "thief",
-      "xp": 300,
-      "magicBonus": 1,
-      "hitAdj": 1,
-      "dmgAdj": 1,
-      "detectionResistance": false,
-      "source": {
-        "book": "PHBR2",
-        "page": 108
-      },
-      "effects": "+1 for attack and damage determination, but it has a peculiar, hollow bronze bulb at the end of its pommel. If this is gently tapped against a hollow surface, it gives a resounding ring quite different from the dull tone emitted if struck against solid stone. Tapping it gently against walls allows the thief a 5 in 6 chance for finding a secret door, rising to 11 in 12 if the thief is elven or half-elven. Also, the thief can search for secret doors at twice the normal rate when using this dagger. In other cases, the thief is 80% likely to be able to determine successfully the approximate thickness and nature of the material the dagger is used to sound."
+      "effects": "To all appearances an ordinary, worn leather saddle of good quality. If worn by a single horse, it attunes itself to that horse when worn for three days (not continuously -- just worn as an ordinary saddle is). Once attuned, nothing remarkable happens unless the horse dies while wearing the saddle. If it does, the spirit of the horse stays with the saddle for another 24 hours; half an hour after the horse died, the spirit will awaken, climb to its unseen feet, and prepare to carry its master wherever he wants to go. The ghost-horse continues to wear the saddle and to carry it around, and the horse's master or other favorite riders may ride it during that time. For the next 24 hours the horse-ghost will tirelessly carry its rider wherever he wants to go, at the full running speed the horse could manage when it was alive. The saddle floats in the air, four or five feet up, at the height the living horse carried it; the rider must mount normally and pretend all is as it ever was. Other than running, the horse-spirit has no unusual abilities. It cannot be seen or touched. It can whinny and neigh, and it CAN buck, though only the saddle is seen to buck in the air. It cannot truly fly; when it comes to a ravine it must descend to the bottom and climb the other slope as it would have had to do if it were alive. This frightens living horses: no normal horse will approach the animated saddle within a hundred feet, so it is best used when the character is alone and has had his horse killed out from under him. IF A CHARACTER KILLS HIS HORSE to get this service, the ghost-horse will remember and be offended -- even if done secretly, by poison or long-distance magic. It will allow him to mount and behave normally for a while, but at some catastrophic time will try to kill the character: jump off a cliff, ride him straight back at the enemy he's trying to elude, or buck him off into a pit of snakes. May also be made for donkeys, camels, or any other ground animals; they don't work with pegasi, griffons, or other flying beasts."
     },
     {
       "name": "Scabbard of Poison",
@@ -471,70 +606,17 @@
       }
     },
     {
-      "name": "Short Sword of Backstabbing",
-      "category": "weapon",
-      "baseType": "Sword, Short",
+      "name": "Shadowcloak",
+      "category": "worn",
+      "slot": "Cloak",
       "restriction": "thiefPreferred",
-      "xp": 700,
-      "magicBonus": 2,
-      "hitAdj": 2,
-      "dmgAdj": 2,
-      "detectionResistance": false,
+      "xp": 3000,
+      "detectionResistance": true,
       "source": {
         "book": "PHBR2",
-        "page": 108
+        "page": 106
       },
-      "effects": "In the hands of any character this is a +2 magical weapon, but in the hands of a thief it is especially potent. WHEN A THIEF MAKES A BACKSTAB ATTEMPT WITH THIS SHORT SWORD, IT ALLOWS HIM TO ATTACK AS IF FOUR LEVELS HIGHER than his actual experience level, with corresponding improvements in THAC0, attack rolls, and damage multiplier on a successful hit."
-    },
-    {
-      "name": "Bracelet of Charms",
-      "category": "worn",
-      "slot": null,
-      "restriction": "warrior",
-      "xp": null,
-      "detectionResistance": false,
-      "source": {
-        "book": "PHBR1",
-        "page": 113
-      },
-      "effects": "A nicely-crafted bracelet of sturdy gold links, looking like any other bracelet to which small charms and mementos are attached. When a warrior (only a warrior, multi-class warrior, or dual-class warrior) slides the bracelet around the blade or haft of a weapon and speaks the command word engraved on the clasp, the weapon disappears and a gold charm matching the weapon appears on the bracelet. Thereafter, when the warrior speaks the command word and the name of the weapon, the weapon magically appears in the hand on whose wrist the bracelet rested, and the bracelet disappears. Holds up to four weapons/charms, normal or magical. Shields and miscellaneous equipment cannot be held; only weapons built as weapons. Siege weapons cannot be held. The change takes no time at all, but only once per turn; the bracelet can be used only eight times in a day, turning the bracelet into a weapon counting as one use and turning the weapon back into a bracelet as one use. If the weapon held in the bracelet's enchantment is called on, and wielded, and then disarmed, the character cannot call on another weapon from the bracelet -- the bracelet is within the weapon and must be retrieved first. A weapon can be taken out of the array: take the bracelet off the wrist, speak the name of the weapon and then the command word, a reversal of the previous procedure. The bracelet does not magically know its owner; anyone who steals it and discovers what it is can use it. Quivers count as part of the weapon they carry arrows for. If a weapon is broken the bracelet isn't; the user separates the broken weapon from it. Quivers are not magically replenished. MAY NOT BE USED ON THE SAME WEAPON AS A SET OF RINGS OF READINESS."
-    },
-    {
-      "name": "Cage of Shelter",
-      "category": "misc",
-      "restriction": "none",
-      "xp": null,
-      "detectionResistance": false,
-      "source": {
-        "book": "PHBR1",
-        "page": 114
-      },
-      "effects": "Looks like a large bird-cage that has been neatly folded down into a package about the size of a medium shield. The user, who can be of any character class, places it upon the ground, steps back from it, and claps his hands loudly either two or three times. TWO CLAPS: the cage grows into a sturdy metal-framed tent housing eight people (substitute one horse for four people). The tent confers no magical blessing but by using it and huddling together for warmth a party can survive a snowstorm that would kill an unprotected party; erected in the desert it avoids the danger and discomfort of a sandstorm. THREE CLAPS: the cage grows into a strong 10' by 10' cell. The door to the cell has the equivalent of a wizard lock; the cage's owner can open it any time he wishes, and any magician with the knock spell can open it by using that spell. A person in the cell would have to make his Bend Bars/Lift Gates roll successfully (or use a knock) to escape; the door's lock cannot be picked. To return the cage to its original form the owner claps again, twice if it is in tent form, three times if it is in cage form. If someone is in it when it is a tent and begins collapsing, it opens up around the person inside; both he and it are unhurt. If someone is in it when it is a cage and begins collapsing, it collapses around him, inflicting 2d6 damage before it breaks open; thereafter it is ruined forever. The cage knows its owner. If someone finds it in a treasure, he must carry it in his gear for a month for the cage to attune itself to him. If its true owner sells it to someone else in the cage's presence, the cage will obey the claps of its new owner immediately."
-    },
-    {
-      "name": "Charm of Favor",
-      "category": "misc",
-      "restriction": "none",
-      "xp": null,
-      "detectionResistance": false,
-      "source": {
-        "book": "PHBR1",
-        "page": 114
-      },
-      "effects": "Given by deities and other powerful beings when they are pleased with the deed of a mortal. A small charm or statuette, usually of semiprecious material, two or three inches in size, representing the god or one of his aspects. Rather like a limited wish: it represents a favor which the deity will do for the character at some time in the future. To use it, the owner must throw the item on the ground so hard that it breaks, and then call out his request. The request must have something to do with the attributes of the god. The god hears it when the favor is requested and, in the guise of the DM, evaluates the favor; if it pertains to one of his attributes, and if the god does not think that the character is making the request out of mere greed or selfishness, and if bestowing the favor will not conflict with any of the god's other aims or desires, he will grant it. Because the deity is evaluating the request, the asking character cannot expect an outrageous favor to be granted. Most enemies who steal the charm from the PC cannot use it successfully; one might take it, hurl it to the ground and break it with his request, and find the cranky god stomping on him and freeing the faithful PC -- this, however, constitutes using up the favor. An NPC friend of the owner might be able to get the item and ask the god to help the charm's true owner, particularly if he is ill or kidnapped and cannot do so for himself. Any character of any class can receive such a charm as a favor, but when they are found in treasure they are useless -- they were not intended for the character who finds them. THE CHARM OF FAVOR DOES NOT RADIATE MAGIC."
-    },
-    {
-      "name": "Rings of Readiness",
-      "category": "worn",
-      "slot": "Ring",
-      "restriction": "none",
-      "xp": null,
-      "detectionResistance": false,
-      "source": {
-        "book": "PHBR1",
-        "page": 115
-      },
-      "effects": "TWO plain iron rings, one suitable to be worn on a finger and one larger, some 2 inches in diameter. The larger ring is placed on some item: sewn into or bolted onto a set of armor, placed upon the pommel of a weapon (in which case it shrinks until it fits snugly), or attached to any item of personal gear weighing less than 100 lbs. When the larger ring is attached to an object, and the smaller is worn by a character, the character needs only to utter the magical word inscribed on the inside of the smaller ring. If the other ring is within 10 miles, it will instantaneously transport that object to the character. If the item attached to the other ring is a weapon, it will appear in his hand; a suit of armor appears on the character, or next to him if he is already wearing armor; anything else appears in a fashion dictated by the DM. If the item is more than 10 miles away, nothing happens. Use of the rings must be announced before initiative in the combat turn; the character calls out the magic word before initiative, then later in the turn when his actions come up, the item appears. If a character finds the smaller ring without the larger one, he can summon whatever object the larger one is attached to, even if it is not his. The magic only works if the item attached to the larger ring is inanimate -- living things are not transported. Once summoned, objects may not be sent back: this is a one-way trip. The rings may be used any number of times; they do not wear out. Usable by characters of any class. MAY NOT BE USED ON THE SAME WEAPON AS A BRACELET OF CHARMS."
+      "effects": "A large, cowled cloak made from pure black velvet. Worn by a thief it improves hide in shadows chances by 25% and makes the thief 50% likely to be invisible in near-darkness, even to infravision, ultravision and the like. It can also be used to cast darkness, darkness 15' radius, and continual darkness once each per day at 12th level of magic use. Finally, once per day the wearer can transform into a shadow for up to 12 turns, becoming a shadow in all respects save for mental ones -- thus the wearer cannot be damaged by nonmagical weapons, undead take the wearer for a shadow and ignore him. Saves against light-based attacks (e.g. a light spell cast into the eyes) are always made at -2 by the wearer. If a cleric successfully makes a turning attempt against the wearer in shadowform, the cloak wearer is permitted a saving throw, at -4 if the cleric is actually able to damn/destroy shadows. If the save fails, the wearer suffers 1d6 points of damage per level of the cleric and the shadowcloak is destroyed. If the save is made, the character takes half damage and must flee in fear from the cleric at maximum rate for one turn."
     },
     {
       "name": "Sheath of Holding",
@@ -644,18 +726,6 @@
       }
     },
     {
-      "name": "Saddle of the Spirit-Horse",
-      "category": "misc",
-      "restriction": "warrior",
-      "xp": null,
-      "detectionResistance": false,
-      "source": {
-        "book": "PHBR1",
-        "page": 116
-      },
-      "effects": "To all appearances an ordinary, worn leather saddle of good quality. If worn by a single horse, it attunes itself to that horse when worn for three days (not continuously -- just worn as an ordinary saddle is). Once attuned, nothing remarkable happens unless the horse dies while wearing the saddle. If it does, the spirit of the horse stays with the saddle for another 24 hours; half an hour after the horse died, the spirit will awaken, climb to its unseen feet, and prepare to carry its master wherever he wants to go. The ghost-horse continues to wear the saddle and to carry it around, and the horse's master or other favorite riders may ride it during that time. For the next 24 hours the horse-ghost will tirelessly carry its rider wherever he wants to go, at the full running speed the horse could manage when it was alive. The saddle floats in the air, four or five feet up, at the height the living horse carried it; the rider must mount normally and pretend all is as it ever was. Other than running, the horse-spirit has no unusual abilities. It cannot be seen or touched. It can whinny and neigh, and it CAN buck, though only the saddle is seen to buck in the air. It cannot truly fly; when it comes to a ravine it must descend to the bottom and climb the other slope as it would have had to do if it were alive. This frightens living horses: no normal horse will approach the animated saddle within a hundred feet, so it is best used when the character is alone and has had his horse killed out from under him. IF A CHARACTER KILLS HIS HORSE to get this service, the ghost-horse will remember and be offended -- even if done secretly, by poison or long-distance magic. It will allow him to mount and behave normally for a while, but at some catastrophic time will try to kill the character: jump off a cliff, ride him straight back at the enemy he's trying to elude, or buck him off into a pit of snakes. May also be made for donkeys, camels, or any other ground animals; they don't work with pegasi, griffons, or other flying beasts."
-    },
-    {
       "name": "Shield of Medusae",
       "category": "worn",
       "slot": "Shield",
@@ -669,6 +739,85 @@
         "page": 116
       },
       "effects": "Shaped like and works like a normal medium shield. But the outside (the side that faces the enemy) is mirror-reflective, and the inside (where the warrior's straps are) is CRYSTAL CLEAR. To use it, the warrior holds it up before him, in front of his eyes, and looks through its clear surface. While he is doing so, he is immune to the stoning gazes of creatures such as the medusa and basilisk, and to magical items which duplicate their gazes. When the character carrying this shield confronts a stoning creature, he reflects their images back at them, and IT IS THEY WHO MUST MAKE SAVING THROWS vs. petrification or be turned to stone. Unlike ordinary shields, the shield of medusae has only two damage points before it shatters -- in other words, if it is hit twice, it is destroyed. (Damage points are PHBR1's optional Damage to Armor system, which this project does not implement; recorded as printed.)"
+    },
+    {
+      "name": "Short Sword of Backstabbing",
+      "category": "weapon",
+      "baseType": "Sword, Short",
+      "restriction": "thiefPreferred",
+      "xp": 700,
+      "magicBonus": 2,
+      "hitAdj": 2,
+      "dmgAdj": 2,
+      "detectionResistance": false,
+      "source": {
+        "book": "PHBR2",
+        "page": 108
+      },
+      "effects": "In the hands of any character this is a +2 magical weapon, but in the hands of a thief it is especially potent. WHEN A THIEF MAKES A BACKSTAB ATTEMPT WITH THIS SHORT SWORD, IT ALLOWS HIM TO ATTACK AS IF FOUR LEVELS HIGHER than his actual experience level, with corresponding improvements in THAC0, attack rolls, and damage multiplier on a successful hit."
+    },
+    {
+      "name": "Species Enemy Medallion",
+      "category": "worn",
+      "slot": "Amulet",
+      "baseType": null,
+      "restriction": "rangerPreferred",
+      "xp": 750,
+      "detectionResistance": false,
+      "source": {
+        "book": "PHBR11",
+        "page": 93
+      },
+      "effects": "A copper disk worn on a chain around the neck and UNDER THE CLOTHING, so that the metal touches the chest. When the character comes within 100 YARDS of his species enemy, the medallion becomes warm, alerting him to the enemy's presence. The intensity of the warmth varies according to the number and proximity of the enemy. The medallion does NOT get hot enough to cause damage, and does NOT reveal the exact location or number of enemies in the vicinity.",
+      "magicBonus": null,
+      "hitAdj": null,
+      "dmgAdj": null
+    },
+    {
+      "name": "String Cage",
+      "category": "misc",
+      "slot": null,
+      "baseType": null,
+      "restriction": "rangerPreferred",
+      "xp": 500,
+      "detectionResistance": false,
+      "source": {
+        "book": "PHBR11",
+        "page": 93
+      },
+      "effects": "A piece of white thread 20 feet long, flecked with gold. Arranged in a circle so that the ends touch, it creates an INVISIBLE BARRIER preventing any creature contained inside from leaving. The barrier has the strength of a wall of force and the shape of a closed cylinder about 6' tall. It ONLY FUNCTIONS IF PLACED ON THE GROUND or other solid surface; if moved, the barrier dissipates. Because of its light weight the string cannot be thrown like a lasso, and if rocks or other weights are attached its magic is negated -- so it is mainly useful to contain creatures that are sleeping, trapped, restrained or cooperative. It can contain ANY SINGLE CREATURE so long as it fits inside the circle. Physical attacks and most spells have no effect on it, and the creature trapped inside cannot move it. A disintegrate spell destroys the device, as will a rod of cancellation or a sphere of annihilation. A contained creature can escape by dimension door, teleport or a similar spell. ONLY THE PERSON WHO ORIGINALLY FORMED THE CIRCLE can separate the ends and free the creature; otherwise it lasts 3-12 (3d4) hours, at which time the ends separate automatically. Usable ONCE PER DAY.",
+      "magicBonus": null,
+      "hitAdj": null,
+      "dmgAdj": null
+    },
+    {
+      "name": "Tallin's Tightrope",
+      "category": "misc",
+      "restriction": "none",
+      "xp": 1250,
+      "detectionResistance": false,
+      "source": {
+        "book": "PHBR2",
+        "page": 107
+      },
+      "effects": "A modified rope of climbing which will only snake forward at an angle of up to 45 degrees upward or downward, but which also enables its owner and up to five man-sized or smaller creatures touched by its owner to walk upon it as if they had the tightrope walking proficiency, with a +4 bonus to any proficiency checks required. Anyone not touched by the rope owner attempting to walk on it will suffer a -4 penalty to any saves or checks made while on the rope. In all other ways, this item is identical to a normal rope of climbing."
+    },
+    {
+      "name": "Thorn of Sleep",
+      "category": "misc",
+      "slot": null,
+      "baseType": null,
+      "restriction": "rangerPreferred",
+      "xp": 100,
+      "detectionResistance": false,
+      "source": {
+        "book": "PHBR11",
+        "page": 93
+      },
+      "effects": "Looks like the thorn of a plant, about three inches long, dry and smooth to the touch. If pricked by the thorn, a creature must make a SAVING THROW VS. PARALYZATION; failure means it falls into a deep slumber and will not waken until attacked or strongly roused -- noises, even those of battle, will not awaken it. EACH THORN CAN BE USED BUT ONCE. Only 1-8 thorns will be found at any one time. A thorn of sleep CAN BE PROJECTED BY A BLOWGUN. The XP value of 100 is PER THORN.",
+      "magicBonus": null,
+      "hitAdj": null,
+      "dmgAdj": null
     }
   ]
 }
