@@ -5629,6 +5629,16 @@ function makeMagicItemNode(data={}, onChange){
       const open = miDetails.style.display !== 'none';
       miDetails.style.display = open ? 'none' : 'block';
       miToggleBtn.textContent = open ? 'Details' : 'Hide';
+      // RE-MEASURE ON OPEN. This panel is built display:none, so any textarea
+      // inside it has scrollHeight 0 and autoExpand rightly refuses to size it
+      // -- a card added from the browser therefore showed its Description
+      // clipped to the minimum until a tab switch happened to re-sweep it.
+      // The MutationObserver catches textareas APPEARING, not panels UNHIDING,
+      // which is why this has to live on the toggle itself.
+      if (!open && typeof autoExpand === 'function') {
+        requestAnimationFrame(() =>
+          miDetails.querySelectorAll('textarea').forEach(ta => autoExpand(ta)));
+      }
     };
   }
 
