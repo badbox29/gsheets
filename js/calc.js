@@ -5312,7 +5312,7 @@ function addMagicFromBrowser(root, item) {
     if (!list) return;
     const base = (typeof WEAPONS_DATA !== 'undefined' ? WEAPONS_DATA : [])
       .find(w => w['Weapon Name'] === item.baseType) || {};
-      added = makeWeaponNode({
+    added = makeWeaponNode({
       name: title,
       damageSM: base['Damage (S-M)'] || '', damageL: base['Damage (L)'] || '',
       speed: base['Speed Factor'] || '',    weight: num(base.Weight),
@@ -5325,13 +5325,14 @@ function addMagicFromBrowser(root, item) {
       hitAdj:     (item.hitAdj     == null ? '' : item.hitAdj),
       dmgAdj:     (item.dmgAdj     == null ? '' : item.dmgAdj),
       effects: item.effects || ''
-    }, done));
+    }, done);
+    list.appendChild(added);
   } else if (dest.list === 'armor') {
     const list = root.querySelector('.armor-list');
     if (!list) return;
     const base = (typeof ARMOR_DATA !== 'undefined' ? ARMOR_DATA : [])
       .find(a => a['Armor Name'] === item.baseType) || {};
-      added = makeArmorNode({
+    added = makeArmorNode({
       name: title,
       armorType: item.slot || 'Other',
       armorTypeKey: (item.baseType && typeof inferArmorTypeKey === 'function')
@@ -5346,8 +5347,9 @@ function addMagicFromBrowser(root, item) {
       weight: num(base.Weight),
       isMagical: true, identified: true, trueName: item.name,
       effects: item.effects || ''
-    }, done));
-    } else {
+    }, done);
+    list.appendChild(added);
+  } else {
     const list = root.querySelector('.magic-items-list');
     if (!list) return;
     // TRUE NAME omitted deliberately. On a weapon or armour the title is the
