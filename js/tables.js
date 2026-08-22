@@ -6985,8 +6985,7 @@ const SUPPLEMENTS = {
     //
     // NO legacyBand ANYWHERE, unlike PHBR1. The book is new, so no table has a
     // stored phbr2.core or phbr2.optional value for a band to inherit.
-    bandOrder: ['armorThiefSkills', 'advancedThiefRules'],
-
+    bandOrder: ['armorThiefSkills', 'kitSkillAdjustments', 'advancedThiefRules'],
     armorThiefSkills: {
       label: 'Armor and thief skills',
       hint:  'Table 38 extends PHB Table 29 to every armor type.',
@@ -7010,6 +7009,37 @@ const SUPPLEMENTS = {
         { text: 'No skill falls below 1%. Table 38: a character \u201ccan always have a ' +
                 '1% chance of success, even when trying to pick pockets in full plate ' +
                 'armor.\u201d The 95% ceiling is unchanged.' }
+      ]
+    },
+
+    kitSkillAdjustments: {
+      label: 'Thief kit skill adjustments',
+      hint:  'Table 4: each kit adjusts the eight thief skills.',
+      rules: ['kitSkillAdjustmentsPHBR2'],
+      changes: [
+        { text: 'Each thief kit adjusts the eight thieving skills by the ' +
+                'percentages in Table 4 (p.24) \u2014 a Cutpurse gets +10% Pick Pockets ' +
+                'and \u22125% Climb Walls, a Troubleshooter \u221210% Pick Pockets and +5% ' +
+                'Open Locks, and so on for all eighteen kits. ' +
+                'THE BOOK ITSELF MARKS THIS OPTIONAL: the heading beneath the table ' +
+                'reads \u201cThief Kits and Thieving Skills (Optional Rules)\u201d.',
+          caveat: 'Table 5 (p.25) fixes the order \u2014 base score, then racial, then ' +
+                  'Dexterity, then KIT, giving the total base skill that ' +
+                  'discretionary points are spent on top of. The kit adjustment is a ' +
+                  'PRE-DISCRETIONARY term, and that total may legitimately be ' +
+                  'NEGATIVE: the book\u2019s own worked example ends at \u22125% Read Languages.' },
+        { text: 'THREE CONDITIONAL BONUSES ARE NOT APPLIED as numbers, because ' +
+                'Table 4 prints them as footnoted dashes. The Assassin and Bounty ' +
+                'Hunter get +5% on a Pick Pockets roll ONLY when slipping poison or ' +
+                'sedative into food or drink, and the Bandit +5% Move Silently ONLY ' +
+                'in the wilderness. They are recorded on each kit\u2019s ability list ' +
+                'instead, where the condition travels with the number.' },
+        { text: 'Kit point budgets also differ where the book says so: the ASSASSIN ' +
+                'gets 40 discretionary points at 1st level and 20 per level after, ' +
+                'and the THUG 40 at 1st with the normal 30 after, against 60 and 30.',
+          caveat: 'The budgets are recorded in the kit data but NOTHING VALIDATES ' +
+                  'THEM YET \u2014 no counter checks the eight point fields against a ' +
+                  'total. Displayed, not enforced.' }
       ]
     },
 
