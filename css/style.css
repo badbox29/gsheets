@@ -1364,9 +1364,19 @@
       background-size: 100% 7px, 100% 1px;
       background-position: center 13px, center 16px;
     }
+		/* Auto-grow is done in JS by autoExpand(); overflow-y was hidden because
+	   that script keeps the height matched to the content, so a scrollbar would
+	   never be needed. The flaw: when a textarea DOESN'T get wired -- which is
+	   what happened to every card created after page load -- hidden overflow
+	   plus resize:none clips the text with no scrollbar and no way for the user
+	   to recover it. The note simply vanishes.
+	   overflow-y:auto makes that failure VISIBLE AND USABLE instead of silent,
+	   and max-height caps a genuine case: a magic item's effects prose runs to
+	   1,100 characters, which fully expanded is a card several screens tall. */
 	textarea {
-	  overflow-y: hidden;
-	  resize: none; /* optional: prevent manual resize handles */
+	  overflow-y: auto;
+	  max-height: 250px;
+	  resize: none; /* handled by autoExpand(); see app.js */
 	}
 	.attack-matrix-table {
 	  border-collapse: collapse;
