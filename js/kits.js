@@ -125,15 +125,33 @@
 // thiefSkillMods -- ranger kit stealth adjustments (PHBR11 Table 12, p.11)
 // ---------------------------------------------------------------------------
 //
-//   thiefSkillMods: { hideInShadows: 10, moveSilently: 10 }
+//   thiefSkillMods: { hideInShadows: 10, moveSilently: 10 }          // ranger
+//   thiefSkillMods: { pickPockets: 10, openLocks: -5, findTraps: -5,  // thief
+//                     moveSilently: 0, hideInShadows: 5, detectNoise: 0,
+//                     climbWalls: 0, readLanguages: -5 }
 //
-// PERCENTAGE POINTS, added to the figures getRangerStealth() computes from PHB
-// Table 18. 0 means the book prints "--" (no adjustment). NULL means the kit
-// has no such ability at all -- only the Sea Ranger, who has neither, and whose
-// entry carries a `note` saying so. A null must NOT be treated as zero.
+// PERCENTAGE POINTS. 0 means the book prints "--" (no adjustment). NULL means
+// the kit has no such ability at all -- only the Sea Ranger, who has neither,
+// and whose entry carries a `note` saying so. A null must NOT be treated as
+// zero. ABSENT keys mean the book adjusts only the skills it lists: ranger kits
+// carry two, thief kits all eight.
 //
-// Ranger-only for now. If another class's handbook turns out to adjust thief
-// skills per kit, widen the shape rather than adding a second field.
+// WIDENED FOR PHBR2, August 2026, exactly as this comment previously instructed
+// ("widen the shape rather than adding a second field"). Ranger values come from
+// PHBR11 Table 12 p.11 and feed getRangerStealth(); THIEF values come from PHBR2
+// TABLE 4 p.24 and are a PRE-DISCRETIONARY term.
+//
+// TABLE 5 (p.25) FIXES THE ORDER: base score -> racial adj -> Dexterity adj ->
+// KIT ADJ -> total base skill, and discretionary points are spent on top of that
+// total. Urlar's worked example ends with Read Languages at -5%, so THE
+// PRE-DISCRETIONARY VALUE MUST NOT BE CLAMPED AT ZERO.
+//
+// FOOTNOTED ZEROS ARE NOT IN THIS FIELD. Table 4 prints a dash with a footnote
+// for three conditional bonuses, all of which live in `abilities` instead:
+// Assassin and Bounty Hunter get +5% on a PICK POCKETS roll when slipping a
+// substance into food or drink and NOWHERE ELSE (note 3); the Bandit gets +5%
+// MOVE SILENTLY in the wilderness (note 4). The Scout's +10% wilderness stealth
+// and -5% city penalty are likewise situational and live in `abilities`.
 //
 // ---------------------------------------------------------------------------
 // TERRAIN AND RACE -- same treatment as alignment
@@ -3112,175 +3130,413 @@ const KITS = {
 
   // ========== THIEF KITS ==========
   thief: {
-    assassin: {
-      name: "Assassin",
-      class: "thief",
-      source: {
-        status: "unverified",
-        work:   "PHBR2 The Complete Thief's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Assassination", notes: "Increased backstab damage multiplier" },
-        { name: "Poison Use", notes: "Can use poisons without restriction" }
-      ],
-      requirements: { str: 12, dex: 12, int: 11, alignment: "Any evil" },
-      benefits: "Backstab x3 at 1st level (improves faster). Poison expertise. +2 to disguise.",
-      hindrances: "Evil alignment required. Hunted by law. Must accept assassination contracts."
-    },
-    bountyhunter: {
-      name: "Bounty Hunter",
-      class: "thief",
-      source: {
-        status: "unverified",
-        work:   "PHBR2 The Complete Thief's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Track Quarry", notes: "Can track humanoids" },
-        { name: "Capture Alive", notes: "+4 to subdue opponents" }
-      ],
-      requirements: { dex: 13, wis: 12, alignment: "Any" },
-      benefits: "Tracking ability. Improved rope use. +2 to find/follow prey. Contacts in many cities.",
-      hindrances: "Must take bounty contracts. Enemies among criminals. Complex legal issues."
-    },
     acrobat: {
       name: "Acrobat",
       class: "thief",
       source: {
-        status: "unverified",
+        status: "verified",
         work:   "PHBR2 The Complete Thief's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+        pages:  "24-26",
+        note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
       },
+      thiefSkillMods: { pickPockets: 5, openLocks: -5, findTraps: -5, moveSilently: 5, hideInShadows: 0, detectNoise: 0, climbWalls: 5, readLanguages: 0 },
       abilities: [
-        { name: "Tumbling", notes: "+3 to jumping, tumbling, and acrobatic feats" },
-        { name: "Defensive Roll", notes: "Can reduce falling damage" }
+        { name: "Acrobatic Skills", notes: "+1 bonus to any proficiency check for JUMPING, TUMBLING or TIGHTROPE WALKING. The bonus is +2 if the Acrobat wears NO ARMOR and, under the optional encumbrance rules, is UNENCUMBERED." },
+        { name: "Acrobatic Proficiencies Are Innate", notes: "Jumping, tumbling and tightrope walking are so crucial to this kit that the Acrobat has them as special abilities EVEN IF THE DM DOES NOT USE THE NONWEAPON PROFICIENCY SYSTEM." },
+        { name: "Weapon Proficiencies", notes: "Any weapon normally permitted to thieves, but Acrobats avoid heavy and cumbersome ones." },
+        { name: "Nonweapon Proficiencies", notes: "Required: none. Recommended: Alertness, Disguise, Fast-Talking, Juggling, Musical Instrument, Riding, Rope Use, Ventriloquism." },
+        { name: "Equipment: Light Only", notes: "Acrobats favor the least and lightest equipment possible. Under the optional encumbrance rules (PHB pp.76-79) they should not be permitted more than LIGHT ENCUMBRANCE." },
+        { name: "Race: Dwarves Discouraged", notes: "Dwarves ought not to take this kit. HALFLINGS AND GNOMES MAY, but do NOT gain the jumping and tightrope walking bonuses. THEY DO RECEIVE THE TUMBLING BONUS." }
       ],
-      requirements: { str: 12, dex: 16, alignment: "Any" },
-      benefits: "Improved climb walls. No damage from falls under 30 ft. +2 AC when dodging.",
-      hindrances: "Reduced pick pockets and open locks (-10%). Must practice daily."
-    },
-    spy: {
-      name: "Spy",
-      class: "thief",
-      source: {
-        status: "unverified",
-        work:   "PHBR2 The Complete Thief's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Deep Cover", notes: "+4 to disguise and acting" },
-        { name: "Information Network", notes: "Contacts in many locations" }
-      ],
-      requirements: { int: 13, cha: 12, alignment: "Any" },
-      benefits: "Improved read languages. Forgery. +2 to gather information. Multiple identities.",
-      hindrances: "Serve organization/nation. Dangerous work. If exposed, become hunted."
-    },
-    burglar: {
-      name: "Burglar",
-      class: "thief",
-      source: {
-        status: "unverified",
-        work:   "PHBR2 The Complete Thief's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Security Expert", notes: "+10% to open locks and find traps" },
-        { name: "Case the Joint", notes: "Can assess building security" }
-      ],
-      requirements: { dex: 14, int: 12, alignment: "Any non-lawful" },
-      benefits: "+10% open locks, find/remove traps. Improved climb walls. Assess loot value.",
-      hindrances: "Reduced backstab (-10%). Must specialize in theft. Thieves' guild obligations."
-    },
-    fence: {
-      name: "Fence",
-      class: "thief",
-      source: {
-        status: "unverified",
-        work:   "PHBR2 The Complete Thief's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Appraisal", notes: "Accurately value any item" },
-        { name: "Black Market Contacts", notes: "Can buy/sell illegal goods" }
-      ],
-      requirements: { int: 13, cha: 13, alignment: "Any non-lawful" },
-      benefits: "+4 to appraise items. Contacts in criminal underworld. +20% to sell stolen goods.",
-      hindrances: "Reduced thieving skills (-10% to most). Must maintain shop. Guild obligations."
-    },
-    cutpurse: {
-      name: "Cutpurse",
-      class: "thief",
-      source: {
-        status: "unverified",
-        work:   "PHBR2 The Complete Thief's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Master Pickpocket", notes: "+15% to pick pockets" },
-        { name: "Blend In Crowd", notes: "+10% to hide in shadows in urban areas" }
-      ],
-      requirements: { dex: 16, alignment: "Any non-lawful" },
-      benefits: "+15% pick pockets. Can steal during conversation. Crowd tactics.",
-      hindrances: "Reduced other skills (-5%). Must work crowds. Guild obligations."
-    },
-    smuggler: {
-      name: "Smuggler",
-      class: "thief",
-      source: {
-        status: "unverified",
-        work:   "PHBR2 The Complete Thief's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Secret Routes", notes: "Know hidden paths and smuggling routes" },
-        { name: "Contraband Expert", notes: "Hide items from detection" }
-      ],
-      requirements: { int: 12, wis: 11, alignment: "Any" },
-      benefits: "Contacts in ports. +4 to navigation. +4 to hide/detect contraband.",
-      hindrances: "Hunted by authorities. Must make smuggling runs. Dangerous enemies."
-    },
-    buccaneer: {
-      name: "Buccaneer",
-      class: "thief",
-      source: {
-        status: "unverified",
-        work:   "PHBR2 The Complete Thief's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Sea Legs", notes: "No penalties on ships" },
-        { name: "Boarding Action", notes: "+2 to hit during ship combat" }
-      ],
-      requirements: { str: 13, dex: 13, alignment: "Any non-lawful" },
-      benefits: "Sailing expertise. Swimming. +2 to hit with cutlass. Fearsome reputation.",
-      hindrances: "Must be on/near water. Hunted by navies. Must crew ship."
+      requirements: { str: 12, dex: 14, alignment: "Any" },
+      benefits: "Minimum Strength 12 and Dexterity 14. +1 to jumping, tumbling and tightrope walking checks, +2 when unarmored and unencumbered; those three proficiencies are innate to the kit. Climbing walls is the most applicable traditional thief skill, and moving silently improves rapidly.",
+      hindrances: "Special Hindrances: None printed. Restricted in practice to light equipment. Dwarves discouraged; halflings and gnomes forgo the jumping and tightrope bonuses."
     },
     adventurer: {
       name: "Adventurer",
       class: "thief",
       source: {
-        status: "unverified",
+        status: "verified",
         work:   "PHBR2 The Complete Thief's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+        pages:  "26-27",
+        note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
       },
+      thiefSkillMods: { pickPockets: 0, openLocks: 0, findTraps: 0, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: 0, readLanguages: 0 },
       abilities: [
-        { name: "Jack of All Trades", notes: "Versatile skill selection" },
-        { name: "Lucky", notes: "Once per day, reroll any failed check" }
+        { name: "No Requirements", notes: "The Adventurer kit has NO REQUIREMENTS beyond those of the thief class itself." },
+        { name: "Weapon Proficiencies", notes: "Any." },
+        { name: "Nonweapon Proficiencies", notes: "Required: none. Recommended: player's choice; among those that may be selected are Alertness, Boating, Fast-talking, Information Gathering and Looting." },
+        { name: "Even Skill Spread", notes: "Spreads skill improvements as evenly as possible, to deal with the many different challenges of adventuring. Any concentration is usually on opening locks or finding and removing traps, which are used most often." },
+        { name: "Gadget-Oriented", notes: "Typically very gadget-oriented, delighting in new ways to bypass monsters and raid their lairs, with money from successful ventures to reinvest in equipment." }
       ],
-      requirements: { dex: 13, alignment: "Any" },
-      benefits: "Balanced thieving skills. Bonus proficiency slots. Good reaction (+1).",
-      hindrances: "No skill bonuses. No specialization. Must seek adventure."
+      requirements: { alignment: "Any, though almost none that is chaotic evil survives long" },
+      benefits: "The jack-of-all-trades, the prototypical dungeon-delving thief. No requirements, no special benefits, no special hindrances, any race. Preferred by many adventuring parties because he is much less likely than other thieves to betray or steal from his own companions.",
+      hindrances: "Special Hindrances: None."
+    },
+    assassin: {
+      name: "Assassin",
+      class: "thief",
+      source: {
+        status: "verified",
+        work:   "PHBR2 The Complete Thief's Handbook",
+        pages:  "26-28",
+        note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
+      },
+      thiefSkillMods: { pickPockets: 0, openLocks: 0, findTraps: 5, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: 0, readLanguages: -5 },
+      discretionaryPoints: 40,
+      discretionaryPointsPerLevel: 20,
+      abilities: [
+        { name: "Poison Identification", notes: "Base chance is the Assassin's LEVEL x 5%. Intelligence 13-15 adds +5%, 16-17 adds +10%, 18 adds +15%. METHOD: by symptom no penalty (most certain, but needs a poisoned character to examine); by taste -5%; by odor -15%; by sight -20% (its advantage is risking no self-poisoning). SELF-POISONING: taste affects him 25% injected, 75% ingested, 100% contact; smell 10%, ingested or contact only. Effects on himself are always HALF STRENGTH. Herbalism adds +5%, healing +10%; THESE ARE NOT CUMULATIVE. An attempt takes one round. If one method fails another may be tried; if all four fail the poison stays a mystery to that Assassin until he gains a level. Identification confers knowledge of the antidote if one exists, though not its availability." },
+        { name: "Slipping Substances", notes: "Adept at slipping poison, sedative and the like into a target's food or drink. Resolved by a PICK POCKETS roll at +5%. THIS BONUS DOES NOT APPLY TO PICKPOCKETING OR ANY OTHER USE of the ability (Table 4, note 3)." },
+        { name: "Any Weapon", notes: "ALONE AMONG THIEF KITS, permitted the use of ANY weapon. Often selects one favored weapon -- a garrote, a serrated dagger, blowgun darts with exotic insect poison -- which may become known as a calling card." },
+        { name: "Nonweapon Proficiencies", notes: "Required: Trailing, Disguise. Recommended: Alertness, Begging, Information Gathering, Herbalism, Land-Based Riding, Observation, Tracking, Voice Mimicry." },
+        { name: "Poison Access", notes: "If the DM permits, poison is available and frequently used. It may be purchased -- expensive and usually illegal -- or manufactured or extracted by the Assassin himself, which can be dangerous." }
+      ],
+      requirements: { str: 12, dex: 12, int: 11, alignment: "Usually evil; a neutral but not good Assassin is conceivable" },
+      benefits: "Minimum Strength 12, Dexterity 12 and Intelligence 11. Permitted ANY weapon, alone among thief kits. Poison identification by four methods, and +5% on a pick pockets roll when slipping substances into food or drink. Favors move silently, hide in shadows, detect noise and climb walls.",
+      hindrances: "ADVANCES MORE SLOWLY IN THIEVES' SKILLS because of the time spent on weapons and poisons: only 40 DISCRETIONARY POINTS at 1st level and 20 PER LEVEL thereafter, against the normal 60 and 30. Generally feared and shunned -- a -4 REACTION PENALTY with non-evil NPCs aware of his profession. The DM may forbid elven, gnome and halfling Assassins, the profession being antithetical to their cultures."
+    },
+    bandit: {
+      name: "Bandit",
+      class: "thief",
+      source: {
+        status: "verified",
+        work:   "PHBR2 The Complete Thief's Handbook",
+        pages:  "27-28",
+        note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
+      },
+      thiefSkillMods: { pickPockets: -5, openLocks: 0, findTraps: 10, moveSilently: 0, hideInShadows: 5, detectNoise: 0, climbWalls: -5, readLanguages: -5 },
+      abilities: [
+        { name: "Ambush", notes: "Because of their adeptness at ambushing, Bandits gain +1 ON THEIR ATTEMPT TO SURPRISE IN A WILDERNESS SETTING." },
+        { name: "Wilderness Stealth", notes: "In the wilderness the Bandit gets +5% to MOVE SILENTLY (Table 4, note 4). This is situational and is NOT part of the flat Table 4 adjustment." },
+        { name: "Bludgeoning Weapons", notes: "Partial to heavy, brutal, bludgeoning weapons. MAY USE FLAIL, MACE, MORNING STAR AND WARHAMMER in addition to those normally permitted to thieves." },
+        { name: "Third Weapon Slot", notes: "At least one initial weapon proficiency slot must be filled by a bludgeoning weapon, and Bandits MUST ALSO TAKE PROFICIENCY IN THE KNIFE -- for fighting, and as practical equipment for wilderness survival. Since this fills the two slots open to a thief, THE BANDIT IS GRANTED A THIRD INITIAL WEAPON PROFICIENCY SLOT, to fill with any weapon permitted to thieves." },
+        { name: "Nonweapon Proficiencies", notes: "Required: Survival (choose appropriate terrain). Recommended: Alertness, Animal Handling/Training, Animal Noise, Firebuilding, Intimidation, Looting, Riding, Rope Use, Set Snares, Swimming." },
+        { name: "Trained Animals", notes: "Bandits like to keep trained animals -- dogs, falcons, pigeons -- for hunting or message-carrying. Animal handling proficiency is needed to make effective use of such an animal." }
+      ],
+      requirements: { str: 10, con: 10, alignment: "Any" },
+      benefits: "Minimum Strength 10 and Constitution 10. +1 to surprise in a wilderness setting, +5% move silently in the wilderness, four bludgeoning weapons beyond the thief list, and a third initial weapon proficiency slot. Favors climb walls, move silently, hide in shadows and find/remove traps.",
+      hindrances: "Generally despised by other characters: normal people hate and fear highwaymen, and other thieves look on them with scorn as outcasts and crude robbers. Any Bandit recognized as such suffers a -2 REACTION PENALTY among non-Bandit NPCs."
+    },
+    beggar: {
+      name: "Beggar",
+      class: "thief",
+      source: {
+        status: "verified",
+        work:   "PHBR2 The Complete Thief's Handbook",
+        pages:  "28-29",
+        note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
+      },
+      thiefSkillMods: { pickPockets: 10, openLocks: -5, findTraps: -5, moveSilently: 0, hideInShadows: 5, detectNoise: 0, climbWalls: 0, readLanguages: -5 },
+      abilities: [
+        { name: "Bonus Nonweapon Proficiencies", notes: "The most valuable benefit of the kit is the LARGE NUMBER OF BONUS NONWEAPON PROFICIENCIES. THESE SHOULD BE GRANTED EVEN IF THE CAMPAIGN AT LARGE DOES NOT USE THE NONWEAPON PROFICIENCY RULES." },
+        { name: "Weapon Proficiencies", notes: "Beggars begin with familiarity only in simple, inexpensive weapons. They select their TWO proficient weapons from: CLUB, DAGGER, DART, KNIFE, SLING or STAFF. The knife is a favorite, being inexpensive, easy to use and easy to conceal." },
+        { name: "Nonweapon Proficiencies", notes: "Required: Begging, Disguise, Information Gathering, Observation. Recommended: Alertness, Singing, Trailing." },
+        { name: "Skill Progression", notes: "Most proficient at picking pockets, to supplement begging income, and at moving silently, hiding in shadows and detecting noise, useful for gathering information and tailing people. Worst at opening locks and finding or removing traps, which require technical training not easily available." },
+        { name: "Equipment", notes: "A wooden bowl or cup for alms. More sophisticated Beggars have false crutches, make-up and the like. Some keep children with them -- rented from the true parents, borrowed for a share of the day's income, or not their own at all -- to arouse still more sympathy." },
+        { name: "Race", notes: "Beggars may be of any race. IN REGIONS WITH A LOT OF BIGOTRY, where demihumans have difficulty finding legitimate employment, Beggars are commonly demihuman. Most nonhuman Beggars were FORCED INTO THEIR POSITION by unfortunate circumstances -- they were not born into it." }
+      ],
+      requirements: { alignment: "Any" },
+      benefits: "No requirements beyond the thief class. A large number of bonus nonweapon proficiencies, granted even in campaigns not using the proficiency rules. Best at picking pockets, moving silently, hiding in shadows and detecting noise.",
+      hindrances: "Scorned by most of society. Even characters who share their wealth feel disgust or condescension. Other thieves recognize the talents and value of Beggars, so the penalty applies only outside that circle: -2 ON REACTION ROLLS WITH NPCs WHO AREN'T THIEVES. Impoverished background: BEGGARS START THE GAME WITH ONLY 3d4 GOLD PIECES. Few can afford armor, and would not wear it if they could, since it would suggest they are wealthier than they wish to appear. A Beggar who rises above his circumstances may equip himself as he sees fit, but will no longer be accepted by other Beggars; one who appears well-off could suffer penalties at the DM's discretion to begging, information gathering, and even trailing."
+    },
+    bountyhunter: {
+      name: "Bounty Hunter",
+      class: "thief",
+      source: {
+        status: "verified",
+        work:   "PHBR2 The Complete Thief's Handbook",
+        pages:  "29-31",
+        note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
+      },
+      thiefSkillMods: { pickPockets: 0, openLocks: 0, findTraps: 5, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: -5, readLanguages: 0 },
+      abilities: [
+        { name: "Minimum 11 In Every Ability Except Charisma", notes: "The Bounty Hunter's vocation is rigorous and demanding at every level -- physical, psychological, even moral. He must have MINIMUM SCORES OF 11 IN EVERY ABILITY EXCEPT CHARISMA." },
+        { name: "Nonlawful Alignment Required", notes: "A further requirement is that the Bounty Hunter be of NONLAWFUL alignment." },
+        { name: "Slipping Substances", notes: "Like the Assassin, adept at slipping poison, sedative and the like into a target's food or drink, resolved by a PICK POCKETS roll at +5%. THIS BONUS DOES NOT APPLY TO PICKPOCKETING OR ANY OTHER USE of the ability (Table 4, note 3). Deadly poisons are more the province of the Assassin, but a carefully placed, powerful sedative may save a Bounty Hunter a great deal of trouble. TO HAVE ACCESS TO SEDATIVES OR UNDERSTAND THEIR USE, A BOUNTY HUNTER MUST HAVE HERBALISM PROFICIENCY." },
+        { name: "Any Weapon, With A Cost", notes: "Permitted the use of ANY weapon. As part of his persona and fearsome public image he will often gain proficiency in a rare or bizarre weapon, such as the khopesh sword or man-catcher. NONTHIEF WEAPONS TAKE UP TWO OF HIS WEAPON PROFICIENCY SLOTS, BUT HE IS GRANTED A BONUS SLOT AT 1ST LEVEL -- so he begins with 3 slots. (Example: Borg Tartan fills two with the two-handed sword and takes the hand crossbow in the third.)" },
+        { name: "Nonweapon Proficiencies", notes: "Required: Tracking. Recommended: Alertness, Animal Handling/Training, Animal Noise, Boating, Direction Sense, Firebuilding, Information Gathering, Herbalism, Hunting, Intimidation, Observation, Riding, Set Snares, Survival, Trailing." },
+        { name: "Skill Progression", notes: "Makes frequent use of almost all thief skills, except perhaps pick pockets -- and note that pick pockets covers all sorts of delicate feats of manual dexterity, including slipping a mickey into a drink." }
+      ],
+      requirements: { str: 11, dex: 11, con: 11, int: 11, wis: 11, alignment: "Nonlawful" },
+      benefits: "Minimum 11 in every ability except Charisma, and nonlawful alignment. Permitted any weapon, with nonthief weapons costing two slots and a bonus slot at 1st level. +5% on a pick pockets roll when slipping substances into food or drink.",
+      hindrances: "Special Benefits: None. Special Hindrances: None. Members of any race could become Bounty Hunters; among the nonhumans, those of mixed blood such as half-elves favor it most, since they are often outsiders and loners not accepted by either side of their ancestry."
+    },
+    buccaneer: {
+      name: "Buccaneer",
+      class: "thief",
+      source: {
+        status: "verified",
+        work:   "PHBR2 The Complete Thief's Handbook",
+        pages:  "31-33",
+        note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
+      },
+      thiefSkillMods: { pickPockets: -5, openLocks: 0, findTraps: 0, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: 0, readLanguages: 5 },
+      abilities: [
+        { name: "Rope Climbing", notes: "Because of their familiarity with ropes, much used in the nautical arts, Buccaneers gain +5% ON CLIMBING ROLLS IF ROPES ARE INVOLVED -- +10% IF THEY ARE ROPES ON A SHIP. Note that the total chance of success with a thief skill, including all positive and negative modifiers, CANNOT EXCEED 95%." },
+        { name: "Rope Combat", notes: "May fight from a rope, usually on a ship, so long as the feet and one hand can grasp it, and are much better at this than other characters. THEY GET +1 ON ATTACK AND SAVING THROW ROLLS IN ROPE COMBAT, AND +2 ON SUCH ROLLS IN SHIPBOARD ROPE COMBAT. These adjustments are ADDED TO ALL THE OTHER MODIFIERS, which are usually negative -- a climbing character would normally get -2 on attacks, so the Buccaneer's +2 bonus merely negates this." },
+        { name: "Learning the Ropes (Optional Rules)", notes: "PHBR2 pp.31-32 carries a full rope-combat subsystem, flagged OPTIONAL in its own heading. A climbing character LOSES ALL ARMOR CLASS BONUSES FOR DEXTERITY AND SHIELD, and suffers -2 on attack, damage and saving throw rolls. A character attacking FROM ABOVE gains +2; one attacking FROM BELOW suffers -2. An off-balance defender is attacked at +2. A character struck by a weapon, or attempting to climb during combat, must make a climbing check or lose his balance; lost balance means the next round is spent falling or regaining balance, and no other action can be performed. NPC sailors have a base climbing percentage of 65% FOR THESE RULES ONLY. OPTIONAL DODGING: a Buccaneer may spend a round dodging, gaining +4 to armor class against attacks directed solely at him that round, provided he has initiative and forgoes all attacks; he may move at half normal rope-climbing speed, and on a successful climbing check adds his Dexterity bonus to AC for that round. RECORDED HERE RATHER THAN AS A SUPPLEMENT TOGGLE: it is situational combat reference with no character-sheet residue." },
+        { name: "Weapon Proficiencies", notes: "The DM may wish to make classic Buccaneer weapons, such as the cutlass, available to thieves of this kit." },
+        { name: "Nonweapon Proficiencies", notes: "Required: Navigation, Seamanship, Swimming. Recommended: Alertness, Direction Sense, Fishing, Gambling, Intimidation, Looting, Rope Use, Tightrope Walking, Weather Sense." },
+        { name: "Armor Avoided", notes: "Buccaneers dress themselves as sailors and carry about the same equipment when at sea. LIKE SAILORS THEY WILL AVOID ARMOR -- it gets in the way of climbing around the rigging (DOUBLE PENALTIES ON CLIMBING ROLLS) and presents a problem for someone unfortunate enough to find himself overboard." }
+      ],
+      requirements: { con: 10, alignment: "Any" },
+      benefits: "Minimum Constitution 10. +5% climbing when ropes are involved, +10% for ropes on a ship. +1 attack and saving throws in rope combat, +2 in shipboard rope combat. Makes much less use of the traditional thief skills than other kits; favors read languages for deciphering maps and codes.",
+      hindrances: "As their expertise lies in rope-climbing, Buccaneers SUFFER A PENALTY OF -10% WHEN THEY ATTEMPT TO CLIMB WITHOUT ONE. Almost all Buccaneers are human, since few demihumans and humanoids are known as seafarers; the occasional half-elf might be found among a crew, or even more rarely a half-breed or full-blooded aquatic elf."
+    },
+    burglar: {
+      name: "Burglar",
+      class: "thief",
+      source: {
+        status: "verified",
+        work:   "PHBR2 The Complete Thief's Handbook",
+        pages:  "33-35",
+        note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
+      },
+      thiefSkillMods: { pickPockets: -5, openLocks: 5, findTraps: 0, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: 5, readLanguages: -5 },
+      abilities: [
+        { name: "Cat Burglar Minimums", notes: "THE CAT BURGLAR requires a minimum Strength of 10 and Dexterity of 13. The book states this for the cat burglar specialization; other Burglar specialists such as the box-man and the jewel thief are described without stated minimums." },
+        { name: "Specialization", notes: "Burglars often specialize further. A BOX-MAN is an expert at opening locks, especially safes and well-protected chests. A CAT BURGLAR or second-story specialist excels at climbing walls. Others specialize by target -- JEWEL THIEVES in particular are the elite among Burglars. A specialized thief is more marketable: by concentrating on one skill, a relatively low-level thief may compete with a thief many levels higher for jobs of a certain type." },
+        { name: "Weapon Proficiencies", notes: "Better Burglars do not bring weapons with them on a job; carrying them only means more serious penalties if caught, either legal or more immediate. On some jobs, however -- stealing from dangerous criminals -- a Burglar is wise to have means of self-defense. Small, quiet, concealable weapons are naturally favored, though a Burglar may choose proficiency in ANY weapon among those normally permitted to thieves." },
+        { name: "Nonweapon Proficiencies", notes: "Required: Alertness, Looting. Recommended: Begging, Information Gathering, Jumping, Observation, Rope Use, Tightrope Walking, Tumbling." },
+        { name: "Skill Progression", notes: "The vital skills of a Burglar are open locks, find/remove traps, move silently, hide in shadows, detect noise and climb walls. He may concentrate particularly on one of these, but would probably then want to be as evenly excellent as possible in the others." },
+        { name: "Equipment", notes: "Burglars love to use specialized hardware to increase their chances of success. See the equipment chapter for specialty items and their effects on thief skills." },
+        { name: "Race", notes: "Members of any race may be Burglars, and IT IS A FAVORITE KIT. Nonhuman thieves often specialize in areas that offer excellent racial bonuses: dwarves may specialize in lockpicking and trap detection, elves in reconnaissance." }
+      ],
+      requirements: { str: 10, dex: 13, alignment: "Any", note: "Strength 10 and Dexterity 13 are stated for the CAT BURGLAR specifically. The book describes other Burglar specialists -- the box-man and the jewel thief -- without printing minimums for them." },
+      benefits: "Cat Burglar requires minimum Strength 10 and Dexterity 13. Alertness and Looting are required proficiencies. Specialization by skill or by target is the way of the urban Burglar.",
+      hindrances: "Special Benefits: None. Special Hindrances: None."
+    },
+    cutpurse: {
+      name: "Cutpurse",
+      class: "thief",
+      source: {
+        status: "verified",
+        work:   "PHBR2 The Complete Thief's Handbook",
+        pages:  "34-36",
+        note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
+      },
+      thiefSkillMods: { pickPockets: 10, openLocks: 0, findTraps: 0, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: -5, readLanguages: -5 },
+      abilities: [
+        { name: "Sizing Up A Target", notes: "The effective pickpocket chooses his target carefully. IN GAME TERMS THE CUTPURSE CAN GUESS THE CLASS AND LEVEL OF ANOTHER CHARACTER. On a successful OBSERVATION proficiency check he accurately determines the target's CHARACTER CLASS. ANOTHER CHECK may be made to determine the APPROXIMATE LEVEL; the DM should roll this check secretly, and if it fails, THE DIFFERENCE BETWEEN THE NUMBER ROLLED AND THE NUMBER NEEDED FOR SUCCESS IS HOW FAR OFF THE ESTIMATE IS." },
+        { name: "Checking Out A Disguise", notes: "When a Cutpurse tries to size up a character who is IN DISGUISE, he suffers a PENALTY OF -5 ON HIS PROFICIENCY CHECK." },
+        { name: "No Requirements", notes: "The Cutpurse has no requirements beyond those of the thief class." },
+        { name: "Weapon Proficiencies", notes: "Small, concealable weapons are ideal for Cutpurses, though they are not formally restricted any more than thieves in general." },
+        { name: "Nonweapon Proficiencies", notes: "Required: Observation, Trailing. Recommended: Alertness, Begging, Information Gathering, Trailing." },
+        { name: "Skill Progression", notes: "Cutpurses naturally specialize in picking pockets. Beyond this they typically favor moving silently and hiding in shadows, as these may increase their pickpocketing talents." },
+        { name: "Race", notes: "Cutpurses may come from any race. HALF-ELVES AND HALFLINGS PARTICULARLY FAVOR THIS KIT; so do elves, to a lesser extent." }
+      ],
+      requirements: { alignment: "Any" },
+      benefits: "No requirements. May guess another character's class and level through Observation proficiency checks. Naturally specialized in picking pockets.",
+      hindrances: "The main hindrance is that THIEVES OF OTHER KITS LOOK DOWN ON THEM, considering them small-time thieves just half a step above Beggars. This is something the DM should bring out in role-playing: CUTPURSE THIEVES WILL HAVE DIFFICULTY COMMANDING A LOT OF RESPECT IN THE UNDERWORLD. A -5 penalty applies to sizing up a character who is in disguise."
+    },
+    fence: {
+      name: "Fence",
+      class: "thief",
+      source: {
+        status: "verified",
+        work:   "PHBR2 The Complete Thief's Handbook",
+        pages:  "36-37",
+        note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
+      },
+      thiefSkillMods: { pickPockets: 0, openLocks: 5, findTraps: 5, moveSilently: -5, hideInShadows: -5, detectNoise: 0, climbWalls: -5, readLanguages: 5 },
+      abilities: [
+        { name: "Underworld Standing", notes: "Because of his contacts, a Fence is probably the BEST PERSON FOR LOCATING AND HIRING THIEVES AND SMUGGLERS, especially in territory not claimed by a guild." },
+        { name: "Reaction Bonus", notes: "Fences generally command a lot of respect from the underworld in their home territory. Unless a thief has a serious vendetta, he will probably court a Fence's favor for business reasons. FENCES RECEIVE A BONUS OF +3 ON REACTIONS WITH NPC THIEVES IF THEIR PROFESSION IS RECOGNIZED." },
+        { name: "Bonus Proficiencies", notes: "The black market network transfers information as well as goods. Fences are probably the best-informed figures of the underworld, and for this reason THEY GAIN GATHER INTELLIGENCE AS A BONUS NONWEAPON PROFICIENCY. THEY ALSO RECEIVE APPRAISING AS A BONUS PROFICIENCY, since it is vital to their vocation." },
+        { name: "Weapon Proficiencies", notes: "Any." },
+        { name: "Nonweapon Proficiencies", notes: "Required: Appraising, Information Gathering. Recommended: Alertness, Fast-talking, Forgery, Gem Cutting, Local History, Observation." },
+        { name: "Skill Progression", notes: "Less powerful Fences -- those lower in the network hierarchy, with fewer contacts -- may need to use thiefly skills. Picking pockets provides a little income when business is slow; opening locks and finding and removing traps are useful for inspecting merchandise. Read languages is sometimes useful in examining merchandise. More powerful Fences often neglect the stealth skills." },
+        { name: "Equipment", notes: "Most Fences own equipment for examining merchandise, to determine whether goods are counterfeit or what their value might be -- a magnifying lens, for instance." }
+      ],
+      requirements: { int: 12, alignment: "Any" },
+      benefits: "Minimum Intelligence 12. +3 on reactions with NPC thieves when his profession is recognized. Gains Information Gathering AND Appraising as bonus nonweapon proficiencies. Best placed of any kit to locate and hire thieves and smugglers.",
+      hindrances: "Fences are relatively prominent in the underworld. Unlike freelance burglars and smugglers who can move from place to place, THE FENCE'S BLACK MARKET NETWORK REQUIRES A STABLE HOME LOCALE so that he can stay in touch with his contacts. The DM may wish to keep player characters from being active Fences because of this: the Fence's life is much more business than adventure. It also means LOCAL AUTHORITIES MAY BE AWARE OF A FENCE'S IDENTITY AND ACTIVITIES, and may periodically harass a minor Fence, demand bribes, or shake him up for information."
+    },
+    investigator: {
+      name: "Investigator",
+      class: "thief",
+      source: {
+        status: "verified",
+        work:   "PHBR2 The Complete Thief's Handbook",
+        pages:  "37-38",
+        note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
+      },
+      thiefSkillMods: { pickPockets: -5, openLocks: 0, findTraps: 0, moveSilently: 0, hideInShadows: 0, detectNoise: 5, climbWalls: 0, readLanguages: 0 },
+      abilities: [
+        { name: "Antithesis Of Criminals", notes: "Though Investigators are listed as thieves, they are usually in fact the antithesis of criminals -- enforcers of law and order, the people who know the skills of the thief intimately so that they can combat him." },
+        { name: "Weapon Proficiencies", notes: "The normal range of weapons open to thieves. Investigators will normally carry two weapons, at least one of them concealed -- a knife, a dagger, or something similarly small, perhaps in a wrist sheath." },
+        { name: "Nonweapon Proficiencies", notes: "Required: Information Gathering, Observation. Recommended: Alertness, Appraising, Disguise, Fast-Talking, Heraldry, Intimidation, Local History, Modern Languages, Reading Lips, Religion, Trailing." },
+        { name: "Skill Progression", notes: "A balance of generalized skills serves Investigators well. Picking pockets is less important, although it may be useful for sleight-of-hand. Read languages is a must for deciphering clues; some criminals write important information in obscure languages or secret codes, and being able to decipher it may mean success or failure. Lockpicking, trap detection and disarmament are useful for penetrating and examining the hideouts and houses of suspects." },
+        { name: "Equipment", notes: "A lot of the technological devices available to the modern Investigator -- fingerprinting techniques, searches of computer databases -- would not be available in a medieval fantasy setting. Still, it may be possible to duplicate some of the effects of such devices with magical items, or the DM can make liberal use of anachronism." },
+        { name: "Race", notes: "Investigators may be of any race, though they probably should be of the dominant race in their area of operation. This means that most Investigators would be human. Operations that investigate guilds with many nonhuman members could make much use of nonhuman Investigators." }
+      ],
+      requirements: { alignment: "Any" },
+      benefits: "No requirements. Information Gathering and Observation are required proficiencies. A balance of generalized thief skills, with read languages a must for deciphering clues.",
+      hindrances: "Special Benefits: None. Special Hindrances: None."
+    },
+    scout: {
+      name: "Scout",
+      class: "thief",
+      source: {
+        status: "verified",
+        work:   "PHBR2 The Complete Thief's Handbook",
+        pages:  "38-40",
+        note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
+      },
+      thiefSkillMods: { pickPockets: -5, openLocks: -5, findTraps: 0, moveSilently: 5, hideInShadows: 5, detectNoise: 0, climbWalls: 0, readLanguages: 0 },
+      abilities: [
+        { name: "Wilderness Stealth", notes: "Due to their extensive wilderness experience and expertise, SCOUTS GAIN +10% ON TWO THIEF SKILLS WHEN IN THE WILDERNESS: SILENT MOVEMENT AND HIDING IN SHADOWS. This is situational and is NOT part of the flat Table 4 adjustment." },
+        { name: "Wilderness Surprise", notes: "Scouts also have an INCREASED CHANCE (1 IN 6 BETTER) TO SURPRISE OPPONENTS IN THE WILDERNESS, because of their stealthiness and careful attunement with their environment." },
+        { name: "Racial Wilderness Variants", notes: "The Scout kit is a good choice for demihuman rogues, since those races often already have an aptitude for wilderness adventuring. Demihuman Scouts may be given a particular orientation according to their race: ELVES, as natural forest dwellers, may have +15% WHEN HIDING IN SHADOWS AND MOVING SILENTLY IN FORESTED WILDERNESS, AND +5% IN OTHER WILDERNESS SETTINGS. FOR A DWARF, THE SPECIAL BONUS MAY APPLY TO HILLS OR MOUNTAINS, and so forth." },
+        { name: "No Requirements", notes: "The Scout kit has no requirements beyond those of the thief class." },
+        { name: "Weapon Proficiencies", notes: "Scouts have the normal range of weapon proficiencies permitted to thieves." },
+        { name: "Nonweapon Proficiencies", notes: "Required: Direction Sense, Tracking. Recommended: Alertness, Animal Handling/Training, Animal Lore, Animal Noise, Boating, Fire-building, Fishing, Heraldry, Herbalism, Hunting, Mountaineering, Observation, Riding, Rope Use, Set Snares, Survival, Swimming, Weather Sense." },
+        { name: "Skill Progression", notes: "Stealth skills are those favored most by the Scout, and members of this kit have highly trained senses -- so it makes sense for these skills to improve most rapidly: move silently, hide in shadows, and hear noise. Climb walls also may see considerable use, though not from climbing walls per se, but trees, cliffs and so forth." },
+        { name: "Equipment", notes: "No self-respecting Scout will permit himself to go without a basic assortment of wilderness survival gear: adequate clothing, rations, fire-starting materials. Special gear to assist climbing, hiding and moving undetected is also favored, as well as devices for hindering or diverting pursuers." }
+      ],
+      requirements: { alignment: "Any" },
+      benefits: "No requirements. +10% to move silently and hide in shadows IN THE WILDERNESS, and surprise opponents 1 in 6 better there. Elven Scouts may instead have +15% in forested wilderness and +5% in other wilderness; dwarven Scouts hills or mountains.",
+      hindrances: "While Scouts are intimately familiar with the wilderness, THEY ARE NOT AS COMFORTABLE IN URBAN SETTINGS. IN THE CITY, CONSEQUENTLY, THE SCOUT SUFFERS A -5% PENALTY ON ALL THIEVES' SKILLS."
+    },
+    smuggler: {
+      name: "Smuggler",
+      class: "thief",
+      source: {
+        status: "verified",
+        work:   "PHBR2 The Complete Thief's Handbook",
+        pages:  "39-42",
+        note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
+      },
+      thiefSkillMods: { pickPockets: -5, openLocks: -5, findTraps: 0, moveSilently: 5, hideInShadows: 5, detectNoise: 5, climbWalls: -5, readLanguages: 0 },
+      abilities: [
+        { name: "Exceptional Alertness", notes: "Smugglers must be exceptionally alert; THEY THEREFORE GET +1 BONUS TO THEIR SURPRISE ROLL." },
+        { name: "No Requirements", notes: "The Smuggler kit has no requirements beyond those of the thief class." },
+        { name: "Weapon Proficiencies", notes: "Smugglers have the normal range of weapons open to thieves, and are not required to take proficiencies with any in particular." },
+        { name: "Nonweapon Proficiencies", notes: "Required: none. Recommended: Alertness, Animal Handling/Training, Animal Noise, Appraising, Boating, Direction Sense, Disguise, Fast-talking, Forgery, Information Gathering, Navigation, Observation, Rope Use, Seamanship, Swimming." },
+        { name: "Skill Progression", notes: "Detecting noise is probably the most useful of the traditional thieves' skills for the Smuggler. After that, hiding in shadows and silent movement. Pickpocketing would be least utilized in smuggling." },
+        { name: "Equipment", notes: "Two items are essential to the Smuggler's vocation: means of transportation, and means of protecting the contraband from discovery. Items from the Evasions section of the equipment chapter (p.90) are of great use -- marbles if the surface is right, or caltrops, can do much to hamper pursuers, and aniseed or dog pepper can throw dogs off the trail." },
+        { name: "Race", notes: "While demihumans are not prohibited from being smugglers, there are few that have any reason to be. Any player who wishes to have a demihuman smuggler should be sure to detail his character background so as to justify the kit." }
+      ],
+      requirements: { alignment: "Any" },
+      benefits: "No requirements. +1 bonus to the surprise roll. Detecting noise is the most useful traditional thief skill for this kit, followed by hiding in shadows and silent movement.",
+      hindrances: "Special Hindrances: None."
+    },
+    spy: {
+      name: "Spy",
+      class: "thief",
+      source: {
+        status: "verified",
+        work:   "PHBR2 The Complete Thief's Handbook",
+        pages:  "41-42",
+        note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
+      },
+      thiefSkillMods: { pickPockets: 0, openLocks: 0, findTraps: 0, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: 0, readLanguages: 0 },
+      abilities: [
+        { name: "Minimum Intelligence", notes: "To take the Spy kit, a thief must have a MINIMUM INTELLIGENCE OF 11." },
+        { name: "Nonthief Weapons For Disguise Only", notes: "The normal range of weapons open to thieves applies to Spies as well, and they are not required to take any in particular. A SPY CAN USE NONTHIEF WEAPONS FOR THE PURPOSE OF DISGUISES, BUT CANNOT TAKE PROFICIENCY IN THEM. Example: to help impersonate a castle guard, a Spy carries a halberd; he could use it in combat, but would suffer a nonproficiency penalty. To increase his chances of success he would probably switch to a familiar weapon -- even a dagger or knife -- unless circumstances prohibit it (people around him would be surprised to see him not using the halberd, and might thereby see through the disguise)." },
+        { name: "Nonweapon Proficiencies", notes: "Required: Disguise, Information Gathering, Observation. Recommended: Alertness, Begging, Etiquette, Forgery, Heraldry, Local History, Reading/Writing, Reading Lips, Trailing." },
+        { name: "Skill Progression", notes: "An effective Spy usually needs a fairly even distribution of thief skills, since his vocation can bring him into any number of diverse situations." },
+        { name: "Equipment", notes: "Spies in the medieval setting do not have all the fancy gadgetry of their modern counterparts. They may equip themselves liberally with what is available, such as boots with hidden compartments in the soles, thieves' equipment, and so forth." },
+        { name: "Race", notes: "Elves and half-elves, with their love for knowledge, are especially predisposed toward this kit. However, the problem that all demihuman Spies face is the difficulty of appearing disguised as a member of another race. They therefore risk having a rather limited range of professional assignments." },
+        { name: "The Standard Penalty For Spying", notes: "The standard penalty for spying, if the crime is beyond the low levels of spreading rumors, eavesdropping, and scoping out potential burglary targets, IS DEATH, and Spies from one nation to another can hardly expect anything in the line of diplomatic immunity." }
+      ],
+      requirements: { int: 11, alignment: "Any" },
+      benefits: "Minimum Intelligence 11. May carry nonthief weapons as part of a disguise, though he cannot gain proficiency in them. An even distribution of thief skills serves the Spy best.",
+      hindrances: "Special Benefits: None. Special Hindrances: None. The standard penalty for spying beyond petty levels is death."
+    },
+    swashbuckler: {
+      name: "Swashbuckler",
+      class: "thief",
+      source: {
+        status: "verified",
+        work:   "PHBR2 The Complete Thief's Handbook",
+        pages:  "42-43",
+        note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
+      },
+      thiefSkillMods: { pickPockets: 0, openLocks: 0, findTraps: -10, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: 5, readLanguages: 5 },
+      abilities: [
+        { name: "Fighter THAC0 With Weapon Of Choice", notes: "The Swashbuckler receives an EXTRA WEAPON PROFICIENCY SLOT which MUST BE DEVOTED TO A WEAPON AMONG THE FOLLOWING: STILETTO, MAIN-GAUCHE, RAPIER OR SABRE. With this weapon of choice, THE THIEF IS ABLE TO FIGHT WITH THE THAC0 OF A FIGHTER OF HIS EXPERIENCE LEVEL. Throughout his career he MUST DEVOTE HALF OF HIS WEAPON PROFICIENCIES TO THESE WEAPONS, until he has mastered the use of (that is, gained proficiency in) every one." },
+        { name: "Disarm Maneuver", notes: "Permitted a special combat maneuver when using his weapon of choice: DISARMAMENT. To disarm an opponent he must DECLARE HIS INTENTION TO DO SO BEFORE INITIATIVE IS ROLLED. He then suffers a +1 PENALTY TO HIS INITIATIVE ROLL, AND A -4 PENALTY ON HIS ATTACK ROLL. If the attack is successful, he will normally cause his enemy's weapon to go flying out of his hand: ROLL 2d6 FOR THE NUMBER OF FEET AWAY THE WEAPON LANDED, and another 1d6 for the direction relative to the disarmed character (1 straight ahead, 2 ahead right, 3 behind right, 4 straight behind, 5 behind left, 6 behind right). Besides weapons, DISARMAMENT CAN BE ATTEMPTED AGAINST MAGIC WANDS OR OTHER SUCH DEVICES HELD IN ONE HAND. ITEMS WORN, such as jewelry, OR HELD IN TWO HANDS, including two-handed weapons, MAY NOT BE AFFECTED." },
+        { name: "Reaction Bonus", notes: "Being such a romantic figure, the Swashbuckler gains as an additional special benefit a +2 REACTION ADJUSTMENT WITH MEMBERS OF THE OPPOSITE SEX." },
+        { name: "Cross-Class Kit", notes: "Both the warrior and thief classes have Swashbucklers -- see The Complete Fighter's Handbook for the warrior version. The differences serve, among other purposes, as an example of how the DM may modify appropriate kits from one class and apply them to another." },
+        { name: "Nonweapon Proficiencies", notes: "Required: Etiquette, Tumbling. Recommended: Alertness, Blind-fighting, Disguise, Fast-talking, Intimidation, Jumping, Navigation (if seaborne; COSTS 2 SLOTS), Riding, Tightrope walking, Trailing." },
+        { name: "Skill Progression", notes: "Swashbucklers tend to have fairly balanced thief skills. This includes pickpocketing, though that talent is more often utilized in the form of sleight of hand." }
+      ],
+      requirements: { str: 13, dex: 13, int: 13, cha: 13, alignment: "Any" },
+      benefits: "Minimum 13 in Strength, Dexterity, Intelligence and Charisma. FIGHTS WITH THE THAC0 OF A FIGHTER OF HIS LEVEL when using his weapon of choice, plus an extra weapon proficiency slot devoted to it. A disarm maneuver, and +2 reaction adjustment with members of the opposite sex.",
+      hindrances: "TROUBLE SEEKS OUT THE SWASHBUCKLER, and this is something the DM will have to play very carefully if the Swashbuckler is to be balanced with the other thief kits. When there is another Swashbuckler around -- thief or warrior -- intent on proving that he is the finest swordsman in the world, it is the PC Swashbuckler he seeks out and challenges, often in the middle of some illicit activity. When there is a lovely lady or handsome young man in distress, she or he will naturally cross the Swashbuckler's path and pull him into the tangle. Half of his weapon proficiencies are locked to the four weapons of choice until all are mastered."
+    },
+    swindler: {
+      name: "Swindler",
+      class: "thief",
+      source: {
+        status: "verified",
+        work:   "PHBR2 The Complete Thief's Handbook",
+        pages:  "43-44",
+        note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
+      },
+      thiefSkillMods: { pickPockets: 0, openLocks: -5, findTraps: 0, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: 0, readLanguages: 5 },
+      abilities: [
+        { name: "Minimum Charisma", notes: "A MINIMUM CHARISMA OF 12 is required of a thief to take this kit." },
+        { name: "Master Of Deception", notes: "While burglars and pickpockets profit through stealth, and bandits and thugs garner their earnings through force, the Swindler relies on his wits. Other thieves take their booty; the Swindler cons his victim into giving it freely." },
+        { name: "Weapon Proficiencies", notes: "The Swindler is permitted the normal range of weapons open to thieves." },
+        { name: "Nonweapon Proficiencies", notes: "Required: Fast-talking. Recommended: Alertness, Appraising, Artistic Ability, Dancing, Disguise, Etiquette, Forgery, Fortune Telling, Gaming, Local History, Observation, Singing, Ventriloquism." },
+        { name: "Skill Progression", notes: "The thieves' skills of a Swindler are usually used in preparation for a con. It is often handy for the Swindler to do some secret scouting -- to observe his victim's habits, for instance. For all of this, the stealth skills (move silently, etc.) are invaluable. Reading languages is also of more use to the Swindler than to thieves of many other kits." },
+        { name: "Equipment", notes: "A Swindler may use special equipment as props for his scams -- tarot cards for a sham fortune teller; pen, ink and paper for forgery; and so forth -- but the specific needs vary among characters, according to their plans and objectives." },
+        { name: "Race", notes: "HALF-ELVES MAKE PARTICULARLY GOOD SWINDLERS. Other demi-humans may be Swindlers as well, though they are not found as frequently." }
+      ],
+      requirements: { cha: 12, alignment: "Any" },
+      benefits: "Minimum Charisma 12. Fast-talking is a required proficiency. Stealth skills are invaluable for scouting a mark, and reading languages is of more use to the Swindler than to most kits.",
+      hindrances: "Special Benefits: None. Special Hindrances: None. Swindlers do not usually join thieves' guilds on a permanent basis, being wanderers by necessity; out of wise deference to the local boys, a Swindler operating in guild territory will make friendly overtures to it, and perhaps offer a share in his take."
+    },
+    thug: {
+      name: "Thug",
+      class: "thief",
+      source: {
+        status: "verified",
+        work:   "PHBR2 The Complete Thief's Handbook",
+        pages:  "43-45",
+        note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
+      },
+      thiefSkillMods: { pickPockets: 0, openLocks: 0, findTraps: 0, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: 0, readLanguages: 0 },
+      discretionaryPoints: 40,
+      discretionaryPointsPerLevel: 30,
+      abilities: [
+        { name: "Ability Requirements Include A CEILING", notes: "Because of the kit's emphasis on physique and physical prowess, a Thug must have MINIMUM ABILITY SCORES OF 12 IN STRENGTH AND CONSTITUTION. FURTHERMORE, HIS INTELLIGENCE MAY BE NO HIGHER THAN 12. THIS IS A MAXIMUM, NOT A MINIMUM -- the only ability CEILING in the thief kits, and it does not fit a minimums-only validator." },
+        { name: "Combat Bonus", notes: "Because they are better trained in combat than other thieves, THUGS RECEIVE +1 ON THEIR TO HIT ROLLS." },
+        { name: "Extra Weapon Proficiency", notes: "Thugs are permitted an EXTRA WEAPON PROFICIENCY SLOT AT FIRST LEVEL. They may choose nonthief weapons, but TO GAIN PROFICIENCY IN ONE REQUIRES AN EXTRA SLOT." },
+        { name: "Nonweapon Proficiencies", notes: "Required: Intimidation. Recommended: player's choice; among those that may be selected are Alertness, Endurance, Looting and Trailing." },
+        { name: "Skill Progression", notes: "There is no uniform preference among Thugs for the distribution of points among their thieves' skills. Note, however, that they start out with fewer points to distribute than other rogues." },
+        { name: "Equipment", notes: "The Thug's equipment usually consists of the biggest, most intimidating weapon available. Otherwise it is a matter of common sense according to the job -- a kidnapper could make good use of a rope to bind his victim." },
+        { name: "Race", notes: "HUMANOIDS AND HALF-HUMANOIDS are particularly fond of this kit, as it emphasizes force over stealth. One has more difficulty imagining demi-human Thugs; DWARVES might have the temperament, but the Thug personality doesn't suit their culture, and their small stature would make them look somewhat silly as guild enforcers -- which is not to say they would be ineffective." }
+      ],
+      requirements: { str: 12, con: 12, intMax: 12, alignment: "Any" },
+      benefits: "Minimum Strength 12 and Constitution 12, and INTELLIGENCE NO HIGHER THAN 12. +1 on to-hit rolls, and an extra weapon proficiency slot at first level.",
+      hindrances: "Thugs spend much of their early career learning about weapons and their use, and their INITIAL TRAINING IN THE TRADITIONAL THIEF SKILLS SUFFERS AS A CONSEQUENCE. To compensate for the extra weapon proficiency slot and combat bonus, a thief of the Thug kit HAS ONLY 40 POINTS TO DISTRIBUTE INITIALLY among his thief skills, although he can still put up to 30 of them in a single ability if he chooses. THE PER-LEVEL ALLOTMENT IS NOT REDUCED -- unlike the Assassin, the book states only the initial figure."
+    },
+    troubleshooter: {
+      name: "Troubleshooter",
+      class: "thief",
+      source: {
+        status: "verified",
+        work:   "PHBR2 The Complete Thief's Handbook",
+        pages:  "44-45",
+        note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
+      },
+      thiefSkillMods: { pickPockets: -10, openLocks: 5, findTraps: 5, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: 0, readLanguages: 0 },
+      abilities: [
+        { name: "Security Consultant", notes: "Like the Investigator, often aligned against other thieves. He has all the skills of the thief, but puts them to a different use: he works chiefly as a security consultant, playing the part of the thief in order to test the worthiness of his clients' defenses." },
+        { name: "Murphy's Law -- DELIBERATELY UNQUANTIFIED", notes: "Troubleshooters have an uncanny knack for troubleshooting: if there is a glitch somewhere in a security system, the Troubleshooter always seems to run into it. He is a living manifestation of Murphy's Law -- IF ANYTHING CAN GO WRONG, IT WILL. His job is to find everything that can go wrong, so it can be fixed. THE BOOK STATES OUTRIGHT THAT THIS IS DIFFICULT TO QUANTIFY AND DEFINE AS A GAME MECHANIC. Instead, the DM is encouraged to bring it in at his discretion during play, for maximum excitement and role-playing fun, filling the character's life with astronomically improbable events and bizarre coincidences. TWO QUESTIONS FOR THE DM before bringing it into play: would this further the plot of the adventure, and would it be fun? At least the second should be answered yes. THE RULE TO FOLLOW IN DECIDING THE SPECIFICS IS: EVERYTHING SHOULD BE BALANCED. FOR EVERY FREAKISH MISHAP THAT WORKS IN THE TROUBLESHOOTER'S FAVOR, THERE SHOULD BE A COMPLEMENTARY ONE THAT WORKS TO HIS DISADVANTAGE." },
+        { name: "Weapon Proficiencies", notes: "Troubleshooters are permitted the normal weapons open to thieves." },
+        { name: "Nonweapon Proficiencies", notes: "Required: Observation. Recommended: player's choice; among those that may be selected are Alertness, Fast-talking, Information Gathering, Locksmithing, and Trailing." },
+        { name: "Skill Progression", notes: "Picking pockets and reading languages are not of much value to the Troubleshooter, but he will probably seek a fairly even distribution among the other thief skills." },
+        { name: "Equipment", notes: "Any Troubleshooter worth his wages will augment his thiefly talents with the best available equipment; he wants to try his absolute best to break down his client's defense -- as does his client -- so he will use whatever devices will increase his chances. A wealthy client could even be persuaded to help the Troubleshooter acquire hard-to-find thief equipment." },
+        { name: "Race", notes: "DWARVES, with their affinity for the mechanical and their lawful tendencies -- and their dour stoicism in the face of all misfortune, however ludicrous -- are the demi-humans most inclined to take this kit. SOME GNOMES also may be found as Troubleshooters; the special benefit/hindrance of this kit suits the pranksters well, but their employers would best be on guard for practical jokes perpetrated in the course of the assignment." }
+      ],
+      requirements: { alignment: "Any" },
+      benefits: "No requirements. Observation is a required proficiency. As a security consultant he has a legitimate reason for his thieving skills and equipment. The Murphy's Law knack is a BENEFIT AND HINDRANCE AT ONCE, deliberately left unquantified by the book and adjudicated by the DM.",
+      hindrances: "The same knack that finds every flaw also means things go wrong to the Troubleshooter's personal disadvantage. The book gives no mechanic; the DM is told to keep it balanced -- for every freakish mishap in his favor there should be a complementary one against him. Officials often keep a suspicious eye on well-known Troubleshooters, and more sophisticated governments may require that they have some sort of license."
     }
   },
 
