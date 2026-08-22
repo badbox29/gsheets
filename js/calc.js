@@ -5283,6 +5283,81 @@ async function renderArmorBrowser(root) {
   resultsDiv.appendChild(countDiv);
 }
 
+// Add a magical item from the browser. THE ONLY BROWSER THAT ROUTES TO THREE
+// DIFFERENT LISTS: weapons to the Weapons tab, slotted worn items to the Armor
+// tab, everything else to the Magic Items tab. Nothing appears in two places.
+//
+// The card must come out INDISTINGUISHABLE from one filled in by hand, so
+// Enchanted and Identified are both ticked and the enchantment fields filled.
+// Every item in core_magic.json is a named item from a book, so it is by
+// definition identified; unidentified loot is manual entry.
+function addMagicFromBrowser(root, item) {
+  if (!item) return;
+  const num = s => { const m = String(s == null ? '' : s).match(/[\d.]+/); return m ? m[0] : ''; };
+  const done = () => {
+    const activeTab = document.querySelector('.tab.active');
+    if (activeTab) markUnsaved(activeTab, true, root);
+    if (typeof recalculateAll === 'function') recalculateAll(root);
+  };
+  // TITLE vs TRUE NAME follows the card convention: the title is the mundane
+  // thing ("Dagger"), the true name is the magical one ("Dagger of Impaling").
+  // With no mundane base -- Boots of Balance, Bag of Vanishing -- both are the
+  // item's own name rather than inventing a generic.
+  const title = item.baseType || item.name;
+  const dest  = (typeof magicDestination === 'function') ? magicDestination(item) : { list: 'magic' };
+
+  if (dest.list === 'weapons') {
+    const list = root.querySelector('.weapons-list');
+    if (!list) return;
+    const base = (typeof WEAPONS_DATA !== 'undefined' ? WEAPONS_DATA : [])
+      .find(w => w['Weapon Name'] === item.baseType) || {};
+    list.appendChild(makeWeaponNode({
+      name: title,
+      damageSM: base['Damage (S-M)'] || '', damageL: base['Damage (L)'] || '',
+      speed: base['Speed Factor'] || '',    weight: num(base.Weight),
+      isMagical: true, identified: true, trueName: item.name,
+      // magicBonus is the ENCHANTMENT LEVEL; hitAdj/dmgAdj are separate because
+      // several of these are non-uniform. Left blank where the book gives no
+      // flat bonus -- Crossbow of Angling is +2 on the BOLT, not the bow, and
+      // filling it here would hand out a permanent +2 crossbow.
+      magicBonus: (item.magicBonus == null ? '' : item.magicBonus),
+      hitAdj:     (item.hitAdj     == null ? '' : item.hitAdj),
+      dmgAdj:     (item.dmgAdj     == null ? '' : item.dmgAdj),
+      effects: item.effects || ''
+    }, done));
+  } else if (dest.list === 'armor') {
+    const list = root.querySelector('.armor-list');
+    if (!list) return;
+    const base = (typeof ARMOR_DATA !== 'undefined' ? ARMOR_DATA : [])
+      .find(a => a['Armor Name'] === item.baseType) || {};
+    list.appendChild(makeArmorNode({
+      name: title,
+      armorType: item.slot || 'Other',
+      armorTypeKey: (item.baseType && typeof inferArmorTypeKey === 'function')
+        ? inferArmorTypeKey(item.baseType) : '',
+      // BASE AC IS LEFT BLANK where the item has no mundane armour behind it.
+      // On Cloak/Ring/Belt/Amulet/Robe/Boots the field ADDS to AC rather than
+      // setting it, so a number here makes the character WORSE -- that is the
+      // eight-point error a Cloak of Shadows produced. Bonuses go in acBonus.
+      baseAC: base.AC || '',
+      acBonus: (item.acBonus == null ? '' : item.acBonus),
+      equipped: false,
+      weight: num(base.Weight),
+      isMagical: true, identified: true, trueName: item.name,
+      effects: item.effects || ''
+    }, done));
+  } else {
+    const list = root.querySelector('.magic-items-list');
+    if (!list) return;
+    list.appendChild(makeMagicItemNode({
+      name: item.name, qty: '1', identified: true, trueName: item.name,
+      notes: (item.effects || '') +
+             (item.source ? '  [' + item.source.book + ' p.' + item.source.page + ']' : '')
+    }, done));
+  }
+  done();
+}
+
 // Add armor from browser to armor list
 function addArmorFromBrowser(root, armor) {
   // Parse weight - extract just the number
