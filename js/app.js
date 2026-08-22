@@ -9586,6 +9586,44 @@ function bindSheet(root, tab){
     armorTypeFilterNew.addEventListener('change', () => renderArmorBrowser(root));
   }
   
+  // Toggle magical items browser visibility
+  const toggleMagicBrowserVis = qs(root, '.toggle-magic-browser-visibility');
+  if (toggleMagicBrowserVis) {
+    toggleMagicBrowserVis.onclick = () => {
+      const content = qs(root, '.magic-browser-content');
+      if (!content) return;
+      const opening = content.style.display === 'none';
+      content.style.display = opening ? 'block' : 'none';
+      // Populates on FIRST OPEN. A deliberate divergence from the weapon and
+      // armor browsers, which sit empty until Refresh is clicked -- the filter
+      // dropdowns are built from the data by renderMagicBrowser, so without
+      // this they would read "All Kinds" and nothing else until the user
+      // guessed to press Refresh.
+      if (opening && typeof renderMagicBrowser === 'function') renderMagicBrowser(root);
+    };
+  }
+
+  // Magical items browser controls
+  const refreshMagic = qs(root, '.refresh-magic');
+  if (refreshMagic) {
+    refreshMagic.onclick = () => renderMagicBrowser(root);
+  }
+
+  const magicSearch = qs(root, '.magic-search');
+  if (magicSearch) {
+    magicSearch.addEventListener('input', () => renderMagicBrowser(root));
+  }
+
+  const magicGroupFilter = qs(root, '.magic-group-filter');
+  if (magicGroupFilter) {
+    magicGroupFilter.addEventListener('change', () => renderMagicBrowser(root));
+  }
+
+  const magicBookFilter = qs(root, '.magic-book-filter');
+  if (magicBookFilter) {
+    magicBookFilter.addEventListener('change', () => renderMagicBrowser(root));
+  }
+
   // Toggle weapon browser visibility
   const toggleWeaponBrowserVis = qs(root, '.toggle-weapon-browser-visibility');
   if (toggleWeaponBrowserVis) {
