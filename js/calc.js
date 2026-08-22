@@ -5346,16 +5346,36 @@ function addMagicFromBrowser(root, item) {
       isMagical: true, identified: true, trueName: item.name,
       effects: item.effects || ''
     }, done));
-  } else {
+    } else {
     const list = root.querySelector('.magic-items-list');
     if (!list) return;
-    list.appendChild(makeMagicItemNode({
-      name: item.name, qty: '1', identified: true, trueName: item.name,
+    // TRUE NAME omitted deliberately. On a weapon or armour the title is the
+    // mundane thing and the true name the magical one -- "Dagger" /
+    // "Dagger of Impaling". A pure magic item has no mundane base, so setting
+    // both to the same string just printed the name twice.
+    const node = makeMagicItemNode({
+      name: item.name, qty: '1', identified: true,
       notes: (item.effects || '') +
              (item.source ? '  [' + item.source.book + ' p.' + item.source.page + ']' : '')
-    }, done));
+    }, done);
+    list.appendChild(node);
+    added = node;
   }
   done();
+
+  // SIZE THE NEW CARD NOW. The observer binds the input listener, but its first
+  // measurement can land before layout; and this is the feature that produced
+  // the card, so it ships its own refresh rather than relying on a sweep.
+  // Two frames, because one is not enough after an insert.
+  // A card routed to ANOTHER TAB cannot be measured at all -- that panel is
+  // display:none and scrollHeight is 0 -- so autoExpand declines to write a
+  // height and the vtab-switch sweep sizes it on arrival, before the player can
+  // see it. That case is inherent, not a bug.
+  if (added && typeof autoExpand === 'function') {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      added.querySelectorAll('textarea').forEach(ta => autoExpand(ta));
+    }));
+  }
 }
 
 // Add armor from browser to armor list
