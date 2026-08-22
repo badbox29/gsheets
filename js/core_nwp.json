@@ -147,6 +147,15 @@
     "Notes": "Reduce penalties for fighting in darkness. Never completely surprised."
   },
   {
+    "Proficiency Name": "Blind-fighting",
+    "Category": "Rogue",
+    "Slots": "2",
+    "Ability Check": "NA / NA",
+    "Modifier": "NA",
+    "Source": "PHB",
+    "Notes": "PHB Table 37 and pp.79-80. NO ABILITY CHECK AND NO MODIFIER -- Table 37 prints NA in both columns. The proficiency grants flat benefits rather than a roll. IN TOTAL DARKNESS the character suffers only -2 to his attack roll, against -4 without the proficiency; under starlight or moonlight only -1. HE SUFFERS NO AC PENALTY from darkness. He retains special abilities normally lost in darkness, at HALF effectiveness (proficiency checks at half the normal score). While moving in darkness he suffers only HALF the normal movement penalty. Against INVISIBLE CREATURES the attack penalty is reduced to -2, but this does NOT let him discover them -- he has only a general idea of their location and cannot target them exactly. MELEE RANGE ONLY: no protection from missile fire or anything outside the reach of his melee weapon, so AC penalties remain against missiles. DOES NOT ALLOW SPELL USE in poor light. BELONGS TO BOTH THE ROGUE AND WARRIOR GROUPS (Table 37 lists it in each, 2 slots either way); NWP_TABLE37_GROUPS in tables.js already carries both, which is what getNWPSlotCost reads -- the single Category here is a DISPLAY label, not the slot-cost authority. PHBR2 Table 1 lists it among the proficiencies available to thieves."
+  },
+  {
     "Proficiency Name": "Boating",
     "Category": "General",
     "Slots": "1",
