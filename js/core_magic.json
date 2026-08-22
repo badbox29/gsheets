@@ -2,8 +2,8 @@
   "_schema": {
     "note": "Magical items from the PHBR supplement series. Mundane equipment does NOT belong here.",
     "category": "potion | weapon | worn | misc -- what the thing IS, not which table it was printed in.",
-    "slot": "For category 'worn': the Armor tab's Worn As slot. null means no matching slot, so it stays on the Magic Items tab.",
-    "baseType": "Name as it appears in core_wp.json / the armor list, for the anchor rule. null when the item has no mundane base.",
+    "slot": "For category 'worn': the Armor tab's Worn As slot. AMULET and ROBE were ADDED to ARMOR_TYPES for PHBR2 -- the standing rule is that new supplement content may require new field values, and they are added as the need is discovered rather than forced into 'Other'.",
+    "baseType": "Name EXACTLY as it appears in core_wp.json / core_armor.json, for the anchor rule -- the card stores this key and reads damage, speed and weight live. Verified against those files, not written from memory: it is 'Light Crossbow' and 'Sword, Short', not 'Crossbow, light' or 'Sword, short'. null when the item has no mundane base.",
     "restriction": "none | thief | thiefPreferred | warrior | warriorPriest. thiefPreferred is PHBR2's (T*): usable by others, of most value to thieves.",
     "xp": "Integer, the string 'U' (unique, not magically reproducible), or null where the book prints no XP value.",
     "magicBonus/hitAdj/dmgAdj": "Mirror the weapon card's Magic / Hit Adj / Damage Adj fields. null where the book gives no flat bonus.",
@@ -172,7 +172,7 @@
     {
       "name": "Amulet of Dramatic Death",
       "category": "worn",
-      "slot": null,
+      "slot": "Amulet",
       "restriction": "thief",
       "xp": "U",
       "detectionResistance": true,
@@ -253,7 +253,7 @@
     {
       "name": "Robe of Vanishing",
       "category": "worn",
-      "slot": null,
+      "slot": "Robe",
       "restriction": "thief",
       "xp": 2000,
       "detectionResistance": true,
@@ -351,7 +351,7 @@
     {
       "name": "Crossbow of Angling",
       "category": "weapon",
-      "baseType": "Crossbow, light",
+      "baseType": "Light Crossbow",
       "restriction": "none",
       "xp": 750,
       "magicBonus": null,
@@ -473,7 +473,7 @@
     {
       "name": "Short Sword of Backstabbing",
       "category": "weapon",
-      "baseType": "Sword, short",
+      "baseType": "Sword, Short",
       "restriction": "thiefPreferred",
       "xp": 700,
       "magicBonus": 2,
@@ -659,7 +659,7 @@
       "name": "Shield of Medusae",
       "category": "worn",
       "slot": "Shield",
-      "baseType": "Shield, medium",
+      "baseType": "Shield, Medium",
       "restriction": "warriorPriest",
       "xp": null,
       "acBonus": null,
