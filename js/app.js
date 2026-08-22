@@ -2220,6 +2220,42 @@ function autoExpand(el) {
   el.style.height = Math.max(el.scrollHeight, min) + "px";
 }
 
+// Bind one textarea, once. The flag makes this safe to call repeatedly, which
+// matters because the sweeps and the observer below can both reach the same
+// element.
+function wireAutoExpand(ta) {
+  if (!ta || ta._autoExpandBound) return;
+  ta._autoExpandBound = true;
+  ta.addEventListener('input', () => autoExpand(ta));
+  // DEFERRED ON PURPOSE: scrollHeight reads 0 until the node is attached and
+  // laid out, and every card factory builds its node BEFORE appending it.
+  setTimeout(() => autoExpand(ta), 0);
+}
+
+// ONE OBSERVER INSTEAD OF SEVENTEEN FACTORY EDITS.
+// The three autoExpand sweeps -- sheet init, vtab switch, loadSheet -- only see
+// the textareas that exist when they run. Every card created afterwards was
+// never wired: magic items, weapons, armour, anything added from a browser. With
+// the old overflow-y:hidden the note was then clipped with no scrollbar and no
+// resize handle, so it looked like the text had been lost.
+// There are seventeen make*Node factories. Wiring each is seventeen chances to
+// miss one and does nothing for the eighteenth, so this watches the sheet
+// instead and catches every textarea however it arrives.
+function observeTextareas(root) {
+  if (!root || root._taObserver || typeof MutationObserver === 'undefined') return;
+  const obs = new MutationObserver(muts => {
+    muts.forEach(m => {
+      (m.addedNodes || []).forEach(n => {
+        if (!n || n.nodeType !== 1) return;
+        if (n.tagName === 'TEXTAREA') wireAutoExpand(n);
+        if (n.querySelectorAll) n.querySelectorAll('textarea').forEach(wireAutoExpand);
+      });
+    });
+  });
+  obs.observe(root, { childList: true, subtree: true });
+  root._taObserver = obs;
+}
+
 /* === list item factories === */
 function makeProfNode(data={}, onChange){
   const el=document.createElement('div');
@@ -10021,11 +10057,9 @@ function bindSheet(root, tab){
   // Ensure sidebar hidden at init for a fresh sheet
   hideSidebarMessage(root);
   
-  // Auto-expand all textareas in this sheet
-  root.querySelectorAll('textarea').forEach(t => {
-    autoExpand(t); // expand once on load
-    t.addEventListener('input', () => autoExpand(t));
-  });
+  // Auto-expand all textareas in this sheet, and keep watching for new ones.
+  root.querySelectorAll('textarea').forEach(wireAutoExpand);
+  observeTextareas(root);
   
   // Setup spellbook tabs system
   setupSpellbookTabs(root);
