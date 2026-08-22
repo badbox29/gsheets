@@ -5305,13 +5305,14 @@ function addMagicFromBrowser(root, item) {
   // item's own name rather than inventing a generic.
   const title = item.baseType || item.name;
   const dest  = (typeof magicDestination === 'function') ? magicDestination(item) : { list: 'magic' };
+  let added = null;   // the node just created, so its textareas can be sized below
 
   if (dest.list === 'weapons') {
     const list = root.querySelector('.weapons-list');
     if (!list) return;
     const base = (typeof WEAPONS_DATA !== 'undefined' ? WEAPONS_DATA : [])
       .find(w => w['Weapon Name'] === item.baseType) || {};
-    list.appendChild(makeWeaponNode({
+      added = makeWeaponNode({
       name: title,
       damageSM: base['Damage (S-M)'] || '', damageL: base['Damage (L)'] || '',
       speed: base['Speed Factor'] || '',    weight: num(base.Weight),
@@ -5330,7 +5331,7 @@ function addMagicFromBrowser(root, item) {
     if (!list) return;
     const base = (typeof ARMOR_DATA !== 'undefined' ? ARMOR_DATA : [])
       .find(a => a['Armor Name'] === item.baseType) || {};
-    list.appendChild(makeArmorNode({
+      added = makeArmorNode({
       name: title,
       armorType: item.slot || 'Other',
       armorTypeKey: (item.baseType && typeof inferArmorTypeKey === 'function')
