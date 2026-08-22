@@ -3384,6 +3384,38 @@ function getThiefArmorCategory(root) {
   return { key: col || 'padded', typeKey: typeKey, name: worn || data.label, illegal: illegal };
 }
 
+// PHBR2 Table 4 (p.24): the character's kit adjustment for the eight thief
+// skills, or null when the band is off, the character has no kit, or the kit
+// carries no adjustments.
+//
+// The kit dropdown stores the kit NAME with spaces stripped and lowercased --
+// "Bounty Hunter" becomes "bountyhunter" -- so the match is made the same way
+// renderKitAbilities makes it, rather than against the kits.js object key.
+// They agree today; matching the same way means they cannot drift apart.
+function getKitSkillMods(root) {
+  if (typeof isSupplementActive !== 'function' ||
+      !isSupplementActive('phbr2', 'kitSkillAdjustments')) return null;
+  if (typeof getKitsForClass !== 'function') return null;
+
+  const kitValue = (root.querySelector('[data-field="kit"]') || {}).value || '';
+  const clazz    = (root.querySelector('[data-field="clazz"]') || {}).value || '';
+  if (!kitValue || !clazz) return null;
+
+  const want = kitValue.toLowerCase().replace(/\s+/g, '');
+  const kit  = getKitsForClass(clazz)
+    .find(k => (k.name || '').toLowerCase().replace(/\s+/g, '') === want);
+  if (!kit || !kit.thiefSkillMods) return null;
+
+  // Eight skills, in the order renderThiefSkills uses. A MISSING KEY IS ZERO
+  // here, unlike a null, which means the kit has no such ability at all -- the
+  // ranger kits carry only two keys and must never be read as eight.
+  const m = kit.thiefSkillMods;
+  const K = ['pickPockets','openLocks','findTraps','moveSilently',
+             'hideInShadows','detectNoise','climbWalls','readLanguages'];
+  if (!K.some(k => typeof m[k] === 'number')) return null;
+  return { name: kit.name, adj: K.map(k => (typeof m[k] === 'number' ? m[k] : 0)) };
+}
+
 // The adjustment row for a character. Bards take the extra -5% in ordinary
 // chain mail; anyone else lands on the worst column instead of the
 // bard-specific row.
