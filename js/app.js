@@ -2215,7 +2215,15 @@ Unmodified: ${displayD20(rawBase)} (raw ${rawBase})`;
 
 // Auto-expand textareas
 function autoExpand(el) {
+  if (!el) return;
   el.style.height = "auto"; // reset
+  // REFUSE TO WRITE A HEIGHT FROM AN INVALID MEASUREMENT. scrollHeight reads 0
+  // for an element that is not laid out -- unattached, or inside a collapsed
+  // panel or an inactive tab. Writing anyway pinned the box to its min-height
+  // and looked exactly like the text had been lost: a Shadowcloak note of 1,137
+  // characters sat at 68px, its .ench-effects min-height, with scrollHeight 341.
+  // Leaving the height alone lets a later sweep or edit size it correctly.
+  if (!el.scrollHeight && el.value) return;
   const min = parseInt(window.getComputedStyle(el).minHeight, 10) || 0;
   el.style.height = Math.max(el.scrollHeight, min) + "px";
 }
@@ -2227,9 +2235,11 @@ function wireAutoExpand(ta) {
   if (!ta || ta._autoExpandBound) return;
   ta._autoExpandBound = true;
   ta.addEventListener('input', () => autoExpand(ta));
-  // DEFERRED ON PURPOSE: scrollHeight reads 0 until the node is attached and
-  // laid out, and every card factory builds its node BEFORE appending it.
-  setTimeout(() => autoExpand(ta), 0);
+  // DOUBLE requestAnimationFrame, not setTimeout(0). The observer sees a node
+  // the instant it is inserted, which is BEFORE the browser has laid it out, so
+  // a timeout-0 measurement still returned scrollHeight 0. Two frames guarantee
+  // layout has run. This is the bug that made the first version do nothing.
+  requestAnimationFrame(() => requestAnimationFrame(() => autoExpand(ta)));
 }
 
 // ONE OBSERVER INSTEAD OF SEVENTEEN FACTORY EDITS.
