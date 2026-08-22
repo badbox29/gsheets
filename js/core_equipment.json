@@ -1,5 +1,41 @@
 [
   {
+    "Item Name": "Ale, Gallon",
+    "Category": "Food",
+    "Capacity": "1 gallon",
+    "Weight": "8 lb",
+    "Cost": "2 sp",
+    "Source": "Unattributed",
+    "Notes": "Common drink SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Antitoxin, Vial",
+    "Category": "Medical",
+    "Capacity": "1 dose",
+    "Weight": "0.1 lb",
+    "Cost": "50 gp",
+    "Source": "Unattributed",
+    "Notes": "+2 bonus to save vs poison for 1 hour SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Atl-Atl",
+    "Category": "Weapon",
+    "Capacity": "",
+    "Weight": "1 lb",
+    "Cost": "1 sp",
+    "Source": "PHBR1",
+    "Notes": "PHBR1 p.116. A stick a few feet long with a broad, shallow groove running its length and a knot at the end. The character rests a javelin's butt against the knot with the shaft lying along the groove, holds it at the other end, and uses the atl-atl as a LEVER to throw much farther than by hand. WORKS ONLY WITH A JAVELIN -- not a spear, long spear, harpoon or trident. Used with one, the javelin's missile line becomes ROF 2/3, S 3, M 6, L 9. Can be carved out of a stick by anyone with the Weaponsmithing proficiency."
+  },
+  {
+    "Item Name": "Backpack",
+    "Category": "Container",
+    "Capacity": "50 lb or 2 cubic feet",
+    "Weight": "2 lb",
+    "Cost": "2 gp",
+    "Source": "Unattributed",
+    "Notes": "Leather or canvas, holds adventuring gear SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
     "Item Name": "Banner or Flag",
     "Category": "Adventuring Gear",
     "Capacity": "N/A",
@@ -9,6 +45,42 @@
     "Notes": "Displays heraldry or signals SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
+    "Item Name": "Barrel",
+    "Category": "Container",
+    "Capacity": "40 gallons",
+    "Weight": "30 lb",
+    "Cost": "2 gp",
+    "Source": "Unattributed",
+    "Notes": "Wooden barrel for liquids or goods SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Basket",
+    "Category": "Container",
+    "Capacity": "20 lb",
+    "Weight": "1 lb",
+    "Cost": "5 sp",
+    "Source": "Unattributed",
+    "Notes": "Woven basket SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Bear Trap",
+    "Category": "Tool",
+    "Capacity": "N/A",
+    "Weight": "10 lb",
+    "Cost": "2 gp",
+    "Source": "Unattributed",
+    "Notes": "2d4 damage, holds creature, DC 20 STR to escape SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Bedroll",
+    "Category": "Camping",
+    "Capacity": "N/A",
+    "Weight": "5 lb",
+    "Cost": "1 sp",
+    "Source": "Unattributed",
+    "Notes": "Sleeping bag or padded mat SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
     "Item Name": "Bell",
     "Category": "Adventuring Gear",
     "Capacity": "N/A",
@@ -16,6 +88,87 @@
     "Cost": "1 gp",
     "Source": "Unattributed",
     "Notes": "For alerting to intruders SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Belt Pouch",
+    "Category": "Container",
+    "Capacity": "3 lb or 1/10 cubic foot",
+    "Weight": "0.5 lb",
+    "Cost": "1 gp",
+    "Source": "Unattributed",
+    "Notes": "Small leather pouch worn on belt SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Bit and Bridle",
+    "Category": "Animal Gear",
+    "Capacity": "N/A",
+    "Weight": "3 lb",
+    "Cost": "15 sp",
+    "Source": "Unattributed",
+    "Notes": "For controlling horse SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Blanket, Winter",
+    "Category": "Camping",
+    "Capacity": "N/A",
+    "Weight": "3 lb",
+    "Cost": "5 sp",
+    "Source": "Unattributed",
+    "Notes": "Warm blanket for sleeping SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Blindfold",
+    "Category": "Restraint",
+    "Capacity": "N/A",
+    "Weight": "0.1 lb",
+    "Cost": "5 cp",
+    "Source": "Unattributed",
+    "Notes": "Blocks vision SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Book, Small",
+    "Category": "Writing",
+    "Capacity": "50 pages",
+    "Weight": "1 lb",
+    "Cost": "5 gp",
+    "Source": "Unattributed",
+    "Notes": "Small journal or notebook SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Bottle, Glass",
+    "Category": "Container",
+    "Capacity": "1 quart",
+    "Weight": "1 lb",
+    "Cost": "2 gp",
+    "Source": "Unattributed",
+    "Notes": "Glass bottle with cork SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Caltrops (20)",
+    "Category": "Tool",
+    "Capacity": "20 caltrops",
+    "Weight": "2 lb",
+    "Cost": "1 gp",
+    "Source": "Unattributed",
+    "Notes": "Cover 5 sq ft, 1 hp damage and movement reduced SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Candle",
+    "Category": "Light Source",
+    "Capacity": "N/A",
+    "Weight": "0.1 lb",
+    "Cost": "1 cp",
+    "Source": "Unattributed",
+    "Notes": "SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Cart",
+    "Category": "Transport",
+    "Capacity": "500 lb",
+    "Weight": "200 lb",
+    "Cost": "100 gp",
+    "Source": "Unattributed",
+    "Notes": "Two-wheeled cart SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
     "Item Name": "Chain (10 ft)",
@@ -45,267 +198,6 @@
     "Notes": "For drawing or marking SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
-    "Item Name": "Grappling Hook",
-    "Category": "Adventuring Gear",
-    "Capacity": "N/A",
-    "Weight": "4 lb",
-    "Cost": "8 sp",
-    "Source": "Unattributed",
-    "Notes": "Attaches to rope for climbing SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Ladder, 10 ft",
-    "Category": "Adventuring Gear",
-    "Capacity": "N/A",
-    "Weight": "20 lb",
-    "Cost": "5 cp",
-    "Source": "Unattributed",
-    "Notes": "Wooden ladder SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Mirror, Small Metal",
-    "Category": "Adventuring Gear",
-    "Capacity": "N/A",
-    "Weight": "0.5 lb",
-    "Cost": "10 gp",
-    "Source": "Unattributed",
-    "Notes": "Lets you view a creature whose gaze is dangerous, such as a medusa. Requires a light source. Acting on a reflected view costs -2 on attack rolls, ability checks and proficiency checks; fighting an opponent seen only in a mirror also forfeits all Dexterity bonuses to Armor Class (PHB Ch.13) SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Piton, Iron",
-    "Category": "Adventuring Gear",
-    "Capacity": "N/A",
-    "Weight": "0.5 lb",
-    "Cost": "3 cp",
-    "Source": "Unattributed",
-    "Notes": "Metal spike for climbing, hammered into rock SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Pole, 10 ft",
-    "Category": "Adventuring Gear",
-    "Capacity": "N/A",
-    "Weight": "8 lb",
-    "Cost": "3 sp",
-    "Source": "Unattributed",
-    "Notes": "Wooden pole for probing floors and ceilings SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Pole, Collapsible (5 ft)",
-    "Category": "Adventuring Gear",
-    "Capacity": "N/A",
-    "Weight": "4 lb",
-    "Cost": "8 sp",
-    "Source": "Unattributed",
-    "Notes": "Folds for easy carrying SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Rope, Hemp (50 ft)",
-    "Category": "Adventuring Gear",
-    "Capacity": "N/A",
-    "Weight": "20 lb",
-    "Cost": "1 gp",
-    "Source": "Unattributed",
-    "Notes": "Supports 1,600 lb SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Rope, Silk (50 ft)",
-    "Category": "Adventuring Gear",
-    "Capacity": "N/A",
-    "Weight": "8 lb",
-    "Cost": "10 gp",
-    "Source": "Unattributed",
-    "Notes": "Supports 2,000 lb, lighter and stronger than hemp SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Signal Horn",
-    "Category": "Adventuring Gear",
-    "Capacity": "N/A",
-    "Weight": "2 lb",
-    "Cost": "1 gp",
-    "Source": "Unattributed",
-    "Notes": "Loud horn for signaling over distances SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Signal Whistle",
-    "Category": "Adventuring Gear",
-    "Capacity": "N/A",
-    "Weight": "0.1 lb",
-    "Cost": "8 sp",
-    "Source": "Unattributed",
-    "Notes": "Loud whistle for signaling SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Wax",
-    "Category": "Adventuring Gear",
-    "Capacity": "N/A",
-    "Weight": "1 lb",
-    "Cost": "1 gp",
-    "Source": "Unattributed",
-    "Notes": "For sealing letters or making impressions of keys SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Bit and Bridle",
-    "Category": "Animal Gear",
-    "Capacity": "N/A",
-    "Weight": "3 lb",
-    "Cost": "15 sp",
-    "Source": "Unattributed",
-    "Notes": "For controlling horse SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Feed, Horse (per day)",
-    "Category": "Animal Gear",
-    "Capacity": "10 lb",
-    "Weight": "10 lb",
-    "Cost": "5 cp",
-    "Source": "Unattributed",
-    "Notes": "Daily feed for one horse SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Saddle, Military",
-    "Category": "Animal Gear",
-    "Capacity": "N/A",
-    "Weight": "40 lb",
-    "Cost": "20 gp",
-    "Source": "Unattributed",
-    "Notes": "War saddle, +2 to stay mounted in combat SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Saddle, Pack",
-    "Category": "Animal Gear",
-    "Capacity": "N/A",
-    "Weight": "15 lb",
-    "Cost": "5 gp",
-    "Source": "Unattributed",
-    "Notes": "For pack animals SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Saddle, Riding",
-    "Category": "Animal Gear",
-    "Capacity": "N/A",
-    "Weight": "35 lb",
-    "Cost": "10 gp",
-    "Source": "Unattributed",
-    "Notes": "Standard riding saddle SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Bedroll",
-    "Category": "Camping",
-    "Capacity": "N/A",
-    "Weight": "5 lb",
-    "Cost": "1 sp",
-    "Source": "Unattributed",
-    "Notes": "Sleeping bag or padded mat SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Blanket, Winter",
-    "Category": "Camping",
-    "Capacity": "N/A",
-    "Weight": "3 lb",
-    "Cost": "5 sp",
-    "Source": "Unattributed",
-    "Notes": "Warm blanket for sleeping SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Tent, Large",
-    "Category": "Camping",
-    "Capacity": "4-6 people",
-    "Weight": "50 lb",
-    "Cost": "25 gp",
-    "Source": "Unattributed",
-    "Notes": "Canvas pavilion tent SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Tent, Small",
-    "Category": "Camping",
-    "Capacity": "1-2 people",
-    "Weight": "20 lb",
-    "Cost": "5 gp",
-    "Source": "Unattributed",
-    "Notes": "Canvas tent for 1-2 people SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Desert Gear",
-    "Category": "Clothing",
-    "Capacity": "N/A",
-    "Weight": "3 lb",
-    "Cost": "3 gp",
-    "Source": "Unattributed",
-    "Notes": "Loose, light clothing and head wrap for desert SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Mask, Theatrical",
-    "Category": "Clothing",
-    "Capacity": "N/A",
-    "Weight": "1 lb",
-    "Cost": "5 sp - 10 gp",
-    "Source": "Unattributed",
-    "Notes": "Various theatrical masks SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Rain Cloak",
-    "Category": "Clothing",
-    "Capacity": "N/A",
-    "Weight": "2 lb",
-    "Cost": "2 gp",
-    "Source": "Unattributed",
-    "Notes": "Oiled cloak that repels water SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Winter Gear",
-    "Category": "Clothing",
-    "Capacity": "N/A",
-    "Weight": "7 lb",
-    "Cost": "5 gp",
-    "Source": "Unattributed",
-    "Notes": "Fur-lined clothing for extreme cold SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Backpack",
-    "Category": "Container",
-    "Capacity": "50 lb or 2 cubic feet",
-    "Weight": "2 lb",
-    "Cost": "2 gp",
-    "Source": "Unattributed",
-    "Notes": "Leather or canvas, holds adventuring gear SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Barrel",
-    "Category": "Container",
-    "Capacity": "40 gallons",
-    "Weight": "30 lb",
-    "Cost": "2 gp",
-    "Source": "Unattributed",
-    "Notes": "Wooden barrel for liquids or goods SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Basket",
-    "Category": "Container",
-    "Capacity": "20 lb",
-    "Weight": "1 lb",
-    "Cost": "5 sp",
-    "Source": "Unattributed",
-    "Notes": "Woven basket SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Belt Pouch",
-    "Category": "Container",
-    "Capacity": "3 lb or 1/10 cubic foot",
-    "Weight": "0.5 lb",
-    "Cost": "1 gp",
-    "Source": "Unattributed",
-    "Notes": "Small leather pouch worn on belt SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Bottle, Glass",
-    "Category": "Container",
-    "Capacity": "1 quart",
-    "Weight": "1 lb",
-    "Cost": "2 gp",
-    "Source": "Unattributed",
-    "Notes": "Glass bottle with cork SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
     "Item Name": "Chest, Large",
     "Category": "Container",
     "Capacity": "50 lb",
@@ -322,6 +214,69 @@
     "Cost": "1 gp",
     "Source": "Unattributed",
     "Notes": "Wooden chest with lock SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Climber's Kit",
+    "Category": "Tool",
+    "Capacity": "N/A",
+    "Weight": "5 lb",
+    "Cost": "20 gp",
+    "Source": "Unattributed",
+    "Notes": "Pitons, hammer, harness - +2 to climbing checks SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Crowbar",
+    "Category": "Tool",
+    "Capacity": "N/A",
+    "Weight": "5 lb",
+    "Cost": "2 gp",
+    "Source": "Unattributed",
+    "Notes": "+2 bonus to force doors SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Desert Gear",
+    "Category": "Clothing",
+    "Capacity": "N/A",
+    "Weight": "3 lb",
+    "Cost": "3 gp",
+    "Source": "Unattributed",
+    "Notes": "Loose, light clothing and head wrap for desert SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Disguise Kit",
+    "Category": "Tool",
+    "Capacity": "10 uses",
+    "Weight": "5 lb",
+    "Cost": "25 gp",
+    "Source": "Unattributed",
+    "Notes": "Makeup, wigs, props for disguises SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Feed, Horse (per day)",
+    "Category": "Animal Gear",
+    "Capacity": "10 lb",
+    "Weight": "10 lb",
+    "Cost": "5 cp",
+    "Source": "Unattributed",
+    "Notes": "Daily feed for one horse SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Fishing Hook and Line",
+    "Category": "Tool",
+    "Capacity": "N/A",
+    "Weight": "0.5 lb",
+    "Cost": "1 sp",
+    "Source": "Unattributed",
+    "Notes": "Basic fishing gear SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Fishing Net, 10 sq ft",
+    "Category": "Tool",
+    "Capacity": "N/A",
+    "Weight": "5 lb",
+    "Cost": "4 gp",
+    "Source": "Unattributed",
+    "Notes": "For fishing SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
     "Item Name": "Flask, Glass",
@@ -342,211 +297,40 @@
     "Notes": "Small leather drinking flask SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
-    "Item Name": "Jug, Clay",
-    "Category": "Container",
-    "Capacity": "1 gallon",
-    "Weight": "8 lb (full)",
-    "Cost": "3 cp",
-    "Source": "Unattributed",
-    "Notes": "Earthenware jug SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Sack, Large",
-    "Category": "Container",
-    "Capacity": "40 lb or 1 cubic foot",
-    "Weight": "1 lb",
-    "Cost": "1 sp",
-    "Source": "Unattributed",
-    "Notes": "Large cloth or burlap sack SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Sack, Small",
-    "Category": "Container",
-    "Capacity": "20 lb or 0.5 cubic feet",
+    "Item Name": "Gag",
+    "Category": "Restraint",
+    "Capacity": "N/A",
     "Weight": "0.5 lb",
-    "Cost": "5 cp",
+    "Cost": "3 sp",
     "Source": "Unattributed",
-    "Notes": "Cloth or burlap sack SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Notes": "Prevents speech and spellcasting SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
-    "Item Name": "Saddlebags",
-    "Category": "Container",
-    "Capacity": "50 lb",
-    "Weight": "8 lb",
-    "Cost": "4 gp",
-    "Source": "Unattributed",
-    "Notes": "Paired bags for horse or mule SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Scroll Case",
-    "Category": "Container",
-    "Capacity": "10 sheets",
-    "Weight": "0.5 lb",
-    "Cost": "1 gp",
-    "Source": "Unattributed",
-    "Notes": "Leather tube for scrolls and maps SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Vial, Glass",
-    "Category": "Container",
-    "Capacity": "1 ounce",
-    "Weight": "0.1 lb",
-    "Cost": "1 gp",
-    "Source": "Unattributed",
-    "Notes": "Small glass vial for potions or holy water SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Waterskin",
-    "Category": "Container",
-    "Capacity": "1 gallon (8 lb)",
-    "Weight": "1 lb (empty)",
+    "Item Name": "Grappling Hook",
+    "Category": "Adventuring Gear",
+    "Capacity": "N/A",
+    "Weight": "4 lb",
     "Cost": "8 sp",
     "Source": "Unattributed",
-    "Notes": "Leather container for water or wine SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Notes": "Attaches to rope for climbing SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
-    "Item Name": "Wineskin",
-    "Category": "Container",
-    "Capacity": "1 gallon (8 lb)",
-    "Weight": "1 lb (empty)",
-    "Cost": "8 sp",
-    "Source": "Unattributed",
-    "Notes": "Leather container for wine or water SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Playing Cards or Dice",
-    "Category": "Entertainment",
+    "Item Name": "Hammer",
+    "Category": "Tool",
     "Capacity": "N/A",
-    "Weight": "0.1 lb",
+    "Weight": "2 lb",
     "Cost": "5 sp",
     "Source": "Unattributed",
-    "Notes": "Gaming equipment SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Notes": "For driving pitons or general use SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
-    "Item Name": "Ale, Gallon",
-    "Category": "Food",
-    "Capacity": "1 gallon",
-    "Weight": "8 lb",
-    "Cost": "2 sp",
-    "Source": "Unattributed",
-    "Notes": "Common drink SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Rations, Iron (1 day)",
-    "Category": "Food",
-    "Capacity": "N/A",
-    "Weight": "1 lb",
-    "Cost": "5 sp",
-    "Source": "Unattributed",
-    "Notes": "Hard tack and dried meat - lasts months SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Rations, Trail (1 day)",
-    "Category": "Food",
-    "Capacity": "N/A",
-    "Weight": "1 lb",
-    "Cost": "5 sp",
-    "Source": "Unattributed",
-    "Notes": "Dried meat, bread, cheese - lasts weeks SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Wine, Common (1 bottle)",
-    "Category": "Food",
-    "Capacity": "1 quart",
-    "Weight": "2 lb",
-    "Cost": "1 sp",
-    "Source": "Unattributed",
-    "Notes": "Table wine SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Wine, Fine (1 bottle)",
-    "Category": "Food",
-    "Capacity": "1 quart",
-    "Weight": "2 lb",
-    "Cost": "10 gp",
-    "Source": "Unattributed",
-    "Notes": "Quality wine SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Candle",
-    "Category": "Light Source",
-    "Capacity": "N/A",
-    "Weight": "0.1 lb",
-    "Cost": "1 cp",
-    "Source": "Unattributed",
-    "Notes": "SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Lamp, Common",
-    "Category": "Light Source",
-    "Capacity": "1 pint oil",
-    "Weight": "2 lb",
-    "Cost": "1 sp",
-    "Source": "Unattributed",
-    "Notes": "Not listed in PHB Table 63 -- the chapter prints no radius or burning time for a common lamp SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Lantern, Bullseye",
-    "Category": "Light Source",
-    "Capacity": "1 pint oil",
+    "Item Name": "Healer's Bag",
+    "Category": "Tool",
+    "Capacity": "10 uses",
     "Weight": "3 lb",
-    "Cost": "12 gp",
+    "Cost": "25 gp",
     "Source": "Unattributed",
-    "Notes": "SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Lantern, Hooded",
-    "Category": "Light Source",
-    "Capacity": "1 pint oil",
-    "Weight": "2 lb",
-    "Cost": "7 gp",
-    "Source": "Unattributed",
-    "Notes": "Can be shuttered SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Oil, Lamp (1 pint)",
-    "Category": "Light Source",
-    "Capacity": "1 pint",
-    "Weight": "1 lb",
-    "Cost": "1 sp",
-    "Source": "Unattributed",
-    "Notes": "Fuel for lanterns and lamps SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Tinder Box",
-    "Category": "Light Source",
-    "Capacity": "N/A",
-    "Weight": "1 lb",
-    "Cost": "8 sp",
-    "Source": "Unattributed",
-    "Notes": "Flint, steel, and tinder for starting fires SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Torch",
-    "Category": "Light Source",
-    "Capacity": "N/A",
-    "Weight": "1 lb",
-    "Cost": "1 cp",
-    "Source": "Unattributed",
-    "Notes": "Can be used as a club SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Spell Component Pouch",
-    "Category": "Magical",
-    "Capacity": "2 lb of components",
-    "Weight": "2 lb",
-    "Cost": "10 gp",
-    "Source": "Unattributed",
-    "Notes": "Contains common spell components SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Antitoxin, Vial",
-    "Category": "Medical",
-    "Capacity": "1 dose",
-    "Weight": "0.1 lb",
-    "Cost": "50 gp",
-    "Source": "Unattributed",
-    "Notes": "+2 bonus to save vs poison for 1 hour SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Notes": "Bandages, herbs, salves for Healing proficiency SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
     "Item Name": "Herbs, Healing",
@@ -556,33 +340,6 @@
     "Cost": "5 gp",
     "Source": "Unattributed",
     "Notes": "Grants +1 hp when applied to wounds SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Perfume, Common",
-    "Category": "Personal",
-    "Capacity": "1 oz",
-    "Weight": "0.1 lb",
-    "Cost": "5 gp",
-    "Source": "Unattributed",
-    "Notes": "Basic perfume or cologne SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Perfume, Exotic",
-    "Category": "Personal",
-    "Capacity": "1 oz",
-    "Weight": "0.1 lb",
-    "Cost": "50 gp",
-    "Source": "Unattributed",
-    "Notes": "Rare and expensive perfume SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Soap, 1 lb",
-    "Category": "Personal",
-    "Capacity": "N/A",
-    "Weight": "1 lb",
-    "Cost": "5 sp",
-    "Source": "Unattributed",
-    "Notes": "For bathing and cleaning SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
     "Item Name": "Holy Symbol, Silver",
@@ -612,123 +369,6 @@
     "Notes": "2d4 damage to undead and creatures from lower planes SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
-    "Item Name": "Blindfold",
-    "Category": "Restraint",
-    "Capacity": "N/A",
-    "Weight": "0.1 lb",
-    "Cost": "5 cp",
-    "Source": "Unattributed",
-    "Notes": "Blocks vision SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Gag",
-    "Category": "Restraint",
-    "Capacity": "N/A",
-    "Weight": "0.5 lb",
-    "Cost": "3 sp",
-    "Source": "Unattributed",
-    "Notes": "Prevents speech and spellcasting SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Manacles",
-    "Category": "Restraint",
-    "Capacity": "N/A",
-    "Weight": "2 lb",
-    "Cost": "15 gp",
-    "Source": "Unattributed",
-    "Notes": "Iron shackles with lock and key SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Manacles, Masterwork",
-    "Category": "Restraint",
-    "Capacity": "N/A",
-    "Weight": "2 lb",
-    "Cost": "50 gp",
-    "Source": "Unattributed",
-    "Notes": "Very difficult to escape from SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Bear Trap",
-    "Category": "Tool",
-    "Capacity": "N/A",
-    "Weight": "10 lb",
-    "Cost": "2 gp",
-    "Source": "Unattributed",
-    "Notes": "2d4 damage, holds creature, DC 20 STR to escape SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Caltrops (20)",
-    "Category": "Tool",
-    "Capacity": "20 caltrops",
-    "Weight": "2 lb",
-    "Cost": "1 gp",
-    "Source": "Unattributed",
-    "Notes": "Cover 5 sq ft, 1 hp damage and movement reduced SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Climber's Kit",
-    "Category": "Tool",
-    "Capacity": "N/A",
-    "Weight": "5 lb",
-    "Cost": "20 gp",
-    "Source": "Unattributed",
-    "Notes": "Pitons, hammer, harness - +2 to climbing checks SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Crowbar",
-    "Category": "Tool",
-    "Capacity": "N/A",
-    "Weight": "5 lb",
-    "Cost": "2 gp",
-    "Source": "Unattributed",
-    "Notes": "+2 bonus to force doors SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Disguise Kit",
-    "Category": "Tool",
-    "Capacity": "10 uses",
-    "Weight": "5 lb",
-    "Cost": "25 gp",
-    "Source": "Unattributed",
-    "Notes": "Makeup, wigs, props for disguises SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Fishing Hook and Line",
-    "Category": "Tool",
-    "Capacity": "N/A",
-    "Weight": "0.5 lb",
-    "Cost": "1 sp",
-    "Source": "Unattributed",
-    "Notes": "Basic fishing gear SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Fishing Net, 10 sq ft",
-    "Category": "Tool",
-    "Capacity": "N/A",
-    "Weight": "5 lb",
-    "Cost": "4 gp",
-    "Source": "Unattributed",
-    "Notes": "For fishing SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Hammer",
-    "Category": "Tool",
-    "Capacity": "N/A",
-    "Weight": "2 lb",
-    "Cost": "5 sp",
-    "Source": "Unattributed",
-    "Notes": "For driving pitons or general use SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Healer's Bag",
-    "Category": "Tool",
-    "Capacity": "10 uses",
-    "Weight": "3 lb",
-    "Cost": "25 gp",
-    "Source": "Unattributed",
-    "Notes": "Bandages, herbs, salves for Healing proficiency SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
     "Item Name": "Hourglass",
     "Category": "Tool",
     "Capacity": "N/A",
@@ -736,6 +376,69 @@
     "Cost": "25 gp",
     "Source": "Unattributed",
     "Notes": "Measures 1 hour of time SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Ink, 1 oz",
+    "Category": "Writing",
+    "Capacity": "1 oz",
+    "Weight": "0.1 lb",
+    "Cost": "8 gp",
+    "Source": "Unattributed",
+    "Notes": "Black ink SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Inkpen",
+    "Category": "Writing",
+    "Capacity": "N/A",
+    "Weight": "0.1 lb",
+    "Cost": "1 sp",
+    "Source": "Unattributed",
+    "Notes": "Quill or reed pen SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Jug, Clay",
+    "Category": "Container",
+    "Capacity": "1 gallon",
+    "Weight": "8 lb (full)",
+    "Cost": "3 cp",
+    "Source": "Unattributed",
+    "Notes": "Earthenware jug SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Ladder, 10 ft",
+    "Category": "Adventuring Gear",
+    "Capacity": "N/A",
+    "Weight": "20 lb",
+    "Cost": "5 cp",
+    "Source": "Unattributed",
+    "Notes": "Wooden ladder SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Lamp, Common",
+    "Category": "Light Source",
+    "Capacity": "1 pint oil",
+    "Weight": "2 lb",
+    "Cost": "1 sp",
+    "Source": "Unattributed",
+    "Notes": "Not listed in PHB Table 63 -- the chapter prints no radius or burning time for a common lamp SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Lantern, Bullseye",
+    "Category": "Light Source",
+    "Capacity": "1 pint oil",
+    "Weight": "3 lb",
+    "Cost": "12 gp",
+    "Source": "Unattributed",
+    "Notes": "SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Lantern, Hooded",
+    "Category": "Light Source",
+    "Capacity": "1 pint oil",
+    "Weight": "2 lb",
+    "Cost": "7 gp",
+    "Source": "Unattributed",
+    "Notes": "Can be shuttered SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
     "Item Name": "Lock, Amazing",
@@ -774,6 +477,24 @@
     "Notes": "+2 bonus to detailed examinations SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
+    "Item Name": "Manacles",
+    "Category": "Restraint",
+    "Capacity": "N/A",
+    "Weight": "2 lb",
+    "Cost": "15 gp",
+    "Source": "Unattributed",
+    "Notes": "Iron shackles with lock and key SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Manacles, Masterwork",
+    "Category": "Restraint",
+    "Capacity": "N/A",
+    "Weight": "2 lb",
+    "Cost": "50 gp",
+    "Source": "Unattributed",
+    "Notes": "Very difficult to escape from SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
     "Item Name": "Marbles (100)",
     "Category": "Tool",
     "Capacity": "100 marbles",
@@ -781,6 +502,15 @@
     "Cost": "1 gp",
     "Source": "Unattributed",
     "Notes": "Cover 5 sq ft, creatures must make DEX check or fall SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Mask, Theatrical",
+    "Category": "Clothing",
+    "Capacity": "N/A",
+    "Weight": "1 lb",
+    "Cost": "5 sp - 10 gp",
+    "Source": "Unattributed",
+    "Notes": "Various theatrical masks SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
     "Item Name": "Merchant's Scale",
@@ -792,6 +522,15 @@
     "Notes": "For weighing coins and goods SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
+    "Item Name": "Mirror, Small Metal",
+    "Category": "Adventuring Gear",
+    "Capacity": "N/A",
+    "Weight": "0.5 lb",
+    "Cost": "10 gp",
+    "Source": "Unattributed",
+    "Notes": "Lets you view a creature whose gaze is dangerous, such as a medusa. Requires a light source. Acting on a reflected view costs -2 on attack rolls, ability checks and proficiency checks; fighting an opponent seen only in a mirror also forfeits all Dexterity bonuses to Armor Class (PHB Ch.13) SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
     "Item Name": "Musical Instrument",
     "Category": "Tool",
     "Capacity": "N/A",
@@ -799,114 +538,6 @@
     "Cost": "5-100 gp",
     "Source": "Unattributed",
     "Notes": "Varies by instrument type SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Pick, Miner's",
-    "Category": "Tool",
-    "Capacity": "N/A",
-    "Weight": "10 lb",
-    "Cost": "3 gp",
-    "Source": "Unattributed",
-    "Notes": "For breaking rock SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Pole, Fishing (10 ft)",
-    "Category": "Tool",
-    "Capacity": "N/A",
-    "Weight": "5 lb",
-    "Cost": "2 sp",
-    "Source": "Unattributed",
-    "Notes": "Simple fishing pole SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Sewing Needle and Thread",
-    "Category": "Tool",
-    "Capacity": "N/A",
-    "Weight": "0.1 lb",
-    "Cost": "5 sp",
-    "Source": "Unattributed",
-    "Notes": "For mending clothes and gear SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Spade or Shovel",
-    "Category": "Tool",
-    "Capacity": "N/A",
-    "Weight": "8 lb",
-    "Cost": "2 gp",
-    "Source": "Unattributed",
-    "Notes": "For digging SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Spyglass",
-    "Category": "Tool",
-    "Capacity": "N/A",
-    "Weight": "1 lb",
-    "Cost": "1000 gp",
-    "Source": "Unattributed",
-    "Notes": "See 4x distance clearly SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Thieves' Picks",
-    "Category": "Tool",
-    "Capacity": "N/A",
-    "Weight": "1 lb",
-    "Cost": "30 gp",
-    "Source": "Unattributed",
-    "Notes": "Set of lockpicks, required for Open Locks skill SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Trap, Snare",
-    "Category": "Tool",
-    "Capacity": "N/A",
-    "Weight": "2 lb",
-    "Cost": "1 gp",
-    "Source": "Unattributed",
-    "Notes": "Simple rope snare for catching small game SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Whetstone",
-    "Category": "Tool",
-    "Capacity": "N/A",
-    "Weight": "1 lb",
-    "Cost": "2 cp",
-    "Source": "Unattributed",
-    "Notes": "For sharpening blades SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Cart",
-    "Category": "Transport",
-    "Capacity": "500 lb",
-    "Weight": "200 lb",
-    "Cost": "100 gp",
-    "Source": "Unattributed",
-    "Notes": "Two-wheeled cart SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Rowboat",
-    "Category": "Transport",
-    "Capacity": "600 lb",
-    "Weight": "100 lb",
-    "Cost": "50 gp",
-    "Source": "Unattributed",
-    "Notes": "Small boat with oars SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Wagon",
-    "Category": "Transport",
-    "Capacity": "2000 lb",
-    "Weight": "400 lb",
-    "Cost": "200 gp",
-    "Source": "Unattributed",
-    "Notes": "Four-wheeled wagon SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Atl-Atl",
-    "Category": "Weapon",
-    "Capacity": "",
-    "Weight": "1 lb",
-    "Cost": "1 sp",
-    "Source": "PHBR1",
-    "Notes": "PHBR1 p.116. A stick a few feet long with a broad, shallow groove running its length and a knot at the end. The character rests a javelin's butt against the knot with the shaft lying along the groove, holds it at the other end, and uses the atl-atl as a LEVER to throw much farther than by hand. WORKS ONLY WITH A JAVELIN -- not a spear, long spear, harpoon or trident. Used with one, the javelin's missile line becomes ROF 2/3, S 3, M 6, L 9. Can be carved out of a stick by anyone with the Weaponsmithing proficiency."
   },
   {
     "Item Name": "Oil, Flask (1 pint)",
@@ -918,49 +549,13 @@
     "Notes": "Can be lit and thrown as weapon, 1d8 fire damage for 2 rounds SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
-    "Item Name": "Sheath, Secret Spring",
-    "Category": "Weapon",
-    "Capacity": "",
-    "Weight": "0.5 lb",
-    "Cost": "35 gp",
-    "Source": "PHBR1",
-    "Notes": "PHBR1 p.117. A mechanical sheath worn on the forearm just below the elbow, for ONE of Dagger, Knife or Stiletto -- a sheath for one of the three will not hold either of the other two, and it cannot be built for any other weapon. Straightening and flexing the arm pops the blade into the hand; the character makes a Dexterity check at +3 to catch it, and a natural 20 always fails. On a failure the blade pops straight out and drops to the floor -- it cannot be 'shot out' as a thrown attack, will not hurt whoever it hits, and always hits hilt-first when fumbled. The wearer must ANNOUNCE BEFORE INITIATIVE is rolled that he intends to pop the blade; when his action comes up he may still attack that round, since arming himself does not use up an attack. Requires someone with BOTH the Set Snares and Weaponsmithing proficiencies to create. Like the Spring-Out Spike it is illegal in most places, but a lesser crime: a fine of 10d6 gp and 1d6 days in jail."
-  },
-  {
-    "Item Name": "Spike, Spring-Out",
-    "Category": "Weapon",
-    "Capacity": "",
+    "Item Name": "Oil, Lamp (1 pint)",
+    "Category": "Light Source",
+    "Capacity": "1 pint",
     "Weight": "1 lb",
-    "Cost": "40 gp",
-    "Source": "PHBR1",
-    "Notes": "PHBR1 pp.116-117. A blade identical in characteristics to the KNIFE, housed in an innocuous rod or handle; pressing the secret catch snaps the blade out and the character is instantly armed. Usually built into something the character will be carrying anyway and would not wish known to be a weapon -- the ends of quarterstaves (which converts a staff into a spear), sometimes the hilts of swords and daggers. Assassins often carry a dagger with an ordinary blade and a poison-coated spring-out spike. MUST BE BUILT IN WHEN THE ITEM IS FIRST CREATED and cannot customarily be added to an existing weapon; built into an ordinary object it adds 1 lb and 40 gp to that object's cost. ILLEGAL in most civilizations -- authorities who catch a character using one will jail him on the assumption of assassination motives."
-  },
-  {
-    "Item Name": "Book, Small",
-    "Category": "Writing",
-    "Capacity": "50 pages",
-    "Weight": "1 lb",
-    "Cost": "5 gp",
-    "Source": "Unattributed",
-    "Notes": "Small journal or notebook SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Ink, 1 oz",
-    "Category": "Writing",
-    "Capacity": "1 oz",
-    "Weight": "0.1 lb",
-    "Cost": "8 gp",
-    "Source": "Unattributed",
-    "Notes": "Black ink SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Inkpen",
-    "Category": "Writing",
-    "Capacity": "N/A",
-    "Weight": "0.1 lb",
     "Cost": "1 sp",
     "Source": "Unattributed",
-    "Notes": "Quill or reed pen SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Notes": "Fuel for lanterns and lamps SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
     "Item Name": "Paper, Sheet",
@@ -981,6 +576,268 @@
     "Notes": "Single sheet of parchment SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
+    "Item Name": "Perfume, Common",
+    "Category": "Personal",
+    "Capacity": "1 oz",
+    "Weight": "0.1 lb",
+    "Cost": "5 gp",
+    "Source": "Unattributed",
+    "Notes": "Basic perfume or cologne SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Perfume, Exotic",
+    "Category": "Personal",
+    "Capacity": "1 oz",
+    "Weight": "0.1 lb",
+    "Cost": "50 gp",
+    "Source": "Unattributed",
+    "Notes": "Rare and expensive perfume SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Pick, Miner's",
+    "Category": "Tool",
+    "Capacity": "N/A",
+    "Weight": "10 lb",
+    "Cost": "3 gp",
+    "Source": "Unattributed",
+    "Notes": "For breaking rock SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Piton, Iron",
+    "Category": "Adventuring Gear",
+    "Capacity": "N/A",
+    "Weight": "0.5 lb",
+    "Cost": "3 cp",
+    "Source": "Unattributed",
+    "Notes": "Metal spike for climbing, hammered into rock SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Playing Cards or Dice",
+    "Category": "Entertainment",
+    "Capacity": "N/A",
+    "Weight": "0.1 lb",
+    "Cost": "5 sp",
+    "Source": "Unattributed",
+    "Notes": "Gaming equipment SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Pole, 10 ft",
+    "Category": "Adventuring Gear",
+    "Capacity": "N/A",
+    "Weight": "8 lb",
+    "Cost": "3 sp",
+    "Source": "Unattributed",
+    "Notes": "Wooden pole for probing floors and ceilings SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Pole, Collapsible (5 ft)",
+    "Category": "Adventuring Gear",
+    "Capacity": "N/A",
+    "Weight": "4 lb",
+    "Cost": "8 sp",
+    "Source": "Unattributed",
+    "Notes": "Folds for easy carrying SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Pole, Fishing (10 ft)",
+    "Category": "Tool",
+    "Capacity": "N/A",
+    "Weight": "5 lb",
+    "Cost": "2 sp",
+    "Source": "Unattributed",
+    "Notes": "Simple fishing pole SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Rain Cloak",
+    "Category": "Clothing",
+    "Capacity": "N/A",
+    "Weight": "2 lb",
+    "Cost": "2 gp",
+    "Source": "Unattributed",
+    "Notes": "Oiled cloak that repels water SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Rations, Iron (1 day)",
+    "Category": "Food",
+    "Capacity": "N/A",
+    "Weight": "1 lb",
+    "Cost": "5 sp",
+    "Source": "Unattributed",
+    "Notes": "Hard tack and dried meat - lasts months SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Rations, Trail (1 day)",
+    "Category": "Food",
+    "Capacity": "N/A",
+    "Weight": "1 lb",
+    "Cost": "5 sp",
+    "Source": "Unattributed",
+    "Notes": "Dried meat, bread, cheese - lasts weeks SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Rope, Hemp (50 ft)",
+    "Category": "Adventuring Gear",
+    "Capacity": "N/A",
+    "Weight": "20 lb",
+    "Cost": "1 gp",
+    "Source": "Unattributed",
+    "Notes": "Supports 1,600 lb SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Rope, Silk (50 ft)",
+    "Category": "Adventuring Gear",
+    "Capacity": "N/A",
+    "Weight": "8 lb",
+    "Cost": "10 gp",
+    "Source": "Unattributed",
+    "Notes": "Supports 2,000 lb, lighter and stronger than hemp SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Rowboat",
+    "Category": "Transport",
+    "Capacity": "600 lb",
+    "Weight": "100 lb",
+    "Cost": "50 gp",
+    "Source": "Unattributed",
+    "Notes": "Small boat with oars SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Sack, Large",
+    "Category": "Container",
+    "Capacity": "40 lb or 1 cubic foot",
+    "Weight": "1 lb",
+    "Cost": "1 sp",
+    "Source": "Unattributed",
+    "Notes": "Large cloth or burlap sack SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Sack, Small",
+    "Category": "Container",
+    "Capacity": "20 lb or 0.5 cubic feet",
+    "Weight": "0.5 lb",
+    "Cost": "5 cp",
+    "Source": "Unattributed",
+    "Notes": "Cloth or burlap sack SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Saddle, Military",
+    "Category": "Animal Gear",
+    "Capacity": "N/A",
+    "Weight": "40 lb",
+    "Cost": "20 gp",
+    "Source": "Unattributed",
+    "Notes": "War saddle, +2 to stay mounted in combat SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Saddle, Pack",
+    "Category": "Animal Gear",
+    "Capacity": "N/A",
+    "Weight": "15 lb",
+    "Cost": "5 gp",
+    "Source": "Unattributed",
+    "Notes": "For pack animals SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Saddle, Riding",
+    "Category": "Animal Gear",
+    "Capacity": "N/A",
+    "Weight": "35 lb",
+    "Cost": "10 gp",
+    "Source": "Unattributed",
+    "Notes": "Standard riding saddle SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Saddlebags",
+    "Category": "Container",
+    "Capacity": "50 lb",
+    "Weight": "8 lb",
+    "Cost": "4 gp",
+    "Source": "Unattributed",
+    "Notes": "Paired bags for horse or mule SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Scroll Case",
+    "Category": "Container",
+    "Capacity": "10 sheets",
+    "Weight": "0.5 lb",
+    "Cost": "1 gp",
+    "Source": "Unattributed",
+    "Notes": "Leather tube for scrolls and maps SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Sewing Needle and Thread",
+    "Category": "Tool",
+    "Capacity": "N/A",
+    "Weight": "0.1 lb",
+    "Cost": "5 sp",
+    "Source": "Unattributed",
+    "Notes": "For mending clothes and gear SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Sheath, Secret Spring",
+    "Category": "Weapon",
+    "Capacity": "",
+    "Weight": "0.5 lb",
+    "Cost": "35 gp",
+    "Source": "PHBR1",
+    "Notes": "PHBR1 p.117. A mechanical sheath worn on the forearm just below the elbow, for ONE of Dagger, Knife or Stiletto -- a sheath for one of the three will not hold either of the other two, and it cannot be built for any other weapon. Straightening and flexing the arm pops the blade into the hand; the character makes a Dexterity check at +3 to catch it, and a natural 20 always fails. On a failure the blade pops straight out and drops to the floor -- it cannot be 'shot out' as a thrown attack, will not hurt whoever it hits, and always hits hilt-first when fumbled. The wearer must ANNOUNCE BEFORE INITIATIVE is rolled that he intends to pop the blade; when his action comes up he may still attack that round, since arming himself does not use up an attack. Requires someone with BOTH the Set Snares and Weaponsmithing proficiencies to create. Like the Spring-Out Spike it is illegal in most places, but a lesser crime: a fine of 10d6 gp and 1d6 days in jail."
+  },
+  {
+    "Item Name": "Sheath, Secret Spring",
+    "Category": "Gear",
+    "Capacity": "",
+    "Weight": "0.5 lb",
+    "Cost": "35 gp",
+    "Source": "PHBR1",
+    "Notes": "PHBR1 p.117. A mechanical device rather than merely a sheath, worn on the arm just below the elbow. BUILT FOR EXACTLY ONE OF: dagger, knife, or stiletto -- a sheath for one WILL NOT HOLD either of the other two, and cannot be built for any weapon outside those three. Record which weapon this sheath is built for, and which of the character's weapons sits in it, in the notes field on the card. Straightening the arm and flexing it pops the blade into the hand. The character must make a DEXTERITY ABILITY CHECK to catch it, with a +3 BONUS, but A NATURAL 20 ALWAYS FAILS. On a failure the blade pops straight out and drops to the floor; it CANNOT be 'shot out' as an attack, will not hurt whomever it hits, and always lands hilt-first when fumbled this way. IN COMBAT the character must announce BEFORE INITIATIVE IS ROLLED that he intends to pop the blade. When his action comes up, if he is still able to straighten his arm, the blade pops into his hand and is instantly ready -- and HE MAY STILL ATTACK that round, since arming himself does not use up an attack. Non-magical. The cost and weight here are the SHEATH ALONE; the weapon it holds is recorded separately. MANUFACTURE requires someone with BOTH the Set Snares AND Weaponsmithing proficiencies. Used by rogues, street-fighters, assassins, and characters wishing to appear unarmed.",
+    "legality": "Illegal in most places, but a lesser crime than the spring-out spike: punishable by a fine of 10d6 gp and a few days (1d6) in jail."
+  },
+  {
+    "Item Name": "Signal Horn",
+    "Category": "Adventuring Gear",
+    "Capacity": "N/A",
+    "Weight": "2 lb",
+    "Cost": "1 gp",
+    "Source": "Unattributed",
+    "Notes": "Loud horn for signaling over distances SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Signal Whistle",
+    "Category": "Adventuring Gear",
+    "Capacity": "N/A",
+    "Weight": "0.1 lb",
+    "Cost": "8 sp",
+    "Source": "Unattributed",
+    "Notes": "Loud whistle for signaling SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Soap, 1 lb",
+    "Category": "Personal",
+    "Capacity": "N/A",
+    "Weight": "1 lb",
+    "Cost": "5 sp",
+    "Source": "Unattributed",
+    "Notes": "For bathing and cleaning SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Spade or Shovel",
+    "Category": "Tool",
+    "Capacity": "N/A",
+    "Weight": "8 lb",
+    "Cost": "2 gp",
+    "Source": "Unattributed",
+    "Notes": "For digging SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Spell Component Pouch",
+    "Category": "Magical",
+    "Capacity": "2 lb of components",
+    "Weight": "2 lb",
+    "Cost": "10 gp",
+    "Source": "Unattributed",
+    "Notes": "Contains common spell components SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
     "Item Name": "Spellbook, Blank",
     "Category": "Writing",
     "Capacity": "100 pages",
@@ -988,5 +845,158 @@
     "Cost": "15 gp",
     "Source": "Unattributed",
     "Notes": "Leather-bound blank book for spells SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Spike, Spring-Out",
+    "Category": "Weapon",
+    "Capacity": "",
+    "Weight": "1 lb",
+    "Cost": "40 gp",
+    "Source": "PHBR1",
+    "Notes": "PHBR1 pp.116-117. A blade identical in characteristics to the KNIFE, housed in an innocuous rod or handle; pressing the secret catch snaps the blade out and the character is instantly armed. Usually built into something the character will be carrying anyway and would not wish known to be a weapon -- the ends of quarterstaves (which converts a staff into a spear), sometimes the hilts of swords and daggers. Assassins often carry a dagger with an ordinary blade and a poison-coated spring-out spike. MUST BE BUILT IN WHEN THE ITEM IS FIRST CREATED and cannot customarily be added to an existing weapon; built into an ordinary object it adds 1 lb and 40 gp to that object's cost. ILLEGAL in most civilizations -- authorities who catch a character using one will jail him on the assumption of assassination motives."
+  },
+  {
+    "Item Name": "Spyglass",
+    "Category": "Tool",
+    "Capacity": "N/A",
+    "Weight": "1 lb",
+    "Cost": "1000 gp",
+    "Source": "Unattributed",
+    "Notes": "See 4x distance clearly SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Tent, Large",
+    "Category": "Camping",
+    "Capacity": "4-6 people",
+    "Weight": "50 lb",
+    "Cost": "25 gp",
+    "Source": "Unattributed",
+    "Notes": "Canvas pavilion tent SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Tent, Small",
+    "Category": "Camping",
+    "Capacity": "1-2 people",
+    "Weight": "20 lb",
+    "Cost": "5 gp",
+    "Source": "Unattributed",
+    "Notes": "Canvas tent for 1-2 people SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Thieves' Picks",
+    "Category": "Tool",
+    "Capacity": "N/A",
+    "Weight": "1 lb",
+    "Cost": "30 gp",
+    "Source": "Unattributed",
+    "Notes": "Set of lockpicks, required for Open Locks skill SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Tinder Box",
+    "Category": "Light Source",
+    "Capacity": "N/A",
+    "Weight": "1 lb",
+    "Cost": "8 sp",
+    "Source": "Unattributed",
+    "Notes": "Flint, steel, and tinder for starting fires SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Torch",
+    "Category": "Light Source",
+    "Capacity": "N/A",
+    "Weight": "1 lb",
+    "Cost": "1 cp",
+    "Source": "Unattributed",
+    "Notes": "Can be used as a club SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Trap, Snare",
+    "Category": "Tool",
+    "Capacity": "N/A",
+    "Weight": "2 lb",
+    "Cost": "1 gp",
+    "Source": "Unattributed",
+    "Notes": "Simple rope snare for catching small game SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Vial, Glass",
+    "Category": "Container",
+    "Capacity": "1 ounce",
+    "Weight": "0.1 lb",
+    "Cost": "1 gp",
+    "Source": "Unattributed",
+    "Notes": "Small glass vial for potions or holy water SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Wagon",
+    "Category": "Transport",
+    "Capacity": "2000 lb",
+    "Weight": "400 lb",
+    "Cost": "200 gp",
+    "Source": "Unattributed",
+    "Notes": "Four-wheeled wagon SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Waterskin",
+    "Category": "Container",
+    "Capacity": "1 gallon (8 lb)",
+    "Weight": "1 lb (empty)",
+    "Cost": "8 sp",
+    "Source": "Unattributed",
+    "Notes": "Leather container for water or wine SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Wax",
+    "Category": "Adventuring Gear",
+    "Capacity": "N/A",
+    "Weight": "1 lb",
+    "Cost": "1 gp",
+    "Source": "Unattributed",
+    "Notes": "For sealing letters or making impressions of keys SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Whetstone",
+    "Category": "Tool",
+    "Capacity": "N/A",
+    "Weight": "1 lb",
+    "Cost": "2 cp",
+    "Source": "Unattributed",
+    "Notes": "For sharpening blades SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Wine, Common (1 bottle)",
+    "Category": "Food",
+    "Capacity": "1 quart",
+    "Weight": "2 lb",
+    "Cost": "1 sp",
+    "Source": "Unattributed",
+    "Notes": "Table wine SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Wine, Fine (1 bottle)",
+    "Category": "Food",
+    "Capacity": "1 quart",
+    "Weight": "2 lb",
+    "Cost": "10 gp",
+    "Source": "Unattributed",
+    "Notes": "Quality wine SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Wineskin",
+    "Category": "Container",
+    "Capacity": "1 gallon (8 lb)",
+    "Weight": "1 lb (empty)",
+    "Cost": "8 sp",
+    "Source": "Unattributed",
+    "Notes": "Leather container for wine or water SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+  },
+  {
+    "Item Name": "Winter Gear",
+    "Category": "Clothing",
+    "Capacity": "N/A",
+    "Weight": "7 lb",
+    "Cost": "5 gp",
+    "Source": "Unattributed",
+    "Notes": "Fur-lined clothing for extreme cold SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   }
 ]
