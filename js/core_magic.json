@@ -2,6 +2,7 @@
   {
     "name": "Amulet of Dramatic Death",
     "category": "worn",
+    "displayGroup": "Clothing & Jewelry",
     "slot": "Amulet",
     "restriction": "thief",
     "xp": "U",
@@ -44,6 +45,7 @@
   {
     "name": "Bag of Vanishing",
     "category": "misc",
+    "displayGroup": "Tools & Gear",
     "restriction": "thief",
     "xp": 5000,
     "detectionResistance": true,
@@ -56,6 +58,7 @@
   {
     "name": "Boots of Balance",
     "category": "worn",
+    "displayGroup": "Clothing & Jewelry",
     "slot": "Boots",
     "restriction": "thiefPreferred",
     "xp": 1000,
@@ -69,6 +72,7 @@
   {
     "name": "Boxes of Delightful Transport",
     "category": "misc",
+    "displayGroup": "Tools & Gear",
     "restriction": "none",
     "xp": 2500,
     "detectionResistance": false,
@@ -81,6 +85,7 @@
   {
     "name": "Bracelet of Charms",
     "category": "worn",
+    "displayGroup": "Clothing & Jewelry",
     "slot": null,
     "restriction": "warrior",
     "xp": null,
@@ -94,6 +99,7 @@
   {
     "name": "Cage of Shelter",
     "category": "misc",
+    "displayGroup": "Tools & Gear",
     "restriction": "none",
     "xp": null,
     "detectionResistance": false,
@@ -106,6 +112,7 @@
   {
     "name": "Chameleon Cloak",
     "category": "worn",
+    "displayGroup": "Clothing & Jewelry",
     "slot": "Cloak",
     "baseType": null,
     "restriction": "rangerPreferred",
@@ -153,6 +160,7 @@
   {
     "name": "Charm of Favor",
     "category": "misc",
+    "displayGroup": "Tools & Gear",
     "restriction": "none",
     "xp": null,
     "detectionResistance": false,
@@ -165,6 +173,7 @@
   {
     "name": "Crossbow of Angling",
     "category": "weapon",
+    "displayGroup": "Weapons & Armor",
     "baseType": "Light Crossbow",
     "restriction": "none",
     "xp": 750,
@@ -181,6 +190,7 @@
   {
     "name": "Dagger of Impaling",
     "category": "weapon",
+    "displayGroup": "Weapons & Armor",
     "baseType": "Dagger",
     "restriction": "thief",
     "xp": 300,
@@ -197,6 +207,7 @@
   {
     "name": "Dagger of Resource",
     "category": "weapon",
+    "displayGroup": "Weapons & Armor",
     "baseType": "Dagger",
     "restriction": "thief",
     "xp": 500,
@@ -242,6 +253,7 @@
   {
     "name": "Dagger of Sounding",
     "category": "weapon",
+    "displayGroup": "Weapons & Armor",
     "baseType": "Dagger",
     "restriction": "thief",
     "xp": 300,
@@ -258,6 +270,7 @@
   {
     "name": "Dust of Trail Dispersion",
     "category": "misc",
+    "displayGroup": "Tools & Gear",
     "restriction": "thiefPreferred",
     "xp": 500,
     "detectionResistance": false,
@@ -270,6 +283,7 @@
   {
     "name": "Essence of Darkness",
     "category": "potion",
+    "displayGroup": "Potions & Oils",
     "restriction": "thiefPreferred",
     "xp": 300,
     "detectionResistance": true,
@@ -303,6 +317,7 @@
   {
     "name": "Gloves of Evasion",
     "category": "worn",
+    "displayGroup": "Clothing & Jewelry",
     "slot": "Gauntlets",
     "restriction": "thiefPreferred",
     "xp": 1000,
@@ -316,6 +331,7 @@
   {
     "name": "Horn of Animal Calls",
     "category": "misc",
+    "displayGroup": "Tools & Gear",
     "slot": null,
     "baseType": null,
     "restriction": "rangerPreferred",
@@ -333,6 +349,7 @@
   {
     "name": "Ice Box",
     "category": "misc",
+    "displayGroup": "Tools & Gear",
     "slot": null,
     "baseType": null,
     "restriction": "rangerPreferred",
@@ -350,6 +367,7 @@
   {
     "name": "Lens of Remote Viewing",
     "category": "misc",
+    "displayGroup": "Tools & Gear",
     "restriction": "thief",
     "xp": 1000,
     "detectionResistance": true,
@@ -362,6 +380,7 @@
   {
     "name": "Lens of Valuation",
     "category": "misc",
+    "displayGroup": "Tools & Gear",
     "restriction": "thief",
     "xp": 1000,
     "detectionResistance": false,
@@ -374,6 +393,7 @@
   {
     "name": "Mantle of the Mundane",
     "category": "worn",
+    "displayGroup": "Clothing & Jewelry",
     "slot": "Cloak",
     "restriction": "thiefPreferred",
     "xp": 1500,
@@ -387,6 +407,7 @@
   {
     "name": "Oil of Slickness",
     "category": "potion",
+    "displayGroup": "Potions & Oils",
     "restriction": "thief",
     "xp": 350,
     "detectionResistance": true,
@@ -399,6 +420,7 @@
   {
     "name": "Portable Shadow",
     "category": "misc",
+    "displayGroup": "Tools & Gear",
     "slot": null,
     "baseType": null,
     "restriction": "rangerPreferred",
@@ -416,6 +438,7 @@
   {
     "name": "Potion of Master Thievery",
     "category": "potion",
+    "displayGroup": "Potions & Oils",
     "restriction": "thief",
     "xp": 500,
     "detectionResistance": true,
@@ -463,6 +486,7 @@
   {
     "name": "Potion of Perception",
     "category": "potion",
+    "displayGroup": "Potions & Oils",
     "restriction": "thiefPreferred",
     "xp": 300,
     "detectionResistance": true,
@@ -475,6 +499,7 @@
   {
     "name": "Potion of Sleep Breathing",
     "category": "potion",
+    "displayGroup": "Potions & Oils",
     "restriction": "none",
     "xp": 250,
     "detectionResistance": true,
@@ -487,6 +512,7 @@
   {
     "name": "Potion of Thievery",
     "category": "potion",
+    "displayGroup": "Potions & Oils",
     "restriction": "thief",
     "xp": 350,
     "detectionResistance": true,
@@ -528,6 +554,7 @@
   {
     "name": "Rings of Readiness",
     "category": "worn",
+    "displayGroup": "Clothing & Jewelry",
     "slot": "Ring",
     "restriction": "none",
     "xp": null,
@@ -541,6 +568,7 @@
   {
     "name": "Robe of Vanishing",
     "category": "worn",
+    "displayGroup": "Clothing & Jewelry",
     "slot": "Robe",
     "restriction": "thief",
     "xp": 2000,
@@ -554,6 +582,7 @@
   {
     "name": "Saddle of the Spirit-Horse",
     "category": "misc",
+    "displayGroup": "Tools & Gear",
     "restriction": "warrior",
     "xp": null,
     "detectionResistance": false,
@@ -566,6 +595,7 @@
   {
     "name": "Scabbard of Poison",
     "category": "misc",
+    "displayGroup": "Tools & Gear",
     "restriction": "none",
     "xp": 500,
     "detectionResistance": false,
@@ -595,6 +625,7 @@
   {
     "name": "Shadowcloak",
     "category": "worn",
+    "displayGroup": "Clothing & Jewelry",
     "slot": "Cloak",
     "restriction": "thiefPreferred",
     "xp": 3000,
@@ -608,6 +639,7 @@
   {
     "name": "Sheath of Holding",
     "category": "misc",
+    "displayGroup": "Tools & Gear",
     "restriction": "none",
     "xp": null,
     "detectionResistance": false,
@@ -715,6 +747,7 @@
   {
     "name": "Shield of Medusae",
     "category": "worn",
+    "displayGroup": "Weapons & Armor",
     "slot": "Shield",
     "baseType": "Shield, Medium",
     "restriction": "warriorPriest",
@@ -730,6 +763,7 @@
   {
     "name": "Short Sword of Backstabbing",
     "category": "weapon",
+    "displayGroup": "Weapons & Armor",
     "baseType": "Sword, Short",
     "restriction": "thiefPreferred",
     "xp": 700,
@@ -746,6 +780,7 @@
   {
     "name": "Species Enemy Medallion",
     "category": "worn",
+    "displayGroup": "Clothing & Jewelry",
     "slot": "Amulet",
     "baseType": null,
     "restriction": "rangerPreferred",
@@ -763,6 +798,7 @@
   {
     "name": "String Cage",
     "category": "misc",
+    "displayGroup": "Tools & Gear",
     "slot": null,
     "baseType": null,
     "restriction": "rangerPreferred",
@@ -780,6 +816,7 @@
   {
     "name": "Tallin's Tightrope",
     "category": "misc",
+    "displayGroup": "Tools & Gear",
     "restriction": "none",
     "xp": 1250,
     "detectionResistance": false,
@@ -792,6 +829,7 @@
   {
     "name": "Thorn of Sleep",
     "category": "misc",
+    "displayGroup": "Tools & Gear",
     "slot": null,
     "baseType": null,
     "restriction": "rangerPreferred",
