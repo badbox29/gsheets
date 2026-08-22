@@ -9609,6 +9609,27 @@ function bindSheet(root, tab){
     refreshMagic.onclick = () => renderMagicBrowser(root);
   }
 
+  // Add buttons. DELEGATED to the results container rather than bound per
+  // button, because renderMagicBrowser replaces its innerHTML on every search
+  // keystroke and filter change -- per-button handlers would be destroyed and
+  // would need rebinding after each render, which is exactly the per-card
+  // closure problem that keeps recurring in this codebase.
+  const magicResults = qs(root, '.magic-results');
+  if (magicResults && !magicResults._magicAddBound) {
+    magicResults._magicAddBound = true;
+    magicResults.addEventListener('click', (e) => {
+      const btn = e.target.closest('.add-magic-from-browser');
+      if (!btn) return;
+      e.stopPropagation();
+      const name = btn.getAttribute('data-magic-name');
+      const item = (typeof MAGIC_DATA !== 'undefined' ? MAGIC_DATA : [])
+        .find(i => i.name === name);
+      if (item && typeof addMagicFromBrowser === 'function') {
+        addMagicFromBrowser(root, item);
+      }
+    });
+  }
+
   const magicSearch = qs(root, '.magic-search');
   if (magicSearch) {
     magicSearch.addEventListener('input', () => renderMagicBrowser(root));
