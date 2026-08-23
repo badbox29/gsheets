@@ -14203,51 +14203,20 @@ function updateThiefSkillRoller(root) {
   });
 }
 
-// Render/show Thief Skills section based on class
+// Render/show Thief Skills section based on class.
+//
+// THE CLASS TEST MOVED TO tables.js as characterHasThiefSkills, August 2026.
+// This function owned the only copy until the PHBR2 equipment and Chapter 7
+// panels needed the same answer, at which point keeping it here would have
+// meant three copies of "bards and assassins count too" and three copies of the
+// dual-class dormancy rule. The logic is unchanged -- it was lifted verbatim.
 function renderThiefSkillsSection(root) {
   const section = root.querySelector('.thief-skills-section');
   if (!section) return;
-  
-  const charType = (val(root, 'char_type') || 'single').toLowerCase();
-  let hasThiefSkills = false;
-  
-  // Helper function to check if a class is thief-type
-  function isThiefClass(className) {
-    const c = (className || '').toLowerCase();
-    return c.includes('thief') || c.includes('bard') || c.includes('assassin');
-  }
-  
-  if (charType === 'multi') {
-    // Multi-class: Show if ANY class is thief
-    const class1 = val(root, 'mc_class1') || '';
-    const class2 = val(root, 'mc_class2') || '';
-    const class3 = val(root, 'mc_class3') || '';
-    
-    hasThiefSkills = isThiefClass(class1) || isThiefClass(class2) || isThiefClass(class3);
-    
-  } else if (charType === 'dual') {
-    // Dual-class: Check dormancy
-    const originalClass = val(root, 'dc_original_class') || '';
-    const originalLevel = parseInt(val(root, 'dc_original_level') || 0, 10);
-    const newClass = val(root, 'dc_new_class') || '';
-    const newLevel = parseInt(val(root, 'dc_new_level') || 1, 10);
-    const isDormant = (root._isDualClassDormant !== undefined)
-      ? root._isDualClassDormant
-      : (newLevel <= originalLevel);
-    
-    if (isDormant) {
-      // Dormant: Only show if NEW class is thief
-      hasThiefSkills = isThiefClass(newClass);
-    } else {
-      // Active: Show if EITHER class is thief
-      hasThiefSkills = isThiefClass(originalClass) || isThiefClass(newClass);
-    }
-    
-  } else {
-    // Single-class: Check the main class field
-    const clazz = val(root, 'clazz') || '';
-    hasThiefSkills = isThiefClass(clazz);
-  }
+
+  const hasThiefSkills = (typeof characterHasThiefSkills === 'function')
+    ? characterHasThiefSkills(root)
+    : false;
   
   // Get all thief-related sections
   const allThiefSections = root.querySelectorAll('.thief-abilities-display, .thief-skills-section');
