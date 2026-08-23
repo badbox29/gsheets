@@ -6626,6 +6626,9 @@ const TOOLS_SUBTABS = [
   // Gated: the renderer hides the section when the band is off, and
   // toolsSubtabApplies reads that display to decide whether the tab exists.
   { key: 'maneuvers', label: 'Maneuvers',        section: 'maneuvers-section',      band: 'reference', gated: true },
+  // Gated the same way as Maneuvers: renderThiefEquipment hides the section when
+  // the PHBR2 band is off, and toolsSubtabApplies reads that display.
+  { key: 'thiefequip', label: 'Thief Equipment', section: 'thief-equip-section',    band: 'reference', gated: true },
   { key: 'vision',   label: 'Vision & Light',    section: 'vision-light-section',   band: 'reference', gated: false },
   { key: 'cover',    label: 'Cover',             section: 'cover-reference-section',band: 'reference', gated: false },
   { key: 'overland', label: 'Overland',          section: 'overland-section',       band: 'reference', gated: false }
