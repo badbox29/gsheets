@@ -8964,6 +8964,56 @@ function paHeightInches(root) {
   return null;
 }
 
+// --- Tumbling (PHB Ch.5) ---
+// CALCULATOR. Placed BEFORE jumping so the two acrobatic panels sit together.
+//
+// THE +4 AC IS NOT A finalAC TERM, and deliberately. The book grants it only
+// "against attacks directed solely at him in any round of combat, provided he
+// has the initiative and foregoes all attacks that round" -- three conditions
+// resolved at the table, in a single round, one of which costs the character
+// his entire action. A standing term in the AC field would claim it in every
+// round including the ones he spends attacking. Same reasoning as the PHBR2
+// equipment panel: situational modifiers belong to the moment, not the sheet.
+//
+// PHBR2 Table 37 will later replace the flat +4 and +2 with an armor-dependent
+// row. Its No Armor column IS +4 and +2, so the figures below are that table's
+// first column and nothing here will contradict it.
+PROF_ABILITY_BUILDERS['tumbling'] = function (root, entry, panelEl) {
+  // An empty category means encumbrance has not been computed yet, not that the
+  // character is overloaded -- do not lock the panel on a blank.
+  const cat = String(val(root, 'encumbrance_category') || '').trim();
+  const ok  = (cat === '' || cat === 'Unencumbered' || cat === 'Light');
+  const c   = getNWPCheckTarget(root, entry.nwp);
+
+  const row = (name, fig, note) =>
+    '<div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">' +
+      '<span style="width:150px;flex-shrink:0;"><strong>' + escapeHtml(name) + '</strong></span>' +
+      '<span style="color:var(--accent-light);width:90px;flex-shrink:0;">' + fig + '</span>' +
+      '<span style="color:var(--muted);flex:1;min-width:200px;">' + note + '</span>' +
+    '</div>';
+
+  panelEl.innerHTML =
+    paBox(ok ? 'Available \u2014 ' + (cat || 'no load recorded')
+             : 'Unavailable \u2014 ' + escapeHtml(cat) + ' encumbrance',
+          ok ? 'Tumbling can only be performed at light encumbrance or less.'
+             : 'Tumbling can only be performed while burdened with light encumbrance ' +
+               'or less. Drop weight to use any of the below.') +
+    '<div style="font-size:11px;' + (ok ? '' : 'opacity:.5;') + '">' +
+    row('Defensive', '+4 AC',
+        'Against attacks directed SOLELY at him, in any round of combat, provided he ' +
+        'has the INITIATIVE and FOREGOES ALL ATTACKS that round. Situational, so it is ' +
+        'not added to the Armor Class field \u2014 claim it at the table for the round.') +
+    row('Attack', '+2 to hit', 'In UNARMED combat only.') +
+    (c.hasCheck
+      ? row('Falling', 'roll ' + c.target + ' or less',
+            'One proficiency check on ' + escapeHtml(c.abilityLabel) + '. On a success: ' +
+            'NO damage from a fall of 10 feet or less, and HALF damage from a fall of ' +
+            '60 feet or less. Falls from greater heights do normal damage however the ' +
+            'check goes.' + (c.alwaysFailsOn20 ? ' A natural 20 always fails.' : ''))
+      : '') +
+    '</div>';
+};
+
 // --- Jumping (PHB Ch.5) ---
 // CALCULATOR. The book gives formulas and two height caps; this resolves them
 // against the character's own level and height so nothing is worked out at the
