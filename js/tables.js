@@ -3291,10 +3291,14 @@ const PHBR2_EQUIPMENT_SKILL_MODS = [
 ];
 
 // Surface labels for the panel's selector, in the order pp.95-96 present them.
+// EVERY LABEL IS A NOUN PHRASE ending in "surface", because the panel drops them
+// mid-sentence -- "No climbing bonus on a very smooth surface". An adjective
+// alone reads as a fragment there, and a label that only works in a dropdown is
+// a label that breaks the first time anything else uses it.
 const PHBR2_CLIMB_SURFACES = [
   { key: 'other',         label: 'Rough or normal surface' },
-  { key: 'smoothCracked', label: 'Smooth or cracked' },
-  { key: 'verySmooth',    label: 'Very smooth' }
+  { key: 'smoothCracked', label: 'Smooth or cracked surface' },
+  { key: 'verySmooth',    label: 'Very smooth surface' }
 ];
 
 // === PHBR2 Chapter 7 reference (pp.111-114) ===
