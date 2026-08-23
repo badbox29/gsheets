@@ -50,7 +50,7 @@
   },
   {
     "Proficiency Name": "Animal Noise",
-    "Category": "Thief",
+    "Category": "Rogue",
     "Slots": "1",
     "Ability Check": "Wis / -1",
     "Modifier": "-1",
@@ -60,7 +60,7 @@
       "smuggler"
     ],
     "Source": "PHBR2",
-    "Notes": "PHBR2 p.16. Imitates noises made by various animals. A successful check means only magic can distinguish the noise from that of the actual animal; a failed roll means the sound varies from the correct noise in some slight way. A FAILED ROLL DOES NOT MEAN ALL CREATURES HEARING IT KNOW THE SOUND IS FAKE -- creatures and humanoids very familiar with the noise know automatically, others in earshot may require Wisdom checks to detect the fake. Bandits and Smugglers often use it for communication on the job, almost as a variant dialect of thieves’ cant."
+    "Notes": "PHBR2 p.16. Imitates noises made by various animals. A successful check means only magic can distinguish the noise from that of the actual animal; a failed roll means the sound varies from the correct noise in some slight way. A FAILED ROLL DOES NOT MEAN ALL CREATURES HEARING IT KNOW THE SOUND IS FAKE -- creatures and humanoids very familiar with the noise know automatically, others in earshot may require Wisdom checks to detect the fake. Bandits and Smugglers often use it for communication on the job, almost as a variant dialect of thieves’ cant. CATEGORY IS \"Rogue\", THE PHB GROUP NAME -- not \"Thief\". getNWPGroups falls back to Category for any proficiency absent from NWP_TABLE37_GROUPS, and a thief's allowed groups are {rogue, general} per PHB Table 38, so \"Thief\" matches nothing and wrongly triggers the out-of-group surcharge."
   },
   {
     "Proficiency Name": "Animal Training",
@@ -111,7 +111,7 @@
   },
   {
     "Proficiency Name": "Begging",
-    "Category": "Thief",
+    "Category": "Rogue",
     "Slots": "1",
     "Ability Check": "Cha / special",
     "Modifier": "special",
@@ -126,7 +126,7 @@
       "spy"
     ],
     "Source": "PHBR2",
-    "Notes": "PHBR2 pp.16-17. TWO FUNCTIONS. First, posing convincingly as a beggar: SUCCESS IS AUTOMATIC, no check needed -- used most by Assassins, Bounty Hunters and Spies in pursuit of assignments. Second, procuring minimal daily income: a successful check panhandles enough money, goods or services for that day’s basic needs (a little food and drink, a place to sleep). Success requires people with money to beg from; an abandoned castle or recently pillaged village is virtually assured failure. MODIFIER IS BY LOCALE, Table 2: uninhabited/wilderness AUTOMATIC FAILURE; countryside -7; hamlet or village -5; town -2; city 0. Considers POPULATION DENSITY, not wealth -- impoverished regions might have greater negative modifiers, but so might affluent areas with traditions of stinginess. MAY NOT BE USED TO FORCE PLAYER CHARACTERS to give money away; players always decide how their characters respond to supplications."
+    "Notes": "PHBR2 pp.16-17. TWO FUNCTIONS. First, posing convincingly as a beggar: SUCCESS IS AUTOMATIC, no check needed -- used most by Assassins, Bounty Hunters and Spies in pursuit of assignments. Second, procuring minimal daily income: a successful check panhandles enough money, goods or services for that day’s basic needs (a little food and drink, a place to sleep). Success requires people with money to beg from; an abandoned castle or recently pillaged village is virtually assured failure. MODIFIER IS BY LOCALE, Table 2: uninhabited/wilderness AUTOMATIC FAILURE; countryside -7; hamlet or village -5; town -2; city 0. Considers POPULATION DENSITY, not wealth -- impoverished regions might have greater negative modifiers, but so might affluent areas with traditions of stinginess. MAY NOT BE USED TO FORCE PLAYER CHARACTERS to give money away; players always decide how their characters respond to supplications. CATEGORY IS \"Rogue\", THE PHB GROUP NAME -- not \"Thief\". getNWPGroups falls back to Category for any proficiency absent from NWP_TABLE37_GROUPS, and a thief's allowed groups are {rogue, general} per PHB Table 38, so \"Thief\" matches nothing and wrongly triggers the out-of-group surcharge."
   },
   {
     "Proficiency Name": "Blacksmithing",
@@ -318,7 +318,7 @@
   },
   {
     "Proficiency Name": "Fast-Talking",
-    "Category": "Thief",
+    "Category": "Rogue",
     "Slots": "1",
     "Ability Check": "Cha / special",
     "Modifier": "special",
@@ -334,7 +334,7 @@
       "troubleshooter"
     ],
     "Source": "PHBR2",
-    "Notes": "PHBR2 p.17. The art of distraction and conning. On a successful check the fast-talker gets away with whatever scam he is attempting. MODIFIERS ARE BASED ON THE TARGET, Table 3, and are CUMULATIVE across both abilities. Target Intelligence: 3 or less n/a; 4-5 -3; 6-8 -1; 9-12 0; 13-15 +1; 16-17 +2; 18 +3; 19 +5; 20 n/a. Target Wisdom: 3 -5; 4-5 -3; 6-8 -1; 9-12 0; 13-15 +1; 16-17 +3; 18 +5; 19+ n/a. TARGETS OF INTELLIGENCE 3 OR LESS FAIL AUTOMATICALLY because they cannot follow what is being said (creatures that stupid are easy to fool in other ways). TARGETS OF INTELLIGENCE 20+ OR WISDOM 19+ ARE IMPERVIOUS. The DM may also modify for the difficulty or plausibility of what is attempted."
+    "Notes": "PHBR2 p.17. The art of distraction and conning. On a successful check the fast-talker gets away with whatever scam he is attempting. MODIFIERS ARE BASED ON THE TARGET, Table 3, and are CUMULATIVE across both abilities. Target Intelligence: 3 or less n/a; 4-5 -3; 6-8 -1; 9-12 0; 13-15 +1; 16-17 +2; 18 +3; 19 +5; 20 n/a. Target Wisdom: 3 -5; 4-5 -3; 6-8 -1; 9-12 0; 13-15 +1; 16-17 +3; 18 +5; 19+ n/a. TARGETS OF INTELLIGENCE 3 OR LESS FAIL AUTOMATICALLY because they cannot follow what is being said (creatures that stupid are easy to fool in other ways). TARGETS OF INTELLIGENCE 20+ OR WISDOM 19+ ARE IMPERVIOUS. The DM may also modify for the difficulty or plausibility of what is attempted. CATEGORY IS \"Rogue\", THE PHB GROUP NAME -- not \"Thief\". getNWPGroups falls back to Category for any proficiency absent from NWP_TABLE37_GROUPS, and a thief's allowed groups are {rogue, general} per PHB Table 38, so \"Thief\" matches nothing and wrongly triggers the out-of-group surcharge."
   },
   {
     "Proficiency Name": "Fire-Building",
@@ -374,7 +374,7 @@
   },
   {
     "Proficiency Name": "Fortune Telling",
-    "Category": "Thief",
+    "Category": "Rogue",
     "Slots": "2",
     "Ability Check": "Cha / +2",
     "Modifier": "+2",
@@ -382,7 +382,7 @@
       "swindler"
     ],
     "Source": "PHBR2",
-    "Notes": "PHBR2 p.18. Knowledge of a variety of methods of divination -- ALL OF THEM FAKE. Tarot cards, palm reading, interpreting the flight of sparrows, the arrangement of a sacrificed animal’s entrails. CONFERS NO MAGICAL POWERS: even in a campaign where fortune telling can make accurate predictions, this proficiency does not enable the thief to do so. He makes up the prediction he wishes to tell. A successful check indicates the customer BELIEVES the fortune is authentic; on a failure the sham is discovered in some way, or the prediction is simply not believed. The DM may apply the same Intelligence and Wisdom modifiers as fast-talking, based on the subject and the believability of the fortune. OPTIONAL RULE: on a natural 1 (or another number secretly chosen by the DM before the die is rolled), the event the thief predicted ACTUALLY COMES TRUE."
+    "Notes": "PHBR2 p.18. Knowledge of a variety of methods of divination -- ALL OF THEM FAKE. Tarot cards, palm reading, interpreting the flight of sparrows, the arrangement of a sacrificed animal’s entrails. CONFERS NO MAGICAL POWERS: even in a campaign where fortune telling can make accurate predictions, this proficiency does not enable the thief to do so. He makes up the prediction he wishes to tell. A successful check indicates the customer BELIEVES the fortune is authentic; on a failure the sham is discovered in some way, or the prediction is simply not believed. The DM may apply the same Intelligence and Wisdom modifiers as fast-talking, based on the subject and the believability of the fortune. OPTIONAL RULE: on a natural 1 (or another number secretly chosen by the DM before the die is rolled), the event the thief predicted ACTUALLY COMES TRUE. CATEGORY IS \"Rogue\", THE PHB GROUP NAME -- not \"Thief\". getNWPGroups falls back to Category for any proficiency absent from NWP_TABLE37_GROUPS, and a thief's allowed groups are {rogue, general} per PHB Table 38, so \"Thief\" matches nothing and wrongly triggers the out-of-group surcharge."
   },
   {
     "Proficiency Name": "Gaming",
@@ -553,7 +553,7 @@
   },
   {
     "Proficiency Name": "Locksmithing",
-    "Category": "Thief",
+    "Category": "Rogue",
     "Slots": "1",
     "Ability Check": "Dex / 0",
     "Modifier": "0",
@@ -561,11 +561,11 @@
       "troubleshooter"
     ],
     "Source": "PHBR2",
-    "Notes": "PHBR2 p.19. The specialized skill of MAKING locks, treated like other \"craft\" proficiencies when checking for success. THIEVES WITH THIS PROFICIENCY GAIN A 10% BONUS TO THEIR LOCKPICKING SKILL, being intimately familiar with the internal structure and working of so many locks. RECOMMENDED FOR TROUBLESHOOTERS, and besides them DWARF AND GNOME THIEVES OF ANY KIT may take locksmithing to fill one slot, because of the tradition of craftsmanship and mechanical things in their cultural heritages -- a RACIAL recommendation, not a kit one. See also PHBR2 pp.111-112, where a locksmith with this proficiency can build superior locks."
+    "Notes": "PHBR2 p.19. The specialized skill of MAKING locks, treated like other \"craft\" proficiencies when checking for success. THIEVES WITH THIS PROFICIENCY GAIN A 10% BONUS TO THEIR LOCKPICKING SKILL, being intimately familiar with the internal structure and working of so many locks. RECOMMENDED FOR TROUBLESHOOTERS, and besides them DWARF AND GNOME THIEVES OF ANY KIT may take locksmithing to fill one slot, because of the tradition of craftsmanship and mechanical things in their cultural heritages -- a RACIAL recommendation, not a kit one. See also PHBR2 pp.111-112, where a locksmith with this proficiency can build superior locks. CATEGORY IS \"Rogue\", THE PHB GROUP NAME -- not \"Thief\". getNWPGroups falls back to Category for any proficiency absent from NWP_TABLE37_GROUPS, and a thief's allowed groups are {rogue, general} per PHB Table 38, so \"Thief\" matches nothing and wrongly triggers the out-of-group surcharge."
   },
   {
     "Proficiency Name": "Looting",
-    "Category": "Thief",
+    "Category": "Rogue",
     "Slots": "1",
     "Ability Check": "Dex / 0",
     "Modifier": "0",
@@ -579,7 +579,7 @@
       "thug"
     ],
     "Source": "PHBR2",
-    "Notes": "PHBR2 p.19. A knack for grabbing the best loot in the shortest time. On a successful check the thief recognizes and stuffs into his pack the most valuable combination of items that is feasible, given his limitations of time and space."
+    "Notes": "PHBR2 p.19. A knack for grabbing the best loot in the shortest time. On a successful check the thief recognizes and stuffs into his pack the most valuable combination of items that is feasible, given his limitations of time and space. CATEGORY IS \"Rogue\", THE PHB GROUP NAME -- not \"Thief\". getNWPGroups falls back to Category for any proficiency absent from NWP_TABLE37_GROUPS, and a thief's allowed groups are {rogue, general} per PHB Table 38, so \"Thief\" matches nothing and wrongly triggers the out-of-group surcharge."
   },
   {
     "Proficiency Name": "Mining",
@@ -943,7 +943,7 @@
   },
   {
     "Proficiency Name": "Voice Mimicry",
-    "Category": "Thief",
+    "Category": "Rogue",
     "Slots": "2",
     "Ability Check": "Cha / special",
     "Modifier": "special",
@@ -952,7 +952,7 @@
       "spy"
     ],
     "Source": "PHBR2",
-    "Notes": "PHBR2 p.21. The art of convincingly imitating the voices of other people. Very demanding, needing intense training and practice with the vocal cords, WHICH IS WHY IT COSTS TWO SLOTS. ACCENTS: a character can imitate any accent he has heard, and SUCCESS IS AUTOMATIC unless people who themselves speak in that accent are listeners, in which case a check is required AT +2. A SPECIFIC PERSON’S VOICE is harder and requires familiarity with the voice; a check determines whether the imitation is detected, with modifiers by how well the listeners know the voice being mimicked: a stranger who has never heard the original is certain success, no modifier; a close acquaintance -2; a close friend -5; someone extremely close such as a parent or spouse -7. WITH DISGUISE: which proficiency is checked first depends on whether the character is SEEN or HEARD first. If the disguise succeeds first, voice mimicry gets +5 -- the listeners have already accepted the appearance. IF THE DISGUISE FAILS, IT DOES NOT MATTER HOW GOOD THE VOICE IMITATION IS. If the voice is successfully mimicked first, the disguise check gets +1."
+    "Notes": "PHBR2 p.21. The art of convincingly imitating the voices of other people. Very demanding, needing intense training and practice with the vocal cords, WHICH IS WHY IT COSTS TWO SLOTS. ACCENTS: a character can imitate any accent he has heard, and SUCCESS IS AUTOMATIC unless people who themselves speak in that accent are listeners, in which case a check is required AT +2. A SPECIFIC PERSON’S VOICE is harder and requires familiarity with the voice; a check determines whether the imitation is detected, with modifiers by how well the listeners know the voice being mimicked: a stranger who has never heard the original is certain success, no modifier; a close acquaintance -2; a close friend -5; someone extremely close such as a parent or spouse -7. WITH DISGUISE: which proficiency is checked first depends on whether the character is SEEN or HEARD first. If the disguise succeeds first, voice mimicry gets +5 -- the listeners have already accepted the appearance. IF THE DISGUISE FAILS, IT DOES NOT MATTER HOW GOOD THE VOICE IMITATION IS. If the voice is successfully mimicked first, the disguise check gets +1. CATEGORY IS \"Rogue\", THE PHB GROUP NAME -- not \"Thief\". getNWPGroups falls back to Category for any proficiency absent from NWP_TABLE37_GROUPS, and a thief's allowed groups are {rogue, general} per PHB Table 38, so \"Thief\" matches nothing and wrongly triggers the out-of-group surcharge."
   },
   {
     "Proficiency Name": "Weaponsmithing",
