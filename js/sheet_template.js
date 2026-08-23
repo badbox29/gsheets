@@ -2581,6 +2581,30 @@ const SHEET_HTML = `
           <div class="maneuvers-list" style="margin-bottom:14px;"></div>
           <h4 style="font-size:12px;margin:0 0 6px;">Body Locations</h4>
           <div class="maneuvers-locations"></div>
+                </section>
+
+        <!-- PHBR2 Ch.5. Populated by renderThiefEquipment; hidden entirely
+             unless the Equipment and thief skills band is ticked.
+
+             EVERY CONTROL IS .ephemeral. The panel answers "what do my skills
+             read right now, with this gear, on this surface" -- a question whose
+             answer changes between one room and the next. Chapter 5's modifiers
+             are situational in a way armor and kit adjustments are not, so they
+             must NOT reach collectSheet and must never be written into the
+             thief skill fields. The panel reads the sheet; it does not touch it. -->
+        <section class="thief-equip-section section" style="display:none;">
+          <h3>Thief Equipment</h3>
+          <p class="prose thief-equip-intro"></p>
+          <div class="thief-equip-controls" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px;">
+            <label style="display:flex;flex-direction:column;gap:2px;">
+              <span style="font-size:11px;color:var(--muted);">Surface being climbed</span>
+              <select class="ephemeral thief-equip-surface" style="width:190px;"></select>
+            </label>
+            <button type="button" class="ghost thief-equip-clear" style="margin-bottom:1px;">Clear all</button>
+          </div>
+          <div class="thief-equip-list" style="margin-bottom:14px;"></div>
+          <h4 style="font-size:12px;margin:0 0 6px;">Adjusted Skills</h4>
+          <div class="thief-equip-readout"></div>
         </section>
 
         <!-- PHBR2 Ch.7. Populated by renderAdvancedThiefRules; hidden entirely
