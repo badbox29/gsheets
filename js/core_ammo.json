@@ -713,5 +713,70 @@
     "Cost": "1 cp",
     "Weight": "1 lb",
     "Notes": "Improvised thrown weapon. May ignite flammables on hit."
+  },
+  {
+    "Ammunition Name": "Arrow, Wood Biter",
+    "Ammunition Type": "Arrow",
+    "Weapon": "Bow (any)",
+    "Quantity": "1",
+    "Damage Modifier": "+0 (-2 one-rope)",
+    "Range Modifier": "+0 (halved one-rope)",
+    "Cost": "8 sp",
+    "Weight": "0.1 lb each",
+    "Notes": "PHBR2 p.96. A broad, flat head with backward-facing barbs, designed to grip when shot into wooden surfaces. Used to carry a rope to a wall, battlement or similar structure at greater range than a thrown grappling iron. TABLE 30 (p.96): +15 for Tree Branches and Wooden Walls. TWO METHODS (p.96). ONE-ROPE: the rope is tied straight to the arrow and the thief climbs it directly. Simple, but the rope must bear his weight, which HALVES ALL BOW RANGES, applies -5 to the Table 30 modifier below, and carries -2 TO HIT AND DAMAGE IF THE ARROW IS USED IN COMBAT FOR ANY REASON. TWO-ROPE: a light string runs through a loop on the arrow and is used to pull a stout rope through after the arrow lands. The string is light enough not to affect the arrow's flight, so NONE of those penalties apply -- but it takes one round per 20 feet of rope played out, and twice the rope, since it runs out and back. Table 29 base chances (p.95), rolled on d100 as Miss / Catch-and-Slip / Catch: Stone Parapet 01-72 / 73-78 / 79-00; Stone Wall Top 01-83 / 84-89 / 90-00; Tree Branches 01-66 / 67-70 / 71-00; Rocky Ledge 01-88 / 89-93 / 94-00; Wooden Wall 01-70 / 71-74 / 75-00. A catch-and-slip holds, then works free after 1d6 rounds of bearing weight; thieves should test a grapple by pulling on it for six rounds first.",
+    "Source": "PHBR2",
+    "legality": "L"
+  },
+  {
+    "Ammunition Name": "Arrow, Stone Biter",
+    "Ammunition Type": "Arrow",
+    "Weapon": "Bow (any)",
+    "Quantity": "1",
+    "Damage Modifier": "+0 (-2 one-rope)",
+    "Range Modifier": "+0 (halved one-rope)",
+    "Cost": "1 gp",
+    "Weight": "0.1 lb each",
+    "Notes": "PHBR2 p.96. A narrow, heavy metal head with small ridges rather than barbs, made from high-quality metal and sharpened as far as possible -- careful craftsmanship is needed. WORKS ONLY ON RELATIVELY SOFT STONE such as sandstone or brick. TABLE 30 (p.96): +10 for Stone Parapet and Stone Wall Top, +5 to Wooden Wall. TWO METHODS (p.96). ONE-ROPE: the rope is tied straight to the arrow and the thief climbs it directly. Simple, but the rope must bear his weight, which HALVES ALL BOW RANGES, applies -5 to the Table 30 modifier below, and carries -2 TO HIT AND DAMAGE IF THE ARROW IS USED IN COMBAT FOR ANY REASON. TWO-ROPE: a light string runs through a loop on the arrow and is used to pull a stout rope through after the arrow lands. The string is light enough not to affect the arrow's flight, so NONE of those penalties apply -- but it takes one round per 20 feet of rope played out, and twice the rope, since it runs out and back. Table 29 base chances (p.95), rolled on d100 as Miss / Catch-and-Slip / Catch: Stone Parapet 01-72 / 73-78 / 79-00; Stone Wall Top 01-83 / 84-89 / 90-00; Tree Branches 01-66 / 67-70 / 71-00; Rocky Ledge 01-88 / 89-93 / 94-00; Wooden Wall 01-70 / 71-74 / 75-00. A catch-and-slip holds, then works free after 1d6 rounds of bearing weight; thieves should test a grapple by pulling on it for six rounds first.",
+    "Source": "PHBR2",
+    "legality": "L"
+  },
+  {
+    "Ammunition Name": "Arrow, Stone Biter (Adamantite)",
+    "Ammunition Type": "Arrow",
+    "Weapon": "Bow (any)",
+    "Quantity": "1",
+    "Damage Modifier": "+0 (-2 one-rope)",
+    "Range Modifier": "+0 (halved one-rope)",
+    "Cost": "7 gp",
+    "Weight": "0.1 lb each",
+    "Notes": "PHBR2 p.96. As the stone biter, but made with adamantite, which lets it bite into ALL BUT THE HARDEST STONE rather than only soft stone -- and makes it extremely expensive. TABLE 30 (p.96): +20 for Stone Parapet and Stone Wall Top, +5 to Wooden Wall. TWO METHODS (p.96). ONE-ROPE: the rope is tied straight to the arrow and the thief climbs it directly. Simple, but the rope must bear his weight, which HALVES ALL BOW RANGES, applies -5 to the Table 30 modifier below, and carries -2 TO HIT AND DAMAGE IF THE ARROW IS USED IN COMBAT FOR ANY REASON. TWO-ROPE: a light string runs through a loop on the arrow and is used to pull a stout rope through after the arrow lands. The string is light enough not to affect the arrow's flight, so NONE of those penalties apply -- but it takes one round per 20 feet of rope played out, and twice the rope, since it runs out and back. Table 29 base chances (p.95), rolled on d100 as Miss / Catch-and-Slip / Catch: Stone Parapet 01-72 / 73-78 / 79-00; Stone Wall Top 01-83 / 84-89 / 90-00; Tree Branches 01-66 / 67-70 / 71-00; Rocky Ledge 01-88 / 89-93 / 94-00; Wooden Wall 01-70 / 71-74 / 75-00. A catch-and-slip holds, then works free after 1d6 rounds of bearing weight; thieves should test a grapple by pulling on it for six rounds first.",
+    "Source": "PHBR2",
+    "legality": "L"
+  },
+  {
+    "Ammunition Name": "Arrow, Minor Grapple",
+    "Ammunition Type": "Arrow",
+    "Weapon": "Bow (any)",
+    "Quantity": "1",
+    "Damage Modifier": "+0 (-2 one-rope)",
+    "Range Modifier": "+0 (halved one-rope)",
+    "Cost": "6 gp",
+    "Weight": "",
+    "Notes": "PHBR2 p.96. A small three-pointed grappling hook as its head, some 3 inches across, usually shot through a window or over a palisade much as a conventional grappling iron is thrown. Table 31 gives it no weight. TABLE 30 (p.96): +10 to Stone Parapet and Tree Branches, +5 to all others. TWO METHODS (p.96). ONE-ROPE: the rope is tied straight to the arrow and the thief climbs it directly. Simple, but the rope must bear his weight, which HALVES ALL BOW RANGES, applies -5 to the Table 30 modifier below, and carries -2 TO HIT AND DAMAGE IF THE ARROW IS USED IN COMBAT FOR ANY REASON. TWO-ROPE: a light string runs through a loop on the arrow and is used to pull a stout rope through after the arrow lands. The string is light enough not to affect the arrow's flight, so NONE of those penalties apply -- but it takes one round per 20 feet of rope played out, and twice the rope, since it runs out and back. Table 29 base chances (p.95), rolled on d100 as Miss / Catch-and-Slip / Catch: Stone Parapet 01-72 / 73-78 / 79-00; Stone Wall Top 01-83 / 84-89 / 90-00; Tree Branches 01-66 / 67-70 / 71-00; Rocky Ledge 01-88 / 89-93 / 94-00; Wooden Wall 01-70 / 71-74 / 75-00. A catch-and-slip holds, then works free after 1d6 rounds of bearing weight; thieves should test a grapple by pulling on it for six rounds first.",
+    "Source": "PHBR2",
+    "legality": "L/S"
+  },
+  {
+    "Ammunition Name": "Arrow, Major Grapple",
+    "Ammunition Type": "Arrow",
+    "Weapon": "Bow (any)",
+    "Quantity": "1",
+    "Damage Modifier": "-2",
+    "Range Modifier": "Halved",
+    "Cost": "10 gp",
+    "Weight": "1 lb each",
+    "Notes": "PHBR2 p.96. The head looks like a fairly long arrowhead of normal width until fired: the rope is fixed at the thief's end, and when the arrow reaches the rope's limit the sudden tension opens the head into a three-pointed grappling hook 6 to 8 inches across, the equal of most ordinary grappling irons. Better aerodynamics and a better chance of gripping than the minor grapple, but a considerably reduced range. CAN ONLY BE USED WITH THE ONE-ROPE METHOD because of how it works, so its halved ranges and -2 to hit and damage are NOT conditional -- they always apply. TABLE 30 (p.96): +15 to Stone Parapet and Tree Branches, +10 to Rocky Ledge and Wooden Wall, +5 to Stone Wall Top. EXEMPT from the one-rope -5, which is the book's own exception and follows from these figures already assuming one-rope use. TWO METHODS (p.96). ONE-ROPE: the rope is tied straight to the arrow and the thief climbs it directly. Simple, but the rope must bear his weight, which HALVES ALL BOW RANGES, applies -5 to the Table 30 modifier below, and carries -2 TO HIT AND DAMAGE IF THE ARROW IS USED IN COMBAT FOR ANY REASON. TWO-ROPE: a light string runs through a loop on the arrow and is used to pull a stout rope through after the arrow lands. The string is light enough not to affect the arrow's flight, so NONE of those penalties apply -- but it takes one round per 20 feet of rope played out, and twice the rope, since it runs out and back. Table 29 base chances (p.95), rolled on d100 as Miss / Catch-and-Slip / Catch: Stone Parapet 01-72 / 73-78 / 79-00; Stone Wall Top 01-83 / 84-89 / 90-00; Tree Branches 01-66 / 67-70 / 71-00; Rocky Ledge 01-88 / 89-93 / 94-00; Wooden Wall 01-70 / 71-74 / 75-00. A catch-and-slip holds, then works free after 1d6 rounds of bearing weight; thieves should test a grapple by pulling on it for six rounds first.",
+    "Source": "PHBR2",
+    "legality": "L/S"
   }
 ]
