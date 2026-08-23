@@ -1296,6 +1296,10 @@ const PROFICIENCY_ABILITIES = {
   "set snares":        { label: "Set Snares",        kind: "modifiers" },
   "hunting":           { label: "Hunting",           kind: "modifiers" },
   "jumping":           { label: "Jumping",           kind: "calculator" },
+  // PHB Ch.5. A calculator, not a reference: what it shows depends on the
+  // character's ENCUMBRANCE (tumbling is unavailable above light) and on his
+  // proficiency check target for the falling rule.
+  "tumbling":          { label: "Tumbling",          kind: "calculator" },
   "healing":           { label: "Healing",           kind: "calculator" },
   "riding, land-based":{ label: "Riding (Land)",     kind: "reference" },
   "riding, airborne":  { label: "Riding (Air)",      kind: "reference" }
