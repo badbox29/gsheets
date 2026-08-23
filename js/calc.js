@@ -2167,8 +2167,21 @@ function renderThiefSkills(root) {
   // at every level -- and a 1% would let a d100 roll of 01 succeed at something
   // impossible. So the floor applies only where the pre-armour chance was
   // already above zero.
+    // PHBR2 Table 4, positioned by Table 5 (p.25), which fixes the order:
+  //   base score -> racial -> Dexterity -> KIT -> total base skill,
+  // and discretionary points are spent ON TOP of that total. So the kit
+  // adjustment is a PRE-DISCRETIONARY term and sits with the other three, not
+  // alongside armour.
+  //
+  // Table 5's own worked example ends with Read Languages at -5%, so THE TOTAL
+  // MAY LEGITIMATELY BE NEGATIVE and must not be clamped here. The only floor
+  // is the PHBR2 1% one below, which applies after armour and only where the
+  // pre-armour chance was already above zero.
+  const kitMods = (typeof getKitSkillMods === 'function') ? getKitSkillMods(root) : null;
+  const kitAdj  = kitMods ? kitMods.adj : [0,0,0,0,0,0,0,0];
+
   const skillVal = (i, points, useDex) => {
-    const preArmor = baseSkills[i] + racialAdj[i] + (useDex ? dexUse[i] : 0) + points;
+    const preArmor = baseSkills[i] + racialAdj[i] + (useDex ? dexUse[i] : 0) + kitAdj[i] + points;
     const lo = (floor && preArmor > 0) ? floor : 0;
     return Math.max(lo, Math.min(cap, preArmor + armorAdj[i]));
   };
@@ -2227,12 +2240,23 @@ function renderThiefSkills(root) {
       el.title = why;
       return;
     }
+        // EVERY TERM IN THE SUM IS NAMED HERE, in Table 5's order: base, race,
+    // Dexterity, KIT, then armour and points. A breakdown that does not add up
+    // to the number displayed is worse than no breakdown at all.
     const parts = ['Base: ' + baseSkills[i], 'Race: ' + sgn(racialAdj[i])];
-    if (i < 5) parts.push('DEX: ' + sgn(dexAdj[i]));
+    // dexUse, NOT dexAdj: under PHBR2 the Dexterity BONUS is forfeited in armour
+    // heavier than simple leather. This line predated that rule and would have
+    // reported a bonus the calculation had already dropped.
+    if (i < 5) parts.push('DEX: ' + sgn(dexUse[i]) + (forfeitDex ? ' (bonus forfeited in this armor)' : ''));
+    if (kitAdj[i] !== 0) parts.push('Kit (' + (kitMods ? kitMods.name : 'kit') + '): ' + sgn(kitAdj[i]));
     if (armorAdj[i] !== 0) parts.push('Armor (' + armorInfo.name + '): ' + sgn(armorAdj[i]));
     parts.push('Points: +' + skillPoints[i]);
-    const total = baseSkills[i] + racialAdj[i] + (i < 5 ? dexAdj[i] : 0) + armorAdj[i] + skillPoints[i];
+    const total = baseSkills[i] + racialAdj[i] + (i < 5 ? dexUse[i] : 0) +
+                  kitAdj[i] + armorAdj[i] + skillPoints[i];
     if (total > THIEF_SKILL_MAX) parts.push('capped at ' + THIEF_SKILL_MAX + '%');
+    if (floor && total < floor && (total - armorAdj[i]) > 0) {
+      parts.push('floored at ' + floor + '% (PHBR2)');
+    }
     el.title = parts.join(', ');
   });
 
