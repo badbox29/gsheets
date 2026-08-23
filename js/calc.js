@@ -2521,7 +2521,11 @@ function renderRangerStealth(root) {
           : ' It carries no adjustment.';
         why = 'Using the Complete Ranger\u2019s Handbook armor table (Tables 11 and 13), so ' +
               'armor adjusts the chance rather than removing it.' + mod;
-      } else if (s.armorKey === 'elven_chain') {
+      } else if (s.armorKey === 'elven_chain' || s.armorKey === 'silenced_elven') {
+        // Both chains, and for the same reason -- silenced elfin chain is elfin
+        // chain with each link wrapped, so it is if anything quieter still. Left
+        // as one branch rather than two: the exemption argument is identical and
+        // a second copy would be a second thing to keep true.
         why = 'Elven chain weighs less than studded leather and is described as lighter and ' +
               'quieter, so it does not trip the ranger\u2019s armor restriction.';
       }
