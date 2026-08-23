@@ -741,6 +741,19 @@
     "Notes": "Magical elven-made chain, lighter and quieter. Usable by wizards and thieves."
   },
   {
+    "Armor Name": "Silenced Elfin Chain",
+    "Source": "PHBR2",
+    "Armor Type": "Medium (Special)",
+    "AC": "5",
+    "Weight": "20 lb",
+    "Cost": "750+ gp",
+    "Movement": "12",
+    "Dex Check": "",
+    "Vision": "",
+    "Hearing": "",
+    "Notes": "PHBR2 p.93. Elfin chain with EACH INDIVIDUAL LINK WRAPPED in thin leather or light cloth binding, which to some extent silences the armor. AC, movement and the magical nature are elfin chain's; only weight, cost and the thief-skill column differ. WEIGHT IS THE PROSE RULE, NOT TABLE 31. p.93 sets encumbrance at ONE-THIRD ABOVE normal elfin chain, which at elfin chain's canon 15 lb gives 20 lb. TABLE 31 (p.103) PRINTS 50 lb AND IS AN ERROR -- 50 lb is plate mail's exact weight, and the same sentence benchmarks the COST against plate mail, so the compiler appears to have carried the wrong figure across. Chris's ruling, August 2026. A relative rule also survives any later correction to elfin chain's weight, which a flat 50 would not. COST: Table 31 gives 750 gp and up, legality S, and marks it hard to obtain. That sits above plate mail's 600 gp exactly as the prose requires (\"fiendishly expensive, costing more than plate mail\"). NOTE THE FRICTION with the Elven Chain Mail record's unattributed 5000+ gp: PHBR2 plainly is not working from that baseline, and on these numbers the rarer item is the cheaper one. Not resolved here. RARER THAN ORDINARY ELFIN CHAIN. Finding a craftsman and persuading him to make a suit could be an adventure in itself. TABLE 28 -- EFFECT ON THIEF SKILLS: Pick Pockets -25, Open Locks -5, Find/Remove Traps -5, Move Silently 0, Hide in Shadows -10, Detect Noise 0, Climb Walls -25, Read Languages 0. THE DASHES IN THAT TABLE ARE ZEROES, NOT OMISSIONS, and reading them so is what makes the prose beneath it true: against ordinary elfin chain (Table 38: -20/-5/-5/-10/-10/-5/-20/0) this is 10 BETTER at Move Silently and 5 BETTER at Detect Noise, paid for by 5 WORSE at Pick Pockets and Climb Walls. The book's \"bonuses ... above those which apply for normal elfin chain\" are therefore relative, not absolute -- the table shows no positive number anywhere. Useful to a thief who needs to sneak but expects to fight."
+  },
+  {
     "Armor Name": "None",
     "Source": "",
     "Armor Type": "None",
