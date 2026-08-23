@@ -11772,7 +11772,143 @@ function renderAdvancedThiefRules(root) {
         blk.lines.map(l => '<li>' + escapeHtml(l) + '</li>').join('') +
       '</ul>' +
     '</div>'
-  ).join('');
+    ).join('');
+}
+
+// PHBR2 Ch.5 equipment panel. READS the sheet and never writes to it: Chapter
+// 5's modifiers are situational -- a clawed glove is worth +10, +5 or nothing
+// depending on the surface -- so they cannot live in the thief skill fields the
+// way armour and kit adjustments do. Must run AFTER renderThiefSkills, since it
+// reads the figures that function writes.
+//
+// Selections are held on the node in _teOn, not in a data-field: they answer
+// "what is true in this room", not "what is true of this character", and
+// collectSheet must never see them. Every control is .ephemeral for the same
+// reason.
+function renderThiefEquipment(root) {
+  const sec = root && root.querySelector('.thief-equip-section');
+  if (!sec) return;
+
+  const on = (typeof isSupplementActive === 'function') &&
+             isSupplementActive('phbr2', 'equipmentSkillMods');
+  sec.style.display = on ? '' : 'none';
+  if (!on || typeof PHBR2_EQUIPMENT_SKILL_MODS === 'undefined') return;
+
+  const KEYS = ['pickPockets', 'openLocks', 'findTraps', 'moveSilently',
+                'hideInShadows', 'detectNoise', 'climbWalls', 'readLanguages'];
+  const FIELDS = ['thief_pickpockets', 'thief_openlocks', 'thief_traps',
+                  'thief_movesilently', 'thief_hide', 'thief_detectnoise',
+                  'thief_climb', 'thief_readlang'];
+  const LABELS = ['Pick Pockets', 'Open Locks', 'Find/Remove Traps', 'Move Silently',
+                  'Hide in Shadows', 'Detect Noise', 'Climb Walls', 'Read Languages'];
+  const sgn = v => (v >= 0 ? '+' : '') + v;
+
+  if (!sec._teOn) sec._teOn = {};
+
+  const intro = sec.querySelector('.thief-equip-intro');
+  if (intro) {
+    intro.textContent =
+      'Tick what the thief is using right now. Each item shows the percentage ' +
+      'PHBR2 prints for it. This panel does not change the skill fields above \u2014 ' +
+      'Chapter 5\u2019s modifiers depend on the surface, the light and what he is ' +
+      'doing, so they belong to the moment rather than to the character.';
+  }
+
+  // Surface selector, built once so a re-render never discards the choice.
+  const surfSel = sec.querySelector('.thief-equip-surface');
+  const SURF = (typeof PHBR2_CLIMB_SURFACES !== 'undefined')
+    ? PHBR2_CLIMB_SURFACES : [{ key: 'other', label: 'Rough or normal surface' }];
+  if (surfSel && !surfSel.options.length) {
+    surfSel.innerHTML = SURF.map(s =>
+      '<option value="' + escapeHtml(s.key) + '">' + escapeHtml(s.label) + '</option>').join('');
+  }
+  const surface = (surfSel && surfSel.value) || SURF[0].key;
+
+  // Per-item contribution at the CURRENT surface. An item whose every modifier
+  // is zero here reads as useless rather than as a bonus of nothing.
+  const contribution = (e) => {
+    const out = {};
+    if (e.mods) Object.keys(e.mods).forEach(k => { if (e.mods[k]) out[k] = e.mods[k]; });
+    if (e.surfaceMods) {
+      const cw = e.surfaceMods[surface] || 0;
+      if (cw) out.climbWalls = (out.climbWalls || 0) + cw;
+    }
+    return out;
+  };
+
+  const list = sec.querySelector('.thief-equip-list');
+  if (list) {
+    list.innerHTML = PHBR2_EQUIPMENT_SKILL_MODS.map((e) => {
+      const c = contribution(e);
+      const bits = KEYS.filter(k => c[k]).map(k => sgn(c[k]) + ' ' + LABELS[KEYS.indexOf(k)]);
+      const dead = !bits.length;
+      const checked = sec._teOn[e.item] ? ' checked' : '';
+      return '<label class="te-row" style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;' +
+             'border-bottom:1px solid var(--border);' + (dead ? 'opacity:.55;' : '') + '">' +
+        '<input type="checkbox" class="ephemeral te-item" data-te="' + escapeHtml(e.item) +
+          '" style="margin-top:3px;"' + checked + '>' +
+        '<span style="flex:1;min-width:0;">' +
+          '<span style="font-size:12px;">' + escapeHtml(e.item) + '</span> ' +
+          '<span style="font-size:11px;color:var(--muted);">' + escapeHtml(e.page) + '</span>' +
+          '<span style="display:block;font-size:11px;color:var(--muted);line-height:1.5;">' +
+            escapeHtml(e.when) +
+            (dead ? ' \u2014 no effect on this surface'
+                  : ' \u2014 ' + escapeHtml(bits.join(', '))) +
+            (e.note ? '<br>' + escapeHtml(e.note) : '') +
+          '</span>' +
+        '</span>' +
+      '</label>';
+    }).join('');
+  }
+
+  // Sum the ticked items.
+  const delta = [0, 0, 0, 0, 0, 0, 0, 0];
+  PHBR2_EQUIPMENT_SKILL_MODS.forEach(e => {
+    if (!sec._teOn[e.item]) return;
+    const c = contribution(e);
+    KEYS.forEach((k, i) => { if (c[k]) delta[i] += c[k]; });
+  });
+
+  // Read the computed figures rather than recomputing them: renderThiefSkills is
+  // the single resolver and already handles bards, the multi-class armour gate
+  // and the PHBR2 floor. A blank or em dash means the skill is not available,
+  // and no amount of equipment makes it available.
+  const cap = (typeof THIEF_SKILL_MAX !== 'undefined') ? THIEF_SKILL_MAX : 95;
+  const readout = sec.querySelector('.thief-equip-readout');
+  if (readout) {
+    readout.innerHTML = FIELDS.map((f, i) => {
+      const el = root.querySelector('[data-field="' + f + '"]');
+      const raw = el ? String(el.value).trim() : '';
+      const base = parseInt(raw, 10);
+      const live = !isNaN(base);
+      const adj = live ? Math.max(0, Math.min(cap, base + delta[i])) : null;
+      const moved = live && delta[i] !== 0;
+      return '<div style="display:flex;gap:8px;align-items:baseline;padding:3px 0;font-size:12px;">' +
+        '<span style="flex:1;color:var(--muted);">' + LABELS[i] + '</span>' +
+        '<span style="width:52px;text-align:right;color:var(--muted);">' +
+          (live ? base + '%' : escapeHtml(raw || '\u2014')) + '</span>' +
+        '<span style="width:52px;text-align:right;color:var(--muted);">' +
+          (moved ? sgn(delta[i]) : '') + '</span>' +
+        '<span style="width:60px;text-align:right;font-weight:600;' +
+          (moved ? '' : 'color:var(--muted);') + '">' +
+          (live ? adj + '%' : '\u2014') + '</span>' +
+      '</div>';
+    }).join('');
+  }
+
+  if (!sec._teBound) {
+    sec._teBound = true;
+    sec.addEventListener('change', (ev) => {
+      const box = ev.target.closest && ev.target.closest('.te-item');
+      if (box) sec._teOn[box.dataset.te] = box.checked;
+      renderThiefEquipment(root);
+    });
+    const clear = sec.querySelector('.thief-equip-clear');
+    if (clear) clear.addEventListener('click', () => {
+      sec._teOn = {};
+      renderThiefEquipment(root);
+    });
+  }
 }
 
 // Defaults the wearer to the character's own race, which is the common case and
