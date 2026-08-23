@@ -2283,9 +2283,27 @@ function renderThiefSkills(root) {
       // forfeit removes a bonus rather than adding a penalty, so nothing in the
       // breakdown accounts for it and a player would see his Dexterity silently
       // stop counting.
+      //
+      // AND NAME THE FIGURES, not just the rule. A Dex 18 thief putting on
+      // silenced elfin chain watches Pick Pockets fall 15 while the armor line
+      // moves 5, and until this itemised the other 10 there was nothing on
+      // screen that accounted for it -- the answer lived only in the field's
+      // hover tooltip. dexAdj is the raw Table 28 row and dexUse is what
+      // survived the forfeit, so their difference IS the amount lost.
+      // Dexterity reaches the first five skills only.
       if (forfeitDex) {
+        const lost = dexAdj
+          .map((v, i) => (v > 0 && i < 5 && !(isBard && i >= 1 && i <= 4))
+            ? labels[i] + ' ' + sgn(dexUse[i] - v) + '%' : null)
+          .filter(Boolean);
         html += '<div style="margin-top:4px;">No Dexterity bonus applies to thief skills in armor ' +
-                'other than simple leather (Table 37, General Notes). Penalties still apply.</div>';
+                'other than simple leather (Table 37, General Notes). Penalties still apply.' +
+                (lost.length
+                  ? '<div style="margin-top:2px;">Dexterity bonus forfeited: ' +
+                    lost.join(' &middot; ') + '</div>'
+                  : '<div style="margin-top:2px;">Your Dexterity grants no bonus to these ' +
+                    'skills, so this costs you nothing.</div>') +
+                '</div>';
       }
       if (armorInfo.illegal) {
         // Says only what is now true. The old text also claimed "Table 29 does
