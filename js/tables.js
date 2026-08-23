@@ -931,12 +931,65 @@ function getAllowedNWPGroups(root) {
 
 // Slot cost of a single nonweapon proficiency, including the Table 38 crossover
 // surcharge. `nwp` is an entry from root._nwps.
-function getNWPSlotCost(nwp, allowedGroups) {
-  // A kit-GRANTED proficiency is free and cannot become unfree -- the crossover
-  // surcharge below must not apply to it either. The Stalker's Alertness and
-  // Camouflage are Rogue-group proficiencies granted to a Ranger; charging the
-  // out-of-group +1 on something the kit hands over would be worse than
-  // charging the base cost.
+// PHBR2 p.16: "if the kit is not listed as appropriate in the proficiency's
+// description, then an additional proficiency slot beyond the number listed is
+// required, JUST AS IF THE PROFICIENCY WERE RESTRICTED TO ANOTHER CLASS".
+//
+// "Just as if" is an EQUIVALENCE, not an addition, so this returns 0 or 1 and
+// getNWPSlotCost takes the MAX of it and the class-group surcharge rather than
+// the sum. A thief taking Survival off-kit pays 2+1, never 2+1+1.
+//
+// APPROPRIATE IF EITHER PRINTING SAYS SO. The book prints this relationship
+// twice -- per proficiency in Ch.2, and per kit in each kit's Nonweapon
+// Proficiencies line -- AND THE TWO PRINTINGS DISAGREE IN 11 PLACES. Eight
+// favour the kit entry (the Scout is required to take Tracking, which Ch.2's
+// Tracking entry does not list him for); three favour Ch.2 (it recommends Voice
+// Mimicry for Spies, whose kit entry omits it). Run crosscheck.js to list them.
+// Reading both and penalising neither means the book's own inconsistency never
+// costs a player a slot. Chris's ruling, August 2026.
+function getKitProficiencySurcharge(nwp, root) {
+  if (!root || typeof isSupplementActive !== 'function' ||
+      !isSupplementActive('phbr2', 'kitProficiencyCost')) return 0;
+
+  const kitValue = (root.querySelector('[data-field="kit"]') || {}).value || '';
+  if (!kitValue) return 0;                       // no kit, no kit rule
+  const kitKey = kitValue.toLowerCase().replace(/\s+/g, '');
+
+  const name = String(nwp.name || nwp['Proficiency Name'] || '').trim().toLowerCase();
+  if (!name) return 0;
+
+  // SCOPED BY THE DATA, not by a source check. Only the Ch.2 proficiencies carry
+  // kit lists, so anything without them is outside this rule and is never
+  // surcharged -- which is what "these new proficiencies" means in the book.
+  const rec = (typeof NWP_DATA !== 'undefined' && Array.isArray(NWP_DATA))
+    ? NWP_DATA.find(r => String(r['Proficiency Name']).trim().toLowerCase() === name) : null;
+  const reqK = (rec && rec['Required Kits'])    || [];
+  const recK = (rec && rec['Recommended Kits']) || [];
+  const hasLists = (reqK.length || (recK && recK.length));
+  if (!hasLists) return 0;
+
+  if (recK === 'ALL' || (Array.isArray(recK) && recK.indexOf('ALL') !== -1)) return 0;
+  if (reqK.indexOf(kitKey) !== -1) return 0;
+  if (Array.isArray(recK) && recK.indexOf(kitKey) !== -1) return 0;
+
+  // The other printing: the kit's own list.
+  const prof = (typeof getKitProficiencies === 'function') ? getKitProficiencies(root) : null;
+  const nw = (prof && prof.nonweapon) || {};
+  const owned = [].concat(nw.required || [], nw.recommended || [], nw.bonus || [])
+    .map(s => String(s).trim().toLowerCase());
+  if (owned.indexOf(name) !== -1) return 0;
+
+  return 1;
+}
+
+// Slot cost of a single nonweapon proficiency, including the Table 38 crossover
+// surcharge. `nwp` is an entry from root._nwps. `root` is OPTIONAL -- without it
+// the PHBR2 kit surcharge is simply not applied, so old call sites are safe.
+function getNWPSlotCost(nwp, allowedGroups, root) {
+  // A kit-GRANTED proficiency is free and cannot become unfree -- neither
+  // surcharge below may apply to it. The Stalker's Alertness and Camouflage are
+  // Rogue-group proficiencies granted to a Ranger; charging the out-of-group +1
+  // on something the kit hands over would be worse than charging the base cost.
   if (nwp && nwp.isKitGranted) return 0;
 
   // `|| 1` cannot tell an ABSENT slots value from a deliberate ZERO, and 0 is
@@ -945,18 +998,22 @@ function getNWPSlotCost(nwp, allowedGroups) {
     ? nwp.slots : nwp.Slots, 10);
   const base = isNaN(parsed) ? 1 : parsed;
 
+  // COMPUTED FIRST, because the class-group tests below return early. The 16 new
+  // PHBR2 proficiencies are absent from Table 37, so getNWPGroups returns []
+  // and the old early return would have skipped the kit rule entirely -- for
+  // exactly the proficiencies the kit rule exists to govern.
+  const kitSur = getKitProficiencySurcharge(nwp, root);
+
   const groups = getNWPGroups(nwp);
+  let classSur = 0;
+  if (groups.length && allowedGroups && allowedGroups.size > 0) {
+    // PHB Table 38: a proficiency from ANY group the character has access to
+    // costs its listed price. Only if it is outside ALL of them does it cost +1.
+    classSur = groups.some(g => allowedGroups.has(g)) ? 0 : 1;
+  }
 
-  // Unknown proficiency -- assume in-group, don't penalize.
-  if (!groups.length) return base;
-
-  // No recognized class -- don't penalize.
-  if (!allowedGroups || allowedGroups.size === 0) return base;
-
-  // PHB Table 38: a proficiency from ANY group the character has access to
-  // costs its listed price. Only if it is outside ALL of them does it cost +1.
-  const inGroup = groups.some(g => allowedGroups.has(g));
-  return inGroup ? base : base + 1;
+  // MAX, NOT SUM -- see getKitProficiencySurcharge.
+  return base + Math.max(classSur, kitSur);
 }
 
 // === Tracking (PHB Chapter 5, Tables 39 and 40) ===
@@ -7017,7 +7074,7 @@ const SUPPLEMENTS = {
     //
     // NO legacyBand ANYWHERE, unlike PHBR1. The book is new, so no table has a
     // stored phbr2.core or phbr2.optional value for a band to inherit.
-    bandOrder: ['armorThiefSkills', 'kitSkillAdjustments', 'advancedThiefRules'],
+    bandOrder: ['armorThiefSkills', 'kitSkillAdjustments', 'kitProficiencyCost', 'advancedThiefRules'],
     armorThiefSkills: {
       label: 'Armor and thief skills',
       hint:  'Table 38 extends PHB Table 29 to every armor type.',
@@ -7069,9 +7126,38 @@ const SUPPLEMENTS = {
         { text: 'Kit point budgets also differ where the book says so: the ASSASSIN ' +
                 'gets 40 discretionary points at 1st level and 20 per level after, ' +
                 'and the THUG 40 at 1st with the normal 30 after, against 60 and 30.',
-          caveat: 'The budgets are recorded in the kit data but NOTHING VALIDATES ' +
+                    caveat: 'The budgets are recorded in the kit data but NOTHING VALIDATES ' +
                   'THEM YET \u2014 no counter checks the eight point fields against a ' +
                   'total. Displayed, not enforced.' }
+      ]
+    },
+
+    kitProficiencyCost: {
+      label: 'Off-kit proficiency costs',
+      hint:  'A proficiency your kit is not listed for costs one extra slot.',
+      rules: ['kitProficiencyCostPHBR2'],
+      changes: [
+        { text: 'PHBR2 p.16: a thief may choose any of the new proficiencies, but ' +
+                'if his kit is NOT LISTED AS APPROPRIATE in that proficiency\u2019s ' +
+                'description, it costs one additional slot \u2014 \u201cjust as if the ' +
+                'proficiency were restricted to another class\u201d. Appropriate means ' +
+                'REQUIRED OR RECOMMENDED; both count.',
+          caveat: 'ONE SURCHARGE, NEVER TWO. The book says \u201cjust as if\u201d, which is an ' +
+                  'equivalence rather than an addition, so a proficiency that is both ' +
+                  'out-of-group and off-kit still costs only +1. Applies ONLY to ' +
+                  'proficiencies that carry kit lists \u2014 the Chapter 2 ones \u2014 so nothing ' +
+                  'else in the list is affected.' },
+        { text: 'A character with NO KIT is never surcharged, and a proficiency the ' +
+                'kit GRANTS stays free \u2014 a granted proficiency cannot become unfree.' },
+        { text: 'THE BOOK PRINTS THIS RELATIONSHIP TWICE and the two printings ' +
+                'disagree in eleven places: once per proficiency in Chapter 2, and ' +
+                'again in each kit\u2019s own Nonweapon Proficiencies line. The Scout is ' +
+                'REQUIRED to take Tracking, yet Chapter 2\u2019s Tracking entry does not ' +
+                'list him; Chapter 2 recommends Voice Mimicry for Spies, yet the Spy ' +
+                'kit omits it.',
+          caveat: 'A kit counts as appropriate if EITHER printing says so, so the ' +
+                  'book\u2019s inconsistency never costs a player a slot. Run crosscheck.js ' +
+                  'to list the eleven.' }
       ]
     },
 
