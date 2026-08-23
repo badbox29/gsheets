@@ -8799,6 +8799,10 @@ function bindSheet(root, tab){
   // alone -- drawing a weapon must be able to change what the panel offers.
   if (typeof renderManeuvers === 'function') renderManeuvers(root);
   if (typeof renderAdvancedThiefRules === 'function') renderAdvancedThiefRules(root);
+  // AFTER renderThiefSkills (above), whose eight fields this reads, and BEFORE
+  // renderToolsSubtabs on the next line, which reads this section's display to
+  // decide whether the tab exists.
+  if (typeof renderThiefEquipment === 'function') renderThiefEquipment(root);
   if (typeof renderPHBR1OnlyControls === 'function') renderPHBR1OnlyControls(root);
   if (typeof renderToolsSubtabs === 'function') renderToolsSubtabs(root);
   if (typeof renderSectionGroups === 'function') renderSectionGroups(root);
@@ -15690,6 +15694,10 @@ function recalculateAll(root) {
   // alone -- drawing a weapon must be able to change what the panel offers.
   if (typeof renderManeuvers === 'function') renderManeuvers(root);
   if (typeof renderAdvancedThiefRules === 'function') renderAdvancedThiefRules(root);
+  // AFTER renderThiefSkills (above), whose eight fields this reads, and BEFORE
+  // renderToolsSubtabs, which reads this section's display to decide whether the
+  // tab exists.
+  if (typeof renderThiefEquipment === 'function') renderThiefEquipment(root);
   if (typeof renderPHBR1OnlyControls === 'function') renderPHBR1OnlyControls(root);
 
   // DEAD LAST, and deliberately after the Quick Reference. This does not break
