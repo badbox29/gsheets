@@ -1581,6 +1581,13 @@ const KITS = {
       },
       thiefSkillMods: { hideInShadows: 5, moveSilently: 0 },
       proficiencies: {
+        nonweapon: {
+          required: ["Etiquette", "Tumbling"],
+          recommended: ["Alertness", "Blind-fighting", "Disguise", "Fast-Talking", "Intimidation", "Jumping", "Navigation", "Riding, Land-Based", "Tightrope Walking", "Trailing"],
+          note: "Navigation is printed \"(if seaborne; costs 2 slots)\" -- a per-kit, per-circumstance slot cost that no field models. Recorded here rather than lost."
+        }
+      },
+      proficiencies: {
         weapon: {
           allowed: [
             "Club", "Dagger", "Dart", "Javelin", "Knife", "Quarterstaff", "Sling", "Spear",
@@ -3140,6 +3147,11 @@ const KITS = {
         note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
       },
       thiefSkillMods: { pickPockets: 5, openLocks: -5, findTraps: -5, moveSilently: 5, hideInShadows: 0, detectNoise: 0, climbWalls: 5, readLanguages: 0 },
+      proficiencies: {
+        nonweapon: {
+          recommended: ["Alertness", "Disguise", "Fast-Talking", "Juggling", "Musical Instrument", "Riding, Land-Based", "Rope Use", "Ventriloquism"]
+        }
+      },
       abilities: [
         { name: "Acrobatic Skills", notes: "+1 bonus to any proficiency check for JUMPING, TUMBLING or TIGHTROPE WALKING. The bonus is +2 if the Acrobat wears NO ARMOR and, under the optional encumbrance rules, is UNENCUMBERED." },
         { name: "Acrobatic Proficiencies Are Innate", notes: "Jumping, tumbling and tightrope walking are so crucial to this kit that the Acrobat has them as special abilities EVEN IF THE DM DOES NOT USE THE NONWEAPON PROFICIENCY SYSTEM." },
@@ -3162,6 +3174,11 @@ const KITS = {
         note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
       },
       thiefSkillMods: { pickPockets: 0, openLocks: 0, findTraps: 0, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: 0, readLanguages: 0 },
+      proficiencies: {
+        nonweapon: {
+          recommended: ["Alertness", "Boating", "Fast-Talking", "Information Gathering", "Looting"]
+        }
+      },
       abilities: [
         { name: "No Requirements", notes: "The Adventurer kit has NO REQUIREMENTS beyond those of the thief class itself." },
         { name: "Weapon Proficiencies", notes: "Any." },
@@ -3183,6 +3200,12 @@ const KITS = {
         note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
       },
       thiefSkillMods: { pickPockets: 0, openLocks: 0, findTraps: 5, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: 0, readLanguages: -5 },
+      proficiencies: {
+        nonweapon: {
+          required: ["Trailing", "Disguise"],
+          recommended: ["Alertness", "Begging", "Information Gathering", "Herbalism", "Riding, Land-Based", "Observation", "Tracking", "Voice Mimicry"]
+        }
+      },
       discretionaryPoints: 40,
       discretionaryPointsPerLevel: 20,
       abilities: [
@@ -3206,6 +3229,12 @@ const KITS = {
         note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
       },
       thiefSkillMods: { pickPockets: -5, openLocks: 0, findTraps: 10, moveSilently: 0, hideInShadows: 5, detectNoise: 0, climbWalls: -5, readLanguages: -5 },
+      proficiencies: {
+        nonweapon: {
+          required: ["Survival"],
+          recommended: ["Alertness", "Animal Handling", "Animal Training", "Animal Noise", "Fire-Building", "Intimidation", "Looting", "Riding, Land-Based", "Rope Use", "Set Snares", "Swimming"]
+        }
+      },
       abilities: [
         { name: "Ambush", notes: "Because of their adeptness at ambushing, Bandits gain +1 ON THEIR ATTEMPT TO SURPRISE IN A WILDERNESS SETTING." },
         { name: "Wilderness Stealth", notes: "In the wilderness the Bandit gets +5% to MOVE SILENTLY (Table 4, note 4). This is situational and is NOT part of the flat Table 4 adjustment." },
@@ -3228,6 +3257,13 @@ const KITS = {
         note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
       },
       thiefSkillMods: { pickPockets: 10, openLocks: -5, findTraps: -5, moveSilently: 0, hideInShadows: 5, detectNoise: 0, climbWalls: 0, readLanguages: -5 },
+      proficiencies: {
+        nonweapon: {
+          required: ["Begging", "Disguise", "Information Gathering", "Observation"],
+          recommended: ["Alertness", "Singing", "Trailing"],
+          note: "Special Benefits calls the kit's proficiencies \"the large number of BONUS nonweapon proficiencies\" and says they should be granted EVEN IF THE CAMPAIGN DOES NOT USE THE PROFICIENCY RULES -- but the book never enumerates which ones are the bonus. The four above are printed under Required. They are encoded as `required` (forced, paid) rather than `bonus` (free) because that is what the Nonweapon Proficiencies line says; a DM reading the Special Benefits as granting them free is following the book just as closely. UNRESOLVED -- see the Fence, whose Required list IS explicitly its bonus list."
+        }
+      },
       abilities: [
         { name: "Bonus Nonweapon Proficiencies", notes: "The most valuable benefit of the kit is the LARGE NUMBER OF BONUS NONWEAPON PROFICIENCIES. THESE SHOULD BE GRANTED EVEN IF THE CAMPAIGN AT LARGE DOES NOT USE THE NONWEAPON PROFICIENCY RULES." },
         { name: "Weapon Proficiencies", notes: "Beggars begin with familiarity only in simple, inexpensive weapons. They select their TWO proficient weapons from: CLUB, DAGGER, DART, KNIFE, SLING or STAFF. The knife is a favorite, being inexpensive, easy to use and easy to conceal." },
@@ -3250,6 +3286,12 @@ const KITS = {
         note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
       },
       thiefSkillMods: { pickPockets: 0, openLocks: 0, findTraps: 5, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: -5, readLanguages: 0 },
+      proficiencies: {
+        nonweapon: {
+          required: ["Tracking"],
+          recommended: ["Alertness", "Animal Handling", "Animal Training", "Animal Noise", "Boating", "Direction Sense", "Fire-Building", "Information Gathering", "Herbalism", "Hunting", "Intimidation", "Observation", "Riding, Land-Based", "Set Snares", "Survival", "Trailing"]
+        }
+      },
       abilities: [
         { name: "Minimum 11 In Every Ability Except Charisma", notes: "The Bounty Hunter's vocation is rigorous and demanding at every level -- physical, psychological, even moral. He must have MINIMUM SCORES OF 11 IN EVERY ABILITY EXCEPT CHARISMA." },
         { name: "Nonlawful Alignment Required", notes: "A further requirement is that the Bounty Hunter be of NONLAWFUL alignment." },
@@ -3272,6 +3314,12 @@ const KITS = {
         note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
       },
       thiefSkillMods: { pickPockets: -5, openLocks: 0, findTraps: 0, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: 0, readLanguages: 5 },
+      proficiencies: {
+        nonweapon: {
+          required: ["Navigation", "Seamanship", "Swimming"],
+          recommended: ["Alertness", "Direction Sense", "Fishing", "Gaming", "Intimidation", "Looting", "Rope Use", "Tightrope Walking", "Weather Sense"]
+        }
+      },
       abilities: [
         { name: "Rope Climbing", notes: "Because of their familiarity with ropes, much used in the nautical arts, Buccaneers gain +5% ON CLIMBING ROLLS IF ROPES ARE INVOLVED -- +10% IF THEY ARE ROPES ON A SHIP. Note that the total chance of success with a thief skill, including all positive and negative modifiers, CANNOT EXCEED 95%." },
         { name: "Rope Combat", notes: "May fight from a rope, usually on a ship, so long as the feet and one hand can grasp it, and are much better at this than other characters. THEY GET +1 ON ATTACK AND SAVING THROW ROLLS IN ROPE COMBAT, AND +2 ON SUCH ROLLS IN SHIPBOARD ROPE COMBAT. These adjustments are ADDED TO ALL THE OTHER MODIFIERS, which are usually negative -- a climbing character would normally get -2 on attacks, so the Buccaneer's +2 bonus merely negates this." },
@@ -3294,6 +3342,12 @@ const KITS = {
         note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
       },
       thiefSkillMods: { pickPockets: -5, openLocks: 5, findTraps: 0, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: 5, readLanguages: -5 },
+      proficiencies: {
+        nonweapon: {
+          required: ["Alertness", "Looting"],
+          recommended: ["Begging", "Information Gathering", "Jumping", "Observation", "Rope Use", "Tightrope Walking", "Tumbling"]
+        }
+      },
       abilities: [
         { name: "Cat Burglar Minimums", notes: "THE CAT BURGLAR requires a minimum Strength of 10 and Dexterity of 13. The book states this for the cat burglar specialization; other Burglar specialists such as the box-man and the jewel thief are described without stated minimums." },
         { name: "Specialization", notes: "Burglars often specialize further. A BOX-MAN is an expert at opening locks, especially safes and well-protected chests. A CAT BURGLAR or second-story specialist excels at climbing walls. Others specialize by target -- JEWEL THIEVES in particular are the elite among Burglars. A specialized thief is more marketable: by concentrating on one skill, a relatively low-level thief may compete with a thief many levels higher for jobs of a certain type." },
@@ -3317,6 +3371,13 @@ const KITS = {
         note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
       },
       thiefSkillMods: { pickPockets: 10, openLocks: 0, findTraps: 0, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: -5, readLanguages: -5 },
+      proficiencies: {
+        nonweapon: {
+          required: ["Observation", "Trailing"],
+          recommended: ["Alertness", "Begging", "Information Gathering"],
+          note: "The book prints Trailing under BOTH Required and Recommended. Listed once, as Required, which is the stronger statement."
+        }
+      },
       abilities: [
         { name: "Sizing Up A Target", notes: "The effective pickpocket chooses his target carefully. IN GAME TERMS THE CUTPURSE CAN GUESS THE CLASS AND LEVEL OF ANOTHER CHARACTER. On a successful OBSERVATION proficiency check he accurately determines the target's CHARACTER CLASS. ANOTHER CHECK may be made to determine the APPROXIMATE LEVEL; the DM should roll this check secretly, and if it fails, THE DIFFERENCE BETWEEN THE NUMBER ROLLED AND THE NUMBER NEEDED FOR SUCCESS IS HOW FAR OFF THE ESTIMATE IS." },
         { name: "Checking Out A Disguise", notes: "When a Cutpurse tries to size up a character who is IN DISGUISE, he suffers a PENALTY OF -5 ON HIS PROFICIENCY CHECK." },
@@ -3340,6 +3401,12 @@ const KITS = {
         note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
       },
       thiefSkillMods: { pickPockets: 0, openLocks: 5, findTraps: 5, moveSilently: -5, hideInShadows: -5, detectNoise: 0, climbWalls: -5, readLanguages: 5 },
+      proficiencies: {
+        nonweapon: {
+          bonus: ["Appraising", "Information Gathering"],
+          recommended: ["Alertness", "Fast-Talking", "Forgery", "Gem Cutting", "Local History", "Observation"]
+        }
+      },
       abilities: [
         { name: "Underworld Standing", notes: "Because of his contacts, a Fence is probably the BEST PERSON FOR LOCATING AND HIRING THIEVES AND SMUGGLERS, especially in territory not claimed by a guild." },
         { name: "Reaction Bonus", notes: "Fences generally command a lot of respect from the underworld in their home territory. Unless a thief has a serious vendetta, he will probably court a Fence's favor for business reasons. FENCES RECEIVE A BONUS OF +3 ON REACTIONS WITH NPC THIEVES IF THEIR PROFESSION IS RECOGNIZED." },
@@ -3363,6 +3430,12 @@ const KITS = {
         note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
       },
       thiefSkillMods: { pickPockets: -5, openLocks: 0, findTraps: 0, moveSilently: 0, hideInShadows: 0, detectNoise: 5, climbWalls: 0, readLanguages: 0 },
+      proficiencies: {
+        nonweapon: {
+          required: ["Information Gathering", "Observation"],
+          recommended: ["Alertness", "Appraising", "Disguise", "Fast-Talking", "Heraldry", "Intimidation", "Local History", "Languages, Modern", "Reading Lips", "Religion", "Trailing"]
+        }
+      },
       abilities: [
         { name: "Antithesis Of Criminals", notes: "Though Investigators are listed as thieves, they are usually in fact the antithesis of criminals -- enforcers of law and order, the people who know the skills of the thief intimately so that they can combat him." },
         { name: "Weapon Proficiencies", notes: "The normal range of weapons open to thieves. Investigators will normally carry two weapons, at least one of them concealed -- a knife, a dagger, or something similarly small, perhaps in a wrist sheath." },
@@ -3385,6 +3458,12 @@ const KITS = {
         note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
       },
       thiefSkillMods: { pickPockets: -5, openLocks: -5, findTraps: 0, moveSilently: 5, hideInShadows: 5, detectNoise: 0, climbWalls: 0, readLanguages: 0 },
+      proficiencies: {
+        nonweapon: {
+          required: ["Direction Sense", "Tracking"],
+          recommended: ["Alertness", "Animal Handling", "Animal Training", "Animal Lore", "Animal Noise", "Boating", "Fire-Building", "Fishing", "Heraldry", "Herbalism", "Hunting", "Mountaineering", "Observation", "Riding, Land-Based", "Rope Use", "Set Snares", "Survival", "Swimming", "Weather Sense"]
+        }
+      },
       abilities: [
         { name: "Wilderness Stealth", notes: "Due to their extensive wilderness experience and expertise, SCOUTS GAIN +10% ON TWO THIEF SKILLS WHEN IN THE WILDERNESS: SILENT MOVEMENT AND HIDING IN SHADOWS. This is situational and is NOT part of the flat Table 4 adjustment." },
         { name: "Wilderness Surprise", notes: "Scouts also have an INCREASED CHANCE (1 IN 6 BETTER) TO SURPRISE OPPONENTS IN THE WILDERNESS, because of their stealthiness and careful attunement with their environment." },
@@ -3409,6 +3488,11 @@ const KITS = {
         note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
       },
       thiefSkillMods: { pickPockets: -5, openLocks: -5, findTraps: 0, moveSilently: 5, hideInShadows: 5, detectNoise: 5, climbWalls: -5, readLanguages: 0 },
+      proficiencies: {
+        nonweapon: {
+          recommended: ["Alertness", "Animal Handling", "Animal Training", "Animal Noise", "Appraising", "Boating", "Direction Sense", "Disguise", "Fast-Talking", "Forgery", "Information Gathering", "Navigation", "Observation", "Rope Use", "Seamanship", "Swimming"]
+        }
+      },
       abilities: [
         { name: "Exceptional Alertness", notes: "Smugglers must be exceptionally alert; THEY THEREFORE GET +1 BONUS TO THEIR SURPRISE ROLL." },
         { name: "No Requirements", notes: "The Smuggler kit has no requirements beyond those of the thief class." },
@@ -3432,6 +3516,12 @@ const KITS = {
         note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
       },
       thiefSkillMods: { pickPockets: 0, openLocks: 0, findTraps: 0, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: 0, readLanguages: 0 },
+      proficiencies: {
+        nonweapon: {
+          required: ["Disguise", "Information Gathering", "Observation"],
+          recommended: ["Alertness", "Begging", "Etiquette", "Forgery", "Heraldry", "Local History", "Reading/Writing", "Reading Lips", "Trailing"]
+        }
+      },
       abilities: [
         { name: "Minimum Intelligence", notes: "To take the Spy kit, a thief must have a MINIMUM INTELLIGENCE OF 11." },
         { name: "Nonthief Weapons For Disguise Only", notes: "The normal range of weapons open to thieves applies to Spies as well, and they are not required to take any in particular. A SPY CAN USE NONTHIEF WEAPONS FOR THE PURPOSE OF DISGUISES, BUT CANNOT TAKE PROFICIENCY IN THEM. Example: to help impersonate a castle guard, a Spy carries a halberd; he could use it in combat, but would suffer a nonproficiency penalty. To increase his chances of success he would probably switch to a familiar weapon -- even a dagger or knife -- unless circumstances prohibit it (people around him would be surprised to see him not using the halberd, and might thereby see through the disguise)." },
@@ -3477,6 +3567,12 @@ const KITS = {
         note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
       },
       thiefSkillMods: { pickPockets: 0, openLocks: -5, findTraps: 0, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: 0, readLanguages: 5 },
+      proficiencies: {
+        nonweapon: {
+          required: ["Fast-Talking"],
+          recommended: ["Alertness", "Appraising", "Artistic Ability", "Dancing", "Disguise", "Etiquette", "Forgery", "Fortune Telling", "Gaming", "Local History", "Observation", "Singing", "Ventriloquism"]
+        }
+      },
       abilities: [
         { name: "Minimum Charisma", notes: "A MINIMUM CHARISMA OF 12 is required of a thief to take this kit." },
         { name: "Master Of Deception", notes: "While burglars and pickpockets profit through stealth, and bandits and thugs garner their earnings through force, the Swindler relies on his wits. Other thieves take their booty; the Swindler cons his victim into giving it freely." },
@@ -3500,6 +3596,12 @@ const KITS = {
         note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
       },
       thiefSkillMods: { pickPockets: 0, openLocks: 0, findTraps: 0, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: 0, readLanguages: 0 },
+      proficiencies: {
+        nonweapon: {
+          required: ["Intimidation"],
+          recommended: ["Alertness", "Endurance", "Looting", "Trailing"]
+        }
+      },
       discretionaryPoints: 40,
       discretionaryPointsPerLevel: 30,
       abilities: [
@@ -3525,6 +3627,12 @@ const KITS = {
         note:   "Transcribed from the book. Skill adjustments are Table 4 (p.24), cross-checked against Table 5."
       },
       thiefSkillMods: { pickPockets: -10, openLocks: 5, findTraps: 5, moveSilently: 0, hideInShadows: 0, detectNoise: 0, climbWalls: 0, readLanguages: 0 },
+      proficiencies: {
+        nonweapon: {
+          required: ["Observation"],
+          recommended: ["Alertness", "Fast-Talking", "Information Gathering", "Locksmithing", "Trailing"]
+        }
+      },
       abilities: [
         { name: "Security Consultant", notes: "Like the Investigator, often aligned against other thieves. He has all the skills of the thief, but puts them to a different use: he works chiefly as a security consultant, playing the part of the thief in order to test the worthiness of his clients' defenses." },
         { name: "Murphy's Law -- DELIBERATELY UNQUANTIFIED", notes: "Troubleshooters have an uncanny knack for troubleshooting: if there is a glitch somewhere in a security system, the Troubleshooter always seems to run into it. He is a living manifestation of Murphy's Law -- IF ANYTHING CAN GO WRONG, IT WILL. His job is to find everything that can go wrong, so it can be fixed. THE BOOK STATES OUTRIGHT THAT THIS IS DIFFICULT TO QUANTIFY AND DEFINE AS A GAME MECHANIC. Instead, the DM is encouraged to bring it in at his discretion during play, for maximum excitement and role-playing fun, filling the character's life with astronomically improbable events and bizarre coincidences. TWO QUESTIONS FOR THE DM before bringing it into play: would this further the plot of the adventure, and would it be fun? At least the second should be answered yes. THE RULE TO FOLLOW IN DECIDING THE SPECIFICS IS: EVERYTHING SHOULD BE BALANCED. FOR EVERY FREAKISH MISHAP THAT WORKS IN THE TROUBLESHOOTER'S FAVOR, THERE SHOULD BE A COMPLEMENTARY ONE THAT WORKS TO HIS DISADVANTAGE." },
