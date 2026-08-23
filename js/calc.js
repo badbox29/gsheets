@@ -11838,10 +11838,17 @@ function renderThiefEquipment(root) {
 
   const list = sec.querySelector('.thief-equip-list');
   if (list) {
+    const surfLabel = (SURF.find(s => s.key === surface) || {}).label || surface;
     list.innerHTML = PHBR2_EQUIPMENT_SKILL_MODS.map((e) => {
       const c = contribution(e);
       const bits = KEYS.filter(k => c[k]).map(k => sgn(c[k]) + ' ' + LABELS[KEYS.indexOf(k)]);
       const dead = !bits.length;
+      // A surface item that grants nothing here must SAY so. Dropping the climb
+      // figure from the summary is not enough -- clawed gloves still show their
+      // move silently penalty, so the row looks unchanged, which is exactly how
+      // it read on a very smooth wall. `dead` cannot carry this: the gloves keep
+      // that -5 whatever the surface and are therefore never dead.
+      const noClimb = !!e.surfaceMods && !e.surfaceMods[surface];
       const checked = sec._teOn[e.item] ? ' checked' : '';
       return '<label class="te-row" style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;' +
              'border-bottom:1px solid var(--border);' + (dead ? 'opacity:.55;' : '') + '">' +
@@ -11852,8 +11859,12 @@ function renderThiefEquipment(root) {
           '<span style="font-size:11px;color:var(--muted);">' + escapeHtml(e.page) + '</span>' +
           '<span style="display:block;font-size:11px;color:var(--muted);line-height:1.5;">' +
             escapeHtml(e.when) +
-            (dead ? ' \u2014 no effect on this surface'
+            (dead ? ' \u2014 no effect here'
                   : ' \u2014 ' + escapeHtml(bits.join(', '))) +
+            (noClimb ? '<br>No climbing bonus on a ' +
+                       escapeHtml(surfLabel.toLowerCase()) +
+                       ' \u2014 too few nooks and crannies to grip.'
+                     : '') +
             (e.note ? '<br>' + escapeHtml(e.note) : '') +
           '</span>' +
         '</span>' +
