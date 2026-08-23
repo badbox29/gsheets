@@ -3229,6 +3229,74 @@ const PHBR2_THIEF_COLUMN = {
 // when the band is active; under Table 29 the app clamps at 0.
 const THIEF_SKILL_MIN_PHBR2 = 1;
 
+// === PHBR2 Chapter 5: equipment effects on thief skills (pp.90-102) ===
+// Read from 300dpi page images, August 2026.
+//
+// Skill keys are the SAME EIGHT getKitSkillMods uses, deliberately -- a second
+// vocabulary for one set of skills is how the two drift apart. A missing key is
+// zero.
+//
+// THESE ARE SITUATIONAL, which is why they get a panel and not a term in
+// skillVal(). Armor and kit adjustments are true of a character all the time;
+// a clawed glove is worth +10, +5 or nothing depending on what he is climbing,
+// and a woodland suit is worth nothing indoors. The panel reads the sheet and
+// never writes to it.
+//
+// `surfaceMods` is a CLIMB WALLS figure keyed by surface, per pp.95-96. `mods`
+// is everything unconditional once the item is in use.
+//
+// NOT ENFORCED, and deliberately: p.90's +20 ceiling on stacked nonmagical
+// bonuses, and its advice that similar-function items should not stack, are
+// addressed to the DM in a section that opens by calling the item modifiers
+// "suggestions only". Each item carries the full percentage the book prints for
+// it. This is why the grappling iron reads +40 next to a +20 cap -- see
+// gsheets_phbr_notes.md, PHBR2, contradiction twelve. Chris's ruling, Aug 2026.
+const PHBR2_EQUIPMENT_SKILL_MODS = [
+  { item: 'Arm Sling', page: 'p.91', when: 'Worn',
+    mods: { pickPockets: -5 },
+    note: 'Halves the chance of being discovered, but a natural 00 on d100 always means discovery.' },
+  { item: 'Footpad\u2019s Boots', page: 'p.93', when: 'Worn',
+    mods: { moveSilently: 5, climbWalls: -5 } },
+  { item: 'Hollow Boots', page: 'p.100', when: 'Worn',
+    mods: { moveSilently: -5 } },
+  { item: 'Darksuit', page: 'p.94', when: 'Shadow, or dusk or early dawn light',
+    mods: { hideInShadows: 5 } },
+  { item: 'Charcoal', page: 'p.94', when: 'Face, neck and backs of hands blacked, in dim light',
+    mods: { hideInShadows: 2 } },
+  { item: 'Woodland Suit', page: 'p.94', when: 'Outdoors \u2014 woodland, field or garden',
+    mods: { hideInShadows: 5 } },
+  { item: 'Plant Dye', page: 'p.94', when: 'Face and hands dyed, outdoors',
+    mods: { hideInShadows: 2 } },
+  { item: 'Weaponblack', page: 'p.94', when: 'Weapon coated',
+    mods: { hideInShadows: 5 },
+    note: 'The book calls its OTHER rule superior: instead of this bonus, the thief needs no second hide roll when drawing a weapon, and takes no penalty for hiding with one already drawn.' },
+  { item: 'Listening Cone', page: 'p.94', when: 'Held against the surface',
+    mods: { detectNoise: 5 } },
+  { item: 'Magnifying Glass', page: 'p.92', when: 'Some of the lock mechanism visible',
+    mods: { openLocks: 5 } },
+  { item: 'Oil and Funnel', page: 'pp.92-93', when: 'Lock oiled \u2014 silent picking check only',
+    mods: { moveSilently: 10 },
+    note: 'Also negates, in whole or in part, any penalty the DM applies for a rusted or dirty lock. Takes 1 round to apply and 1d6+4 rounds to work.' },
+  { item: 'Clawed Gloves', page: 'pp.95-96', when: 'Climbing',
+    surfaceMods: { verySmooth: 0, smoothCracked: 5, other: 10 },
+    mods: { moveSilently: -5 },
+    note: 'Sharkskin-coated gloves are treated as clawed gloves in all respects (p.98). The move silently penalty applies only while climbing.' },
+  { item: 'Clawed Overshoes', page: 'pp.95-96', when: 'Climbing',
+    surfaceMods: { verySmooth: 0, smoothCracked: 5, other: 10 },
+    mods: { moveSilently: -10 } },
+  { item: 'Climbing Dagger', page: 'p.95', when: 'Climbing \u2014 at the DM\u2019s option',
+    mods: { climbWalls: 10 } },
+  { item: 'Grappling Iron and Rope', page: 'p.95', when: 'Climbing the wall by the rope',
+    mods: { climbWalls: 40 } }
+];
+
+// Surface labels for the panel's selector, in the order pp.95-96 present them.
+const PHBR2_CLIMB_SURFACES = [
+  { key: 'other',         label: 'Rough or normal surface' },
+  { key: 'smoothCracked', label: 'Smooth or cracked' },
+  { key: 'verySmooth',    label: 'Very smooth' }
+];
+
 // === PHBR2 Chapter 7 reference (pp.111-114) ===
 // Content only -- nothing here is rolled, computed or enforced. Read from
 // 300dpi page images, August 2026.
@@ -7074,7 +7142,7 @@ const SUPPLEMENTS = {
     //
     // NO legacyBand ANYWHERE, unlike PHBR1. The book is new, so no table has a
     // stored phbr2.core or phbr2.optional value for a band to inherit.
-    bandOrder: ['armorThiefSkills', 'kitSkillAdjustments', 'kitProficiencyCost', 'advancedThiefRules'],
+    bandOrder: ['armorThiefSkills', 'kitSkillAdjustments', 'kitProficiencyCost', 'equipmentSkillMods', 'advancedThiefRules'],
     armorThiefSkills: {
       label: 'Armor and thief skills',
       hint:  'Table 38 extends PHB Table 29 to every armor type.',
@@ -7188,6 +7256,27 @@ const SUPPLEMENTS = {
                 'time exceeds the poison\u2019s onset.',
           caveat: 'Identifying a poison is an ASSASSIN KIT ability (pp.27\u201328), not a ' +
                   'Chapter 7 rule, so it is not gated here.' }
+            ]
+    },
+
+    equipmentSkillMods: {
+      label: 'Equipment and thief skills',
+      hint:  'Chapter 5 gear adjusts the eight thief skills.',
+      rules: ['equipmentSkillModsPHBR2'],
+      changes: [
+        { text: 'Adds a Thief Equipment panel on the Tools tab. Tick what the ' +
+                'character is using and the panel shows the adjusted skill figures ' +
+                'beside the sheet\u2019s own \u2014 footpad\u2019s boots +5 Move Silently and ' +
+                '\u22125 Climb Walls, a darksuit +5 Hide in Shadows, a listening cone ' +
+                '+5 Detect Noise, a grappling iron and rope +40 Climb Walls, and so on.',
+          caveat: 'The panel READS the sheet and does not write to it. Chapter 5\u2019s ' +
+                  'modifiers are situational \u2014 a clawed glove is worth +5, +10 or ' +
+                  'nothing depending on the surface \u2014 so they cannot sit in the ' +
+                  'skill fields the way armor and kit adjustments do.' },
+        { text: 'Each item shows the percentage the book prints for it. PHBR2 p.90\u2019s ' +
+                'ceiling on stacked nonmagical bonuses and its no-stacking guidance ' +
+                'for similar items are addressed to the DM, not the player, and are ' +
+                'not enforced or shown here.' }
       ]
     }
   },
