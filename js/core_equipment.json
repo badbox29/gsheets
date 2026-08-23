@@ -23,8 +23,8 @@
     "Capacity": "50 lb or 2 cubic feet",
     "Weight": "2 lb",
     "Cost": "2 gp",
-    "Source": "Unattributed",
-    "Notes": "Leather or canvas, holds adventuring gear SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Leather or canvas, holds adventuring gear SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Banner or Flag",
@@ -41,17 +41,26 @@
     "Capacity": "40 gallons",
     "Weight": "30 lb",
     "Cost": "2 gp",
-    "Source": "Unattributed",
-    "Notes": "Wooden barrel for liquids or goods SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Wooden barrel for liquids or goods SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
-    "Item Name": "Basket",
+    "Item Name": "Basket, Large",
     "Category": "Container",
     "Capacity": "20 lb",
     "Weight": "1 lb",
-    "Cost": "5 sp",
-    "Source": "Unattributed",
-    "Notes": "Woven basket SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Cost": "3 sp",
+    "Source": "PHB",
+    "Notes": "Woven basket SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. SPLIT FROM A SINGLE RECORD that matched neither of the PHB's two rows, August 2026."
+  },
+  {
+    "Item Name": "Basket, Small",
+    "Category": "Container",
+    "Capacity": "20 lb",
+    "Weight": "0.1 lb",
+    "Cost": "5 cp",
+    "Source": "PHB",
+    "Notes": "Woven basket SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. SPLIT FROM A SINGLE RECORD that matched neither of the PHB's two rows, August 2026."
   },
   {
     "Item Name": "Bear Trap",
@@ -75,19 +84,28 @@
     "Item Name": "Bell",
     "Category": "Adventuring Gear",
     "Capacity": "N/A",
-    "Weight": "1 lb",
+    "Weight": "",
     "Cost": "1 gp",
-    "Source": "Unattributed",
-    "Notes": "For alerting to intruders SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "For alerting to intruders SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: weight 1 lb -> (blank). THE PHB PRINTS A DASH in the weight column here, which is neither of its two footnote markers: not '*' (ten weigh a pound) and not '**' (no appreciable weight). A dash is no figure given, so the weight is blank."
   },
   {
-    "Item Name": "Belt Pouch",
+    "Item Name": "Belt Pouch, Large",
+    "Category": "Container",
+    "Capacity": "3 lb or 1/10 cubic foot",
+    "Weight": "1 lb",
+    "Cost": "1 gp",
+    "Source": "PHB",
+    "Notes": "Small leather pouch worn on belt SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. SPLIT FROM A SINGLE RECORD that matched neither of the PHB's two rows, August 2026."
+  },
+  {
+    "Item Name": "Belt Pouch, Small",
     "Category": "Container",
     "Capacity": "3 lb or 1/10 cubic foot",
     "Weight": "0.5 lb",
-    "Cost": "1 gp",
-    "Source": "Unattributed",
-    "Notes": "Small leather pouch worn on belt SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Cost": "7 sp",
+    "Source": "PHB",
+    "Notes": "Small leather pouch worn on belt SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. SPLIT FROM A SINGLE RECORD that matched neither of the PHB's two rows, August 2026."
   },
   {
     "Item Name": "Bit and Bridle",
@@ -95,8 +113,8 @@
     "Capacity": "N/A",
     "Weight": "3 lb",
     "Cost": "15 sp",
-    "Source": "Unattributed",
-    "Notes": "For controlling horse SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "For controlling horse SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Blanket, Winter",
@@ -104,8 +122,8 @@
     "Capacity": "N/A",
     "Weight": "3 lb",
     "Cost": "5 sp",
-    "Source": "Unattributed",
-    "Notes": "Warm blanket for sleeping SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Warm blanket for sleeping SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Blindfold",
@@ -129,10 +147,10 @@
     "Item Name": "Bottle, Glass",
     "Category": "Container",
     "Capacity": "1 quart",
-    "Weight": "1 lb",
-    "Cost": "2 gp",
-    "Source": "Unattributed",
-    "Notes": "Glass bottle with cork SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Weight": "0.1 lb",
+    "Cost": "10 gp",
+    "Source": "PHB",
+    "Notes": "Glass bottle with cork SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: cost 2 gp -> 10 gp; weight 1 lb -> 0.1 lb."
   },
   {
     "Item Name": "Caltrops (20)",
@@ -149,8 +167,8 @@
     "Capacity": "N/A",
     "Weight": "0.1 lb",
     "Cost": "1 cp",
-    "Source": "Unattributed",
-    "Notes": "SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Cart",
@@ -162,13 +180,22 @@
     "Notes": "Two-wheeled cart SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
-    "Item Name": "Chain (10 ft)",
+    "Item Name": "Chain, Heavy (per ft)",
     "Category": "Adventuring Gear",
     "Capacity": "N/A",
-    "Weight": "20 lb",
-    "Cost": "30 gp",
-    "Source": "Unattributed",
-    "Notes": "Strong metal chain SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Weight": "3 lb",
+    "Cost": "4 gp",
+    "Source": "PHB",
+    "Notes": "Strong metal chain SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. REPLACES a 'Chain (10 ft)' record at 30 gp / 20 lb, which reconciled with neither PHB row: the PHB prices chain PER FOOT in two weights."
+  },
+  {
+    "Item Name": "Chain, Light (per ft)",
+    "Category": "Adventuring Gear",
+    "Capacity": "N/A",
+    "Weight": "1 lb",
+    "Cost": "3 gp",
+    "Source": "PHB",
+    "Notes": "Strong metal chain SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. REPLACES a 'Chain (10 ft)' record -- see Chain, Heavy."
   },
   {
     "Item Name": "Chalk",
@@ -176,8 +203,8 @@
     "Capacity": "N/A",
     "Weight": "0.1 lb",
     "Cost": "1 cp",
-    "Source": "Unattributed",
-    "Notes": "For marking walls and paths SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "For marking walls and paths SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Charcoal, Bundle",
@@ -193,19 +220,19 @@
     "Item Name": "Chest, Large",
     "Category": "Container",
     "Capacity": "50 lb",
-    "Weight": "50 lb",
-    "Cost": "5 gp",
-    "Source": "Unattributed",
-    "Notes": "Large wooden chest with lock SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Weight": "25 lb",
+    "Cost": "2 gp",
+    "Source": "PHB",
+    "Notes": "Large wooden chest with lock SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: cost 5 gp -> 2 gp; weight 50 lb -> 25 lb."
   },
   {
     "Item Name": "Chest, Small",
     "Category": "Container",
     "Capacity": "20 lb",
-    "Weight": "25 lb",
+    "Weight": "10 lb",
     "Cost": "1 gp",
-    "Source": "Unattributed",
-    "Notes": "Wooden chest with lock SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Wooden chest with lock SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: weight 25 lb -> 10 lb."
   },
   {
     "Item Name": "Climber's Kit",
@@ -254,13 +281,14 @@
     "Notes": "Daily feed for one horse SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
-    "Item Name": "Fishing Hook and Line",
+    "Item Name": "Fishhook",
     "Category": "Tool",
     "Capacity": "N/A",
-    "Weight": "0.5 lb",
+    "Weight": "",
     "Cost": "1 sp",
-    "Source": "Unattributed",
-    "Notes": "Basic fishing gear SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Basic fishing gear SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: weight 0.5 lb -> (blank); renamed from Fishing Hook and Line. RENAMED to the PHB's own entry, which it matched on price. Weight is the PHB's '**'.",
+    "negligibleWeight": "yes"
   },
   {
     "Item Name": "Fishing Net, 10 sq ft",
@@ -268,8 +296,8 @@
     "Capacity": "N/A",
     "Weight": "5 lb",
     "Cost": "4 gp",
-    "Source": "Unattributed",
-    "Notes": "For fishing SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "For fishing SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Flask, Glass",
@@ -367,17 +395,17 @@
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "25 gp",
-    "Source": "Unattributed",
-    "Notes": "Measures 1 hour of time SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Measures 1 hour of time SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
-    "Item Name": "Ink, 1 oz",
+    "Item Name": "Writing Ink (per vial)",
     "Category": "Writing",
     "Capacity": "1 oz",
     "Weight": "0.1 lb",
-    "Cost": "8 gp",
-    "Source": "Unattributed",
-    "Notes": "Black ink SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Cost": "8 sp",
+    "Source": "PHB",
+    "Notes": "Black ink SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: cost 8 gp -> 8 sp; renamed from Ink, 1 oz."
   },
   {
     "Item Name": "Inkpen",
@@ -403,8 +431,8 @@
     "Capacity": "N/A",
     "Weight": "20 lb",
     "Cost": "5 cp",
-    "Source": "Unattributed",
-    "Notes": "Wooden ladder SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Wooden ladder SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Lamp, Common",
@@ -421,8 +449,8 @@
     "Capacity": "1 pint oil",
     "Weight": "3 lb",
     "Cost": "12 gp",
-    "Source": "Unattributed",
-    "Notes": "SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Lantern, Hooded",
@@ -430,17 +458,8 @@
     "Capacity": "1 pint oil",
     "Weight": "2 lb",
     "Cost": "7 gp",
-    "Source": "Unattributed",
-    "Notes": "Can be shuttered SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
-  },
-  {
-    "Item Name": "Lock, Amazing",
-    "Category": "Tool",
-    "Capacity": "N/A",
-    "Weight": "1 lb",
-    "Cost": "500+ gp",
-    "Source": "Unattributed",
-    "Notes": "Masterwork lock, very difficult to pick SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Can be shuttered SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Lock, Good",
@@ -448,26 +467,26 @@
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "100 gp",
-    "Source": "Unattributed",
-    "Notes": "Quality lock with key SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Quality lock with key SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
-    "Item Name": "Lock, Simple",
+    "Item Name": "Lock, Poor",
     "Category": "Tool",
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "20 gp",
-    "Source": "Unattributed",
-    "Notes": "Basic lock with key SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Basic lock with key SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: renamed from Lock, Simple. RENAMED to match the PHB, which grades locks Poor and Good and prices only those two. The values were already the PHB's Poor row exactly."
   },
   {
     "Item Name": "Magnifying Glass",
     "Category": "Tool",
     "Capacity": "N/A",
-    "Weight": "0.5 lb",
+    "Weight": "0.1 lb",
     "Cost": "100 gp",
-    "Source": "Unattributed",
-    "Notes": "+2 bonus to detailed examinations SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "+2 bonus to detailed examinations SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: weight 0.5 lb -> 0.1 lb."
   },
   {
     "Item Name": "Manacles",
@@ -511,26 +530,26 @@
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "2 gp",
-    "Source": "Unattributed",
-    "Notes": "For weighing coins and goods SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "For weighing coins and goods SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Mirror, Small Metal",
     "Category": "Adventuring Gear",
     "Capacity": "N/A",
-    "Weight": "0.5 lb",
+    "Weight": "0.1 lb",
     "Cost": "10 gp",
-    "Source": "Unattributed",
-    "Notes": "Lets you view a creature whose gaze is dangerous, such as a medusa. Requires a light source. Acting on a reflected view costs -2 on attack rolls, ability checks and proficiency checks; fighting an opponent seen only in a mirror also forfeits all Dexterity bonuses to Armor Class (PHB Ch.13) SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Lets you view a creature whose gaze is dangerous, such as a medusa. Requires a light source. Acting on a reflected view costs -2 on attack rolls, ability checks and proficiency checks; fighting an opponent seen only in a mirror also forfeits all Dexterity bonuses to Armor Class (PHB Ch.13) SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: weight 0.5 lb -> 0.1 lb."
   },
   {
     "Item Name": "Musical Instrument",
     "Category": "Tool",
     "Capacity": "N/A",
-    "Weight": "1-10 lb",
+    "Weight": "0.5-3 lb",
     "Cost": "5-100 gp",
-    "Source": "Unattributed",
-    "Notes": "Varies by instrument type SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Varies by instrument type SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: weight 1-10 lb -> 0.5-3 lb."
   },
   {
     "Item Name": "Oil, Flask (1 pint)",
@@ -542,31 +561,33 @@
     "Notes": "Can be lit and thrown as weapon, 1d8 fire damage for 2 rounds SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
-    "Item Name": "Oil, Lamp (1 pint)",
+    "Item Name": "Oil, Lamp (per flask)",
     "Category": "Light Source",
     "Capacity": "1 pint",
     "Weight": "1 lb",
-    "Cost": "1 sp",
-    "Source": "Unattributed",
-    "Notes": "Fuel for lanterns and lamps SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Cost": "6 cp",
+    "Source": "PHB",
+    "Notes": "Fuel for lanterns and lamps SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: cost 1 sp -> 6 cp; renamed from Oil, Lamp (1 pint)."
   },
   {
     "Item Name": "Paper, Sheet",
     "Category": "Writing",
     "Capacity": "N/A",
-    "Weight": "0.1 lb",
+    "Weight": "",
     "Cost": "2 gp",
-    "Source": "Unattributed",
-    "Notes": "Single sheet of paper SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Single sheet of paper SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: weight 0.1 lb -> (blank). WEIGHT IS THE PHB'S '**': no appreciable weight, not counted for encumbrance unless hundreds are carried. That is a rule, not a number, so it is the negligibleWeight flag rather than a fake 0.1 lb.",
+    "negligibleWeight": "yes"
   },
   {
     "Item Name": "Parchment, Sheet",
     "Category": "Writing",
     "Capacity": "N/A",
-    "Weight": "0.1 lb",
+    "Weight": "",
     "Cost": "1 gp",
-    "Source": "Unattributed",
-    "Notes": "Single sheet of parchment SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Single sheet of parchment SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: weight 0.1 lb -> (blank). WEIGHT IS THE PHB'S '**' -- see Paper, Sheet.",
+    "negligibleWeight": "yes"
   },
   {
     "Item Name": "Perfume, Common",
@@ -574,8 +595,8 @@
     "Capacity": "1 oz",
     "Weight": "0.1 lb",
     "Cost": "5 gp",
-    "Source": "Unattributed",
-    "Notes": "Basic perfume or cologne SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Basic perfume or cologne SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Perfume, Exotic",
@@ -601,8 +622,8 @@
     "Capacity": "N/A",
     "Weight": "0.5 lb",
     "Cost": "3 cp",
-    "Source": "Unattributed",
-    "Notes": "Metal spike for climbing, hammered into rock SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Metal spike for climbing, hammered into rock SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Playing Cards or Dice",
@@ -673,8 +694,8 @@
     "Capacity": "N/A",
     "Weight": "20 lb",
     "Cost": "1 gp",
-    "Source": "Unattributed",
-    "Notes": "Supports 1,600 lb SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Supports 1,600 lb SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Rope, Silk (50 ft)",
@@ -682,8 +703,8 @@
     "Capacity": "N/A",
     "Weight": "8 lb",
     "Cost": "10 gp",
-    "Source": "Unattributed",
-    "Notes": "Supports 2,000 lb, lighter and stronger than hemp SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Supports 2,000 lb, lighter and stronger than hemp SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Rowboat",
@@ -698,19 +719,19 @@
     "Item Name": "Sack, Large",
     "Category": "Container",
     "Capacity": "40 lb or 1 cubic foot",
-    "Weight": "1 lb",
-    "Cost": "1 sp",
-    "Source": "Unattributed",
-    "Notes": "Large cloth or burlap sack SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Weight": "0.5 lb",
+    "Cost": "2 sp",
+    "Source": "PHB",
+    "Notes": "Large cloth or burlap sack SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: cost 1 sp -> 2 sp; weight 1 lb -> 0.5 lb."
   },
   {
     "Item Name": "Sack, Small",
     "Category": "Container",
     "Capacity": "20 lb or 0.5 cubic feet",
-    "Weight": "0.5 lb",
+    "Weight": "0.1 lb",
     "Cost": "5 cp",
-    "Source": "Unattributed",
-    "Notes": "Cloth or burlap sack SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Cloth or burlap sack SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: weight 0.5 lb -> 0.1 lb."
   },
   {
     "Item Name": "Saddle, Military",
@@ -727,8 +748,8 @@
     "Capacity": "N/A",
     "Weight": "15 lb",
     "Cost": "5 gp",
-    "Source": "Unattributed",
-    "Notes": "For pack animals SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "For pack animals SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Saddle, Riding",
@@ -736,26 +757,26 @@
     "Capacity": "N/A",
     "Weight": "35 lb",
     "Cost": "10 gp",
-    "Source": "Unattributed",
-    "Notes": "Standard riding saddle SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Standard riding saddle SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
-    "Item Name": "Saddlebags",
+    "Item Name": "Saddle Bags, Large",
     "Category": "Container",
     "Capacity": "50 lb",
     "Weight": "8 lb",
     "Cost": "4 gp",
-    "Source": "Unattributed",
-    "Notes": "Paired bags for horse or mule SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Paired bags for horse or mule SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: renamed from Saddlebags. The PHB prices two sizes; this record held the Large figures."
   },
   {
-    "Item Name": "Scroll Case",
+    "Item Name": "Map or Scroll Case",
     "Category": "Container",
     "Capacity": "10 sheets",
-    "Weight": "0.5 lb",
-    "Cost": "1 gp",
-    "Source": "Unattributed",
-    "Notes": "Leather tube for scrolls and maps SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Weight": "1 lb",
+    "Cost": "8 sp",
+    "Source": "PHB",
+    "Notes": "Leather tube for scrolls and maps SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: cost 1 gp -> 8 sp; weight 0.5 lb -> 1 lb; renamed from Scroll Case."
   },
   {
     "Item Name": "Sewing Needle and Thread",
@@ -763,8 +784,8 @@
     "Capacity": "N/A",
     "Weight": "0.1 lb",
     "Cost": "5 sp",
-    "Source": "Unattributed",
-    "Notes": "For mending clothes and gear SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "For mending clothes and gear SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Sheath, Secret Spring",
@@ -791,8 +812,8 @@
     "Capacity": "N/A",
     "Weight": "0.1 lb",
     "Cost": "8 sp",
-    "Source": "Unattributed",
-    "Notes": "Loud whistle for signaling SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Loud whistle for signaling SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Soap, 1 lb",
@@ -800,8 +821,8 @@
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "5 sp",
-    "Source": "Unattributed",
-    "Notes": "For bathing and cleaning SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "For bathing and cleaning SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Spade or Shovel",
@@ -836,26 +857,26 @@
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "1000 gp",
-    "Source": "Unattributed",
-    "Notes": "See 4x distance clearly SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "See 4x distance clearly SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Tent, Large",
     "Category": "Camping",
     "Capacity": "4-6 people",
-    "Weight": "50 lb",
+    "Weight": "20 lb",
     "Cost": "25 gp",
-    "Source": "Unattributed",
-    "Notes": "Canvas pavilion tent SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Canvas pavilion tent SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: weight 50 lb -> 20 lb."
   },
   {
     "Item Name": "Tent, Small",
     "Category": "Camping",
     "Capacity": "1-2 people",
-    "Weight": "20 lb",
+    "Weight": "10 lb",
     "Cost": "5 gp",
-    "Source": "Unattributed",
-    "Notes": "Canvas tent for 1-2 people SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Canvas tent for 1-2 people SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: weight 20 lb -> 10 lb."
   },
   {
     "Item Name": "Thieves' Picks",
@@ -882,8 +903,8 @@
     "Capacity": "N/A",
     "Weight": "1 lb",
     "Cost": "1 cp",
-    "Source": "Unattributed",
-    "Notes": "Can be used as a club SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Can be used as a club SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Trap, Snare",
@@ -935,9 +956,9 @@
     "Category": "Tool",
     "Capacity": "N/A",
     "Weight": "1 lb",
-    "Cost": "2 cp",
-    "Source": "Unattributed",
-    "Notes": "For sharpening blades SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Cost": "2 gp",
+    "Source": "PHB",
+    "Notes": "For sharpening blades SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026. CORRECTED: cost 2 cp -> 2 gp."
   },
   {
     "Item Name": "Wine, Common (1 bottle)",
@@ -963,8 +984,8 @@
     "Capacity": "1 gallon (8 lb)",
     "Weight": "1 lb (empty)",
     "Cost": "8 sp",
-    "Source": "Unattributed",
-    "Notes": "Leather container for wine or water SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHB",
+    "Notes": "Leather container for wine or water SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   },
   {
     "Item Name": "Winter Gear",
@@ -1442,5 +1463,285 @@
     "Source": "PHBR2",
     "Notes": "PHBR2 p.102. Large, wickerwork basketlike devices worn over the feet, coming to mid-calf height. The thief balances upright and propels himself across water with a paddle or oar. THE DM MAY INSIST ON A MOVE SILENTLY CHECK at some stage, and if anything happens to startle the thief -- an arrow whizzing past his head, a monster rising up in the water -- A DEXTERITY TEST MAY BE CALLED FOR TO AVOID FALLING IN. The book notes these belong most correctly in Kara-Tur, the land of Oriental Adventures and ninja, but could exist in any fantasy setting.",
     "legality": "S/I"
+  },
+  {
+    "Item Name": "Barding, Chain",
+    "Category": "Animal Gear",
+    "Capacity": "",
+    "Weight": "70 lb",
+    "Cost": "500 gp",
+    "Source": "PHB",
+    "Notes": "Armor for a warhorse or other mount. The PHB prices seven grades; half barding covers the front of the animal only.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Barding, Full Plate",
+    "Category": "Animal Gear",
+    "Capacity": "",
+    "Weight": "85 lb",
+    "Cost": "2000 gp",
+    "Source": "PHB",
+    "Notes": "Armor for a warhorse or other mount. The PHB prices seven grades; half barding covers the front of the animal only.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Barding, Full Scale",
+    "Category": "Animal Gear",
+    "Capacity": "",
+    "Weight": "75 lb",
+    "Cost": "1000 gp",
+    "Source": "PHB",
+    "Notes": "Armor for a warhorse or other mount. The PHB prices seven grades; half barding covers the front of the animal only.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Barding, Half Brigandine",
+    "Category": "Animal Gear",
+    "Capacity": "",
+    "Weight": "45 lb",
+    "Cost": "500 gp",
+    "Source": "PHB",
+    "Notes": "Armor for a warhorse or other mount. The PHB prices seven grades; half barding covers the front of the animal only.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Barding, Half Padded",
+    "Category": "Animal Gear",
+    "Capacity": "",
+    "Weight": "25 lb",
+    "Cost": "100 gp",
+    "Source": "PHB",
+    "Notes": "Armor for a warhorse or other mount. The PHB prices seven grades; half barding covers the front of the animal only.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Barding, Half Scale",
+    "Category": "Animal Gear",
+    "Capacity": "",
+    "Weight": "50 lb",
+    "Cost": "500 gp",
+    "Source": "PHB",
+    "Notes": "Armor for a warhorse or other mount. The PHB prices seven grades; half barding covers the front of the animal only.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Barding, Leather or Padded",
+    "Category": "Animal Gear",
+    "Capacity": "",
+    "Weight": "60 lb",
+    "Cost": "150 gp",
+    "Source": "PHB",
+    "Notes": "Armor for a warhorse or other mount. The PHB prices seven grades; half barding covers the front of the animal only.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Cart Harness",
+    "Category": "Animal Gear",
+    "Capacity": "",
+    "Weight": "10 lb",
+    "Cost": "2 gp",
+    "Source": "PHB",
+    "Notes": "Harness for hitching a draft animal to a cart.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Halter",
+    "Category": "Animal Gear",
+    "Capacity": "",
+    "Weight": "0.1 lb",
+    "Cost": "5 cp",
+    "Source": "PHB",
+    "Notes": "A simple head collar for leading an animal.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Horseshoes & Shoeing",
+    "Category": "Animal Gear",
+    "Capacity": "",
+    "Weight": "10 lb",
+    "Cost": "1 gp",
+    "Source": "PHB",
+    "Notes": "A set of shoes and the smith's work to fit them.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Saddle Blanket",
+    "Category": "Animal Gear",
+    "Capacity": "",
+    "Weight": "4 lb",
+    "Cost": "3 gp",
+    "Source": "PHB",
+    "Notes": "Padding between saddle and animal.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Saddle Bags, Small",
+    "Category": "Container",
+    "Capacity": "",
+    "Weight": "5 lb",
+    "Cost": "3 gp",
+    "Source": "PHB",
+    "Notes": "The smaller of the PHB's two sizes.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Yoke, Horse",
+    "Category": "Animal Gear",
+    "Capacity": "",
+    "Weight": "15 lb",
+    "Cost": "5 gp",
+    "Source": "PHB",
+    "Notes": "A draft yoke sized for a horse.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Yoke, Ox",
+    "Category": "Animal Gear",
+    "Capacity": "",
+    "Weight": "20 lb",
+    "Cost": "3 gp",
+    "Source": "PHB",
+    "Notes": "A draft yoke sized for an ox.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Block and Tackle",
+    "Category": "Tool",
+    "Capacity": "",
+    "Weight": "5 lb",
+    "Cost": "5 gp",
+    "Source": "PHB",
+    "Notes": "Pulleys and rope for lifting heavy loads.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Bolt Case",
+    "Category": "Container",
+    "Capacity": "",
+    "Weight": "1 lb",
+    "Cost": "1 gp",
+    "Source": "PHB",
+    "Notes": "A case for crossbow bolts, the crossbow's counterpart to a quiver.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Bucket",
+    "Category": "Container",
+    "Capacity": "",
+    "Weight": "3 lb",
+    "Cost": "5 sp",
+    "Source": "PHB",
+    "Notes": "An ordinary wooden or iron-bound bucket.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Quiver",
+    "Category": "Container",
+    "Capacity": "",
+    "Weight": "1 lb",
+    "Cost": "8 sp",
+    "Source": "PHB",
+    "Notes": "A case for arrows.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Canvas (per sq yd)",
+    "Category": "Adventuring Gear",
+    "Capacity": "",
+    "Weight": "1 lb",
+    "Cost": "4 sp",
+    "Source": "PHB",
+    "Notes": "Heavy cloth, sold by the square yard.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Cloth, Common (per 10 sq yd)",
+    "Category": "Adventuring Gear",
+    "Capacity": "",
+    "Weight": "10 lb",
+    "Cost": "7 gp",
+    "Source": "PHB",
+    "Notes": "Ordinary cloth, sold by the ten square yards.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Cloth, Fine (per 10 sq yd)",
+    "Category": "Adventuring Gear",
+    "Capacity": "",
+    "Weight": "10 lb",
+    "Cost": "50 gp",
+    "Source": "PHB",
+    "Notes": "Fine cloth, sold by the ten square yards.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Cloth, Rich (per 10 sq yd)",
+    "Category": "Adventuring Gear",
+    "Capacity": "",
+    "Weight": "10 lb",
+    "Cost": "100 gp",
+    "Source": "PHB",
+    "Notes": "Rich cloth, sold by the ten square yards.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Crampons",
+    "Category": "Adventuring Gear",
+    "Capacity": "",
+    "Weight": "2 lb",
+    "Cost": "4 gp",
+    "Source": "PHB",
+    "Notes": "Spiked frames strapped to boots for ice and rock.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Flint and Steel",
+    "Category": "Light Source",
+    "Capacity": "",
+    "Weight": "0.1 lb",
+    "Cost": "5 sp",
+    "Source": "PHB",
+    "Notes": "For striking a spark to start a fire.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Iron Pot",
+    "Category": "Camping",
+    "Capacity": "",
+    "Weight": "2 lb",
+    "Cost": "5 sp",
+    "Source": "PHB",
+    "Notes": "A cooking pot.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Lantern, Beacon",
+    "Category": "Light Source",
+    "Capacity": "",
+    "Weight": "50 lb",
+    "Cost": "150 gp",
+    "Source": "PHB",
+    "Notes": "The largest lantern the PHB prices, and far too heavy to carry as gear.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Papyrus (per sheet)",
+    "Category": "Writing",
+    "Capacity": "",
+    "Weight": "",
+    "Cost": "8 sp",
+    "Source": "PHB",
+    "Notes": "A cheaper writing surface than parchment. Weight is the PHB's '**': no appreciable weight unless hundreds are carried.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026.",
+    "negligibleWeight": "yes"
+  },
+  {
+    "Item Name": "Signet Ring or Personal Seal",
+    "Category": "Personal",
+    "Capacity": "",
+    "Weight": "0.1 lb",
+    "Cost": "5 gp",
+    "Source": "PHB",
+    "Notes": "For sealing letters and documents with an identifying impression. Note that PHBR2 p.100 has a thief take a WAX BLOCK impression of exactly this kind of seal, for later duplication or forgery.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Tent, Pavilion",
+    "Category": "Camping",
+    "Capacity": "",
+    "Weight": "50 lb",
+    "Cost": "100 gp",
+    "Source": "PHB",
+    "Notes": "The largest tent the PHB prices.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Water Clock",
+    "Category": "Tool",
+    "Capacity": "",
+    "Weight": "200 lb",
+    "Cost": "1000 gp",
+    "Source": "PHB",
+    "Notes": "A clepsydra. Priced as a fixture rather than as gear -- it weighs 200 lb.  ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
+  },
+  {
+    "Item Name": "Oil, Greek Fire (per flask)",
+    "Category": "Weapon",
+    "Capacity": "1 flask",
+    "Weight": "2 lb",
+    "Cost": "10 gp",
+    "Source": "PHB",
+    "Notes": "Incendiary oil, thrown as a grenadelike missile rather than burned for light. Distinct from the existing Oil, Flask (1 pint) record, which the PHB equipment table does not price, and from lamp oil at 6 cp. ATTRIBUTED TO PHB and checked against a photograph of the PHB Tack and Harness / Miscellaneous Equipment tables, August 2026."
   }
 ]
