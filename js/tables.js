@@ -3205,7 +3205,14 @@ const THIEF_ARMOR_ADJUSTMENTS_PHBR2 = {
   brigandine_splint: [-40, -15, -25, -40, -30, -25, -50, 0],
   scale_banded:      [-50, -20, -20, -60, -50, -30, -90, 0],
   plate_mail:        [-75, -40, -40, -80, -75, -50, -95, 0],
-  plate_armor:       [-95, -80, -80, -95, -95, -70, -95, 0]
+  plate_armor:       [-95, -80, -80, -95, -95, -70, -95, 0],
+  // TABLE 28 (p.93), silenced elfin chain. THE DASHES IN THAT TABLE ARE ZEROES,
+  // not omissions, and reading them so is what makes the prose beneath it true:
+  // against the `elven` row above this is 10 BETTER at Move Silently and 5
+  // BETTER at Detect Noise, paid for by 5 WORSE at Pick Pockets and Climb Walls.
+  // The book's "bonuses ... above those which apply for normal elfin chain" are
+  // therefore RELATIVE -- the table prints no positive number anywhere.
+  silenced_elven:    [-25,  -5,  -5,   0, -10,   0, -25, 0]
 };
 
 // ARMOR_TYPES key -> Table 38 column. Footnote 2 files bronze plate under plate
@@ -3217,6 +3224,7 @@ const PHBR2_THIEF_COLUMN = {
   none:        'none',              leather:      'leather',
   studded:     'studded_padded',    padded:       'studded_padded',
   hide:        'hide',              elven_chain:  'elven',
+  silenced_elven: 'silenced_elven',
   ring:        'ring_chain',        chain:        'ring_chain',
   brigandine:  'brigandine_splint', splint:       'brigandine_splint',
   scale:       'scale_banded',      banded:       'scale_banded',
@@ -3358,6 +3366,11 @@ const THIEF_SKILL_MAX = 95;
 // longer, more specific names are tested first so "elven chain mail" cannot be
 // eaten by "chain" and "studded leather" cannot be eaten by "leather".
 const ARMOR_NAME_INFERENCE = [
+  // BEFORE 'elven chain', and both spellings: PHBR2 writes "elfin" throughout
+  // while this file writes "elven", and a record named "Silenced Elven Chain"
+  // must not be eaten by the plain entry below and lose its Table 28 column.
+  ['silenced elfin', 'silenced_elven'],
+  ['silenced elven', 'silenced_elven'],
   ['elven chain',    'elven_chain'],
   ['studded',        'studded'],
   ['bronze plate',   'bronze_plate'],
@@ -3608,6 +3621,11 @@ const ARMOR_TYPES = {
   scale:        { label: 'Scale Mail',        ac:  6, weight: 40, thiefColumn: null,      rangerStealth: false, metal: true  },
   chain:        { label: 'Chain Mail',        ac:  5, weight: 40, thiefColumn: 'chain',   rangerStealth: false, metal: true  },
   elven_chain:  { label: 'Elven Chain Mail',  ac:  5, weight: 15, thiefColumn: 'elven',   rangerStealth: true,  metal: true  },
+  // PHBR2 p.93. thiefColumn stays 'elven' DELIBERATELY: Table 28 is PHBR2's, so
+  // with the book switched off this must behave as ordinary elfin chain under
+  // PHB Table 29. The difference lives in PHBR2_THIEF_COLUMN, which is only
+  // consulted when the armorThiefSkills band is on.
+  silenced_elven: { label: 'Silenced Elfin Chain', ac: 5, weight: 20, thiefColumn: 'elven', rangerStealth: true, metal: true },
   banded:       { label: 'Banded Mail',       ac:  4, weight: 35, thiefColumn: null,      rangerStealth: false, metal: true  },
   splint:       { label: 'Splint Mail',       ac:  4, weight: 40, thiefColumn: null,      rangerStealth: false, metal: true  },
   bronze_plate: { label: 'Bronze Plate Mail', ac:  4, weight: 45, thiefColumn: null,      rangerStealth: false, metal: true  },
@@ -3663,9 +3681,9 @@ const WEARABLE_TYPES = {
 // (= the book's rule), per the "tool ships RAW" principle.
 const CLASS_ARMOR_ALLOWED = {
   wizard:  [],                                                    // no armor at all
-  thief:   ['none', 'leather', 'studded', 'padded', 'elven_chain'],
+  thief:   ['none', 'leather', 'studded', 'padded', 'elven_chain', 'silenced_elven'],
   bard:    ['none', 'padded', 'leather', 'studded', 'ring', 'hide',
-            'brigandine', 'scale', 'chain', 'elven_chain'],        // "up to and including chain mail"
+            'brigandine', 'scale', 'chain', 'elven_chain', 'silenced_elven'], // "up to and including chain mail"
   druid:   ['none', 'leather'],
   cleric:  null,
   warrior: null
@@ -3989,7 +4007,7 @@ const RANGER_STEALTH_CAP = 99;   // Table 18: "maximum attainable"
 // Elven chain qualifies on the numbers -- 15 lb and Move 12 against studded
 // leather's 25 lb and Move 9 -- and the rule's own stated reason (inflexible,
 // too much noise) does not apply to it either.
-const RANGER_STEALTH_MAX_ARMOR = ['none', 'padded', 'leather', 'studded', 'elven_chain'];
+const RANGER_STEALTH_MAX_ARMOR = ['none', 'padded', 'leather', 'studded', 'elven_chain', 'silenced_elven'];
 
 // === PHBR11 Tables 11 and 13: ranger stealth by armor (SUPPLEMENT, OFF by default) ===
 // [Hide in Shadows, Move Silently], percentage points.
@@ -4023,6 +4041,11 @@ const RANGER_STEALTH_ARMOR_CRH = {
   scale:        [-50, -60],
   chain:        [-30, -40],
   elven_chain:  [-10, -10],
+  // PHBR11 predates PHBR2 and prints no row for silenced elfin chain. It
+  // INHERITS elfin chain's figures rather than being improved by Table 28's
+  // relative logic: Table 28 is the only place any book states a difference,
+  // and it speaks to thief skills, not ranger stealth. Chris's ruling, Aug 2026.
+  silenced_elven: [-10, -10],
   splint:       [-30, -40],
   banded:       [-50, -60],
   bronze_plate: [-75, -80],
@@ -5325,10 +5348,11 @@ function getManeuverWeaponRules(weaponName, category) {
 //
 // AC = 10 - (sum of the pieces worn) - shield - Dex - everything else.
 //
-// FOURTEEN TYPES, WHICH IS EXACTLY ARMOR_TYPES MINUS `none` AND `elven_chain`.
-// Elven chain is absent because it is inherently magical, and split magical
-// armour "grants none of its magical bonus" (p.112) -- so there is no number to
-// give it. The UI therefore offers the partial slots ONLY for the types below:
+// FOURTEEN TYPES, WHICH IS ARMOR_TYPES MINUS `none`, `elven_chain` AND
+// `silenced_elven`. Both chains are absent for the same reason: they are
+// inherently magical, and split magical armour "grants none of its magical
+// bonus" (p.112) -- so there is no number to give either. The UI therefore
+// offers the partial slots ONLY for the types below:
 // this is a LOCK rather than a warning, because the combination is not
 // forbidden, it is UNCOMPUTABLE. Warn when a book says so; lock when the model
 // says so.
@@ -6275,7 +6299,7 @@ const CLIMBING_CONDITION_MODIFIERS = { dry: 0, slight: -25, slippery: -40 };
 const CLIMBING_ARMOR_MODIFIERS = {
   none: 0, leather: 0, ring: 0, hide: 0, brigandine: 0,
   padded: -5,  studded: -5,
-  scale: -15,  chain: -15,  elven_chain: -15,
+  scale: -15,  chain: -15,  elven_chain: -15,  silenced_elven: -15,
   banded: -25, splint: -25,
   bronze_plate: -50, plate: -50, field_plate: -50, full_plate: -50
 };
