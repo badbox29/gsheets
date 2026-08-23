@@ -6612,7 +6612,18 @@ const TOOLS_SUBTABS = [
   { key: 'dice',     label: 'Dice',              section: 'dice-rollers-section',   band: 'universal', gated: false },
   { key: 'racial',   label: 'Racial Abilities',  section: 'racial-checks-section',  band: 'race',      gated: true,
     labelFrom: '.racial-checks-title' },
+  // THE THREE THIEF PANELS SIT TOGETHER. All three are gated on the character
+  // being a thief, so all three are band 'class' by the permanence rule above --
+  // Thief Equipment was briefly filed under 'reference', which pushed it past
+  // Climbing, Armor Fitting and Maneuvers and split it from Thief Skills.
   { key: 'thief',    label: 'Thief Skills',      section: 'thief-skills-section',   band: 'class',     gated: true },
+  // Gated: renderThiefEquipment hides the section when the PHBR2 band is off,
+  // and toolsSubtabApplies reads that display to decide whether the tab exists.
+  { key: 'thiefequip', label: 'Thief Equipment', section: 'thief-equip-section',    band: 'class',     gated: true },
+  // WAS NEVER REGISTERED HERE AT ALL. renderToolsSubtabs hides non-active panels
+  // by walking this array, so an unregistered section is never hidden and showed
+  // up underneath every sub-tab. Fixed August 2026.
+  { key: 'thiefrules', label: 'Thief Rules',     section: 'advanced-thief-section', band: 'class',     gated: true },
   { key: 'turning',  label: 'Turn Undead',       section: 'turn-undead-section',    band: 'class',     gated: true },
   // GATED on carrying a qualifying weapon, not on class or race -- at most ten
   // weapons in the book have a breakage rule and most characters carry none.
@@ -6626,9 +6637,6 @@ const TOOLS_SUBTABS = [
   // Gated: the renderer hides the section when the band is off, and
   // toolsSubtabApplies reads that display to decide whether the tab exists.
   { key: 'maneuvers', label: 'Maneuvers',        section: 'maneuvers-section',      band: 'reference', gated: true },
-  // Gated the same way as Maneuvers: renderThiefEquipment hides the section when
-  // the PHBR2 band is off, and toolsSubtabApplies reads that display.
-  { key: 'thiefequip', label: 'Thief Equipment', section: 'thief-equip-section',    band: 'reference', gated: true },
   { key: 'vision',   label: 'Vision & Light',    section: 'vision-light-section',   band: 'reference', gated: false },
   { key: 'cover',    label: 'Cover',             section: 'cover-reference-section',band: 'reference', gated: false },
   { key: 'overland', label: 'Overland',          section: 'overland-section',       band: 'reference', gated: false }
