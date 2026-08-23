@@ -3512,7 +3512,7 @@ function getThiefArmorCategory(root) {
   const data = (typeof ARMOR_TYPES !== 'undefined') ? ARMOR_TYPES[typeKey] : null;
   if (!data) return { key: 'none', typeKey: '', name: worn || 'No armor', illegal: false };
 
-    // Table COVERAGE and CLASS LEGALITY are different questions. They coincide
+  // Table COVERAGE and CLASS LEGALITY are different questions. They coincide
   // under Table 29 and come apart twice: a BARD legally wears ring, hide,
   // brigandine or scale, none of which Table 29 covers; and PHBR2's Table 38
   // gives every type a column, so `!col` would be false everywhere and the
@@ -3528,6 +3528,45 @@ function getThiefArmorCategory(root) {
     return allowed && allowed.indexOf(typeKey) === -1;
   });
   return { key: col || 'padded', typeKey: typeKey, name: worn || data.label, illegal: illegal };
+}
+
+// Does this character have thieving skills at all? THE SINGLE RESOLVER, and the
+// reason it exists: the test is not "is the class Thief". BARDS AND ASSASSINS
+// have thief skills too, multi-class shows if ANY class is a thief type, and
+// dual-class turns on DORMANCY -- a dormant dual-class counts only its new
+// class, an active one either.
+//
+// Extracted from renderThiefSkillsSection in app.js, which owned the only copy,
+// at the point a second and third consumer appeared (the PHBR2 equipment and
+// Chapter 7 panels). Every sibling Tools panel carries its own copy of its class
+// test -- renderTurnUndeadTable has a private isClericClass and its own dual
+// handling -- and three copies of the dormancy rule is how two of them end up
+// disagreeing. Call this; do not re-derive it.
+function characterHasThiefSkills(root) {
+  if (!root) return false;
+  const isThiefClass = c => {
+    const s = (c || '').toLowerCase();
+    return s.includes('thief') || s.includes('bard') || s.includes('assassin');
+  };
+  const charType = (val(root, 'char_type') || 'single').toLowerCase();
+
+  if (charType === 'multi') {
+    return isThiefClass(val(root, 'mc_class1')) ||
+           isThiefClass(val(root, 'mc_class2')) ||
+           isThiefClass(val(root, 'mc_class3'));
+  }
+  if (charType === 'dual') {
+    const originalClass = val(root, 'dc_original_class') || '';
+    const newClass      = val(root, 'dc_new_class') || '';
+    const originalLevel = parseInt(val(root, 'dc_original_level') || 0, 10);
+    const newLevel      = parseInt(val(root, 'dc_new_level') || 1, 10);
+    const isDormant = (root._isDualClassDormant !== undefined)
+      ? root._isDualClassDormant
+      : (newLevel <= originalLevel);
+    return isDormant ? isThiefClass(newClass)
+                     : (isThiefClass(originalClass) || isThiefClass(newClass));
+  }
+  return isThiefClass(val(root, 'clazz'));
 }
 
 // PHBR2 Table 4 (p.24): the character's kit adjustment for the eight thief
