@@ -11821,8 +11821,16 @@ function renderAdvancedThiefRules(root) {
   const sec = root && root.querySelector('.advanced-thief-section');
   if (!sec) return;
 
+  // Band AND class, as with the equipment panel. Chapter 7's mugging rules need
+  // backstab eligibility and its lock and trap rules need lockpicking, both
+  // thief-only. The ANTIDOTE section is the one part any class could use, since
+  // it runs off a Herbalism check -- not enough to show a fighter a panel titled
+  // "Advanced Rules for Thieves". Chris's call, August 2026; if antidotes are
+  // wanted for non-thieves later they are a paragraph that can move out.
   const on = (typeof isSupplementActive === 'function') &&
-             isSupplementActive('phbr2', 'advancedThiefRules');
+             isSupplementActive('phbr2', 'advancedThiefRules') &&
+             (typeof characterHasThiefSkills !== 'function' ||
+              characterHasThiefSkills(root));
   sec.style.display = on ? '' : 'none';
   if (!on || typeof PHBR2_ADVANCED_RULES === 'undefined') return;
 
@@ -11861,8 +11869,19 @@ function renderThiefEquipment(root) {
   const sec = root && root.querySelector('.thief-equip-section');
   if (!sec) return;
 
+  // TWO GATES, and both are necessary. The band says the table is in play; the
+  // class test says this character has anything for it to act on. Every item
+  // here modifies one of the eight thief skills, so without them the readout is
+  // eight em dashes -- which is what a fighter saw.
+  //
+  // characterHasThiefSkills is the shared resolver in tables.js, NOT a local
+  // copy: bards and assassins have thief skills, multi-class counts any class,
+  // and dual-class turns on dormancy. Re-deriving that here would be the third
+  // copy of a rule that has to stay identical in three places.
   const on = (typeof isSupplementActive === 'function') &&
-             isSupplementActive('phbr2', 'equipmentSkillMods');
+             isSupplementActive('phbr2', 'equipmentSkillMods') &&
+             (typeof characterHasThiefSkills !== 'function' ||
+              characterHasThiefSkills(root));
   sec.style.display = on ? '' : 'none';
   if (!on || typeof PHBR2_EQUIPMENT_SKILL_MODS === 'undefined') return;
 
