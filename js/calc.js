@@ -7557,7 +7557,7 @@ function renderProficiencySlots(root) {
   let crossoverCount = 0;
   let bonusSlotTotal = 0;
   nwps.forEach(n => {
-    const cost = getNWPSlotCost(n, allowedGroups);
+    const cost = getNWPSlotCost(n, allowedGroups, root);
     // PHB: additional slots may be spent on a proficiency already known, for
     // +1 to its checks (or, for eight of them, some other benefit). Those
     // slots come out of the same budget and were never being charged.
@@ -8125,7 +8125,7 @@ async function renderNWPBrowser(root) {
     // stored Category -- which charged a thief the out-of-group surcharge for
     // Blind-fighting, Gaming and Set Snares, all of which are Rogue as well as
     // Warrior. getNWPSlotCost already reads nwp.slots || nwp.Slots.
-    const effCost   = getNWPSlotCost(nwp, allowedGroups);
+    const effCost   = getNWPSlotCost(nwp, allowedGroups, root);
     const isCrossover = effCost > baseSlots;
 
     const slotText = isCrossover
@@ -8248,7 +8248,7 @@ function renderNWProficiencies(root) {
     nwpDiv.style.cssText = 'padding:8px;margin-bottom:8px;border:1px solid var(--border);border-radius:4px;background:var(--glass);';
 
     const baseSlots = parseInt(nwp.slots, 10) || 1;
-    const effCost   = getNWPSlotCost(nwp, nwpAllowedGroups);
+    const effCost   = getNWPSlotCost(nwp, nwpAllowedGroups, root);
     // A proficiency that costs nothing must SAY why, or it reads as a bug.
     // GRANTED in words rather than a colour alone: the status vocabulary is full
     // at five tokens, and this is a claim about where a proficiency CAME FROM,
