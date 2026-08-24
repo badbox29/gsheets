@@ -18,8 +18,8 @@
       "burglar"
     ],
     "Recommended Kits": "ALL",
-    "Source": "PHBR2",
-    "Notes": "PHBR2 p.16, Table 1, NEW THIEF PROFICIENCIES -- with a full entry. WAS MIS-SOURCED TO PHBR1, which has no proficiency section at all and no occurrence of the word in 128 pages. Reduces the chance of being surprised by 1 in 10 on a successful check. Marked *** in PHBR2 Table 1: THE DM MAY TREAT THIS AS A GENERAL PROFICIENCY, available to any class at no additional slot cost. THE FOOTNOTE IS A DM OPTION -- \"if the DM wishes\" -- not the book's default. Only three entries carry it: Alertness, Boating and Observation."
+    "Source": "PHBR2, PHBR11",
+    "Notes": "PHBR11 SUPERSEDES PHBR2 ON THIS PROFICIENCY, and says so outright: its entry closes \"(This replaces the description of this proficiency in The Complete Thief's Handbook.)\" THE PHBR11 TEXT IS THEREFORE THE AUTHORITATIVE ONE. A character with this proficiency is exceptionally attuned to his surroundings, able to detect disturbances and notice discrepancies. A SUCCESSFUL PROFICIENCY CHECK REDUCES HIS CHANCE OF BEING SURPRISED BY 1. PRINTED IN BOTH BOOKS with identical values -- PHBR2 p.16 Table 1 and PHBR11 Table 55, both 1 slot, Wisdom, +1. Sources are listed EARLIEST PUBLICATION FIRST: PHBR2 is 1989, PHBR11 is 1993. CATEGORY IS General ON PHBR11'S AUTHORITY, NOT AS PHBR2'S OPTION APPLIED BY DEFAULT. PHBR11 gives each new proficiency a CROSSOVER GROUPS line -- groups named there buy it at normal cost, groups not named pay one additional point -- and for Alertness that line reads \"Crossover Groups: General.\" So every class takes it at 1 slot regardless of PHBR2's optional footnote. This matters mechanically: NWP_TABLE37_GROUPS carries only PHB Table 37 entries, so for a supplement proficiency the Category field feeds getNWPSlotCost directly. Marked *** in PHBR2 Table 1: THE DM MAY TREAT THIS AS A GENERAL PROFICIENCY, available to any class at no additional slot cost. THE FOOTNOTE IS A DM OPTION -- \"if the DM wishes\" -- not the book's default. Only three entries carry it: Alertness, Boating and Observation. WAS EARLIER MIS-SOURCED TO PHBR1, which has no proficiency section at all and no occurrence of the word in 128 pages; the correction to PHBR2 was right but stopped one book short."
   },
   {
     "Proficiency Name": "Ancient History",
@@ -107,7 +107,7 @@
     "Ability Check": "Int / 0",
     "Modifier": "0",
     "Source": "PHB",
-    "Notes": "Cast horoscopes and make predictions, from a subject's birth date and time plus study of the stars and celestial events. THE INSIGHT REACHES ONLY 30 DAYS AHEAD and is vague at best. On a successful check the astrologer foresees a GENERAL EVENT -- a great battle, a friend lost, a new friendship made -- and the DM decides the exact prediction from his intentions for the next few sessions. THE PREDICTION DOES NOT GUARANTEE THE RESULT; it indicates a potential one. A FAILED CHECK YIELDS NO INFORMATION, EXCEPT ON A NATURAL 20, WHICH MAKES THE PREDICTION WILDLY INACCURATE. CHARACTERS WITH ASTROLOGY GAIN +1 TO ALL NAVIGATION PROFICIENCY CHECKS, PROVIDED THE STARS CAN BE SEEN -- the mechanical effect most likely to come up in play, and the reason this is worth a slot to a traveller. The proficiency needs preparation and advance knowledge from the DM, so it is permissible for him to avoid the question, though not all the time; a player is well advised to ask at the END of a session and let the DM answer next time. PHBR2 p.16 LISTS ASTROLOGY AMONG THE PROFICIENCIES A THIEF MAY TAKE (Table 1, NEW THIEF PROFICIENCIES) BUT DESCRIBES IT NOWHERE -- it is the only entry in that column with no section of its own and no line in the book's contents. PHBR1 likewise only references it. THE PHB ENTRY IS THEREFORE AUTHORITATIVE and SOURCE STAYS PHB, because PHBR2 adds availability, not the proficiency -- the same treatment already given to Navigation, Survival, Tracking and Reading/Writing. Chris's ruling, August 2026."
+    "Notes": "Cast horoscopes and make predictions. Not always accurate."
   },
   {
     "Proficiency Name": "Begging",
@@ -167,7 +167,7 @@
       "smuggler"
     ],
     "Source": "PHBR2, PHBR11",
-    "Notes": "PRINTED IN BOTH BOOKS, with identical values: PHBR2 p.17 (1 slot, Wisdom, +1) and PHBR11 Ch.5. Sources are listed EARLIEST PUBLICATION FIRST -- PHBR2 is 1989, PHBR11 is 1993. Needed to guide a boat down a rapid stream or to reduce the dangers of capsizing a canoe or kayak; a proficient character can also ensure a boat is propelled at its maximum speed. DISTINCT FROM NAVIGATION AND SEAMANSHIP, which apply to ships on oceans, seas or at least large lakes, rather than small craft on smaller lakes and rivers. Marked *** in PHBR2 Table 1: THE DM MAY TREAT THIS AS A GENERAL PROFICIENCY, available to any class at no additional slot cost. THE FOOTNOTE IS A DM OPTION -- \"if the DM wishes\" -- not the book's default. Only three entries carry it: Alertness, Boating and Observation."
+    "Notes": "PRINTED IN BOTH BOOKS, with identical values: PHBR2 p.17 (1 slot, Wisdom, +1) and PHBR11 Ch.5. Sources are listed EARLIEST PUBLICATION FIRST -- PHBR2 is 1989, PHBR11 is 1993. Needed to guide a boat down a rapid stream or to reduce the dangers of capsizing a canoe or kayak; a proficient character can also ensure a boat is propelled at its maximum speed. DISTINCT FROM NAVIGATION AND SEAMANSHIP, which apply to ships on oceans, seas or at least large lakes, rather than small craft on smaller lakes and rivers. Marked *** in PHBR2 Table 1: the DM may treat this as a GENERAL proficiency, available to any class at no additional slot cost."
   },
   {
     "Proficiency Name": "Bowyer/Fletcher",
@@ -646,7 +646,7 @@
       "smuggler"
     ],
     "Source": "PHBR2",
-    "Notes": "PHBR2 p.19. Characters with this proficiency have cultivated exceptionally acute powers of observation. THE DM MAY ASK FOR A CHECK, OR SECRETLY ROLL IT HIMSELF, any time there is something subtly askew. HE MAY ALSO ALLOW A CHARACTER WITH OBSERVATION TO INCREASE HIS CHANCE OF FINDING SECRET OR CONCEALED DOORS BY 1 IN 6. THE PROFICIENCY COVERS ALL THE SENSES, not sight alone. The book's example: questioning a man claiming to be a craftsman who worked on the palace, a successful check reveals that his hands are in beautiful condition and entirely lacking callouses -- from which the character may deduce he is posing, and may be a con man or a spy. Marked *** in PHBR2 Table 1: THE DM MAY TREAT THIS AS A GENERAL PROFICIENCY, available to any class at no additional slot cost. THE FOOTNOTE IS A DM OPTION -- \"if the DM wishes\" -- not the book's default. Only three entries carry it: Alertness, Boating and Observation."
+    "Notes": "Notice small details and remember them accurately"
   },
   {
     "Proficiency Name": "Persuasion",
