@@ -1979,7 +1979,7 @@ const SHEET_HTML = `
           <textarea data-field="family_history" style="min-height:80px"></textarea>
         </section>
 
-        <!-- Allies, Contacts & Organizations -->
+        <!-- Allies & Contacts -->
         <section class="section">
           <h3>Allies & Contacts</h3>
           <textarea data-field="alliances"></textarea>
@@ -1993,11 +1993,11 @@ const SHEET_HTML = `
 		
         </div>
 
-        <div class="section-group-head">
-          <span class="grp-name">Organizations</span>
-          <span class="grp-rule"></span>
-        </div>
         <div class="section-group">
+          <div class="section-group-head">
+            <span class="grp-name">Organizations</span>
+            <span class="grp-rule"></span>
+          </div>
 
         <!-- ORGANIZATIONS. Guilds, orders, colleges, companies, temples.
              PHBR2 Chapter 4 (pp.51-56) leaves every quantity here deliberately
@@ -2024,7 +2024,7 @@ const SHEET_HTML = `
              cost us in the modals. -->
         <section class="section organizations-section">
           <p class="prose org-empty-banner">
-            Guilds, orders, colleges, companies and temples \u2014 anything the
+            Guilds, orders, colleges, companies and temples &mdash; anything the
             character belongs to that has rules, dues or expectations attached.
             Loose affiliations are better recorded under Allies &amp; Contacts
             above. Click <strong>+ Organization</strong> to add one.
