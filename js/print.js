@@ -2259,6 +2259,80 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     });
   }
 
+  // === ORGANIZATIONS (optional) ===
+  // A LIST OF RECORDS, not label/value pairs, so it gets its own table rather
+  // than joining DETAIL_FIELDS above. Rides the `details` toggle: it is the
+  // same kind of content and a separate tick-box for a section most characters
+  // leave empty would be one more thing to explain.
+  //
+  // ORDER IS THE SCREEN'S ORDER -- active first, at risk next, former last --
+  // because a character hunted by a guild he betrayed needs that visible, and
+  // one he resigned from ten levels ago does not. Re-derived here rather than
+  // read off the DOM: print.js takes the saved record, never the rendered page.
+  const ORG_PRINT_TONE = { good: 0, risk: 1, bad: 1, past: 2 };
+  const ORG_PRINT_LABELS = {
+    active: 'Active', apprentice: 'Apprentice', associate: 'Associate / Honorary',
+    infiltrating: 'Infiltrating', indebted: 'Dues owed', betrayed: 'Betrayed them',
+    hunted: 'Hunted / Marked', lapsed: 'Lapsed', resigned: 'Resigned',
+    expelled: 'Expelled'
+  };
+  const ORG_PRINT_TONES = {
+    active: 'good', apprentice: 'good', associate: 'good',
+    infiltrating: 'risk', indebted: 'risk', betrayed: 'bad', hunted: 'bad',
+    lapsed: 'past', resigned: 'past', expelled: 'past'
+  };
+  const orgList = ((sheet && sheet.organizations) || [])
+    .map((o, i) => ({ o: o, i: i }))
+    .sort((a, b) => {
+      const ta = ORG_PRINT_TONE[ORG_PRINT_TONES[a.o.status] || 'good'];
+      const tb = ORG_PRINT_TONE[ORG_PRINT_TONES[b.o.status] || 'good'];
+      return ta !== tb ? ta - tb : a.i - b.i;
+    })
+    .map(x => x.o);
+
+  const showOrganizations = !!opts.details && orgList.length > 0;
+  const organizationBlocks = [];
+
+  if (showOrganizations) {
+    const orgRows = orgList.map(o => {
+      // Composed into one cell rather than given seven columns of their own:
+      // most are blank on most records, and seven near-empty columns would
+      // waste the width that the name and status actually need.
+      const bits = [];
+      if (String(o.type || '').trim())   bits.push(String(o.type).trim());
+      if (String(o.rank || '').trim())   bits.push('Rank: ' + String(o.rank).trim());
+      if (String(o.house || '').trim())  bits.push(String(o.house).trim());
+      if (String(o.leader || '').trim()) bits.push('Led by ' + String(o.leader).trim());
+      if (String(o.dues || '').trim())   bits.push('Dues: ' + String(o.dues).trim());
+      if (String(o.cut || '').trim())    bits.push('Cut: ' + String(o.cut).trim());
+      if (String(o.fence || '').trim())  bits.push('Fence: ' + String(o.fence).trim());
+      const obl = String(o.obligations || '').trim();
+      if (obl) bits.push(obl);
+      return [
+        cell(String(o.name || '').trim() || ' ', 6, { bold: true }),
+        cell(ORG_PRINT_LABELS[o.status] || 'Active', 6, { margin: [0, 2, 0, 2] }),
+        cell(bits.length ? bits.join(' \u00B7 ') : ' ', 6, { margin: [0, 2, 0, 2] })
+      ];
+    });
+
+    organizationBlocks.push({
+      table: {
+        headerRows: 1,
+        widths: ['24%', '16%', '60%'],
+        body: [
+          [
+            hdrCell('Organization', 6),
+            hdrCell('Standing', 6),
+            hdrCell('Details', 6)
+          ],
+          ...orgRows
+        ]
+      },
+      layout: gridLayout,
+      margin: [0, 0, 0, 5]
+    });
+  }
+
   // === BACKGROUND / HISTORY (optional) ===
   // Off by default in the modal: it is prose the player wrote for themselves,
   // not something anyone reads mid-session. Ticked on, it prints verbatim
@@ -4004,6 +4078,13 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       // === CHARACTER DETAILS (optional) ===
       ...optional(showDetails,
         printSection('CHARACTER DETAILS', ...detailBlocks)
+      ),
+
+      // === ORGANIZATIONS (optional) ===
+      // Between Details and Background deliberately: it is recorded fact like
+      // the block above it, not prose like the one below.
+      ...optional(showOrganizations,
+        printSection('ORGANIZATIONS', ...organizationBlocks)
       ),
 
       // === BACKGROUND / HISTORY (optional) ===
