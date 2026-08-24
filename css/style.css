@@ -1978,6 +1978,52 @@
 	.item.follower.st-deceased .fol-r1 > input { color: var(--muted); text-decoration: line-through; }
 	.item.follower.st-retired  .fol-r1 > input { color: var(--muted); }
 
+	/* ORGANIZATION TABS (Details tab).
+	   Same --st-* vocabulary as the follower rails above, and deliberately so:
+	   a colour that means "gone" on one card must not mean something else two
+	   tabs away. Three tones, not ten -- the status list has ten entries but
+	   they collapse to good / at-risk / former, because --st-* is a fixed,
+	   colour-blindness-checked set and inventing a fourth shade would break the
+	   promise that the legend reads the same in every theme.
+
+	   COLOUR IS NEVER THE ONLY SIGNAL. Sort order carries it too (active first,
+	   at-risk next, former last), the tab's title attribute names the status in
+	   words, and .st-past strikes the name through. Someone who cannot separate
+	   the amber from the red still gets three independent tells. */
+	.org-tab {
+	  padding: 5px 12px;
+	  border: 1px solid var(--border);
+	  border-bottom: 3px solid transparent;
+	  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+	  background: var(--glass);
+	  color: var(--text);
+	  font-size: 12px;
+	  white-space: nowrap;
+	  cursor: pointer;
+	}
+	.org-tab:hover { background: var(--field); }
+	.org-tab.active {
+	  border-color: var(--accent);
+	  background: var(--field);
+	  font-weight: 600;
+	}
+
+	/* The bottom border is the status rail, so the active tab keeps its own
+	   accent on the other three sides and still shows what it is. */
+	.org-tab.st-good { border-bottom-color: var(--st-available); }
+	.org-tab.st-risk { border-bottom-color: var(--st-lost); }
+	.org-tab.st-bad  { border-bottom-color: var(--st-forbidden); }
+	.org-tab.st-past {
+	  border-bottom-color: var(--muted);
+	  color: var(--muted);
+	  text-decoration: line-through;
+	}
+	.org-tab.st-past.active { color: var(--text); }
+
+	/* The strip scrolls rather than wrapping, but the scrollbar itself is noise
+	   at this size -- five organizations is already an unusual character. */
+	.org-tabs-wrapper { scrollbar-width: thin; }
+
 	/* A labelled figure on the summary line. The label is text, the value is the
 	   real input, sized to its content. */
 	.item.follower .fol-stat {
