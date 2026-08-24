@@ -3299,7 +3299,37 @@ const PHBR2_EQUIPMENT_SKILL_MODS = [
   { item: 'Climbing Dagger', page: 'p.95', when: 'Climbing \u2014 at the DM\u2019s option',
     mods: { climbWalls: 10 } },
   { item: 'Grappling Iron and Rope', page: 'p.95', when: 'Climbing the wall by the rope',
-    mods: { climbWalls: 40 } }
+    mods: { climbWalls: 40 } },
+
+  // === Chapter 6, The Arts of Deception (p.109) ===
+  //
+  // NOT EQUIPMENT, but they belong here: both modify PICK POCKETS, which is what
+  // this table is for. The book files them under swindles because that is the
+  // activity; the app files them by the skill they touch, because that is what a
+  // player is looking at when he needs them. `group` keeps the two runs apart in
+  // the panel.
+  //
+  // A thief has no way to learn either rule otherwise -- neither is attached to
+  // an item he can buy, so nothing on the sheet would ever mention them.
+  //
+  // Anyone making a GAMBLING proficiency check "will probably be wise to the
+  // swindler's tricks" (p.109) -- the other side of both entries.
+  { group: 'Swindles', item: 'Rigging a die throw', page: 'p.109',
+    when: 'Throwing a die so it lands as he wishes',
+    mods: { pickPockets: -40 },
+    note: 'ONE ROLL PER DIE, so rigging a pair of dice is two rolls at -40 each. ' +
+          'The largest single modifier in the book. Loaded dice -- imperceptibly ' +
+          'rounded faces, weighted pips -- are a separate thing and need no roll; ' +
+          'this is the true master throwing an honest die where he wants it.' },
+  // NO NUMBER, and that is the whole point: the rule is that a roll is required
+  // at all, which is not something a player would think to ask for. Rendered as
+  // a reference line rather than a tick-box, since there is nothing to add.
+  { group: 'Swindles', item: 'Shell game \u2014 switching the pea', page: 'p.109',
+    when: 'Palming the pea by sleight of hand', reference: true,
+    note: 'Needs a SUCCESSFUL PICK POCKETS ROLL, unmodified, to go unnoticed. ' +
+          'The swindle itself runs on a confederate in the crowd -- a "capper" who ' +
+          'wins first to draw the real target in; the roll only covers the moment ' +
+          'the pea leaves the shell.' }
 ];
 
 // Surface labels for the panel's selector, in the order pp.95-96 present them.
