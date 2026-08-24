@@ -1984,6 +1984,13 @@ const SHEET_HTML = `
           <h3>Allies & Contacts</h3>
           <textarea data-field="alliances"></textarea>
         </section>
+
+		<!-- Background History -->
+        <section class="section">
+          <h3>Background History</h3>
+          <textarea data-field="background_history" style="min-height:120px"></textarea>
+        </section>
+		
         </div>
 
         <div class="section-group-head">
@@ -2030,13 +2037,7 @@ const SHEET_HTML = `
           <button type="button" class="ghost add-organization" style="margin-bottom:12px;">+ Organization</button>
           <div class="org-panel"></div>
         </section>
-
-        <!-- Background History -->
-        <section class="section">
-          <h3>Background History</h3>
-          <textarea data-field="background_history" style="min-height:120px"></textarea>
-        </section>
-        </div>
+		</div>
       </main>
     </div>
 
