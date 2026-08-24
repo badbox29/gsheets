@@ -12071,10 +12071,30 @@ function renderThiefEquipment(root) {
   const list = sec.querySelector('.thief-equip-list');
   if (list) {
     const surfLabel = (SURF.find(s => s.key === surface) || {}).label || surface;
-    list.innerHTML = PHBR2_EQUIPMENT_SKILL_MODS.map((e) => {
+    // GROUPED, in first-appearance order rather than a hardcoded list, so a new
+    // group is a data change and nothing else. An entry with no `group` is
+    // Equipment -- the fifteen Chapter 5 rows predate the field and must not
+    // need editing to keep working.
+    const seen = [];
+    PHBR2_EQUIPMENT_SKILL_MODS.forEach(e => {
+      const g = e.group || 'Equipment';
+      if (seen.indexOf(g) === -1) seen.push(g);
+    });
+    let lastGroup = null;
+    list.innerHTML = seen.map(g => PHBR2_EQUIPMENT_SKILL_MODS
+      .filter(e => (e.group || 'Equipment') === g)
+      .map((e) => {
       const c = contribution(e);
       const bits = KEYS.filter(k => c[k]).map(k => sgn(c[k]) + ' ' + LABELS[KEYS.indexOf(k)]);
-      const dead = !bits.length;
+      // A REFERENCE ROW IS NEVER DEAD. `dead` means "contributes nothing here",
+      // which greys the row and prints "no effect here" -- actively wrong for
+      // the shell game, where the rule IS that a roll is required. It has no
+      // number because the book gives it none, not because the number is zero.
+      const dead = !e.reference && !bits.length;
+      const head = (lastGroup === g) ? '' :
+        '<div style="font-size:11px;font-weight:600;color:var(--accent-light);' +
+        'margin:10px 0 2px;">' + escapeHtml(g) + '</div>';
+      lastGroup = g;
       // A surface item that grants nothing here must SAY so. Dropping the climb
       // figure from the summary is not enough -- clawed gloves still show their
       // move silently penalty, so the row looks unchanged, which is exactly how
@@ -12082,10 +12102,16 @@ function renderThiefEquipment(root) {
       // that -5 whatever the surface and are therefore never dead.
       const noClimb = !!e.surfaceMods && !e.surfaceMods[surface];
       const checked = sec._teOn[e.item] ? ' checked' : '';
-      return '<label class="te-row" style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;' +
+      // A reference row gets a bullet where the checkbox would be, so the column
+      // still lines up and nobody hunts for a tick-box that was never there.
+      return head +
+        '<label class="te-row" style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;' +
              'border-bottom:1px solid var(--border);' + (dead ? 'opacity:.55;' : '') + '">' +
-        '<input type="checkbox" class="ephemeral te-item" data-te="' + escapeHtml(e.item) +
-          '" style="margin-top:3px;"' + checked + '>' +
+        (e.reference
+          ? '<span style="width:13px;flex-shrink:0;margin-top:3px;color:var(--muted);' +
+            'text-align:center;">\u2022</span>'
+          : '<input type="checkbox" class="ephemeral te-item" data-te="' + escapeHtml(e.item) +
+            '" style="margin-top:3px;"' + checked + '>') +
         '<span style="flex:1;min-width:0;">' +
           '<span style="font-size:12px;">' + escapeHtml(e.item) + '</span> ' +
           '<span style="font-size:11px;color:var(--muted);">' + escapeHtml(e.page) + '</span>' +
@@ -12101,13 +12127,16 @@ function renderThiefEquipment(root) {
           '</span>' +
         '</span>' +
       '</label>';
-    }).join('');
+      }).join('')
+    ).join('');
   }
 
-  // Sum the ticked items.
+  // Sum the ticked items. A `reference` row has no checkbox and no numbers, so
+  // it can never be ticked -- the guard is belt and braces against a stale
+  // _teOn entry surviving a data change.
   const delta = [0, 0, 0, 0, 0, 0, 0, 0];
   PHBR2_EQUIPMENT_SKILL_MODS.forEach(e => {
-    if (!sec._teOn[e.item]) return;
+    if (e.reference || !sec._teOn[e.item]) return;
     const c = contribution(e);
     KEYS.forEach((k, i) => { if (c[k]) delta[i] += c[k]; });
   });
