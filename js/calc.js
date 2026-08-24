@@ -9019,6 +9019,7 @@ PROF_ABILITY_BUILDERS['tumbling'] = function (root, entry, panelEl) {
 // against the character's own level and height so nothing is worked out at the
 // table. No proficiency check is mentioned for jumping itself.
 PROF_ABILITY_BUILDERS['jumping'] = function (root, entry, panelEl) {
+  const st = getProfAbilityState(root, 'jumping');
   const lvl = paLevel(root);
   const half = Math.floor(lvl / 2);
   const h = paHeightInches(root);
@@ -9047,8 +9048,64 @@ PROF_ABILITY_BUILDERS['jumping'] = function (root, entry, panelEl) {
       '<span style="color:var(--muted);">' + (j.c ? j.c + ' \u00B7 ' : '') + escapeHtml(j.note) + '</span>' +
       '</div>').join('') +
     '</div>' +
+        // POLE LENGTH IS AN INPUT, because every vault figure derives from it and
+    // nothing else: span is 1.5x the pole, the height cleared IS the pole, and
+    // the feet-landing obstacle is half of it. Prose made the player do three
+    // multiplications at the table for a number the panel already had.
+    //
+    // EPHEMERAL, like every other panel condition here -- which pole he happens
+    // to be holding is true of the moment, not of the character.
+    //
+    // The legal range is ADVISORY. A pole outside 4-10 feet longer than his
+    // height still computes; it just says so. Warn, never block.
+    (function () {
+      const trim = n => String(Number(n.toFixed(2)));
+      const poleMin = h ? (h + 48) / 12 : null;
+      const poleMax = h ? (h + 120) / 12 : null;
+      const poleVal = parseFloat(st.pole);
+      const pole = (!isNaN(poleVal) && poleVal > 0) ? poleVal : null;
+      const outOfRange = (pole !== null && poleMin !== null) &&
+                         (pole < poleMin - 0.001 || pole > poleMax + 0.001);
+
+      return '<div style="font-size:11px;margin-bottom:12px;">' +
+        '<div style="font-weight:600;margin-bottom:4px;">Pole vault</div>' +
+        '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">' +
+          '<input type="number" class="jmp-pole" min="0" step="0.5" ' +
+            'value="' + (pole !== null ? trim(pole) : '') + '" placeholder="ft" ' +
+            'style="width:64px;flex-shrink:0;padding:2px 4px;font-size:11px;">' +
+          '<span>Pole length' +
+            (poleMin !== null
+              ? ' <span style="color:var(--muted);">(' + trim(poleMin) + ' to ' +
+                trim(poleMax) + ' ft for his height)</span>'
+              : ' <span style="color:var(--muted);">(set Height to see his legal range)</span>') +
+          '</span>' +
+        '</div>' +
+        (pole !== null
+          ? '<div style="display:flex;gap:8px;margin-bottom:4px;flex-wrap:wrap;">' +
+              '<span style="width:150px;flex-shrink:0;"><strong>Distance spanned</strong></span>' +
+              '<span style="color:var(--accent-light);width:110px;flex-shrink:0;">' +
+                trim(pole * 1.5) + ' ft</span>' +
+              '<span style="color:var(--muted);">1\u00BD times the pole.</span></div>' +
+            '<div style="display:flex;gap:8px;margin-bottom:4px;flex-wrap:wrap;">' +
+              '<span style="width:150px;flex-shrink:0;"><strong>Height cleared</strong></span>' +
+              '<span style="color:var(--accent-light);width:110px;flex-shrink:0;">' +
+                trim(pole) + ' ft</span>' +
+              '<span style="color:var(--muted);">Equal to the pole.</span></div>' +
+            '<div style="display:flex;gap:8px;margin-bottom:4px;flex-wrap:wrap;">' +
+              '<span style="width:150px;flex-shrink:0;"><strong>Land on his feet</strong></span>' +
+              '<span style="color:var(--accent-light);width:110px;flex-shrink:0;">up to ' +
+                trim(pole / 2) + ' ft</span>' +
+              '<span style="color:var(--muted);">Only over an obstacle no higher than half the pole.</span></div>' +
+            (outOfRange
+              ? '<div style="color:var(--warning, #e0a34a);margin-top:4px;">A pole for this ' +
+                'character should be ' + trim(poleMin) + ' to ' + trim(poleMax) + ' ft \u2014 4 to 10 ' +
+                'feet longer than his height. Figures above still apply if your DM allows it.</div>'
+              : '')
+          : '<div style="color:var(--muted);">Enter a pole length for the vault figures.</div>') +
+        '</div>';
+    })() +
     '<details class="disclosure" style="font-size:11px;">' +
-    '<summary>pole vault</summary>' +
+    '<summary>pole vault rules</summary>' +
     '<div style="color:var(--muted);margin-top:6px;line-height:1.5;">' +
     'Requires at least a 30-foot running start. The pole must be 4 to 10 feet longer ' +
     'than the character\u2019s height' + (h ? ' \u2014 for him, ' + ft(h + 48) + ' to ' + ft(h + 120) + ' ft' : '') + '. ' +
@@ -9059,6 +9116,12 @@ PROF_ABILITY_BUILDERS['jumping'] = function (root, entry, panelEl) {
     'The book\u2019s example: with a 12-foot pole he could vault through a window 12 feet up, ' +
     'land on his feet in an opening 6 feet up, or cross a moat 18 feet wide.' +
     '</div></details>';
+
+  const poleEl = panelEl.querySelector('.jmp-pole');
+  if (poleEl) poleEl.onchange = () => {
+    st.pole = poleEl.value;
+    renderProficiencyAbilities(root);
+  };
 };
 
 // --- Tightrope Walking (PHB Ch.5) ---
