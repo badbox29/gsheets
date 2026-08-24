@@ -2032,42 +2032,7 @@ const SHEET_HTML = `
           <div class="org-panel"></div>
         </section>
 
-        <!-- Thieves' Guild. PHBR2 Chapter 4 (pp.51-56) leaves every quantity
-             here deliberately unfixed -- dues "will be variable", the guild's
-             cut "will again be variable", and fences "never pay more than a
-             fraction of the market price" with no fraction given. That is
-             exactly why the sheet is where they belong: the DM settles them
-             once at his table, and the player then needs them permanently.
-
-             UNGATED. The book has a Non-Thief Guildmembers section (p.73) and
-             guilds recruit mages, priests and fighters as specialists, so a
-             fighter working as guild muscle wants this block as much as a
-             cutpurse does. Empty fields cost an unaffiliated character nothing.
-
-             Guildmaster gets its own line because Chapter 4 makes a point of
-             members frequently NOT knowing who it is -- "unknown" is a real and
-             useful answer to record. -->
-        <section class="section">
-          <h3>Thieves' Guild</h3>
-          <div class="row">
-            <div class="col"><label>Guild Name</label><input data-field="guild_name" type="text"></div>
-            <div class="col"><label>Rank / Standing</label><input data-field="guild_rank" type="text"></div>
-          </div>
-          <div class="row" style="margin-top:8px">
-            <div class="col"><label>Guildhouse / Territory</label><input data-field="guild_house" type="text"></div>
-            <div class="col"><label>Guildmaster</label><input data-field="guild_master" type="text"></div>
-          </div>
-          <div class="row" style="margin-top:8px">
-            <div class="col"><label>Dues</label><input data-field="guild_dues" type="text"></div>
-            <div class="col"><label>Guild's Cut</label><input data-field="guild_cut" type="text"></div>
-          </div>
-          <label style="margin-top:8px">Fence</label>
-          <input data-field="guild_fence" type="text">
-          <label style="margin-top:8px">Obligations & Duties</label>
-          <textarea data-field="guild_obligations" style="min-height:80px"></textarea>
-        </section>
-
-			<!-- Background History -->
+        <!-- Background History -->
         <section class="section">
           <h3>Background History</h3>
           <textarea data-field="background_history" style="min-height:120px"></textarea>
