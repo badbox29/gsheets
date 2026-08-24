@@ -8985,6 +8985,16 @@ PROF_ABILITY_BUILDERS['tumbling'] = function (root, entry, panelEl) {
   const ok  = (cat === '' || cat === 'Unencumbered' || cat === 'Light');
   const c   = getNWPCheckTarget(root, entry.nwp);
 
+  // PHBR2 Table 37 REPLACES the PHB's flat +4 and +2, which is safe because its
+  // No Armor column IS +4 and +2 -- the same relationship Table 38's first three
+  // columns have to Table 29. With the band off these stay the book's figures.
+  const acro = (typeof getAcrobaticArmorMods === 'function')
+    ? getAcrobaticArmorMods(root) : null;
+  const defAC  = acro ? acro.row.tumbleDef : 4;
+  const atkAdj = acro ? acro.row.tumbleAtk : 2;
+  const fallMod = (acro && typeof acro.row.falling === 'number') ? acro.row.falling : 0;
+  const aName = acro ? ' \u00B7 ' + escapeHtml(acro.name) : '';
+
   const row = (name, fig, note) =>
     '<div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">' +
       '<span style="width:150px;flex-shrink:0;"><strong>' + escapeHtml(name) + '</strong></span>' +
@@ -8999,13 +9009,16 @@ PROF_ABILITY_BUILDERS['tumbling'] = function (root, entry, panelEl) {
              : 'Tumbling can only be performed while burdened with light encumbrance ' +
                'or less. Drop weight to use any of the below.') +
     '<div style="font-size:11px;' + (ok ? '' : 'opacity:.5;') + '">' +
-    row('Defensive', '+4 AC',
+    row('Defensive', (defAC ? '+' + defAC + ' AC' : 'none') + aName,
         'Against attacks directed SOLELY at him, in any round of combat, provided he ' +
         'has the INITIATIVE and FOREGOES ALL ATTACKS that round. Situational, so it is ' +
         'not added to the Armor Class field \u2014 claim it at the table for the round.') +
-    row('Attack', '+2 to hit', 'In UNARMED combat only.') +
+    row('Attack', (atkAdj ? '+' + atkAdj + ' to hit' : 'none') + aName,
+        'In UNARMED combat only.' +
+        (acro && !atkAdj ? ' This armor removes the bonus entirely.' : '')) +
     (c.hasCheck
-      ? row('Falling', 'roll ' + c.target + ' or less',
+      ? row('Falling', 'roll ' + (c.target + fallMod) + ' or less' +
+                       (fallMod ? ' (' + c.target + ' ' + fallMod + ')' : ''),
             'One proficiency check on ' + escapeHtml(c.abilityLabel) + '. On a success: ' +
             'NO damage from a fall of 10 feet or less, and HALF damage from a fall of ' +
             '60 feet or less. Falls from greater heights do normal damage however the ' +
@@ -9027,13 +9040,28 @@ PROF_ABILITY_BUILDERS['jumping'] = function (root, entry, panelEl) {
   const capBroad = h ? ft(h * 6) + ' ft' : null;
   const capHigh  = h ? ft(h * 1.5) + ' ft' : null;
 
+  // PHBR2 Table 37. The jump rows adjust a DISTANCE IN FEET, so they are shown
+  // as a separate term rather than folded into the dice expression -- "2d6 + 5
+  // ft, armor -15 ft" stays readable where "2d6 - 10 ft" does not.
+  const acro = (typeof getAcrobaticArmorMods === 'function')
+    ? getAcrobaticArmorMods(root) : null;
+  const aj = k => (acro && typeof acro.row[k] === 'number') ? acro.row[k] : 0;
+  const trimFt = n => String(Number(n.toFixed(2)));
+  const armorNote = k => {
+    const v = aj(k);
+    if (!v) return null;
+    return 'Armor (' + escapeHtml(acro.name) + ') ' + (v > 0 ? '+' : '') + trimFt(v) + ' ft';
+  };
+
   const jumps = [
     { n: 'Running broad jump', f: `2d6 + ${lvl} ft`,  c: capBroad ? `max ${capBroad} (6\u00D7 height)` : null,
-      note: 'Needs a 20-foot running start.' },
+      a: armorNote('broadRun'), note: 'Needs a 20-foot running start.' },
     { n: 'Running high jump',  f: `1d3 + ${half} ft`, c: capHigh ? `max ${capHigh} (1\u00BD\u00D7 height)` : null,
-      note: 'Needs a 20-foot running start.' },
-    { n: 'Standing broad jump', f: `1d6 + ${half} ft`, c: null, note: 'No run-up.' },
-    { n: 'Standing high jump',  f: '3 ft',             c: null, note: 'No run-up. A flat figure.' }
+      a: armorNote('highRun'), note: 'Needs a 20-foot running start.' },
+    { n: 'Standing broad jump', f: `1d6 + ${half} ft`, c: null,
+      a: armorNote('broadStand'), note: 'No run-up.' },
+    { n: 'Standing high jump',  f: '3 ft',             c: null,
+      a: armorNote('highStand'), note: 'No run-up. A flat figure.' }
   ];
 
   panelEl.innerHTML =
@@ -9045,9 +9073,21 @@ PROF_ABILITY_BUILDERS['jumping'] = function (root, entry, panelEl) {
       '<div style="display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap;">' +
       '<span style="width:150px;flex-shrink:0;"><strong>' + escapeHtml(j.n) + '</strong></span>' +
       '<span style="color:var(--accent-light);width:110px;flex-shrink:0;">' + j.f + '</span>' +
-      '<span style="color:var(--muted);">' + (j.c ? j.c + ' \u00B7 ' : '') + escapeHtml(j.note) + '</span>' +
+      '<span style="color:var(--muted);">' + (j.c ? j.c + ' \u00B7 ' : '') + escapeHtml(j.note) +
+        (j.a ? '<br><span style="color:var(--warning, #e0a34a);">' + j.a + '</span>' : '') +
+      '</span>' +
       '</div>').join('') +
     '</div>' +
+    // p.114, and it is NOT a floor at zero: "Should the resulting total be less
+    // than zero, the character fails the acrobatic feat entirely (probably by
+    // tripping and landing flat on his face)." Clamping would have turned a
+    // pratfall into standing still.
+    (acro
+      ? '<div style="font-size:11px;color:var(--muted);margin-bottom:12px;">' +
+        'A jump whose adjusted distance comes out <strong style="color:var(--text);">below zero ' +
+        'is a failed attempt</strong>, not a jump of no distance \u2014 the character trips and ' +
+        'lands flat on his face.</div>'
+      : '') +
         // POLE LENGTH IS AN INPUT, because every vault figure derives from it and
     // nothing else: span is 1.5x the pole, the height cleared IS the pole, and
     // the feet-landing obstacle is half of it. Prose made the player do three
@@ -9066,6 +9106,20 @@ PROF_ABILITY_BUILDERS['jumping'] = function (root, entry, panelEl) {
       const pole = (!isNaN(poleVal) && poleVal > 0) ? poleVal : null;
       const outOfRange = (pole !== null && poleMin !== null) &&
                          (pole < poleMin - 0.001 || pole > poleMax + 0.001);
+      // PHBR2 p.114 CREATES a check the PHB does not have: "To successfully get
+      // off the ground in armor bulkier than leather requires a proficiency
+      // check, adjusted, as indicated on Table 37." A NULL poleVault entry means
+      // no check is required at all -- which is why the No Armor column prints a
+      // dash rather than a zero.
+      const pvMod = (acro && typeof acro.row.poleVault === 'number') ? acro.row.poleVault : null;
+      const pvChk = (pvMod !== null && entry && entry.nwp)
+        ? getNWPCheckTarget(root, entry.nwp) : null;
+      // "a pole vaulter with armor heavier or bulkier than studded or padded can
+      // vault no higher than the height of the pole" -- the columns at or beyond
+      // hide, which is where Table 37's own ordering puts the break.
+      const pvCapped = !!acro &&
+        ['hide','ring_chain','brigandine_splint','scale_banded','plate_mail','plate_armor']
+          .indexOf(acro.col) !== -1;
 
       return '<div style="font-size:11px;margin-bottom:12px;">' +
         '<div style="font-weight:600;margin-bottom:4px;">Pole vault</div>' +
@@ -9096,6 +9150,16 @@ PROF_ABILITY_BUILDERS['jumping'] = function (root, entry, panelEl) {
               '<span style="color:var(--accent-light);width:110px;flex-shrink:0;">up to ' +
                 trim(pole / 2) + ' ft</span>' +
               '<span style="color:var(--muted);">Only over an obstacle no higher than half the pole.</span></div>' +
+            (pvMod !== null && pvChk && pvChk.hasCheck
+              ? '<div style="color:var(--warning, #e0a34a);margin-top:4px;">Armor (' +
+                escapeHtml(acro.name) + '): getting off the ground needs a proficiency ' +
+                'check, roll <strong>' + (pvChk.target + pvMod) + ' or less</strong> on ' +
+                escapeHtml(pvChk.abilityLabel) + ' (' + pvChk.target + ' ' + pvMod + ').</div>'
+              : '') +
+            (pvCapped
+              ? '<div style="color:var(--warning, #e0a34a);margin-top:4px;">In this armor he ' +
+                'can vault no higher than the height of the pole.</div>'
+              : '') +
             (outOfRange
               ? '<div style="color:var(--warning, #e0a34a);margin-top:4px;">A pole for this ' +
                 'character should be ' + trim(poleMin) + ' to ' + trim(poleMax) + ' ft \u2014 4 to 10 ' +
@@ -9150,13 +9214,20 @@ PROF_ABILITY_BUILDERS['tightrope walking'] = function (root, entry, panelEl) {
     body = paBox('No check required',
       'Wider than 1 foot needs no check for a proficient character under normal circumstances.');
   } else {
+    // PHBR2 Table 37 armour, when the band is on. Applied OUTSIDE the
+    // Math.min(0, ...) that caps width relief: a balancing rod offsets a narrow
+    // rope, it does not offset a suit of plate mail.
+    const acro = (typeof getAcrobaticArmorMods === 'function')
+      ? getAcrobaticArmorMods(root) : null;
+    const armorPen = (acro && typeof acro.row.tightrope === 'number') ? acro.row.tightrope : 0;
     const relief = slots + (rod ? 2 : 0);
-    const pen = Math.min(0, band.pen + relief) - wind;
+    const pen = Math.min(0, band.pen + relief) - wind + armorPen;
     const target = (c.hasCheck ? c.target : 0) + pen + coop;
     const parts = [];
     if (band.pen) parts.push('Width ' + band.pen);
     if (relief)   parts.push('Reduced by ' + relief + (rod ? ' (rod' + (slots ? ' + slots' : '') + ')' : ' (extra slots)'));
     if (wind)     parts.push('Wind or vibration -' + wind);
+    if (armorPen) parts.push('Armor (' + acro.name + ') ' + armorPen);
     if (coop)     parts.push('Assistance +1');
     body = paBox('Balance check: ' + paFmt(target),
       'One check every 60 feet or part thereof \u00B7 movement 60 ft per round' +
