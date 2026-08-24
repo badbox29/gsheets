@@ -9017,7 +9017,7 @@ PROF_ABILITY_BUILDERS['tumbling'] = function (root, entry, panelEl) {
         'In UNARMED combat only.' +
         (acro && !atkAdj ? ' This armor removes the bonus entirely.' : '')) +
     (c.hasCheck
-      ? row('Falling', 'roll ' + (c.target + fallMod) + ' or less' +
+    ? row('Falling', paFmt(c.target + fallMod) +
                        (fallMod ? ' (' + c.target + ' ' + fallMod + ')' : ''),
             'One proficiency check on ' + escapeHtml(c.abilityLabel) + '. On a success: ' +
             'NO damage from a fall of 10 feet or less, and HALF damage from a fall of ' +
@@ -9150,11 +9150,18 @@ PROF_ABILITY_BUILDERS['jumping'] = function (root, entry, panelEl) {
               '<span style="color:var(--accent-light);width:110px;flex-shrink:0;">up to ' +
                 trim(pole / 2) + ' ft</span>' +
               '<span style="color:var(--muted);">Only over an obstacle no higher than half the pole.</span></div>' +
+            // paFmt, NOT a hand-rolled "roll N or less": a target below 1 has to
+            // read "no roll can succeed", and in plate mail it frequently is one
+            // -- Str 12 against Table 37's -12 lands exactly on zero. The figure
+            // was right; "roll 0 or less" was an instruction nobody can follow.
             (pvMod !== null && pvChk && pvChk.hasCheck
               ? '<div style="color:var(--warning, #e0a34a);margin-top:4px;">Armor (' +
-                escapeHtml(acro.name) + '): getting off the ground needs a proficiency ' +
-                'check, roll <strong>' + (pvChk.target + pvMod) + ' or less</strong> on ' +
-                escapeHtml(pvChk.abilityLabel) + ' (' + pvChk.target + ' ' + pvMod + ').</div>'
+                escapeHtml(acro.name) + '): getting off the ground needs a ' +
+                escapeHtml(pvChk.abilityLabel) + ' proficiency check \u2014 <strong>' +
+                paFmt(pvChk.target + pvMod) + '</strong> (' + pvChk.target + ' ' + pvMod + ').' +
+                (pvChk.target + pvMod < 1
+                  ? ' He cannot vault in this armor.'
+                  : '') + '</div>'
               : '') +
             (pvCapped
               ? '<div style="color:var(--warning, #e0a34a);margin-top:4px;">In this armor he ' +
