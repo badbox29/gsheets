@@ -874,6 +874,59 @@ function renderCombatQuickReference(root) {
       thac0El.title = '';
     }
   }
+  // === PHBR2 Swashbuckler: fighter THAC0 with his weapon of choice ===
+  //
+  // p.42: the extra weapon proficiency slot must go to a stiletto, main-gauche,
+  // rapier or sabre, "and with this, the Swashbuckler's 'weapon of choice,' the
+  // thief is able to fight with the THAC0 of a fighter of his experience level."
+  // ONE nominated weapon, not all four -- the four are what he may CHOOSE from.
+  //
+  // SHOWN AS A DELTA, NOT A THAC0. The gap is purely progression, so subtracting
+  // it from any row of the attack matrix is correct and carries that weapon's
+  // Strength, enchantment and specialisation adjustments with it. A standalone
+  // figure here would be a bare number the reader could not place.
+  //
+  // NOT BAND-GATED, unlike every other PHBR2 mechanic: this is a kit benefit,
+  // and the kit only exists at all when PHBR2's kits are in play. Chris's call,
+  // August 2026.
+  //
+  // NOT A SECOND THAC0 PROGRESSION either, and deliberately -- one kit of
+  // eighteen does not justify teaching renderAttackMatrix, the multi-class
+  // resolver and the dual-class resolver about a per-weapon class swap.
+  const swashEl = root.querySelector('.combat-swashbuckler');
+  if (swashEl) {
+    const kitVal = (val(root, 'kit') || '').toLowerCase().replace(/\s+/g, '');
+    const lvl    = parseInt(val(root, 'level') || 0, 10);
+    const tables = (typeof THAC0_TABLES !== 'undefined') ? THAC0_TABLES : null;
+    let delta = null;
+    if (kitVal === 'swashbuckler' && tables && lvl >= 1) {
+      // Clamped at the table's length, as getThac0 does: both tables stop at 20.
+      const i = Math.min(lvl, tables.rogue.length) - 1;
+      delta = tables.rogue[i] - tables.warrior[i];
+    }
+    if (delta === null) {
+      swashEl.style.display = 'none';
+      swashEl.textContent = '';
+    } else {
+      swashEl.style.display = '';
+      // ZERO IS WORTH PRINTING. Both tables start at 20, so a 1st-level
+      // Swashbuckler's headline benefit is worth nothing yet -- saying so is
+      // more use than an absent line he would read as a bug.
+      swashEl.innerHTML = '<strong>Weapon of choice:</strong> ' +
+        (delta > 0
+          ? 'THAC0 is <strong>' + delta + ' better</strong> (fighter progression at level ' + lvl + ')'
+          : 'no THAC0 benefit yet \u2014 the fighter and rogue progressions are equal at 1st level');
+      swashEl.title =
+        'PHBR2 p.42. The Swashbuckler fights with the THAC0 of a FIGHTER of his ' +
+        'experience level, using the one weapon bought with his extra ' +
+        'proficiency slot: stiletto, main-gauche, rapier or sabre.\n\n' +
+        'Subtract ' + delta + ' from that weapon\u2019s row on the attack matrix. ' +
+        'Strength, enchantment and specialisation are already in those rows and ' +
+        'still apply.\n\n' +
+        'The gap widens with level: 0 at 1st, 3 at 6th, 10 at 20th.';
+    }
+  }
+
   if (acEl) {
     acEl.textContent = acShown;
     acEl.style.color = condAcPenalty ? 'var(--error, #ff6b6b)' : '';
