@@ -2281,7 +2281,10 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     infiltrating: 'risk', indebted: 'risk', betrayed: 'bad', hunted: 'bad',
     lapsed: 'past', resigned: 'past', expelled: 'past'
   };
-  const orgList = ((sheet && sheet.organizations) || [])
+  // details.organizations, NOT sheet.organizations. collectSheet writes the
+  // array inside the `details` object, beside backgroundHistory -- save and load
+  // agree, and print.js was the only reader looking at the top level.
+  const orgList = ((details && details.organizations) || [])
     .map((o, i) => ({ o: o, i: i }))
     .sort((a, b) => {
       const ta = ORG_PRINT_TONE[ORG_PRINT_TONES[a.o.status] || 'good'];
