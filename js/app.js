@@ -10351,14 +10351,27 @@ function renderOptionalRules(root) {
 // renders a flat list of checkboxes from OPTIONAL_RULES, and a book is a
 // two-level thing -- a row that opens, containing toggles that own several
 // rules each.
+// EXPANSION STATE IS PER-SESSION, NOT PERSISTED. Chris, August 2026: every book
+// starts collapsed on page load, whatever was open last time.
+//
+// It still has to survive a REPAINT, though, which is the whole reason this
+// object exists rather than nothing at all -- renderSupplements rebuilds the
+// entire list every time a band is ticked, so without somewhere to hold the
+// open/closed flags the book you were reading would slam shut under you the
+// moment you used it.
+//
+// Deliberately NOT localStorage. It was persisted under
+// SUPPLEMENTS_EXPAND_KEY, which is now unread; that constant survives in
+// tables.js with a note. Old gsheets_supplements_expanded entries linger
+// harmlessly in existing browsers and are never consulted.
+const SUPPLEMENTS_EXPANDED = {};
+
 function renderSupplements(root) {
   const listEl = root.querySelector('.supplements-list');
   if (!listEl || typeof SUPPLEMENTS === 'undefined') return;
   listEl.innerHTML = '';
 
-  let expanded = {};
-  try { expanded = JSON.parse(localStorage.getItem(SUPPLEMENTS_EXPAND_KEY) || '{}'); }
-  catch (e) { expanded = {}; }
+  const expanded = SUPPLEMENTS_EXPANDED;
 
   getSupplementKeys().forEach(bookKey => {
     const book = SUPPLEMENTS[bookKey];
@@ -10472,11 +10485,9 @@ function renderSupplements(root) {
       body.style.display = nowOpen ? '' : 'none';
       const caret = head.querySelector('.supp-caret');
       if (caret) caret.textContent = nowOpen ? '\u25BC' : '\u25B6';
-      let saved = {};
-      try { saved = JSON.parse(localStorage.getItem(SUPPLEMENTS_EXPAND_KEY) || '{}'); }
-      catch (e) { saved = {}; }
-      saved[bookKey] = nowOpen;
-      localStorage.setItem(SUPPLEMENTS_EXPAND_KEY, JSON.stringify(saved));
+      // In memory, NOT localStorage: the state has to survive a repaint but not
+      // a reload. See SUPPLEMENTS_EXPANDED above.
+      SUPPLEMENTS_EXPANDED[bookKey] = nowOpen;
     });
 
     wrap.appendChild(head);
