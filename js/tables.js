@@ -7545,6 +7545,10 @@ const SUPPLEMENTS = {
 };
 
 const SUPPLEMENTS_STORAGE_KEY  = 'gsheets_supplements';
+// UNUSED SINCE AUGUST 2026 and kept only so the key is documented. Supplement
+// expansion is now per-session, held in SUPPLEMENTS_EXPANDED in app.js: books
+// start collapsed on every page load. Existing browsers still hold a
+// gsheets_supplements_expanded entry from before the change; nothing reads it.
 const SUPPLEMENTS_EXPAND_KEY   = 'gsheets_supplements_expanded';
 
 // Books in publication order.
