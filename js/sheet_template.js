@@ -2016,7 +2016,6 @@ const SHEET_HTML = `
              top of index.html records what per-tab duplication has already
              cost us in the modals. -->
         <section class="section organizations-section">
-          <h3>Organizations</h3>
           <p class="prose org-empty-banner">
             Guilds, orders, colleges, companies and temples \u2014 anything the
             character belongs to that has rules, dues or expectations attached.
