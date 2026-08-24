@@ -3601,6 +3601,79 @@ function getKitSkillMods(root) {
   return { name: kit.name, adj: K.map(k => (typeof m[k] === 'number' ? m[k] : 0)) };
 }
 
+// === PHBR2 Table 37: Effects of Armor on Acrobatic Proficiencies (p.114) ===
+// Read from 300dpi page images, August 2026, together with the prose section
+// "Armor and Acrobatic Proficiencies" on pp.114-115 that governs it.
+//
+// SAME NINE COLUMNS AS TABLE 38, so PHBR2_THIEF_COLUMN resolves this unchanged.
+//
+// UNITS DIFFER BY ROW and the book marks it: the four jump rows carry foot
+// marks and adjust a DISTANCE; poleVault, tightrope and falling carry none and
+// adjust a CHECK. tumbleDefensive and tumbleAttack are absolute values that
+// REPLACE the PHB's flat +4 and +2 -- safe, because the No Armor column IS +4
+// and +2, exactly as Table 38's first three columns reproduce Table 29.
+//
+// THE NON-MONOTONIC ENTRIES ARE REAL. A running high jump is worse in plate
+// mail (-20 ft) than in plate armor (-18 ft), and ring or chain beats
+// brigandine or splint at defensive tumbling. Table 38 has the same character.
+// Do not "correct" them.
+//
+// poleVault's No Armor entry is a DASH, not a zero, and the prose says why:
+// the check only exists "in armor bulkier than leather". Unarmored, there is no
+// roll to modify -- so null here means NO CHECK REQUIRED, while 0 would mean an
+// unmodified one.
+const PHBR2_ACROBATIC_ARMOR = {
+  //                    broadRun highRun broadStand highStand poleVault tightrope tumbleDef tumbleAtk falling
+  none:              { broadRun:   1, highRun:   1, broadStand:  0.5, highStand: 0.25,
+                       poleVault: null, tightrope: null, tumbleDef: 4, tumbleAtk: 2, falling: null },
+  leather:           { broadRun:   0, highRun:   0, broadStand:    0, highStand:    0,
+                       poleVault: null, tightrope:    0, tumbleDef: 4, tumbleAtk: 2, falling:    0 },
+  elven:             { broadRun:   0, highRun:-0.5, broadStand:    0, highStand:    0,
+                       poleVault:   -1, tightrope:   -1, tumbleDef: 4, tumbleAtk: 2, falling:   -1 },
+  studded_padded:    { broadRun:-0.5, highRun:  -1, broadStand:   -1, highStand:   -1,
+                       poleVault:   -1, tightrope:   -1, tumbleDef: 3, tumbleAtk: 2, falling:   -1 },
+  hide:              { broadRun:  -3, highRun:  -2, broadStand:   -2, highStand:   -1,
+                       poleVault:   -3, tightrope:   -3, tumbleDef: 1, tumbleAtk: 0, falling:   -3 },
+  ring_chain:        { broadRun:  -5, highRun:  -4, broadStand:   -3, highStand:   -2,
+                       poleVault:   -5, tightrope:   -5, tumbleDef: 2, tumbleAtk: 1, falling:   -5 },
+  brigandine_splint: { broadRun:  -7, highRun:  -8, broadStand:   -4, highStand: -2.5,
+                       poleVault:   -8, tightrope:   -6, tumbleDef: 1, tumbleAtk: 1, falling:   -6 },
+  scale_banded:      { broadRun: -10, highRun: -10, broadStand:   -5, highStand: -2.5,
+                       poleVault:  -10, tightrope:   -8, tumbleDef: 0, tumbleAtk: 0, falling:   -8 },
+  plate_mail:        { broadRun: -15, highRun: -20, broadStand:   -7, highStand:   -3,
+                       poleVault:  -12, tightrope:  -10, tumbleDef: 0, tumbleAtk: 0, falling:  -10 },
+  plate_armor:       { broadRun: -20, highRun: -18, broadStand:  -10, highStand:   -3,
+                       poleVault:  -15, tightrope:  -12, tumbleDef: 0, tumbleAtk: 0, falling:  -12 }
+};
+
+// Leather is not a printed Table 37 column -- it is the standard the figures
+// assume, as it is for Tables 29 and 38 -- so it adjusts nothing and takes the
+// zero row above. `none` is a real printed column and does carry bonuses.
+//
+// NOT CLASS-GATED, and this is the one PHBR2 band that is not: Table 37 speaks
+// to acrobatic PROFICIENCIES, so a fighter who buys Tumbling is hindered by his
+// plate mail exactly as a thief would be. Holding the proficiency is the gate,
+// which the panels already apply.
+function getAcrobaticArmorMods(root) {
+  if (typeof isSupplementActive !== 'function' ||
+      !isSupplementActive('phbr2', 'armorAcrobatics')) return null;
+  if (typeof getThiefArmorCategory !== 'function' ||
+      typeof PHBR2_THIEF_COLUMN === 'undefined') return null;
+
+  const cat = getThiefArmorCategory(root);
+  if (!cat) return null;
+  // cat.key === 'none' wins over typeKey for the same reason getThiefArmorAdjustments
+  // keys off it: the PHBR1 high-quality branch returns key 'none' while keeping
+  // the real typeKey, and mapping from typeKey would cancel that benefit.
+  let col = (cat.key === 'none') ? 'none'
+          : (PHBR2_THIEF_COLUMN[cat.typeKey] || 'studded_padded');
+  // Table 37 prints no silenced column; silenced elfin chain tumbles as elfin.
+  if (col === 'silenced_elven') col = 'elven';
+  const row = PHBR2_ACROBATIC_ARMOR[col];
+  if (!row) return null;
+  return { col, row, name: cat.name };
+}
+
 // The adjustment row for a character. Bards take the extra -5% in ordinary
 // chain mail; anyone else lands on the worst column instead of the
 // bard-specific row.
@@ -7224,7 +7297,8 @@ const SUPPLEMENTS = {
     //
     // NO legacyBand ANYWHERE, unlike PHBR1. The book is new, so no table has a
     // stored phbr2.core or phbr2.optional value for a band to inherit.
-    bandOrder: ['armorThiefSkills', 'kitSkillAdjustments', 'kitProficiencyCost', 'equipmentSkillMods', 'advancedThiefRules'],
+    bandOrder: ['armorThiefSkills', 'armorAcrobatics', 'kitSkillAdjustments',
+                'kitProficiencyCost', 'equipmentSkillMods', 'advancedThiefRules'],
     armorThiefSkills: {
       label: 'Armor and thief skills',
       hint:  'Table 38 extends PHB Table 29 to every armor type.',
@@ -7359,6 +7433,39 @@ const SUPPLEMENTS = {
                 'ceiling on stacked nonmagical bonuses and its no-stacking guidance ' +
                 'for similar items are addressed to the DM, not the player, and are ' +
                 'not enforced or shown here.' }
+            ]
+    },
+
+    armorAcrobatics: {
+      label: 'Armor and acrobatics',
+      hint:  'Table 37: armor adjusts jumping, tumbling and tightrope walking.',
+      rules: ['armorAcrobaticsPHBR2'],
+      changes: [
+        { text: 'Armor adjusts every acrobatic proficiency, by Table 37 (p.114). ' +
+                'Jump distances shift in FEET \\u2014 a running broad jump is +1 ft with no ' +
+                'armor and \\u221220 ft in plate armor. Tightrope walking and the tumbler\\u2019s ' +
+                'falling check take penalties from \\u22121 to \\u221212.',
+          caveat: 'A jump whose adjusted distance falls BELOW ZERO is not a jump of ' +
+                  'no distance: p.114 says the character \\u201cfails the acrobatic feat ' +
+                  'entirely (probably by tripping and landing flat on his face)\\u201d.' },
+        { text: 'Tumbling\\u2019s flat bonuses become armor-dependent. The Player\\u2019s ' +
+                'Handbook grants +4 Armor Class and +2 to hit unarmed; Table 37 keeps ' +
+                'both in no armor or elfin chain, drops the defensive bonus to +3 in ' +
+                'studded or padded, +2 in ring or chain, +1 in hide or brigandine, and ' +
+                'to nothing at all in scale mail or heavier.' },
+        { text: 'POLE VAULTING GAINS A PROFICIENCY CHECK THE PLAYER\\u2019S HANDBOOK DOES ' +
+                'NOT HAVE. p.114: getting off the ground in armor bulkier than leather ' +
+                'requires a check, adjusted by Table 37 \\u2014 which is why that row alone ' +
+                'reads \\u201c\\u2014\\u201d in the No Armor column rather than a number. A vaulter in ' +
+                'armor heavier or bulkier than studded or padded can also vault no ' +
+                'higher than the height of his pole.' },
+        { text: 'NOT GATED ON BEING A THIEF, unlike this book\\u2019s other panels. Table 37 ' +
+                'is about acrobatic PROFICIENCIES, and a fighter who buys Tumbling is ' +
+                'slowed by his own plate armor exactly as a thief would be. Holding the ' +
+                'proficiency is the gate.',
+          caveat: 'Table 37 has no column for silenced elfin chain, so it takes the ' +
+                  'plain elfin chain row \\u2014 the wrapping quiets the links, it does not ' +
+                  'change how a man tumbles in them.' }
       ]
     }
   },
