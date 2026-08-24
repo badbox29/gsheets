@@ -3015,6 +3015,14 @@ const SHEET_HTML = `
 		  <div><strong>AC:</strong> <span class="combat-ac">—</span></div>
 		</div>
 		<div class="combat-ac-breakdown" style="margin-top:2px;padding-left:10px;line-height:1.5;"></div>
+			<!-- PHBR2 Swashbuckler. Populated by renderCombatQuickReference; hidden
+			     entirely for every other character. A DELTA rather than a figure,
+			     because the difference between the fighter and rogue progressions
+			     is purely progression -- so it composes with the per-weapon rows
+			     below, which already fold in Strength, enchantment and
+			     specialisation. An absolute THAC0 here would strand the reader
+			     wondering what it already included. -->
+			<div class="combat-swashbuckler" style="margin-top:4px;padding-left:10px;line-height:1.5;display:none;"></div>
 		<div style="margin-top:4px;">
 		  <strong>Move:</strong> <span class="combat-move">—</span>
 		</div>
