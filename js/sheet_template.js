@@ -1981,8 +1981,55 @@ const SHEET_HTML = `
 
         <!-- Allies, Contacts & Organizations -->
         <section class="section">
-          <h3>Alliances & Contacts</h3>
+          <h3>Allies & Contacts</h3>
           <textarea data-field="alliances"></textarea>
+        </section>
+        </div>
+
+        <div class="section-group-head">
+          <span class="grp-name">Organizations</span>
+          <span class="grp-rule"></span>
+        </div>
+        <div class="section-group">
+
+        <!-- ORGANIZATIONS. Guilds, orders, colleges, companies, temples.
+             PHBR2 Chapter 4 (pp.51-56) leaves every quantity here deliberately
+             unfixed -- dues "will be variable", the guild's cut "will again be
+             variable", fences "never pay more than a fraction of the market
+             price" with no fraction given. That is exactly why the sheet is
+             where they belong: the DM settles them once, the player needs them
+             for good.
+
+             NOT THIEF-ONLY. PHBR2 has a Non-Thief Guildmembers section (p.73)
+             and guilds recruit mages, priests and fighters as specialists. A
+             paladin's order and a bard's college use the same eight fields.
+
+             TABS, NOT CARDS, and NOT SEEDED. The spellbook pattern, with one
+             difference that matters: spellbooks always have at least one and
+             refuse to delete the last. Most characters belong to nothing, so
+             this starts EMPTY and the strip stays hidden until the first is
+             added.
+
+             EVERY LOOKUP IN app.js MUST BE root.querySelector, never document.
+             This markup exists once per open character tab, so a document-wide
+             query finds another character's strip. The datalist comment at the
+             top of index.html records what per-tab duplication has already
+             cost us in the modals. -->
+        <section class="section organizations-section">
+          <h3>Organizations</h3>
+          <p class="prose org-empty-banner">
+            Guilds, orders, colleges, companies and temples \u2014 anything the
+            character belongs to that has rules, dues or expectations attached.
+            Loose affiliations are better recorded under Allies &amp; Contacts
+            above. Click <strong>+ Organization</strong> to add one.
+          </p>
+          <div class="org-tabs-container" style="display:none;align-items:center;gap:8px;margin-bottom:12px;">
+            <div class="org-tabs-wrapper" style="flex:1;overflow-x:auto;">
+              <div class="org-tabs" style="display:flex;gap:4px;"></div>
+            </div>
+          </div>
+          <button type="button" class="ghost add-organization" style="margin-bottom:12px;">+ Organization</button>
+          <div class="org-panel"></div>
         </section>
 
         <!-- Thieves' Guild. PHBR2 Chapter 4 (pp.51-56) leaves every quantity
