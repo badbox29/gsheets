@@ -13164,6 +13164,53 @@ function renderOrganizations(root) {
   const panel  = sec.querySelector('.org-panel');
   if (!tabs || !panel) return;
 
+  // BOUND BEFORE ANY EARLY RETURN, and this is why: the empty-list return four
+  // lines below fires on every new sheet, and this block used to sit under it --
+  // so the button that creates the FIRST organization was never wired, and could
+  // never be clicked to leave the empty state. Wiring belongs to the SECTION,
+  // which always exists; the contents come and go. Same class of fault as the
+  // textarea sweeps in gsheets_project_notes.md section 7: a binding that
+  // depends on when the function happens to run.
+  if (!sec._orgBound) {
+    sec._orgBound = true;
+    const add = sec.querySelector('.add-organization');
+    if (add) add.onclick = () => addNewOrganization(root);
+
+    sec.addEventListener('click', (ev) => {
+      const tab = ev.target.closest && ev.target.closest('.org-tab');
+      if (tab) { setActiveOrganization(root, tab.dataset.org); return; }
+      if (ev.target.closest && ev.target.closest('.org-rename')) {
+        renameOrganization(root, getOrganizationsData(root).activeOrgId);
+      }
+      if (ev.target.closest && ev.target.closest('.org-delete')) {
+        deleteOrganization(root, getOrganizationsData(root).activeOrgId);
+      }
+    });
+
+    // input, not change: a half-typed guild name still has to survive a tab
+    // switch, and the sheet autosaves.
+    sec.addEventListener('input', (ev) => {
+      const d = getOrganizationsData(root);
+      const org = d.organizations.find(o => o.id === d.activeOrgId);
+      if (!org) return;
+      if (ev.target.classList.contains('org-f')) org[ev.target.dataset.k] = ev.target.value;
+      else if (ev.target.classList.contains('org-obligations')) org.obligations = ev.target.value;
+      else return;
+      markUnsaved(document.querySelector('.tab.active'), true, root);
+    });
+
+    // A status change re-sorts the strip, so it must re-render.
+    sec.addEventListener('change', (ev) => {
+      if (!ev.target.classList.contains('org-status')) return;
+      const d = getOrganizationsData(root);
+      const org = d.organizations.find(o => o.id === d.activeOrgId);
+      if (!org) return;
+      org.status = ev.target.value;
+      renderOrganizations(root);
+      markUnsaved(document.querySelector('.tab.active'), true, root);
+    });
+  }
+
   if (banner) banner.style.display = list.length ? 'none' : '';
   if (strip)  strip.style.display  = list.length ? 'flex' : 'none';
 
@@ -13206,46 +13253,6 @@ function renderOrganizations(root) {
     '<label style="margin-top:8px">Obligations &amp; Duties</label>' +
     '<textarea class="org-obligations" style="min-height:80px">' +
     escapeHtml(active.obligations || '') + '</textarea>';
-
-  if (!sec._orgBound) {
-    sec._orgBound = true;
-    const add = sec.querySelector('.add-organization');
-    if (add) add.onclick = () => addNewOrganization(root);
-
-    sec.addEventListener('click', (ev) => {
-      const tab = ev.target.closest && ev.target.closest('.org-tab');
-      if (tab) { setActiveOrganization(root, tab.dataset.org); return; }
-      if (ev.target.closest && ev.target.closest('.org-rename')) {
-        renameOrganization(root, getOrganizationsData(root).activeOrgId);
-      }
-      if (ev.target.closest && ev.target.closest('.org-delete')) {
-        deleteOrganization(root, getOrganizationsData(root).activeOrgId);
-      }
-    });
-
-    // input, not change: a half-typed guild name still has to survive a tab
-    // switch, and the sheet autosaves.
-    sec.addEventListener('input', (ev) => {
-      const d = getOrganizationsData(root);
-      const org = d.organizations.find(o => o.id === d.activeOrgId);
-      if (!org) return;
-      if (ev.target.classList.contains('org-f')) org[ev.target.dataset.k] = ev.target.value;
-      else if (ev.target.classList.contains('org-obligations')) org.obligations = ev.target.value;
-      else return;
-      markUnsaved(document.querySelector('.tab.active'), true, root);
-    });
-
-    // A status change re-sorts the strip, so it must re-render.
-    sec.addEventListener('change', (ev) => {
-      if (!ev.target.classList.contains('org-status')) return;
-      const d = getOrganizationsData(root);
-      const org = d.organizations.find(o => o.id === d.activeOrgId);
-      if (!org) return;
-      org.status = ev.target.value;
-      renderOrganizations(root);
-      markUnsaved(document.querySelector('.tab.active'), true, root);
-    });
-  }
 }
 
 // ===== Multiple Spellbooks Management =====
