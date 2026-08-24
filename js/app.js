@@ -6622,7 +6622,12 @@ function collectSheet(root){
     // henchmenMax and loyaltyBase deliberately absent -- see loadSheet.
     // Charisma is already saved; these are read back out of CHA_TABLE.
     henchmenNotes: val(root,'henchmen_notes'),
-    backgroundHistory: val(root,'background_history')
+    backgroundHistory: val(root,'background_history'),
+    // Every quantity in an organization record is one PHBR2 Ch.4 refuses to fix
+    // -- dues, the guild's cut and the fence's fraction are all "variable" by
+    // design -- so they are stored, never derived.
+    organizations: getOrganizationsData(root).organizations,
+    activeOrgId: getOrganizationsData(root).activeOrgId
   };
 
   // Notes tab - collect entries from each category
@@ -7445,6 +7450,13 @@ function loadSheet(root, data){
   // outright if the table were ever corrected. Derived values are never stored.
   val(root,'henchmen_notes', d.henchmenNotes || '');
   val(root,'background_history', d.backgroundHistory || '');
+  // Organizations live on root._organizationsData, not in data-field inputs, so
+  // they need this branch and the matching one in collectSheet. An older
+  // character has no `organizations` key at all and must read as none, not as
+  // undefined.
+  setOrganizationsData(root, { organizations: d.organizations || [],
+                               activeOrgId: d.activeOrgId || null });
+  if (typeof renderOrganizations === 'function') renderOrganizations(root);
 
   // === Notes tab ===
   const nt = data.notesTab || {};
@@ -8803,6 +8815,10 @@ function bindSheet(root, tab){
   // renderToolsSubtabs on the next line, which reads this section's display to
   // decide whether the tab exists.
   if (typeof renderThiefEquipment === 'function') renderThiefEquipment(root);
+  // Details tab, not Tools -- but it renders from JS data rather than from
+  // data-field inputs, so it needs an explicit call or a new sheet shows an
+  // empty section with a dead button.
+  if (typeof renderOrganizations === 'function') renderOrganizations(root);
   if (typeof renderPHBR1OnlyControls === 'function') renderPHBR1OnlyControls(root);
   if (typeof renderToolsSubtabs === 'function') renderToolsSubtabs(root);
   if (typeof renderSectionGroups === 'function') renderSectionGroups(root);
@@ -12999,9 +13015,243 @@ window.addEventListener('pagehide', () => {
   }
 });
 
+/* ===== Organizations (Details tab) =============================================
+   Guilds, orders, colleges, companies, temples. The spellbook tab pattern with
+   three deliberate differences:
+
+   1. NOT SEEDED. Spellbooks always have one and refuse to delete the last.
+      Most characters belong to nothing, so this starts empty and the strip
+      stays hidden until the first is added.
+   2. STATUS, NOT DELETION. "Resigned" is the honest record and losing the tab
+      loses the history, so there is no close button on the tab. Delete lives
+      inside the panel, where it takes intent.
+   3. NO SCROLL APPARATUS. Spellbooks carry left/right arrows and an overflow
+      menu for five or more. overflow-x:auto is the honest answer here.
+
+   EVERY LOOKUP IS root.querySelector, NEVER document. This markup exists once
+   per open character tab; a document-wide query finds another character's strip.
+   ============================================================================ */
+
+// Grounded in the books, not invented. PHBR2 Ch.4 covers apprenticeship, dues
+// and names Infiltration as a relationship mode (p.61); Ch.1 p.15 spells out
+// what breaking the professional code costs -- "fences may even refuse to
+// purchase the goods he acquires ... former associates squealing on him."
+//
+// `tone` drives BOTH the colour and the sort. Three bands only, because the
+// --st-* tokens are a fixed, colour-blindness-checked vocabulary and inventing
+// a fourth shade would break the promise that the legend means one thing
+// everywhere. See style.css: "Do not put --st-* in a theme block."
+const ORG_STATUSES = [
+  { key: 'active',       label: 'Active',              tone: 'good' },
+  { key: 'apprentice',   label: 'Apprentice',          tone: 'good' },
+  { key: 'associate',    label: 'Associate / Honorary', tone: 'good' },
+  { key: 'infiltrating', label: 'Infiltrating',        tone: 'risk' },
+  { key: 'indebted',     label: 'Dues owed',           tone: 'risk' },
+  { key: 'betrayed',     label: 'Betrayed them',       tone: 'bad'  },
+  { key: 'hunted',       label: 'Hunted / Marked',     tone: 'bad'  },
+  { key: 'lapsed',       label: 'Lapsed',              tone: 'past' },
+  { key: 'resigned',     label: 'Resigned',            tone: 'past' },
+  { key: 'expelled',     label: 'Expelled',            tone: 'past' }
+];
+// Active, then at risk, then former. NOT "active then everything else": a
+// character hunted by a guild he betrayed is the most urgent thing on the
+// strip, and a guild he left ten levels ago is the least. Burying Hunted
+// behind Resigned puts the alert where nobody looks.
+const ORG_TONE_ORDER = { good: 0, risk: 1, bad: 1, past: 2 };
+
+const ORG_FIELDS = [
+  { key: 'type',   label: 'Type',                  hint: 'Guild, order, college, company, temple' },
+  { key: 'rank',   label: 'Rank / Standing' },
+  { key: 'house',  label: 'Guildhouse / Territory' },
+  { key: 'leader', label: 'Leader' },
+  { key: 'dues',   label: 'Dues' },
+  { key: 'cut',    label: "Cut / Tithe" },
+  { key: 'fence',  label: 'Fence / Broker' }
+];
+
+function generateOrgId() {
+  return 'org-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+}
+
+function getOrganizationsData(root) {
+  if (!root._organizationsData) {
+    root._organizationsData = { organizations: [], activeOrgId: null };
+  }
+  return root._organizationsData;
+}
+
+function setOrganizationsData(root, data) {
+  root._organizationsData = data && Array.isArray(data.organizations)
+    ? { organizations: data.organizations, activeOrgId: data.activeOrgId || null }
+    : { organizations: [], activeOrgId: null };
+}
+
+function orgStatus(key) {
+  return ORG_STATUSES.find(s => s.key === key) || ORG_STATUSES[0];
+}
+
+// Sorted for DISPLAY only. The stored array keeps insertion order, so tabs do
+// not shuffle underneath someone who is mid-edit for any reason but a status
+// change -- and when one does change, the move is the point.
+function sortedOrganizations(data) {
+  return data.organizations
+    .map((o, i) => ({ o: o, i: i }))
+    .sort((a, b) => {
+      const ta = ORG_TONE_ORDER[orgStatus(a.o.status).tone];
+      const tb = ORG_TONE_ORDER[orgStatus(b.o.status).tone];
+      return ta !== tb ? ta - tb : a.i - b.i;
+    })
+    .map(x => x.o);
+}
+
+function setActiveOrganization(root, id) {
+  const data = getOrganizationsData(root);
+  data.activeOrgId = id;
+  renderOrganizations(root);
+}
+
+function addNewOrganization(root) {
+  const data = getOrganizationsData(root);
+  const name = prompt('Enter name for new organization:',
+                      'Organization ' + (data.organizations.length + 1));
+  if (!name || !name.trim()) return;
+  const org = { id: generateOrgId(), name: name.trim(), status: 'active',
+                obligations: '' };
+  ORG_FIELDS.forEach(f => { org[f.key] = ''; });
+  data.organizations.push(org);
+  data.activeOrgId = org.id;
+  renderOrganizations(root);
+  markUnsaved(document.querySelector('.tab.active'), true, root);
+}
+
+function renameOrganization(root, id) {
+  const data = getOrganizationsData(root);
+  const org = data.organizations.find(o => o.id === id);
+  if (!org) return;
+  const name = prompt('Rename organization:', org.name);
+  if (!name || !name.trim()) return;
+  org.name = name.trim();
+  renderOrganizations(root);
+  markUnsaved(document.querySelector('.tab.active'), true, root);
+}
+
+// Confirmed, and worded so the alternative is visible: setting a status keeps
+// the record, which is nearly always what someone actually wants.
+function deleteOrganization(root, id) {
+  const data = getOrganizationsData(root);
+  const org = data.organizations.find(o => o.id === id);
+  if (!org) return;
+  if (!confirm('Remove "' + org.name + '" entirely?\n\nIf the character has ' +
+               'merely left, set the status to Resigned or Expelled instead \u2014 ' +
+               'that keeps the record. This cannot be undone.')) return;
+  data.organizations = data.organizations.filter(o => o.id !== id);
+  if (data.activeOrgId === id) {
+    data.activeOrgId = data.organizations.length ? data.organizations[0].id : null;
+  }
+  renderOrganizations(root);
+  markUnsaved(document.querySelector('.tab.active'), true, root);
+}
+
+function renderOrganizations(root) {
+  const sec = root && root.querySelector('.organizations-section');
+  if (!sec) return;
+  const data = getOrganizationsData(root);
+  const list = sortedOrganizations(data);
+
+  const banner = sec.querySelector('.org-empty-banner');
+  const strip  = sec.querySelector('.org-tabs-container');
+  const tabs   = sec.querySelector('.org-tabs');
+  const panel  = sec.querySelector('.org-panel');
+  if (!tabs || !panel) return;
+
+  if (banner) banner.style.display = list.length ? 'none' : '';
+  if (strip)  strip.style.display  = list.length ? 'flex' : 'none';
+
+  if (!list.length) { tabs.innerHTML = ''; panel.innerHTML = ''; return; }
+
+  if (!list.some(o => o.id === data.activeOrgId)) data.activeOrgId = list[0].id;
+  const active = list.find(o => o.id === data.activeOrgId);
+
+  tabs.innerHTML = list.map(o => {
+    const st = orgStatus(o.status);
+    return '<button type="button" class="org-tab st-' + st.tone +
+      (o.id === data.activeOrgId ? ' active' : '') +
+      '" data-org="' + escapeHtml(o.id) + '" title="' + escapeHtml(st.label) + '">' +
+      escapeHtml(o.name) + '</button>';
+  }).join('');
+
+  const st = orgStatus(active.status);
+  panel.innerHTML =
+    '<div class="row" style="margin-bottom:8px;">' +
+      '<div class="col"><label>Status</label><select class="org-status">' +
+        ORG_STATUSES.map(s => '<option value="' + s.key + '"' +
+          (s.key === st.key ? ' selected' : '') + '>' + escapeHtml(s.label) +
+          '</option>').join('') +
+      '</select></div>' +
+      '<div class="col" style="display:flex;align-items:flex-end;gap:8px;">' +
+        '<button type="button" class="ghost org-rename">Rename</button>' +
+        '<button type="button" class="ghost org-delete">Remove</button>' +
+      '</div>' +
+    '</div>' +
+    ORG_FIELDS.reduce(function (html, f, i) {
+      const open = (i % 2 === 0) ? '<div class="row" style="margin-top:8px">' : '';
+      const close = (i % 2 === 1 || i === ORG_FIELDS.length - 1) ? '</div>' : '';
+      return html + open +
+        '<div class="col"><label>' + escapeHtml(f.label) +
+        (f.hint ? ' <span style="color:var(--muted);font-weight:400;">' +
+                  escapeHtml(f.hint) + '</span>' : '') + '</label>' +
+        '<input type="text" class="org-f" data-k="' + f.key + '" value="' +
+        escapeHtml(active[f.key] || '') + '"></div>' + close;
+    }, '') +
+    '<label style="margin-top:8px">Obligations &amp; Duties</label>' +
+    '<textarea class="org-obligations" style="min-height:80px">' +
+    escapeHtml(active.obligations || '') + '</textarea>';
+
+  if (!sec._orgBound) {
+    sec._orgBound = true;
+    const add = sec.querySelector('.add-organization');
+    if (add) add.onclick = () => addNewOrganization(root);
+
+    sec.addEventListener('click', (ev) => {
+      const tab = ev.target.closest && ev.target.closest('.org-tab');
+      if (tab) { setActiveOrganization(root, tab.dataset.org); return; }
+      if (ev.target.closest && ev.target.closest('.org-rename')) {
+        renameOrganization(root, getOrganizationsData(root).activeOrgId);
+      }
+      if (ev.target.closest && ev.target.closest('.org-delete')) {
+        deleteOrganization(root, getOrganizationsData(root).activeOrgId);
+      }
+    });
+
+    // input, not change: a half-typed guild name still has to survive a tab
+    // switch, and the sheet autosaves.
+    sec.addEventListener('input', (ev) => {
+      const d = getOrganizationsData(root);
+      const org = d.organizations.find(o => o.id === d.activeOrgId);
+      if (!org) return;
+      if (ev.target.classList.contains('org-f')) org[ev.target.dataset.k] = ev.target.value;
+      else if (ev.target.classList.contains('org-obligations')) org.obligations = ev.target.value;
+      else return;
+      markUnsaved(document.querySelector('.tab.active'), true, root);
+    });
+
+    // A status change re-sorts the strip, so it must re-render.
+    sec.addEventListener('change', (ev) => {
+      if (!ev.target.classList.contains('org-status')) return;
+      const d = getOrganizationsData(root);
+      const org = d.organizations.find(o => o.id === d.activeOrgId);
+      if (!org) return;
+      org.status = ev.target.value;
+      renderOrganizations(root);
+      markUnsaved(document.querySelector('.tab.active'), true, root);
+    });
+  }
+}
+
 // ===== Multiple Spellbooks Management =====
 
 // Generate unique ID for spellbooks
+
 function generateSpellbookId() {
   return 'spellbook-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
 }
