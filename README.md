@@ -2,7 +2,7 @@
 
 A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and no build step.
 
-**Version 11.3.0**
+**Version 11.5.0**
 
 ## Live Demo
 
@@ -53,6 +53,15 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 * High-quality racial armor: elven steel at half weight, gnomish leather that takes no thieving penalty, human plate that guards against breath weapons
 * Piecemeal armor worn as separate pieces, with armor class summed from what covers you, piece weights worked out from the suit, and the thieving penalty taken from the most restrictive piece
 * A melee maneuvers reference covering all eleven maneuvers, the five body locations, and your numbed and useless thresholds — filtered to what each weapon you carry can actually do, because a lasso never parries and a bow does only four of them
+* The Complete Thief's Handbook in full, split into six rule groups — armor and thief skills, armor and acrobatics, kit skill adjustments, off-kit proficiency costs, equipment, and Chapter 7's advanced rules
+* All eighteen thief kits from the book, with their skill adjustments, point budgets and proficiency requirements
+* Thief skills recalculated for every armor type the book covers, from hide through full plate, with the Dexterity bonus forfeited above simple leather and the exact amount lost named on screen
+* A thief equipment panel: tick what he is carrying and see the adjusted skills beside his own, with the modifiers that depend on the surface he is climbing changing as you change it
+* Silenced elfin chain, quieter than ordinary elven mail and worse at picking pockets, with its own column in the thieving table
+* Sixty-one items of thief equipment priced with the legality the book gives them — legal, shady, or available only through a guild
+* Special function arrows that carry a rope to a wall, with the grappling table and the trade-off between the two ways of rigging the line
+* Acrobatics worked out in full: jumping and pole vaulting from your own height and pole, tumbling's armor class bonus and its conditions, tightrope walking, and how far you can fall before it hurts
+* Armor's effect on every acrobatic feat, including the vault a man in plate mail simply cannot make
 * Multi-page printable character sheet with configurable sections, blank write-in lines, and color schemes
 * Import / export character data
 * JSON-based storage for portability
@@ -242,6 +251,72 @@ Follow these steps **in order** to avoid overwriting your data:
 * I am not a developer.
 
 ### Recent Updates
+
+#### v11.5.0
+
+**The Complete Thief's Handbook**
+
+* Six rule groups under PHBR2, each switchable on its own. A table that wants
+  the armor table need not also take kit skill adjustments, and a table that
+  wants neither can still stock the equipment.
+* **Armor and thief skills.** The Player's Handbook covers three kinds of armor;
+  the book covers ten. A thief in chain mail read −30% to pick pockets when the
+  book says −40%, and one in plate armor read −30% where the book says −95%.
+  Two rules ride along with it: no skill ever falls below 1%, and **no Dexterity
+  bonus applies to thief skills in anything heavier than simple leather**. That
+  second one removes a bonus rather than adding a penalty, so it is invisible in
+  the armor percentages — the panel now names the exact amount lost from each
+  skill rather than leaving you to find it in a tooltip.
+* **All eighteen thief kits**, with the skill adjustments the book marks
+  optional, the discretionary point budgets that differ for the Assassin and the
+  Thug, and the extra proficiency slot a kit charges for a proficiency it is not
+  listed for.
+* **Thief equipment.** Sixty-one items priced with the legality the book gives
+  them — freely sold, shady, or guild-only — and marked where even a legal item
+  is hard to come by. Clothing carries its weight without adding to what you
+  are carrying, as the book intends.
+* **A thief equipment panel** in Tools. Tick what he is using and the adjusted
+  skills appear beside his own. The modifiers that depend on circumstance behave
+  like it: clawed gloves are worth +10 on a rough wall, +5 on a smooth one and
+  nothing at all on glass, and the panel says so when they are worth nothing.
+  It reads the sheet and never writes to it, because what he is holding this
+  round is not a fact about the character.
+* **Silenced elfin chain** — every link wrapped in leather, ten better at moving
+  silently and five worse at picking pockets than ordinary elven mail, and
+  costing more than plate.
+* **Special function arrows** that carry a rope to a wall or a branch, with the
+  grappling table and the real choice behind them: tie the rope straight to the
+  arrow and lose half your range, or thread a light string through and spend a
+  round for every twenty feet of rope.
+
+**Acrobatics**
+
+* **Tumbling** now has a panel of its own: the +4 armor class bonus with the
+  conditions attached to it, the +2 to hit unarmed, and the falling rule that
+  turns a sixty-foot drop into a thirty-foot one. The armor class bonus is not
+  added to your armor class, and deliberately — it costs you every attack that
+  round, so it belongs where you claim it rather than sitting on the sheet
+  claiming itself.
+* **Pole vaulting** takes a pole length and works out how far you span, how high
+  you clear, and the highest obstacle you can still land on your feet over. It
+  will tell you if the pole is the wrong length for your height and compute the
+  figures anyway.
+* **Armor and acrobatics.** Every acrobatic feat is affected by what you are
+  wearing — a running broad jump loses twenty feet in plate armor. A jump whose
+  distance comes out below zero is not a jump of no distance: you trip and land
+  flat on your face. Getting off the ground with a pole in anything bulkier than
+  leather needs a check, and in plate mail there is no roll that succeeds.
+
+**Data corrections**
+
+* The Player's Handbook equipment tables were checked against the tool's own
+  records for the first time. Sixteen prices and weights were wrong, two of them
+  by a factor of a hundred — a whetstone cost 2 cp instead of 2 gp, a vial of
+  ink 8 gp instead of 8 sp. Three records blended two different Player's
+  Handbook entries into one and have been split; thirty-one items that were
+  simply missing have been added.
+* Every corrected record now says which book it came from, so the next pass can
+  tell what has been checked from what has merely always been there.
 
 #### v11.3.0
 
