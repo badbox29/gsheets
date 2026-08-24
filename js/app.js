@@ -10367,10 +10367,25 @@ function renderSupplements(root) {
     // PHBR1 split.
     const bands = book.bandOrder || ['core', 'optional'];
     const active = bands.some(b => isSupplementActive(bookKey, b));
-    // A book with anything switched on is ALWAYS open, whatever the saved
-    // state. A live supplement collapsed out of sight is how a table loses
-    // track of which rules it is playing.
-    const open = active || !!expanded[bookKey];
+    // SAVED STATE WINS, and books DEFAULT TO COLLAPSED. Chris, August 2026.
+    //
+    // This used to read `active || !!expanded[bookKey]` -- a book with anything
+    // switched on was forced open whatever the user had collapsed. The reason
+    // was sound when written: a live supplement hidden from view is how a table
+    // loses track of which rules it is playing. THE `active` MARKER IN THE
+    // HEADER NOW DOES THAT JOB, and it shows while collapsed. The rule outlived
+    // the problem it solved.
+    //
+    // IT WAS ALSO THE CAUSE OF THE "COLLAPSE STATE IS LOST ON EVERY TOGGLE"
+    // REPORT, which was diagnosed in the notes as renderSupplements dropping
+    // saved state on rebuild. It does not: it reads and honours that state a
+    // dozen lines up. Ticking a checkbox repaints, and the repaint forced every
+    // ACTIVE book open again -- so with two books live, collapsing one and then
+    // touching the other sprang the first back. One rule, two symptoms.
+    //
+    // Undefined means collapsed, so a book nobody has touched starts closed
+    // whether or not it is live.
+    const open = expanded[bookKey] === true;
 
     const wrap = document.createElement('div');
     wrap.style.cssText = 'background:var(--glass);border-radius:4px;margin-bottom:6px;';
