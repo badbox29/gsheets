@@ -2,7 +2,7 @@
 
 A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and no build step.
 
-**Version 11.5.0**
+**Version 11.6.0**
 
 ## Live Demo
 
@@ -53,6 +53,7 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 * High-quality racial armor: elven steel at half weight, gnomish leather that takes no thieving penalty, human plate that guards against breath weapons
 * Piecemeal armor worn as separate pieces, with armor class summed from what covers you, piece weights worked out from the suit, and the thieving penalty taken from the most restrictive piece
 * A melee maneuvers reference covering all eleven maneuvers, the five body locations, and your numbed and useless thresholds — filtered to what each weapon you carry can actually do, because a lasso never parries and a bow does only four of them
+* Organizations: record the guilds, orders, colleges, companies and temples a character belongs to, each on its own tab, with standing that runs from apprentice to hunted
 * The Complete Thief's Handbook in full, split into six rule groups — armor and thief skills, armor and acrobatics, kit skill adjustments, off-kit proficiency costs, equipment, and Chapter 7's advanced rules
 * All eighteen thief kits from the book, with their skill adjustments, point budgets and proficiency requirements
 * Thief skills recalculated for every armor type the book covers, from hide through full plate, with the Dexterity bonus forfeited above simple leather and the exact amount lost named on screen
@@ -251,6 +252,49 @@ Follow these steps **in order** to avoid overwriting your data:
 * I am not a developer.
 
 ### Recent Updates
+
+#### v11.6.0
+
+**Organizations**
+
+* A new section on the Details tab for everything a character belongs to that has
+  rules, dues or expectations attached — a thieves' guild, a knightly order, a
+  bardic college, a mercenary company, a temple. Each gets its own tab, added
+  only when you need it, so a character who belongs to nothing sees nothing.
+* Record the name, what kind of body it is, the character's rank, its
+  guildhouse or territory, who leads it, what it charges in dues, what cut or
+  tithe it takes, who he fences or brokers through, and what it expects of him.
+  *The Complete Thief's Handbook* deliberately refuses to fix any of those
+  numbers — dues "will be variable", fences pay "a fraction" of market price —
+  which is exactly why they belong on the sheet: your DM settles them once and
+  you need them thereafter.
+* **Standing, not deletion.** A character can be Active, an Apprentice, an
+  Associate, Infiltrating, in arrears on his dues, Lapsed, Resigned, Expelled —
+  or he can have betrayed them, or be hunted by them. Leaving a guild is part of
+  the story, so nothing is thrown away when it happens.
+* Tabs sort themselves by how much the standing matters right now: current
+  memberships first, then the ones that could get you killed, then the ones you
+  walked away from. Colour follows the same status system the follower cards use,
+  and never carries the meaning alone — order, a strikethrough and the tooltip
+  all say the same thing.
+* Prints with the character sheet, between Character Details and Background.
+
+**The Complete Thief's Handbook — completed**
+
+* Every chapter of the book has now been read page by page rather than surveyed,
+  which turned up two chapters that had been missed entirely. The classic cons
+  chapter contributes two rules a thief would otherwise never find: rigging a
+  die throw takes a pick pockets roll at −40%, once per die, and switching the
+  pea in a shell game takes one too.
+* Corrections to the proficiency descriptions, including an astrologer's +1 to
+  navigation when the stars are out, and an observant character's better chance
+  of spotting a concealed door.
+
+**Fixes**
+
+* Supplement books on the Options tab now start collapsed every time you open
+  the app, and stay where you put them while you work. Previously, ticking any
+  rule sprang every active book back open.
 
 #### v11.5.0
 
