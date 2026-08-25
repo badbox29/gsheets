@@ -2933,13 +2933,19 @@ function toggleSpellbookSection(root) {
   // Same treatment the hirelings Duration field already uses, and for the same
   // reason: a field that VANISHED would quietly contradict the PDF.
   const spellsGated = (typeof abilitiesAreWithdrawn === 'function') && abilitiesAreWithdrawn(root);
-  if (isSpellcaster) {
-    spellbookSection.style.opacity       = spellsGated ? '0.45' : '';
-    spellbookSection.style.pointerEvents = spellsGated ? 'none' : '';
-    spellbookSection.title = spellsGated
-      ? 'Locked while this character\u2019s class status is set \u2014 a forgotten memory, not a deleted one. Nothing here is removed, and it all returns when the status goes back to Active.'
-      : '';
-  }
+  const lockMsg = 'Locked while this character\u2019s class status is set \u2014 a forgotten ' +
+                  'memory, not a deleted one. Nothing here is removed, and it all returns ' +
+                  'when the status goes back to Active.';
+  // MEMORIZED SPELLS ARE A SEPARATE SECTION from the spellbook and were missed
+  // the first time. Greyed together because they fail together: a character who
+  // cannot cast has neither a usable book nor a usable loadout.
+  [spellbookSection, root.querySelector('.memorized-section')].forEach(sec => {
+    if (!sec) return;
+    if (sec === spellbookSection && !isSpellcaster) return;
+    sec.style.opacity       = spellsGated ? '0.45' : '';
+    sec.style.pointerEvents = spellsGated ? 'none' : '';
+    sec.title = spellsGated ? lockMsg : '';
+  });
 
   // The sidebar Study / Pray button follows the same test. Kept here rather than
   // given its own copy of that class list: two lists of caster classes WILL
