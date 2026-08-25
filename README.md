@@ -2,7 +2,7 @@
 
 A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and no build step.
 
-**Version 11.6.0**
+**Version 11.6.5**
 
 ## Live Demo
 
@@ -41,6 +41,7 @@ Where'd it get the name?  "gsheets" is a shortening of "Ghome's sheets", because
 * Card status colours fixed across every theme and checked against red-green and red-blind colour vision, so the legend means the same thing whichever theme you use
 * Optional-rules framework with live toggles for Player's Handbook options and house-rule overrides
 * Supplement support, one row per book and one checkbox per rule group, applying what a Complete Handbook states and staying quiet about the experiments it merely offers — switching a group off suspends what it granted rather than deleting it, and switching it back on restores it untouched
+* Specialty priest support from the Complete Priest's Handbook — a second prime requisite and its 5% experience tier, a six- or four-sided hit die, extra proficiency group crossovers, the per-level language slot, and the one priesthood in the book permitted weapon specialization
 * The complete ranger kit list from the Complete Ranger's Handbook, transcribed from the book, with the two crypt kits from DRAGON #234
 * Ranger tracking, stealth and animal empathy worked out from your level, race, kit and armor, with every term shown
 * The Complete Fighter's Handbook in full, split into seven rule groups you can switch on one at a time rather than all together
@@ -252,6 +253,66 @@ Follow these steps **in order** to avoid overwriting your data:
 * I am not a developer.
 
 ### Recent Updates
+
+#### v11.6.5
+
+**The Complete Priest's Handbook — specialty priests**
+
+* The book prints some sixty priest classes and then tells the DM, in as many
+  words, that he is free to rewrite the races, proficiencies, weapons, armor and
+  spheres of any of them. So none of the sixty ship as data. What ships instead
+  is the handful of fields the sheet could not otherwise express, which work
+  just as well for a faith your DM invented off the book's own Faith Design
+  Sheet as for one printed in it.
+* **A second prime requisite.** A priesthood may name an ability beside Wisdom:
+  either at 16 earns 5% bonus experience, both at 16 earns 10%. Around a third
+  of the book's priesthoods do this, in every combination from Charisma to
+  Constitution. **The Player's Handbook has no 5% tier at all** — this is the
+  only place in the game it appears, and the sheet now works it out.
+* **Hit dice by priesthood.** Priests of gods that ask little of the body roll
+  six-sided dice, and four-sided where the god's attribute implies soft living —
+  the gods of Love and Magic among them. This changes what the generator rolls
+  and nothing else: hit points you already have are never recalculated.
+* **Proficiency group crossovers.** Every priesthood names its own set. Most
+  read Priest and General; a god of War or Wind adds Warrior, one of Everything
+  adds Wizard, one of Prosperity adds Rogue. A crossover group costs single
+  slots instead of double, and the change shows on every proficiency already
+  learned, immediately.
+* **Language and Communication**, one of the book's granted powers, gives an
+  extra proficiency slot every level that may only buy a language. Modelled so
+  those slots genuinely cannot be spent on anything else.
+* **Weapon specialization**, which exactly one priesthood in the book allows —
+  the priest of the god of War, who must choose a single weapon and specialize
+  in it. He gets the whole package, attack progression included, so a warhammer
+  specialist attacks 3/2 at low level and 5/2 at 13th **with that weapon only**,
+  while keeping a priest's THAC0 and one attack with everything else. The sheet
+  warns if more than one weapon is marked, since the book allows one.
+* **Restrictions** — celibacy, chastity, vestments in public, forbidden foods —
+  are recorded and displayed, never enforced. Whether one was broken is your
+  DM's call.
+* All of it sits in a new **Specialty Priest** block under Basic Info, which
+  appears only for a single-class priest with the book switched on, and hides
+  again without discarding anything.
+
+**Fixes**
+
+* **Proficiency costs now repaint the moment a rule changes.** Switching any
+  rule that moves what a proficiency costs — fighting styles' weapon groups,
+  off-kit costs, the new crossovers — updated the slot counter but left every
+  proficiency already learned showing its old price until you saved and
+  reloaded. This had been true since those rules shipped.
+* **The same for languages.** Adding or removing one left the nonweapon slot
+  counter stale, though changing whether you could read or write it did not.
+* **And for weapon proficiencies.** Changing class from fighter to cleric left
+  the Specialize checkboxes on screen until a reload.
+* **A surcharged proficiency now says which rule charged it.** The row read
+  "+1 out-of-group" and cited the Player's Handbook whatever the cause — so a
+  proficiency squarely inside your own class groups, charged the extra slot by
+  the thief book because your kit is not listed for it, was told it was out of
+  group. It now reads "+1 off-kit" and cites the right book, and where both
+  rules apply it explains why that is still one slot and not two.
+* Several rule descriptions in the fighter and thief panels displayed raw escape
+  codes instead of dashes and apostrophes.
 
 #### v11.6.0
 
