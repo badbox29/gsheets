@@ -8322,7 +8322,7 @@ async function renderNWPBrowser(root) {
     const isCrossover = effCost > baseSlots;
 
     const slotText = isCrossover
-      ? `<span style="color:var(--error, #ff6b6b);" title="Out-of-group proficiency: +1 slot (PHB Table 38)">Slots: ${effCost} (${baseSlots} +1 out-of-group)</span>`
+      ? `<span style="color:var(--error, #ff6b6b);" title="${nwpSurchargeTitle(nwp, allowedGroups, root)}">Slots: ${effCost} (${baseSlots} +1 ${nwpSurchargeLabel(nwp, allowedGroups, root)})</span>`
       : `Slots: ${effCost}`;
 
     const browseGroupLabel = getNWPGroups(nwp)
@@ -8406,6 +8406,32 @@ function addNWProficiency(root, nwp) {
   if (tab) markUnsaved(tab, true, root);
 }
 
+// Row text and tooltip for a surcharged proficiency. Both ask getNWPSurcharge
+// rather than inferring from the cost, because cost alone cannot distinguish a
+// PHB Table 38 class-group charge from a PHBR2 kit charge -- and the row used to
+// assert Table 38 for both, on proficiencies that were in group.
+function nwpSurchargeLabel(nwp, allowedGroups, root) {
+  const src = (typeof getNWPSurcharge === 'function')
+    ? getNWPSurcharge(nwp, allowedGroups, root).source : 'class';
+  return src === 'kit' ? 'off-kit' : 'out-of-group';
+}
+
+function nwpSurchargeTitle(nwp, allowedGroups, root) {
+  const src = (typeof getNWPSurcharge === 'function')
+    ? getNWPSurcharge(nwp, allowedGroups, root).source : 'class';
+  if (src === 'kit') {
+    return 'Off-kit proficiency: +1 slot (PHBR2 p.16). This proficiency is in one ' +
+           'of your class groups, but your kit is not listed as appropriate for it, ' +
+           'so it costs one slot more \u2014 just as if it belonged to another class.';
+  }
+  if (src === 'both') {
+    return 'Out-of-group AND off-kit: +1 slot total, not +2. PHB Table 38 and PHBR2 ' +
+           'p.16 would each charge one slot, and PHBR2 states the kit rule as an ' +
+           'equivalence rather than an addition, so only one applies.';
+  }
+  return 'Out-of-group proficiency: +1 slot (PHB Table 38)';
+}
+
 // Render non-weapon proficiencies list
 function renderNWProficiencies(root) {
   renderProficiencySlots(root);
@@ -8452,7 +8478,7 @@ function renderNWProficiencies(root) {
         `the kit -- you keep them, but must pay for them out of the next free slots ` +
         `you have available.">GRANTED \u00B7 0 slots</span>`
       : effCost > baseSlots
-      ? `<span style="color:var(--error, #ff6b6b);" title="Out-of-group proficiency: +1 slot (PHB Table 38)">Slots: ${effCost} (${baseSlots} +1 out-of-group)</span>`
+      ? `<span style="color:var(--error, #ff6b6b);" title="${nwpSurchargeTitle(nwp, nwpAllowedGroups, root)}">Slots: ${effCost} (${baseSlots} +1 ${nwpSurchargeLabel(nwp, nwpAllowedGroups, root)})</span>`
       : `Slots: ${effCost}`;
 
     // Show every Table 37 group this proficiency belongs to, not just the one
