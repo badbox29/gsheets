@@ -1999,6 +1999,60 @@ function renderXPProgression(root) {
 // "Cleric 7 / Thief 9" resolves to priest. Gating on category alone would admit
 // some multi-class priests and reject others at random. Testing char_type first
 // means that ambiguity is never reached.
+// SINGLE OWNER of the Class Status column and its banner. Fills the option
+// labels too, because "Fallen -- irrevocable" and "Renounced -- irrevocable"
+// are the same stored state in different words, and hardcoding either in the
+// template would be wrong for the other class.
+//
+// PALADINS ARE CLASS_CATEGORIES "warrior", NOT "priest", so the test needs both
+// conditions. char_type is checked first for the same reason it is in
+// renderSpecialtyPriest: getClassCategory matches by substring, longest key
+// first, so "Cleric 7 / Fighter 9" resolves to warrior while "Cleric 7 /
+// Thief 9" resolves to priest.
+function renderClassStatus(root) {
+  const col  = root.querySelector('.class-status-col');
+  const note = root.querySelector('.class-status-note');
+  if (!col && !note) return;
+
+  const clazz  = (val(root, 'clazz') || '').toLowerCase();
+  const single = (val(root, 'char_type') || 'single').toLowerCase() === 'single';
+  const isPaladin = single && clazz.includes('paladin');
+  const isPriest  = single && (typeof getClassCategory === 'function') &&
+                    getClassCategory(clazz) === 'priest';
+  const show = isPaladin || isPriest;
+
+  if (col) col.style.display = show ? '' : 'none';
+  if (!show) { if (note) note.style.display = 'none'; return; }
+
+  const L = isPriest
+    ? { graced:    'Renounced \u2014 abilities retained by DM',
+        suspended: 'Spells withheld pending atonement',
+        fallen:    'Renounced \u2014 irrevocable' }
+    : { graced:    'Fallen \u2014 abilities retained by DM',
+        suspended: 'Suspended pending atonement',
+        fallen:    'Fallen \u2014 irrevocable' };
+  Object.keys(L).forEach(k => {
+    const opt = col && col.querySelector('.cs-' + k);
+    if (opt) opt.textContent = L[k];
+  });
+
+  if (!note) return;
+  const status = (typeof getFallenStatus === 'function') ? getFallenStatus(root) : '';
+  const NOTE = {
+    graced: isPriest
+      ? 'RECORDED, NOT ENFORCED. This priest has renounced his faith, but his DM has left his powers intact \u2014 nothing on the sheet is withdrawn. PHBR3 p.122 sets out what would otherwise follow.'
+      : 'RECORDED, NOT ENFORCED. This paladin has fallen, but his DM has left his abilities intact \u2014 nothing on the sheet is withdrawn. PHB Ch.3 sets out what would otherwise follow.',
+    suspended: isPriest
+      ? 'The god is withholding spells (PHBR3 pp.120\u2013121). A willful breach of the priesthood\u2019s weapon or armour restrictions costs 2d6 damage, every spell that day, and no spells for 1d6 days; purification and atonement restore them. Granted powers and turning are withdrawn here until you set the status back.'
+      : 'PHB Ch.3: an evil act committed while enchanted or magically controlled suspends paladinhood until an atonement spell is cast. Saving throw bonus, turning and 9th-level spellcasting are withdrawn until you set the status back.',
+    fallen: isPriest
+      ? 'PHBR3 p.122: he loses all granted powers, and \u201che\u2019ll never again be a priest.\u201d By combat ability \u2014 GOOD: lose one experience level and become a fighter. MEDIUM: lose two. POOR: start over as a fighter under the dual-class rules. THE SHEET DOES NOT CHANGE YOUR CLASS OR LEVEL \u2014 edit them yourself when your DM says so.'
+      : 'PHB Ch.3: a knowing, willing evil act ends paladinhood \u201cimmediately and irrevocably\u2026 He is ever after a fighter.\u201d He keeps none of the special benefits, INCLUDING the 9th-level spellcasting the book prints inside that list. THE SHEET DOES NOT CHANGE YOUR CLASS \u2014 edit it yourself when your DM says so.'
+  };
+  note.textContent = NOTE[status] || '';
+  note.style.display = status ? '' : 'none';
+}
+
 function renderSpecialtyPriest(root) {
   const block = root.querySelector('.specialty-priest');
   const note  = root.querySelector('.specialty-priest-note');
