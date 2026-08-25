@@ -8925,6 +8925,10 @@ function bindSheet(root, tab){
       // it, changing the crossover group moves the slot BUDGET while every
       // learned proficiency keeps displaying its old cost.
       if (typeof renderNWProficiencies === 'function') renderNWProficiencies(root);
+      // sp_weapon_spec changes whether the Specialize checkbox renders, and the
+      // p.90 advisory counts specialized weapons -- neither repaints without
+      // this, since renderWeaponProficiencies is in no shared refresh list.
+      if (typeof renderWeaponProficiencies === 'function') renderWeaponProficiencies(root);
     }
   });
 
@@ -10565,6 +10569,12 @@ function recalcAllOpenSheets() {
     // kit surcharge, PHBR3 crossovers -- updated the counter and left every
     // learned proficiency showing its old price until a save and reload.
     if (typeof renderNWProficiencies === 'function') renderNWProficiencies(sheet);
+    // Same gap, weapon side. canSpecialize decides whether the Specialize
+    // checkbox exists at all, so toggling PHBR3 has to rebuild this list or the
+    // checkbox lingers on a character who may no longer specialize. Also
+    // repaints the p.90 one-weapon advisory. Cascades to renderProficiencySlots
+    // and renderCombatQuickReference, which it calls at its head.
+    if (typeof renderWeaponProficiencies === 'function') renderWeaponProficiencies(sheet);
     // renderArmorRestrictions and renderHenchmanLimits ARE inside
     // recalculateAll and need no line here. renderClassGroupValidation is not,
     // so it still does.
@@ -15973,6 +15983,17 @@ function recalculateAll(root) {
   // Value, not weight -- no ordering dependency, unlike the pair around it.
   if (typeof renderValuablesValue === 'function') renderValuablesValue(root);
   if (typeof renderEncumbrance === 'function') renderEncumbrance(root);
+  // BEFORE renderProficiencySlots, which this calls at its head anyway -- the
+  // duplicate is idempotent and cheaper than reasoning about ordering.
+  //
+  // Not previously in ANY shared refresh list, so changing class from fighter to
+  // cleric left the Specialize checkboxes on screen until a reload. That bug
+  // predates PHBR3; the specialty priest permission just made it easy to hit.
+  // Safe on this hot path despite rebuilding DOM: the list's controls are a
+  // checkbox and two selects, all of which commit on change rather than
+  // keystroke, unlike the nwp-bonus-slots number input that kept
+  // renderNWProficiencies out of here.
+  if (typeof renderWeaponProficiencies === 'function') renderWeaponProficiencies(root);
   if (typeof renderProficiencySlots === 'function') renderProficiencySlots(root);
   if (typeof renderMovementRate === 'function') renderMovementRate(root);
   // AFTER renderMovementRate, always. Both panels multiply against
