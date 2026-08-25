@@ -7621,6 +7621,7 @@ function loadSheet(root, data){
   // so a renderer has to be added to all three. Missing here means a saved
   // specialty priest opens with the block hidden and his overrides invisible
   // until something else triggers a recalculation.
+  if (typeof renderClassStatus === 'function') renderClassStatus(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   renderCoinWeight(root);
   renderRacialAbilities(root);
@@ -8795,6 +8796,7 @@ function bindSheet(root, tab){
   // this list explains that bindSheet and loadSheet each keep their own, so a
   // renderer added to recalculateAll alone never fires on a newly bound sheet.
   // Without this the Specialty Priest block stays hidden until the first edit.
+  if (typeof renderClassStatus === 'function') renderClassStatus(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   renderCoinWeight(root);
   renderRacialAbilities(root);
@@ -15998,6 +16000,7 @@ function recalculateAll(root) {
   // Specialty Priest block and the 5%-tier note in the XP disclosure, and it is
   // the gate that decides whether a second prime requisite is legible at all --
   // so it settles before the bonus is computed from it.
+  if (typeof renderClassStatus === 'function') renderClassStatus(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   if (typeof renderPrimeRequisiteBonus === 'function') renderPrimeRequisiteBonus(root);
   if (typeof renderThiefSkills === 'function') renderThiefSkills(root);
