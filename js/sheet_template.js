@@ -75,14 +75,18 @@ const SHEET_HTML = `
           <!-- CLASS MECHANICS, on their own row. Every column here is
                single-class-field, so a multi or dual-class character loses the
                whole row cleanly instead of leaving gaps mid-row where Class and
-               Kit used to sit beside Race and Gender. -->
-          <div class="row" style="margin-top:8px">
+               Kit used to sit beside Race and Gender.
+               flex-wrap ADDED for the class status banner, which is a full-width
+               member of this row rather than a sibling below it -- .row is
+               display:flex with no wrap by default, so a flex-basis:100% child
+               squeezes every other column instead of taking its own line. -->
+          <div class="row" style="margin-top:8px;flex-wrap:wrap">
             <div class="col single-class-field"><label>Class</label><input data-field="clazz" type="text" list="class-options" autocomplete="off" title="Suggestions only — this stays a free-text field. Multi and dual-class characters store a formatted display string here, which no dropdown could hold. Prefix homebrew with hb_."></div>
             <!-- ADVISORY BANNER. Says what the book says happened and stops
                  there. PHBR3's fallen priest loses levels and his class; the
                  sheet still does not touch clazz or level, it tells the player
                  to. Populated by the same owner that shows the column. -->
-            <div class="class-status-note" style="display:none;flex-basis:100%;font-size:11px;line-height:1.45;margin-top:6px;padding:6px 8px;border-radius:var(--radius);background:rgba(0,0,0,0.12);color:var(--warning);"></div>
+            <div class="class-status-note" style="display:none;order:99;flex-basis:100%;font-size:11px;line-height:1.45;margin-top:6px;padding:6px 8px;border-radius:var(--radius);background:rgba(0,0,0,0.12);color:var(--warning);"></div>
             <!-- CLASS STATUS (PHB Ch.3 paladin; PHBR3 p.122 priest). Hidden
                  unless the class is a paladin variant or resolves to the priest
                  category -- paladins are CLASS_CATEGORIES "warrior", not
