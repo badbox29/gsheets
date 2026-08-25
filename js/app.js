@@ -2924,13 +2924,32 @@ function toggleSpellbookSection(root) {
   
   spellbookSection.style.display = isSpellcaster ? 'block' : 'none';
 
+  // NEVER HIDDEN, NEVER CLEARED -- LOCKED AND GREYED. This is the hard
+  // requirement on this whole feature: a fallen paladin's spellbook is a
+  // forgotten memory, not a deleted record. Everything in it goes on being
+  // collected, saved and PRINTED whatever the screen shows; only the opacity
+  // and the pointer events change, and both come straight back.
+  //
+  // Same treatment the hirelings Duration field already uses, and for the same
+  // reason: a field that VANISHED would quietly contradict the PDF.
+  const spellsGated = (typeof abilitiesAreWithdrawn === 'function') && abilitiesAreWithdrawn(root);
+  if (isSpellcaster) {
+    spellbookSection.style.opacity       = spellsGated ? '0.45' : '';
+    spellbookSection.style.pointerEvents = spellsGated ? 'none' : '';
+    spellbookSection.title = spellsGated
+      ? 'Locked while this character\u2019s class status is set \u2014 a forgotten memory, not a deleted one. Nothing here is removed, and it all returns when the status goes back to Active.'
+      : '';
+  }
+
   // The sidebar Study / Pray button follows the same test. Kept here rather than
   // given its own copy of that class list: two lists of caster classes WILL
   // drift, and a fighter offered a Study button or a necromancer denied one are
   // both silent failures nobody reports.
   const studyBtn = root.querySelector('.study-button');
   if (studyBtn) {
-    studyBtn.style.display = isSpellcaster ? 'block' : 'none';
+    // Hidden outright rather than greyed: unlike the spellbook this holds no
+    // record, it is an action, and a withdrawn caster has no spells to prepare.
+    studyBtn.style.display = (isSpellcaster && !spellsGated) ? 'block' : 'none';
     // Priests pray; the conditions are identical (PHB Ch.7).
     const isPriestCaster = clazz.includes('cleric') || clazz.includes('druid') ||
                            clazz.includes('priest') || clazz.includes('shaman') ||
