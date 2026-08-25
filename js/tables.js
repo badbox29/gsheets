@@ -1406,7 +1406,30 @@ function canSpecialize(root) {
   const charType = (val(root, "char_type") || "single").toLowerCase();
   if (charType !== "single") return false;
   const clazz = (val(root, "clazz") || "").trim().toLowerCase();
-  return clazz === "fighter";
+  if (clazz === "fighter") return true;
+
+  // PHBR3 p.90. The priest of the god of War "must choose one weapon from the
+  // list of weapons available and specialize in that weapon according to normal
+  // weapon specialization rules. He is the only priest who can take any weapon
+  // specialization." Guarded because getSpecialtyPriestOverride lives in
+  // calc.js, which loads after this file.
+  //
+  // HE GETS THE WHOLE PACKAGE, TABLE 35 INCLUDED. The PHB cannot settle this:
+  // the only thing it says about who may specialize is "single-class fighters
+  // only", and that is the exact restriction PHBR3 lifts. Reading the word
+  // "fighter" there as proof the attack rate is a class feature is circular --
+  // it appears because of the gate, not because of the rate. So "normal rules"
+  // means the rules as written minus the eligibility restriction, and there is
+  // no principled seam between the +1/+2 bonuses and the attack progression.
+  //
+  // In practice a War priest specialized in a warhammer attacks 3/2 at levels
+  // 1-6, 2 at 7-12 and 5/2 at 13+ WITH THAT WEAPON ONLY -- everything else
+  // stays at his Table 15 rate of 1, and his THAC0 stays a priest's throughout.
+  // Specialization never touches THAC0.
+  if (typeof getSpecialtyPriestOverride === 'function' &&
+      getSpecialtyPriestOverride(root, 'sp_weapon_spec')) return true;
+
+  return false;
 }
 
 // ADDITIONAL slots (beyond the base proficiency) required to specialize.
