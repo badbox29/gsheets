@@ -8985,6 +8985,18 @@ function bindSheet(root, tab){
       }
       root._prevClassStatus = now;
       if (typeof recalculateAll === 'function') recalculateAll(root);
+      // recalculateAll carries saves, spell slots, turn undead and class
+      // abilities, but NOT these two -- so the spellbook stayed crisp and the
+      // Wisdom bonus tooltips stayed put until a save and reload.
+      //
+      // Called HERE rather than added to recalculateAll: toggleSpellbookSection
+      // rewrites the Study/Pray button and cleanupOldWisTooltips rewrites
+      // tooltips across the slot boxes, and recalculateAll fires on every
+      // keystroke in the class field. A status change is a single deliberate
+      // choice, which is the right frequency for both.
+      if (typeof toggleSpellbookSection === 'function') toggleSpellbookSection(root);
+      if (typeof cleanupOldWisTooltips === 'function') cleanupOldWisTooltips(root);
+    }
     }
   });
 
