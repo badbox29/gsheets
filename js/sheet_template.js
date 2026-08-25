@@ -78,6 +78,33 @@ const SHEET_HTML = `
                Kit used to sit beside Race and Gender. -->
           <div class="row" style="margin-top:8px">
             <div class="col single-class-field"><label>Class</label><input data-field="clazz" type="text" list="class-options" autocomplete="off" title="Suggestions only — this stays a free-text field. Multi and dual-class characters store a formatted display string here, which no dropdown could hold. Prefix homebrew with hb_."></div>
+            <!-- ADVISORY BANNER. Says what the book says happened and stops
+                 there. PHBR3's fallen priest loses levels and his class; the
+                 sheet still does not touch clazz or level, it tells the player
+                 to. Populated by the same owner that shows the column. -->
+            <div class="class-status-note" style="display:none;flex-basis:100%;font-size:11px;line-height:1.45;margin-top:6px;padding:6px 8px;border-radius:var(--radius);background:rgba(0,0,0,0.12);color:var(--warning);"></div>
+            <!-- CLASS STATUS (PHB Ch.3 paladin; PHBR3 p.122 priest). Hidden
+                 unless the class is a paladin variant or resolves to the priest
+                 category -- paladins are CLASS_CATEGORIES "warrior", not
+                 "priest", so the test needs both conditions.
+                 VISIBILITY HAS ONE OWNER, in calc.js. NOT marked
+                 single-class-field despite sitting in this row: that class is
+                 swept by handleCharacterTypeChange, which writes style.display
+                 on every match and would fight the owner. The owner tests
+                 char_type itself instead.
+                 MANUAL, NEVER AUTO-DETECTED. Alignment may prompt; it may not
+                 set. Two of the three PHB grades are not alignment-detectable,
+                 the first can be permanent while still LG, and Chris's CN
+                 hb_dpaladin would register fallen the instant it loaded. -->
+            <div class="col class-status-col" style="display:none;">
+              <label>Class Status</label>
+              <select data-field="class_status" title="PHB Ch.3 and PHBR3 p.122. Set this by hand from what happened at the table -- the sheet never infers it from your alignment.">
+                <option value="">Active</option>
+                <option value="graced" class="cs-graced"></option>
+                <option value="suspended" class="cs-suspended"></option>
+                <option value="fallen" class="cs-fallen"></option>
+              </select>
+            </div>
             <div class="col single-class-field">
               <label>Kit</label>
               <select data-field="kit">
