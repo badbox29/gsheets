@@ -1,4 +1,10 @@
-// ===== SHEET TEMPLATE (scoped; no IDs) =====.
+// ===== SHEET TEMPLATE (scoped; no IDs) =====
+//
+// THIS WHOLE FILE IS ONE JS TEMPLATE LITERAL. A backtick anywhere terminates it,
+// and a dollar sign followed by a brace starts an interpolation. Either one
+// breaks the file, and the error surfaces in app.js as "SHEET_HTML is not
+// defined" rather than pointing here. Run node --check on this file before
+// committing any edit to it.
 const SHEET_HTML = `
   <div class="sheet-body">
     <!-- Vertical Tab Bar -->
@@ -81,11 +87,10 @@ const SHEET_HTML = `
             <!-- Some kits are ONE kit in the book that BRANCHES. PHBR1's
                  Pirate/Outlaw prints a single entry and then splits four
                  mechanical fields, labelling them "Pirate's" and "Outlaw's"; the
-                 Amazon does the same on race. Hidden entirely unless theNOTE: this whole file is ONE JS template literal. A backtick
-                 anywhere terminates it, and a dollar sign followed by a brace
-                 starts an interpolation. Either one breaks the file, and the
-                 error surfaces in app.js as "SHEET_HTML is not defined" rather
-                 than pointing here. -->
+                 Amazon does the same on race. Hidden entirely unless the selected
+                 kit declares a variants block, which populateKitVariantDropdown
+                 checks on every render -- a kit without one never shows the
+                 column at all. -->
             <!-- NOT single-class-field, deliberately. handleCharacterTypeChange
                  sweeps that class and writes style.display on every match, which
                  blew away the inline none and showed an empty "Variant" column on
@@ -123,10 +128,17 @@ const SHEET_HTML = `
                     PHB Chapter 3. Four classes have more than one: paladin (Str, Cha),
                     ranger (Str, Dex, Wis), druid (Wis, Cha) and bard (Dex, Cha). All of
                     them must reach 16 &mdash; not just one.<br><br>
+                    <span class="specialty-priest-note" style="display:none;">
+                    <strong>Specialty priests can also earn 5%.</strong> The Complete
+                    Priest&rsquo;s Handbook (p.13) lets a priesthood name a second prime
+                    requisite beside Wisdom: either ability at 16 earns 5%, both at 16
+                    earns 10%. Set it under Specialty Priest below &mdash; the only 5%
+                    tier in the game.<br><br>
+                    </span>
                     <strong>The sheet does not apply it for you.</strong> The bonus is to
                     experience <em>awards</em>, so it attaches to XP as you earn it, not to
-                    the total already banked. Add the 10% when your DM makes an award, then
-                    enter the result.<br><br>
+                    the total already banked. Add the bonus when your DM makes an award,
+                    then enter the result.<br><br>
                     <strong>Multi-class</strong> characters need 16 in the prime requisites of
                     every one of their classes. <strong>Dual-class</strong> reads the new class
                     only, which is automatic in practice, since switching already demands 17 or
@@ -140,6 +152,85 @@ const SHEET_HTML = `
             </div>
           </div>
           
+          <!-- SPECIALTY PRIEST (PHBR3). Hidden unless the phbr3.specialtyPriests
+               band is on AND the class resolves to the priest category.
+               VISIBILITY HAS ONE OWNER, in app.js. Deliberately NOT marked
+               single-class-field: handleCharacterTypeChange sweeps that class and
+               writes style.display on every match, which is exactly how the kit
+               Variant column once appeared blank on single-class sheets.
+               Single-class only for now -- p.95 allows multi-class specialty
+               priests, but hit dice and crossovers go ambiguous across two
+               classes. Every control is a select because val() reads el.value
+               and cannot see a checkbox's checked state. -->
+          <div class="specialty-priest" style="display:none;margin-top:8px;padding:8px;background:rgba(0,0,0,0.1);border-radius:var(--radius);">
+            <h4 style="font-size:14px;margin:0 0 6px 0;">Specialty Priest</h4>
+            <p style="font-size:12px;color:var(--muted);margin:0 0 8px 0;line-height:1.5;">
+              PHBR3 prints some sixty priest classes and expects your DM to invent more.
+              Set whatever your priesthood grants. Blank entries behave exactly as the
+              Player&rsquo;s Handbook cleric, so an ordinary cleric needs nothing here.
+            </p>
+            <div class="row">
+              <div class="col">
+                <label>Second Prime Requisite</label>
+                <select data-field="sp_prime_req2" title="PHBR3 p.13. Wisdom is always the first. With a second, either at 16 earns +5% experience and both at 16 earns +10%. The PHB has no +5% tier.">
+                  <option value="">None (Wisdom only)</option>
+                  <option value="str">Strength</option>
+                  <option value="dex">Dexterity</option>
+                  <option value="con">Constitution</option>
+                  <option value="int">Intelligence</option>
+                  <option value="cha">Charisma</option>
+                </select>
+              </div>
+              <div class="col">
+                <label>Hit Die</label>
+                <select data-field="sp_hit_die" title="PHBR3 pp.20-21. Priests of gods with little physical demand roll d6; d4 where the attribute implies soft living. Affects only what the generator rolls -- hit points you have already are never recalculated.">
+                  <option value="">Standard (d8)</option>
+                  <option value="6">d6</option>
+                  <option value="4">d4</option>
+                </select>
+              </div>
+              <div class="col">
+                <label>Extra Crossover Group</label>
+                <select data-field="sp_crossover" title="PHBR3 Ch.3. Priest and General are standard for every priest. A priesthood may add one more, which then costs single slots rather than double.">
+                  <option value="">None</option>
+                  <option value="warrior">Warrior</option>
+                  <option value="wizard">Wizard</option>
+                  <option value="rogue">Rogue</option>
+                  <option value="warrior,wizard">Warrior + Wizard</option>
+                  <option value="warrior,rogue">Warrior + Rogue</option>
+                  <option value="wizard,rogue">Wizard + Rogue</option>
+                </select>
+              </div>
+            </div>
+            <div class="row" style="margin-top:8px">
+              <div class="col">
+                <label>Language &amp; Communication</label>
+                <select data-field="sp_language_slot" title="PHBR3 p.25. This granted power gives one extra nonweapon proficiency slot per experience level, usable only for languages appropriate to the priesthood.">
+                  <option value="">Not granted</option>
+                  <option value="yes">Granted (extra language slot per level)</option>
+                </select>
+              </div>
+              <div class="col">
+                <label>Weapon Specialization</label>
+                <select data-field="sp_weapon_spec" title="PHBR3 p.90. A priest of the god of War must choose one weapon from his permitted list and specialize in it. He is the only priest who may specialize at all.">
+                  <option value="">Not permitted</option>
+                  <option value="yes">Permitted</option>
+                </select>
+              </div>
+            </div>
+            <!-- FREE TEXT, NOT A CHECKBOX SET. Restrictions are never computed --
+                 whether one was broken is the DM's call, and PHBR3 punishes it
+                 harshly (p.120: 2d6 damage and every spell withheld). The Ch.2
+                 vocabulary is only a starting point: Wind's "no leathers or furs"
+                 (p.90) fits no checkbox. -->
+            <div class="row" style="margin-top:8px">
+              <div class="col" style="flex:1 1 100%;">
+                <label>Restrictions</label>
+                <input data-field="sp_restrictions" type="text" placeholder="e.g. Celibate and chaste; must wear vestments in public" title="PHBR3 pp.19-21 lists nine kinds: armor, celibacy, chastity, clothing, contamination, hit points, magical items, mutilation and weapons. Recorded and displayed only -- the sheet never enforces these.">
+              </div>
+            </div>
+          </div>
+
           <!-- Multi-Class Fields (hidden by default) -->
           <div class="multi-class-fields" style="display:none;">
             <div class="row" style="margin-top:8px;padding:8px;background:rgba(0,0,0,0.1);border-radius:var(--radius);">
