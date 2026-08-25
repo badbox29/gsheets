@@ -15488,7 +15488,18 @@ function renderTurnUndeadTable(root) {
     return c.includes('paladin');
   }
   
+  // GATED ON STATUS, via the resolver rather than the class string. A fallen
+  // paladin "is ever after a fighter" (PHB Ch.3) and a renounced priest "loses
+  // all his granted powers" (PHBR3 p.122); turning is the clearest of those.
+  // 'graced' deliberately does not gate -- abilitiesAreWithdrawn returns false
+  // for it, which is the whole reason that state exists.
+  //
+  // The check sits HERE rather than in the three character-type branches below,
+  // because all three ask this one function. Single-class only in practice: the
+  // status column is hidden for multi and dual characters, so getFallenStatus
+  // returns '' for them and this is a no-op.
   function canTurnUndead(className) {
+    if (typeof abilitiesAreWithdrawn === 'function' && abilitiesAreWithdrawn(root)) return false;
     return isClericClass(className) || isPaladinClass(className);
   }
   
