@@ -1000,18 +1000,16 @@ function getKitProficiencySurcharge(nwp, root) {
 // Slot cost of a single nonweapon proficiency, including the Table 38 crossover
 // surcharge. `nwp` is an entry from root._nwps. `root` is OPTIONAL -- without it
 // the PHBR2 kit surcharge is simply not applied, so old call sites are safe.
-function getNWPSlotCost(nwp, allowedGroups, root) {
-  // A kit-GRANTED proficiency is free and cannot become unfree -- neither
-  // surcharge below may apply to it. The Stalker's Alertness and Camouflage are
-  // Rogue-group proficiencies granted to a Ranger; charging the out-of-group +1
-  // on something the kit hands over would be worse than charging the base cost.
-  if (nwp && nwp.isKitGranted) return 0;
-
-  // `|| 1` cannot tell an ABSENT slots value from a deliberate ZERO, and 0 is
-  // falsy. Same trap as the weapon proficiency counter and the row label.
-  const parsed = parseInt(nwp.slots !== undefined && nwp.slots !== null && nwp.slots !== ''
-    ? nwp.slots : nwp.Slots, 10);
-  const base = isNaN(parsed) ? 1 : parsed;
+// WHICH surcharge applies, and why. Split out of getNWPSlotCost because the
+// cost alone cannot tell the two apart, and the proficiency row was labelling
+// EVERY surcharge as PHB Table 38 out-of-group -- including a PHBR2 kit charge
+// on a proficiency squarely IN the character's groups. A tooltip that cites the
+// wrong rulebook teaches a player something false about the game.
+//
+// Returns { amount, source } where source is 'class', 'kit', 'both' or ''.
+// getNWPSlotCost delegates here so there is exactly one place that decides.
+function getNWPSurcharge(nwp, allowedGroups, root) {
+  if (nwp && nwp.isKitGranted) return { amount: 0, source: '' };
 
   // COMPUTED FIRST, because the class-group tests below return early. The 16 new
   // PHBR2 proficiencies are absent from Table 37, so getNWPGroups returns []
@@ -1027,8 +1025,27 @@ function getNWPSlotCost(nwp, allowedGroups, root) {
     classSur = groups.some(g => allowedGroups.has(g)) ? 0 : 1;
   }
 
-  // MAX, NOT SUM -- see getKitProficiencySurcharge.
-  return base + Math.max(classSur, kitSur);
+  // MAX, NOT SUM -- see getKitProficiencySurcharge. 'both' therefore still costs
+  // one slot; it records that either rule would have charged it alone.
+  const amount = Math.max(classSur, kitSur);
+  const source = !amount ? '' : (classSur && kitSur) ? 'both' : (classSur ? 'class' : 'kit');
+  return { amount, source };
+}
+
+function getNWPSlotCost(nwp, allowedGroups, root) {
+  // A kit-GRANTED proficiency is free and cannot become unfree -- neither
+  // surcharge may apply to it. The Stalker's Alertness and Camouflage are
+  // Rogue-group proficiencies granted to a Ranger; charging the out-of-group +1
+  // on something the kit hands over would be worse than charging the base cost.
+  if (nwp && nwp.isKitGranted) return 0;
+
+  // `|| 1` cannot tell an ABSENT slots value from a deliberate ZERO, and 0 is
+  // falsy. Same trap as the weapon proficiency counter and the row label.
+  const parsed = parseInt(nwp.slots !== undefined && nwp.slots !== null && nwp.slots !== ''
+    ? nwp.slots : nwp.Slots, 10);
+  const base = isNaN(parsed) ? 1 : parsed;
+
+  return base + getNWPSurcharge(nwp, allowedGroups, root).amount;
 }
 
 // === Tracking (PHB Chapter 5, Tables 39 and 40) ===
