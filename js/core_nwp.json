@@ -138,15 +138,6 @@
     "Notes": "Create and repair metal objects. Requires forge and tools."
   },
   {
-    "Proficiency Name": "Blind-Fighting",
-    "Category": "Warrior",
-    "Slots": "2",
-    "Ability Check": "N/A",
-    "Modifier": "N/A",
-    "Source": "PHB",
-    "Notes": "Reduce penalties for fighting in darkness. Never completely surprised."
-  },
-  {
     "Proficiency Name": "Blind-fighting",
     "Category": "Rogue",
     "Slots": "2",
