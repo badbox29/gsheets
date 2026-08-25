@@ -6722,6 +6722,10 @@ function collectSheet(root){
     // says: unticking the book suspends the EFFECT, never the entry, so a
     // character keeps his priesthood through a table that switches PHBR3 off
     // and back on.
+    // Written UNCONDITIONALLY, like specialtyPriest. A status is a fact about
+    // what happened at the table; it survives the class being edited, the
+    // character being exported, and every supplement toggle.
+    classStatus: val(root,'class_status'),
     specialtyPriest: {
       primeReq2:    val(root,'sp_prime_req2'),
       hitDie:       val(root,'sp_hit_die'),
@@ -7160,6 +7164,12 @@ function loadSheet(root, data){
   // no _pending dance like kitVariant, whose options are built later by
   // populateKitVariantDropdown. Absent on every character saved before this
   // shipped, hence the || {} rather than trusting the key to exist.
+  // Class status. Absent on every character saved before this shipped, so the
+  // || '' leaves them Active. _prevClassStatus seeds the confirmation baseline
+  // so loading a fallen character does not immediately prompt about itself.
+  val(root, 'class_status', data.classStatus || '');
+  root._prevClassStatus = data.classStatus || '';
+
   const sp = data.specialtyPriest || {};
   val(root, 'sp_prime_req2',   sp.primeReq2   || '');
   val(root, 'sp_hit_die',      sp.hitDie      || '');
@@ -8929,6 +8939,31 @@ function bindSheet(root, tab){
       // p.90 advisory counts specialized weapons -- neither repaints without
       // this, since renderWeaponProficiencies is in no shared refresh list.
       if (typeof renderWeaponProficiencies === 'function') renderWeaponProficiencies(root);
+    }
+    // CLASS STATUS. Moving INTO a gating state withdraws saves, turning, class
+    // abilities and spell access at once, so it asks first -- a misclick must
+    // not be able to strip a character. Moving OUT, or into 'graced' (which
+    // gates nothing), is not destructive and asks nothing.
+    if (f === 'class_status') {
+      const prev = root._prevClassStatus || '';
+      const now  = (e.target.value || '').trim().toLowerCase();
+      if ((now === 'suspended' || now === 'fallen') && now !== prev) {
+        const isPriest = (typeof getClassCategory === 'function') &&
+                         getClassCategory(val(root, 'clazz') || '') === 'priest';
+        const what = isPriest
+          ? 'granted powers, turning and spell access'
+          : 'saving throw bonus, turning, special benefits and spell access';
+        const irrev = now === 'fallen'
+          ? '\n\nThe books call this one irrevocable.' : '';
+        if (!confirm('Withdraw this character\u2019s ' + what + '?' + irrev +
+                     '\n\nNothing is deleted \u2014 spells and spellbooks are kept and ' +
+                     'greyed, and everything returns if you set the status back.')) {
+          e.target.value = prev;
+          return;
+        }
+      }
+      root._prevClassStatus = now;
+      if (typeof recalculateAll === 'function') recalculateAll(root);
     }
   });
 
