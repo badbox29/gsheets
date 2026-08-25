@@ -290,11 +290,19 @@ Follow these steps **in order** to avoid overwriting your data:
   navigation when the stars are out, and an observant character's better chance
   of spotting a concealed door.
 
+* Swashbucklers fight with a fighter's THAC0 using their chosen blade, and the
+  Combat Quick Reference now says how much better that is at their level — three
+  points at 6th, ten at 20th. Subtract it from that weapon's line on the attack
+  matrix; everything already in that line still counts.
+
 **Fixes**
 
 * Supplement books on the Options tab now start collapsed every time you open
   the app, and stay where you put them while you work. Previously, ticking any
   rule sprang every active book back open.
+* Proficiency descriptions checked against *The Complete Ranger's Handbook* as
+  well, which prints many of the same ones. Every slot cost, ability and modifier
+  agreed; Alertness gained the fuller description the later book supplies.
 
 #### v11.5.0
 
