@@ -7499,6 +7499,63 @@ const SUPPLEMENTS = {
       ]
     }
   },
+    phbr3: {
+    code:  'PHBR3',
+    title: 'The Complete Priest\u2019s Handbook',
+    order: 3,
+
+    // ONE BAND FOR NOW. Two more are expected from this book -- "Toning Down
+    // the Cleric" (p.122) and the priest punishment rules (pp.120-122) -- but a
+    // toggle owning no implemented rule is a checkbox that does nothing, so
+    // each arrives with its code.
+    //
+    // NO legacyBand ANYWHERE IN THIS BOOK. PHBR1 needs it because its bands
+    // replaced a single `core` toggle people had already ticked. PHBR3 has
+    // never shipped a core key, so there is nothing to fall back to, and
+    // isSupplementActive treats a missing legacyBand as "no fallback".
+    //
+    // THE SIXTY PRIESTHOODS OF CHAPTER 3 ARE NOT SHIPPED AS DATA. This band
+    // gives the player the FIELDS to express any of them -- or a faith the DM
+    // invented off the Faith Design Sheet (p.39), which is what the book
+    // actually asks for. Sphere access is already recorded per character and
+    // needs nothing from here.
+    bandOrder: ['specialtyPriests'],
+
+    specialtyPriests: {
+      label: 'Specialty priests',
+      hint:  'Per-priesthood overrides: hit die, second prime requisite, proficiency crossovers.',
+      rules: ['specialtyPriestsPHBR3'],
+      changes: [
+        { text: 'A SECOND PRIME REQUISITE (p.13). A priesthood may name an ability ' +
+                'beyond Wisdom: either at 16 earns +5% experience, both at 16 earns ' +
+                '+10%. Roughly a third of the book\u2019s priesthoods do this, in every ' +
+                'combination from Charisma to Constitution. The Player\u2019s Handbook ' +
+                'has no +5% tier at all, so this adds one.' },
+        { text: 'HIT DICE BY PRIESTHOOD (pp.20\u201321). Priests of gods with little ' +
+                'physical demand roll d6, or d4 where the deity\u2019s attribute implies ' +
+                'soft living \u2014 Arts, Dawn, Literature/Poetry, Moon, Peace and ' +
+                'Prosperity take d6; Love and Magic take d4.',
+          caveat: 'Affects only what the character generator rolls. Hit points are a ' +
+                  'field you type, and nothing recalculates them, so a character ' +
+                  'already in play keeps every point he has.' },
+        { text: 'PROFICIENCY GROUP CROSSOVERS (Ch.3). Each priesthood names its own ' +
+                'own-group set. Most read Priest and General; a god of War or Wind adds ' +
+                'Warrior, a god of Everything adds Wizard, one of Prosperity adds Rogue. ' +
+                'Crossover groups cost single slots rather than double. Also here: the ' +
+                'extra language slot per level granted by Language and Communication ' +
+                '(p.25), and weapon specialization, which the god of War alone permits ' +
+                'a priest (p.90).' },
+        { text: 'RESTRICTIONS (pp.19\u201321) are recorded and displayed, never enforced. ' +
+                'Celibacy, chastity, vestments in public, forbidden foods and materials ' +
+                'all appear across Chapter 3, and the book punishes violations harshly ' +
+                '(p.120: 2d6 damage and every spell withheld). Whether a restriction was ' +
+                'broken is your DM\u2019s call, not the sheet\u2019s.',
+          caveat: 'SINGLE-CLASS ONLY for now. PHBR3 p.95 allows multi-class specialty ' +
+                  'priests, but hit dice and crossovers become ambiguous across two ' +
+                  'classes, so the fields follow the same rule as kits.' }
+      ]
+    }
+  },
   phbr11: {
     code:  'PHBR11',
     title: 'The Complete Ranger\u2019s Handbook',
