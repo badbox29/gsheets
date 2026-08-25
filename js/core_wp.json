@@ -739,7 +739,7 @@
     "Cost": "2 gp",
     "Weight": "2 lb",
     "Source": "PHBR1",
-    "Notes": "A metal hook with a metal or wooden crossbar at the base. \"Attached\" means the hook has been used to replace a hand. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: PHBR1 pp.95 and 119 print two IDENTICAL copies of this row and the in-chapter description adds no conflicting numbers. The values here are PHBR1's. THE CRH REPRINT DISAGREES: Speed Factor 2 (CRH reprint prints 4). The original is followed because a reprint should not silently rewrite its source -- the same call made for PHB Table 27 over CRH Table 54's transposed halfling row. Recorded, not resolved: the CRH page has not been re-read to confirm the reprint says what we transcribed. PROFICIENCY RELATIONSHIP (PHBR1 p.100): NOT related to any other proficiency. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
+    "Notes": "A metal hook with a metal or wooden crossbar at the base. \"Attached\" means the hook has been used to replace a hand. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: PHBR1 pp.95 and 119 print two IDENTICAL copies of this row and the in-chapter description adds no conflicting numbers. The values here are PHBR1's. THE CRH REPRINT DISAGREES: Speed Factor 2 (CRH reprint prints 4). The original is followed because a reprint should not silently rewrite its source -- the same call made for PHB Table 27 over CRH Table 54's transposed halfling row. Recorded, not resolved: the CRH page has not been re-read to confirm the reprint says what we transcribed. PROFICIENCY RELATIONSHIP (PHBR1 p.100): NOT related to any other proficiency. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed. PHBR3 p.124 PRINTS THIS WEAPON AS THE 'BILL' but at 5 cp, which is the HELD price -- so PHBR3 describes the held variant and says nothing about the 2 gp cost of replacing a hand. Source deliberately NOT updated here: attribution means the book printed these values, and PHBR3 did not print this row's cost."
   },
   {
     "Weapon Name": "Gaff/Hook, Held",
@@ -761,8 +761,8 @@
     "Group": "Dagger",
     "Cost": "5 cp",
     "Weight": "2 lb",
-    "Source": "PHBR1",
-    "Notes": "A metal hook with a metal or wooden crossbar at the base, carried in the hand rather than replacing it. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: PHBR1 pp.95 and 119 print two IDENTICAL copies of this row and the in-chapter description adds no conflicting numbers. The values here are PHBR1's. THE CRH REPRINT DISAGREES: Speed Factor 2 (CRH reprint prints 4). The original is followed because a reprint should not silently rewrite its source -- the same call made for PHB Table 27 over CRH Table 54's transposed halfling row. Recorded, not resolved: the CRH page has not been re-read to confirm the reprint says what we transcribed. PROFICIENCY RELATIONSHIP (PHBR1 p.100): NOT related to any other proficiency. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
+    "Source": "PHBR1, PHBR3",
+    "Notes": "A metal hook with a metal or wooden crossbar at the base, carried in the hand rather than replacing it. Reprinted in PHBR11 Table 58 (p.100) as an optional weapon from The Complete Fighter's Handbook. ATTRIBUTION CHECKED AGAINST THE ORIGINAL, August 2026: PHBR1 pp.95 and 119 print two IDENTICAL copies of this row and the in-chapter description adds no conflicting numbers. The values here are PHBR1's. THE CRH REPRINT DISAGREES: Speed Factor 2 (CRH reprint prints 4). The original is followed because a reprint should not silently rewrite its source -- the same call made for PHB Table 27 over CRH Table 54's transposed halfling row. Recorded, not resolved: the CRH page has not been re-read to confirm the reprint says what we transcribed. PROFICIENCY RELATIONSHIP (PHBR1 p.100): NOT related to any other proficiency. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed. ALSO PRINTED AS 'BILL' (PHBR3 p.124), AND THE BOOK SAYS SO OUTRIGHT: p.41 states the bill 'is the same as the gaff/hook' and that 'gaff' and 'hook' are its nautical names. PHBR3's row matches THIS one and not the Attached variant on every value including cost -- 5 cp, 2 lb, S, P, SF 2, 1d4/1d3, one-handed only. NO SEPARATE 'BILL' ROW EXISTS, deliberately: the book asserts the equivalence, so a second row would be the same weapon duplicated under a third name. Search for 'bill' finds this row only if the browser matches Notes -- an open question for every aliased weapon, not one to solve by renaming an identity anchor that PHBR1 and PHBR11 both print as gaff/hook. NOT the PHB's Bill-Guisarme, which is a Size L polearm doing 2d4/1d10 at SF 10."
   },
   {
     "Weapon Name": "Glaive",
@@ -1401,8 +1401,8 @@
     "Group": "Net",
     "Cost": "5 sp",
     "Weight": "3 lb",
-    "Source": "PHBR1",
-    "Notes": "A length of rope with a loop at the end; the wielder holds the slack in his off-hand, twirls the lasso in his other, and hurls the loop. ON A HIT THE ATTACKER MUST DECLARE WHAT HE IS TRYING TO ACCOMPLISH -- the book gives five uses. TRIP: a Called Shot to the legs; target makes a Dexterity check with Pull/Trip modifiers or falls. PIN ARMS: a Called Shot to the arms; target makes a Strength check with Pull/Trip modifiers or both arms are pinned as per the Pin maneuver, each additional lasso giving -4 to his Strength for struggling, and at Strength 0 he cannot escape. DISMOUNT A RIDER: no Called Shot needed, but both parties must make Strength rolls when the mount's movement reaches the end of the rope -- loser takes 1d2 (rope torn from hands) or 1d3 (yanked from the saddle); tie both. SNAG THE HEAD: a Called Shot to the head, 1d3 damage plus Strength bonus on the hit and 1 point plus Strength per round thereafter; if the wielder can hoist the victim into the air it becomes 1d4 STRANGULATION damage per round with no Strength bonus, and a strangling victim cannot shout or raise the alarm. Tying the rope to a stationary object wins the Strength contest automatically unless the rope breaks. Range is a function of the rope's length rather than a throw, so the book gives it S 1, M 2, L 3 with no fixed rate of fire. Two-handed only. PHBR1 pp.94-95, 98, 119. TWO-HANDED ONLY (PHBR1 pp.95, 119, marked '&'): intended for two-handed use only."
+    "Source": "PHBR1, PHBR3",
+    "Notes": "A length of rope with a loop at the end; the wielder holds the slack in his off-hand, twirls the lasso in his other, and hurls the loop. ON A HIT THE ATTACKER MUST DECLARE WHAT HE IS TRYING TO ACCOMPLISH -- the book gives five uses. TRIP: a Called Shot to the legs; target makes a Dexterity check with Pull/Trip modifiers or falls. PIN ARMS: a Called Shot to the arms; target makes a Strength check with Pull/Trip modifiers or both arms are pinned as per the Pin maneuver, each additional lasso giving -4 to his Strength for struggling, and at Strength 0 he cannot escape. DISMOUNT A RIDER: no Called Shot needed, but both parties must make Strength rolls when the mount's movement reaches the end of the rope -- loser takes 1d2 (rope torn from hands) or 1d3 (yanked from the saddle); tie both. SNAG THE HEAD: a Called Shot to the head, 1d3 damage plus Strength bonus on the hit and 1 point plus Strength per round thereafter; if the wielder can hoist the victim into the air it becomes 1d4 STRANGULATION damage per round with no Strength bonus, and a strangling victim cannot shout or raise the alarm. Tying the rope to a stationary object wins the Strength contest automatically unless the rope breaks. Range is a function of the rope's length rather than a throw, so the book gives it S 1, M 2, L 3 with no fixed rate of fire. Two-handed only. PHBR1 pp.94-95, 98, 119. TWO-HANDED ONLY (PHBR1 pp.95, 119, marked '&'): intended for two-handed use only. PHBR3 p.124 prints this weapon with values identical to PHBR1's -- 5 sp, 3 lb, L, no damage, SF 10, two-handed only. Attribution appended so the row is known to have two sources: a multi-source record is one whose second source gets a say if a value is ever questioned."
   },
   {
     "Weapon Name": "Light Crossbow",
@@ -1597,7 +1597,7 @@
     "Damage (L)": "1d10",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
-    "Grip": "",
+    "Grip": "two-handed",
     "No Proficiency": "",
     "Speed Factor": "9",
     "Speed Factor 2H": "",
@@ -1606,10 +1606,10 @@
     "Range (M)": "",
     "Range (L)": "",
     "Group": "Hammer",
-    "Cost": "10 gp",
-    "Weight": "16 lb",
-    "Source": "Unattributed",
-    "Notes": ""
+    "Cost": "5 gp",
+    "Weight": "10 lb",
+    "Source": "PHBR3",
+    "Notes": "PHBR3 p.124. ADOPTED IN FULL FROM AN UNATTRIBUTED ROW, August 2026. The previous entry held 10 gp / 16 lb with a BLANK Grip and no identified source; PHBR3 agrees on Size, Type, Speed Factor and both damage figures and supplies cost, weight and the missing grip. An attributed printing beats a row whose origin nobody can name, and nothing competes with PHBR3 here -- unlike Net and Nunchaku, where PHBR1 prints rival values and the conflict is left standing. Note the weight change is real: 16 lb to 10 lb moves encumbrance for anyone carrying one. A polearm with a heavy bludgeoning head, appropriate to clerics and to specific priests not allowed edged weapons; where a priesthood permits polearms this includes the maul and the mancatcher, but a priesthood listing the maul ALONE does not thereby gain the other polearms. TWO-HANDED ONLY (PHBR3 p.124, marked '☆'). PHBR3 p.124 prints this weapon in its New Weapons List. The table's footnotes mark grip: '*' one-handed only, '☆' two-handed only. Its 'Type +' column points at the PHB p.90 optional rule for weapon type vs armor type."
   },
   {
     "Weapon Name": "Morning Star",
@@ -1678,7 +1678,7 @@
     "Cost": "5 gp",
     "Weight": "10 lb",
     "Source": "Unattributed",
-    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Entangles, no damage PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Size M. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. TWO-HANDED ONLY (PHBR1 pp.95, 119, marked '&'): intended for two-handed use only."
+    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Entangles, no damage PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Size M. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. TWO-HANDED ONLY (PHBR1 pp.95, 119, marked '&'): intended for two-handed use only. A SECOND BOOK NOW PRINTS PHBR1'S VALUES. PHBR3 p.124 gives figures IDENTICAL to PHBR1's, and carries no equivalent of PHBR1 p.102's 'simplified conversion' disclaimer. VALUES STILL NOT ADOPTED and the Source stays Unattributed -- Chris's call, August 2026. The reason is that PHBR3 may simply be REPRINTING PHBR1's table: all six of its 'new' weapons are ones PHBR1 already printed, and it reproduces PHBR1's martial arts wholesale and says so on p.124. If it is a reprint, this is one source counted twice rather than two books agreeing, and the Oriental Adventures question is untouched. RECORDED, NOT RESOLVED: still settles when someone opens Oriental Adventures. Compare the Maul, adopted from PHBR3 in the same pass because nothing competed with it there."
   },
   {
     "Weapon Name": "Nunchaku",
@@ -1701,7 +1701,7 @@
     "Cost": "3 gp",
     "Weight": "2 lb",
     "Source": "Unattributed",
-    "Notes": "Oriental weapon PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Cost 1 gp, Weight 3 lb, Size M. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.102): its own proficiency, NOT related to any other, flails included. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
+    "Notes": "Oriental weapon PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Cost 1 gp, Weight 3 lb, Size M. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.102): its own proficiency, NOT related to any other, flails included. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed. A SECOND BOOK NOW PRINTS PHBR1'S VALUES. PHBR3 p.124 gives figures IDENTICAL to PHBR1's, and carries no equivalent of PHBR1 p.102's 'simplified conversion' disclaimer. VALUES STILL NOT ADOPTED and the Source stays Unattributed -- Chris's call, August 2026. The reason is that PHBR3 may simply be REPRINTING PHBR1's table: all six of its 'new' weapons are ones PHBR1 already printed, and it reproduces PHBR1's martial arts wholesale and says so on p.124. If it is a reprint, this is one source counted twice rather than two books agreeing, and the Oriental Adventures question is untouched. RECORDED, NOT RESOLVED: still settles when someone opens Oriental Adventures. Compare the Maul, adopted from PHBR3 in the same pass because nothing competed with it there."
   },
   {
     "Weapon Name": "Partisan",
@@ -2022,8 +2022,8 @@
     "Group": "Polearm",
     "Cost": "5 gp",
     "Weight": "8 lb",
-    "Source": "PHBR11",
-    "Notes": "A curved blade on a 5-ft wooden pole. This farm tool cuts grain at harvest and doubles as a weapon, wielded by holding the short wooden bars on the end opposite the blade. ALWAYS used two-handed. Improvised weapon TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws."
+    "Source": "PHBR3, PHBR11",
+    "Notes": "A curved blade on a 5-ft wooden pole. This farm tool cuts grain at harvest and doubles as a weapon, wielded by holding the short wooden bars on the end opposite the blade. ALWAYS used two-handed. Improvised weapon TWO-HANDED ONLY (PHBR1 p.93): cannot be wielded in one hand. The sling is listed here because one hand loads it and the other throws. PHBR3 p.124 prints this weapon with values identical to PHBR11's -- 5 gp, 8 lb, M, P/S, SF 8, 1d6+1/1d8, two-handed only. Source lists PHBR3 FIRST by publication order (1990 before the ranger book), not by when it was transcribed."
   },
   {
     "Weapon Name": "Short Bow",

@@ -363,13 +363,22 @@
     "Notes": "Grants +1 hp when applied to wounds SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
   },
   {
+    "Item Name": "Canon (holy book)",
+    "Category": "Religious",
+    "Capacity": "",
+    "Weight": "5 lb",
+    "Cost": "450 gp",
+    "Source": "PHBR3",
+    "Notes": "PHBR3 p.123. The holy book of a faith, written in the distant past either by the god or by a believer obeying his word. It records important events from the faith's history, explains the requirements the god makes of his followers, and explains his philosophy, goals and concerns. NOT A MAGICAL WORK, and it does NOT act as a holy symbol -- it cannot be used to confront vampires or similar monsters. COST DERIVED, NOT INVENTED: the book calls a canon 'a mere 200 sheets (400 pages)' and prices it at 400 gp in paper alone at 2 gp per sheet, plus 50 gp for binding. That matches this file's own Paper, Sheet at 2 gp (PHB), so the figure is internally consistent with data already held. A priest should have saved enough to commission one SOMETIME BETWEEN 3RD AND 5TH LEVEL; one who reaches 6th without acquiring a copy is viewed with suspicion by commoners and fellow priests alike, who will question his devotion. He carries it wherever he travels and should make every effort to recover a stolen one. Not all faiths have an individual written canon: some share a common one, some transmit it orally, some have none at all. WEIGHT IS AN ESTIMATE, not printed -- the book gives no figure; 5 lb is a 400-page bound volume and should be replaced if a printed weight ever surfaces."
+  },
+  {
     "Item Name": "Holy Symbol, Silver",
     "Category": "Religious",
     "Capacity": "N/A",
     "Weight": "0.5 lb",
     "Cost": "25 gp",
     "Source": "Unattributed",
-    "Notes": "Symbol of deity, required for clerics SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Notes": "Symbol of deity, required for clerics SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. PHBR3 p.123: holy symbols are usually duplicated in WOOD, GLASS OR PRECIOUS METALS and carried by priests of the god; ordinary followers may carry one too. ENCHANTING ONE takes an hour and THREE priests of 2nd level or higher of the same god, substituting sanctuary for the create water used in making holy water, and requires a material component: some object carved with the god's symbol. Every priest player should know what his holy symbol looks like -- the DM may decide, or let the player design it subject to approval. SOURCE DELIBERATELY LEFT UNATTRIBUTED: PHBR3 names the materials but prints no prices, and attribution here would claim this row's cost came from a book that never gave one. Compare Holy Water, where PHBR3 prints the actual figure. A GLASS holy symbol has no row of its own."
   },
   {
     "Item Name": "Holy Symbol, Wood",
@@ -378,7 +387,7 @@
     "Weight": "0.5 lb",
     "Cost": "1 gp",
     "Source": "Unattributed",
-    "Notes": "Wooden religious symbol SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Notes": "Wooden religious symbol SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. PHBR3 p.123: holy symbols are usually duplicated in WOOD, GLASS OR PRECIOUS METALS and carried by priests of the god; ordinary followers may carry one too. ENCHANTING ONE takes an hour and THREE priests of 2nd level or higher of the same god, substituting sanctuary for the create water used in making holy water, and requires a material component: some object carved with the god's symbol. Every priest player should know what his holy symbol looks like -- the DM may decide, or let the player design it subject to approval. SOURCE DELIBERATELY LEFT UNATTRIBUTED: PHBR3 names the materials but prints no prices, and attribution here would claim this row's cost came from a book that never gave one. Compare Holy Water, where PHBR3 prints the actual figure. A GLASS holy symbol has no row of its own."
   },
   {
     "Item Name": "Holy Water, Vial",
@@ -386,8 +395,8 @@
     "Capacity": "1 oz",
     "Weight": "0.1 lb",
     "Cost": "25 gp",
-    "Source": "Unattributed",
-    "Notes": "2d4 damage to undead and creatures from lower planes SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Source": "PHBR3",
+    "Notes": "2d4 damage to undead and creatures from lower planes SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. PHBR3 p.123 PRINTS THIS PRICE AND EXPLAINS IT, which is why an otherwise unattributed row now has a source. In a temple of the god, THREE priests of 2nd level or higher stand over an empty water-basin and pray for the god's blessing for a full hour, then cast simultaneously: one create water, the second protection from evil, the third purify food & drink. That makes HALF A GALLON. create water alone can make up to four gallons, but the other two spells each cover only half a gallon, so every additional PAIR of priests casting those two adds another half-gallon -- NINE priests together reach the four-gallon ceiling. The expenditure of magic and the hour of time are the reason a single dose costs 25 gp to an adventurer; any three priests of 2nd level or higher of the same god can make it 'for free'."
   },
   {
     "Item Name": "Hourglass",
