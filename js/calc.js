@@ -7718,6 +7718,20 @@ function renderProficiencySlots(root) {
   const langSpent = getLanguageSlotsSpent(root);
   nwpSpent += langSpent;
 
+  // PHBR3 p.25, Language and Communication: "one extra nonweapon proficiency
+  // slot each level, and must use that slot to acquire a language."
+  //
+  // MODELLED AS AN OFFSET AGAINST LANGUAGE SPEND, not as an addition to the
+  // budget. The book restricts these slots to languages; adding them to
+  // nwpTotal would let them be spent on Herbalism with nothing to object. The
+  // min() means a grant can never exceed what languages actually cost, so it
+  // cannot subsidize anything else, and the displayed total is the same either
+  // way.
+  const langGrant = getSpecialtyPriestOverride(root, 'sp_language_slot')
+    ? Math.min(parseInt(val(root, 'level') || 1, 10), langSpent)
+    : 0;
+  nwpSpent -= langGrant;
+
   // --- Render ---
   const wpOver  = wpSpent  > budget.wpTotal;
   const nwpOver = nwpSpent > budget.nwpTotal;
@@ -7746,7 +7760,11 @@ function renderProficiencySlots(root) {
   // reads as a contradiction with only a hover tooltip to resolve it, and on a
   // phone there is no hover at all.
   const spendParts = [];
-  if (langSpent > 0)      spendParts.push(`${langSpent} on languages`);
+  if (langSpent > 0) {
+    spendParts.push(langGrant > 0
+      ? `${langSpent} on languages (${langGrant} granted)`
+      : `${langSpent} on languages`);
+  }
   if (bonusSlotTotal > 0) spendParts.push(`${bonusSlotTotal} on extra slots`);
   if (spendParts.length)  nwpLabel += ` \u00B7 ${spendParts.join(', ')}`;
   nwpTextEl.textContent = nwpLabel;
