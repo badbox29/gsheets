@@ -1473,7 +1473,11 @@ const SHEET_HTML = `
         </section>
 
 		<!-- Memorized Spells -->
-		<section class="section">
+		<!-- memorized-section CLASS ADDED so the class-status gate can grey it.
+		     Same rule as the spellbook: LOCKED, NEVER HIDDEN AND NEVER CLEARED.
+		     A withdrawn caster keeps every spell he had prepared, and they all
+		     go on being saved and PRINTED whatever the screen shows. -->
+		<section class="section memorized-section">
 		  
 		  <!-- Spell slot status display -->
 		  <div class="spell-slot-status stat-strip">
