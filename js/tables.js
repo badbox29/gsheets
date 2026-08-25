@@ -7091,9 +7091,9 @@ const OPTIONAL_RULES = {
     default: false
   },
   styleSpecializationPHBR1: {
-    label:   'Fighting styles: Style Specialization (Complete Fighter\\u2019s Handbook)',
-    detail:  'PHBR1 pp.61\\u201364. Four melee fighting styles \\u2014 Single-Weapon, ' +
-             'Two-Hander, Weapon and Shield, Two-Weapon \\u2014 which every character ' +
+    label:   'Fighting styles: Style Specialization (Complete Fighter\u2019s Handbook)',
+    detail:  'PHBR1 pp.61\u201364. Four melee fighting styles \u2014 Single-Weapon, ' +
+             'Two-Hander, Weapon and Shield, Two-Weapon \u2014 which every character ' +
              'already knows some of, by class, from the moment he is created. A weapon ' +
              'proficiency slot may be spent to SPECIALIZE in one. Only single-class ' +
              'Warriors may ever hold more than one specialization; only Warriors and ' +
@@ -7102,6 +7102,23 @@ const OPTIONAL_RULES = {
              'the others change speed factor, damage, attack penalties, or grant an ' +
              'extra attack usable solely for Shield-Punch and Parry. Turning this off ' +
              'suspends the effects without disturbing anything the player entered.',
+    category: 'supplement',
+    default: false
+  },
+  specialtyPriestsPHBR3: {
+    label:   'Specialty priests: per-priesthood overrides (Complete Priest\u2019s Handbook)',
+    detail:  'PHBR3 Chapters 2 and 3. The book prints some sixty priest classes, each ' +
+             'with its own hit die, prime requisites and proficiency crossovers, and ' +
+             'expects the DM to invent more from its Faith Design Sheet (p.39). Rather ' +
+             'than ship sixty rows the book itself tells the DM to rewrite, this exposes ' +
+             'the handful of fields the app cannot otherwise express: a second prime ' +
+             'requisite and its +5% experience tier, a d6 or d4 hit die, extra ' +
+             'proficiency group crossovers, the per-level language slot from Language ' +
+             'and Communication, and weapon specialization for a priest of the god of ' +
+             'War. Sphere access is unaffected \u2014 that is already recorded per ' +
+             'character, from whatever the DM granted. Restrictions are displayed and ' +
+             'never enforced. Turning this off hides the fields and suspends their ' +
+             'effects; nothing entered is discarded.',
     category: 'supplement',
     default: false
   }
@@ -7472,29 +7489,29 @@ const SUPPLEMENTS = {
       rules: ['armorAcrobaticsPHBR2'],
       changes: [
         { text: 'Armor adjusts every acrobatic proficiency, by Table 37 (p.114). ' +
-                'Jump distances shift in FEET \\u2014 a running broad jump is +1 ft with no ' +
-                'armor and \\u221220 ft in plate armor. Tightrope walking and the tumbler\\u2019s ' +
-                'falling check take penalties from \\u22121 to \\u221212.',
+                'Jump distances shift in FEET \u2014 a running broad jump is +1 ft with no ' +
+                'armor and \u221220 ft in plate armor. Tightrope walking and the tumbler\u2019s ' +
+                'falling check take penalties from \u22121 to \u221212.',
           caveat: 'A jump whose adjusted distance falls BELOW ZERO is not a jump of ' +
-                  'no distance: p.114 says the character \\u201cfails the acrobatic feat ' +
-                  'entirely (probably by tripping and landing flat on his face)\\u201d.' },
-        { text: 'Tumbling\\u2019s flat bonuses become armor-dependent. The Player\\u2019s ' +
+                  'no distance: p.114 says the character \u201cfails the acrobatic feat ' +
+                  'entirely (probably by tripping and landing flat on his face)\u201d.' },
+        { text: 'Tumbling\u2019s flat bonuses become armor-dependent. The Player\u2019s ' +
                 'Handbook grants +4 Armor Class and +2 to hit unarmed; Table 37 keeps ' +
                 'both in no armor or elfin chain, drops the defensive bonus to +3 in ' +
                 'studded or padded, +2 in ring or chain, +1 in hide or brigandine, and ' +
                 'to nothing at all in scale mail or heavier.' },
-        { text: 'POLE VAULTING GAINS A PROFICIENCY CHECK THE PLAYER\\u2019S HANDBOOK DOES ' +
+        { text: 'POLE VAULTING GAINS A PROFICIENCY CHECK THE PLAYER\u2019S HANDBOOK DOES ' +
                 'NOT HAVE. p.114: getting off the ground in armor bulkier than leather ' +
-                'requires a check, adjusted by Table 37 \\u2014 which is why that row alone ' +
-                'reads \\u201c\\u2014\\u201d in the No Armor column rather than a number. A vaulter in ' +
+                'requires a check, adjusted by Table 37 \u2014 which is why that row alone ' +
+                'reads \u201c\u2014\u201d in the No Armor column rather than a number. A vaulter in ' +
                 'armor heavier or bulkier than studded or padded can also vault no ' +
                 'higher than the height of his pole.' },
-        { text: 'NOT GATED ON BEING A THIEF, unlike this book\\u2019s other panels. Table 37 ' +
+        { text: 'NOT GATED ON BEING A THIEF, unlike this book\u2019s other panels. Table 37 ' +
                 'is about acrobatic PROFICIENCIES, and a fighter who buys Tumbling is ' +
                 'slowed by his own plate armor exactly as a thief would be. Holding the ' +
                 'proficiency is the gate.',
           caveat: 'Table 37 has no column for silenced elfin chain, so it takes the ' +
-                  'plain elfin chain row \\u2014 the wrapping quiets the links, it does not ' +
+                  'plain elfin chain row \u2014 the wrapping quiets the links, it does not ' +
                   'change how a man tumbles in them.' }
       ]
     }
