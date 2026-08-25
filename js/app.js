@@ -1522,7 +1522,7 @@ function renderSavingThrows(root) {
     }
   });
 
-  if (saveClassNames.some(c => hasPaladinSaveBonus(c))) {
+  if (saveClassNames.some(c => hasPaladinSaveBonus(c, root))) {
     for (let i = 0; i < 5; i++) {
       totalAdj[i] += PALADIN_SAVE_BONUS;
       // Note text carries BOTH numbers on purpose. The stored delta is -2
