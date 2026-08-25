@@ -5410,7 +5410,7 @@ async function renderArmorBrowser(root) {
     // reads it.
     // Provenance is shown instead: entries with no Source key are PHB Chapter 6,
     // so only the exceptions announce themselves.
-    if (armor.Source) details.push(`Source: ${armor.Source}`);
+    const matchSource = spell => !sourceFilter || (spell.source || '') === sourceFilter;
     
     if (details.length > 0) {
       infoHTML += `<div style="font-size:11px;color:var(--muted);margin-top:2px;">${details.join(' | ')}</div>`;
