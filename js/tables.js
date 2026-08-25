@@ -1,4 +1,4 @@
-// ===== escapeHtml — the ONLY HTML escape in this project =====.
+// ===== escapeHtml — the ONLY HTML escape in this project =====
 // Lives in tables.js because it loads first, so calc.js, app.js and print.js can
 // all reach it without any load-order risk.
 //
