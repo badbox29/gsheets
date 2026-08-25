@@ -853,6 +853,12 @@ const SHEET_HTML = `
                one: each sits above the list that resolves it, so the prompt and
                the action are never on different parts of the page. -->
           <div class="kit-advisory-note-wpn" style="display:none;margin-bottom:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
+        <!-- PHBR3 p.90. Populated by renderWeaponProficiencies; empty and
+              hidden unless a specialty priest has specialized in more than one
+              weapon. ADVISORY, NEVER BLOCKING -- the checkboxes stay live and
+              every bonus keeps applying, exactly as the fighting-styles note
+              works, because a DM may well allow it. -->
+         <div class="weapon-profs-advisory" style="display:none;font-size:11px;line-height:1.4;margin-bottom:6px;color:var(--warning);"></div>
          <div class="list weapon-profs-list"></div>
 
           <!-- PHBR1 pp.61-64. Placed HERE, under the weapon slot counter, because
