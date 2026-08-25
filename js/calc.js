@@ -11125,6 +11125,17 @@ function renderClassAbilities(root) {
   const classAbilitiesList = root.querySelector('.class-abilities-list');
   if (!classAbilitiesList) return;
 
+  // GREY THE CONTAINER, do not empty it. A withdrawn ability is still a fact
+  // about the character -- the paladin who fell had a detect evil, and gets it
+  // back on atonement. Dimming the whole list is also far cheaper than testing
+  // every ability individually and looks identical.
+  const gated = (typeof abilitiesAreWithdrawn === 'function') && abilitiesAreWithdrawn(root);
+  classAbilitiesList.style.opacity       = gated ? '0.45' : '';
+  classAbilitiesList.style.pointerEvents = gated ? 'none' : '';
+  classAbilitiesList.title = gated
+    ? 'Withdrawn while this character\u2019s class status is set. Nothing is lost \u2014 set the status back to Active and these return.'
+    : '';
+
   const charType = (val(root, "char_type") || "single").toLowerCase();
 
   // Utility: get auto abilities for a single class up to a level
