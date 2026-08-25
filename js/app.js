@@ -8997,7 +8997,6 @@ function bindSheet(root, tab){
       if (typeof toggleSpellbookSection === 'function') toggleSpellbookSection(root);
       if (typeof cleanupOldWisTooltips === 'function') cleanupOldWisTooltips(root);
     }
-    }
   });
 
   const fightingStyleFields =
