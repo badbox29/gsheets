@@ -6717,6 +6717,19 @@ function collectSheet(root){
     // and collectSheet has never produced it, so every variant silently reset to
     // the race-or-default fallback on the next load.
     kitVariant: val(root,'kit_variant'),
+    // PHBR3 (Chs.2-3). Nested rather than six top-level keys, following
+    // fightingStyles. Written UNCONDITIONALLY, whatever the supplement toggle
+    // says: unticking the book suspends the EFFECT, never the entry, so a
+    // character keeps his priesthood through a table that switches PHBR3 off
+    // and back on.
+    specialtyPriest: {
+      primeReq2:    val(root,'sp_prime_req2'),
+      hitDie:       val(root,'sp_hit_die'),
+      crossover:    val(root,'sp_crossover'),
+      languageSlot: val(root,'sp_language_slot'),
+      weaponSpec:   val(root,'sp_weapon_spec'),
+      restrictions: val(root,'sp_restrictions')
+    },
     // Kit-granted proficiencies the player has deliberately deleted. Without
     // this the next syncKitGrantedNWPs puts every one of them straight back, so
     // the decision survived only until the character was reloaded.
@@ -7142,6 +7155,18 @@ function loadSheet(root, data){
   // survived a load. The comment claiming this ordering was deliberate had it
   // exactly backwards.
   root._pendingKitVariant = data.kitVariant || '';
+
+  // PHBR3 specialty priest overrides. Plain selects, so they restore directly --
+  // no _pending dance like kitVariant, whose options are built later by
+  // populateKitVariantDropdown. Absent on every character saved before this
+  // shipped, hence the || {} rather than trusting the key to exist.
+  const sp = data.specialtyPriest || {};
+  val(root, 'sp_prime_req2',   sp.primeReq2   || '');
+  val(root, 'sp_hit_die',      sp.hitDie      || '');
+  val(root, 'sp_crossover',    sp.crossover   || '');
+  val(root, 'sp_language_slot', sp.languageSlot || '');
+  val(root, 'sp_weapon_spec',  sp.weaponSpec  || '');
+  val(root, 'sp_restrictions', sp.restrictions || '');
 
   root._weaponProfs = data.weaponProfs || [];
   
@@ -7582,6 +7607,11 @@ function loadSheet(root, data){
   renderDexterityEffects(root);
   renderIntelligenceEffects(root);
   renderXPProgression(root);
+  // THE THIRD LIST. bindSheet, loadSheet and recalculateAll each keep their own,
+  // so a renderer has to be added to all three. Missing here means a saved
+  // specialty priest opens with the block hidden and his overrides invisible
+  // until something else triggers a recalculation.
+  if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   renderCoinWeight(root);
   renderRacialAbilities(root);
   renderClassAbilities(root);
@@ -8751,6 +8781,11 @@ function bindSheet(root, tab){
   renderDexterityEffects(root);
   renderIntelligenceEffects(root);
   renderXPProgression(root);
+  // REPEATED FROM recalculateAll, not redundantly: the comment at the head of
+  // this list explains that bindSheet and loadSheet each keep their own, so a
+  // renderer added to recalculateAll alone never fires on a newly bound sheet.
+  // Without this the Specialty Priest block stays hidden until the first edit.
+  if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   renderCoinWeight(root);
   renderRacialAbilities(root);
   renderClassAbilities(root);
@@ -8874,6 +8909,16 @@ function bindSheet(root, tab){
       // only visible consequence of choosing an orientation, so without this the
       // dropdown appears to do nothing until a save and reload.
       if (typeof renderKitAbilities === 'function') renderKitAbilities(root);
+      if (typeof recalculateAll === 'function') recalculateAll(root);
+    }
+    // PHBR3 specialty priest overrides. recalculateAll rather than a hand-picked
+    // list, for the same reason the fighting styles below use it: a second prime
+    // requisite moves the XP bonus, a crossover group moves every nonweapon slot
+    // cost, and the language grant moves the slot counter -- and those have order
+    // constraints between them that a short list here would silently break.
+    // sp_restrictions is in the pattern for consistency; it displays only, and
+    // being a text input it fires on blur rather than per keystroke.
+    if (f && /^sp_(prime_req2|hit_die|crossover|language_slot|weapon_spec|restrictions)$/.test(f)) {
       if (typeof recalculateAll === 'function') recalculateAll(root);
     }
   });
@@ -15886,6 +15931,11 @@ function recalculateAll(root) {
   if (typeof renderAttackMatrix === 'function') renderAttackMatrix(root);
   if (typeof renderSpellSlots === 'function') renderSpellSlots(root);
   if (typeof renderXPProgression === 'function') renderXPProgression(root);
+  // BEFORE renderPrimeRequisiteBonus, deliberately. This owns visibility for the
+  // Specialty Priest block and the 5%-tier note in the XP disclosure, and it is
+  // the gate that decides whether a second prime requisite is legible at all --
+  // so it settles before the bonus is computed from it.
+  if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   if (typeof renderPrimeRequisiteBonus === 'function') renderPrimeRequisiteBonus(root);
   if (typeof renderThiefSkills === 'function') renderThiefSkills(root);
   if (typeof renderThiefSkillsSection === 'function') renderThiefSkillsSection(root);
