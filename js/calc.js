@@ -6295,7 +6295,11 @@ function addLanguageProficiency(root, lang) {
   });
   
   renderLanguageProficiencies(root);
-  
+  // See deleteLanguageProficiency: a new language spends a nonweapon slot, and
+  // under PHBR3's Language and Communication grant it may also change how many
+  // are subsidized -- so the budget line has to repaint here too.
+  if (typeof renderProficiencySlots === 'function') renderProficiencySlots(root);
+
   // Mark as unsaved
   const tab = document.querySelector('.tab.active');
   if (tab) markUnsaved(tab, true, root);
@@ -6568,7 +6572,12 @@ function deleteLanguageProficiency(root, index) {
   if (confirm(`Remove ${langName} from your languages?`)) {
     root._languages.splice(index, 1);
     renderLanguageProficiencies(root);
-    
+    // Languages are bought with NONWEAPON slots, so removing one frees budget.
+    // Missing here, and in addLanguageProficiency, since before PHBR3 --
+    // setNativeLanguage and updateLanguageFlag both carry this call and these
+    // two did not, so the counter went stale on every add and delete.
+    if (typeof renderProficiencySlots === 'function') renderProficiencySlots(root);
+
     // Mark as unsaved
     const tab = document.querySelector('.tab.active');
     if (tab) markUnsaved(tab, true, root);
