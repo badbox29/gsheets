@@ -1988,6 +1988,48 @@ function renderXPProgression(root) {
   }
 }
 
+// PHBR3 specialty priest overrides: the SINGLE OWNER of visibility for the
+// Specialty Priest block and for the 5%-tier note in the XP disclosure. Two
+// owners is how the kit Variant column once rendered blank on single-class
+// sheets, so nothing else may write display on either element.
+//
+// char_type IS CHECKED FIRST, and not only for the stated single-class scope.
+// getClassCategory matches by substring, longest key first, so "Cleric 7 /
+// Fighter 9" resolves to WARRIOR (fighter, 7 chars, beats cleric, 6) while
+// "Cleric 7 / Thief 9" resolves to priest. Gating on category alone would admit
+// some multi-class priests and reject others at random. Testing char_type first
+// means that ambiguity is never reached.
+function renderSpecialtyPriest(root) {
+  const block = root.querySelector('.specialty-priest');
+  const note  = root.querySelector('.specialty-priest-note');
+  if (!block && !note) return;
+
+  const bandOn = (typeof isSupplementActive === 'function') &&
+                 isSupplementActive('phbr3', 'specialtyPriests');
+  const single = (val(root, 'char_type') || 'single').toLowerCase() === 'single';
+  const isPriest = (typeof getClassCategory === 'function') &&
+                   getClassCategory(val(root, 'clazz') || '') === 'priest';
+
+  const show = bandOn && single && isPriest;
+  if (block) block.style.display = show ? 'block'  : 'none';
+  if (note)  note.style.display  = show ? 'inline' : 'none';
+}
+
+// Does this character have a PHBR3 override in force? Every consumer asks
+// through here rather than reading the field, so the band check lives in one
+// place -- unticking the book suspends the effect while the entry stays put.
+// Returns '' when the override is off or inapplicable, so callers can treat the
+// result as falsy without a second gate.
+function getSpecialtyPriestOverride(root, field) {
+  if (!root) return '';
+  if (typeof isSupplementActive !== 'function') return '';
+  if (!isSupplementActive('phbr3', 'specialtyPriests')) return '';
+  if ((val(root, 'char_type') || 'single').toLowerCase() !== 'single') return '';
+  if (typeof getClassCategory !== 'function') return '';
+  if (getClassCategory(val(root, 'clazz') || '') !== 'priest') return '';
+  return val(root, field) || '';
+}
+
 function renderPrimeRequisiteBonus(root) {
   const xpBonusEl = root.querySelector('[data-field="xp_bonus"]');
   if (!xpBonusEl) return;
@@ -2006,6 +2048,34 @@ function renderPrimeRequisiteBonus(root) {
   const primeReqNames = info.abilities.map(a => ABILITY_LABELS[a] || a);
   const allMeet16 = info.abilities.every(a => parseInt(val(root, a) || 0, 10) >= 16);
   
+  // PHBR3 p.13. A priesthood may name a second prime requisite beside Wisdom,
+  // and that brings a tier the PHB does not have: EITHER at 16 earns +5%, BOTH
+  // earn +10%. Read through getSpecialtyPriestOverride so the band gate lives in
+  // one place -- with PHBR3 off it returns '' and the PHB branch below runs
+  // untouched.
+  //
+  // GUARDED TO A SOLE WISDOM PRIME REQUISITE. The druid already has two (Wis,
+  // Cha) and the paladin, ranger and bard have their own sets; PHBR3 builds its
+  // priesthoods on the CLERIC, so a second requisite only makes sense where
+  // Wisdom stands alone. Anything else falls through to the PHB rule.
+  const second = getSpecialtyPriestOverride(root, 'sp_prime_req2');
+  if (second && info.abilities.length === 1 && info.abilities[0] === 'wis') {
+    const wisOK = parseInt(val(root, 'wis') || 0, 10) >= 16;
+    const secOK = parseInt(val(root, second) || 0, 10) >= 16;
+    const pair  = 'Wisdom and ' + (ABILITY_LABELS[second] || second);
+    if (wisOK && secOK) {
+      xpBonusEl.value = "+10%";
+      xpBonusEl.title = `${pair} are both 16+ (PHBR3 p.13)`;
+    } else if (wisOK || secOK) {
+      xpBonusEl.value = "+5%";
+      xpBonusEl.title = `One of ${pair} is 16+ \u2014 both would earn +10% (PHBR3 p.13)`;
+    } else {
+      xpBonusEl.value = "0%";
+      xpBonusEl.title = `${pair}: either at 16 earns +5%, both earn +10% (PHBR3 p.13)`;
+    }
+    return;
+  }
+
   if (allMeet16) {
     xpBonusEl.value = "+10%";
     xpBonusEl.title = `All prime requisites (${primeReqNames.join(", ")}) are 16+`;
