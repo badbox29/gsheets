@@ -8920,6 +8920,11 @@ function bindSheet(root, tab){
     // being a text input it fires on blur rather than per keystroke.
     if (f && /^sp_(prime_req2|hit_die|crossover|language_slot|weapon_spec|restrictions)$/.test(f)) {
       if (typeof recalculateAll === 'function') recalculateAll(root);
+      // Same reasoning as recalcAllOpenSheets: a select change is a discrete
+      // action, not a keystroke, so rebuilding the list here is safe. Without
+      // it, changing the crossover group moves the slot BUDGET while every
+      // learned proficiency keeps displaying its old cost.
+      if (typeof renderNWProficiencies === 'function') renderNWProficiencies(root);
     }
   });
 
@@ -10547,6 +10552,19 @@ function renderSupplements(root) {
 function recalcAllOpenSheets() {
   document.querySelectorAll('.sheet-container').forEach(sheet => {
     if (typeof recalculateAll === 'function') recalculateAll(sheet);
+    // NOT INSIDE recalculateAll, deliberately. This rebuilds the learned
+    // proficiency list's DOM, and that list contains the nwp-bonus-slots number
+    // input -- recalculateAll fires on every keystroke in the class field, so
+    // rebuilding there could yank focus out from under a player mid-entry.
+    // A supplement or optional-rule toggle is a discrete click, so it is safe
+    // here and this is the path both of them take.
+    //
+    // FIXES A BUG OLDER THAN PHBR3. recalculateAll carries
+    // renderProficiencySlots (the budget) but not this (the per-item cost), so
+    // toggling any rule that moves NWP cost -- PHBR1 weapon groups, the PHBR2
+    // kit surcharge, PHBR3 crossovers -- updated the counter and left every
+    // learned proficiency showing its old price until a save and reload.
+    if (typeof renderNWProficiencies === 'function') renderNWProficiencies(sheet);
     // renderArmorRestrictions and renderHenchmanLimits ARE inside
     // recalculateAll and need no line here. renderClassGroupValidation is not,
     // so it still does.
