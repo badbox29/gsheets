@@ -7885,6 +7885,27 @@ function renderWeaponProficiencies(root) {
   renderProficiencySlots(root);
   if (typeof renderCombatQuickReference === 'function') renderCombatQuickReference(root);
 
+  // PHBR3 p.90: the War priest "must choose ONE weapon from the list of weapons
+  // available and specialize in that weapon." One, not several. Nothing in the
+  // PHB limits a fighter this way, so this is checked only where the permission
+  // came from a priesthood -- getSpecialtyPriestOverride returns '' for anyone
+  // else, including every fighter.
+  const advisoryDiv = root.querySelector('.weapon-profs-advisory');
+  if (advisoryDiv) {
+    const isPriestSpec = (typeof getSpecialtyPriestOverride === 'function') &&
+                         getSpecialtyPriestOverride(root, 'sp_weapon_spec');
+    const specCount = (root._weaponProfs || []).filter(p => p.specialized).length;
+    if (isPriestSpec && specCount > 1) {
+      advisoryDiv.textContent =
+        'PHBR3 p.90: a specialty priest may specialize in ONE weapon only \u2014 ' +
+        specCount + ' are marked. The bonuses still apply; ask your DM.';
+      advisoryDiv.style.display = '';
+    } else {
+      advisoryDiv.textContent = '';
+      advisoryDiv.style.display = 'none';
+    }
+  }
+
   const listDiv = root.querySelector('.weapon-profs-list');
   
   if (!listDiv) return;
