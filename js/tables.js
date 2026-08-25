@@ -2181,10 +2181,45 @@ const PALADIN_SAVE_BONUS = -2;
 // with abilities ACTIVE, so nothing is gated. When status does get modelled,
 // THIS FUNCTION is the single place to test the flag. Do not scatter that
 // check across the save, turn-undead and ability-list call sites.
-function hasPaladinSaveBonus(clazz) {
+// THE SINGLE PLACE STATUS IS TESTED. The comment above asked for exactly this:
+// "Do not scatter that check across the save, turn-undead and ability-list call
+// sites." Every consumer asks here; none reads the field directly.
+//
+// FOUR STATES, THREE STORED KEYS. Empty is Active.
+//   'graced'    -- fell, but the DM left the abilities intact. GATES NOTHING.
+//   'suspended' -- lost pending atonement. Gates.
+//   'fallen'    -- irrevocable. Gates.
+//
+// 'graced' EXISTS BECAUSE TWO OF CHRIS'S CHARACTERS NEED IT. His paladin is
+// fallen by alignment change and on a redemption arc, played with abilities
+// ACTIVE by his DM's decision; his hb_dpaladin gnome is CN against a LG
+// requirement and would register fallen instantly under any auto-detection. A
+// boolean would force both into a state their DM never imposed. The status is
+// therefore a MANUAL field -- alignment may prompt, it may never set.
+//
+// ADVISORY EVERYWHERE. Nothing here rewrites clazz or level, not even for
+// PHBR3's priest, whose fall costs him levels and his class. The sheet says
+// what the book says happened; the player edits.
+function getFallenStatus(root) {
+  if (!root || typeof val !== 'function') return '';
+  const s = (val(root, 'class_status') || '').trim().toLowerCase();
+  return (s === 'graced' || s === 'suspended' || s === 'fallen') ? s : '';
+}
+
+// Does status currently WITHDRAW class abilities? 'graced' deliberately does not.
+function abilitiesAreWithdrawn(root) {
+  const s = getFallenStatus(root);
+  return s === 'suspended' || s === 'fallen';
+}
+
+// `root` is OPTIONAL. Without it the status check is skipped, so the dozens of
+// existing call sites that pass only a class string keep their old behaviour
+// rather than silently losing the bonus.
+function hasPaladinSaveBonus(clazz, root) {
   const c = (clazz || "").trim().toLowerCase();
   if (!c) return false;
-  return c.includes('paladin');
+  if (!c.includes('paladin')) return false;
+  return !(root && abilitiesAreWithdrawn(root));
 }
 
 // isPriestClass is defined once, below (next to isWizardClass). It matches every
