@@ -926,9 +926,24 @@ function getAllowedNWPGroups(root) {
     if (groups) groups.forEach(g => allowed.add(g));
   });
 
+  // PHBR3 Ch.3. Every priesthood names its own crossover set. Priest and General
+  // are standard; a god of War or Wind adds Warrior, one of Everything adds
+  // Wizard, one of Prosperity adds Rogue. An added group costs single slots
+  // rather than double, so this widens the set and never narrows it.
+  //
+  // getSpecialtyPriestOverride LIVES IN calc.js, which loads after this file.
+  // Safe at call time -- nothing invokes this during parse -- but guarded so a
+  // reordering of the script tags degrades to the PHB set instead of throwing.
+  if (typeof getSpecialtyPriestOverride === 'function') {
+    const extra = getSpecialtyPriestOverride(root, 'sp_crossover');
+    if (extra) extra.split(',').forEach(g => {
+      const key = g.trim().toLowerCase();
+      if (key) allowed.add(key);
+    });
+  }
+
   return allowed;
 }
-
 // Slot cost of a single nonweapon proficiency, including the Table 38 crossover
 // surcharge. `nwp` is an entry from root._nwps.
 // PHBR2 p.16: "if the kit is not listed as appropriate in the proficiency's
