@@ -10648,6 +10648,13 @@ function recalcAllOpenSheets() {
     // repaints the p.90 one-weapon advisory. Cascades to renderProficiencySlots
     // and renderCombatQuickReference, which it calls at its head.
     if (typeof renderWeaponProficiencies === 'function') renderWeaponProficiencies(sheet);
+    // Third of the same kind. renderSphereAccessSummary has three call sites,
+    // all of them sphere EDITS, and sits in none of the shared lists -- so the
+    // PHBR3 toning-down-the-cleric advisory appeared and vanished only when a
+    // sphere was touched, never when the band itself was switched. Safe here:
+    // it writes one line of innerHTML into .sphere-access-summary and holds no
+    // focusable element.
+    if (typeof renderSphereAccessSummary === 'function') renderSphereAccessSummary(sheet);
     // renderArmorRestrictions and renderHenchmanLimits ARE inside
     // recalculateAll and need no line here. renderClassGroupValidation is not,
     // so it still does.
