@@ -9006,6 +9006,11 @@ function bindSheet(root, tab){
         if (typeof recalculateAll === 'function') recalculateAll(root);
         if (typeof renderWeaponProficiencies === 'function') renderWeaponProficiencies(root);
         if (typeof renderNWProficiencies === 'function') renderNWProficiencies(root);
+        // Spheres were written straight into the selects, which raises no change
+        // event -- so the summary and the spell browser must be told. Neither is
+        // in recalculateAll.
+        if (typeof renderSphereAccessSummary === 'function') renderSphereAccessSummary(root);
+        if (typeof renderSpellAccess === 'function') renderSpellAccess(root);
         const tab = document.querySelector('.tab.active');
         if (tab) markUnsaved(tab, true, root);
       }
