@@ -2028,19 +2028,26 @@ const SP_BANNERS = [
              ['sp_restrictions', 'Other']] }
 ];
 
-// Shows the Details-tab faith row. SEPARATE OWNER from renderSpecialtyPriest,
-// which gates the Core block, because the tests differ: that one requires a
-// single-class priest, this one requires only the band. A DM may write up a
-// faith on any sheet, and a player may record what he serves before his class
-// resolves to anything the category test recognises.
+// Shows the Details-tab faith row. SAME GATE as the Core block: band on, single
+// class, priest category. These fields describe a PRIESTHOOD, and a fighter has
+// a patron deity rather than one -- Patron Deity and Deity Status in the rows
+// above are for everyone, these two are not.
+//
+// char_type is tested first for the reason it always is here: getClassCategory
+// matches by substring, longest key first, so "Cleric 7 / Fighter 9" resolves to
+// warrior while "Cleric 7 / Thief 9" resolves to priest.
 function renderSpecialtyPriestFaith(root) {
   const row  = root.querySelector('.sp-faith-row');
   const note = root.querySelector('.sp-faith-note');
   if (!row && !note) return;
   const on = (typeof isSupplementActive === 'function') &&
              isSupplementActive('phbr3', 'specialtyPriests');
-  if (row)  row.style.display  = on ? '' : 'none';
-  if (note) note.style.display = on ? '' : 'none';
+  const single = (val(root, 'char_type') || 'single').toLowerCase() === 'single';
+  const isPriest = (typeof getClassCategory === 'function') &&
+                   getClassCategory(val(root, 'clazz') || '') === 'priest';
+  const show = on && single && isPriest;
+  if (row)  row.style.display  = show ? '' : 'none';
+  if (note) note.style.display = show ? '' : 'none';
 }
 
 function renderSpecialtyPriestBanners(root) {
