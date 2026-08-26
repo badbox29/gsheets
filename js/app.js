@@ -7661,6 +7661,7 @@ function loadSheet(root, data){
   // specialty priest opens with the block hidden and his overrides invisible
   // until something else triggers a recalculation.
   if (typeof renderClassStatus === 'function') renderClassStatus(root);
+  if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   renderCoinWeight(root);
   renderRacialAbilities(root);
@@ -8836,6 +8837,7 @@ function bindSheet(root, tab){
   // renderer added to recalculateAll alone never fires on a newly bound sheet.
   // Without this the Specialty Priest block stays hidden until the first edit.
   if (typeof renderClassStatus === 'function') renderClassStatus(root);
+  if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   renderCoinWeight(root);
   renderRacialAbilities(root);
@@ -10669,6 +10671,11 @@ function recalcAllOpenSheets() {
     // it writes one line of innerHTML into .sphere-access-summary and holds no
     // focusable element.
     if (typeof renderSphereAccessSummary === 'function') renderSphereAccessSummary(sheet);
+    // MANDATORY, not optional: these banners read isSupplementActive through
+    // getSpecialtyPriestOverride, and anything that does must be reachable from
+    // here or it only repaints when something unrelated happens to fire. Five
+    // separate bugs in this codebase have had exactly that shape.
+    if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(sheet);
     // renderArmorRestrictions and renderHenchmanLimits ARE inside
     // recalculateAll and need no line here. renderClassGroupValidation is not,
     // so it still does.
@@ -16069,6 +16076,7 @@ function recalculateAll(root) {
   // the gate that decides whether a second prime requisite is legible at all --
   // so it settles before the bonus is computed from it.
   if (typeof renderClassStatus === 'function') renderClassStatus(root);
+  if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   if (typeof renderPrimeRequisiteBonus === 'function') renderPrimeRequisiteBonus(root);
   if (typeof renderThiefSkills === 'function') renderThiefSkills(root);
