@@ -8380,7 +8380,14 @@ function bindSheet(root, tab){
       // the staleness went unseen.
       if (typeof renderHitDice === 'function') renderHitDice(root);
       if (typeof renderMovementRate === 'function') renderMovementRate(root);
-      markUnsaved(tab, true, root);
+      // SAME REASONING AS THE LEVEL LISTENER: recalculateAll is the maintained
+      // list, and each ability listener keeps its own hand-written one that has
+      // already drifted at least once (see the CON comment above). Calling it
+      // here means any future renderer is picked up for free; the calls above
+      // are idempotent. Without this the PHBR3 minimum-ability advisory never
+      // fired, because nothing repainted it on an ability change.
+      if (typeof recalculateAll === 'function') recalculateAll(root);
+		markUnsaved(tab, true, root);
     });
   }
   
@@ -8397,7 +8404,14 @@ function bindSheet(root, tab){
       renderPrimeRequisiteBonus(root); // Re-render for prime requisite
       const charType = (val(root, "char_type") || "single").toLowerCase();
       if (charType === 'dual') updateDualClassCalculations(root);
-      markUnsaved(tab, true, root);
+      // SAME REASONING AS THE LEVEL LISTENER: recalculateAll is the maintained
+      // list, and each ability listener keeps its own hand-written one that has
+      // already drifted at least once (see the CON comment above). Calling it
+      // here means any future renderer is picked up for free; the calls above
+      // are idempotent. Without this the PHBR3 minimum-ability advisory never
+      // fired, because nothing repainted it on an ability change.
+      if (typeof recalculateAll === 'function') recalculateAll(root);
+		markUnsaved(tab, true, root);
     });
   }
   
@@ -8431,7 +8445,14 @@ function bindSheet(root, tab){
 	  renderTurnUndeadTable(root);
 	  const charType = (val(root, "char_type") || "single").toLowerCase();
       if (charType === 'dual') updateDualClassCalculations(root);
-      markUnsaved(tab, true, root);
+      // SAME REASONING AS THE LEVEL LISTENER: recalculateAll is the maintained
+      // list, and each ability listener keeps its own hand-written one that has
+      // already drifted at least once (see the CON comment above). Calling it
+      // here means any future renderer is picked up for free; the calls above
+      // are idempotent. Without this the PHBR3 minimum-ability advisory never
+      // fired, because nothing repainted it on an ability change.
+      if (typeof recalculateAll === 'function') recalculateAll(root);
+		markUnsaved(tab, true, root);
     });
   }
   
@@ -8464,7 +8485,14 @@ function bindSheet(root, tab){
       renderProficiencySlots(root);  // INT grants bonus NWP slots (PHB Table 4)
       const charType = (val(root, "char_type") || "single").toLowerCase();
       if (charType === 'dual') updateDualClassCalculations(root);
-      markUnsaved(tab, true, root);
+      // SAME REASONING AS THE LEVEL LISTENER: recalculateAll is the maintained
+      // list, and each ability listener keeps its own hand-written one that has
+      // already drifted at least once (see the CON comment above). Calling it
+      // here means any future renderer is picked up for free; the calls above
+      // are idempotent. Without this the PHBR3 minimum-ability advisory never
+      // fired, because nothing repainted it on an ability change.
+      if (typeof recalculateAll === 'function') recalculateAll(root);
+		markUnsaved(tab, true, root);
     });
   }
   
@@ -8479,7 +8507,14 @@ function bindSheet(root, tab){
       renderPrimeRequisiteBonus(root); // Re-render for prime requisite
 	  const charType = (val(root, "char_type") || "single").toLowerCase();
       if (charType === 'dual') updateDualClassCalculations(root);
-      markUnsaved(tab, true, root);
+      // SAME REASONING AS THE LEVEL LISTENER: recalculateAll is the maintained
+      // list, and each ability listener keeps its own hand-written one that has
+      // already drifted at least once (see the CON comment above). Calling it
+      // here means any future renderer is picked up for free; the calls above
+      // are idempotent. Without this the PHBR3 minimum-ability advisory never
+      // fired, because nothing repainted it on an ability change.
+      if (typeof recalculateAll === 'function') recalculateAll(root);
+		markUnsaved(tab, true, root);
     });
   }
   
@@ -8491,7 +8526,14 @@ function bindSheet(root, tab){
       renderPrimeRequisiteBonus(root); // Re-render for prime requisite
 	  const charType = (val(root, "char_type") || "single").toLowerCase();
       if (charType === 'dual') updateDualClassCalculations(root);
-      markUnsaved(tab, true, root);
+      // SAME REASONING AS THE LEVEL LISTENER: recalculateAll is the maintained
+      // list, and each ability listener keeps its own hand-written one that has
+      // already drifted at least once (see the CON comment above). Calling it
+      // here means any future renderer is picked up for free; the calls above
+      // are idempotent. Without this the PHBR3 minimum-ability advisory never
+      // fired, because nothing repainted it on an ability change.
+      if (typeof recalculateAll === 'function') recalculateAll(root);
+		markUnsaved(tab, true, root);
     });
   }
   
