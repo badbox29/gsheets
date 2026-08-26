@@ -342,6 +342,14 @@ const SHEET_HTML = `
                 <input data-field="sp_restrictions" type="text" placeholder="e.g. Must always travel on foot" title="Anything the categories above do not cover. Duties, rights and vows all belong here.">
               </div>
             </div>
+            <!-- CROSS-CHECKS. Advisory only, and worded as the book's guidance
+                 rather than as errors, because PHBR3 BREAKS ITS OWN GUIDELINES in
+                 its own entries: Agriculture is Poor combat on a d8 (p.21 says
+                 d6), and Arts has ten major spheres where p.22 allows seven.
+                 Minimum scores and races come from the TEMPLATE, so they stay
+                 silent on a DM-created faith; hit die and combat rating come from
+                 the character's own fields and work for any priesthood. -->
+            <div class="sp-checks" style="display:none;margin-top:10px;padding:6px 8px;border-radius:var(--radius);font-size:11px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
             </details>
           </div>
 
