@@ -2028,6 +2028,21 @@ const SP_BANNERS = [
              ['sp_restrictions', 'Other']] }
 ];
 
+// Shows the Details-tab faith row. SEPARATE OWNER from renderSpecialtyPriest,
+// which gates the Core block, because the tests differ: that one requires a
+// single-class priest, this one requires only the band. A DM may write up a
+// faith on any sheet, and a player may record what he serves before his class
+// resolves to anything the category test recognises.
+function renderSpecialtyPriestFaith(root) {
+  const row  = root.querySelector('.sp-faith-row');
+  const note = root.querySelector('.sp-faith-note');
+  if (!row && !note) return;
+  const on = (typeof isSupplementActive === 'function') &&
+             isSupplementActive('phbr3', 'specialtyPriests');
+  if (row)  row.style.display  = on ? '' : 'none';
+  if (note) note.style.display = on ? '' : 'none';
+}
+
 function renderSpecialtyPriestBanners(root) {
   const els = root.querySelectorAll('.sp-restrict-banner');
   if (!els.length) return;
