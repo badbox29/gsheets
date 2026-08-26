@@ -6768,6 +6768,7 @@ function collectSheet(root){
       // Details tab, not the Core block -- stored here anyway because they
       // describe the same priesthood and splitting the record across two keys
       // would be a second place for it to drift.
+      templateSource: val(root,'sp_template_source'),
       faithType: val(root,'sp_faith_type'),
       combat:    val(root,'sp_combat')
     },
@@ -7221,6 +7222,7 @@ function loadSheet(root, data){
   val(root, 'sp_restrict_diet',       sp.restrictDiet       || '');
   val(root, 'sp_restrict_items',      sp.restrictItems      || '');
   val(root, 'sp_restrict_mutilation', sp.restrictMutilation || '');
+  val(root, 'sp_template_source', sp.templateSource || 'DM-Created');
   val(root, 'sp_faith_type', sp.faithType || '');
   val(root, 'sp_combat',     sp.combat    || '');
 
@@ -7670,6 +7672,7 @@ function loadSheet(root, data){
   if (typeof renderClassStatus === 'function') renderClassStatus(root);
   if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(root);
   if (typeof renderSpecialtyPriestFaith === 'function') renderSpecialtyPriestFaith(root);
+  if (typeof populatePriesthoodTemplates === 'function') populatePriesthoodTemplates(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   renderCoinWeight(root);
   renderRacialAbilities(root);
@@ -8847,6 +8850,7 @@ function bindSheet(root, tab){
   if (typeof renderClassStatus === 'function') renderClassStatus(root);
   if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(root);
   if (typeof renderSpecialtyPriestFaith === 'function') renderSpecialtyPriestFaith(root);
+  if (typeof populatePriesthoodTemplates === 'function') populatePriesthoodTemplates(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   renderCoinWeight(root);
   renderRacialAbilities(root);
@@ -8973,14 +8977,53 @@ function bindSheet(root, tab){
       if (typeof renderKitAbilities === 'function') renderKitAbilities(root);
       if (typeof recalculateAll === 'function') recalculateAll(root);
     }
-      // PHBR3 specialty priest overrides. recalculateAll rather than a hand-picked
-      // list, for the same reason the fighting styles below use it: a second prime
-      // requisite moves the XP bonus, a crossover group moves every nonweapon slot
-      // cost, and the language grant moves the slot counter -- and those have order
-      // constraints between them that a short list here would silently break.
-      // sp_restrictions is in the pattern for consistency; it displays only, and
-      // being a text input it fires on blur rather than per keystroke.
-      if (f && /^sp_(prime_req2|hit_die|crossover|language_slot|weapon_spec|restrictions|restrict_\w+|faith_type|combat)$/.test(f)) {
+    // PHBR3 specialty priest overrides. recalculateAll rather than a hand-picked
+    // list, for the same reason the fighting styles below use it: a second prime
+    // requisite moves the XP bonus, a crossover group moves every nonweapon slot
+    // cost, and the language grant moves the slot counter -- and those have order
+    // constraints between them that a short list here would silently break.
+    // sp_restrictions is in the pattern for consistency; it displays only, and
+    // being a text input it fires on blur rather than per keystroke.
+    // THE TEMPLATE PICKER. An action, not a value -- it snaps back to its own
+    // label afterwards and the answer lives in sp_template_source, so there is
+    // one place showing the truth. Handled BEFORE the sp_ branch below, and
+    // returns, because applying a template fires no change events of its own.
+    if (f === 'sp_template') {
+      const key = (e.target.value || '').trim();
+      e.target.value = '';
+      if (!key) return;
+      // Ask only when there is something to lose. Same shape as the class
+      // status confirm: a blank sheet gets no prompt.
+      if (typeof specialtyPriestHasContent === 'function' && specialtyPriestHasContent(root)) {
+        const label = e.target.options[e.target.selectedIndex]
+          ? '' : '';
+        if (!confirm('Apply this template?\n\nEvery Specialty Priest field will be ' +
+                     'overwritten, including any you filled in yourself that the ' +
+                     'template leaves blank.\n\nYour deity\u2019s name is not touched.')) return;
+      }
+      if (typeof applyPriesthoodTemplate === 'function' && applyPriesthoodTemplate(root, key)) {
+        // Baseline for modified-detection. Set AFTER applying, so the template's
+        // own writes are not mistaken for the player editing it.
+        root._spTemplateClean = true;
+        if (typeof recalculateAll === 'function') recalculateAll(root);
+        if (typeof renderWeaponProficiencies === 'function') renderWeaponProficiencies(root);
+        if (typeof renderNWProficiencies === 'function') renderNWProficiencies(root);
+        const tab = document.querySelector('.tab.active');
+        if (tab) markUnsaved(tab, true, root);
+      }
+      return;
+    }
+    if (f && /^sp_(prime_req2|hit_die|crossover|language_slot|weapon_spec|restrictions|restrict_\w+|faith_type|combat)$/.test(f)) {
+      // MODIFIED-DETECTION. Any edit to any specialty priest field diverges the
+      // character from the template it came from -- including filling a field
+      // the template deliberately left empty, which Chris's ruling treats as
+      // just as much a statement as a populated one. Never fires on the
+      // template's own writes: those go through val() and raise no change event.
+      const srcEl = root.querySelector('[data-field="sp_template_source"]');
+      if (srcEl && srcEl.value && srcEl.value !== 'DM-Created' &&
+          !/\(Modified\)$/.test(srcEl.value)) {
+        srcEl.value = srcEl.value + ' (Modified)';
+      }
       if (typeof recalculateAll === 'function') recalculateAll(root);
       // Same reasoning as recalcAllOpenSheets: a select change is a discrete
       // action, not a keystroke, so rebuilding the list here is safe. Without
@@ -16088,6 +16131,7 @@ function recalculateAll(root) {
   if (typeof renderClassStatus === 'function') renderClassStatus(root);
   if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(root);
   if (typeof renderSpecialtyPriestFaith === 'function') renderSpecialtyPriestFaith(root);
+  if (typeof populatePriesthoodTemplates === 'function') populatePriesthoodTemplates(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   if (typeof renderPrimeRequisiteBonus === 'function') renderPrimeRequisiteBonus(root);
   if (typeof renderThiefSkills === 'function') renderThiefSkills(root);
