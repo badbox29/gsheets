@@ -6757,7 +6757,14 @@ function collectSheet(root){
       crossover:    val(root,'sp_crossover'),
       languageSlot: val(root,'sp_language_slot'),
       weaponSpec:   val(root,'sp_weapon_spec'),
-      restrictions: val(root,'sp_restrictions')
+      restrictions:  val(root,'sp_restrictions'),
+      restrictArmor: val(root,'sp_restrict_armor'),
+      restrictWeapons: val(root,'sp_restrict_weapons'),
+      restrictClothing: val(root,'sp_restrict_clothing'),
+      restrictCelibacy: val(root,'sp_restrict_celibacy'),
+      restrictDiet:  val(root,'sp_restrict_diet'),
+      restrictItems: val(root,'sp_restrict_items'),
+      restrictMutilation: val(root,'sp_restrict_mutilation')
     },
     // Kit-granted proficiencies the player has deliberately deleted. Without
     // this the next syncKitGrantedNWPs puts every one of them straight back, so
@@ -7202,6 +7209,13 @@ function loadSheet(root, data){
   val(root, 'sp_language_slot', sp.languageSlot || '');
   val(root, 'sp_weapon_spec',  sp.weaponSpec  || '');
   val(root, 'sp_restrictions', sp.restrictions || '');
+  val(root, 'sp_restrict_armor',      sp.restrictArmor      || '');
+  val(root, 'sp_restrict_weapons',    sp.restrictWeapons    || '');
+  val(root, 'sp_restrict_clothing',   sp.restrictClothing   || '');
+  val(root, 'sp_restrict_celibacy',   sp.restrictCelibacy   || '');
+  val(root, 'sp_restrict_diet',       sp.restrictDiet       || '');
+  val(root, 'sp_restrict_items',      sp.restrictItems      || '');
+  val(root, 'sp_restrict_mutilation', sp.restrictMutilation || '');
 
   root._weaponProfs = data.weaponProfs || [];
   
@@ -8955,7 +8969,7 @@ function bindSheet(root, tab){
     // constraints between them that a short list here would silently break.
     // sp_restrictions is in the pattern for consistency; it displays only, and
     // being a text input it fires on blur rather than per keystroke.
-    if (f && /^sp_(prime_req2|hit_die|crossover|language_slot|weapon_spec|restrictions)$/.test(f)) {
+      if (f && /^sp_(prime_req2|hit_die|crossover|language_slot|weapon_spec|restrictions|restrict_\w+)$/.test(f)) {
       if (typeof recalculateAll === 'function') recalculateAll(root);
       // Same reasoning as recalcAllOpenSheets: a select change is a discrete
       // action, not a keystroke, so rebuilding the list here is safe. Without
