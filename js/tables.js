@@ -7207,8 +7207,27 @@ const OPTIONAL_RULES = {
              'and Communication, and weapon specialization for a priest of the god of ' +
              'War. Sphere access is unaffected \u2014 that is already recorded per ' +
              'character, from whatever the DM granted. Restrictions are displayed and ' +
-             'never enforced. Turning this off hides the fields and suspends their ' +
+              'never enforced. Turning this off hides the fields and suspends their ' +
              'effects; nothing entered is discarded.',
+    category: 'supplement',
+    default: false
+  },
+  toningDownClericPHBR3: {
+    label:   'Toning down the cleric: three major spheres, two minor (Complete Priest\u2019s Handbook)',
+    detail:  'PHBR3 p.122, answering the problem the book names on p.22. Chapter 2 budgets ' +
+             'a priesthood\u2019s sphere access against its combat ability \u2014 three major ' +
+             'spheres for a good fighter, up to seven for a poor one \u2014 and then concedes ' +
+             'that the Player\u2019s Handbook Cleric, with twelve major spheres, one minor and ' +
+             'metal armor, is stronger than nearly any priesthood the book prints. The ' +
+             'remedy keeps his weapon and armor limits exactly as they are and cuts him to ' +
+             'MAJOR access in three spheres, one of which must be All, and MINOR access in ' +
+             'two. The book intends those four choices to be made when the character is ' +
+             'created or converted and never changed; here they are only counted and ' +
+             'reported, since a misclick should not cost a character his spheres. Applies to ' +
+             'vanilla Clerics alone \u2014 not Druids, whose spheres are already restricted, ' +
+             'and not to a character with a PHBR3 priesthood recorded, who is not a Cleric. ' +
+             'Only turn this on if you agree the Cleric is too strong at your table; the ' +
+             'book is explicit that you should otherwise leave him alone.',
     category: 'supplement',
     default: false
   }
