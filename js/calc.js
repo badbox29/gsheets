@@ -2133,6 +2133,64 @@ function renderClassStatus(root) {
   note.style.display = status ? '' : 'none';
 }
 
+// Builds the template list. Called at bind time AND again when the fetch lands,
+// since a sheet opened on a cold load would otherwise show only DM-Created.
+// Rebuilds from scratch rather than appending, so a second call cannot double
+// the list.
+function populatePriesthoodTemplates(root) {
+  const sel = root.querySelector('[data-field="sp_template"]');
+  if (!sel) return;
+  const list = (typeof PRIESTHOOD_TEMPLATES !== 'undefined') ? PRIESTHOOD_TEMPLATES : [];
+  sel.innerHTML = '<option value="">\u2014 apply a template \u2014</option>' +
+                  '<option value="dm">DM-Created</option>' +
+                  list.slice().sort((a, b) => (a.label || '').localeCompare(b.label || ''))
+                      .map(p => '<option value="' + escapeHtml(p.key) + '">' +
+                                escapeHtml(p.label) + '</option>').join('');
+  sel.value = '';
+}
+
+// THE THIRTEEN FIELDS A TEMPLATE WRITES, paired with the key it reads. Spheres,
+// granted powers, followers and the rest of the 36 are carried in the data but
+// have no control to write into yet -- they are transcribed once and wired when
+// their consumers exist, rather than re-read later.
+const SP_TEMPLATE_FIELDS = [
+  ['sp_prime_req2', 'primeReq2'], ['sp_hit_die', 'hitDie'],
+  ['sp_crossover', 'crossover'], ['sp_language_slot', 'languageSlot'],
+  ['sp_weapon_spec', 'weaponSpec'], ['sp_faith_type', 'faithType'],
+  ['sp_combat', 'combat'],
+  ['sp_restrict_armor', 'restrictArmor'], ['sp_restrict_weapons', 'restrictWeapons'],
+  ['sp_restrict_clothing', 'restrictClothing'], ['sp_restrict_celibacy', 'restrictCelibacy'],
+  ['sp_restrict_diet', 'restrictDiet'], ['sp_restrict_items', 'restrictItems'],
+  ['sp_restrict_mutilation', 'restrictMutilation'], ['sp_restrictions', 'restrictions']
+];
+
+// Does any specialty priest field hold anything? Decides whether applying a
+// template needs to ask first -- prompting on a blank sheet is noise.
+function specialtyPriestHasContent(root) {
+  return SP_TEMPLATE_FIELDS.some(([f]) => (val(root, f) || '').trim());
+}
+
+// Writes a template's values across every field, INCLUDING BLANKING the ones it
+// leaves empty. Chris's ruling, and it is the right one: a template field left
+// empty is a positive statement -- "this priesthood imposes no dietary
+// restriction" -- so a stale value the player typed earlier would misrepresent
+// the priesthood he just chose.
+//
+// Never touches patron_deity. That holds the god's NAME, not his attribute.
+function applyPriesthoodTemplate(root, key) {
+  if (key === 'dm') {
+    SP_TEMPLATE_FIELDS.forEach(([f]) => val(root, f, ''));
+    val(root, 'sp_template_source', 'DM-Created');
+    return true;
+  }
+  const list = (typeof PRIESTHOOD_TEMPLATES !== 'undefined') ? PRIESTHOOD_TEMPLATES : [];
+  const t = list.find(p => p.key === key);
+  if (!t) return false;
+  SP_TEMPLATE_FIELDS.forEach(([f, k]) => val(root, f, t[k] || ''));
+  val(root, 'sp_template_source', t.label || key);
+  return true;
+}
+
 function renderSpecialtyPriest(root) {
   const block = root.querySelector('.specialty-priest');
   const note  = root.querySelector('.specialty-priest-note');
