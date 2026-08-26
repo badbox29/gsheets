@@ -2187,8 +2187,38 @@ function applyPriesthoodTemplate(root, key) {
   const t = list.find(p => p.key === key);
   if (!t) return false;
   SP_TEMPLATE_FIELDS.forEach(([f, k]) => val(root, f, t[k] || ''));
+  applyTemplateSpheres(root, t);
   val(root, 'sp_template_source', t.label || key);
   return true;
+}
+
+// Writes sphere access into the per-character map. THE BIGGEST CONVENIENCE HERE:
+// a player otherwise sets twenty-odd of these by hand, one row at a time.
+//
+// CLEARS EVERY ROW FIRST, for the same reason a template blanks the text fields
+// it leaves empty -- a sphere the previous template granted and this one does not
+// would otherwise survive and misrepresent the priesthood just chosen.
+//
+// SILENT NO-OP IF THE ROWS DO NOT EXIST. They are built by renderSpellAccess on
+// the Magic tab and only for priest characters, so a template applied before that
+// has run finds nothing. Harmless: the caller re-renders immediately after, and
+// the values are re-read from the DOM, not cached.
+//
+// "All" IS NEVER SET. It renders as static text with no select -- no deity grants
+// it and it cannot be switched off (PHB Ch.3) -- so the data omits it entirely.
+function applyTemplateSpheres(root, t) {
+  const sels = root.querySelectorAll('.sphere-checkboxes select[data-sphere]');
+  if (!sels.length) return;
+  const want = {};
+  (t.spheresMajor || []).forEach(s => { want[s.toLowerCase()] = 'major'; });
+  (t.spheresMinor || []).forEach(s => { want[s.toLowerCase()] = 'minor'; });
+  // Case-insensitive, because getAllSpheres() derives these names from the spell
+  // data and the saved record, that list and the setting spheres have disagreed
+  // on casing before.
+  sels.forEach(sel => {
+    const name = (sel.getAttribute('data-sphere') || '').toLowerCase();
+    sel.value = want[name] || 'none';
+  });
 }
 
 function renderSpecialtyPriest(root) {
