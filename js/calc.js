@@ -1999,6 +1999,64 @@ function renderXPProgression(root) {
 // "Cleric 7 / Thief 9" resolves to priest. Gating on category alone would admit
 // some multi-class priests and reject others at random. Testing char_type first
 // means that ambiguity is never reached.
+// PHBR3 pp.19-21 restriction banners. ONE renderer, four banners, driven by a
+// table -- they share a gate, a style and their show-if-nonempty logic, and
+// differ only in which fields feed them and where they land. A fifth is a row
+// in SP_BANNERS, not a sixth function.
+//
+// ECHOES, NOT JUDGEMENTS. Each shows back what the player recorded under
+// Specialty Priest. Nothing here reads an armor row, a weapon row or an item --
+// which is the point. The books decline to state materials often enough
+// (Shield, Small is "wooden or metal"; the gladiator cuirass is "leather or
+// metal") that a computed verdict would have to invent one.
+//
+// CROSSOVER GROUP DELIBERATELY HAS NO BANNER. It is the one specialty priest
+// setting that already does something visible -- slot costs move in that very
+// section and every affected proficiency reports it -- so a banner would only
+// narrate what the numbers already say.
+const SP_BANNERS = [
+  { key: 'armor',       heading: 'Priesthood restrictions',
+    fields: [['sp_restrict_armor', 'Armor'], ['sp_restrict_clothing', 'Dress']] },
+  { key: 'weapons',     heading: 'Priesthood restrictions',
+    fields: [['sp_restrict_weapons', 'Weapons']] },
+  { key: 'items',       heading: 'Priesthood restrictions',
+    fields: [['sp_restrict_items', 'Magical items']] },
+  { key: 'observances', heading: 'Priesthood observances',
+    fields: [['sp_restrict_celibacy', 'Celibacy &amp; chastity'],
+             ['sp_restrict_diet', 'Diet &amp; contamination'],
+             ['sp_restrict_mutilation', 'Mutilation'],
+             ['sp_restrictions', 'Other']] }
+];
+
+function renderSpecialtyPriestBanners(root) {
+  const els = root.querySelectorAll('.sp-restrict-banner');
+  if (!els.length) return;
+
+  // Same gate as the fields themselves. With the band off, or on a fighter, or
+  // on a multi-class character, every banner goes quiet -- but nothing typed is
+  // touched, so it all comes back.
+  const on = (typeof getSpecialtyPriestOverride === 'function');
+
+  els.forEach(el => {
+    const def = SP_BANNERS.find(b => b.key === el.getAttribute('data-sp-banner'));
+    if (!def) return;
+    const lines = on ? def.fields
+      .map(([f, label]) => {
+        const v = (getSpecialtyPriestOverride(root, f) || '').trim();
+        return v ? '<strong>' + label + ':</strong> ' + escapeHtml(v) : '';
+      })
+      .filter(Boolean) : [];
+    if (!lines.length) {
+      el.innerHTML = '';
+      el.style.display = 'none';
+      return;
+    }
+    el.innerHTML = '<strong>' + def.heading + '</strong> (PHBR3 pp.19\u201321) \u2014 ' +
+                   'advisory; nothing here is blocked.<br>' + lines.join('<br>');
+    el.style.display = '';
+  });
+}
+
 // SINGLE OWNER of the Class Status column and its banner. Fills the option
 // labels too, because "Fallen -- irrevocable" and "Renounced -- irrevocable"
 // are the same stored state in different words, and hardcoding either in the
