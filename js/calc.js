@@ -4858,6 +4858,38 @@ function renderSphereAccessSummary(root) {
                ': nothing above level ' + deity.cap + '</span>');
   }
 
+  // PHBR3 p.122, "Toning Down the Cleric". Counted and reported, NEVER enforced:
+  // the book intends the four choices to be fixed at creation, but a misclick
+  // should not cost a character his spheres, and a DM who is DMing will notice
+  // someone trying it on.
+  //
+  // VANILLA CLERICS ALONE. Druids are excluded because their spheres are already
+  // restricted by design and the rule names the Cleric only. A character with a
+  // PHBR3 priesthood recorded is excluded because he is a priest of a specific
+  // mythos, not a Cleric -- and this rule exists precisely so that he is no
+  // longer outshone by one. Reading sp_prime_req2 and friends directly rather
+  // than through getSpecialtyPriestOverride, because the question here is "has a
+  // priesthood been recorded", not "is the override in force" -- the answer must
+  // not change when the specialtyPriests band is toggled off.
+  if (typeof isSupplementActive === 'function' &&
+      isSupplementActive('phbr3', 'toningDownCleric')) {
+    const clazz = (val(root, 'clazz') || '').trim().toLowerCase();
+    const single = (val(root, 'char_type') || 'single').toLowerCase() === 'single';
+    const hasPriesthood = ['sp_prime_req2', 'sp_hit_die', 'sp_crossover',
+                           'sp_language_slot', 'sp_weapon_spec', 'sp_restrictions']
+                          .some(f => (val(root, f) || '').trim());
+    if (single && clazz === 'cleric' && !hasPriesthood) {
+      const over = [];
+      if (major > 3) over.push((major - 3) + ' major over');
+      if (minor > 2) over.push((minor - 2) + ' minor over');
+      parts.push(over.length
+        ? '<span style="color:var(--warning);">Toned-down cleric: 3 major and 2 minor \u2014 ' +
+          escapeHtml(over.join(', ')) + '</span>'
+        : '<span style="color:var(--muted);">Toned-down cleric: ' + major + '/3 major, ' +
+          minor + '/2 minor</span>');
+    }
+  }
+
   el.innerHTML = parts.join(' <span style="color:var(--muted);">\u00B7</span> ');
 }
 
