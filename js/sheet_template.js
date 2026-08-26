@@ -2099,9 +2099,9 @@ const SHEET_HTML = `
           <div class="row">
             <div class="col"><label>Homeworld</label><input data-field="homeworld" type="text"></div>
             <div class="col"><label>Homeland</label><input data-field="homeland" type="text"></div>
+            <div class="col"><label>Birthplace</label><input data-field="birthplace" type="text"></div>
           </div>
           <div class="row" style="margin-top:8px">
-            <div class="col"><label>Birthplace</label><input data-field="birthplace" type="text"></div>
             <div class="col"><label>Patron Deity</label><input data-field="patron_deity" type="text"></div>
             <div class="col"><label>Deity Status</label><select data-field="deity_status" title="PHB Ch.7 optional rule: not all deities are equal.&#10;Demi-god grants spells up to 5th level, Lesser deity up to 6th, Greater deity all levels.&#10;&#10;Only has an effect while 'Patron deity power limits priest spell levels' is ticked in Settings > Optional Rules.&#10;Leave unset to be treated as a greater deity (no restriction).">
               <option value="">— not specified —</option>
@@ -2109,6 +2109,36 @@ const SHEET_HTML = `
               <option value="lesser">Lesser deity</option>
               <option value="demigod">Demi-god</option>
             </select></div>
+          </div>
+          <!-- PHBR3 ONLY. Hidden with the band off; owned by
+               renderSpecialtyPriestFaith in calc.js, which is the only thing
+               that writes display on either element.
+               SEPARATE FROM Deity Status, deliberately. That answers HOW
+               POWERFUL the being is; this answers WHAT KIND of thing it is, and
+               the two are independent -- Entropy is a Force and could be greater
+               or lesser. Folding them into one dropdown would make them mutually
+               exclusive and would leave an unfilled field reading as "a God",
+               which is what the kit gates test for.
+               NOT class-gated: a DM may write up a faith on any sheet. -->
+          <div class="sp-faith-note" style="display:none;margin-top:10px;padding:6px 8px;border-radius:var(--radius);font-size:11px;line-height:1.4;color:var(--muted);background:var(--glass);">
+            The row below describes the priesthood itself, and influences specialty priest characters (PHBR3).
+          </div>
+          <div class="row sp-faith-row" style="display:none;margin-top:8px">
+            <div class="col"><label>Faith Type</label>
+              <select data-field="sp_faith_type" title="PHBR3 p.11. A GOD is a powerful being, usually of human or greater intelligence, that wants its will imposed on the world. A FORCE is a natural or unnatural process -- magically powerful but not necessarily intelligent. Entropy, Nature, Magic and the Life-Death-Rebirth Cycle are Forces; druids tend to serve the Force of Nature rather than gods of nature. A PHILOSOPHY is an idea so widely believed that it draws magical energy the way a Force does, and stops generating any when nobody believes it. All three grant spells and powers identically; the distinction matters only to a few PHBR3 kits, which bar priests of Forces and Philosophies.">
+                <option value="">&mdash; not specified &mdash;</option>
+                <option value="god">A God</option>
+                <option value="force">A Force</option>
+                <option value="philosophy">A Philosophy</option>
+              </select></div>
+            <div class="col"><label>Combat Abilities</label>
+              <select data-field="sp_combat" title="PHBR3 p.22, derived from what the priesthood may wear and wield. GOOD: metal armor and a good range of weapons -- five or more types, or a few high-damage ones. MEDIUM: no metal armor but a good weapon range, or metal armor with a poor one. POOR: no metal armor and few weapons. The book uses this to budget sphere access and hit dice, both of which you set directly above; recorded here for reference and for the kits that gate on it.">
+                <option value="">&mdash; not specified &mdash;</option>
+                <option value="good">Good</option>
+                <option value="medium">Medium</option>
+                <option value="poor">Poor</option>
+              </select></div>
+            <div class="col"></div>
           </div>
         </section>
 
