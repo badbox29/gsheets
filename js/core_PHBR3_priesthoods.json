@@ -18,7 +18,7 @@
     "minAbilities": "Minimum ability scores required to be a priest of this mythos at all (PHBR3 p.13: 'always Wisdom, and often one other'). An OBJECT keyed by ability rather than a wis/second pair, deliberately: in all six entries transcribed so far the second minimum happens to BE the second prime requisite, but nothing in the book promises that, and an entry requiring a score in an ability that is not a prime requisite would break a coupled shape. Iterate the object; do not assume its contents. The values are ENTRY REQUIREMENTS and are unrelated to the 16s that earn the experience bonus - see primeReq2.",
     "schemaScope": "EVERY field a Chapter 3 entry prints that maps to something the sheet has, or plausibly will. Chris's call: these are TEMPLATES and starting points, so the cost of an unused field now is far below the cost of re-reading sixty entries later. A field that has no consumer yet is still worth carrying.",
     "transcriptionCost": "This schema means roughly 25 values per entry, pulled from prose rather than tables. Budget accordingly - ten entries is a session, not a coffee break.",
-    "spheres": "The high-value pair. Sphere access is a STORED PER-CHARACTER MAP the player otherwise fills by hand, twenty-odd entries at a time; a template applying it is the single biggest convenience here. Keys must match the sphere vocabulary in tables.js, resolved at transcription time, not at runtime.",
+    "spheres": "The high-value pair: sphere access is a STORED PER-CHARACTER MAP the player otherwise fills by hand, twenty-odd rows at a time. NAMES MUST MATCH getAllSpheres() EXACTLY, which derives them from the loaded spell data rather than from a fixed list -- Title Case, and verified against a live console call, not against PHB_CORE_SPHERES. THERE IS NO 'Elemental' ROW: the data splits it into Elemental Air/Earth/Fire/Water, and PHBR3's 'Major Access to Elemental' is expanded to all four here at transcription time, per the ELEMENTAL_SPHERES note in tables.js that a DM granting Elemental grants all four. 'All' IS DELIBERATELY OMITTED from every entry even though every priesthood has it: it renders as static 'Always' text with no select, because no deity grants it and it cannot be switched off. TWO TRAPS FOR TRANSCRIPTION: 'War' is both a sphere and a priesthood, and they are unrelated -- the War priesthood's spheres are Combat and Elemental, not War. And the eleven Tome of Magic spheres (Chaos, Law, Numbers, Thought, Time, Travelers, War, Wards) POSTDATE PHBR3, so a Chapter 3 entry can never reference one; if a transcription produces one it is an error.",
     "alignmentField": "The PRIEST'S permitted alignments, not the deity's and not the flock's - entries print all three and only the first constrains a player character.",
     "permittedVsRestricted": "weaponsPermitted / armorPermitted hold the book's RAW lists. restrictWeapons / restrictArmor hold the short human summary that reaches the banners. Both, deliberately: the summary is what a player reads, the raw list is what any future check needs.",
     "orientalWeapons": "CONDITIONAL permission - 'Oriental Campaigns: Also bo stick.' Never fold these into weaponsPermitted, or every priesthood silently gains them."
@@ -71,18 +71,17 @@
         "Nunchaku"
       ],
       "spheresMajor": [
-        "all",
-        "creation",
-        "divination",
-        "plant",
-        "summoning"
+        "Creation",
+        "Divination",
+        "Plant",
+        "Summoning"
       ],
       "spheresMinor": [
-        "animal",
-        "healing",
-        "protection",
-        "sun",
-        "weather"
+        "Animal",
+        "Healing",
+        "Protection",
+        "Sun",
+        "Weather"
       ],
       "grantedPowers": [
         "Analysis, Detection and Identification of any domesticated grain or garden plant",
@@ -162,17 +161,16 @@
         "Bo stick"
       ],
       "spheresMajor": [
-        "all",
-        "astral",
-        "creation",
-        "divination",
-        "guardian",
-        "necromantic",
-        "protection"
+        "Astral",
+        "Creation",
+        "Divination",
+        "Guardian",
+        "Necromantic",
+        "Protection"
       ],
       "spheresMinor": [
-        "charm",
-        "healing"
+        "Charm",
+        "Healing"
       ],
       "grantedPowers": [
         "Detection of graves and undead",
@@ -262,14 +260,16 @@
         "Daikyu"
       ],
       "spheresMajor": [
-        "all",
-        "combat",
-        "elemental"
+        "Combat",
+        "Elemental Air",
+        "Elemental Earth",
+        "Elemental Fire",
+        "Elemental Water"
       ],
       "spheresMinor": [
-        "creation",
-        "sun",
-        "weather"
+        "Creation",
+        "Sun",
+        "Weather"
       ],
       "grantedPowers": [
         "Immunity (+2 bonus)"
