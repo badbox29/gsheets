@@ -194,12 +194,21 @@ const SHEET_HTML = `
                classes. Every control is a select because val() reads el.value
                and cannot see a checkbox's checked state. -->
           <div class="specialty-priest" style="display:none;margin-top:8px;padding:8px;background:rgba(0,0,0,0.1);border-radius:var(--radius);">
-            <h4 style="font-size:14px;margin:0 0 6px 0;">Specialty Priest</h4>
+            <h4 style="font-size:14px;margin:0 0 6px 0;">Specialty Priest?</h4>
             <p style="font-size:12px;color:var(--muted);margin:0 0 8px 0;line-height:1.5;">
               PHBR3 prints some sixty priest classes and expects your DM to invent more.
-              Set whatever your priesthood grants. Blank entries behave exactly as the
+              If you intend to play a Specialty Priest, expand the section below and set
+              whatever your priesthood grants. Blank entries behave exactly as the
               Player&rsquo;s Handbook cleric, so an ordinary cleric needs nothing here.
             </p>
+            <!-- COLLAPSED ON EVERY LOAD, deliberately: no `open` attribute, and
+                 SHEET_HTML is regenerated per tab so the state never persists.
+                 Most priests are ordinary clerics who need none of this, and it
+                 sits on the Core tab where scrolling is at a premium.
+                 A <details> toggle fires `toggle`, not `change`, so it cannot
+                 trip autosave -- no `ephemeral` class needed. -->
+            <details class="specialty-priest-details">
+              <summary style="cursor:pointer;font-size:12px;color:var(--accent);margin-bottom:8px;">Specialty priest settings</summary>
             <div class="row">
               <div class="col">
                 <label>Second Prime Requisite</label>
@@ -249,17 +258,60 @@ const SHEET_HTML = `
                 </select>
               </div>
             </div>
-            <!-- FREE TEXT, NOT A CHECKBOX SET. Restrictions are never computed --
+            <!-- FREE TEXT, NOT CHECKBOXES. Restrictions are never computed --
                  whether one was broken is the DM's call, and PHBR3 punishes it
                  harshly (p.120: 2d6 damage and every spell withheld). The Ch.2
                  vocabulary is only a starting point: Wind's "no leathers or furs"
-                 (p.90) fits no checkbox. -->
+                 (p.90) fits no checkbox.
+                 ONE FIELD PER CATEGORY, not one blob, so a future banner can key
+                 off the category it cares about instead of string-matching prose
+                 a player typed however he felt like. PHBR3 pp.19-21 names nine
+                 kinds; Hit Points is already sp_hit_die above, leaving eight.
+                 Celibacy and chastity share a row -- the book distinguishes them
+                 (unmarried vs abstinent) but a sheet does not need to. Diet sits
+                 with contamination, which is where the book puts vegetarianism
+                 along with blood, iron, gems and taboo animals. -->
             <div class="row" style="margin-top:8px">
-              <div class="col" style="flex:1 1 100%;">
-                <label>Restrictions</label>
-                <input data-field="sp_restrictions" type="text" placeholder="e.g. Celibate and chaste; must wear vestments in public" title="PHBR3 pp.19-21 lists nine kinds: armor, celibacy, chastity, clothing, contamination, hit points, magical items, mutilation and weapons. Recorded and displayed only -- the sheet never enforces these.">
+              <div class="col">
+                <label>Armor Restrictions</label>
+                <input data-field="sp_restrict_armor" type="text" placeholder="e.g. No metal armor; wooden shields only" title="PHBR3 p.19. Sample limits: may not wear non-metal armor, metal armor, magical armor, or any armor; may not use shields, or certain types; may only wear armor made by priests of the same faith.">
+              </div>
+              <div class="col">
+                <label>Weapon Restrictions</label>
+                <input data-field="sp_restrict_weapons" type="text" placeholder="e.g. Blunt weapons only; sickle preferred" title="PHBR3 p.21. A priesthood may permit only one category of weapon, forbid one, or forbid weapons entirely. Limiting a god of Death's priests to sickle-like weapons is the book's own example.">
               </div>
             </div>
+            <div class="row" style="margin-top:8px">
+              <div class="col">
+                <label>Clothing &amp; Vestments</label>
+                <input data-field="sp_restrict_clothing" type="text" placeholder="e.g. Vestments whenever in public; no knotted hems" title="PHBR3 p.20. Distinctive costume proclaiming the priest's status, worn during official functions or during all waking hours. May forbid certain garments, or require parts of the body concealed.">
+              </div>
+              <div class="col">
+                <label>Celibacy &amp; Chastity</label>
+                <input data-field="sp_restrict_celibacy" type="text" placeholder="e.g. Chaste except during planting season" title="PHBR3 pp.19-20. CELIBACY is the older sense -- remaining unmarried. CHASTITY is abstaining from sexual relations. A priest may be required to be either, both, or neither.">
+              </div>
+            </div>
+            <div class="row" style="margin-top:8px">
+              <div class="col">
+                <label>Diet &amp; Contamination</label>
+                <input data-field="sp_restrict_diet" type="text" placeholder="e.g. Vegetarian; may not touch iron" title="PHBR3 p.20. Items or substances held unholy, unclean or taboo -- specific animals or whole classes, blood, gems, iron, plants, water from particular sources. Contact requires rituals of purification.">
+              </div>
+              <div class="col">
+                <label>Magical Items</label>
+                <input data-field="sp_restrict_items" type="text" placeholder="e.g. Only items made by the order" title="PHBR3 p.21. Beyond the ordinary priest limits, a priesthood may permit only magical items made by priests of the order, or forbid magical items entirely.">
+              </div>
+            </div>
+            <div class="row" style="margin-top:8px">
+              <div class="col">
+                <label>Mutilation</label>
+                <input data-field="sp_restrict_mutilation" type="text" placeholder="e.g. Ritually blinded at initiation" title="PHBR3 p.21. A sacrifice of mutilation demanded of the priesthood -- most common among evil faiths, but possible in any. Usually compensated with an extra granted power.">
+              </div>
+              <div class="col">
+                <label>Other Restrictions</label>
+                <input data-field="sp_restrictions" type="text" placeholder="e.g. Must always travel on foot" title="Anything the categories above do not cover. Duties, rights and vows all belong here.">
+              </div>
+            </div>
+            </details>
           </div>
 
           <!-- Multi-Class Fields (hidden by default) -->
