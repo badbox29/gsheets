@@ -9000,9 +9000,9 @@ function bindSheet(root, tab){
                      'template leaves blank.\n\nYour deity\u2019s name is not touched.')) return;
       }
       if (typeof applyPriesthoodTemplate === 'function' && applyPriesthoodTemplate(root, key)) {
-        // Baseline for modified-detection. Set AFTER applying, so the template's
-        // own writes are not mistaken for the player editing it.
-        root._spTemplateClean = true;
+        // Modified-detection needs no baseline flag: applyPriesthoodTemplate
+        // writes through val(), which raises no change event, so the template's
+        // own writes cannot be mistaken for the player editing it.
         if (typeof recalculateAll === 'function') recalculateAll(root);
         if (typeof renderWeaponProficiencies === 'function') renderWeaponProficiencies(root);
         if (typeof renderNWProficiencies === 'function') renderNWProficiencies(root);
