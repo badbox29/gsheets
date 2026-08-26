@@ -7669,6 +7669,7 @@ function loadSheet(root, data){
   // until something else triggers a recalculation.
   if (typeof renderClassStatus === 'function') renderClassStatus(root);
   if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(root);
+  if (typeof renderSpecialtyPriestFaith === 'function') renderSpecialtyPriestFaith(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   renderCoinWeight(root);
   renderRacialAbilities(root);
@@ -8845,6 +8846,7 @@ function bindSheet(root, tab){
   // Without this the Specialty Priest block stays hidden until the first edit.
   if (typeof renderClassStatus === 'function') renderClassStatus(root);
   if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(root);
+  if (typeof renderSpecialtyPriestFaith === 'function') renderSpecialtyPriestFaith(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   renderCoinWeight(root);
   renderRacialAbilities(root);
@@ -10683,6 +10685,7 @@ function recalcAllOpenSheets() {
     // here or it only repaints when something unrelated happens to fire. Five
     // separate bugs in this codebase have had exactly that shape.
     if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(sheet);
+    if (typeof renderSpecialtyPriestFaith === 'function') renderSpecialtyPriestFaith(sheet);
     // renderArmorRestrictions and renderHenchmanLimits ARE inside
     // recalculateAll and need no line here. renderClassGroupValidation is not,
     // so it still does.
@@ -16084,6 +16087,7 @@ function recalculateAll(root) {
   // so it settles before the bonus is computed from it.
   if (typeof renderClassStatus === 'function') renderClassStatus(root);
   if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(root);
+  if (typeof renderSpecialtyPriestFaith === 'function') renderSpecialtyPriestFaith(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   if (typeof renderPrimeRequisiteBonus === 'function') renderPrimeRequisiteBonus(root);
   if (typeof renderThiefSkills === 'function') renderThiefSkills(root);
