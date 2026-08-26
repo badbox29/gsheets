@@ -2212,6 +2212,27 @@ function applyTemplateSpheres(root, t) {
   const want = {};
   (t.spheresMajor || []).forEach(s => { want[s.toLowerCase()] = 'major'; });
   (t.spheresMinor || []).forEach(s => { want[s.toLowerCase()] = 'minor'; });
+
+  // ANNOUNCE ANY SPHERE NAME THAT MATCHES NO ROW. The match above is
+  // case-insensitive on purpose -- getAllSpheres() derives its names from the
+  // spell data, and that list, the saved record and the setting spheres have
+  // disagreed on casing before -- but tolerance means a bad name does NOTHING
+  // rather than failing loudly. That is how a template shipped with an
+  // unexpanded "elemental" applied five of its eight spheres and looked like it
+  // had worked.
+  //
+  // Cheap insurance with fifty-odd entries still to transcribe: a typo, a Tome
+  // of Magic sphere that postdates PHBR3, or another unexpanded "Elemental"
+  // announces itself on the first apply instead of hiding in the data.
+  const known = {};
+  sels.forEach(sel => { known[(sel.getAttribute('data-sphere') || '').toLowerCase()] = true; });
+  const unmatched = Object.keys(want).filter(k => !known[k]);
+  if (unmatched.length) {
+    console.warn('Priesthood template "' + (t.key || '?') + '": no sphere row matches ' +
+                 unmatched.join(', ') + '. Check core_PHBR3_priesthoods.json against ' +
+                 'getAllSpheres() \u2014 note there is no bare "Elemental" row; it splits ' +
+                 'into Elemental Air, Earth, Fire and Water.');
+  }
   // Case-insensitive, because getAllSpheres() derives these names from the spell
   // data and the saved record, that list and the setting spheres have disagreed
   // on casing before.
