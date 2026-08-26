@@ -201,12 +201,15 @@ const SHEET_HTML = `
               whatever your priesthood grants. Blank entries behave exactly as the
               Player&rsquo;s Handbook cleric, so an ordinary cleric needs nothing here.
             </p>
-            <!-- COLLAPSED ON EVERY LOAD, deliberately: no `open` attribute, and
+            <!-- COLLAPSED ON EVERY LOAD, deliberately: no open attribute, and
                  SHEET_HTML is regenerated per tab so the state never persists.
                  Most priests are ordinary clerics who need none of this, and it
                  sits on the Core tab where scrolling is at a premium.
-                 A <details> toggle fires `toggle`, not `change`, so it cannot
-                 trip autosave -- no `ephemeral` class needed. -->
+                 A details element fires toggle, not change, so it cannot trip
+                 autosave -- no ephemeral class needed.
+                 NO BACKTICKS ANYWHERE IN THIS FILE, including inside HTML
+                 comments: the whole file is one template literal and the first
+                 backtick ends it. -->
             <details class="specialty-priest-details">
               <summary style="cursor:pointer;font-size:12px;color:var(--accent);margin-bottom:8px;">Specialty priest settings</summary>
             <div class="row">
