@@ -8995,8 +8995,6 @@ function bindSheet(root, tab){
       // Ask only when there is something to lose. Same shape as the class
       // status confirm: a blank sheet gets no prompt.
       if (typeof specialtyPriestHasContent === 'function' && specialtyPriestHasContent(root)) {
-        const label = e.target.options[e.target.selectedIndex]
-          ? '' : '';
         if (!confirm('Apply this template?\n\nEvery Specialty Priest field will be ' +
                      'overwritten, including any you filled in yourself that the ' +
                      'template leaves blank.\n\nYour deity\u2019s name is not touched.')) return;
