@@ -212,7 +212,35 @@ const SHEET_HTML = `
                  backtick ends it. -->
             <details class="specialty-priest-details">
               <summary style="cursor:pointer;font-size:12px;color:var(--accent);margin-bottom:8px;">Specialty priest settings</summary>
+            <!-- TEMPLATES, NOT A CLASSIFICATION. PHBR3 p.40 tells the DM he may
+                 rewrite most of what each entry prints, so applying one fills the
+                 fields and then gets out of the way. The dropdown is an ACTION
+                 PICKER and snaps back to its own label after use -- the answer
+                 lives in the provenance field beside it, so there is one place
+                 showing the truth rather than two that can disagree.
+                 Options are built by populatePriesthoodTemplates in calc.js from
+                 core_PHBR3_priesthoods.json; only the DM-Created option is here,
+                 so a failed fetch still leaves a usable control. -->
             <div class="row">
+              <div class="col">
+                <label>Priesthood Template</label>
+                <select data-field="sp_template" class="ephemeral" title="Applying a template overwrites every Specialty Priest field, including blanking any you filled in yourself. Choose DM-Created, or just edit the fields directly, for a faith of your DM's own.">
+                  <option value="">&mdash; apply a template &mdash;</option>
+                  <option value="dm">DM-Created</option>
+                </select>
+              </div>
+              <div class="col">
+                <label>Source Priesthood</label>
+                <!-- READONLY: this records where the settings CAME FROM, which is
+                     a fact about edit history rather than an input. Typing in it
+                     would let it lie. "(Modified)" appears the moment any
+                     specialty priest field is edited after a template is applied,
+                     and clears again if the same template is re-applied. -->
+                <input data-field="sp_template_source" type="text" readonly value="DM-Created" title="Provenance only. Shows which template these settings came from, and whether they have been changed since.">
+              </div>
+              <div class="col"></div>
+            </div>
+            <div class="row" style="margin-top:8px">
               <div class="col">
                 <label>Second Prime Requisite</label>
                 <select data-field="sp_prime_req2" title="PHBR3 p.13. Wisdom is always the first. With a second, either at 16 earns +5% experience and both at 16 earns +10%. The PHB has no +5% tier.">
