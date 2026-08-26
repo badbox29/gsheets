@@ -6764,7 +6764,12 @@ function collectSheet(root){
       restrictCelibacy: val(root,'sp_restrict_celibacy'),
       restrictDiet:  val(root,'sp_restrict_diet'),
       restrictItems: val(root,'sp_restrict_items'),
-      restrictMutilation: val(root,'sp_restrict_mutilation')
+      restrictMutilation: val(root,'sp_restrict_mutilation'),
+      // Details tab, not the Core block -- stored here anyway because they
+      // describe the same priesthood and splitting the record across two keys
+      // would be a second place for it to drift.
+      faithType: val(root,'sp_faith_type'),
+      combat:    val(root,'sp_combat')
     },
     // Kit-granted proficiencies the player has deliberately deleted. Without
     // this the next syncKitGrantedNWPs puts every one of them straight back, so
@@ -7216,6 +7221,8 @@ function loadSheet(root, data){
   val(root, 'sp_restrict_diet',       sp.restrictDiet       || '');
   val(root, 'sp_restrict_items',      sp.restrictItems      || '');
   val(root, 'sp_restrict_mutilation', sp.restrictMutilation || '');
+  val(root, 'sp_faith_type', sp.faithType || '');
+  val(root, 'sp_combat',     sp.combat    || '');
 
   root._weaponProfs = data.weaponProfs || [];
   
@@ -8964,14 +8971,14 @@ function bindSheet(root, tab){
       if (typeof renderKitAbilities === 'function') renderKitAbilities(root);
       if (typeof recalculateAll === 'function') recalculateAll(root);
     }
-    // PHBR3 specialty priest overrides. recalculateAll rather than a hand-picked
-    // list, for the same reason the fighting styles below use it: a second prime
-    // requisite moves the XP bonus, a crossover group moves every nonweapon slot
-    // cost, and the language grant moves the slot counter -- and those have order
-    // constraints between them that a short list here would silently break.
-    // sp_restrictions is in the pattern for consistency; it displays only, and
-    // being a text input it fires on blur rather than per keystroke.
-      if (f && /^sp_(prime_req2|hit_die|crossover|language_slot|weapon_spec|restrictions|restrict_\w+)$/.test(f)) {
+      // PHBR3 specialty priest overrides. recalculateAll rather than a hand-picked
+      // list, for the same reason the fighting styles below use it: a second prime
+      // requisite moves the XP bonus, a crossover group moves every nonweapon slot
+      // cost, and the language grant moves the slot counter -- and those have order
+      // constraints between them that a short list here would silently break.
+      // sp_restrictions is in the pattern for consistency; it displays only, and
+      // being a text input it fires on blur rather than per keystroke.
+      if (f && /^sp_(prime_req2|hit_die|crossover|language_slot|weapon_spec|restrictions|restrict_\w+|faith_type|combat)$/.test(f)) {
       if (typeof recalculateAll === 'function') recalculateAll(root);
       // Same reasoning as recalcAllOpenSheets: a select change is a discrete
       // action, not a keystroke, so rebuilding the list here is safe. Without
