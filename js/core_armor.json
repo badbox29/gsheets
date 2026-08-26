@@ -10,8 +10,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Hardened leather boots with reinforced toes NON-METAL, named in the row.",
-    "Metal": false
+    "Notes": "Hardened leather boots with reinforced toes"
   },
   {
     "Armor Name": "Boots, Metal-Shod",
@@ -24,8 +23,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Boots with metal reinforcement METAL, named in the row.",
-    "Metal": true
+    "Notes": "Boots with metal reinforcement"
   },
   {
     "Armor Name": "Boots, Soft Leather",
@@ -38,8 +36,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Soft leather boots NON-METAL, named in the row.",
-    "Metal": false
+    "Notes": "Soft leather boots"
   },
   {
     "Armor Name": "Dastana",
@@ -52,7 +49,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Armored vambraces, -1 to AC when used with other armor NO Metal FLAG. Armored vambraces, material unstated in the row and in any 2e source held here."
+    "Notes": "Armored vambraces, -1 to AC when used with other armor"
   },
   {
     "Armor Name": "Cloak",
@@ -65,7 +62,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Standard traveling cloak NO Metal FLAG. PHB Table 44 clothing at AC 10, not armor -- the restriction has nothing to bite on."
+    "Notes": "Standard traveling cloak"
   },
   {
     "Armor Name": "Leather Jacket",
@@ -78,7 +75,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Heavy leather jacket, minimal armor value NO Metal FLAG. PHB Table 44 clothing at AC 10, not armor -- the restriction has nothing to bite on."
+    "Notes": "Heavy leather jacket, minimal armor value"
   },
   {
     "Armor Name": "Robes",
@@ -91,7 +88,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Wizard or priest robes NO Metal FLAG. PHB Table 44 clothing at AC 10, not armor -- the restriction has nothing to bite on."
+    "Notes": "Wizard or priest robes"
   },
   {
     "Armor Name": "Tunic and Pants",
@@ -104,7 +101,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Common clothing NO Metal FLAG. PHB Table 44 clothing at AC 10, not armor -- the restriction has nothing to bite on."
+    "Notes": "Common clothing"
   },
   {
     "Armor Name": "Gauntlets, Leather",
@@ -117,8 +114,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Leather gloves, basic hand protection NON-METAL, named in the row.",
-    "Metal": false
+    "Notes": "Leather gloves, basic hand protection"
   },
   {
     "Armor Name": "Gauntlets, Metal",
@@ -131,8 +127,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Metal gauntlets, full hand protection. Improves unarmed damage. METAL, named in the row.",
-    "Metal": true
+    "Notes": "Metal gauntlets, full hand protection. Improves unarmed damage."
   },
   {
     "Armor Name": "Gladiator Armor, Gallic",
@@ -145,8 +140,7 @@
     "Dex Check": "-1",
     "Vision": "",
     "Hearing": "",
-    "Notes": "PHBR1 pp.104-105. Gladiator armor is assembled from separate pieces rather than worn as a suit; the three named types are the standard combinations. A Gladiator character MUST choose his armor from this listing. Galea, belt, manica on the weapon arm, and fasciae. AC 7, or 6 with the scutum he carries. The Gallic gladiator fights with any number of weapons. Cost is the sum of its pieces, listed separately in this file. These types are named for real-world sites (Thrace, Gaul, Samnos); rename them to suit your setting. METAL, resolved by COMPOSITION. PHBR1 p.106: the Gallic wears the galea, the BELT, manica and fasciae. The belt alone decides it -- the book calls it a protective METAL belt -- and the galea is a visored helmet.",
-    "Metal": true
+    "Notes": "PHBR1 pp.104-105. Gladiator armor is assembled from separate pieces rather than worn as a suit; the three named types are the standard combinations. A Gladiator character MUST choose his armor from this listing. Galea, belt, manica on the weapon arm, and fasciae. AC 7, or 6 with the scutum he carries. The Gallic gladiator fights with any number of weapons. Cost is the sum of its pieces, listed separately in this file. These types are named for real-world sites (Thrace, Gaul, Samnos); rename them to suit your setting."
   },
   {
     "Armor Name": "Gladiator Armor, Samnite",
@@ -159,8 +153,7 @@
     "Dex Check": "-2",
     "Vision": "",
     "Hearing": "",
-    "Notes": "PHBR1 pp.104-105. Gladiator armor is assembled from separate pieces rather than worn as a suit; the three named types are the standard combinations. A Gladiator character MUST choose his armor from this listing. The most heavily-armored type: cuirass, fasciae on the legs, manica on the weapon arm, and the galea helmet. AC 5, or 4 with the scutum he carries. Should someone wear just the cuirass, his base AC would be 7. Cost is the sum of its pieces, listed separately in this file. These types are named for real-world sites (Thrace, Gaul, Samnos); rename them to suit your setting. METAL, resolved by COMPOSITION. PHBR1 p.106: the Samnite wears a cuirass, fasciae, manica and the GALEA helmet. The galea decides it; the cuirass is \"leather or metal\" and does not need to resolve.",
-    "Metal": true
+    "Notes": "PHBR1 pp.104-105. Gladiator armor is assembled from separate pieces rather than worn as a suit; the three named types are the standard combinations. A Gladiator character MUST choose his armor from this listing. The most heavily-armored type: cuirass, fasciae on the legs, manica on the weapon arm, and the galea helmet. AC 5, or 4 with the scutum he carries. Should someone wear just the cuirass, his base AC would be 7. Cost is the sum of its pieces, listed separately in this file. These types are named for real-world sites (Thrace, Gaul, Samnos); rename them to suit your setting."
   },
   {
     "Armor Name": "Gladiator Armor, Thracian",
@@ -173,8 +166,7 @@
     "Dex Check": "0",
     "Vision": "",
     "Hearing": "",
-    "Notes": "PHBR1 pp.104-105. Gladiator armor is assembled from separate pieces rather than worn as a suit; the three named types are the standard combinations. A Gladiator character MUST choose his armor from this listing. Fasciae on the legs only. AC 9, or 8 with the parma he carries. In gladiatorial combat the Thracian fights only with a dagger; in the field, adventuring, he could use anything he wants. Cost is the sum of its pieces, listed separately in this file. These types are named for real-world sites (Thrace, Gaul, Samnos); rename them to suit your setting. NON-METAL, resolved by COMPOSITION rather than by AC. PHBR1 p.106: the Thracian \"wears only fasciae on his legs\" -- leather bands -- plus a parma, and shields carry no material classification.",
-    "Metal": false
+    "Notes": "PHBR1 pp.104-105. Gladiator armor is assembled from separate pieces rather than worn as a suit; the three named types are the standard combinations. A Gladiator character MUST choose his armor from this listing. Fasciae on the legs only. AC 9, or 8 with the parma he carries. In gladiatorial combat the Thracian fights only with a dagger; in the field, adventuring, he could use anything he wants. Cost is the sum of its pieces, listed separately in this file. These types are named for real-world sites (Thrace, Gaul, Samnos); rename them to suit your setting."
   },
   {
     "Armor Name": "Gladiator Piece, Belt",
@@ -187,8 +179,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "PHBR1 p.104. A component of gladiator armor, bought and worn separately rather than as a suit; see the Thracian, Gallic and Samnite entries for the standard combinations. Protective metal belt at the waist. METAL per PHBR1 p.106, which calls it a \"protective metal belt at waist.\"",
-    "Metal": true
+    "Notes": "PHBR1 p.104. A component of gladiator armor, bought and worn separately rather than as a suit; see the Thracian, Gallic and Samnite entries for the standard combinations. Protective metal belt at the waist."
   },
   {
     "Armor Name": "Gladiator Piece, Cuirass",
@@ -201,7 +192,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "PHBR1 p.104. A component of gladiator armor, bought and worn separately rather than as a suit; see the Thracian, Gallic and Samnite entries for the standard combinations. Leather or metal chest plate. Worn alone it gives AC 7. NO Metal FLAG. PHBR1 p.106 calls it a \"leather or metal chest plate\" -- the book names both and declines to choose, so the player does."
+    "Notes": "PHBR1 p.104. A component of gladiator armor, bought and worn separately rather than as a suit; see the Thracian, Gallic and Samnite entries for the standard combinations. Leather or metal chest plate. Worn alone it gives AC 7."
   },
   {
     "Armor Name": "Gladiator Piece, Fasciae",
@@ -214,8 +205,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "PHBR1 p.104. A component of gladiator armor, bought and worn separately rather than as a suit; see the Thracian, Gallic and Samnite entries for the standard combinations. Leather bands on the legs. NON-METAL per PHBR1 p.106: \"leather bands on legs.\"",
-    "Metal": false
+    "Notes": "PHBR1 p.104. A component of gladiator armor, bought and worn separately rather than as a suit; see the Thracian, Gallic and Samnite entries for the standard combinations. Leather bands on the legs."
   },
   {
     "Armor Name": "Gladiator Piece, Galerus",
@@ -228,7 +218,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "PHBR1 p.104. A component of gladiator armor, bought and worn separately rather than as a suit; see the Thracian, Gallic and Samnite entries for the standard combinations. Shoulder piece on the weapon shoulder. NO Metal FLAG. PHBR1 p.106 gives it as a \"shoulder piece on weapon shoulder\" without naming a material."
+    "Notes": "PHBR1 p.104. A component of gladiator armor, bought and worn separately rather than as a suit; see the Thracian, Gallic and Samnite entries for the standard combinations. Shoulder piece on the weapon shoulder."
   },
   {
     "Armor Name": "Gladiator Piece, Manica",
@@ -241,8 +231,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "PHBR1 p.104. A component of gladiator armor, bought and worn separately rather than as a suit; see the Thracian, Gallic and Samnite entries for the standard combinations. Leather sleeve for the weapon arm. NON-METAL per PHBR1 p.106: a \"leather sleeve.\"",
-    "Metal": false
+    "Notes": "PHBR1 p.104. A component of gladiator armor, bought and worn separately rather than as a suit; see the Thracian, Gallic and Samnite entries for the standard combinations. Leather sleeve for the weapon arm."
   },
   {
     "Armor Name": "Banded Mail",
@@ -255,8 +244,7 @@
     "Dex Check": "-2",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Overlapping metal bands on chain mail and leather DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt. METAL per PHBR3 p.41, which names this armor in its metal list: \"not all of them are all-metal, but all of them have metal elements.\" The classification exists because \"may not wear metal armor\" is among the commonest priesthood restrictions in that book (pp.19-21).",
-    "Metal": true
+    "Notes": "Overlapping metal bands on chain mail and leather DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt."
   },
   {
     "Armor Name": "Bronze Plate Mail",
@@ -269,8 +257,7 @@
     "Dex Check": "-3",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Bronze plates covering vital areas DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt. METAL per PHBR3 p.41, which names this armor in its metal list: \"not all of them are all-metal, but all of them have metal elements.\" The classification exists because \"may not wear metal armor\" is among the commonest priesthood restrictions in that book (pp.19-21).",
-    "Metal": true
+    "Notes": "Bronze plates covering vital areas DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt."
   },
   {
     "Armor Name": "Field Plate",
@@ -283,8 +270,7 @@
     "Dex Check": "-3",
     "Vision": "",
     "Hearing": "",
-    "Notes": "High-quality plate armor with superior workmanship DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt. METAL per PHBR3 p.41, which names this armor in its metal list: \"not all of them are all-metal, but all of them have metal elements.\" The classification exists because \"may not wear metal armor\" is among the commonest priesthood restrictions in that book (pp.19-21).",
-    "Metal": true
+    "Notes": "High-quality plate armor with superior workmanship DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt."
   },
   {
     "Armor Name": "Full Plate",
@@ -297,8 +283,7 @@
     "Dex Check": "-3",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Best armor available, custom-fitted articulated plate DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt. METAL per PHBR3 p.41, which names this armor in its metal list: \"not all of them are all-metal, but all of them have metal elements.\" The classification exists because \"may not wear metal armor\" is among the commonest priesthood restrictions in that book (pp.19-21).",
-    "Metal": true
+    "Notes": "Best armor available, custom-fitted articulated plate DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt."
   },
   {
     "Armor Name": "Plate Mail",
@@ -311,8 +296,7 @@
     "Dex Check": "-3",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Interlocking metal plates covering most of the body DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt. METAL per PHBR3 p.41, which names this armor in its metal list: \"not all of them are all-metal, but all of them have metal elements.\" The classification exists because \"may not wear metal armor\" is among the commonest priesthood restrictions in that book (pp.19-21).",
-    "Metal": true
+    "Notes": "Interlocking metal plates covering most of the body DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt."
   },
   {
     "Armor Name": "Splint Mail",
@@ -325,8 +309,7 @@
     "Dex Check": "-2",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Metal strips on leather backing with chain mail DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt. METAL per PHBR3 p.41, which names this armor in its metal list: \"not all of them are all-metal, but all of them have metal elements.\" The classification exists because \"may not wear metal armor\" is among the commonest priesthood restrictions in that book (pp.19-21).",
-    "Metal": true
+    "Notes": "Metal strips on leather backing with chain mail DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt."
   },
   {
     "Armor Name": "O-Yoroi",
@@ -339,7 +322,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Japanese great armor, equivalent to field plate PHBR1 p.105 states that oriental and occidental armor differ only DESCRIPTIVELY: leather armor is leather, plate is plate, and basic costs, weights and AC values are IDENTICAL to the western styles -- samurai armor is the equivalent of padded leather. A samurai may spend more than the minimum, the extra going into making it a remarkable example of eastern art rather than into protection. The pre-existing values on this record are unsourced and were NOT overwritten, because PHBR1 gives no separate figures to overwrite them with. NO Metal FLAG. The AC, cost and weight on this row are UNSOURCED (see above), so matching them to a PHBR3 category would stack a real inference on an unverified figure. Its material is named nowhere in the 2e material held here. Would resolve from Oriental Adventures -- a 1st EDITION book, so using it is an edition-boundary decision, not merely a sourcing one. Parked alongside the same question on Net and Nunchaku in core_wp.json."
+    "Notes": "Japanese great armor, equivalent to field plate PHBR1 p.105 states that oriental and occidental armor differ only DESCRIPTIVELY: leather armor is leather, plate is plate, and basic costs, weights and AC values are IDENTICAL to the western styles -- samurai armor is the equivalent of padded leather. A samurai may spend more than the minimum, the extra going into making it a remarkable example of eastern art rather than into protection. The pre-existing values on this record are unsourced and were NOT overwritten, because PHBR1 gives no separate figures to overwrite them with."
   },
   {
     "Armor Name": "Gladiator Piece, Galea",
@@ -352,8 +335,7 @@
     "Dex Check": "",
     "Vision": "-2",
     "Hearing": "-3",
-    "Notes": "PHBR1 p.104. A component of gladiator armor, bought and worn separately rather than as a suit; see the Thracian, Gallic and Samnite entries for the standard combinations. Visored helmet. A Closed-Face helmet: -2 Vision, -3 Hearing. METAL per PHBR1 p.106: a visored helmet.",
-    "Metal": true
+    "Notes": "PHBR1 p.104. A component of gladiator armor, bought and worn separately rather than as a suit; see the Thracian, Gallic and Samnite entries for the standard combinations. Visored helmet. A Closed-Face helmet: -2 Vision, -3 Hearing."
   },
   {
     "Armor Name": "Gladiator Piece, Myrmillo",
@@ -366,8 +348,7 @@
     "Dex Check": "",
     "Vision": "-2",
     "Hearing": "-3",
-    "Notes": "PHBR1 p.104. A component of gladiator armor, bought and worn separately rather than as a suit; see the Thracian, Gallic and Samnite entries for the standard combinations. Visored helm resembling a sea fish. A Closed-Face helmet: -2 Vision, -3 Hearing. METAL per PHBR1 p.106: a visored helm resembling a sea fish.",
-    "Metal": true
+    "Notes": "PHBR1 p.104. A component of gladiator armor, bought and worn separately rather than as a suit; see the Thracian, Gallic and Samnite entries for the standard combinations. Visored helm resembling a sea fish. A Closed-Face helmet: -2 Vision, -3 Hearing."
   },
   {
     "Armor Name": "Head Protection, None",
@@ -380,7 +361,7 @@
     "Dex Check": "",
     "Vision": "-0",
     "Hearing": "-0",
-    "Notes": "PHBR1 p.107. Wearing no head protection costs NOTHING in Vision or Hearing -- but under the optional hit location rules an attacker may make a Called Shot at the head and thereby IGNORE the character's AC benefits from armor. Bonuses from shields, high Dexterity and magical items still count. At a total -8 to hit this is rarely worth it unless the victim is otherwise heavily armored -- which is exactly when it is worth it. NOTE that head protection does NOT change Armor Class: a warrior in full plate has the same AC with a great helm, with no helmet at all, or anything between. NO Metal FLAG. A placeholder row, not an item."
+    "Notes": "PHBR1 p.107. Wearing no head protection costs NOTHING in Vision or Hearing -- but under the optional hit location rules an attacker may make a Called Shot at the head and thereby IGNORE the character's AC benefits from armor. Bonuses from shields, high Dexterity and magical items still count. At a total -8 to hit this is rarely worth it unless the victim is otherwise heavily armored -- which is exactly when it is worth it. NOTE that head protection does NOT change Armor Class: a warrior in full plate has the same AC with a great helm, with no helmet at all, or anything between."
   },
   {
     "Armor Name": "Helmet, Basinet",
@@ -393,8 +374,7 @@
     "Dex Check": "",
     "Vision": "-2",
     "Hearing": "-3",
-    "Notes": "Close-fitting helmet with visor PHBR1 p.106/108 names the basinet as its example of the CLOSED-FACE HELMET: metal, like the open-faced helmet except that there is armor plate, often a visor which may be opened, in front of the face. -2 Vision, -3 Hearing. The galea worn by gladiators and the myrmillo are also of this type, as are the helmets of many knights and mounted warriors. BENEFIT: if the wearer is also in plate mail or field plate, he gets +1 to saving throws vs. dragon breath and vs. fire-based spells and magical effects such as burning hands, pyrotechnics, fire ball, flaming sphere, wall of fire, delayed blast fireball, incendiary cloud and meteor swarm, as determined by the DM. HINDRANCE: if a lasso, chain or bolas is used to snare the head of a rider wearing one, he rolls 1d6 -- on 4-6 the attack is handled normally, but on 1-3 it is treated as a normal lasso or chain dismount and the attacker does NOT get the extra damage a head-lasso normally allows. METAL. A basinet is a steel helm.",
-    "Metal": true
+    "Notes": "Close-fitting helmet with visor PHBR1 p.106/108 names the basinet as its example of the CLOSED-FACE HELMET: metal, like the open-faced helmet except that there is armor plate, often a visor which may be opened, in front of the face. -2 Vision, -3 Hearing. The galea worn by gladiators and the myrmillo are also of this type, as are the helmets of many knights and mounted warriors. BENEFIT: if the wearer is also in plate mail or field plate, he gets +1 to saving throws vs. dragon breath and vs. fire-based spells and magical effects such as burning hands, pyrotechnics, fire ball, flaming sphere, wall of fire, delayed blast fireball, incendiary cloud and meteor swarm, as determined by the DM. HINDRANCE: if a lasso, chain or bolas is used to snare the head of a rider wearing one, he rolls 1d6 -- on 4-6 the attack is handled normally, but on 1-3 it is treated as a normal lasso or chain dismount and the attacker does NOT get the extra damage a head-lasso normally allows."
   },
   {
     "Armor Name": "Helmet, Great Helm",
@@ -407,8 +387,7 @@
     "Dex Check": "",
     "Vision": "-3",
     "Hearing": "-4",
-    "Notes": "Full face coverage, -1 to initiative, limits vision PHBR1 p.106/108: a massive helm covering the entire head from the top of the head to the top of the shoulders, leaving slits open for the eyes and holes open for breathing; it has NO removable visor. -3 Vision, -4 Hearing, the worst of the six types. BENEFITS: +2 to saving throws vs. wizard spells such as hypnotism, light cast on his eyes, blindness, hypnotic pattern, suggestion, fire charm, rainbow pattern and other mind-controlling spells -- but NOT charm person, charm monster or domination. If the wearer is also in plate mail or field plate he gets +2 to saving throws vs. dragon breath and vs. fire-based spells and effects. METAL. A great helm is a steel helm.",
-    "Metal": true
+    "Notes": "Full face coverage, -1 to initiative, limits vision PHBR1 p.106/108: a massive helm covering the entire head from the top of the head to the top of the shoulders, leaving slits open for the eyes and holes open for breathing; it has NO removable visor. -3 Vision, -4 Hearing, the worst of the six types. BENEFITS: +2 to saving throws vs. wizard spells such as hypnotism, light cast on his eyes, blindness, hypnotic pattern, suggestion, fire charm, rainbow pattern and other mind-controlling spells -- but NOT charm person, charm monster or domination. If the wearer is also in plate mail or field plate he gets +2 to saving throws vs. dragon breath and vs. fire-based spells and effects."
   },
   {
     "Armor Name": "Helmet, Leather Cap",
@@ -421,8 +400,7 @@
     "Dex Check": "",
     "Vision": "-0",
     "Hearing": "-1",
-    "Notes": "Soft leather cap, minimal protection PHBR1 p.106/108 calls this the CAP: a padded, leather or even steel skullcap about the size of and worn much like a close-fitting cap, beret or hat. No Vision penalty and only -1 to Hearing, as it partially covers the ears. Often worn in conjunction with padded, leather, hide, studded leather and other lightweight armors. WEIGHT DISCREPANCY: PHBR1 p.106 gives 2 lb; the previous unsourced value here was 1 lb. PHBR1's is adopted, being the only sourced figure available. NON-METAL, named in the row.",
-    "Metal": false
+    "Notes": "Soft leather cap, minimal protection PHBR1 p.106/108 calls this the CAP: a padded, leather or even steel skullcap about the size of and worn much like a close-fitting cap, beret or hat. No Vision penalty and only -1 to Hearing, as it partially covers the ears. Often worn in conjunction with padded, leather, hide, studded leather and other lightweight armors. WEIGHT DISCREPANCY: PHBR1 p.106 gives 2 lb; the previous unsourced value here was 1 lb. PHBR1's is adopted, being the only sourced figure available."
   },
   {
     "Armor Name": "Helmet, Metal Helm",
@@ -435,8 +413,7 @@
     "Dex Check": "",
     "Vision": "-1",
     "Hearing": "-2",
-    "Notes": "Standard metal helmet, protects against critical hits (optional rule) PHBR1 p.106/108 calls this the OPEN-FACED HELMET: reinforced leather or metal covering the back, sides and top of the face, leaving most of the face open. -1 Vision, -2 Hearing (it completely covers the ears, usually with small holes or grating so the wearer can hear at all). Corinthian helmets of ancient Greece are the example; in a medieval campaign these are often worn by military officers and soldiers who can afford the protection. WEIGHT DISCREPANCY: PHBR1 p.106 gives 5 lb; the previous unsourced value here was 10 lb. PHBR1's is adopted, being the only sourced figure available. METAL, named in the row.",
-    "Metal": true
+    "Notes": "Standard metal helmet, protects against critical hits (optional rule) PHBR1 p.106/108 calls this the OPEN-FACED HELMET: reinforced leather or metal covering the back, sides and top of the face, leaving most of the face open. -1 Vision, -2 Hearing (it completely covers the ears, usually with small holes or grating so the wearer can hear at all). Corinthian helmets of ancient Greece are the example; in a medieval campaign these are often worn by military officers and soldiers who can afford the protection. WEIGHT DISCREPANCY: PHBR1 p.106 gives 5 lb; the previous unsourced value here was 10 lb. PHBR1's is adopted, being the only sourced figure available."
   },
   {
     "Armor Name": "Helmet, Padded Coif",
@@ -449,8 +426,7 @@
     "Dex Check": "",
     "Vision": "-0",
     "Hearing": "-1",
-    "Notes": "Quilted cloth helmet PHBR1 p.106/108 calls this the COIF: a padded chain mail hood fitting snugly around the neck and over all the head except the face from chin to forehead. No Vision penalty, -1 to Hearing. Usually worn with chain mail. A heavily armored knight often wears a coif AND a Great Helm over it; the only benefit that confers is that he can remove the Great Helm to see and hear better while still having some head protection. WEIGHT DISCREPANCY: PHBR1 p.106 gives 2 lb; the previous unsourced value here was 1 lb. PHBR1's is adopted, being the only sourced figure available. NON-METAL, named in the row.",
-    "Metal": false
+    "Notes": "Quilted cloth helmet PHBR1 p.106/108 calls this the COIF: a padded chain mail hood fitting snugly around the neck and over all the head except the face from chin to forehead. No Vision penalty, -1 to Hearing. Usually worn with chain mail. A heavily armored knight often wears a coif AND a Great Helm over it; the only benefit that confers is that he can remove the Great Helm to see and hear better while still having some head protection. WEIGHT DISCREPANCY: PHBR1 p.106 gives 2 lb; the previous unsourced value here was 1 lb. PHBR1's is adopted, being the only sourced figure available."
   },
   {
     "Armor Name": "Barding, Banded Mail",
@@ -463,7 +439,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from banded mail, Table 46 NO Metal FLAG, deliberately. PHBR3 p.19 restricts the armor a priest may WEAR; barding is worn by the mount. Blank means the question does not apply -- false would wrongly read as \"non-metal armor you are permitted.\""
+    "Notes": "Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from banded mail, Table 46"
   },
   {
     "Armor Name": "Barding, Chain",
@@ -476,7 +452,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from chain mail, Table 46 NO Metal FLAG, deliberately. PHBR3 p.19 restricts the armor a priest may WEAR; barding is worn by the mount. Blank means the question does not apply -- false would wrongly read as \"non-metal armor you are permitted.\""
+    "Notes": "Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from chain mail, Table 46"
   },
   {
     "Armor Name": "Barding, Full Plate",
@@ -489,7 +465,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from stated outright on p.92: \"equivalent of a warrior's field plate... provides an Armor Class of 2 to the mount\" NO Metal FLAG, deliberately. PHBR3 p.19 restricts the armor a priest may WEAR; barding is worn by the mount. Blank means the question does not apply -- false would wrongly read as \"non-metal armor you are permitted.\""
+    "Notes": "Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from stated outright on p.92: \"equivalent of a warrior's field plate... provides an Armor Class of 2 to the mount\""
   },
   {
     "Armor Name": "Barding, Full Scale",
@@ -502,7 +478,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from scale mail, Table 46 NO Metal FLAG, deliberately. PHBR3 p.19 restricts the armor a priest may WEAR; barding is worn by the mount. Blank means the question does not apply -- false would wrongly read as \"non-metal armor you are permitted.\""
+    "Notes": "Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from scale mail, Table 46"
   },
   {
     "Armor Name": "Barding, Half Brigandine",
@@ -515,7 +491,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Half barding covers head, neck, chest and front quarters only. Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from brigandine, Table 46 NO Metal FLAG, deliberately. PHBR3 p.19 restricts the armor a priest may WEAR; barding is worn by the mount. Blank means the question does not apply -- false would wrongly read as \"non-metal armor you are permitted.\""
+    "Notes": "Half barding covers head, neck, chest and front quarters only. Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from brigandine, Table 46"
   },
   {
     "Armor Name": "Barding, Half Padded",
@@ -528,7 +504,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Half barding covers head, neck, chest and front quarters only. Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from padded armor, Table 46 NO Metal FLAG, deliberately. PHBR3 p.19 restricts the armor a priest may WEAR; barding is worn by the mount. Blank means the question does not apply -- false would wrongly read as \"non-metal armor you are permitted.\""
+    "Notes": "Half barding covers head, neck, chest and front quarters only. Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from padded armor, Table 46"
   },
   {
     "Armor Name": "Barding, Half Scale",
@@ -541,7 +517,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Half barding covers head, neck, chest and front quarters only. Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from scale mail, Table 46 NO Metal FLAG, deliberately. PHBR3 p.19 restricts the armor a priest may WEAR; barding is worn by the mount. Blank means the question does not apply -- false would wrongly read as \"non-metal armor you are permitted.\""
+    "Notes": "Half barding covers head, neck, chest and front quarters only. Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from scale mail, Table 46"
   },
   {
     "Armor Name": "Barding, Leather or Padded",
@@ -554,7 +530,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from leather/padded armor, Table 46 NO Metal FLAG, deliberately. PHBR3 p.19 restricts the armor a priest may WEAR; barding is worn by the mount. Blank means the question does not apply -- false would wrongly read as \"non-metal armor you are permitted.\""
+    "Notes": "Barding AC is the armor's own rating, not the mount's resulting AC -- a creature with a better natural AC applies the rule on PHB p.102. Cost and weight from Tack and Harness (p.91), which has no AC column; AC from leather/padded armor, Table 46"
   },
   {
     "Armor Name": "Greaves",
@@ -567,7 +543,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Metal shin guards NO Metal FLAG. Greaves are made in both metal and hardened leather and this row does not say which."
+    "Notes": "Metal shin guards"
   },
   {
     "Armor Name": "Leather Armor",
@@ -580,8 +556,7 @@
     "Dex Check": "0",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Soft leather, breastplate and shoulder protection DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt. NON-METAL per PHBR3 p.41, which names this armor in its non-metal list alongside hide and padded.",
-    "Metal": false
+    "Notes": "Soft leather, breastplate and shoulder protection DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt."
   },
   {
     "Armor Name": "Padded Armor",
@@ -594,8 +569,7 @@
     "Dex Check": "0",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Quilted cloth armor DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt. NON-METAL per PHBR3 p.41, which names this armor in its non-metal list alongside hide and padded.",
-    "Metal": false
+    "Notes": "Quilted cloth armor DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt."
   },
   {
     "Armor Name": "Studded Leather",
@@ -608,8 +582,7 @@
     "Dex Check": "-1",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Leather armor reinforced with metal studs DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt. METAL per PHBR3 p.41, which names this armor in its metal list: \"not all of them are all-metal, but all of them have metal elements.\" The classification exists because \"may not wear metal armor\" is among the commonest priesthood restrictions in that book (pp.19-21).",
-    "Metal": true
+    "Notes": "Leather armor reinforced with metal studs DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt."
   },
   {
     "Armor Name": "Leather Lamellar",
@@ -622,8 +595,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Lacquered leather strips laced together PHBR1 p.105 states that oriental and occidental armor differ only DESCRIPTIVELY: leather armor is leather, plate is plate, and basic costs, weights and AC values are IDENTICAL to the western styles -- samurai armor is the equivalent of padded leather. A samurai may spend more than the minimum, the extra going into making it a remarkable example of eastern art rather than into protection. The pre-existing values on this record are unsourced and were NOT overwritten, because PHBR1 gives no separate figures to overwrite them with. NON-METAL, on this row's own description: \"lacquered leather strips laced together.\"",
-    "Metal": false
+    "Notes": "Lacquered leather strips laced together PHBR1 p.105 states that oriental and occidental armor differ only DESCRIPTIVELY: leather armor is leather, plate is plate, and basic costs, weights and AC values are IDENTICAL to the western styles -- samurai armor is the equivalent of padded leather. A samurai may spend more than the minimum, the extra going into making it a remarkable example of eastern art rather than into protection. The pre-existing values on this record are unsourced and were NOT overwritten, because PHBR1 gives no separate figures to overwrite them with."
   },
   {
     "Armor Name": "Padded Silk Armor",
@@ -636,8 +608,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Multiple layers of silk, resistant to some weapons PHBR1 p.105 states that oriental and occidental armor differ only DESCRIPTIVELY: leather armor is leather, plate is plate, and basic costs, weights and AC values are IDENTICAL to the western styles -- samurai armor is the equivalent of padded leather. A samurai may spend more than the minimum, the extra going into making it a remarkable example of eastern art rather than into protection. The pre-existing values on this record are unsourced and were NOT overwritten, because PHBR1 gives no separate figures to overwrite them with. NON-METAL, on this row's own description: \"multiple layers of silk.\"",
-    "Metal": false
+    "Notes": "Multiple layers of silk, resistant to some weapons PHBR1 p.105 states that oriental and occidental armor differ only DESCRIPTIVELY: leather armor is leather, plate is plate, and basic costs, weights and AC values are IDENTICAL to the western styles -- samurai armor is the equivalent of padded leather. A samurai may spend more than the minimum, the extra going into making it a remarkable example of eastern art rather than into protection. The pre-existing values on this record are unsourced and were NOT overwritten, because PHBR1 gives no separate figures to overwrite them with."
   },
   {
     "Armor Name": "Gladiator Armor",
@@ -650,8 +621,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Partial armor for arena combat - shoulder guard, arm guard, minimal torso coverage SUPERSEDED IN PRACTICE: PHBR1 pp.104-105 gives three NAMED gladiator armor types with sourced AC and weight -- Thracian AC 9, Gallic AC 7, Samnite AC 5 -- each assembled from the separately-listed pieces. This unsourced generic row is left in place rather than deleted, since characters may already reference it, but new characters should use one of the three named types. METAL. This generic AC 7 row matches the GALLIC set exactly (PHBR1 p.106), which includes the metal belt and the galea.",
-    "Metal": true
+    "Notes": "Partial armor for arena combat - shoulder guard, arm guard, minimal torso coverage SUPERSEDED IN PRACTICE: PHBR1 pp.104-105 gives three NAMED gladiator armor types with sourced AC and weight -- Thracian AC 9, Gallic AC 7, Samnite AC 5 -- each assembled from the separately-listed pieces. This unsourced generic row is left in place rather than deleted, since characters may already reference it, but new characters should use one of the three named types."
   },
   {
     "Armor Name": "Brigandine",
@@ -664,8 +634,7 @@
     "Dex Check": "-2",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Small metal plates riveted to fabric or leather DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt. METAL per PHBR3 p.41, which names this armor in its metal list: \"not all of them are all-metal, but all of them have metal elements.\" The classification exists because \"may not wear metal armor\" is among the commonest priesthood restrictions in that book (pp.19-21).",
-    "Metal": true
+    "Notes": "Small metal plates riveted to fabric or leather DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt."
   },
   {
     "Armor Name": "Chain Mail",
@@ -678,8 +647,7 @@
     "Dex Check": "-2",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Interlocking metal rings DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt. METAL per PHBR3 p.41, which names this armor in its metal list: \"not all of them are all-metal, but all of them have metal elements.\" The classification exists because \"may not wear metal armor\" is among the commonest priesthood restrictions in that book (pp.19-21).",
-    "Metal": true
+    "Notes": "Interlocking metal rings DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt."
   },
   {
     "Armor Name": "Hide Armor",
@@ -692,8 +660,7 @@
     "Dex Check": "-3",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Thick animal hides, crude armor DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt. NON-METAL per PHBR3 p.41, which names this armor in its non-metal list alongside hide and padded.",
-    "Metal": false
+    "Notes": "Thick animal hides, crude armor DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt."
   },
   {
     "Armor Name": "Ring Mail",
@@ -706,8 +673,7 @@
     "Dex Check": "-1",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Metal rings sewn to leather backing DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt. DISCREPANCY, recorded not resolved: PHBR1 p.106 reprints the PHB armor table with a Dexterity column added, and its weight for this row is 50 lb rather than the PHB's 30 lb. The PHB value is kept -- a supplement's table should not silently rewrite a core one, the same call already made for PHB Table 27 over CRH Table 54's transposed halfling row. Only Ring Mail and Scale Mail differ; the other twelve rows match the PHB exactly, which is itself evidence that these two are the supplement's error. METAL per PHBR3 p.41, which names this armor in its metal list: \"not all of them are all-metal, but all of them have metal elements.\" The classification exists because \"may not wear metal armor\" is among the commonest priesthood restrictions in that book (pp.19-21).",
-    "Metal": true
+    "Notes": "Metal rings sewn to leather backing DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt. DISCREPANCY, recorded not resolved: PHBR1 p.106 reprints the PHB armor table with a Dexterity column added, and its weight for this row is 50 lb rather than the PHB's 30 lb. The PHB value is kept -- a supplement's table should not silently rewrite a core one, the same call already made for PHB Table 27 over CRH Table 54's transposed halfling row. Only Ring Mail and Scale Mail differ; the other twelve rows match the PHB exactly, which is itself evidence that these two are the supplement's error."
   },
   {
     "Armor Name": "Scale Mail",
@@ -720,8 +686,7 @@
     "Dex Check": "-2",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Overlapping metal scales on leather backing DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt. DISCREPANCY, recorded not resolved: PHBR1 p.106 reprints the PHB armor table with a Dexterity column added, and its weight for this row is 30 lb rather than the PHB's 40 lb. The PHB value is kept -- a supplement's table should not silently rewrite a core one, the same call already made for PHB Table 27 over CRH Table 54's transposed halfling row. Only Ring Mail and Scale Mail differ; the other twelve rows match the PHB exactly, which is itself evidence that these two are the supplement's error. METAL per PHBR3 p.41, which names this armor in its metal list: \"not all of them are all-metal, but all of them have metal elements.\" The classification exists because \"may not wear metal armor\" is among the commonest priesthood restrictions in that book (pp.19-21).",
-    "Metal": true
+    "Notes": "Overlapping metal scales on leather backing DEXTERITY CHECK PENALTY is PHBR1 p.106, an OPTIONAL rule the book offers for tables that want armored characters to be less graceful. It applies to Dexterity checks and to Dexterity-based nonweapon proficiencies, EXCEPT Riding (Land-based or Airborne) and Charioteering, which are exempt. DISCREPANCY, recorded not resolved: PHBR1 p.106 reprints the PHB armor table with a Dexterity column added, and its weight for this row is 30 lb rather than the PHB's 40 lb. The PHB value is kept -- a supplement's table should not silently rewrite a core one, the same call already made for PHB Table 27 over CRH Table 54's transposed halfling row. Only Ring Mail and Scale Mail differ; the other twelve rows match the PHB exactly, which is itself evidence that these two are the supplement's error."
   },
   {
     "Armor Name": "Do-Maru",
@@ -734,7 +699,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Japanese body wrap armor PHBR1 p.105 states that oriental and occidental armor differ only DESCRIPTIVELY: leather armor is leather, plate is plate, and basic costs, weights and AC values are IDENTICAL to the western styles -- samurai armor is the equivalent of padded leather. A samurai may spend more than the minimum, the extra going into making it a remarkable example of eastern art rather than into protection. The pre-existing values on this record are unsourced and were NOT overwritten, because PHBR1 gives no separate figures to overwrite them with. NO Metal FLAG. \"Body wrap armor\" names no material, and this row's AC is unsourced. Same OA question as O-Yoroi."
+    "Notes": "Japanese body wrap armor PHBR1 p.105 states that oriental and occidental armor differ only DESCRIPTIVELY: leather armor is leather, plate is plate, and basic costs, weights and AC values are IDENTICAL to the western styles -- samurai armor is the equivalent of padded leather. A samurai may spend more than the minimum, the extra going into making it a remarkable example of eastern art rather than into protection. The pre-existing values on this record are unsourced and were NOT overwritten, because PHBR1 gives no separate figures to overwrite them with."
   },
   {
     "Armor Name": "Kozane",
@@ -747,8 +712,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Scale armor made from individual metal scales PHBR1 p.105 states that oriental and occidental armor differ only DESCRIPTIVELY: leather armor is leather, plate is plate, and basic costs, weights and AC values are IDENTICAL to the western styles -- samurai armor is the equivalent of padded leather. A samurai may spend more than the minimum, the extra going into making it a remarkable example of eastern art rather than into protection. The pre-existing values on this record are unsourced and were NOT overwritten, because PHBR1 gives no separate figures to overwrite them with. METAL, on this row's own description: \"scale armor made from individual metal scales.\" NOT derived from the PHBR1 equivalence or from the AC, both of which are unsourced here.",
-    "Metal": true
+    "Notes": "Scale armor made from individual metal scales PHBR1 p.105 states that oriental and occidental armor differ only DESCRIPTIVELY: leather armor is leather, plate is plate, and basic costs, weights and AC values are IDENTICAL to the western styles -- samurai armor is the equivalent of padded leather. A samurai may spend more than the minimum, the extra going into making it a remarkable example of eastern art rather than into protection. The pre-existing values on this record are unsourced and were NOT overwritten, because PHBR1 gives no separate figures to overwrite them with."
   },
   {
     "Armor Name": "Tatami-Do",
@@ -761,7 +725,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Folding armor, can be stored in small container PHBR1 p.105 states that oriental and occidental armor differ only DESCRIPTIVELY: leather armor is leather, plate is plate, and basic costs, weights and AC values are IDENTICAL to the western styles -- samurai armor is the equivalent of padded leather. A samurai may spend more than the minimum, the extra going into making it a remarkable example of eastern art rather than into protection. The pre-existing values on this record are unsourced and were NOT overwritten, because PHBR1 gives no separate figures to overwrite them with. NO Metal FLAG. \"Folding armor\" names no material, and this row's AC is unsourced. Same OA question as O-Yoroi."
+    "Notes": "Folding armor, can be stored in small container PHBR1 p.105 states that oriental and occidental armor differ only DESCRIPTIVELY: leather armor is leather, plate is plate, and basic costs, weights and AC values are IDENTICAL to the western styles -- samurai armor is the equivalent of padded leather. A samurai may spend more than the minimum, the extra going into making it a remarkable example of eastern art rather than into protection. The pre-existing values on this record are unsourced and were NOT overwritten, because PHBR1 gives no separate figures to overwrite them with."
   },
   {
     "Armor Name": "Elven Chain Mail",
@@ -774,8 +738,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Magical elven-made chain, lighter and quieter. Usable by wizards and thieves. METAL. Chris's ruling, August 2026: \"elven chain is metal. period.\" Its special property is that it is quiet and light enough for a thief, not that it stopped being chain.",
-    "Metal": true
+    "Notes": "Magical elven-made chain, lighter and quieter. Usable by wizards and thieves."
   },
   {
     "Armor Name": "Silenced Elfin Chain",
@@ -788,8 +751,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "PHBR2 p.93. Elfin chain with EACH INDIVIDUAL LINK WRAPPED in thin leather or light cloth binding, which to some extent silences the armor. AC, movement and the magical nature are elfin chain's; only weight, cost and the thief-skill column differ. WEIGHT IS THE PROSE RULE, NOT TABLE 31. p.93 sets encumbrance at ONE-THIRD ABOVE normal elfin chain, which at elfin chain's canon 15 lb gives 20 lb. TABLE 31 (p.103) PRINTS 50 lb AND IS AN ERROR -- 50 lb is plate mail's exact weight, and the same sentence benchmarks the COST against plate mail, so the compiler appears to have carried the wrong figure across. Chris's ruling, August 2026. A relative rule also survives any later correction to elfin chain's weight, which a flat 50 would not. COST: Table 31 gives 750 gp and up, legality S, and marks it hard to obtain. That sits above plate mail's 600 gp exactly as the prose requires (\"fiendishly expensive, costing more than plate mail\"). NOTE THE FRICTION with the Elven Chain Mail record's unattributed 5000+ gp: PHBR2 plainly is not working from that baseline, and on these numbers the rarer item is the cheaper one. Not resolved here. RARER THAN ORDINARY ELFIN CHAIN. Finding a craftsman and persuading him to make a suit could be an adventure in itself. TABLE 28 -- EFFECT ON THIEF SKILLS: Pick Pockets -25, Open Locks -5, Find/Remove Traps -5, Move Silently 0, Hide in Shadows -10, Detect Noise 0, Climb Walls -25, Read Languages 0. THE DASHES IN THAT TABLE ARE ZEROES, NOT OMISSIONS, and reading them so is what makes the prose beneath it true: against ordinary elfin chain (Table 38: -20/-5/-5/-10/-10/-5/-20/0) this is 10 BETTER at Move Silently and 5 BETTER at Detect Noise, paid for by 5 WORSE at Pick Pockets and Climb Walls. The book's \"bonuses ... above those which apply for normal elfin chain\" are therefore relative, not absolute -- the table shows no positive number anywhere. Useful to a thief who needs to sneak but expects to fight. METAL, as elven chain -- the wrapping quiets the links, it does not change what they are made of.",
-    "Metal": true
+    "Notes": "PHBR2 p.93. Elfin chain with EACH INDIVIDUAL LINK WRAPPED in thin leather or light cloth binding, which to some extent silences the armor. AC, movement and the magical nature are elfin chain's; only weight, cost and the thief-skill column differ. WEIGHT IS THE PROSE RULE, NOT TABLE 31. p.93 sets encumbrance at ONE-THIRD ABOVE normal elfin chain, which at elfin chain's canon 15 lb gives 20 lb. TABLE 31 (p.103) PRINTS 50 lb AND IS AN ERROR -- 50 lb is plate mail's exact weight, and the same sentence benchmarks the COST against plate mail, so the compiler appears to have carried the wrong figure across. Chris's ruling, August 2026. A relative rule also survives any later correction to elfin chain's weight, which a flat 50 would not. COST: Table 31 gives 750 gp and up, legality S, and marks it hard to obtain. That sits above plate mail's 600 gp exactly as the prose requires (\"fiendishly expensive, costing more than plate mail\"). NOTE THE FRICTION with the Elven Chain Mail record's unattributed 5000+ gp: PHBR2 plainly is not working from that baseline, and on these numbers the rarer item is the cheaper one. Not resolved here. RARER THAN ORDINARY ELFIN CHAIN. Finding a craftsman and persuading him to make a suit could be an adventure in itself. TABLE 28 -- EFFECT ON THIEF SKILLS: Pick Pockets -25, Open Locks -5, Find/Remove Traps -5, Move Silently 0, Hide in Shadows -10, Detect Noise 0, Climb Walls -25, Read Languages 0. THE DASHES IN THAT TABLE ARE ZEROES, NOT OMISSIONS, and reading them so is what makes the prose beneath it true: against ordinary elfin chain (Table 38: -20/-5/-5/-10/-10/-5/-20/0) this is 10 BETTER at Move Silently and 5 BETTER at Detect Noise, paid for by 5 WORSE at Pick Pockets and Climb Walls. The book's \"bonuses ... above those which apply for normal elfin chain\" are therefore relative, not absolute -- the table shows no positive number anywhere. Useful to a thief who needs to sneak but expects to fight."
   },
   {
     "Armor Name": "None",
@@ -802,7 +764,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "No armor worn NO Metal FLAG. A placeholder row, not an item."
+    "Notes": "No armor worn"
   },
   {
     "Armor Name": "Breastplate",
@@ -815,8 +777,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Front torso protection only METAL. A breastplate is a metal chest defence.",
-    "Metal": true
+    "Notes": "Front torso protection only"
   },
   {
     "Armor Name": "Cuirass",
@@ -829,8 +790,7 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Breastplate and backplate only METAL. NOTE this is the standalone Cuirass row; the PHBR1 GLADIATOR PIECE of the same name is left BLANK, because p.106 calls that one a \"leather or metal chest plate\" and declines to choose.",
-    "Metal": true
+    "Notes": "Breastplate and backplate only"
   },
   {
     "Armor Name": "Kote",
@@ -843,7 +803,7 @@
     "Dex Check": "0",
     "Vision": "",
     "Hearing": "",
-    "Notes": "PHBR1 pp.105-106. A pair of armored sleeves, an oriental form of armor unknown in the west, which may be worn concealed under the samurai's tunic. Costs TWICE as much as a buckler and acts almost the same. THE FACT THAT KOTE COME AS A PAIR DOES NOT MEAN +2 TO AC -- only the +1 a buckler normally confers. Two differences from a buckler: kote CANNOT BE DISARMED, and the wearer can still use weapons in both hands. Its Dexterity-check penalty is the buckler's, counted only for Juggling, Tightrope Walking and Tumbling. NO Metal FLAG. \"Armored sleeves\" names no material, and armor being protective says nothing about metal content -- PHBR3 classes STUDDED LEATHER as metal, so the inference runs both ways."
+    "Notes": "PHBR1 pp.105-106. A pair of armored sleeves, an oriental form of armor unknown in the west, which may be worn concealed under the samurai's tunic. Costs TWICE as much as a buckler and acts almost the same. THE FACT THAT KOTE COME AS A PAIR DOES NOT MEAN +2 TO AC -- only the +1 a buckler normally confers. Two differences from a buckler: kote CANNOT BE DISARMED, and the wearer can still use weapons in both hands. Its Dexterity-check penalty is the buckler's, counted only for Juggling, Tightrope Walking and Tumbling."
   },
   {
     "Armor Name": "Shield, Body",
@@ -856,7 +816,7 @@
     "Dex Check": "-3",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Large shield covering most of body, -1 to AC, additional protection vs missiles DEXTERITY CHECK PENALTY is PHBR1 p.106 and is NOT a general penalty -- for shields it is counted ONLY when using the Juggling, Tightrope Walking and Tumbling proficiencies, and the DM may waive it where the skill plainly does not need the off hand. NO Metal FLAG. No 2e source splits shields by material -- the PHB sizes and prices them, and this file's own Shield, Small row calls it a \"small wooden or metal shield.\" A priesthood clause like the god of Wind's \"all wooden shields (no metal or leather)\" (PHBR3 p.90) is recorded in that priesthood's free-text restrictions, not computed here."
+    "Notes": "Large shield covering most of body, -1 to AC, additional protection vs missiles DEXTERITY CHECK PENALTY is PHBR1 p.106 and is NOT a general penalty -- for shields it is counted ONLY when using the Juggling, Tightrope Walking and Tumbling proficiencies, and the DM may waive it where the skill plainly does not need the off hand."
   },
   {
     "Armor Name": "Shield, Buckler",
@@ -869,7 +829,7 @@
     "Dex Check": "0",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Small shield, -1 to AC. Does not protect against rear attacks. DEXTERITY CHECK PENALTY is PHBR1 p.106 and is NOT a general penalty -- for shields it is counted ONLY when using the Juggling, Tightrope Walking and Tumbling proficiencies, and the DM may waive it where the skill plainly does not need the off hand. NO Metal FLAG. No 2e source splits shields by material -- the PHB sizes and prices them, and this file's own Shield, Small row calls it a \"small wooden or metal shield.\" A priesthood clause like the god of Wind's \"all wooden shields (no metal or leather)\" (PHBR3 p.90) is recorded in that priesthood's free-text restrictions, not computed here."
+    "Notes": "Small shield, -1 to AC. Does not protect against rear attacks. DEXTERITY CHECK PENALTY is PHBR1 p.106 and is NOT a general penalty -- for shields it is counted ONLY when using the Juggling, Tightrope Walking and Tumbling proficiencies, and the DM may waive it where the skill plainly does not need the off hand."
   },
   {
     "Armor Name": "Shield, Medium",
@@ -882,7 +842,7 @@
     "Dex Check": "-2",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Standard shield, -1 to AC DEXTERITY CHECK PENALTY is PHBR1 p.106 and is NOT a general penalty -- for shields it is counted ONLY when using the Juggling, Tightrope Walking and Tumbling proficiencies, and the DM may waive it where the skill plainly does not need the off hand. PHBR1 p.106 calls the medium shield the SCUTUM (an oblong shield) in its gladiator listing; same item, same values. NO Metal FLAG. No 2e source splits shields by material -- the PHB sizes and prices them, and this file's own Shield, Small row calls it a \"small wooden or metal shield.\" A priesthood clause like the god of Wind's \"all wooden shields (no metal or leather)\" (PHBR3 p.90) is recorded in that priesthood's free-text restrictions, not computed here."
+    "Notes": "Standard shield, -1 to AC DEXTERITY CHECK PENALTY is PHBR1 p.106 and is NOT a general penalty -- for shields it is counted ONLY when using the Juggling, Tightrope Walking and Tumbling proficiencies, and the DM may waive it where the skill plainly does not need the off hand. PHBR1 p.106 calls the medium shield the SCUTUM (an oblong shield) in its gladiator listing; same item, same values."
   },
   {
     "Armor Name": "Shield, Small",
@@ -895,7 +855,7 @@
     "Dex Check": "-1",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Small wooden or metal shield, -1 to AC DEXTERITY CHECK PENALTY is PHBR1 p.106 and is NOT a general penalty -- for shields it is counted ONLY when using the Juggling, Tightrope Walking and Tumbling proficiencies, and the DM may waive it where the skill plainly does not need the off hand. PHBR1 p.106 calls the small shield the PARMA (square or round) in its gladiator listing; same item, same values. NO Metal FLAG. No 2e source splits shields by material -- the PHB sizes and prices them, and this file's own Shield, Small row calls it a \"small wooden or metal shield.\" A priesthood clause like the god of Wind's \"all wooden shields (no metal or leather)\" (PHBR3 p.90) is recorded in that priesthood's free-text restrictions, not computed here."
+    "Notes": "Small wooden or metal shield, -1 to AC DEXTERITY CHECK PENALTY is PHBR1 p.106 and is NOT a general penalty -- for shields it is counted ONLY when using the Juggling, Tightrope Walking and Tumbling proficiencies, and the DM may waive it where the skill plainly does not need the off hand. PHBR1 p.106 calls the small shield the PARMA (square or round) in its gladiator listing; same item, same values."
   },
   {
     "Armor Name": "Ceremonial Armor",
@@ -908,6 +868,6 @@
     "Dex Check": "",
     "Vision": "",
     "Hearing": "",
-    "Notes": "Decorative armor for parades and ceremonies, typically as protective as base type but ornate NO Metal FLAG. Cost already reads \"Varies\"; the material varies with it."
+    "Notes": "Decorative armor for parades and ceremonies, typically as protective as base type but ornate"
   }
 ]
