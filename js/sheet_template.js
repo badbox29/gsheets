@@ -1906,6 +1906,7 @@ const SHEET_HTML = `
 			<span class="key"><i style="background:transparent;border:1px solid var(--muted);box-sizing:border-box"></i>related</span>
 			<span class="key"><i style="background:var(--st-forbidden)"></i>not proficient</span>
 		  </div>
+		  <div class="sp-restrict-banner" data-sp-banner="weapons" style="display:none;margin-bottom:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
 		  <div class="list weapons-list"></div>
 		</section>
 
@@ -2008,6 +2009,12 @@ const SHEET_HTML = `
 		<section class="section">
 		  <!-- Class armor restrictions (advisory; never blocks) -->
 		  <div class="armor-restriction-note" style="display:none;margin-bottom:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
+		  <!-- BELOW the class note deliberately: the PHB rule about what this
+		       class may wear reads first, the priesthood's own restrictions
+		       second. Clothing rides here rather than in Equipment -- vestments,
+		       hems and forbidden materials are about what is WORN, and a second
+		       banner elsewhere would echo the same text and drift from it. -->
+		  <div class="sp-restrict-banner" data-sp-banner="armor" style="display:none;margin-bottom:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
 		  <!-- Rail key. Hidden until resolveArmorLegality exists to paint the
 		       rails: a key for colours nothing produces is worse than none. -->
 		  <div class="spell-listbar armor-rail-key" style="display:none;">
@@ -2073,6 +2080,7 @@ const SHEET_HTML = `
 			<em>Enchanted?</em> there so the bonuses reach THAC0, damage, weapon speed and Armor Class.
 			An enchanted weapon or suit recorded on this tab is a note only and changes no calculation.
 		  </p>
+		  <div class="sp-restrict-banner" data-sp-banner="items" style="display:none;margin-bottom:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
 		  <div class="list magic-items-list"></div>
 		</section>
 	  </main>
@@ -2129,6 +2137,12 @@ const SHEET_HTML = `
           </div>
           <label style="margin-top:8px">Appearance Notes</label>
           <textarea data-field="appearance_notes"></textarea>
+          <!-- PHBR3 pp.19-21. Observances that are not about gear: celibacy and
+               chastity, diet and contamination, mutilation, and anything the
+               named categories miss. Advisory echo of what the player recorded
+               under Specialty Priest -- computed from nothing, enforcing
+               nothing. -->
+          <div class="sp-restrict-banner" data-sp-banner="observances" style="display:none;margin-top:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
         </section>
 
         </div>
