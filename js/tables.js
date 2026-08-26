@@ -7626,7 +7626,7 @@ const SUPPLEMENTS = {
     // invented off the Faith Design Sheet (p.39), which is what the book
     // actually asks for. Sphere access is already recorded per character and
     // needs nothing from here.
-    bandOrder: ['specialtyPriests'],
+    bandOrder: ['specialtyPriests', 'toningDownCleric'],
 
     specialtyPriests: {
       label: 'Specialty priests',
@@ -7660,6 +7660,34 @@ const SUPPLEMENTS = {
           caveat: 'SINGLE-CLASS ONLY for now. PHBR3 p.95 allows multi-class specialty ' +
                   'priests, but hit dice and crossovers become ambiguous across two ' +
                   'classes, so the fields follow the same rule as kits.' }
+            ]
+    },
+
+    toningDownCleric: {
+      label: 'Toning down the cleric',
+      hint:  'Cleric sphere access drops to three major and two minor, chosen at creation.',
+      rules: ['toningDownClericPHBR3'],
+      changes: [
+        { text: 'THE BOOK\u2019S OWN ADMISSION, p.22: after budgeting sphere access ' +
+                'against combat ability all through Chapter 2, it stops and says the ' +
+                'effort is \u201csubstantially thwarted by the original Cleric class ' +
+                'himself,\u201d who has major access to twelve spheres, minor to one, and ' +
+                'metal armor \u2014 \u201cmore powerful than just about any more restrictive ' +
+                'priesthood.\u201d By its own scale he should sit at three major and two ' +
+                'minor. p.122 is the remedy it offers.' },
+        { text: 'MAJOR ACCESS TO THREE SPHERES, one of which must be All, the other two ' +
+                'the player\u2019s choice. MINOR ACCESS TO TWO, also the player\u2019s choice. ' +
+                'Weapon and armor limits are explicitly left alone.',
+          caveat: 'ADVISORY, NEVER ENFORCED. The book says the four choices are made when ' +
+                  'the Cleric is created or converted and \u201cmay not be changed ' +
+                  'afterwards\u201d, but the sheet only counts and tells you \u2014 a misclick ' +
+                  'should not cost a character his spheres, and a DM who is DMing will ' +
+                  'know if someone tries something sneaky.' },
+        { text: 'VANILLA CLERICS ONLY. Druids are untouched \u2014 their spheres are already ' +
+                'restricted by design and the rule names the Cleric alone. So is any ' +
+                'character with a PHBR3 priesthood recorded under Specialty Priest: he is ' +
+                'a priest of a specific mythos, not a Cleric, and this rule exists ' +
+                'precisely so that he is no longer outshone by one.' }
       ]
     }
   },
