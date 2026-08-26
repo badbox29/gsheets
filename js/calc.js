@@ -2014,6 +2014,86 @@ function renderXPProgression(root) {
 // setting that already does something visible -- slot costs move in that very
 // section and every affected proficiency reports it -- so a banner would only
 // narrate what the numbers already say.
+// Resolve the applied template from the provenance field. Returns null for
+// DM-Created, for an unrecognised label, and for "(Modified)" only in the sense
+// that the suffix is stripped first -- a modified priesthood is STILL that
+// priesthood for checking purposes, which is Chris's ruling on provenance: the
+// DM said "you are a priest of War, with a tweak".
+function getAppliedTemplate(root) {
+  const src = (val(root, 'sp_template_source') || '').replace(/\s*\(Modified\)\s*$/, '').trim();
+  if (!src || src === 'DM-Created') return null;
+  const list = (typeof PRIESTHOOD_TEMPLATES !== 'undefined') ? PRIESTHOOD_TEMPLATES : [];
+  return list.find(p => (p.label || '') === src) || null;
+}
+
+// FOUR CROSS-CHECKS, three of them here and the sphere budget in
+// renderSphereAccessSummary where the counting already happens.
+//
+// ADVISORY, AND WORDED AS GUIDANCE RATHER THAN ERROR. PHBR3 breaks its own rules
+// in its own entries -- Agriculture is Poor combat on a d8 where p.21 says d6 --
+// so a check that called that a mistake would be calling the book wrong.
+const ABILITY_LABELS_SP = { str:'Strength', dex:'Dexterity', con:'Constitution',
+                            int:'Intelligence', wis:'Wisdom', cha:'Charisma' };
+
+function renderSpecialtyPriestChecks(root) {
+  const el = root.querySelector('.sp-checks');
+  if (!el) return;
+  const on = (typeof getSpecialtyPriestOverride === 'function') &&
+             (getSpecialtyPriestOverride(root, 'sp_combat') !== null);
+  const gate = (typeof isSupplementActive === 'function') &&
+               isSupplementActive('phbr3', 'specialtyPriests');
+  const lines = [];
+
+  if (gate) {
+    const t = getAppliedTemplate(root);
+
+    // 1. MINIMUM ABILITY SCORES. Template-only: the sheet has no field for them.
+    if (t && t.minAbilities) {
+      const short = Object.keys(t.minAbilities).filter(k => {
+        const have = parseInt(val(root, k) || 0, 10);
+        return have > 0 && have < t.minAbilities[k];
+      });
+      if (short.length) {
+        lines.push('<strong>' + escapeHtml(t.label) + '</strong> asks ' +
+          escapeHtml(Object.keys(t.minAbilities)
+            .map(k => (ABILITY_LABELS_SP[k] || k) + ' ' + t.minAbilities[k]).join(', ')) +
+          ' \u2014 short on ' + escapeHtml(short.map(k => ABILITY_LABELS_SP[k] || k).join(', ')) + '.');
+      }
+    }
+
+    // 2. RACES ALLOWED. Template-only, same reason.
+    if (t && t.racesAllowed && t.racesAllowed.length &&
+        typeof getRaceKey === 'function') {
+      const rk = getRaceKey(val(root, 'race') || '');
+      if (rk && t.racesAllowed.indexOf(rk) === -1) {
+        lines.push('<strong>' + escapeHtml(t.label) + '</strong> is open to ' +
+          escapeHtml(t.racesAllowed.join(', ')) + ' \u2014 this character is ' +
+          escapeHtml(rk) + '.');
+      }
+    }
+
+    // 3. HIT DIE vs COMBAT ABILITIES (p.21). Character fields, so this works for
+    // a DM-invented faith as well as a printed one.
+    const die = getSpecialtyPriestOverride(root, 'sp_hit_die');
+    const cbt = getSpecialtyPriestOverride(root, 'sp_combat');
+    if (die && cbt) {
+      if (die === '4' && cbt !== 'poor') {
+        lines.push('PHBR3 p.21 gives four-sided dice only to a priesthood with POOR ' +
+                   'combat abilities, and warns even then that it need not be so.');
+      } else if (die === '6' && cbt === 'good') {
+        lines.push('PHBR3 p.21 gives six-sided dice to a priesthood with MEDIUM to POOR ' +
+                   'combat abilities.');
+      }
+    }
+  }
+
+  el.innerHTML = lines.length
+    ? '<strong>Priesthood guidance</strong> \u2014 advisory; nothing here is blocked.<br>' +
+      lines.join('<br>')
+    : '';
+  el.style.display = lines.length ? '' : 'none';
+}
+
 const SP_BANNERS = [
   { key: 'armor',       heading: 'Priesthood restrictions',
     fields: [['sp_restrict_armor', 'Armor'], ['sp_restrict_clothing', 'Dress']] },
@@ -5076,6 +5156,23 @@ function renderSphereAccessSummary(root) {
           escapeHtml(over.join(', ')) + '</span>'
         : '<span style="color:var(--muted);">Toned-down cleric: ' + major + '/3 major, ' +
           minor + '/2 minor</span>');
+    }
+  }
+
+  // 4. SPHERE BUDGET (PHBR3 p.22): Good 3 major + 2 minor, Medium 5 + 4, Poor
+  // 7 + 6, counting All among the majors. Reported, never enforced -- p.41 says
+  // outright that not all the book's own priesthoods follow it, and Arts (ten
+  // major on Poor combat) and Birth/Children (eleven) prove it.
+  if (typeof getSpecialtyPriestOverride === 'function') {
+    const cbt = getSpecialtyPriestOverride(root, 'sp_combat');
+    const BUDGET = { good: [3, 2], medium: [5, 4], poor: [7, 6] };
+    if (BUDGET[cbt]) {
+      const [bMaj, bMin] = BUDGET[cbt];
+      const majWithAll = major + 1;   // All is always granted and has no control
+      const over = majWithAll > bMaj || minor > bMin;
+      parts.push('<span style="color:var(--' + (over ? 'warning' : 'muted') + ');">' +
+        cbt.charAt(0).toUpperCase() + cbt.slice(1) + ' combat budget: ' +
+        majWithAll + '/' + bMaj + ' major, ' + minor + '/' + bMin + ' minor</span>');
     }
   }
 
