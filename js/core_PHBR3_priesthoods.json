@@ -1,0 +1,419 @@
+{
+  "_README": {
+    "what": "PHBR3 Chapter 3 priesthood TEMPLATES. Selecting one populates the Specialty Priest fields on the Core tab and the faith fields on Details. It is a STARTING POINT, not a binding: p.40 tells the DM outright he may change races allowed, proficiencies, rights, weapon and armor restrictions, other limitations and spheres of influence. Edit anything after applying and the provenance field records 'X (Modified)'.",
+    "notFields": "Deliberately NOT carried: spheres, granted powers, followers and strongholds, proficiency lists, duties, symbols. Those are either recorded elsewhere on the sheet, or are the material p.40 expects to be rewritten. Thirteen fields here, all of which map to a control that already exists.",
+    "deityName": "A template never touches patron_deity. That field holds the god's NAME - 'Kyros' - not his attribute. The template records 'War' in the provenance field and leaves the name to the player.",
+    "blankIsData": "An EMPTY string is a positive statement, not an absence. restrictDiet:'' means this priesthood imposes no dietary restriction, and re-applying a template blanks any field the player had filled. hitDie:'' means the standard eight-sided die.",
+    "transcriptionStatus": "INCOMPLETE. 6 of ~60 entries are written, and every one was transcribed from a page image of the book, per the standing rule that game data is never written from memory or from OCR. The remaining entries are unwritten rather than wrong - a missing key simply does not appear in the dropdown.",
+    "verified": [
+      "agriculture",
+      "ancestors",
+      "elemental_forces",
+      "peace",
+      "war",
+      "wind"
+    ],
+    "combatRatings": "PHBR3 p.22 derives these from armor and weapon access, and every entry states its own at the end of the Weapon and Armor Restrictions paragraph - 'All together, these constitute Poor combat abilities.' Transcribe what the entry says; do not re-derive it.",
+    "primeReq2": "PHBR3 p.13. Wisdom is always the first. Where an entry names a second ability, EITHER at 16 earns +5% experience and BOTH at 16 earns +10%. Where it names Wisdom alone, primeReq2 is ''.",
+    "minAbilities": "Minimum ability scores required to be a priest of this mythos at all (PHBR3 p.13: 'always Wisdom, and often one other'). An OBJECT keyed by ability rather than a wis/second pair, deliberately: in all six entries transcribed so far the second minimum happens to BE the second prime requisite, but nothing in the book promises that, and an entry requiring a score in an ability that is not a prime requisite would break a coupled shape. Iterate the object; do not assume its contents. The values are ENTRY REQUIREMENTS and are unrelated to the 16s that earn the experience bonus - see primeReq2.",
+    "schemaScope": "EVERY field a Chapter 3 entry prints that maps to something the sheet has, or plausibly will. Chris's call: these are TEMPLATES and starting points, so the cost of an unused field now is far below the cost of re-reading sixty entries later. A field that has no consumer yet is still worth carrying.",
+    "transcriptionCost": "This schema means roughly 25 values per entry, pulled from prose rather than tables. Budget accordingly - ten entries is a session, not a coffee break.",
+    "spheres": "The high-value pair. Sphere access is a STORED PER-CHARACTER MAP the player otherwise fills by hand, twenty-odd entries at a time; a template applying it is the single biggest convenience here. Keys must match the sphere vocabulary in tables.js, resolved at transcription time, not at runtime.",
+    "alignmentField": "The PRIEST'S permitted alignments, not the deity's and not the flock's - entries print all three and only the first constrains a player character.",
+    "permittedVsRestricted": "weaponsPermitted / armorPermitted hold the book's RAW lists. restrictWeapons / restrictArmor hold the short human summary that reaches the banners. Both, deliberately: the summary is what a player reads, the raw list is what any future check needs.",
+    "orientalWeapons": "CONDITIONAL permission - 'Oriental Campaigns: Also bo stick.' Never fold these into weaponsPermitted, or every priesthood silently gains them."
+  },
+  "priesthoods": [
+    {
+      "key": "agriculture",
+      "label": "Agriculture",
+      "page": 41,
+      "faithType": "god",
+      "combat": "poor",
+      "alignment": [
+        "tn",
+        "ng"
+      ],
+      "racesAllowed": [
+        "gnome",
+        "half-elf",
+        "halfling",
+        "human"
+      ],
+      "genderNote": "Most agricultural deities are female.",
+      "hitDie": "",
+      "primeReq2": "con",
+      "minAbilities": {
+        "wis": 11,
+        "con": 12
+      },
+      "crossover": "",
+      "languageSlot": "",
+      "weaponSpec": "",
+      "nwpRequired": [
+        "Agriculture"
+      ],
+      "nwpRecommended": [
+        "Local History",
+        "Reading/Writing",
+        "Religion"
+      ],
+      "wpRequired": [],
+      "weaponsPermitted": [
+        "Bill",
+        "Flail (both)",
+        "Hand axe (thrown)",
+        "Scythe",
+        "Sickle"
+      ],
+      "armorPermitted": "All non-magical non-metal armor; all non-magical non-metal shields",
+      "orientalWeapons": [
+        "Nunchaku"
+      ],
+      "spheresMajor": [
+        "all",
+        "creation",
+        "divination",
+        "plant",
+        "summoning"
+      ],
+      "spheresMinor": [
+        "animal",
+        "healing",
+        "protection",
+        "sun",
+        "weather"
+      ],
+      "grantedPowers": [
+        "Analysis, Detection and Identification of any domesticated grain or garden plant",
+        "Create Food & Water once per day, in addition to all other spells",
+        "Immunity to spoiled vegetable or fruit substances and to low food poisoning",
+        "At 8th level: heroes’ feast once per day"
+      ],
+      "restrictArmor": "No metal armor or shields; no magical armor or shields",
+      "restrictWeapons": "Bill, flails, hand axe (thrown), scythe, sickle only",
+      "restrictClothing": "",
+      "restrictCelibacy": "",
+      "restrictDiet": "",
+      "restrictItems": "",
+      "restrictMutilation": "",
+      "restrictions": "",
+      "duties": [
+        "Guidance",
+        "Marriage",
+        "Observation of annual celebrations at the start of winter and start of spring",
+        "Vigilance against threats to the food supply"
+      ],
+      "followers": "At 8th level: one 5th, one 3rd, one 2nd and ten 1st-level priests of the same god, plus one 2nd and eight 1st-level warriors as guards. Priesthood pays half the stronghold cost.",
+      "symbols": [
+        "Sickle",
+        "Scythe",
+        "Sheaf of wheat"
+      ],
+      "relations": "Good terms with druids and the priests of Community, Earth, Fertility, Fire, Life-Death-Rebirth Cycle, Nature, Seasons and Vegetation.",
+      "note": "Other Limitations: None - so the standard d8 despite Poor combat abilities, which is the book declining to apply its own p.21 guideline. Oriental campaigns add nunchaku."
+    },
+    {
+      "key": "ancestors",
+      "label": "Ancestors",
+      "page": 42,
+      "faithType": "god",
+      "combat": "poor",
+      "alignment": [
+        "cg",
+        "ng",
+        "lg"
+      ],
+      "racesAllowed": [
+        "dwarf",
+        "elf",
+        "gnome",
+        "half-elf",
+        "halfling",
+        "human"
+      ],
+      "genderNote": "Ancestor deities are not inclined toward either sex.",
+      "hitDie": "",
+      "primeReq2": "",
+      "minAbilities": {
+        "wis": 12
+      },
+      "crossover": "",
+      "languageSlot": "",
+      "weaponSpec": "",
+      "nwpRequired": [
+        "Local History"
+      ],
+      "nwpRecommended": [
+        "Reading/Writing",
+        "Heraldry",
+        "Religion"
+      ],
+      "wpRequired": [],
+      "weaponsPermitted": [
+        "Club",
+        "Dagger/dirk",
+        "Dart",
+        "Knife",
+        "Quarterstaff"
+      ],
+      "armorPermitted": "None; no shields",
+      "orientalWeapons": [
+        "Bo stick"
+      ],
+      "spheresMajor": [
+        "all",
+        "astral",
+        "creation",
+        "divination",
+        "guardian",
+        "necromantic",
+        "protection"
+      ],
+      "spheresMinor": [
+        "charm",
+        "healing"
+      ],
+      "grantedPowers": [
+        "Detection of graves and undead",
+        "Immunity to the charm abilities of undead",
+        "Turn undead as a cleric",
+        "At 8th level: Prophecy — hears the voices of the dead advising him"
+      ],
+      "restrictArmor": "No armor of any kind; no shields",
+      "restrictWeapons": "Club, dagger/dirk, dart, knife, quarterstaff only",
+      "restrictClothing": "",
+      "restrictCelibacy": "",
+      "restrictDiet": "",
+      "restrictItems": "",
+      "restrictMutilation": "",
+      "restrictions": "",
+      "duties": [
+        "Guidance",
+        "Marriage",
+        "Education",
+        "Missions"
+      ],
+      "followers": "At 8th level: five 1st-level priests and fifteen 1st-level priests of the same priesthood. Priesthood pays half the stronghold cost; it must act as a genealogical library.",
+      "symbols": [
+        "Tree"
+      ],
+      "relations": "Good terms with Birth/Children, Community, Divinity of Mankind, Fate/Destiny, Race and Sites. Dislikes the priests of Disease.",
+      "note": "Wisdom 16 means +10%, so no second prime requisite. Oriental campaigns add bo stick."
+    },
+    {
+      "key": "elemental_forces",
+      "label": "Elemental Forces",
+      "page": 56,
+      "faithType": "force",
+      "combat": "good",
+      "alignment": [
+        "cg",
+        "cn",
+        "ce"
+      ],
+      "racesAllowed": [
+        "dwarf",
+        "elf",
+        "gnome",
+        "half-elf",
+        "halfling",
+        "human"
+      ],
+      "genderNote": "",
+      "hitDie": "",
+      "primeReq2": "int",
+      "minAbilities": {
+        "wis": 10,
+        "int": 13
+      },
+      "crossover": "wizard",
+      "languageSlot": "",
+      "weaponSpec": "",
+      "nwpRequired": [
+        "Spellcraft"
+      ],
+      "nwpRecommended": [
+        "Fire-building",
+        "Astrology",
+        "Reading/Writing",
+        "Religion"
+      ],
+      "wpRequired": [],
+      "weaponsPermitted": [
+        "Battle axe",
+        "Bows (all)",
+        "Cestus",
+        "Club",
+        "Hand/throwing axe",
+        "Harpoon",
+        "Javelin",
+        "Mace",
+        "Net",
+        "Picks (all)",
+        "Scourge",
+        "Scythe",
+        "Sickle",
+        "Spear",
+        "Trident"
+      ],
+      "armorPermitted": "All armor and shields",
+      "orientalWeapons": [
+        "Daikyu"
+      ],
+      "spheresMajor": [
+        "all",
+        "combat",
+        "elemental"
+      ],
+      "spheresMinor": [
+        "creation",
+        "sun",
+        "weather"
+      ],
+      "grantedPowers": [
+        "Immunity (+2 bonus)"
+      ],
+      "restrictArmor": "",
+      "restrictWeapons": "",
+      "restrictClothing": "Priestly vestments whenever appearing in public",
+      "restrictCelibacy": "",
+      "restrictDiet": "",
+      "restrictItems": "",
+      "restrictMutilation": "",
+      "restrictions": "",
+      "duties": [
+        "Guidance",
+        "Marriage",
+        "Education",
+        "Missions",
+        "Vigilance"
+      ],
+      "followers": "",
+      "symbols": [],
+      "relations": "Good terms with Darkness/Night, Dawn, Fertility, Fire, Light, Lightning, Love, Magic, Seasons, Sky/Weather, Sun, Thunder and Time.",
+      "note": "CORRECTED: first transcribed as 'Everything' and as a God. It is ELEMENTAL FORCES and a FORCE - the heading reads 'Elemental Forces (Force)' and the alignment paragraph says the forces worshipped 'are chaotic in nature'. Caught only by re-reading the page. All armor and shields permitted, and a wide weapon list - hence Good combat abilities. Crossovers are Priest, General, Wizard. Oriental campaigns add daikyu."
+    },
+    {
+      "key": "peace",
+      "label": "Peace",
+      "page": 79,
+      "faithType": "god",
+      "combat": "medium",
+      "alignment": [],
+      "racesAllowed": [],
+      "genderNote": "",
+      "hitDie": "6",
+      "primeReq2": "",
+      "minAbilities": {
+        "wis": 11
+      },
+      "crossover": "",
+      "languageSlot": "yes",
+      "weaponSpec": "",
+      "nwpRequired": [],
+      "nwpRecommended": [],
+      "wpRequired": [],
+      "weaponsPermitted": [],
+      "armorPermitted": "",
+      "orientalWeapons": [],
+      "spheresMajor": [],
+      "spheresMinor": [],
+      "grantedPowers": [],
+      "restrictArmor": "All non-magical armor and shields; nothing magical",
+      "restrictWeapons": "",
+      "restrictClothing": "Clothing or badges displaying priestly status whenever in public",
+      "restrictCelibacy": "",
+      "restrictDiet": "",
+      "restrictItems": "",
+      "restrictMutilation": "",
+      "restrictions": "",
+      "duties": [],
+      "followers": "",
+      "symbols": [],
+      "relations": "",
+      "note": "SIX-SIDED HIT DICE, stated outright in Other Limitations. Language and Communication is granted but bounded: one extra language per level from 1st to 4th ONLY, and it must be the tongue of a sentient humanoid race."
+    },
+    {
+      "key": "war",
+      "label": "War",
+      "page": 90,
+      "faithType": "god",
+      "combat": "good",
+      "alignment": [],
+      "racesAllowed": [],
+      "genderNote": "",
+      "hitDie": "",
+      "primeReq2": "str",
+      "minAbilities": {
+        "wis": 9,
+        "str": 13
+      },
+      "crossover": "warrior",
+      "languageSlot": "",
+      "weaponSpec": "yes",
+      "nwpRequired": [],
+      "nwpRecommended": [],
+      "wpRequired": [],
+      "weaponsPermitted": [],
+      "armorPermitted": "",
+      "orientalWeapons": [],
+      "spheresMajor": [],
+      "spheresMinor": [],
+      "grantedPowers": [],
+      "restrictArmor": "",
+      "restrictWeapons": "Must choose one permitted weapon and specialize in it",
+      "restrictClothing": "",
+      "restrictCelibacy": "",
+      "restrictDiet": "",
+      "restrictItems": "",
+      "restrictMutilation": "",
+      "restrictions": "",
+      "duties": [],
+      "followers": "",
+      "symbols": [],
+      "relations": "",
+      "note": "THE ONLY PRIESTHOOD IN THE BOOK PERMITTED WEAPON SPECIALIZATION - 'He is the only priest who can take any weapon specialization.' Blind-fighting is a required nonweapon proficiency. Crossovers are Priest, General, Warrior."
+    },
+    {
+      "key": "wind",
+      "label": "Wind",
+      "page": 90,
+      "faithType": "god",
+      "combat": "poor",
+      "alignment": [],
+      "racesAllowed": [],
+      "genderNote": "",
+      "hitDie": "",
+      "primeReq2": "",
+      "minAbilities": {
+        "wis": 9
+      },
+      "crossover": "warrior",
+      "languageSlot": "",
+      "weaponSpec": "",
+      "nwpRequired": [],
+      "nwpRecommended": [],
+      "wpRequired": [],
+      "weaponsPermitted": [],
+      "armorPermitted": "",
+      "orientalWeapons": [],
+      "spheresMajor": [],
+      "spheresMinor": [],
+      "grantedPowers": [],
+      "restrictArmor": "No armor; wooden shields only, no metal or leather",
+      "restrictWeapons": "Club, quarterstaff, scythe, sickle only",
+      "restrictClothing": "No leather or fur in clothing",
+      "restrictCelibacy": "",
+      "restrictDiet": "",
+      "restrictItems": "",
+      "restrictMutilation": "",
+      "restrictions": "",
+      "duties": [],
+      "followers": "",
+      "symbols": [],
+      "relations": "",
+      "note": "Herbalism is a required nonweapon proficiency. Crossovers are Priest, General, Warrior. Oriental campaigns add nunchaku. The wooden-shields clause is why shield material is recorded as free text rather than computed - no 2e source splits core_armor.json's shield rows by material."
+    }
+  ]
+}
