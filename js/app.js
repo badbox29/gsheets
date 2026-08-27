@@ -8844,7 +8844,17 @@ function bindSheet(root, tab){
     root.addEventListener(evt, (e) => {
       const f = e.target && e.target.getAttribute && e.target.getAttribute('data-field');
       if (!f) return;
+      // THIS IS A LIST OF INPUT FIELDS, NOT OF RENDERERS -- and that distinction
+      // is the whole point. renderClassGroupValidation now lives in
+      // recalculateAll, so ADDING A VALIDATOR NEEDS NO WIRING HERE. Only a field
+      // that no listener already watches needs an entry.
+      //
+      // gender, alignment and kit are here because they had NO listener of their
+      // own: gender has none anywhere in the file, and alignment and kit were
+      // served by a separate branch that has been removed now the renderer is in
+      // recalculateAll.
       if (['clazz', 'race', 'char_type', 'str', 'int', 'wis', 'con', 'cha', 'dex',
+           'gender', 'alignment', 'kit',
            'mc_class1', 'mc_class2', 'mc_class3',
            'dc_new_class', 'dc_original_class'].indexOf(f) !== -1) {
         if (typeof renderSpecialistValidation === 'function') renderSpecialistValidation(root);
