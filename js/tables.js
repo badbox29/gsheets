@@ -8584,13 +8584,23 @@ function validateKitPriesthood(root) {
                   .replace(/\s*\(Modified\)\s*$/, '').trim();
   const named = label && label !== 'DM-Created';
 
-  if (named && Array.isArray(pr.barred) && pr.barred.indexOf(label) !== -1) {
+  // TWELVE OF THE 64 PRIESTHOOD LABELS CONTAIN A COMMA, because that is how the
+  // book prints them -- "Mischief, Trickery", "Sky, Weather", "Oracles,
+  // Prophecy". Joining such a list with ", " makes five priesthoods read as
+  // nine. Semicolons separate the entries so the commas inside them stay put.
+  const listPriesthoods = arr => arr.join('; ');
+
+  const barred = named && Array.isArray(pr.barred) && pr.barred.indexOf(label) !== -1;
+  if (barred) {
     problems.push('The ' + kit.name + ' kit is barred to priests of ' + label + '.');
   }
-  if (named && Array.isArray(pr.required) && pr.required.length &&
+  // SUPPRESSED WHEN ALREADY BARRED. A barred priesthood is necessarily absent
+  // from the required list, so reporting both says the same thing twice and
+  // buries the specific finding under a list of fifteen names.
+  if (!barred && named && Array.isArray(pr.required) && pr.required.length &&
       pr.required.indexOf(label) === -1) {
     problems.push('The ' + kit.name + ' kit expects a priest of one of: ' +
-                  pr.required.join(', ') + '. This character serves ' + label + '.');
+                  listPriesthoods(pr.required) + '. This character serves ' + label + '.');
   }
   const cbt = (val(root, 'sp_combat') || '').trim();
   if (cbt && Array.isArray(pr.barredByCombat) && pr.barredByCombat.indexOf(cbt) !== -1) {
