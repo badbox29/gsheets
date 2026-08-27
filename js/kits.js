@@ -2609,176 +2609,443 @@ const KITS = {
 
   // ========== CLERIC KITS ==========
   cleric: {
-    priestofmythos: {
-      name: "Priest of Specific Mythos",
+    // ===================================================================
+    // PHBR3 THE COMPLETE PRIEST'S HANDBOOK, Chapter 4 (pp.95-109).
+    //
+    // ALL TEN OF THIS BOOK'S KITS, transcribed from the book. The previous
+    // contents of this block were ten UNVERIFIED entries of which only three
+    // were PHBR3 kits at all; the audit is recorded in gsheets_phbr_notes.md.
+    // Six were removed as not-kits -- "Priest of Specific Mythos" is the Ch.3
+    // CLASS TYPE, "Crusader" is a Ch.5 PERSONALITY (p.110), "Healer" is a Ch.3
+    // PRIESTHOOD, and "Fighting Cleric", "Undead Slayer" and "Missionary" appear
+    // nowhere in the book as kits. `monk` was renamed `fightingmonk`.
+    //
+    // KITS ATTACH TO PRIESTS, NOT ONLY TO CLERICS. p.95: "most kits are allowed
+    // to priests of most faiths." They live under `cleric` because that is where
+    // the class keying puts them; a specialty priest is a cleric-chassis
+    // character with a priesthood recorded under Specialty Priest.
+    //
+    // requirements.priesthood IS THE NEW GATING AXIS and it finally works: every
+    // kit prints a BARRED line naming priesthoods, and sp_template_source now
+    // carries a canonical label. `barredByCombat` and `barredByFaithType` gate on
+    // sp_combat and sp_faith_type instead, for the kits that name a property
+    // rather than a list.
+    //
+    // ONE KIT ONLY, EVER (p.109). A character may take one priest kit, may
+    // abandon it, and may then NEVER take another. Multi- and dual-class priests
+    // get one kit total, not one per class. Abandoning surrenders all benefits
+    // and hindrances but KEEPS the bonus proficiencies -- they stop being
+    // bonuses, and must be paid for out of the next slots earned.
+    // ===================================================================
+
+    amazonpriestess: {
+      name: "Amazon Priestess",
       class: "cleric",
       source: {
-        status: "unverified",
+        status: "verified",
         work:   "PHBR3 The Complete Priest's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+        pages:  "97-99",
+        note:   "Transcribed from the book."
+      },
+      proficiencies: {
+        weapon: {
+          recommended: ["Spear", "Long Bow"],
+          allowedPrinted: "Required: None. Recommended: Spear, long bow; if possible, various axes and swords",
+          note: "An Amazon who cannot use spear and long bow will be looked down upon and will not command the respect of other priestesses -- Amazon warriors must know their use."
+        },
+        nonweapon: {
+          required: ["Riding, Land-Based", "Animal Training"],
+          recommended: ["Animal Handling", "Animal Lore", "Armorer", "Bowyer/Fletcher", "Hunting", "Running", "Survival", "Tracking"],
+          note: "Riding (Land-Based) and Animal Training are BONUS proficiencies, granted free. Animal Handling is General; Animal Lore, Armorer, Bowyer/Fletcher, Hunting, Running, Survival and Tracking are Warrior-group."
+        }
+      },
+      requirements: {
+        gender: "female",
+        priesthood: {
+          barred: ["Disease", "Peace"],
+          required: ["Community", "Competition", "Elemental Forces", "Good (Philosophy)", "Hunting", "Light", "Mischief, Trickery", "Moon", "Oracles, Prophecy", "Race (Human)", "Sky, Weather", "Sun", "War", "Wind", "Wisdom"],
+          note: "The DM decides which gods act as patrons for the Amazon civilization; most Amazon priestesses will serve those specific gods. An Amazon will command LESS RESPECT unless she is a priestess of one of the required list -- since each attribute has its own role to play in any civilization, few gods are really inappropriate."
+        }
       },
       abilities: [
-        { name: "Deity-Specific Powers", notes: "Granted powers based on chosen deity" },
-        { name: "Sacred Weapon", notes: "Proficiency with deity's favored weapon" }
+        { name: "First Blow Bonus", notes: "+3 to hit and +3 damage on her FIRST BLOW ONLY, in a fight where a male opponent from a culture where women fighters tend to be rare confronts an Amazon for the first time. Reflects that her opponent's guard is down." },
+        { name: "First Blow Bonus: Limits", notes: "Does NOT work on any Warrior of 5th level or higher, or a character of any other class at 8th or higher -- too seasoned to let his guard down. At the DM's discretion a wary NPC may make an Intelligence check to see the attack coming and deny the bonus. Does not work on any male fighter from a culture where women do regularly fight, who has had fighting-women comrades, who has faced fighting-women opponents, or who has seen the Amazon use the bonus on someone else. On player-characters it works only if the player is role-playing honestly enough to admit his character would underestimate her. Once she hits with the bonus, that target never falls for it again. Usable successfully once per victim, ever. If she MISSES she continues to receive it against that target until she hits him once." },
+        { name: "Reaction Penalty", notes: "-3 reaction adjustment from NPCs from male-dominated societies. Player-characters do not have to demonstrate this hostility unless they want to for role-playing purposes, and even then it should fade as they come to respect her." },
+        { name: "Starting Armor", notes: "When first created she must buy her armor from: shield, leather, padded, studded leather, brigandine, scale mail, hide, banded mail, bronze plate mail. Once she has adventured elsewhere in the world she may purchase other types according to her priest-class limitations." }
       ],
-      requirements: { wis: 14, alignment: "Deity-dependent" },
-      benefits: "Access to additional spheres. Deity-specific granted power.",
-      hindrances: "Must follow deity's ethos. Restricted spheres. May have weapon/armor restrictions."
+      reaction: [
+        { value: -3, when: "From NPCs of male-dominated societies" }
+      ],
+      benefits: "First blow bonus of +3/+3 against a male opponent from a culture where women fighters are rare, once per victim ever. Bonus proficiencies: Riding (Land-Based) and Animal Training. Wealth: the ordinary 3d6x10 gp.",
+      hindrances: "-3 reaction adjustment from male-dominated societies. Starting armor limited to a nine-item list until she has adventured abroad. May not serve the gods of Disease or Peace, and commands less respect outside the listed priesthoods. To abandon the kit she must renounce her Amazon citizenship, identifying herself more strongly with another culture.",
+      notes: "Races: none excluded. Humans, elvish and half-elvish Amazons are most appropriate. Dwarves would substitute battle axe and warhammer for their weapons and swine for their preferred mounts; gnomes throwing axe and short sword, riding ponies, with Tracking and Survival as bonus proficiencies; halflings javelin and sling, with Endurance and Set Snares."
     },
-    fightingcleric: {
-      name: "Fighting Cleric",
+
+    barbarianpriest: {
+      name: "Barbarian/Berserker Priest",
       class: "cleric",
       source: {
-        status: "unverified",
+        status: "verified",
         work:   "PHBR3 The Complete Priest's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+        pages:  "99-100",
+        note:   "Transcribed from the book."
+      },
+      proficiencies: {
+        weapon: {
+          recommended: ["Battle Axe", "Sword, Bastard", "Sling", "Warhammer"],
+          allowedPrinted: "Required: None. Recommended: Battle axe, sword/bastard, bow (any), sling, warhammer",
+          note: "The priesthood may limit the priest's choice of weapons and not allow him to learn all of these."
+        },
+        nonweapon: {
+          required: ["Endurance"],
+          recommended: ["Animal Handling", "Animal Training", "Direction Sense", "Fire-Building", "Riding, Land-Based", "Weather Sense", "Blind-fighting", "Hunting", "Mountaineering", "Running", "Set Snares", "Survival", "Tracking", "Herbalism", "Jumping"],
+          note: "Endurance is a BONUS proficiency. Some recommended proficiencies are outside the priest's Nonweapon Proficiency Group Crossovers and cost DOUBLE the listed slots if taken. The DM may require this priest to take a proficiency in the tribal specialty -- Fishing, Agriculture, and so on."
+        }
+      },
+      requirements: {
+        priesthood: {
+          barred: ["Arts", "Love", "Music, Dance"],
+          recommended: ["Agriculture", "Animals", "Darkness, Night", "Earth", "Elemental Forces", "Fertility", "Hunting", "Lightning", "Metalwork", "Nature", "Sky, Weather", "Thunder", "Strength", "War"],
+          note: "Barbarian tribes tend to have one or two patron gods, usually gods of natural forces or barbarian attributes. Gods of the 'softer' attributes would be represented but their priests would be much rarer -- no priesthood is BARRED among the barbarians, however scarce."
+        }
       },
       abilities: [
-        { name: "Warrior Priest", notes: "Combat-focused divine servant" },
-        { name: "Weapon Mastery", notes: "Extra weapon proficiency slot at 1st level" }
+        { name: "Imposing Presence", notes: "+1 reaction adjustment bonus when encountering NPCs, rising to +3 among members of his own culture. Barbarians are imposing and dangerous-looking, which tends to make others respect them or at least wish not to make enemies of them." },
+        { name: "Faster Berserker Rage", notes: "If the priest's culture has Berserker warriors (see The Complete Fighter's Handbook) and he has the incite berserker rage granted power, berserkers of his culture in his presence go berserk in ONE round instead of the usual ten. The priest is not required to use his power for this to take place; it just happens." },
+        { name: "Authority Penalty", notes: "-3 reaction adjustment when encountering NPCs in positions of power: rulers, government officials and the like. He does not respect the authorities and they have learned to be cautious of him -- this sort of priest keeps freeing his enslaved brethren, and even if he worships a god known to this culture, he does so in a way the locals consider wrong." },
+        { name: "Starting Equipment", notes: "With his starting gold he cannot buy armor heavier than splint mail, banded mail or bronze plate mail. Once he has adventured in the outer world he can buy any type of armor his priestly requirements allow. With his starting gold he can buy only weapons appropriate to his tribe: battle axe, bows, club, dagger/dirk, footman's flail, mace, or pick, hand/throwing axe, sling, spear, and swords." }
       ],
-      requirements: { str: 14, wis: 14, alignment: "Any" },
-      benefits: "THAC0 improves as fighter. Can specialize in one weapon.",
-      hindrances: "Reduced spell progression (one less spell per level). Cannot turn undead."
+      reaction: [
+        { value: 1, when: "General NPCs" },
+        { value: 3, when: "Members of his own culture" },
+        { value: -3, when: "Rulers, government officials and others in positions of power" }
+      ],
+      benefits: "Imposing presence: +1 reaction generally, +3 among his own people. Berserkers of his culture rage in one round rather than ten in his presence. Bonus proficiency: Endurance. Wealth: the ordinary 3d6x10 gp.",
+      hindrances: "-3 reaction from rulers and officials. Starting armor capped at splint, banded or bronze plate; starting weapons limited to a tribal list. Abandoning the kit means renouncing his allegiance to tribe or clan and accepting citizenship in some other culture, which requires performing his priestly duties in the fashion of the priests of THAT culture.",
+      notes: "There are NO ability requirements to be a priest of a barbarian or berserker tribe. The warriors of the tribe must have Strength 15, and priests will be most impressive if they can approximate or match that score, but it is not a requirement of the kit. Races: no special restrictions; each DM decides whether his demihumans can live in what are considered barbarian cultures."
     },
-    monk: {
-      name: "Monk",
+
+    fightingmonk: {
+      name: "Fighting-Monk",
       class: "cleric",
       source: {
-        status: "unverified",
+        status: "verified",
         work:   "PHBR3 The Complete Priest's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+        pages:  "100-101",
+        note:   "Transcribed from the book. RENAMED from `monk`, which held unverified paraphrase under a name the book does not use."
+      },
+      proficiencies: {
+        weapon: {
+          allowedPrinted: "Required: See Special Benefits. Otherwise the priest may take any weapon proficiencies his specific priest class allows; he may not take any the class does not allow.",
+          note: "TWO FREE WEAPON PROFICIENCY SLOTS which MUST be used to take Specialization in one of the three styles of Unarmed Combat -- Punching, Wrestling or Martial Arts."
+        },
+        nonweapon: {
+          required: ["Tumbling"],
+          recommended: ["Riding, Land-Based", "Artistic Ability", "Dancing", "Reading/Writing", "Religion"],
+          note: "Tumbling is a BONUS proficiency. NO PROFICIENCY HE TAKES COSTS DOUBLE: he has a Nonweapon Proficiency Group Crossover with ALL FIVE proficiency groups -- General, Priest, Rogue, Warrior and Wizard."
+        }
+      },
+      requirements: {
+        dex: 12,
+        priesthood: {
+          barredByCombat: ["poor"],
+          note: "A priest of any priesthood which starts out with Poor Fighting Abilities is barred from this kit. Gated on sp_combat rather than on a name list, which is why barredByCombat exists."
+        }
       },
       abilities: [
-        { name: "Martial Arts", notes: "Improved unarmed combat" },
-        { name: "Stunning Fist", notes: "Can stun opponents with unarmed attacks" },
-        { name: "Unarmored Defense", notes: "AC bonus when unarmored" }
+        { name: "Two Free Weapon Proficiency Slots", notes: "Receives two free weapon proficiency slots which he must use to take Specialization in one of the three styles of Unarmed Combat (Punching, Wrestling, or Martial Arts). THE ONLY PRIEST WHO CAN SPECIALIZE IN AN UNARMED COMBAT STYLE. He can specialize in any or all of the three styles, but may only specialize in one of them at first experience level." },
+        { name: "All Five Group Crossovers", notes: "Has a Nonweapon Proficiency Group Crossover with all five Proficiency Groups (General, Priest, Rogue, Warrior, Wizard). No proficiency he takes will cost double the usual number of slots." },
+        { name: "Unspent Slots Are Kept", notes: "He does not have to spend all his starting Weapon Proficiency slots at first level. He can save his unspent proficiencies, and they do not 'go away'. Later he can spend them at a rate of one proficiency per experience level to improve his martial arts or buy new martial arts." },
+        { name: "No Armor", notes: "This priest cannot wear any sort of armor." },
+        { name: "Sphere Sacrifice", notes: "If he is a priest-class with Medium Combat Abilities, he must 'give up' some of his Spheres of Influence. He may have no more than THREE Major Accesses (one of which must be All) and TWO Minor Accesses. The player may choose from the accesses he currently has which ones the character loses and which he keeps." },
+        { name: "Poverty", notes: "May never own more things -- weapons, treasure, money, etc. -- than he can carry on his back." }
       ],
-      requirements: { str: 13, dex: 15, wis: 15, alignment: "Lawful" },
-      benefits: "Improved AC (starts at 10, improves with level). Improved movement rate. Evasion.",
-      hindrances: "Cannot wear armor. Cannot use shields. Limited weapons (staff, club, crossbow). Must follow strict discipline."
+      benefits: "Two free weapon proficiency slots for unarmed combat specialization. The only priest who can specialize in an unarmed combat style. Nonweapon proficiency group crossover with all five groups. Unspent weapon proficiency slots are kept and may be spent at one per level. Bonus proficiency: Tumbling. Wealth: the ordinary 3d6x10 gp.",
+      hindrances: "Cannot wear any armor. If his priest-class has Medium Combat Abilities he must give up spheres down to three major (one must be All) and two minor. May never own more than he can carry on his back. Barred from any priesthood with Poor Fighting Abilities.",
+      notes: "ABANDONING THIS KIT TAKES THREE EXPERIENCE LEVELS. He must not use any of his unarmed combat techniques for three whole experience levels' worth of time; once he has reached that third level he has forgotten them, may wear armor appropriate to his priest-class, and may resume any spheres he renounced. If he forgets himself and uses unarmed combat techniques during the process he must start over. Races: no special limitations, though humans, elves and half-elves seem visually more suited to the kit."
     },
-    pacifist: {
+
+    noblemanpriest: {
+      name: "Nobleman Priest",
+      class: "cleric",
+      source: {
+        status: "verified",
+        work:   "PHBR3 The Complete Priest's Handbook",
+        pages:  "101-103",
+        note:   "Transcribed from the book."
+      },
+      proficiencies: {
+        weapon: {
+          recommended: ["Sword, Long", "Sword, Bastard", "Lance"],
+          allowedPrinted: "Required: None. Recommended: Long sword, bastard sword, lance, flails (all), maces (all), if allowed by the priest's actual priest class"
+        },
+        nonweapon: {
+          required: ["Etiquette", "Heraldry", "Riding, Land-Based"],
+          recommended: ["Animal Training", "Dancing", "Gaming", "Hunting", "Local History", "Musical Instrument", "Reading/Writing"],
+          note: "Etiquette, Heraldry and Riding (Land-Based) are BONUS proficiencies, all General group. Warrior-group recommendations cost DOUBLE SLOTS unless the priest class has a nonweapon proficiency group crossover including the Warrior group."
+        }
+      },
+      requirements: {
+        priesthood: { barred: [] }
+      },
+      abilities: [
+        { name: "Noble Reaction Bonus", notes: "+3 reaction from any noble of his own culture, and +2 from nobles of other cultures. The DM can ignore this if there is a cultural hatred between those people and the priest's culture or the priest's god." },
+        { name: "Right of Shelter", notes: "When travelling he can demand shelter from anyone in his own land. He can demand shelter for two people multiplied by his experience level -- at eighth level he can demand shelter for himself and a retinue of fifteen more people." },
+        { name: "Sheltering Others", notes: "As he can demand shelter of others, other Nobleman Priests can demand shelter of him. This can be expensive if they decide to stay awhile, and is a good way for the DM to bleed extra money from the priest if he seems to have too much." },
+        { name: "High Living", notes: "Expected to live well. If he has enough money to do so he may only buy high-quality goods, and so must spend at least TWO TIMES the minimum necessary money for anything he buys. If a basic long sword costs 15 gp he won't buy one worth less than 30 gp; the extra money goes into quality, engraving and so on. He cannot save money by having a friend or follower buy cheaper things for him." },
+        { name: "Shabby Gear Penalty", notes: "If he is broke he can settle for lesser goods, but the other nobles of his culture will mock him if they see him with shabby accoutrements, and he does not get his reaction bonus until once again all his goods are high-quality. If his gear and possessions look sufficiently shabby, people may not believe him to be a nobleman at all, and may refuse him the shelter he could ordinarily demand." }
+      ],
+      reaction: [
+        { value: 3, when: "Nobles of his own culture" },
+        { value: 2, when: "Nobles of other cultures" }
+      ],
+      requirementsPrinted: "There are no special requirements to be a Nobleman Priest.",
+      benefits: "Starts with more gold: 225 gp plus the standard 3d6x10 gp. +3 reaction from nobles of his own culture, +2 from other cultures' nobles. May demand shelter for two people per experience level. Bonus proficiencies: Etiquette, Heraldry, Riding (Land-Based).",
+      hindrances: "Must spend at least twice the minimum on anything he buys. Other Nobleman Priests may demand shelter of him. Loses his reaction bonus while his gear is shabby, and may be refused shelter if it is shabby enough. Must buy a suit of armor no lesser than brigandine or scale mail if his class permits, at least one weapon larger than a dagger, and a horse with riding saddle, bit and bridle, horseshoes and shoeing, halter and saddle blanket, before starting play.",
+      notes: "A nobleman can become a priest and NOT take this kit -- such a priest lives more frugally, does not have to have a disdain for lower social classes, and does not count him among their ranks. If a Nobleman Priest player-character decides his attitudes are wrong he may abandon the kit; he will be ostracized by most of the nobles who counted him a friend, loses all other benefits and hindrances of the kit, and if the priest abandons the kit that money doesn't magically 'go away' -- as part of his social ostracization the character should suffer some financial loss equal to at least 225 gp. Races: no special requirements; the DM may decide not all races have the same kind of social snobbery."
+    },
+
+    outlawpriest: {
+      name: "Outlaw Priest",
+      class: "cleric",
+      source: {
+        status: "verified",
+        work:   "PHBR3 The Complete Priest's Handbook",
+        pages:  "103-104",
+        note:   "Transcribed from the book. DISTINCT from the druid `outlaw` kit, which is PHBR13's."
+      },
+      proficiencies: {
+        weapon: {
+          recommended: ["Cutlass", "Belaying Pin", "Bill"],
+          allowedPrinted: "Required: None. Recommended: If Pirate, cutlass*, belaying pin*, bill. If Outlaw, weapon choices appropriate for the outlaw band. (* introduced in The Complete Fighter's Handbook.)"
+        },
+        nonweapon: {
+          required: ["Religion"],
+          recommended: ["Rope Use", "Seamanship", "Swimming", "Weather Sense", "Navigation", "Engineering", "Reading/Writing", "Appraising", "Set Snares", "Tightrope Walking", "Tumbling", "Direction Sense", "Fire-Building", "Riding, Land-Based", "Animal Lore", "Bowyer/Fletcher", "Endurance", "Hunting", "Running", "Survival", "Tracking", "Healing", "Herbalism", "Local History", "Disguise"],
+          note: "Religion is a BONUS proficiency. The book splits its recommendations into a Pirate list and an Outlaw list; both are merged here. Several are Warrior-, Rogue- or Wizard-group and cost DOUBLE SLOTS unless the priest class dictates otherwise. Engineering is recommended for shipbuilding, Reading/Writing for mapmaking."
+        }
+      },
+      requirements: {
+        priesthood: {
+          barred: ["Community"],
+          barredByFaithType: ["philosophy", "force"],
+          note: "Priests of the god of Community may not take this kit. Priests of no Philosophy or Force may take it -- they can associate with pirate or outlaw bands, but there is no censure within their orders because of it, and therefore no disadvantage to belonging to such a band."
+        }
+      },
+      abilities: [
+        { name: "No Superiors", notes: "The main benefit of this kit: the priest does not have any superiors. He takes orders from no superior religious authority, unless the god himself chooses to issue some." },
+        { name: "Opposed By His Order", notes: "Opposed by the normal priestly order serving his god. When they hear of his plans they try to thwart them -- break up religious meetings, disrupt building of his temple. This priest never gets to build a temple at cut-rate prices; he must always spend the whole amount to build his temple. If he ever abandons his kit, the regular priesthood may accept his temple as one belonging to the priesthood, but will never recompense him half the money it took to build it." },
+        { name: "Wanted By The Authorities", notes: "In the pursuit of his duties he is opposed by other priests serving the same god. In addition, if he has identified himself with an outlaw or pirate band, he will be wanted by the authorities as a member of that band. If he is part of an outlaw or pirate band he is sought by the same authorities who seek that band, and will pay the same penalties under the law as they do if he is caught." },
+        { name: "Equipment: No Metal Armor At Sea", notes: "No restrictions on equipment. Within the context of the campaign, if this is a pirate or outlaw band, it is a bad idea to wear metal armor (banded, brigandine, bronze plate, chain, field plate, full plate, plate mail, and ring mail). Metal armor drags pirates down to their deaths when they fall overboard, and it is noisy when worn by outlaws trying to ambush their prey. But this is just a factor the DM needs to remember, not a restriction on the kit." }
+      ],
+      benefits: "No superior religious authority; takes orders from no one but the god himself. Bonus proficiency: Religion. Wealth: the standard 3d6x10 gp for starting gold.",
+      hindrances: "Opposed by the normal priestly order serving his god. Never gets cut-rate temple construction -- must always spend the full amount. If part of an outlaw or pirate band, sought by the same authorities and subject to the same penalties under the law.",
+      notes: "To abandon the kit he leaves the outlaw band or opposes/disbands the new religious order, whichever is pertinent, AND must answer all the charges pressed against him by the authorities -- being tried and going to prison for a time, paying reparations, or accepting tasks of penance from his temple. If he does not, he will continue to be opposed by his temple and wanted by the authorities. Races: no special restrictions."
+    },
+
+    pacifistpriest: {
       name: "Pacifist Priest",
       class: "cleric",
       source: {
-        status: "unverified",
+        status: "verified",
         work:   "PHBR3 The Complete Priest's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+        pages:  "104-105",
+        note:   "Transcribed from the book."
+      },
+      proficiencies: {
+        weapon: {
+          allowed: ["Bow", "Dart"],
+          allowedPrinted: "May not know any Weapon Proficiency except bow and dart, and may only know them if his true priest-class allows them. May only use these weapons in competition.",
+          note: "He still receives all his Weapon Proficiency slots. If he ever abandons this kit he may 'spend' them at a rate of two slots every experience level."
+        },
+        nonweapon: {
+          required: ["Etiquette"],
+          recommended: ["Modern Languages", "Ancient Languages", "Ancient History", "Singing", "Musical Instrument", "Reading/Writing"],
+          note: "Etiquette is a BONUS proficiency."
+        }
+      },
+      requirements: {
+        priesthood: {
+          barred: ["Disease", "Evil (Philosophy)", "Justice, Revenge", "War"],
+          note: "Priests of these gods, forces and philosophies may not be Pacifist Priests."
+        }
       },
       abilities: [
-        { name: "Aura of Peace", notes: "Enemies must save or be unable to attack" },
-        { name: "Enhanced Healing", notes: "Cure spells heal +2 HP per die" }
+        { name: "Compelling Personality", notes: "+2 to his CHARISMA SCORE -- his Charisma cannot exceed 18 from this bonus. In addition to any reaction bonus that heightened Charisma gives him, he receives a +2 reaction from anyone who is not utterly opposed to his philosophy. Beings opposed to his philosophy include priests and devoted adherents of the gods, forces and philosophies mentioned under Barred, and certain warlike nonhuman races such as orcs, ogres and trolls." },
+        { name: "May Never Wear Armor", notes: "This priest may never wear armor." },
+        { name: "May Never Use Weapons Or Harmful Tactics", notes: "May never use weapons, spells or any other tactics to harm a human, demihuman, nonhuman or monster. If he ever violates this decree, his GOD will not punish him -- because the pacifist's oath is one he took for himself, not for his god -- but his OWN GUILT will deprive him of all magic spells for the span of one month. If the DM wishes, if the priest is a follower of the god of Peace, the god can instead punish him as a Betrayal of Goals from the Role-Playing chapter." },
+        { name: "Equipment", notes: "May not buy any armor, and may not buy any weapon except dagger or knife (for eating only), and bow and dart if he has proficiency with them." }
       ],
-      requirements: { wis: 16, cha: 14, alignment: "Any good" },
-      benefits: "+2 to all healing spells. Turn undead as 2 levels higher.",
-      hindrances: "Cannot attack or cause harm. Cannot use edged weapons. Must flee from combat."
+      reaction: [
+        { value: 2, when: "Anyone not utterly opposed to his philosophy" }
+      ],
+      benefits: "+2 to his Charisma score, capped at 18. +2 reaction from anyone not opposed to his philosophy. Takes orders from no superior religious authority. Bonus proficiency: Etiquette. Wealth: the standard 3d6x10 gp.",
+      hindrances: "May never wear armor. May never use weapons, spells or other tactics to harm any living being -- violation costs him all spells for one month through guilt alone. Weapon proficiencies limited to bow and dart, usable only in competition. May not buy armor, or any weapon beyond a dagger or knife for eating.",
+      notes: "THE BOOK WARNS ABOUT THIS KIT AT THE TABLE: the DM should allow this priest only when (1) he is an NPC, (2) he is part of a specific quest or mission and the party must guard him, or (3) all the PCs are pacifists. The player of a pacifist priest will feel left out in combat and will be compelled to chide the other PCs for their violence, which will get on their nerves -- so the DM should keep such quests short. Just because the priest demands peacefulness of all around him, his allies do not have to obey. There are no special rules for abandonment if the character eventually feels he needs to be wielding force to achieve his ends. Races: no special limitations."
     },
-    scholar: {
+
+    peasantpriest: {
+      name: "Peasant Priest",
+      class: "cleric",
+      source: {
+        status: "verified",
+        work:   "PHBR3 The Complete Priest's Handbook",
+        pages:  "105-106",
+        note:   "Transcribed from the book."
+      },
+      proficiencies: {
+        weapon: {
+          allowedPrinted: "The player may choose his character's weapon proficiencies subject to the limitations of the priest's actual priest-class. The DM may insist that the character start out the campaign only with proficiencies appropriate to a peasant -- short sword, spear, bow, footman's weapons and the like; long swords (and bigger blades), horseman's weapons, exotic polearms, lances, tridents and the like are not. This should only be a restriction when the character is first created; afterwards he can learn any weapon his priest-class allows him.",
+          allowedScope: "creation"
+        },
+        nonweapon: {
+          required: ["Agriculture"],
+          recommended: ["Fishing", "Weather Sense", "Animal Lore"],
+          note: "BONUS PROFICIENCY IS A CHOICE: Agriculture OR Fishing, player's choice. Recommended is Weather Sense OR Animal Lore, player's choice, plus any of the General proficiencies. Agriculture is recorded as required because the field holds one value; the choice is printed here."
+        }
+      },
+      requirements: {
+        priesthood: {
+          barred: ["Evil (Philosophy)", "Good (Philosophy)", "Prosperity"],
+          note: "Priests of these gods, forces and philosophies may not take this kit."
+        }
+      },
+      abilities: [
+        { name: "Shelter Among His Own", notes: "Always has shelter when he is in his own community; his own people will shelter him even from the land's rightful authorities. Among peasants of other communities he cannot count on this benefit, but he receives a +2 reaction adjustment from all peasants." },
+        { name: "Vow of Poverty", notes: "Restrictions on the way he spends his money. Other than weapons, with which he has no monetary limitation, he may own only one object worth as much as 15 gp, and other than that one object may own nothing worth more than 10 gp. He may never own more than 75 gp worth of (nonweapon) property at any one time. If he receives money or gifts which put him above that limit he must give away money and possessions until once again he is within the 75 gp limitation." },
+        { name: "Party Friction", notes: "In the campaign he devotes himself to the needs of the common man. If part of an adventuring party he won't support any plans which endanger or exploit the peasants or serfs, and will try to recommend plans which advantage them. He'll insist that treasures be shared with the locals of the area where the treasure was found, and that the local peasant community receive two shares if the treasure is split into even shares. In a greedy or tight-fisted party this may result in the priest becoming disillusioned with the party." }
+      ],
+      reaction: [
+        { value: 2, when: "All peasants" }
+      ],
+      benefits: "Always sheltered in his own community, even from the rightful authorities. +2 reaction from all peasants. Bonus proficiency: Agriculture or Fishing, player's choice. Wealth: the standard 3d6x10 gp, but no more than 75 gp of it may be spent on goods other than weapons.",
+      hindrances: "Vow of poverty: may own only one object worth as much as 15 gp, nothing else worth more than 10 gp, and never more than 75 gp of nonweapon property at any one time. Excess money and possessions must be given away.",
+      notes: "There are no ability-score requirements to be a Peasant Priest, and no special rules for abandonment of this kit. The Peasant Priest need not have been born a peasant -- he could have been born a nobleman and later abandoned that lifestyle and the privileges of his class. He is the antithesis of the Nobleman Priest. Races: no special limitation."
+    },
+
+    prophetpriest: {
+      name: "Prophet Priest",
+      class: "cleric",
+      source: {
+        status: "verified",
+        work:   "PHBR3 The Complete Priest's Handbook",
+        pages:  "106-107",
+        note:   "Transcribed from the book. Was `prophet` with unverified paraphrase; re-transcribed and re-keyed."
+      },
+      proficiencies: {
+        weapon: {
+          allowedPrinted: "Required: None. Recommended: Any that the priest's actual priest-class permits."
+        },
+        nonweapon: {
+          required: ["Weather Sense"],
+          recommended: [],
+          note: "Weather Sense is a BONUS proficiency. The book prints \"Recommended: None special.\""
+        }
+      },
+      requirements: {
+        wis: 15,
+        priesthood: {
+          barred: ["Oracles, Prophecy"],
+          barredByFaithType: ["philosophy", "force"],
+          note: "Priests of the god of Prophecy may NOT take this kit -- all other priests may. Priests of philosophies or forces do not receive their prophecies from a god; their prophecies are more like psychic impressions. Since a prophet is rarer than a priest of prophecy, the DM has the right to approve or disapprove any character taking this kit."
+        }
+      },
+      abilities: [
+        { name: "Prophecy", notes: "Receives the Medium Granted Power Prophecy from the Designing Faiths chapter. MORE LIMITED than the Prophecy granted to priests of the god of Prophecy: with this power, priests may receive visions from the god at any time the DM decides, but may only deliberately sink into a trance in order to receive a vision ONCE PER DAY." },
+        { name: "Reaction Penalty", notes: "-2 reaction adjustment. It is not normal for anyone but priests of the god of Prophecy to be prophets, so normal people are a little edgy around other prophets and react to them at -2. THIS ADJUSTMENT MAY NEVER RESULT IN A REACTION WORSE THAN CAUTIOUS." }
+      ],
+      reaction: [
+        { value: -2, when: "Ordinary folk -- never worse than Cautious" }
+      ],
+      benefits: "The Prophecy granted power, limited to one deliberate trance per day. Bonus proficiency: Weather Sense. Wealth: the normal 3d6x10 gp.",
+      hindrances: "-2 reaction adjustment from ordinary folk, though never worse than Cautious. THIS KIT MAY NOT BE ABANDONED: as long as he is a priest, he is a Prophet Priest.",
+      notes: "A prophet is one who receives signs, dreams or clues about the future from his god. Priests of the god of prophecy are prophets, but they are not the ONLY prophets -- priests of other gods can receive and pass along prophecies. In the campaign the Prophet Priest is partly a tool for the DM, who can use the character to supply clues and even red herrings to the characters. His is often a thankless job, and he is often a bit alienated from the normal folk. Races: no special limitations."
+    },
+
+    savagepriest: {
+      name: "Savage Priest",
+      class: "cleric",
+      source: {
+        status: "verified",
+        work:   "PHBR3 The Complete Priest's Handbook",
+        pages:  "107-108",
+        note:   "Transcribed from the book."
+      },
+      proficiencies: {
+        weapon: {
+          allowed: ["Blowgun", "Long Bow", "Short Bow", "Club", "Dagger", "Javelin", "Knife", "Sling", "Spear"],
+          allowedScope: "creation",
+          allowedPrinted: "Limited to the weapons his actual priest-class permits him, and further limited (when he is first created) to blowgun, long bow, short bow, club, dagger, javelin, knife, sling, spear. After he has adventured in the outer world, the character may learn other proficiencies."
+        },
+        nonweapon: {
+          required: ["Direction Sense"],
+          recommended: ["Animal Handling", "Animal Training", "Fire-Building", "Fishing", "Riding, Land-Based", "Rope Use", "Swimming", "Animal Lore", "Bowyer/Fletcher", "Hunting", "Mountaineering", "Running", "Set Snares", "Tracking", "Healing", "Herbalism", "Local History", "Jumping", "Tightrope Walking", "Tumbling"],
+          barred: ["Etiquette", "Heraldry"],
+          note: "BONUS PROFICIENCIES ARE CHOICES: Direction Sense OR Weather Sense (player choice), and Endurance OR Survival (player choice). Warrior-, Rogue- and Wizard-group recommendations cost DOUBLE SLOTS unless the priest-class dictates otherwise. THE SAVAGE MAY NOT TAKE Etiquette or Heraldry when first created."
+        }
+      },
+      requirements: {
+        str: 11,
+        con: 13,
+        priesthood: {
+          barred: ["Disease", "Divinity of Mankind (Philosophy)", "Evil (Philosophy)", "Good (Philosophy)"],
+          recommended: ["Animals", "Earth", "Elemental Forces", "Fire", "Hunting", "Nature", "Sky, Weather", "Vegetation"],
+          note: "Priests of the barred gods and philosophies may not take this kit; the recommended list is where the book says the kit is MOST appropriate."
+        }
+      },
+      abilities: [
+        { name: "Detect Magic", notes: "A special Detect Magic ability resembling the spell of the same name, usable ONCE PER DAY PER EXPERIENCE LEVEL -- a 5th-level savage could use it five times per day. The Savage Priest is in tune with nature and can feel when there is something magical in the vicinity. As with the first-level Priest spell, he has a 10% chance per experience level to determine the sphere of the magic." },
+        { name: "Imposing and Strange", notes: "The Savage Priest is imposing and strange, and worships his gods 'all wrong' -- civilized folk and priests recognize that his rites are different, unlike theirs. He suffers a -2 reaction adjustment from all civilized folk (NPCs; PCs can decide for themselves how they react to him)." },
+        { name: "Equipment", notes: "With his starting gold he may buy NO ARMOR OTHER THAN LEATHER ARMOR AND SHIELD, and may buy no weapon not listed under Weapon Proficiencies. He must spend all his gold when he is created, or lose any 'change' he has left over." }
+      ],
+      reaction: [
+        { value: -2, when: "All civilized folk" }
+      ],
+      benefits: "Detect Magic once per day per experience level, with a 10% chance per level to determine the sphere. Bonus proficiencies: Direction Sense or Weather Sense, and Endurance or Survival, both player's choice. Wealth: 3d6x5 gp -- HALF the usual starting gold.",
+      hindrances: "-2 reaction from all civilized folk. May buy no armor other than leather and shield at creation, and no weapon outside the permitted list. Must spend all starting gold or lose the remainder. May not take Etiquette or Heraldry when first created.",
+      notes: "This is a shaman of a savage tribe, a member of a technologically and culturally primitive but nature-attuned community. He interprets the will of his god and acts as advisor or leader to the tribe. He might be an animal-totem shaman who assigns tribal warriors their animal totems, or the witch-doctor who insists on the deaths of adventurers from the outside world. THE DM SHOULD INSIST that the character role-play his tribal origins in the first four or five experience levels, until he is more used to the outside world -- baffled by 'high-technology' inventions (iron and steel weapons, boats made of more than a single log, hourglasses, anything more sophisticated than the tools of his tribe), by civilized morals and ethics, and especially by the strangeness and unfairness of the laws of civilized men. If you have The Complete Fighter's Handbook, use the Equipment rules for the Savage Warrior Kit instead. To abandon this kit the character renounces his membership in the tribe and accepts citizenship in some other culture -- which frequently happens with Savage Priests who join adventuring parties and see so much of the outside world that they no longer feel part of the tribe. Take a priestess of a nature-god and give her the Savage Priestess kit, and you end up with something very like a nymph. Races: no special limitations."
+    },
+
+    scholarpriest: {
       name: "Scholar Priest",
       class: "cleric",
       source: {
-        status: "unverified",
+        status: "verified",
         work:   "PHBR3 The Complete Priest's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+        pages:  "108-109",
+        note:   "Transcribed from the book. Was `scholar` with unverified paraphrase; re-transcribed and re-keyed."
+      },
+      proficiencies: {
+        weapon: {
+          allowedPrinted: "Required: None. Recommended: Any appropriate to the priest's actual priest-class. See Special Benefits -- he may convert weapon proficiency slots into nonweapon proficiency slots."
+        },
+        nonweapon: {
+          required: ["Reading/Writing"],
+          recommended: ["Artistic Ability", "Etiquette", "Heraldry", "Languages, Modern", "Ancient History", "Astrology", "Languages, Ancient", "Local History"],
+          note: "Reading/Writing is a BONUS proficiency."
+        }
+      },
+      requirements: {
+        int: 13,
+        priesthood: {
+          barred: ["Competition", "Fertility", "Life-Death-Rebirth Cycle (Force)", "Strength", "War"],
+          recommended: ["Arts", "Crafts", "Culture (Bringing Of)", "Divinity of Mankind (Philosophy)", "Literature, Poetry", "Music, Dance", "Wisdom"],
+          note: "Priests of the barred gods, forces and philosophies may not take this kit; the recommended list is where the book says the kit is MOST appropriate."
+        }
       },
       abilities: [
-        { name: "Lore Keeper", notes: "+4 to knowledge checks" },
-        { name: "Research", notes: "Can research new spells and religious knowledge" }
+        { name: "Slot Conversion", notes: "MAY SPEND ANY OF HIS WEAPON PROFICIENCY SLOTS ON NONWEAPON PROFICIENCIES INSTEAD. He doesn't have to; he can adhere to the normal pattern of proficiency choice appropriate to his priest-class. But if he wishes he may turn Weapon Proficiency slots into Nonweapon slots and thereby become a very skilled character." },
+        { name: "Scholarly Reaction Bonus", notes: "+3 reaction from other scholars, admirers of scholastic concerns, writers, journalists, and people who imagine that they are scholars. Because of this, when the party thinks it is in a situation when no one is willing to help, it may turn out that the mousy clerk, antagonistic king or homely witch they met is an admirer of or even correspondent with the Scholar Priest and will help them." },
+        { name: "Egotistical Debates", notes: "Many scholars are egotistical, and debates between scholars can become very heated and personal. Whenever the DM rolls a reaction check from another scholar, he should first roll 1d6. ON A 1, the player-character scholar gets a -6 REACTION ADJUSTMENT INSTEAD OF A +3, because at some time in the past (or even the present) he argued or disagreed with this scholar's pet opinion and offended him completely." },
+        { name: "Equipment: Writing Materials", notes: "Must always have writing material, quill and ink with him. If he ever loses them he must regain or replace them as soon as possible, and in the meantime will be recording his experiences in any fashion he can find. Other than that, this kit makes no demands on the way he spends his money." }
       ],
-      requirements: { int: 14, wis: 14, alignment: "Any" },
-      benefits: "Read/write all languages. Free research proficiencies. Extra proficiency slots.",
-      hindrances: "Poor combat abilities (-2 to hit). Must spend time studying. Physically weak."
-    },
-    crusader: {
-      name: "Crusader",
-      class: "cleric",
-      source: {
-        status: "unverified",
-        work:   "PHBR3 The Complete Priest's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Holy Warrior", notes: "Combines faith and martial prowess" },
-        { name: "Smite Evil", notes: "Once per day, +4 to hit and damage vs evil" }
+      reaction: [
+        { value: 3, when: "Other scholars, admirers of scholastic concerns, writers and journalists" },
+        { value: -6, when: "Another scholar, on a 1 in 6 -- an old argument, replacing the +3 entirely" }
       ],
-      requirements: { str: 14, wis: 14, alignment: "Any good" },
-      benefits: "THAC0 improves as fighter. Can wear all armor. Rally allies (+1 morale).",
-      hindrances: "Must crusade against evil. Reduced spell access (one less spell). Tithe 30%."
-    },
-    undeadslayer: {
-      name: "Undead Slayer",
-      class: "cleric",
-      source: {
-        status: "unverified",
-        work:   "PHBR3 The Complete Priest's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Turn Undead Enhancement", notes: "Turn undead as 3 levels higher" },
-        { name: "Detect Undead", notes: "Detect undead at 60 ft radius" }
-      ],
-      requirements: { wis: 15, alignment: "Any good" },
-      benefits: "+2 to hit vs undead. Immune to energy drain. Destroy undead on turning.",
-      hindrances: "Must hunt and destroy undead. Disturbing presence (-1 reaction with living)."
-    },
-    missionary: {
-      name: "Missionary",
-      class: "cleric",
-      source: {
-        status: "unverified",
-        work:   "PHBR3 The Complete Priest's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Convert Followers", notes: "+4 to convince others to join faith" },
-        { name: "Inspire Faith", notes: "Grant temporary morale/save bonuses to converts" }
-      ],
-      requirements: { wis: 14, cha: 15, alignment: "Any" },
-      benefits: "+3 reaction with potential converts. Learn languages easily. Extra followers.",
-      hindrances: "Must spread faith actively. Cannot refuse aid to converts. Give away 50% of treasure."
-    },
-    prophet: {
-      name: "Prophet",
-      class: "cleric",
-      source: {
-        status: "unverified",
-        work:   "PHBR3 The Complete Priest's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Divine Visions", notes: "Receive visions from deity" },
-        { name: "Prophecy", notes: "Can cast augury 3/day" }
-      ],
-      requirements: { wis: 17, cha: 14, alignment: "Any" },
-      benefits: "Access to divination sphere. +2 to saves vs illusion/enchantment.",
-      hindrances: "Visions can be disturbing. Must share prophecies. Seen as touched/mad (-2 reaction)."
-    },
-    healer: {
-      name: "Healer",
-      class: "cleric",
-      source: {
-        status: "unverified",
-        work:   "PHBR3 The Complete Priest's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Healing Touch", notes: "All healing spells heal maximum HP" },
-        { name: "Lay on Hands", notes: "Heal 2 HP per level, once per day" }
-      ],
-      requirements: { wis: 16, cha: 14, alignment: "Any good" },
-      benefits: "Free healing proficiency. Immunity to disease. Cure disease at 1st level.",
-      hindrances: "Cannot cause harm (no damage spells). Must help all injured. Limited spell access."
+      benefits: "May spend weapon proficiency slots on nonweapon proficiencies instead. +3 reaction from scholars and admirers of scholarship. Bonus proficiency: Reading/Writing. Wealth: the standard 3d6x10 gp.",
+      hindrances: "On a 1 in 6, a scholar's reaction is -6 instead of +3 because of an old disagreement. Must always carry writing material, quill and ink, and must replace them as soon as possible if lost. THIS KIT CANNOT BE ABANDONED.",
+      notes: "A researcher, most at home poring over books, scrolls, papyri, clay tablets and other old writings. He is not forbidden from fighting, but is more likely to try to straighten out a bad situation with reason, personal charisma, or even trickery than with a weapon. His life is dedicated to the assimilation of knowledge and, usually, the transmission of that knowledge to new generations. A scholar can break off correspondence with other scholars, can choose not to teach, can decide not to do any studying or writing for as long as he likes, but can always re-enter the academic world. Races: no special limitations."
     }
   },
 
