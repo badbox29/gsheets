@@ -1,632 +1,258 @@
-[
-  {
-    "Style Name": "Pummeling",
-    "Type": "Basic Style",
-    "Slots": "1",
-    "Category": "Unarmed",
-    "Source": "PHB",
-    "Base Damage": "1d2",
-    "Specialization": "Yes",
-    "Notes": "Basic punching and striking. Can specialize like a weapon. Improved with additional slots."
+{
+  "_README": {
+    "what": "Unarmed combat: Punching, Wrestling and Martial Arts. PHBR1 The Complete Fighter's Handbook, book pp.74-78, with PHB pp.97-98 as the base rules PHBR1 elaborates on.",
+    "replaces": "THIS FILE REPLACES A FABRICATED ONE. The previous core_unarmed_martial_arts.json held 63 rows of invented content -- named styles such as Tae Kwon Do, Judo, Tai Chi Chuan, Praying Mantis, Eagle Claw, Black Tiger, Iron Body and Pressure Points, each with slot costs and damage dice, 29 of them attributed to 'Complete Fighter'. A search of all 129 pages of PHBR1 found 21 of 22 sampled names ABSENT FROM THE BOOK ENTIRELY; the one hit for 'Boxing' was an incidental use of the word. Meanwhile the maneuvers PHBR1 actually prints -- Rabbit Punch, Kidney Punch, Wild Swing, Head Punch, Elbow Shot, Vitals-Punch -- did not appear in that file at all. It was read by nothing and had sat in js/ looking authoritative for a long time.",
+    "shape": "PHBR1 HAS THREE STYLES AND ONE RESULTS TABLE, not a catalogue of named arts. The old file's shape was wrong as well as its content.",
+    "phbDependency": "THE PUNCHING AND WRESTLING RESULTS TABLE IS NOT IN PHBR1. It is PHB Table 57, p.97, and PHBR1 only refers to it -- 'Review the Punch rules from the Player's Handbook, page 98.' Its maneuvers (Wild Swing, Rabbit Punch, Kidney Punch, Glancing Blow, Jab, Uppercut, Hook, Elbow Smash, Trip, Arm Lock, Kick) are named in PHBR1's examples but never tabulated there. That table is NOT transcribed here and must come from the PHB if it is ever wanted.",
+    "notOrientalAdventures": "The old file marked 30 rows 'Oriental Adventures', a 1st EDITION book outside this project's 2e scope. None are carried over. PHBR1 p.76 is explicit that its Martial Arts 'aren't any real-world fighting style; they're a combination of generic martial-arts maneuvers in the tradition of martial-arts movies.'",
+    "transcribedFrom": "Page images of book pp.74-78. Never from OCR or memory."
   },
-  {
-    "Style Name": "Wrestling",
-    "Type": "Basic Style",
-    "Slots": "1",
-    "Category": "Unarmed",
-    "Source": "PHB",
-    "Base Damage": "Special",
-    "Specialization": "Yes",
-    "Notes": "Grappling, holds, and throws. Can specialize like a weapon. Bonuses to overbear, pin, and wrestling maneuvers."
+  "styles": [
+    {
+      "key": "punching",
+      "label": "Punching",
+      "source": "PHB p.98; PHBR1 pp.74-75",
+      "slotsToKnow": 0,
+      "knownByAll": true,
+      "slotsToSpecialize": 1,
+      "baseDamage": "1-2, plus Strength bonus. A punch with a metal gauntlet does 1-3 plus Strength bonus.",
+      "temporaryDamage": "75% of all punching damage is TEMPORARY and wears off within minutes after the combat is concluded.",
+      "resultsTable": "phbTable57",
+      "specialization": {
+        "toHit": 1,
+        "damage": 1,
+        "chartBonus": 1,
+        "extraAttacks": "One additional punching attack per combat round. BOTH HANDS MUST BE FREE and holding nothing for the character to gain this benefit.",
+        "pullPunch": "When he pulls his punch he may also refuse to do the +2 damage that specialization gives him."
+      },
+      "notes": "Everyone has a certain knowledge of punching and can be considered to have a 'weapon proficiency' in it -- no slot is needed to KNOW it, only to specialize. A character can pull his punch to do no damage at all, or only his punch damage without his Strength bonus. A character using a cestus DOES add the to-hit and damage bonuses from Punching Specialization to his cestus damage; if he has specialized in the cestus too he decides round by round which set of bonuses to apply."
+    },
+    {
+      "key": "wrestling",
+      "label": "Wrestling",
+      "source": "PHB p.98; PHBR1 pp.75-76",
+      "slotsToKnow": 0,
+      "knownByAll": true,
+      "slotsToSpecialize": 1,
+      "baseDamage": "1 point per successful move, plus Strength bonus if the attacker desires. A continued hold causes cumulatively 1 more point of damage each round than the round before.",
+      "temporaryDamage": "As with punching damage, wrestling damage is also temporary.",
+      "resultsTable": "phbTable57",
+      "specialization": {
+        "toHit": 1,
+        "damage": "All maneuvers do 2 points of damage plus Strength bonus, and continued holds cause cumulatively 1 more point of damage for each round they are held.",
+        "chartBonus": 1,
+        "strengthForHolds": "+2 to Strength, ONLY for maintaining a wrestling hold. A Strength 15 character rolls against Strength 17 when maintaining a hold, but only for that purpose.",
+        "pullDamage": "When he chooses to pull wrestling damage, the character may also pull the +2 to damage granted by specialization."
+      },
+      "notes": "Both characters roll normal attack rolls against the opponent's AC, using the Armor Modifiers For Wrestling table on PHB p.97. Results marked with an asterisk on PHB Table 57 mean the attacker, if successful, can maintain that hold until it is broken -- use the Strength-roll rules described for the Grab maneuver to determine when holds are broken. A character can pull wrestling damage: no damage, or the 1 point associated with each successful maneuver, or the 1 point plus Strength bonus, whichever he chooses."
+    },
+    {
+      "key": "martialarts",
+      "label": "Martial Arts",
+      "source": "PHBR1 pp.76-77",
+      "slotsToKnow": 1,
+      "knownByAll": false,
+      "slotsToSpecialize": 1,
+      "baseDamage": "See the Martial Arts Results Table. Damage from any bare-handed Martial Arts attack is split: 25% is normal damage, the remaining 75% is temporary.",
+      "temporaryDamage": "25% of the damage from the attack is normal damage; the remaining 75% is temporary.",
+      "resultsTable": "martialArtsResults",
+      "specialization": {
+        "toHit": 1,
+        "damage": 1,
+        "chartBonus": 1,
+        "extraAttacks": "One additional Martial Arts attack per combat round. BOTH HANDS MUST BE FREE and holding nothing for the character to gain this benefit.",
+        "pullAttack": "He may pull his attack just as Punching and Wrestling characters do, and when he pulls his attack he can also refuse to do the +1 damage that specialization gives him."
+      },
+      "notes": "AVAILABLE ONLY IF THE DM DECIDES the art exists in the campaign. He must first decide whether he wants characters able to use these maneuvers, which will tend to give the campaign a more oriental flavor; then, if he wishes to use them, he needs to establish a history for these combat abilities -- customarily they were developed by some distant civilization, and recent trade with that culture has brought some practitioners and teachers of the art to the player-characters' society. No weapons are used. A character CAN hold a weapon in one hand and nothing in the other, attacking with his weapon one round and with his Martial Arts skill in the next. The character makes a normal attack roll against the normal Armor Class of the target -- if the ATTACKING character has armor on, he DOES suffer the Armor Modifiers For Wrestling from PHB Table 57."
+    }
+  ],
+  "martialArtsResults": {
+    "source": "PHBR1 p.76, Martial Arts Results Table",
+    "note": "Look up the ATTACK ROLL, not the damage. A chart bonus lets the character shift his result up or down and choose any maneuver within the range his bonus covers -- a +3 bonus on a rolled 16 lets him choose anywhere from 19 down to 13. ENCODE AS A PLAIN LOOKUP, NEVER AS A FORMULA. THE TABLE IS NOT SYMMETRICAL, though it looks it at a glance. Both ends escalate away from 11/Graze, but the LOW end is deadlier at every distance: nine steps up gives Head Punch at 15% knockout, nine steps down gives High Kick at 20%, and the bottom row is Head Punch at 30%. The maneuvers do not mirror either -- 14 is an Elbow Shot where 8 is a Body-Punch, and 15 is a Side Kick where 7 is a Knee-Shot. Any implementation that generates the low half by reflecting the high half will be wrong.",
+    "damageIsTemporary": "25% normal, 75% temporary. See the style entry.",
+    "rows": [
+      {
+        "roll": "20+",
+        "maneuver": "Head Punch",
+        "damage": 3,
+        "koPercent": 15
+      },
+      {
+        "roll": "19",
+        "maneuver": "High Kick",
+        "damage": 2,
+        "koPercent": 10
+      },
+      {
+        "roll": "18",
+        "maneuver": "Vitals-Kick",
+        "damage": 2,
+        "koPercent": 8
+      },
+      {
+        "roll": "17",
+        "maneuver": "Vitals-Punch",
+        "damage": 2,
+        "koPercent": 5
+      },
+      {
+        "roll": "16",
+        "maneuver": "Head Bash",
+        "damage": 2,
+        "koPercent": 5
+      },
+      {
+        "roll": "15",
+        "maneuver": "Side Kick",
+        "damage": 1,
+        "koPercent": 3
+      },
+      {
+        "roll": "14",
+        "maneuver": "Elbow Shot",
+        "damage": 1,
+        "koPercent": 1
+      },
+      {
+        "roll": "13",
+        "maneuver": "Body-Punch",
+        "damage": 1,
+        "koPercent": 2
+      },
+      {
+        "roll": "12",
+        "maneuver": "Low Kick",
+        "damage": 1,
+        "koPercent": 1
+      },
+      {
+        "roll": "11",
+        "maneuver": "Graze",
+        "damage": 0,
+        "koPercent": 1
+      },
+      {
+        "roll": "10",
+        "maneuver": "Body-Punch",
+        "damage": 1,
+        "koPercent": 2
+      },
+      {
+        "roll": "9",
+        "maneuver": "Low Kick",
+        "damage": 1,
+        "koPercent": 1
+      },
+      {
+        "roll": "8",
+        "maneuver": "Body-Punch",
+        "damage": 1,
+        "koPercent": 2
+      },
+      {
+        "roll": "7",
+        "maneuver": "Knee-Shot",
+        "damage": 1,
+        "koPercent": 3
+      },
+      {
+        "roll": "6",
+        "maneuver": "Side Kick",
+        "damage": 1,
+        "koPercent": 5
+      },
+      {
+        "roll": "5",
+        "maneuver": "Head Bash",
+        "damage": 2,
+        "koPercent": 10
+      },
+      {
+        "roll": "4",
+        "maneuver": "Vitals-Punch",
+        "damage": 2,
+        "koPercent": 10
+      },
+      {
+        "roll": "3",
+        "maneuver": "Vitals-Kick",
+        "damage": 2,
+        "koPercent": 15
+      },
+      {
+        "roll": "2",
+        "maneuver": "High Kick",
+        "damage": 2,
+        "koPercent": 20
+      },
+      {
+        "roll": "1 or less",
+        "maneuver": "Head Punch",
+        "damage": 3,
+        "koPercent": 30
+      }
+    ]
   },
-  {
-    "Style Name": "Martial Arts",
-    "Type": "Basic Style",
-    "Slots": "1",
-    "Category": "Unarmed",
-    "Source": "PHB",
-    "Base Damage": "1d3",
-    "Specialization": "No",
-    "Notes": "General martial arts training. Better damage than pummeling. Cannot specialize."
-  },
-  {
-    "Style Name": "Boxing",
-    "Type": "Western Style",
-    "Slots": "1",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "1d3",
-    "Specialization": "Yes",
-    "Notes": "Punching with fists. +1 to hit. Can specialize for increased damage and attacks per round."
-  },
-  {
-    "Style Name": "Karate",
-    "Type": "Oriental Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "1d6",
-    "Specialization": "Yes",
-    "Notes": "Striking art using hands, feet, elbows, knees. Higher damage than basic styles. Can learn kata."
-  },
-  {
-    "Style Name": "Kung Fu",
-    "Type": "Oriental Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "1d6",
-    "Specialization": "Yes",
-    "Notes": "Chinese martial art. Variety of hand and foot strikes. Many different sub-styles available."
-  },
-  {
-    "Style Name": "Jujitsu",
-    "Type": "Oriental Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "1d4",
-    "Specialization": "Yes",
-    "Notes": "Japanese grappling art. Throws, locks, and holds. Bonuses to wrestling and overbearing."
-  },
-  {
-    "Style Name": "Tae Kwon Do",
-    "Type": "Oriental Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "1d8",
-    "Specialization": "Yes",
-    "Notes": "Korean kicking art. Emphasis on powerful kicks. High damage potential."
-  },
-  {
-    "Style Name": "Aikido",
-    "Type": "Oriental Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "1d3",
-    "Specialization": "No",
-    "Notes": "Defensive art using opponent's momentum. Excellent for throws and redirects. AC bonus when fighting defensively."
-  },
-  {
-    "Style Name": "Judo",
-    "Type": "Oriental Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "1d4",
-    "Specialization": "Yes",
-    "Notes": "Throwing and grappling art. Bonus to throw opponents. Can throw opponents larger than self."
-  },
-  {
-    "Style Name": "Sumo",
-    "Type": "Oriental Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "1d6",
-    "Specialization": "No",
-    "Notes": "Japanese wrestling. Push and throw opponents. Requires high Strength and weight. Bonus to overbearing."
-  },
-  {
-    "Style Name": "Kendo",
-    "Type": "Weapon Style",
-    "Slots": "1",
-    "Category": "Martial Arts",
-    "Source": "Oriental Adventures",
-    "Base Damage": "N/A",
-    "Specialization": "No",
-    "Notes": "Japanese sword art. Applies to sword combat. +1 to hit and damage with swords when practiced."
-  },
-  {
-    "Style Name": "Kyudo",
-    "Type": "Weapon Style",
-    "Slots": "1",
-    "Category": "Martial Arts",
-    "Source": "Oriental Adventures",
-    "Base Damage": "N/A",
-    "Specialization": "No",
-    "Notes": "Japanese archery. +1 to hit with bows. Meditation and focus improve accuracy."
-  },
-  {
-    "Style Name": "Tai Chi Chuan",
-    "Type": "Internal Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "1d4",
-    "Specialization": "No",
-    "Notes": "Slow, flowing movements. Meditative combat style. AC bonus, improved balance and centering."
-  },
-  {
-    "Style Name": "Panther Style",
-    "Type": "Animal Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "1d6",
-    "Specialization": "No",
-    "Notes": "Fast, graceful strikes. Claw-hand techniques. Bonus to initiative and Dexterity-based actions."
-  },
-  {
-    "Style Name": "Crane Style",
-    "Type": "Animal Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "1d4",
-    "Specialization": "No",
-    "Notes": "Precise strikes and excellent balance. Can fight standing on one leg. AC bonus against larger opponents."
-  },
-  {
-    "Style Name": "Tiger Style",
-    "Type": "Animal Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "1d8",
-    "Specialization": "No",
-    "Notes": "Powerful, aggressive strikes. Claw techniques. Bonus to damage and intimidation."
-  },
-  {
-    "Style Name": "Dragon Style",
-    "Type": "Animal Style",
-    "Slots": "3",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "1d6",
-    "Specialization": "No",
-    "Notes": "Flowing, adaptive combat. Combines elements of multiple styles. Very versatile."
-  },
-  {
-    "Style Name": "Snake Style",
-    "Type": "Animal Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "1d4",
-    "Specialization": "No",
-    "Notes": "Quick strikes to vital points. Finger jabs. Can target pressure points for special effects."
-  },
-  {
-    "Style Name": "Monkey Style",
-    "Type": "Animal Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "1d3",
-    "Specialization": "No",
-    "Notes": "Unpredictable, acrobatic fighting. Tumbling and dodging. Difficult for opponents to predict."
-  },
-  {
-    "Style Name": "Drunken Style",
-    "Type": "Deceptive Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "1d6",
-    "Specialization": "No",
-    "Notes": "Appears intoxicated. Unpredictable movements confuse opponents. Opponents have penalty to hit."
-  },
-  {
-    "Style Name": "Praying Mantis",
-    "Type": "Animal Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "1d4",
-    "Specialization": "No",
-    "Notes": "Grasping and striking techniques. Excellent for trapping opponent's limbs. Bonus to disarm."
-  },
-  {
-    "Style Name": "Iron Hand",
-    "Type": "Advanced Technique",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "+2 to base",
-    "Specialization": "No",
-    "Notes": "Toughened hands through training. Increased damage. Can break objects with strikes."
-  },
-  {
-    "Style Name": "Kick Attack",
-    "Type": "Maneuver",
-    "Slots": "1",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "1d6",
-    "Specialization": "No",
-    "Notes": "Powerful kick. Can be used with any martial arts style. Higher damage than punching."
-  },
-  {
-    "Style Name": "Flying Kick",
-    "Type": "Advanced Maneuver",
-    "Slots": "1",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "1d8",
-    "Specialization": "No",
-    "Notes": "Leaping kick attack. Requires running start. Deals extra damage but leaves fighter vulnerable."
-  },
-  {
-    "Style Name": "Circle Kick",
-    "Type": "Advanced Maneuver",
-    "Slots": "1",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "1d4 each",
-    "Specialization": "No",
-    "Notes": "Spinning kick that can hit multiple adjacent opponents. Requires space to execute."
-  },
-  {
-    "Style Name": "Elbow Strike",
-    "Type": "Maneuver",
-    "Slots": "1",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "1d4+1",
-    "Specialization": "No",
-    "Notes": "Close-range elbow attack. Effective in grapples. Bonus to damage."
-  },
-  {
-    "Style Name": "Knee Strike",
-    "Type": "Maneuver",
-    "Slots": "1",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "1d6+1",
-    "Specialization": "No",
-    "Notes": "Powerful knee attack. Best used in close combat or grapples. High damage."
-  },
-  {
-    "Style Name": "Headbutt",
-    "Type": "Maneuver",
-    "Slots": "1",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "1d4",
-    "Specialization": "No",
-    "Notes": "Head strike. Very close range. Can stun opponent. User takes 1 hp damage."
-  },
-  {
-    "Style Name": "Weapon Catch",
-    "Type": "Defensive Technique",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "N/A",
-    "Specialization": "No",
-    "Notes": "Catch and hold opponent's weapon. Requires successful roll. Can disarm or break weapon."
-  },
-  {
-    "Style Name": "Deflect Arrows",
-    "Type": "Defensive Technique",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "N/A",
-    "Specialization": "No",
-    "Notes": "Deflect incoming missile attacks with hands. Requires awareness of attack. Limited uses per round."
-  },
-  {
-    "Style Name": "Mental Resistance",
-    "Type": "Mental Discipline",
-    "Slots": "1",
-    "Category": "Martial Arts",
-    "Source": "Oriental Adventures",
-    "Base Damage": "N/A",
-    "Specialization": "No",
-    "Notes": "Meditative training improves mental saves. Bonus to saves vs mind-affecting magic."
-  },
-  {
-    "Style Name": "Meditation",
-    "Type": "Mental Discipline",
-    "Slots": "1",
-    "Category": "Martial Arts",
-    "Source": "Oriental Adventures",
-    "Base Damage": "N/A",
-    "Specialization": "No",
-    "Notes": "Deep meditation restores hit points and reduces stress. Takes one hour of quiet focus."
-  },
-  {
-    "Style Name": "Pressure Points",
-    "Type": "Advanced Technique",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "Special",
-    "Specialization": "No",
-    "Notes": "Strike vital pressure points. Can stun, paralyze, or cause severe pain. Requires precise targeting."
-  },
-  {
-    "Style Name": "Stunning Blow",
-    "Type": "Advanced Technique",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "Normal",
-    "Specialization": "No",
-    "Notes": "Powerful strike that can stun opponent. Target must save or be stunned for 1d4 rounds."
-  },
-  {
-    "Style Name": "Disabling Strike",
-    "Type": "Advanced Technique",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "Normal",
-    "Specialization": "No",
-    "Notes": "Target specific body part to disable. Can cripple limb or cause specific impairment."
-  },
-  {
-    "Style Name": "Death Touch",
-    "Type": "Legendary Technique",
-    "Slots": "3",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "Death",
-    "Specialization": "No",
-    "Notes": "Legendary technique that can kill with a single touch. Requires years of training. Target gets save."
-  },
-  {
-    "Style Name": "Quivering Palm",
-    "Type": "Legendary Technique",
-    "Slots": "3",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "Death/Delayed",
-    "Specialization": "No",
-    "Notes": "Delayed death strike. Set vibration in target's body. Dies later unless remove curse cast."
-  },
-  {
-    "Style Name": "Iron Body",
-    "Type": "Body Hardening",
-    "Slots": "2",
-    "Category": "Martial Arts",
-    "Source": "Complete Fighter",
-    "Base Damage": "N/A",
-    "Specialization": "No",
-    "Notes": "Toughen entire body through conditioning. AC improvement. Resist some physical damage."
-  },
-  {
-    "Style Name": "Eagle Claw",
-    "Type": "Animal Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "1d4",
-    "Specialization": "No",
-    "Notes": "Gripping and tearing techniques. Strong grip. Bonus to grappling and choking."
-  },
-  {
-    "Style Name": "White Crane",
-    "Type": "Animal Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "1d4",
-    "Specialization": "No",
-    "Notes": "Graceful defensive style. Excellent evasion. Can redirect attacks."
-  },
-  {
-    "Style Name": "Black Tiger",
-    "Type": "Animal Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "1d8",
-    "Specialization": "No",
-    "Notes": "Fierce, aggressive style. Emphasizes power. Intimidation bonus in combat."
-  },
-  {
-    "Style Name": "Leopard Style",
-    "Type": "Animal Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "1d6",
-    "Specialization": "No",
-    "Notes": "Speed and agility focused. Multiple rapid strikes. Extra attack per round at higher skill."
-  },
-  {
-    "Style Name": "Bear Style",
-    "Type": "Animal Style",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "1d10",
-    "Specialization": "No",
-    "Notes": "Powerful, crushing attacks. Grappling emphasis. Requires high Strength."
-  },
-  {
-    "Style Name": "Dim Mak",
-    "Type": "Legendary Technique",
-    "Slots": "3",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "Special",
-    "Specialization": "No",
-    "Notes": "Death touch targeting pressure points. Causes internal damage. Extremely difficult to master."
-  },
-  {
-    "Style Name": "Chi Strike",
-    "Type": "Ki Technique",
-    "Slots": "2",
-    "Category": "Unarmed",
-    "Source": "Oriental Adventures",
-    "Base Damage": "+1d6",
-    "Specialization": "No",
-    "Notes": "Focus chi energy into strikes. Increased damage. Can affect creatures immune to normal weapons."
-  },
-  {
-    "Style Name": "Ki Focus",
-    "Type": "Ki Technique",
-    "Slots": "1",
-    "Category": "Martial Arts",
-    "Source": "Oriental Adventures",
-    "Base Damage": "N/A",
-    "Specialization": "No",
-    "Notes": "Focus internal energy. Temporary bonus to one physical ability score. Lasts 1 turn."
-  },
-  {
-    "Style Name": "Ki Shout",
-    "Type": "Ki Technique",
-    "Slots": "1",
-    "Category": "Martial Arts",
-    "Source": "Oriental Adventures",
-    "Base Damage": "Special",
-    "Specialization": "No",
-    "Notes": "Powerful shout using ki. Can stun opponents within 10 feet. Save or be stunned 1 round."
-  },
-  {
-    "Style Name": "Feint",
-    "Type": "Combat Technique",
-    "Slots": "1",
-    "Category": "Martial Arts",
-    "Source": "Complete Fighter",
-    "Base Damage": "N/A",
-    "Specialization": "No",
-    "Notes": "Fake attack to create opening. Next attack gains bonus to hit if feint succeeds."
-  },
-  {
-    "Style Name": "Sweep",
-    "Type": "Combat Technique",
-    "Slots": "1",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "1d3",
-    "Specialization": "No",
-    "Notes": "Low sweep to knock opponent down. Target must save or fall prone."
-  },
-  {
-    "Style Name": "Instant Stand",
-    "Type": "Combat Technique",
-    "Slots": "1",
-    "Category": "Martial Arts",
-    "Source": "Complete Fighter",
-    "Base Damage": "N/A",
-    "Specialization": "No",
-    "Notes": "Spring to feet instantly from prone position. Does not count as action."
-  },
-  {
-    "Style Name": "Kiai Shout",
-    "Type": "Combat Technique",
-    "Slots": "1",
-    "Category": "Martial Arts",
-    "Source": "Oriental Adventures",
-    "Base Damage": "N/A",
-    "Specialization": "No",
-    "Notes": "Spirit shout for focus. Bonus to next attack roll. Can also intimidate opponents."
-  },
-  {
-    "Style Name": "Defensive Stance",
-    "Type": "Combat Technique",
-    "Slots": "1",
-    "Category": "Martial Arts",
-    "Source": "Complete Fighter",
-    "Base Damage": "N/A",
-    "Specialization": "No",
-    "Notes": "Adopt purely defensive posture. AC bonus but cannot attack effectively."
-  },
-  {
-    "Style Name": "Focused Attack",
-    "Type": "Combat Technique",
-    "Slots": "1",
-    "Category": "Martial Arts",
-    "Source": "Complete Fighter",
-    "Base Damage": "N/A",
-    "Specialization": "No",
-    "Notes": "Trade defense for offense. Bonus to attack and damage but AC penalty."
-  },
-  {
-    "Style Name": "Berserker Rage",
-    "Type": "Combat Technique",
-    "Slots": "2",
-    "Category": "Martial Arts",
-    "Source": "Complete Fighter",
-    "Base Damage": "+2",
-    "Specialization": "No",
-    "Notes": "Enter berserk state. Bonus to hit and damage. Cannot use complex tactics while raging."
-  },
-  {
-    "Style Name": "Slow Fall",
-    "Type": "Movement Technique",
-    "Slots": "1",
-    "Category": "Martial Arts",
-    "Source": "Oriental Adventures",
-    "Base Damage": "N/A",
-    "Specialization": "No",
-    "Notes": "Reduce or eliminate falling damage. Can fall safely from great heights."
-  },
-  {
-    "Style Name": "Wall Running",
-    "Type": "Movement Technique",
-    "Slots": "2",
-    "Category": "Martial Arts",
-    "Source": "Oriental Adventures",
-    "Base Damage": "N/A",
-    "Specialization": "No",
-    "Notes": "Run short distances on vertical surfaces. Requires momentum."
-  },
-  {
-    "Style Name": "Great Leap",
-    "Type": "Movement Technique",
-    "Slots": "1",
-    "Category": "Martial Arts",
-    "Source": "Oriental Adventures",
-    "Base Damage": "N/A",
-    "Specialization": "No",
-    "Notes": "Jump great distances. Double or triple normal jumping distance."
-  },
-  {
-    "Style Name": "Blind Fighting",
-    "Type": "Combat Technique",
-    "Slots": "2",
-    "Category": "Martial Arts",
-    "Source": "PHB",
-    "Base Damage": "N/A",
-    "Specialization": "No",
-    "Notes": "Fight effectively without sight. Reduced penalties in darkness. Never completely surprised."
-  },
-  {
-    "Style Name": "Parry",
-    "Type": "Defensive Technique",
-    "Slots": "1",
-    "Category": "Martial Arts",
-    "Source": "Complete Fighter",
-    "Base Damage": "N/A",
-    "Specialization": "No",
-    "Notes": "Block incoming attack with limbs. Can block one attack per round with successful roll."
-  },
-  {
-    "Style Name": "Counter Strike",
-    "Type": "Defensive Technique",
-    "Slots": "2",
-    "Category": "Martial Arts",
-    "Source": "Complete Fighter",
-    "Base Damage": "Normal",
-    "Specialization": "No",
-    "Notes": "Block and immediately counter-attack. If parry succeeds, get free attack."
-  },
-  {
-    "Style Name": "Axe Kick",
-    "Type": "Advanced Maneuver",
-    "Slots": "1",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "1d8",
-    "Specialization": "No",
-    "Notes": "Powerful downward heel kick. Can break objects. High damage vs prone opponents."
-  },
-  {
-    "Style Name": "Spinning Backfist",
-    "Type": "Advanced Maneuver",
-    "Slots": "1",
-    "Category": "Unarmed",
-    "Source": "Complete Fighter",
-    "Base Damage": "1d6+1",
-    "Specialization": "No",
-    "Notes": "Spinning backhand strike. Surprise attack. Bonus to hit if opponent unaware."
+  "maneuvers": [
+    {
+      "name": "Body-Punch",
+      "description": "A straightforward punch into the target's stomach or chest."
+    },
+    {
+      "name": "Elbow Shot",
+      "description": "The attacker plants his elbow into the target's chest, side, or stomach."
+    },
+    {
+      "name": "Graze",
+      "description": "This could have started out as any sort of maneuver, but it merely grazed the target; it wasn't landed firmly."
+    },
+    {
+      "name": "Low Kick",
+      "description": "The attacker kicks the target in the leg or thigh."
+    },
+    {
+      "name": "Head Bash",
+      "description": "The attacker slams his forehead into the target's face, which is a stout maneuver."
+    },
+    {
+      "name": "Head Punch",
+      "description": "A good, strong blow with the fist to the enemy's head, particularly his jaw."
+    },
+    {
+      "name": "High Kick",
+      "description": "The attacker kicks the target in the upper body somewhere: stomach, chest, back, or shoulder."
+    },
+    {
+      "name": "Knee-Shot",
+      "description": "The attacker brings his knee up into the target's stomach or thigh."
+    },
+    {
+      "name": "Side Kick",
+      "description": "The attacker has time to prepare and launch a very powerful sideways kick, which may be at the end of a cinematic leap."
+    },
+    {
+      "name": "Vitals-Kick",
+      "description": "The attacker kicks his target at some vulnerable point: groin, kidney, neck, solar plexus, etc."
+    },
+    {
+      "name": "Vitals-Punch",
+      "description": "The attacker puts his fist into one of the vulnerable points mentioned above."
+    }
+  ],
+  "rules": {
+    "specializationIsNotWeaponSpecialization": "Specialization in an unarmed style does NOT count as Weapon Specialization. A first-level fighter could specialize in both Long Sword and Punching if he wished. A Rogue, who cannot take any Weapon Specialization, can still take ONE unarmed fighting style specialization.",
+    "fightingStylesDoNotApply": "Fighting style specializations (Single-Weapon, Two-Hander and the rest) do NOT grant any bonuses to Punching, Wrestling or Martial Arts combat. They are of use only to combat with melee weapons.",
+    "howManyStyles": "Any character can specialize in ONE of the three unarmed styles. Only a single-class Warrior -- and the Fighting-Monk from The Complete Priest's Handbook -- may specialize in more than one.",
+    "warriorProgression": "A single-class Warrior can only specialize in one of the three when he is first created. After first level he may specialize in the other two, taking specialization in only one style each time he receives a new Weapon Proficiency, so he could not be a specialist in all three until sixth experience level, and ninth is more likely.",
+    "usualChoice": "The book's own advice: a character wanting more than one style will usually take either Martial Arts OR Punching, not both, because their usefulness overlaps a great deal, and will then take Wrestling because it is useful when the character is being grappled.",
+    "continuingSpecialization": {
+      "availableTo": "An option available ONLY to single-class Warriors and to Fighting-Monks from The Complete Priest's Handbook.",
+      "restriction": "The character may not take more than basic Specialization in any of the arts at FIRST experience level. At first level he may devote one slot to Punching, or one to Wrestling, or two to Martial Arts, but no more than that to any of them. At third level, when he receives another slot, he may devote it to improving his specialization.",
+      "perSlot": "For each additional slot devoted to his art: +1 to all attack rolls with that combat style, +1 to all damage with that combat style, and +1 chart bonus with all attacks in that style.",
+      "chartBonusRange": "With chart bonuses of +2 or more, the character can choose ANY maneuver within the range of maneuvers covered by his chart bonus -- not merely one row up or down.",
+      "example": "Cassius the Gladiator is a Punching Specialist. He specialized at first level, put another slot into it at third, another at sixth, and still another at ninth. At ninth level he has +3 to attack rolls, +3 to damage and a +3 chart bonus. Rolling a 16 to hit, he can choose the maneuver anywhere from 19 down to 13."
+    },
+    "orientalCampaigns": "PHBR1 p.78 notes a change for oriental settings; the rule continues past the page read and is not transcribed here.",
+    "fightingMonk": "PHBR1 p.74 forward-references the Fighting-Monk as 'described in The Complete Priest's Handbook' -- the two books were written to interlock. PHBR3's kit gives two free weapon proficiency slots which MUST be spent on unarmed specialization, and makes the Fighting-Monk the only priest who can specialize in an unarmed combat style. See kits.js, cleric.fightingmonk."
   }
-]
+}
