@@ -2,7 +2,7 @@
 
 A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and no build step.
 
-**Version 11.6.5**
+**Version 11.7.0**
 
 ## Live Demo
 
@@ -253,6 +253,68 @@ Follow these steps **in order** to avoid overwriting your data:
 * I am not a developer.
 
 ### Recent Updates
+
+#### v11.7.0
+
+**The Complete Priest's Handbook — priesthood templates**
+
+* All **64 priesthoods** from the book are now selectable as **templates** from
+  the Specialty Priest section. Picking one fills in everything it grants —
+  second prime requisite, hit die, proficiency crossovers, language grant,
+  weapon specialization, restrictions, faith type, combat abilities — and sets
+  your sphere access on the Magic tab in one action, where it would otherwise be
+  twenty-odd entries by hand.
+* They are **templates, not rules**. The book tells your DM outright that he may
+  rewrite most of any priesthood, so applying one is a starting point. Edit
+  anything afterwards and the **Source Priesthood** field records it as, for
+  instance, "War (Modified)". The default is **DM-Created**, for a faith your DM
+  invented.
+* Applying a template **overwrites everything**, including clearing fields it
+  leaves blank — a priesthood that imposes no dietary restriction is saying
+  something, and a leftover value would misrepresent it. You are asked to confirm
+  only when there is something to lose.
+* **Restrictions are split by kind** — armour, weapons, clothing, celibacy, diet,
+  magical items, mutilation and other — and each is echoed as an advisory where
+  you need it: armour and dress on the Armour tab, weapons on Weapons, magical
+  items on Magic Items, and the observances at the foot of Details.
+* **Four cross-checks**, all advisory and none of them blocking: minimum ability
+  scores, races allowed, hit die against combat abilities, and the sphere budget
+  the book recommends. They are worded as guidance because the book breaks its
+  own guidelines in its own entries.
+
+**Priest kits**
+
+* All ten of the book's priest kits are now present and correct: **Amazon
+  Priestess, Barbarian/Berserker, Fighting-Monk, Nobleman, Outlaw, Pacifist,
+  Peasant, Prophet, Savage and Scholar**. Six entries that were previously listed
+  as priest kits have been removed — they were not kits at all, but a class type,
+  a personality type, a priesthood, and three names that appear nowhere in the
+  book.
+
+**Fallen priests and paladins**
+
+* A **Class Status** field for paladins and priests, with four states. A fallen
+  paladin or renounced priest loses his saving throw bonus, turning, class
+  abilities and spell access — but **nothing is ever deleted**. Spellbooks and
+  memorised spells are greyed and locked as a forgotten memory, and everything
+  still prints. Setting the status back restores it all.
+* There is a state for **fallen but still granted his abilities**, because a DM
+  may leave them intact. Status is always set by hand — the sheet never infers it
+  from your alignment — and it asks before withdrawing anything.
+
+**Toning down the cleric**
+
+* The book's own remedy for a Cleric it admits is stronger than nearly any
+  priesthood it prints: major access to three spheres and minor to two. Reported,
+  never enforced.
+
+**Fixes**
+
+* Ability score changes now refresh everything that depends on them. Each of the
+  six ability boxes kept its own list of what to update, and several had drifted.
+* Weapon and armour data from the book: the Bill identified as the same weapon as
+  the Gaff/Hook, the Maul corrected to 5 gp and 10 lb, and the Canon — a priest's
+  holy book — added at 450 gp.
 
 #### v11.6.5
 
