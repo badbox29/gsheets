@@ -2660,7 +2660,7 @@ const KITS = {
         }
       },
       requirements: {
-        gender: "female",
+        gender: ["female"],
         priesthood: {
           barred: ["Disease", "Peace"],
           required: ["Community", "Competition", "Elemental Forces", "Good (Philosophy)", "Hunting", "Light", "Mischief, Trickery", "Moon", "Oracles, Prophecy", "Race (Human)", "Sky, Weather", "Sun", "War", "Wind", "Wisdom"],
