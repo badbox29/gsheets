@@ -2183,6 +2183,48 @@ function renderSpecialtyPriestChecks(root) {
                    'combat abilities.');
       }
     }
+
+    // 5. KIT vs PRIESTHOOD. Lives here rather than in renderKitRequirements
+    // because it is a priesthood concern and this banner already sits outside
+    // the collapsible where it can be seen. THREE GATE SHAPES: a barred name
+    // list, a required name list, and two DERIVED gates that read sp_combat and
+    // sp_faith_type instead of a name -- the Fighting-Monk is barred from any
+    // POOR-combat priesthood, and the Outlaw and Prophet from any Philosophy or
+    // Force, whatever it is called.
+    const kit = (typeof getSelectedKit === 'function') ? getSelectedKit(root) : null;
+    const pr  = kit && kit.requirements && kit.requirements.priesthood;
+    if (pr) {
+      const label = (val(root, 'sp_template_source') || '')
+                      .replace(/\s*\(Modified\)\s*$/, '').trim();
+      const named = label && label !== 'DM-Created';
+
+      if (named && Array.isArray(pr.barred) && pr.barred.indexOf(label) !== -1) {
+        lines.push('The ' + escapeHtml(kit.name) + ' kit is barred to priests of ' +
+                   escapeHtml(label) + '.');
+      }
+      if (named && Array.isArray(pr.required) && pr.required.length &&
+          pr.required.indexOf(label) === -1) {
+        lines.push('The ' + escapeHtml(kit.name) + ' kit expects one of: ' +
+                   escapeHtml(pr.required.join(', ')) + '.');
+      }
+      if (Array.isArray(pr.barredByCombat) &&
+          pr.barredByCombat.indexOf(cbt) !== -1) {
+        lines.push('The ' + escapeHtml(kit.name) + ' kit is barred to a priesthood with ' +
+                   escapeHtml(cbt) + ' combat abilities.');
+      }
+      const ft = getSpecialtyPriestOverride(root, 'sp_faith_type');
+      if (ft && Array.isArray(pr.barredByFaithType) &&
+          pr.barredByFaithType.indexOf(ft) !== -1) {
+        lines.push('The ' + escapeHtml(kit.name) + ' kit is barred to priests of a ' +
+                   escapeHtml(ft) + '.');
+      }
+      // A DM-created faith cannot be matched against a name list, which is
+      // exactly the "cannot confirm" case worth saying out loud.
+      if (!named && ((pr.barred && pr.barred.length) || (pr.required && pr.required.length))) {
+        lines.push('The ' + escapeHtml(kit.name) + ' kit restricts which priesthoods may ' +
+                   'take it. This character\u2019s faith is DM-created, so that cannot be checked.');
+      }
+    }
   }
 
   el.innerHTML = lines.length
