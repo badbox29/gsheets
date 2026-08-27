@@ -7091,6 +7091,38 @@ const OPTIONAL_RULES = {
     category: 'override',
     default: true
   },
+  kitAbilityRequirements: {
+    label:   'Warn when ability scores do not meet the kit',
+    detail:  'About thirty kits across the Complete handbooks require a minimum in one or more ' +
+             'abilities -- the Cavalier wants Strength, Dexterity and Constitution 15, the ' +
+             'Fighting-Monk Dexterity 12, the Divinate Wisdom 16 and Charisma 15. One kit ' +
+             'requires a MAXIMUM instead: the Thug must have Intelligence no higher than 12. ' +
+             'An ability left blank is never reported \u2014 an unrolled score says nothing about ' +
+             'whether the character will qualify. Advisory only; nothing is blocked.',
+    category: 'override',
+    default: true
+  },
+  kitGenderRequirements: {
+    label:   'Warn when the kit describes a different gender',
+    detail:  'Two kits, both Amazons, are described in their books as female. This is a ' +
+             'description of a CULTURE rather than a rule of the game, and is separated from the ' +
+             'other kit checks so a table can switch it off without losing them. Advisory only; ' +
+             'nothing is blocked.',
+    category: 'override',
+    default: true
+  },
+  kitPriesthoodRequirements: {
+    label:   'Warn when a priest kit conflicts with the priesthood',
+    detail:  'PHBR3 Chapter 4. Every priest kit names the priesthoods that may not take it, and ' +
+             'some name the only ones that may: the Amazon Priestess is barred to priests of ' +
+             'Disease or Peace, the Pacifist to Disease, Evil, Justice/Revenge and War. Two kits ' +
+             'gate on a PROPERTY rather than a name \u2014 the Fighting-Monk is barred to any ' +
+             'priesthood with poor combat abilities, and the Outlaw and Prophet to priests of any ' +
+             'Philosophy or Force. A DM-created faith cannot be matched against a name list, and ' +
+             'the check says so rather than staying silent. Advisory only; nothing is blocked.',
+    category: 'override',
+    default: true
+  },
   agingEffects: {
     label:   'Show aging effects for the entered age',
     detail:  'PHB Tables 11 and 12. On reaching middle age, old age and venerable age a character ' +
@@ -8463,6 +8495,116 @@ function validateKitAlignment(root) {
                   '. This character is ' + getAlignmentLabel(key) + '.');
   }
 
+  return problems;
+}
+
+// Shared resolver for the three kit validators below. Same lookup
+// validateKitAlignment and renderKitAbilities use: the select stores the kit
+// NAME with whitespace removed, not the KITS object key.
+function getKitForValidation(root) {
+  if (typeof getKitsForClass !== 'function') return null;
+  const kitValue = (val(root, 'kit') || '').trim();
+  const clazz    = (val(root, 'clazz') || '').trim().toLowerCase();
+  if (!kitValue || !clazz) return null;
+  return getKitsForClass(clazz)
+    .find(k => k.name.toLowerCase().replace(/\s+/g, '') === kitValue) || null;
+}
+
+// Kit ability requirements. About thirty kits carry a minimum, and exactly one
+// carries a MAXIMUM -- the Thug requires Intelligence NO HIGHER than 12, so a
+// check that only looked for scores too low would miss it entirely.
+//
+// A BLANK SCORE IS NOT A FAILURE. An unrolled ability says nothing about
+// whether the character will qualify, and reporting it as zero would make every
+// new sheet shout before a single die was rolled.
+function validateKitAbilities(root) {
+  const problems = [];
+  if (typeof isOptionalRule === 'function' &&
+      !isOptionalRule('kitAbilityRequirements')) return problems;
+  const kit = getKitForValidation(root);
+  const req = kit && kit.requirements;
+  if (!req) return problems;
+
+  ['str', 'dex', 'con', 'int', 'wis', 'cha'].forEach(k => {
+    const have = parseInt(val(root, k) || 0, 10);
+    if (!have) return;
+    const label = (typeof ABILITY_LABELS !== 'undefined' && ABILITY_LABELS[k]) || k.toUpperCase();
+    if (req[k] && have < req[k]) {
+      problems.push('The ' + kit.name + ' kit requires ' + label + ' ' + req[k] +
+                    '. This character has ' + have + '.');
+    }
+    if (req[k + 'Max'] && have > req[k + 'Max']) {
+      problems.push('The ' + kit.name + ' kit requires ' + label +
+                    ' no higher than ' + req[k + 'Max'] +
+                    '. This character has ' + have + '.');
+    }
+  });
+  return problems;
+}
+
+// Kit gender requirements. Two kits, both Amazons, both stored as an array.
+// The book describes a CULTURE rather than a law of nature, which is why this
+// is advisory and separately switchable.
+function validateKitGender(root) {
+  const problems = [];
+  if (typeof isOptionalRule === 'function' &&
+      !isOptionalRule('kitGenderRequirements')) return problems;
+  const kit = getKitForValidation(root);
+  const req = kit && kit.requirements;
+  if (!req || !Array.isArray(req.gender) || !req.gender.length) return problems;
+
+  const g = (val(root, 'gender') || '').trim().toLowerCase();
+  if (!g) return problems;
+  if (req.gender.map(x => String(x).toLowerCase()).indexOf(g) === -1) {
+    problems.push('The ' + kit.name + ' kit is described as ' +
+                  req.gender.join(' or ') + '. This character is ' +
+                  (val(root, 'gender') || '').trim() + '.');
+  }
+  return problems;
+}
+
+// Kit priesthood requirements (PHBR3 Ch.4). THREE GATE SHAPES: a barred name
+// list, a required name list, and two DERIVED gates that read the character's
+// own specialty priest fields rather than a name -- the Fighting-Monk is barred
+// from any POOR-combat priesthood and the Outlaw and Prophet from any Philosophy
+// or Force, whatever that faith happens to be called.
+//
+// A DM-CREATED FAITH CANNOT BE MATCHED against a name list, and saying so is the
+// point rather than a gap: it tells the player the kit has a restriction his
+// character has not been checked against.
+function validateKitPriesthood(root) {
+  const problems = [];
+  if (typeof isOptionalRule === 'function' &&
+      !isOptionalRule('kitPriesthoodRequirements')) return problems;
+  const kit = getKitForValidation(root);
+  const pr  = kit && kit.requirements && kit.requirements.priesthood;
+  if (!pr) return problems;
+
+  const label = (val(root, 'sp_template_source') || '')
+                  .replace(/\s*\(Modified\)\s*$/, '').trim();
+  const named = label && label !== 'DM-Created';
+
+  if (named && Array.isArray(pr.barred) && pr.barred.indexOf(label) !== -1) {
+    problems.push('The ' + kit.name + ' kit is barred to priests of ' + label + '.');
+  }
+  if (named && Array.isArray(pr.required) && pr.required.length &&
+      pr.required.indexOf(label) === -1) {
+    problems.push('The ' + kit.name + ' kit expects a priest of one of: ' +
+                  pr.required.join(', ') + '. This character serves ' + label + '.');
+  }
+  const cbt = (val(root, 'sp_combat') || '').trim();
+  if (cbt && Array.isArray(pr.barredByCombat) && pr.barredByCombat.indexOf(cbt) !== -1) {
+    problems.push('The ' + kit.name + ' kit is barred to a priesthood with ' +
+                  cbt + ' combat abilities.');
+  }
+  const ft = (val(root, 'sp_faith_type') || '').trim();
+  if (ft && Array.isArray(pr.barredByFaithType) && pr.barredByFaithType.indexOf(ft) !== -1) {
+    problems.push('The ' + kit.name + ' kit is barred to priests of a ' + ft + '.');
+  }
+  if (!named && ((pr.barred && pr.barred.length) || (pr.required && pr.required.length))) {
+    problems.push('The ' + kit.name + ' kit restricts which priesthoods may take it. ' +
+                  'This character\u2019s faith is DM-created, so that has not been checked.');
+  }
   return problems;
 }
 
