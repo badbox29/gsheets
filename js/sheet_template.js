@@ -240,6 +240,37 @@ const SHEET_HTML = `
               </div>
               <div class="col"></div>
             </div>
+            <!-- MOVED FROM THE DETAILS TAB. These describe what the priesthood
+                 IS, so they belong above the fields describing what it GRANTS -
+                 and with this block collapsible, splitting one priesthood across
+                 two tabs meant jumping back and forth to fill it in.
+                 NO SEPARATE VISIBILITY OWNER: the whole block is already gated by
+                 renderSpecialtyPriest, so renderSpecialtyPriestFaith in calc.js
+                 now owns nothing and is dead code.
+                 sp_faith_type IS DELIBERATELY SEPARATE FROM deity_status on the
+                 Details tab. That answers HOW POWERFUL the being is; this answers
+                 WHAT KIND of thing it is, and the two are independent - Entropy
+                 is a Force and could be greater or lesser. Folding them into one
+                 dropdown would make them mutually exclusive and would leave an
+                 unfilled field reading as "a God", which is what the kit gates
+                 test for. -->
+            <div class="row" style="margin-top:8px">
+              <div class="col"><label>Faith Type</label>
+                <select data-field="sp_faith_type" title="PHBR3 p.11. A GOD is a powerful being, usually of human or greater intelligence, that wants its will imposed on the world. A FORCE is a natural or unnatural process -- magically powerful but not necessarily intelligent. Entropy, Nature, Magic and the Life-Death-Rebirth Cycle are Forces; druids tend to serve the Force of Nature rather than gods of nature. A PHILOSOPHY is an idea so widely believed that it draws magical energy the way a Force does, and stops generating any when nobody believes it. All three grant spells and powers identically; the distinction matters only to a few PHBR3 kits, which bar priests of Forces and Philosophies.">
+                  <option value="">&mdash; not specified &mdash;</option>
+                  <option value="god">A God</option>
+                  <option value="force">A Force</option>
+                  <option value="philosophy">A Philosophy</option>
+                </select></div>
+              <div class="col"><label>Combat Abilities</label>
+                <select data-field="sp_combat" title="PHBR3 p.22, derived from what the priesthood may wear and wield. GOOD: metal armor and a good range of weapons -- five or more types, or a few high-damage ones. MEDIUM: no metal armor but a good weapon range, or metal armor with a poor one. POOR: no metal armor and few weapons. The book uses this to budget sphere access and hit dice, both of which you set directly below.">
+                  <option value="">&mdash; not specified &mdash;</option>
+                  <option value="good">Good</option>
+                  <option value="medium">Medium</option>
+                  <option value="poor">Poor</option>
+                </select></div>
+              <div class="col"></div>
+            </div>
             <div class="row" style="margin-top:8px">
               <div class="col">
                 <label>Second Prime Requisite</label>
@@ -2145,36 +2176,6 @@ const SHEET_HTML = `
               <option value="lesser">Lesser deity</option>
               <option value="demigod">Demi-god</option>
             </select></div>
-          </div>
-          <!-- PHBR3 ONLY. Hidden with the band off; owned by
-               renderSpecialtyPriestFaith in calc.js, which is the only thing
-               that writes display on either element.
-               SEPARATE FROM Deity Status, deliberately. That answers HOW
-               POWERFUL the being is; this answers WHAT KIND of thing it is, and
-               the two are independent -- Entropy is a Force and could be greater
-               or lesser. Folding them into one dropdown would make them mutually
-               exclusive and would leave an unfilled field reading as "a God",
-               which is what the kit gates test for.
-               NOT class-gated: a DM may write up a faith on any sheet. -->
-          <div class="sp-faith-note" style="display:none;margin-top:10px;padding:6px 8px;border-radius:var(--radius);font-size:11px;line-height:1.4;color:var(--muted);background:var(--glass);">
-            The row below describes the priesthood itself, and influences specialty priest characters (PHBR3).
-          </div>
-          <div class="row sp-faith-row" style="display:none;margin-top:8px">
-            <div class="col"><label>Faith Type</label>
-              <select data-field="sp_faith_type" title="PHBR3 p.11. A GOD is a powerful being, usually of human or greater intelligence, that wants its will imposed on the world. A FORCE is a natural or unnatural process -- magically powerful but not necessarily intelligent. Entropy, Nature, Magic and the Life-Death-Rebirth Cycle are Forces; druids tend to serve the Force of Nature rather than gods of nature. A PHILOSOPHY is an idea so widely believed that it draws magical energy the way a Force does, and stops generating any when nobody believes it. All three grant spells and powers identically; the distinction matters only to a few PHBR3 kits, which bar priests of Forces and Philosophies.">
-                <option value="">&mdash; not specified &mdash;</option>
-                <option value="god">A God</option>
-                <option value="force">A Force</option>
-                <option value="philosophy">A Philosophy</option>
-              </select></div>
-            <div class="col"><label>Combat Abilities</label>
-              <select data-field="sp_combat" title="PHBR3 p.22, derived from what the priesthood may wear and wield. GOOD: metal armor and a good range of weapons -- five or more types, or a few high-damage ones. MEDIUM: no metal armor but a good weapon range, or metal armor with a poor one. POOR: no metal armor and few weapons. The book uses this to budget sphere access and hit dice, both of which you set directly above; recorded here for reference and for the kits that gate on it.">
-                <option value="">&mdash; not specified &mdash;</option>
-                <option value="good">Good</option>
-                <option value="medium">Medium</option>
-                <option value="poor">Poor</option>
-              </select></div>
-            <div class="col"></div>
           </div>
         </section>
 
