@@ -10783,9 +10783,6 @@ function recalcAllOpenSheets() {
     // separate bugs in this codebase have had exactly that shape.
     if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(sheet);
     if (typeof renderSpecialtyPriestChecks === 'function') renderSpecialtyPriestChecks(sheet);
-    // renderArmorRestrictions and renderHenchmanLimits ARE inside
-    // recalculateAll and need no line here. renderClassGroupValidation is not,
-    // so it still does.
     if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(sheet);
     if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(sheet);
   });
@@ -10824,9 +10821,6 @@ function renderOneOptionalRule(listEl, key) {
       // Recalculate every open tab -- these rules affect movement, combat, etc.
       document.querySelectorAll('.sheet-container').forEach(sheet => {
         if (typeof recalculateAll === 'function') recalculateAll(sheet);
-        // renderArmorRestrictions and renderHenchmanLimits ARE inside
-        // recalculateAll and need no line here. renderClassGroupValidation is
-        // not, so it still does.
         if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(sheet);
         if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(sheet);
       });
