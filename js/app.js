@@ -8856,21 +8856,7 @@ function bindSheet(root, tab){
       // keystroke in a field none of them read.
       if (f === 'age' || f === 'race') {
         if (typeof renderAgingEffects === 'function') renderAgingEffects(root);
-      }
-      // THIS BANNER NOW HAS TEN SOURCES, NOT TWO. The comment that used to sit
-      // here said alignment and kit "feed only the two alignment checks" -- true
-      // when it was written, and false the moment validateKitAbilities,
-      // validateKitGender and validateKitPriesthood joined the sources array.
-      // Those read GENDER, the six ABILITY SCORES and the specialty priest
-      // fields, and none of them triggered a repaint: setting a kit's gender
-      // wrongly showed nothing until the player happened to touch alignment.
-      //
-      // Ability scores are NOT listed here -- their own listeners already end in
-      // recalculateAll, which carries this renderer.
-      if (f === 'alignment' || f === 'kit' || f === 'gender' || f === 'race' ||
-          f === 'sp_template_source' || f === 'sp_combat' || f === 'sp_faith_type') {
-        if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(root);
-      }
+      }      
     });
   });
 
@@ -16189,6 +16175,15 @@ function recalculateAll(root) {
   if (typeof renderClassStatus === 'function') renderClassStatus(root);
   if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(root);
   if (typeof renderSpecialtyPriestChecks === 'function') renderSpecialtyPriestChecks(root);
+  // THE BANNER GOES IN THE MAINTAINED LIST. It has ten sources reading a dozen
+  // fields -- class, race, alignment, kit, gender, six ability scores and three
+  // specialty priest fields -- and was driven by a hand-picked list of field
+  // names that had to be extended every time a validator was added. It never
+  // kept up: gender did not repaint it, ability scores did not, and applying a
+  // priesthood template did not, because that writes through val() and raises no
+  // change event at all. Nine separate fixes were made to that list before this
+  // one. A renderer whose inputs keep growing belongs here, not in a list.
+  if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(root);
   if (typeof populatePriesthoodTemplates === 'function') populatePriesthoodTemplates(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   if (typeof renderPrimeRequisiteBonus === 'function') renderPrimeRequisiteBonus(root);
