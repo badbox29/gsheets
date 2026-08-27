@@ -53,9 +53,14 @@ const SHEET_HTML = `
               <input data-field="title" type="text" placeholder="e.g. Frostbane, Warden of the Pass" title="Honorifics and epithets earned in play. Comma-separate several — a character may collect titles from different peoples. Kept SEPARATE from Name on purpose: Name is the save key and the export filename, so a title appended there would change where the character is stored.">
             </div>
           </div>
-		  <div class="row" style="margin-top:8px">
-            <div class="col"><label>Race</label><input data-field="race" type="text" list="race-options" autocomplete="off" title="The six player races. Subraces such as Grey Elf or Deep Gnome are fine — they resolve to their base race. Anything unrecognised is flagged, not blocked."></div>
-            <div class="col">
+		  <!-- KIT REQUIREMENT ADVISORY, identity half. Directly above the row
+	          holding Race, Gender and Alignment, which is what it reports on.
+	          Alignment is the commonest kit requirement in the file by a wide
+	          margin -- 65 kits carry one, against 17 for race and 2 for gender. -->
+	      <div class="kit-req-identity" style="display:none;margin-top:8px;padding:6px 8px;border-radius:var(--radius);font-size:11px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
+	      <div class="row" style="margin-top:8px">
+          <div class="col"><label>Race</label><input data-field="race" type="text" list="race-options" autocomplete="off" title="The six player races. Subraces such as Grey Elf or Deep Gnome are fine — they resolve to their base race. Anything unrecognised is flagged, not blocked."></div>
+              <div class="col">
               <label>Gender</label>
               <select data-field="gender">
                 <option value="">Please Select</option>
@@ -523,6 +528,13 @@ const SHEET_HTML = `
         <!-- Ability Scores -->
         <section class="section">
           <h3>Ability Scores</h3>
+          <!-- KIT REQUIREMENT ADVISORY, ability half. Directly under the heading
+               and above the scores it is about. Covers minimums (about 30 kits)
+               and the one MAXIMUM in the file -- the Barbarian requires
+               Intelligence NO HIGHER than 12, so a check that only looked for
+               scores that are too low would miss it. ADVISORY: the kit stays
+               selected and every bonus keeps applying. -->
+          <div class="kit-req-abilities" style="display:none;margin-bottom:10px;padding:6px 8px;border-radius:var(--radius);font-size:11px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
           <div class="stat-grid">
             <div class="stat">STR<br><input data-field="str" type="number" min="1" max="25"></div>
             <div class="stat">DEX<br><input data-field="dex" type="number" min="1" max="25"></div>
