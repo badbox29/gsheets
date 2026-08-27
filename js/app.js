@@ -8857,10 +8857,18 @@ function bindSheet(root, tab){
       if (f === 'age' || f === 'race') {
         if (typeof renderAgingEffects === 'function') renderAgingEffects(root);
       }
-      // Alignment and kit feed only the two alignment checks, so they take
-      // their own branch for exactly the same reason. Class changes are
-      // already covered by the list above.
-      if (f === 'alignment' || f === 'kit') {
+      // THIS BANNER NOW HAS TEN SOURCES, NOT TWO. The comment that used to sit
+      // here said alignment and kit "feed only the two alignment checks" -- true
+      // when it was written, and false the moment validateKitAbilities,
+      // validateKitGender and validateKitPriesthood joined the sources array.
+      // Those read GENDER, the six ABILITY SCORES and the specialty priest
+      // fields, and none of them triggered a repaint: setting a kit's gender
+      // wrongly showed nothing until the player happened to touch alignment.
+      //
+      // Ability scores are NOT listed here -- their own listeners already end in
+      // recalculateAll, which carries this renderer.
+      if (f === 'alignment' || f === 'kit' || f === 'gender' || f === 'race' ||
+          f === 'sp_template_source' || f === 'sp_combat' || f === 'sp_faith_type') {
         if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(root);
       }
     });
