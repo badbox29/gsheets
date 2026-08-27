@@ -11206,7 +11206,17 @@ function renderClassGroupValidation(root) {
     { heading: 'Alignment and class (PHB Ch.4)',
       problems: (typeof validateClassAlignment === 'function') ? validateClassAlignment(root) : [] },
     { heading: 'Alignment and kit (Complete handbooks)',
-      problems: (typeof validateKitAlignment === 'function') ? validateKitAlignment(root) : [] }
+      problems: (typeof validateKitAlignment === 'function') ? validateKitAlignment(root) : [] },
+    // The remaining kit requirements, which had no consumer until now. They join
+    // this banner rather than getting their own because that is what this
+    // function is for -- one banner, one heading per source when a source fires
+    // alone, and a Settings toggle each.
+    { heading: 'Ability scores and kit (Complete handbooks)',
+      problems: (typeof validateKitAbilities === 'function') ? validateKitAbilities(root) : [] },
+    { heading: 'Gender and kit (Complete handbooks)',
+      problems: (typeof validateKitGender === 'function') ? validateKitGender(root) : [] },
+    { heading: 'Priesthood and kit (PHBR3 Ch.4)',
+      problems: (typeof validateKitPriesthood === 'function') ? validateKitPriesthood(root) : [] }
   ];
 
   const active   = sources.filter(s => s.problems.length);
