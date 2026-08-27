@@ -9081,6 +9081,11 @@ function bindSheet(root, tab){
       // p.90 advisory counts specialized weapons -- neither repaints without
       // this, since renderWeaponProficiencies is in no shared refresh list.
       if (typeof renderWeaponProficiencies === 'function') renderWeaponProficiencies(root);
+      // sp_combat drives the p.22 sphere budget readout, and
+      // renderSphereAccessSummary is in recalcAllOpenSheets but NOT in
+      // recalculateAll -- its own three call sites are all sphere EDITS. Without
+      // this, changing Combat Abilities left the budget line stale.
+      if (typeof renderSphereAccessSummary === 'function') renderSphereAccessSummary(root);
     }
     // CLASS STATUS. Moving INTO a gating state withdraws saves, turning, class
     // abilities and spell access at once, so it asks first -- a misclick must
