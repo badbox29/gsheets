@@ -2026,6 +2026,104 @@ function getAppliedTemplate(root) {
   return list.find(p => (p.label || '') === src) || null;
 }
 
+// KIT REQUIREMENT ADVISORY. `requirements` has been populated across FOUR books
+// -- PHBR1, PHBR2, PHBR11 and PHBR3 -- and until now was read by NOTHING: there
+// was not one reference to `.requirements` anywhere in calc.js, app.js or
+// tables.js. This is that data's first consumer.
+//
+// SIX CHECKS across two banners. Ability minimums and the single maximum go
+// under the Ability Scores heading; alignment, race and gender go above the row
+// that holds them; priesthood rides in the existing .sp-checks banner, which
+// already sits outside the collapsible where a warning can be seen.
+//
+// ADVISE, NEVER BLOCK. The kit stays selected and every bonus keeps applying.
+// Some of these are things a DM waives routinely -- PHBR11's demi-ranger rules
+// are an optional experiment, and the gender requirements describe a culture
+// rather than a law of nature.
+//
+// TERRAIN IS DELIBERATELY NOT CHECKED. It appears on 13 kits: 10 ranger kits
+// from PHBR11 (verified) and 3 druid kits from PHBR13 (UNVERIFIED, and all three
+// carrying a word-for-word identical list, which is the signature of paraphrase).
+// It also needs a sheet field that does not exist. See project notes §8.
+//
+// maxLevel IS NOT A KIT CEILING and is not checked. All nine instances sit
+// inside demiRanger blocks and are the PHBR11 Table 53 demihuman level cap; the
+// data says so itself -- "maxLevel is reference only; the app models no level
+// limits."
+const KIT_REQ_ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+
+function renderKitRequirements(root) {
+  const abEl = root.querySelector('.kit-req-abilities');
+  const idEl = root.querySelector('.kit-req-identity');
+  if (!abEl && !idEl) return;
+
+  const kit = (typeof getSelectedKit === 'function') ? getSelectedKit(root) : null;
+  const req = kit && kit.requirements;
+  const ab = [], id = [];
+
+  if (req) {
+    // 1 & 2. ABILITY MINIMUMS, and the one MAXIMUM in the file -- the Barbarian
+    // requires Intelligence NO HIGHER than 12, so a low-only check would miss it.
+    KIT_REQ_ABILITIES.forEach(k => {
+      const have = parseInt(val(root, k) || 0, 10);
+      if (!have) return;                       // unset scores are not failures
+      if (req[k] && have < req[k]) {
+        ab.push((ABILITY_LABELS_SP[k] || k) + ' ' + req[k] + ' needed, ' + have + ' rolled');
+      }
+      const max = req[k + 'Max'];
+      if (max && have > max) {
+        ab.push((ABILITY_LABELS_SP[k] || k) + ' must be no higher than ' + max + ', ' + have + ' rolled');
+      }
+    });
+
+    // 3. ALIGNMENT -- the commonest kit requirement in the file, 65 of 101.
+    // "Any" and similar free text are not lists and cannot be matched.
+    if (Array.isArray(req.alignment) && req.alignment.length) {
+      const a = (val(root, 'alignment') || '').trim().toLowerCase();
+      const key = (typeof normalizeAlignmentKey === 'function') ? normalizeAlignmentKey(a) : a;
+      if (key && req.alignment.indexOf(key) === -1) {
+        id.push('Alignment: this kit asks for ' +
+          escapeHtml(req.alignment.map(x => (typeof ALIGNMENTS !== 'undefined' && ALIGNMENTS[x])
+            ? ALIGNMENTS[x].label : x).join(', ')) + '.');
+      }
+    }
+
+    // 4. RACE. getRaceKey resolves subraces, so "Grey Elf" tests as elf.
+    if (Array.isArray(req.race) && req.race.length && typeof getRaceKey === 'function') {
+      const rk = getRaceKey(val(root, 'race') || '');
+      if (rk && req.race.indexOf(rk) === -1) {
+        id.push('Race: this kit is open to ' + escapeHtml(req.race.join(', ')) + '.');
+      }
+    }
+
+    // 5. GENDER. Two kits, both Amazons. Stored as an array on both.
+    if (Array.isArray(req.gender) && req.gender.length) {
+      const g = (val(root, 'gender') || '').trim().toLowerCase();
+      if (g && req.gender.map(x => String(x).toLowerCase()).indexOf(g) === -1) {
+        id.push('Gender: this kit is described as ' + escapeHtml(req.gender.join(', ')) + '.');
+      }
+    }
+  }
+
+  const paint = (el, lines) => {
+    if (!el) return;
+    el.innerHTML = lines.length
+      ? '<strong>Kit requirements</strong> \u2014 advisory; the kit still applies.<br>' +
+        lines.map(escapeHtml).join('<br>')
+      : '';
+    el.style.display = lines.length ? '' : 'none';
+  };
+  // Identity lines are pre-escaped in places, so paint them raw and escape the
+  // ability lines, which are built entirely from numbers and fixed labels.
+  if (abEl) paint(abEl, ab);
+  if (idEl) {
+    idEl.innerHTML = id.length
+      ? '<strong>Kit requirements</strong> \u2014 advisory; the kit still applies.<br>' + id.join('<br>')
+      : '';
+    idEl.style.display = id.length ? '' : 'none';
+  }
+}
+
 // FOUR CROSS-CHECKS, three of them here and the sphere budget in
 // renderSphereAccessSummary where the counting already happens.
 //
