@@ -7671,7 +7671,6 @@ function loadSheet(root, data){
   // until something else triggers a recalculation.
   if (typeof renderClassStatus === 'function') renderClassStatus(root);
   if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(root);
-  if (typeof renderSpecialtyPriestFaith === 'function') renderSpecialtyPriestFaith(root);
   if (typeof renderSpecialtyPriestChecks === 'function') renderSpecialtyPriestChecks(root);
   if (typeof populatePriesthoodTemplates === 'function') populatePriesthoodTemplates(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
@@ -8892,7 +8891,6 @@ function bindSheet(root, tab){
   // Without this the Specialty Priest block stays hidden until the first edit.
   if (typeof renderClassStatus === 'function') renderClassStatus(root);
   if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(root);
-  if (typeof renderSpecialtyPriestFaith === 'function') renderSpecialtyPriestFaith(root);
   if (typeof renderSpecialtyPriestChecks === 'function') renderSpecialtyPriestChecks(root);
   if (typeof populatePriesthoodTemplates === 'function') populatePriesthoodTemplates(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
@@ -10780,7 +10778,6 @@ function recalcAllOpenSheets() {
     // here or it only repaints when something unrelated happens to fire. Five
     // separate bugs in this codebase have had exactly that shape.
     if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(sheet);
-    if (typeof renderSpecialtyPriestFaith === 'function') renderSpecialtyPriestFaith(sheet);
     if (typeof renderSpecialtyPriestChecks === 'function') renderSpecialtyPriestChecks(sheet);
     // renderArmorRestrictions and renderHenchmanLimits ARE inside
     // recalculateAll and need no line here. renderClassGroupValidation is not,
@@ -16183,7 +16180,6 @@ function recalculateAll(root) {
   // so it settles before the bonus is computed from it.
   if (typeof renderClassStatus === 'function') renderClassStatus(root);
   if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(root);
-  if (typeof renderSpecialtyPriestFaith === 'function') renderSpecialtyPriestFaith(root);
   if (typeof renderSpecialtyPriestChecks === 'function') renderSpecialtyPriestChecks(root);
   if (typeof populatePriesthoodTemplates === 'function') populatePriesthoodTemplates(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
