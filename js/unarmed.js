@@ -22,6 +22,7 @@ fetch('js/core_unarmed_martial_arts.json')
         if (typeof renderUnarmedTables === 'function') renderUnarmedTables(sheet);
       });
     }
+    console.log('Unarmed combat loaded:',
       (data.styles || []).length + ' styles, ' +
       ((data.martialArtsResults && data.martialArtsResults.rows) || []).length + ' martial arts rows, ' +
       ((data.phbTable58 && data.phbTable58.rows) || []).length + ' punch/wrestle rows');
