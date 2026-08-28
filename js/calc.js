@@ -2026,6 +2026,104 @@ function getAppliedTemplate(root) {
   return list.find(p => (p.label || '') === src) || null;
 }
 
+// UNARMED COMBAT (PHBR1 pp.74-78). Owns the .unarmed-styles block: visibility,
+// the derived readout, and the advisory.
+//
+// SLOT COUNTS, NOT SPECIALIZATION LEVELS. The select value is how many weapon
+// proficiency slots the character has put into that style, because the two do
+// not line up across the three: everyone already knows punching and wrestling,
+// so ONE slot buys specialization outright, while Martial Arts costs a slot
+// merely to KNOW and a second to specialize. One honest number in the field,
+// and the bonuses derived from it here.
+//
+// THE BONUS LADDER (p.78, Continuing Specialization): the first specializing
+// slot gives +1/+1/+1, and EACH FURTHER slot gives another +1 to hit, +1 to
+// damage and +1 chart bonus.
+const UNARMED_STYLES = [
+  { field: 'unarmed_punching',     label: 'Punching',     specAt: 1 },
+  { field: 'unarmed_wrestling',    label: 'Wrestling',    specAt: 1 },
+  { field: 'unarmed_martial_arts', label: 'Martial Arts', specAt: 2 }
+];
+
+function unarmedBonus(slots, specAt) {
+  const n = parseInt(slots, 10) || 0;
+  return n < specAt ? 0 : (n - specAt) + 1;
+}
+
+function renderUnarmedStyles(root) {
+  const box = root.querySelector('.unarmed-styles');
+  if (!box) return;
+  const on = (typeof isSupplementActive === 'function') &&
+             isSupplementActive('phbr1', 'unarmedCombat');
+  box.style.display = on ? '' : 'none';
+  if (!on) return;
+
+  const sumEl = root.querySelector('.unarmed-summary');
+  const advEl = root.querySelector('.unarmed-advisory');
+  const parts = [], warn = [];
+  let specialized = 0;
+
+  UNARMED_STYLES.forEach(s => {
+    const slots = parseInt(val(root, s.field), 10) || 0;
+    if (!slots) return;
+    const b = unarmedBonus(slots, s.specAt);
+    if (!b) {
+      // Martial Arts at exactly one slot: known, not specialized.
+      parts.push('<strong>' + s.label + '</strong> known, not specialized');
+      return;
+    }
+    specialized++;
+    parts.push('<strong>' + s.label + '</strong> +' + b + ' to hit, +' + b +
+               ' damage, +' + b + ' chart bonus');
+  });
+
+  // ONE STYLE ONLY, for most characters (p.77). A single-class Warrior and the
+  // PHBR3 Fighting-Monk are the exceptions, which is why this tests the KIT and
+  // not the class alone.
+  const clazz  = (val(root, 'clazz') || '').toLowerCase();
+  const single = (val(root, 'char_type') || 'single').toLowerCase() === 'single';
+  const kitVal = (val(root, 'kit') || '').trim().toLowerCase();
+  const isWarrior = single && (typeof getClassCategory === 'function') &&
+                    getClassCategory(clazz) === 'warrior';
+  const isMonk    = kitVal === 'fightingmonk';
+  const mayHaveMany = isWarrior || isMonk;
+
+  if (specialized > 1 && !mayHaveMany) {
+    warn.push('PHBR1 p.77: any character may specialize in ONE of the three unarmed styles. ' +
+              'Only a single-class warrior \u2014 or the Fighting-Monk from PHBR3 \u2014 may take more.');
+  }
+  const continuing = UNARMED_STYLES.filter(s =>
+    unarmedBonus(val(root, s.field), s.specAt) > 1).map(s => s.label);
+  if (continuing.length && !mayHaveMany) {
+    warn.push('PHBR1 p.78: Continuing Specialization \u2014 spending further slots for another ' +
+              '+1 each \u2014 is open only to single-class warriors and Fighting-Monks. ' +
+              'This character has it in ' + escapeHtml(continuing.join(', ')) + '.');
+  }
+  // A Rogue may take no weapon specialization at all, but may still take ONE
+  // unarmed style (p.75). Worth stating, because it reads like a contradiction.
+  if (specialized === 1 && (typeof getClassCategory === 'function') &&
+      getClassCategory(clazz) === 'rogue') {
+    parts.push('<span style="color:var(--muted);">A rogue may take one unarmed style ' +
+               'specialization even though he may take no weapon specialization (p.75).</span>');
+  }
+
+  if (sumEl) {
+    sumEl.innerHTML = parts.length
+      ? parts.join(' <span style="color:var(--muted);">\u00B7</span> ') +
+        '<br><span style="color:var(--muted);">One extra unarmed attack per round while both ' +
+        'hands are free and empty. Chart bonus of +2 or more lets you choose any maneuver in ' +
+        'range on the results table.</span>'
+      : '<span style="color:var(--muted);">Everyone can punch and wrestle without spending a ' +
+        'slot. Specializing buys +1 to hit, +1 damage and a +1 chart bonus.</span>';
+  }
+  if (advEl) {
+    advEl.innerHTML = warn.length
+      ? '<strong>Unarmed combat</strong> \u2014 advisory; nothing is blocked.<br>' + warn.join('<br>')
+      : '';
+    advEl.style.display = warn.length ? '' : 'none';
+  }
+}
+
 // KIT REQUIREMENT CHECKS ARE NOT HERE. They live in tables.js as
 // validateKitAbilities, validateKitGender and validateKitPriesthood, feeding
 // renderClassGroupValidation's shared banner alongside validateKitAlignment.
