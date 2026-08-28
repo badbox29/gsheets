@@ -9082,6 +9082,11 @@ function bindSheet(root, tab){
     }
     if (f && /^unarmed_(punching|wrestling|martial_arts)$/.test(f)) {
       if (typeof renderUnarmedStyles === 'function') renderUnarmedStyles(root);
+      // These slots are charged against the weapon proficiency budget by
+      // getUnarmedStyleSlots, so the COUNTER has to repaint too -- the readout
+      // above only draws the bonuses. Same omission as the armed styles once
+      // had; see the fighting-style branch, which calls this for the same reason.
+      if (typeof renderProficiencySlots === 'function') renderProficiencySlots(root);
     }
     if (f && /^sp_(prime_req2|hit_die|crossover|language_slot|weapon_spec|restrictions|restrict_\w+|faith_type|combat)$/.test(f)) {
       // MODIFIED-DETECTION. Any edit to any specialty priest field diverges the
