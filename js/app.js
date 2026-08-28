@@ -7689,6 +7689,7 @@ function loadSheet(root, data){
   if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(root);
   if (typeof renderSpecialtyPriestChecks === 'function') renderSpecialtyPriestChecks(root);
   if (typeof renderUnarmedStyles === 'function') renderUnarmedStyles(root);
+  if (typeof renderUnarmedTables === 'function') renderUnarmedTables(root);
   if (typeof populatePriesthoodTemplates === 'function') populatePriesthoodTemplates(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   renderCoinWeight(root);
@@ -8914,6 +8915,7 @@ function bindSheet(root, tab){
   if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(root);
   if (typeof renderSpecialtyPriestChecks === 'function') renderSpecialtyPriestChecks(root);
   if (typeof renderUnarmedStyles === 'function') renderUnarmedStyles(root);
+  if (typeof renderUnarmedTables === 'function') renderUnarmedTables(root);
   if (typeof populatePriesthoodTemplates === 'function') populatePriesthoodTemplates(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   renderCoinWeight(root);
@@ -9082,6 +9084,7 @@ function bindSheet(root, tab){
     }
     if (f && /^unarmed_(punching|wrestling|martial_arts)$/.test(f)) {
       if (typeof renderUnarmedStyles === 'function') renderUnarmedStyles(root);
+	  if (typeof renderUnarmedTables === 'function') renderUnarmedTables(root);
       // These slots are charged against the weapon proficiency budget by
       // getUnarmedStyleSlots, so the COUNTER has to repaint too -- the readout
       // above only draws the bonuses. Same omission as the armed styles once
@@ -10810,6 +10813,7 @@ function recalcAllOpenSheets() {
     if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(sheet);
     if (typeof renderSpecialtyPriestChecks === 'function') renderSpecialtyPriestChecks(sheet);
     if (typeof renderUnarmedStyles === 'function') renderUnarmedStyles(sheet);
+	if (typeof renderUnarmedTables === 'function') renderUnarmedTables(sheet);
     if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(sheet);
     if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(sheet);
   });
@@ -16207,6 +16211,7 @@ function recalculateAll(root) {
   if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(root);
   if (typeof renderSpecialtyPriestChecks === 'function') renderSpecialtyPriestChecks(root);
   if (typeof renderUnarmedStyles === 'function') renderUnarmedStyles(root);
+  if (typeof renderUnarmedTables === 'function') renderUnarmedTables(root);
   // THE BANNER GOES IN THE MAINTAINED LIST. It has ten sources reading a dozen
   // fields -- class, race, alignment, kit, gender, six ability scores and three
   // specialty priest fields -- and was driven by a hand-picked list of field
