@@ -3,7 +3,7 @@
     "what": "Unarmed combat: Punching, Wrestling and Martial Arts. PHBR1 The Complete Fighter's Handbook, book pp.74-78, with PHB pp.97-98 as the base rules PHBR1 elaborates on.",
     "replaces": "THIS FILE REPLACES A FABRICATED ONE. The previous core_unarmed_martial_arts.json held 63 rows of invented content -- named styles such as Tae Kwon Do, Judo, Tai Chi Chuan, Praying Mantis, Eagle Claw, Black Tiger, Iron Body and Pressure Points, each with slot costs and damage dice, 29 of them attributed to 'Complete Fighter'. A search of all 129 pages of PHBR1 found 21 of 22 sampled names ABSENT FROM THE BOOK ENTIRELY; the one hit for 'Boxing' was an incidental use of the word. Meanwhile the maneuvers PHBR1 actually prints -- Rabbit Punch, Kidney Punch, Wild Swing, Head Punch, Elbow Shot, Vitals-Punch -- did not appear in that file at all. It was read by nothing and had sat in js/ looking authoritative for a long time.",
     "shape": "PHBR1 HAS THREE STYLES AND ONE RESULTS TABLE, not a catalogue of named arts. The old file's shape was wrong as well as its content.",
-    "phbDependency": "THE PUNCHING AND WRESTLING RESULTS TABLE IS NOT IN PHBR1. It is PHB Table 57, p.97, and PHBR1 only refers to it -- 'Review the Punch rules from the Player's Handbook, page 98.' Its maneuvers (Wild Swing, Rabbit Punch, Kidney Punch, Glancing Blow, Jab, Uppercut, Hook, Elbow Smash, Trip, Arm Lock, Kick) are named in PHBR1's examples but never tabulated there. That table is NOT transcribed here and must come from the PHB if it is ever wanted.",
+    "phbDependency": "TWO PHB TABLES ARE INVOLVED AND THEY ARE EASY TO CONFUSE. PHB TABLE 57 is Armor Modifiers For Wrestling -- a to-hit penalty by the armor worn. PHB TABLE 58 is Punching and Wrestling Results -- the attack-roll lookup. PHBR1 does not reprint either; it refers to them. Both are transcribed below from the Player's Handbook so the app has them, since the unarmed rules cannot be used without them.",
     "notOrientalAdventures": "The old file marked 30 rows 'Oriental Adventures', a 1st EDITION book outside this project's 2e scope. None are carried over. PHBR1 p.76 is explicit that its Martial Arts 'aren't any real-world fighting style; they're a combination of generic martial-arts maneuvers in the tradition of martial-arts movies.'",
     "transcribedFrom": "Page images of book pp.74-78. Never from OCR or memory."
   },
@@ -17,7 +17,7 @@
       "slotsToSpecialize": 1,
       "baseDamage": "1-2, plus Strength bonus. A punch with a metal gauntlet does 1-3 plus Strength bonus.",
       "temporaryDamage": "75% of all punching damage is TEMPORARY and wears off within minutes after the combat is concluded.",
-      "resultsTable": "phbTable57",
+      "resultsTable": "phbTable58",
       "specialization": {
         "toHit": 1,
         "damage": 1,
@@ -36,7 +36,7 @@
       "slotsToSpecialize": 1,
       "baseDamage": "1 point per successful move, plus Strength bonus if the attacker desires. A continued hold causes cumulatively 1 more point of damage each round than the round before.",
       "temporaryDamage": "As with punching damage, wrestling damage is also temporary.",
-      "resultsTable": "phbTable57",
+      "resultsTable": "phbTable58",
       "specialization": {
         "toHit": 1,
         "damage": "All maneuvers do 2 points of damage plus Strength bonus, and continued holds cause cumulatively 1 more point of damage for each round they are held.",
@@ -44,7 +44,7 @@
         "strengthForHolds": "+2 to Strength, ONLY for maintaining a wrestling hold. A Strength 15 character rolls against Strength 17 when maintaining a hold, but only for that purpose.",
         "pullDamage": "When he chooses to pull wrestling damage, the character may also pull the +2 to damage granted by specialization."
       },
-      "notes": "Both characters roll normal attack rolls against the opponent's AC, using the Armor Modifiers For Wrestling table on PHB p.97. Results marked with an asterisk on PHB Table 57 mean the attacker, if successful, can maintain that hold until it is broken -- use the Strength-roll rules described for the Grab maneuver to determine when holds are broken. A character can pull wrestling damage: no damage, or the 1 point associated with each successful maneuver, or the 1 point plus Strength bonus, whichever he chooses."
+      "notes": "Both characters roll normal attack rolls against the opponent's AC, using PHB Table 57, Armor Modifiers For Wrestling, p.97. Results marked with an asterisk on PHB Table 58 mean the attacker, if successful, can maintain that hold until it is broken -- use the Strength-roll rules described for the Grab maneuver to determine when holds are broken. A character can pull wrestling damage: no damage, or the 1 point associated with each successful maneuver, or the 1 point plus Strength bonus, whichever he chooses."
     },
     {
       "key": "martialarts",
@@ -63,7 +63,7 @@
         "extraAttacks": "One additional Martial Arts attack per combat round. BOTH HANDS MUST BE FREE and holding nothing for the character to gain this benefit.",
         "pullAttack": "He may pull his attack just as Punching and Wrestling characters do, and when he pulls his attack he can also refuse to do the +1 damage that specialization gives him."
       },
-      "notes": "AVAILABLE ONLY IF THE DM DECIDES the art exists in the campaign. He must first decide whether he wants characters able to use these maneuvers, which will tend to give the campaign a more oriental flavor; then, if he wishes to use them, he needs to establish a history for these combat abilities -- customarily they were developed by some distant civilization, and recent trade with that culture has brought some practitioners and teachers of the art to the player-characters' society. No weapons are used. A character CAN hold a weapon in one hand and nothing in the other, attacking with his weapon one round and with his Martial Arts skill in the next. The character makes a normal attack roll against the normal Armor Class of the target -- if the ATTACKING character has armor on, he DOES suffer the Armor Modifiers For Wrestling from PHB Table 57."
+      "notes": "AVAILABLE ONLY IF THE DM DECIDES the art exists in the campaign. He must first decide whether he wants characters able to use these maneuvers, which will tend to give the campaign a more oriental flavor; then, if he wishes to use them, he needs to establish a history for these combat abilities -- customarily they were developed by some distant civilization, and recent trade with that culture has brought some practitioners and teachers of the art to the player-characters' society. No weapons are used. A character CAN hold a weapon in one hand and nothing in the other, attacking with his weapon one round and with his Martial Arts skill in the next. The character makes a normal attack roll against the normal Armor Class of the target -- if the ATTACKING character has armor on, he DOES suffer the Armor Modifiers For Wrestling, PHB Table 57."
     }
   ],
   "martialArtsResults": {
@@ -254,5 +254,208 @@
     },
     "orientalCampaigns": "PHBR1 p.78 notes a change for oriental settings; the rule continues past the page read and is not transcribed here.",
     "fightingMonk": "PHBR1 p.74 forward-references the Fighting-Monk as 'described in The Complete Priest's Handbook' -- the two books were written to interlock. PHBR3's kit gives two free weapon proficiency slots which MUST be spent on unarmed specialization, and makes the Fighting-Monk the only priest who can specialize in an unarmed combat style. See kits.js, cleric.fightingmonk."
+  },
+  "phbTable58": {
+    "label": "Punching and Wrestling Results",
+    "source": "PHB Table 58",
+    "note": "ONE ROLL, TWO COLUMNS: the same attack roll gives a Punch result and a Wrestle result, and the character uses whichever he was attempting. An asterisk on a Wrestle result means the hold can be maintained from round to round until broken. Unlike the Martial Arts table, DAMAGE DOES NOT RISE MONOTONICALLY toward the ends -- a 19 Wild Swing does 0 damage and a 20+ Haymaker does 2. Encode as a plain lookup.",
+    "holdMarker": "*",
+    "rows": [
+      {
+        "roll": "20+",
+        "punch": "Haymaker",
+        "damage": 2,
+        "koPercent": 10,
+        "wrestle": "Bear hug",
+        "hold": true
+      },
+      {
+        "roll": "19",
+        "punch": "Wild swing",
+        "damage": 0,
+        "koPercent": 1,
+        "wrestle": "Arm twist",
+        "hold": false
+      },
+      {
+        "roll": "18",
+        "punch": "Rabbit punch",
+        "damage": 1,
+        "koPercent": 3,
+        "wrestle": "Kick",
+        "hold": false
+      },
+      {
+        "roll": "17",
+        "punch": "Kidney punch",
+        "damage": 1,
+        "koPercent": 5,
+        "wrestle": "Trip",
+        "hold": false
+      },
+      {
+        "roll": "16",
+        "punch": "Glancing blow",
+        "damage": 1,
+        "koPercent": 2,
+        "wrestle": "Elbow smash",
+        "hold": false
+      },
+      {
+        "roll": "15",
+        "punch": "Jab",
+        "damage": 2,
+        "koPercent": 6,
+        "wrestle": "Arm lock",
+        "hold": true
+      },
+      {
+        "roll": "14",
+        "punch": "Uppercut",
+        "damage": 1,
+        "koPercent": 8,
+        "wrestle": "Leg twist",
+        "hold": false
+      },
+      {
+        "roll": "13",
+        "punch": "Hook",
+        "damage": 2,
+        "koPercent": 9,
+        "wrestle": "Leg lock",
+        "hold": false
+      },
+      {
+        "roll": "12",
+        "punch": "Kidney punch",
+        "damage": 1,
+        "koPercent": 5,
+        "wrestle": "Throw",
+        "hold": false
+      },
+      {
+        "roll": "11",
+        "punch": "Hook",
+        "damage": 2,
+        "koPercent": 10,
+        "wrestle": "Gouge",
+        "hold": false
+      },
+      {
+        "roll": "10",
+        "punch": "Glancing blow",
+        "damage": 1,
+        "koPercent": 3,
+        "wrestle": "Elbow smash",
+        "hold": false
+      },
+      {
+        "roll": "9",
+        "punch": "Combination",
+        "damage": 1,
+        "koPercent": 10,
+        "wrestle": "Leg lock",
+        "hold": true
+      },
+      {
+        "roll": "8",
+        "punch": "Uppercut",
+        "damage": 1,
+        "koPercent": 9,
+        "wrestle": "Headlock",
+        "hold": true
+      },
+      {
+        "roll": "7",
+        "punch": "Combination",
+        "damage": 2,
+        "koPercent": 10,
+        "wrestle": "Throw",
+        "hold": false
+      },
+      {
+        "roll": "6",
+        "punch": "Jab",
+        "damage": 2,
+        "koPercent": 8,
+        "wrestle": "Gouge",
+        "hold": false
+      },
+      {
+        "roll": "5",
+        "punch": "Glancing blow",
+        "damage": 1,
+        "koPercent": 3,
+        "wrestle": "Kick",
+        "hold": false
+      },
+      {
+        "roll": "4",
+        "punch": "Rabbit punch",
+        "damage": 2,
+        "koPercent": 5,
+        "wrestle": "Arm lock",
+        "hold": true
+      },
+      {
+        "roll": "3",
+        "punch": "Hook",
+        "damage": 2,
+        "koPercent": 12,
+        "wrestle": "Gouge",
+        "hold": false
+      },
+      {
+        "roll": "2",
+        "punch": "Uppercut",
+        "damage": 2,
+        "koPercent": 15,
+        "wrestle": "Headlock",
+        "hold": true
+      },
+      {
+        "roll": "1",
+        "punch": "Wild swing",
+        "damage": 0,
+        "koPercent": 2,
+        "wrestle": "Leg twist",
+        "hold": false
+      },
+      {
+        "roll": "Less than 1",
+        "punch": "Haymaker",
+        "damage": 2,
+        "koPercent": 25,
+        "wrestle": "Bearhug",
+        "hold": true
+      }
+    ]
+  },
+  "phbTable57": {
+    "label": "Armor Modifiers For Wrestling",
+    "source": "PHB Table 57",
+    "note": "A TO-HIT MODIFIER applied when wrestling a target in this armor -- and also applied to the ATTACKER when he wrestles or uses Martial Arts while wearing it himself (PHBR1 pp.75-76). Armor lighter than studded leather carries no modifier.",
+    "rows": [
+      {
+        "armor": "Studded leather",
+        "modifier": -1
+      },
+      {
+        "armor": "Chain, ring, and scale mail",
+        "modifier": -2
+      },
+      {
+        "armor": "Banded, splint, and plate mail",
+        "modifier": -5
+      },
+      {
+        "armor": "Field plate armor",
+        "modifier": -8
+      },
+      {
+        "armor": "Full plate armor",
+        "modifier": -10
+      }
+    ]
   }
 }
