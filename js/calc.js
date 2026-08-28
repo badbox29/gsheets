@@ -2130,6 +2130,133 @@ function renderUnarmedStyles(root) {
   }
 }
 
+// The Tools-tab companion to the maneuvers panel. Renders the three lookup
+// tables from UNARMED_DATA -- no game data lives in this function or in the
+// markup it fills.
+//
+// THE TABLES ARE LIVE, NOT INERT. A chart bonus lets the character choose any
+// maneuver within its range on a given roll, which no static table can show, so
+// the rows in reach of his bonus are marked and the panel repaints when his
+// specialization changes.
+function unarmedRow(cells, opts) {
+  const o = opts || {};
+  return '<div style="display:flex;gap:10px;padding:3px 6px;border-radius:3px;' +
+         (o.highlight ? 'background:color-mix(in srgb, var(--accent) 14%, transparent);' : '') +
+         (o.head ? 'font-size:11px;color:var(--muted);border-bottom:1px solid var(--border);' : 'font-size:12px;') +
+         '">' + cells.map(c =>
+           '<span style="' + (c.w || 'flex:1') + ';' + (c.style || '') + '">' +
+           escapeHtml(String(c.t)) + '</span>').join('') + '</div>';
+}
+
+function renderUnarmedTables(root) {
+  const sec = root.querySelector('.unarmed-section');
+  if (!sec) return;
+  const on = (typeof isSupplementActive === 'function') &&
+             isSupplementActive('phbr1', 'unarmedCombat');
+  sec.style.display = on ? '' : 'none';
+  if (!on) return;
+  const D = (typeof UNARMED_DATA !== 'undefined') ? UNARMED_DATA : null;
+  if (!D) return;
+
+  const slots = f => { const v = parseInt(val(root, f), 10); return isNaN(v) ? 0 : v; };
+  const maSlots = slots('unarmed_martial_arts');
+  const maBonus = (typeof unarmedBonus === 'function') ? unarmedBonus(maSlots, 2) : 0;
+  const pBonus  = (typeof unarmedBonus === 'function') ? unarmedBonus(slots('unarmed_punching'), 1) : 0;
+  const wBonus  = (typeof unarmedBonus === 'function') ? unarmedBonus(slots('unarmed_wrestling'), 1) : 0;
+
+  const intro = sec.querySelector('.unarmed-tables-intro');
+  if (intro) intro.textContent =
+    'Everyone can punch and wrestle without spending a slot. Martial Arts must be learned, ' +
+    'and exists only if your DM says it does. Damage is mostly temporary: 75% of punching ' +
+    'and wrestling damage, and 75% of martial arts damage, wears off after the fight.';
+
+  // What the character actually has, so the tables below are not abstract.
+  const bEl = sec.querySelector('.unarmed-tables-bonuses');
+  if (bEl) {
+    const bits = [];
+    if (pBonus) bits.push('Punching +' + pBonus + ' hit, +' + pBonus + ' damage, chart +' + pBonus);
+    if (wBonus) bits.push('Wrestling +' + wBonus + ' hit, +' + wBonus + ' damage, chart +' + wBonus);
+    if (maSlots === 1) bits.push('Martial Arts known, not specialized');
+    else if (maBonus) bits.push('Martial Arts +' + maBonus + ' hit, +' + maBonus + ' damage, chart +' + maBonus);
+    bEl.innerHTML = bits.length
+      ? '<div style="font-size:12px;line-height:1.6;">' + bits.map(escapeHtml).join(
+          ' <span style="color:var(--muted);">\u00B7</span> ') +
+        '<div style="font-size:11px;color:var(--muted);margin-top:2px;">Rows within reach of ' +
+        'your chart bonus are highlighted. With +2 or more you may choose any maneuver in that ' +
+        'range.</div></div>'
+      : '<div style="font-size:11px;color:var(--muted);">You have not specialized in an unarmed ' +
+        'style. Set one on the Proficiencies tab to see your chart bonus applied below.</div>';
+  }
+
+  // --- Martial Arts Results (PHBR1 p.76). Shown only if he knows the style. ---
+  const maEl = sec.querySelector('.unarmed-table-ma');
+  if (maEl) {
+    if (!maSlots) { maEl.innerHTML = ''; }
+    else {
+      const rows = (D.martialArtsResults && D.martialArtsResults.rows) || [];
+      maEl.innerHTML =
+        '<h4 style="font-size:12px;margin:0 0 6px;">Martial Arts Results</h4>' +
+        unarmedRow([{t:'Roll',w:'width:70px'},{t:'Maneuver',w:'flex:1'},
+                    {t:'Dmg',w:'width:50px'},{t:'% KO',w:'width:50px'}], {head:true}) +
+        rows.map((r, i) =>
+          unarmedRow([{t:r.roll,w:'width:70px'},{t:r.maneuver,w:'flex:1'},
+                      {t:r.damage,w:'width:50px'},{t:r.koPercent + '%',w:'width:50px'}],
+                     {highlight: maBonus > 0})).join('') +
+        (maBonus > 0
+          ? '<div style="font-size:11px;color:var(--muted);margin-top:4px;">Your +' + maBonus +
+            ' chart bonus lets you shift your rolled result up or down by ' + maBonus +
+            ' row' + (maBonus > 1 ? 's' : '') + ' and take any maneuver in that range.</div>'
+          : '');
+    }
+  }
+
+  // --- Maneuver descriptions, collapsed. ---
+  const dEl = sec.querySelector('.unarmed-maneuver-descriptions');
+  if (dEl) {
+    dEl.innerHTML = (!maSlots) ? '' :
+      '<details><summary style="cursor:pointer;font-size:12px;color:var(--accent);">' +
+      'What each maneuver is</summary><div style="padding:6px 2px;font-size:12px;line-height:1.6;">' +
+      (D.maneuvers || []).map(m =>
+        '<div style="margin-bottom:3px;"><strong>' + escapeHtml(m.name) + '</strong> \u2014 ' +
+        escapeHtml(m.description) + '</div>').join('') + '</div></details>';
+  }
+
+  // --- Punching and Wrestling Results (PHB Table 58). Always shown. ---
+  const pwEl = sec.querySelector('.unarmed-table-pw');
+  if (pwEl) {
+    const t58 = D.phbTable58 || {};
+    const hi = Math.max(pBonus, wBonus);
+    pwEl.innerHTML =
+      '<h4 style="font-size:12px;margin:0 0 6px;">Punching and Wrestling Results ' +
+      '<span style="font-weight:400;color:var(--muted);font-size:11px;">(PHB Table 58)</span></h4>' +
+      unarmedRow([{t:'Roll',w:'width:70px'},{t:'Punch',w:'flex:1'},{t:'Dmg',w:'width:44px'},
+                  {t:'% KO',w:'width:44px'},{t:'Wrestle',w:'flex:1'}], {head:true}) +
+      (t58.rows || []).map(r =>
+        unarmedRow([{t:r.roll,w:'width:70px'},{t:r.punch,w:'flex:1'},{t:r.damage,w:'width:44px'},
+                    {t:r.koPercent + '%',w:'width:44px'},
+                    {t:r.wrestle + (r.hold ? '  \u21bb held' : ''),w:'flex:1',
+                     style: r.hold ? 'color:var(--accent-light);' : ''}],
+                   {highlight: hi > 0})).join('') +
+      '<div style="font-size:11px;color:var(--muted);margin-top:4px;">' +
+      '\u21bb held \u2014 the hold can be maintained round to round until broken. ' +
+      'One roll gives both columns; use whichever you were attempting.</div>';
+  }
+
+  // --- Armor Modifiers for Wrestling (PHB Table 57). ---
+  const arEl = sec.querySelector('.unarmed-table-armor');
+  if (arEl) {
+    const t57 = D.phbTable57 || {};
+    arEl.innerHTML =
+      '<h4 style="font-size:12px;margin:0 0 6px;">Armor Modifiers for Wrestling ' +
+      '<span style="font-weight:400;color:var(--muted);font-size:11px;">(PHB Table 57)</span></h4>' +
+      unarmedRow([{t:'Armor',w:'flex:1'},{t:'Modifier',w:'width:80px'}], {head:true}) +
+      (t57.rows || []).map(r =>
+        unarmedRow([{t:r.armor,w:'flex:1'},{t:r.modifier,w:'width:80px'}])).join('') +
+      '<div style="font-size:11px;color:var(--muted);margin-top:4px;">' +
+      escapeHtml(t57.note || '') + '</div>';
+  }
+}
+
 // KIT REQUIREMENT CHECKS ARE NOT HERE. They live in tables.js as
 // validateKitAbilities, validateKitGender and validateKitPriesthood, feeding
 // renderClassGroupValidation's shared banner alongside validateKitAlignment.
