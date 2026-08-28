@@ -2141,7 +2141,6 @@ function renderUnarmedStyles(root) {
 function unarmedRow(cells, opts) {
   const o = opts || {};
   return '<div style="display:flex;gap:10px;padding:3px 6px;border-radius:3px;' +
-         (o.highlight ? 'background:color-mix(in srgb, var(--accent) 14%, transparent);' : '') +
          (o.head ? 'font-size:11px;color:var(--muted);border-bottom:1px solid var(--border);' : 'font-size:12px;') +
          '">' + cells.map(c =>
            '<span style="' + (c.w || 'flex:1') + ';' + (c.style || '') + '">' +
@@ -2200,8 +2199,8 @@ function renderUnarmedTables(root) {
                     {t:'Dmg',w:'width:50px'},{t:'% KO',w:'width:50px'}], {head:true}) +
         rows.map((r, i) =>
           unarmedRow([{t:r.roll,w:'width:70px'},{t:r.maneuver,w:'flex:1'},
-                      {t:r.damage,w:'width:50px'},{t:r.koPercent + '%',w:'width:50px'}],
-                     {highlight: maBonus > 0})).join('') +
+                      {t:r.damage,w:'width:50px'},{t:r.koPercent + '%',w:'width:50px'}]
+                     )).join('') +
         (maBonus > 0
           ? '<div style="font-size:11px;color:var(--muted);margin-top:4px;">Your +' + maBonus +
             ' chart bonus lets you shift your rolled result up or down by ' + maBonus +
@@ -2225,7 +2224,6 @@ function renderUnarmedTables(root) {
   const pwEl = sec.querySelector('.unarmed-table-pw');
   if (pwEl) {
     const t58 = D.phbTable58 || {};
-    const hi = Math.max(pBonus, wBonus);
     pwEl.innerHTML =
       '<h4 style="font-size:12px;margin:0 0 6px;">Punching and Wrestling Results ' +
       '<span style="font-weight:400;color:var(--muted);font-size:11px;">(PHB Table 58)</span></h4>' +
@@ -2235,8 +2233,8 @@ function renderUnarmedTables(root) {
         unarmedRow([{t:r.roll,w:'width:70px'},{t:r.punch,w:'flex:1'},{t:r.damage,w:'width:44px'},
                     {t:r.koPercent + '%',w:'width:44px'},
                     {t:r.wrestle + (r.hold ? '  \u21bb held' : ''),w:'flex:1',
-                     style: r.hold ? 'color:var(--accent-light);' : ''}],
-                   {highlight: hi > 0})).join('') +
+                     style: r.hold ? 'color:var(--accent-light);' : ''}]
+                   )).join('') +
       '<div style="font-size:11px;color:var(--muted);margin-top:4px;">' +
       '\u21bb held \u2014 the hold can be maintained round to round until broken. ' +
       'One roll gives both columns; use whichever you were attempting.</div>';
