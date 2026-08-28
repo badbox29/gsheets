@@ -10804,7 +10804,7 @@ function recalcAllOpenSheets() {
     // separate bugs in this codebase have had exactly that shape.
     if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(sheet);
     if (typeof renderSpecialtyPriestChecks === 'function') renderSpecialtyPriestChecks(sheet);
-    if (typeof renderUnarmedStyles === 'function') renderUnarmedStyles(root);
+    if (typeof renderUnarmedStyles === 'function') renderUnarmedStyles(sheet);
     if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(sheet);
     if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(sheet);
   });
