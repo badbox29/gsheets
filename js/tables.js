@@ -7227,6 +7227,19 @@ const OPTIONAL_RULES = {
     category: 'supplement',
     default: false
   },
+  unarmedCombatPHBR1: {
+    label:   'Unarmed combat: punching, wrestling and martial arts (Complete Fighter\u2019s Handbook)',
+    detail:  'PHBR1 pp.74-78, elaborating on PHB pp.97-98. Everyone can already punch and ' +
+             'wrestle; this rule adds SPECIALIZATION in them, and adds MARTIAL ARTS as a third ' +
+             'style that must be learned first. Each specialization gives +1 to hit, +1 to ' +
+             'damage and a +1 chart bonus on the results table, plus an extra unarmed attack per ' +
+             'round when both hands are free. Most characters may specialize in only one style; ' +
+             'single-class warriors and the PHBR3 Fighting-Monk may take more, and may keep ' +
+             'spending slots for a further +1/+1/+1 each time. Whether Martial Arts exists in ' +
+             'the campaign at all is the DM\u2019s decision (p.76). Advisory only; nothing is blocked.',
+    category: 'supplement',
+    default: false
+  },
   specialtyPriestsPHBR3: {
     label:   'Specialty priests: per-priesthood overrides (Complete Priest\u2019s Handbook)',
     detail:  'PHBR3 Chapters 2 and 3. The book prints some sixty priest classes, each ' +
@@ -7313,7 +7326,7 @@ const SUPPLEMENTS = {
     // panel. All are CONTENT THE BOOK ADDS rather than rules that change core
     // arithmetic -- a stone dagger only exists because PHBR1 prints it, so a
     // table not using the book cannot be holding one.
-    bandOrder: ['fightingStyles', 'weaponGroups', 'weaponQuality',
+    bandOrder: ['fightingStyles', 'unarmedCombat', 'weaponGroups', 'weaponQuality',
                 'armorQuality', 'piecemealArmor', 'meleeManeuvers',
                 'tightGroupsAsRelated'],
 
@@ -7335,6 +7348,38 @@ const SUPPLEMENTS = {
           caveat: 'Unticking SUSPENDS the bonus; it never refunds the slots or deletes ' +
                   'the specialization. The purchase stays on the character, greyed, and ' +
                   'returns intact when the book is switched back on.' }
+      ]
+    },
+
+	unarmedCombat: {
+      label: 'Punching, wrestling and martial arts',
+      hint:  'Specialize in unarmed combat, and add the Martial Arts style.',
+      rules: ['unarmedCombatPHBR1'],
+      changes: [
+        { text: 'PUNCHING AND WRESTLING ARE ALREADY KNOWN BY EVERYONE (PHB p.98) and cost no ' +
+                'slot; this band adds SPECIALIZATION in them for ONE weapon proficiency slot ' +
+                'each, giving +1 to hit, +1 to damage, a +1 CHART BONUS and one extra unarmed ' +
+                'attack per round when both hands are free and empty.' },
+        { text: 'MARTIAL ARTS IS A THIRD STYLE and must be learned before it can be specialized ' +
+                'in \u2014 one slot to know it, a second to specialize. PHBR1 p.76 leaves it to the ' +
+                'DM whether the art exists in the campaign at all.',
+          caveat: 'The book is explicit that these are not real-world fighting styles but ' +
+                  '\u201ca combination of generic martial-arts maneuvers in the tradition of ' +
+                  'martial-arts movies\u201d.' },
+        { text: 'THE CHART BONUS is what specialization is really for: it lets the character ' +
+                'shift his result on the results table and choose a better maneuver. With a bonus ' +
+                'of +2 or more he may choose ANY maneuver within the range his bonus covers.' },
+        { text: 'ONE STYLE ONLY, for most characters. A single-class Warrior \u2014 and the ' +
+                'Fighting-Monk from PHBR3 \u2014 may specialize in more than one, but only one at ' +
+                'creation and only one more per new weapon proficiency slot thereafter. ' +
+                'CONTINUING SPECIALIZATION, spending further slots for +1/+1/+1 each, is open to ' +
+                'those same two only.',
+          caveat: 'Advisory throughout. The sheet reports what the book allows and blocks nothing.' },
+        { text: 'SPECIALIZATION HERE IS NOT WEAPON SPECIALIZATION and does not consume it. A ' +
+                'first-level fighter may specialize in both Long Sword and Punching; a Rogue, who ' +
+                'may take no weapon specialization at all, may still take one unarmed style.' },
+        { text: 'THE ARMED FIGHTING STYLES GRANT NOTHING HERE. Single-Weapon, Two-Hander and the ' +
+                'rest are of use only in combat with melee weapons (PHBR1 p.75).' }
       ]
     },
 
