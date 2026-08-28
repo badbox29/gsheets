@@ -17,7 +17,11 @@ fetch('js/core_unarmed_martial_arts.json')
   .then(response => response.json())
   .then(data => {
     UNARMED_DATA = data;
-    console.log('Unarmed combat loaded:',
+    if (typeof document !== 'undefined') {
+      document.querySelectorAll('.sheet-container').forEach(sheet => {
+        if (typeof renderUnarmedTables === 'function') renderUnarmedTables(sheet);
+      });
+    }
       (data.styles || []).length + ' styles, ' +
       ((data.martialArtsResults && data.martialArtsResults.rows) || []).length + ' martial arts rows, ' +
       ((data.phbTable58 && data.phbTable58.rows) || []).length + ' punch/wrestle rows');
