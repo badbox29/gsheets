@@ -2180,9 +2180,11 @@ function renderUnarmedTables(root) {
     bEl.innerHTML = bits.length
       ? '<div style="font-size:12px;line-height:1.6;">' + bits.map(escapeHtml).join(
           ' <span style="color:var(--muted);">\u00B7</span> ') +
-        '<div style="font-size:11px;color:var(--muted);margin-top:2px;">Your chart bonus lets ' +
-        'you shift your rolled result on the tables below. With +2 or more you may choose any ' +
-        'maneuver in that range.</div></div>'
+        '<div style="font-size:11px;color:var(--muted);margin-top:2px;">A CHART BONUS DOES NOT ' +
+        'CHANGE YOUR ROLL \u2014 it lets you take a different row once you have hit. At +1 you may ' +
+        'take the maneuver one row above or below the one you rolled, usually for more damage or ' +
+        'a better knockout chance. At +2 or more you may choose ANY maneuver within that ' +
+        'range.</div></div>'
       : '<div style="font-size:11px;color:var(--muted);">You have not specialized in an unarmed ' +
         'style. Set one on the Proficiencies tab to see your chart bonus applied below.</div>';
   }
@@ -2203,8 +2205,9 @@ function renderUnarmedTables(root) {
                      )).join('') +
         (maBonus > 0
           ? '<div style="font-size:11px;color:var(--muted);margin-top:4px;">Your +' + maBonus +
-            ' chart bonus lets you shift your rolled result up or down by ' + maBonus +
-            ' row' + (maBonus > 1 ? 's' : '') + ' and take any maneuver in that range.</div>'
+            ' chart bonus: once you hit, you may take a maneuver up to ' + maBonus + ' row' +
+            (maBonus > 1 ? 's' : '') + ' above or below the one you rolled' +
+            (maBonus > 1 ? ', and anything in between' : '') + '.</div>'
           : '');
     }
   }
