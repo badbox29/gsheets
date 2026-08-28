@@ -7920,6 +7920,32 @@ function getFightingStyles(root) {
   return s;
 }
 
+// Weapon proficiency slots spent on unarmed styles (PHBR1 pp.74-78). SEPARATE
+// FROM getFightingStyles because the two are separate bands -- a table can have
+// the armed styles without the unarmed ones -- but they charge the same budget,
+// so renderProficiencySlots adds both.
+//
+// THE STORED VALUE IS ALREADY A SLOT COUNT, which is why this is a sum and not a
+// conversion. That was the reason for storing slots rather than specialization
+// levels: the three styles reach specialization at different slot counts, and a
+// level would have had to be converted back here to charge for it.
+//
+// ZERO WHEN THE BAND IS OFF, so a table without it sees the number it always
+// saw -- and the purchase is suspended rather than refunded, which matches how
+// the armed styles and every other supplement toggle behave.
+function getUnarmedStyleSlots(root) {
+  if (typeof isSupplementActive === 'function' &&
+      !isSupplementActive('phbr1', 'unarmedCombat')) return 0;
+  const n = f => {
+    const el = root.querySelector('[data-field="' + f + '"]');
+    const v  = el ? parseInt(el.value, 10) : 0;
+    return isNaN(v) ? 0 : Math.max(0, v);
+  };
+  return Math.min(4, n('unarmed_punching')) +
+         Math.min(4, n('unarmed_wrestling')) +
+         Math.min(5, n('unarmed_martial_arts'));
+}
+
 // Render the weapon + nonweapon proficiency slot counters (PHB Table 34).
 // The weapon proficiency browser answers questions ABOUT THE CHARACTER -- is
 // this already Known, is it Covered by a paired proficiency, does his kit permit
@@ -8171,6 +8197,10 @@ function renderProficiencySlots(root) {
   // when the book is off, so a PHB-only table sees the number it always saw.
   const styles = getFightingStyles(root);
   wpSpent += styles.total;
+  // PHBR1 pp.74-78, same budget. Punching and Wrestling cost nothing to KNOW,
+  // so only the specializing slots are charged; Martial Arts costs one slot
+  // just to learn.
+  if (typeof getUnarmedStyleSlots === 'function') wpSpent += getUnarmedStyleSlots(root);
 
   // --- Nonweapon slots spent ---
   // Base cost from core_nwp.json (some cost 2), PLUS the PHB Table 38 crossover
