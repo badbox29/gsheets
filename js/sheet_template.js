@@ -1082,7 +1082,7 @@ const SHEET_HTML = `
                    only meaningful alongside them (PHBR1 pp.60-61, 64). A select
                    rather than a checkbox so it collects through the same val()
                    path as its neighbours. -->
-              <label style="display:flex;flex-direction:column;gap:2px;width:150px;">
+                            <label style="display:flex;flex-direction:column;gap:2px;width:150px;">
                 <span style="font-size:11px;color:var(--muted);">Ambidexterity</span>
                 <select data-field="style_ambidextrous">
                   <option value="0">Right- or left-handed</option>
@@ -1090,6 +1090,70 @@ const SHEET_HTML = `
                 </select>
               </label>
             </div>
+          </div>
+
+          <!-- UNARMED COMBAT. A SEPARATE BLOCK FROM THE FIGHTING STYLES ABOVE,
+               and a separate band, because PHBR1 p.75 says outright that the
+               armed styles "do not grant any bonuses to Punching, Wrestling, or
+               Martial Arts combat. They're of use only to combat with melee
+               weapons." Two neighbouring blocks that sound alike and share
+               nothing mechanically.
+
+               THE VALUE OF EACH SELECT IS THE NUMBER OF SLOTS DEVOTED, not a
+               specialization level, because the two do not line up across the
+               three styles: everyone already knows punching and wrestling, so
+               one slot buys specialization outright, while Martial Arts costs a
+               slot merely to KNOW and a second to specialize. Storing slots
+               keeps one honest number in the field and lets the readout derive
+               the rest.
+
+               THE LADDER PAST SPECIALIZATION is Continuing Specialization
+               (p.78), open only to single-class Warriors and PHBR3
+               Fighting-Monks. It is offered to everyone here and reported by an
+               advisory, per the standing advise-never-block rule. -->
+          <div class="unarmed-styles" style="display:none;margin-top:10px;">
+            <div class="stat-strip">
+              <span class="lab">UNARMED COMBAT</span>
+              <span class="prose unarmed-styles-note"></span>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:12px;padding:6px 2px;">
+              <label style="display:flex;flex-direction:column;gap:2px;width:170px;">
+                <span style="font-size:11px;color:var(--muted);">Punching</span>
+                <select data-field="unarmed_punching" title="PHB p.98, PHBR1 pp.74-75. Everyone can punch; a slot buys SPECIALIZATION. A normal punch does 1-2 plus Strength bonus, 1-3 with a metal gauntlet, and 75% of punching damage is temporary.">
+                  <option value="0">Not specialized</option>
+                  <option value="1">Specialized (1 slot)</option>
+                  <option value="2">+1 more (2 slots)</option>
+                  <option value="3">+2 more (3 slots)</option>
+                  <option value="4">+3 more (4 slots)</option>
+                </select>
+              </label>
+              <label style="display:flex;flex-direction:column;gap:2px;width:170px;">
+                <span style="font-size:11px;color:var(--muted);">Wrestling</span>
+                <select data-field="unarmed_wrestling" title="PHB p.98, PHBR1 pp.75-76. Everyone can wrestle; a slot buys SPECIALIZATION, which also gives +2 Strength for MAINTAINING a hold only. Wrestling damage is temporary too.">
+                  <option value="0">Not specialized</option>
+                  <option value="1">Specialized (1 slot)</option>
+                  <option value="2">+1 more (2 slots)</option>
+                  <option value="3">+2 more (3 slots)</option>
+                  <option value="4">+3 more (4 slots)</option>
+                </select>
+              </label>
+              <label style="display:flex;flex-direction:column;gap:2px;width:170px;">
+                <span style="font-size:11px;color:var(--muted);">Martial Arts</span>
+                <select data-field="unarmed_martial_arts" title="PHBR1 pp.76-77. UNLIKE PUNCHING AND WRESTLING this must be learned before it can be specialized in: one slot to know it, a second to specialize. Available only if your DM decides the art exists in the campaign. Damage is 25% normal and 75% temporary.">
+                  <option value="0">Not known</option>
+                  <option value="1">Proficient (1 slot)</option>
+                  <option value="2">Specialized (2 slots)</option>
+                  <option value="3">+1 more (3 slots)</option>
+                  <option value="4">+2 more (4 slots)</option>
+                  <option value="5">+3 more (5 slots)</option>
+                </select>
+              </label>
+            </div>
+            <!-- Derived readout: to-hit, damage and CHART BONUS per style, plus
+                 the extra-attack note. The chart bonus is the point of
+                 specializing and is invisible unless it is stated. -->
+            <div class="unarmed-summary" style="font-size:11px;line-height:1.5;color:var(--muted);padding:0 2px 4px;"></div>
+            <div class="unarmed-advisory" style="display:none;margin-top:6px;padding:6px 8px;border-radius:var(--radius);font-size:11px;line-height:1.45;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
           </div>
         </section>
 		
