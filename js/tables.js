@@ -6901,6 +6901,15 @@ const TOOLS_SUBTABS = [
   // Gated: the renderer hides the section when the band is off, and
   // toolsSubtabApplies reads that display to decide whether the tab exists.
   { key: 'maneuvers', label: 'Maneuvers',        section: 'maneuvers-section',      band: 'reference', gated: true },
+  // DIRECTLY AFTER MANEUVERS, and 'reference' like it -- the two are companions
+  // but deliberately separate panels, since PHBR1 p.75 says the armed fighting
+  // styles grant nothing to unarmed combat.
+  // GATED: renderUnarmedTables hides the section when the band is off, and
+  // toolsSubtabApplies reads that display to decide whether the tab exists.
+  // REGISTERING IT IS NOT OPTIONAL. An unregistered section is never hidden by
+  // renderToolsSubtabs and appears underneath whichever sub-tab is open -- see
+  // the Thief Rules comment above, which is the same bug.
+  { key: 'unarmed',  label: 'Unarmed Combat',    section: 'unarmed-section',        band: 'reference', gated: true },
   { key: 'vision',   label: 'Vision & Light',    section: 'vision-light-section',   band: 'reference', gated: false },
   { key: 'cover',    label: 'Cover',             section: 'cover-reference-section',band: 'reference', gated: false },
   { key: 'overland', label: 'Overland',          section: 'overland-section',       band: 'reference', gated: false }
