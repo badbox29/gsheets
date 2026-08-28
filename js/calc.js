@@ -2180,9 +2180,9 @@ function renderUnarmedTables(root) {
     bEl.innerHTML = bits.length
       ? '<div style="font-size:12px;line-height:1.6;">' + bits.map(escapeHtml).join(
           ' <span style="color:var(--muted);">\u00B7</span> ') +
-        '<div style="font-size:11px;color:var(--muted);margin-top:2px;">Rows within reach of ' +
-        'your chart bonus are highlighted. With +2 or more you may choose any maneuver in that ' +
-        'range.</div></div>'
+        '<div style="font-size:11px;color:var(--muted);margin-top:2px;">Your chart bonus lets ' +
+        'you shift your rolled result on the tables below. With +2 or more you may choose any ' +
+        'maneuver in that range.</div></div>'
       : '<div style="font-size:11px;color:var(--muted);">You have not specialized in an unarmed ' +
         'style. Set one on the Proficiencies tab to see your chart bonus applied below.</div>';
   }
