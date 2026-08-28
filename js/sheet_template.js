@@ -2967,6 +2967,34 @@ const SHEET_HTML = `
           <div class="maneuvers-locations"></div>
                 </section>
 
+        <!-- PHBR1 pp.74-78, plus PHB Tables 57 and 58 which PHBR1 refers to but
+             does not reprint. Populated by renderUnarmedTables from
+             UNARMED_DATA; hidden entirely unless the unarmed combat band is
+             ticked. NO GAME DATA IN THIS MARKUP.
+
+             A COMPANION TO THE MANEUVERS PANEL, NOT PART OF IT. The two answer
+             different questions and PHBR1 p.75 keeps them apart itself: the
+             armed fighting styles "do not grant any bonuses to Punching,
+             Wrestling, or Martial Arts combat."
+
+             THE TABLES ARE NOT INERT REFERENCE. A chart bonus lets the character
+             choose any maneuver within its range, which no static table can
+             show -- so the rows his bonus puts in reach are marked, and the
+             panel repaints when his specialization changes.
+
+             PUNCHING AND WRESTLING SHOW FOR EVERYONE. They are PHB rules any
+             character can use without spending a slot; only the Martial Arts
+             table is conditional, since that style must be learned. -->
+        <section class="unarmed-section section" style="display:none;">
+          <h3>Unarmed Combat</h3>
+          <p class="prose unarmed-tables-intro"></p>
+          <div class="unarmed-tables-bonuses" style="margin-bottom:12px;"></div>
+          <div class="unarmed-table-ma" style="margin-bottom:14px;"></div>
+          <div class="unarmed-maneuver-descriptions" style="margin-bottom:14px;"></div>
+          <div class="unarmed-table-pw" style="margin-bottom:14px;"></div>
+          <div class="unarmed-table-armor"></div>
+        </section>
+
         <!-- PHBR2 Ch.5. Populated by renderThiefEquipment; hidden entirely
              unless the Equipment and thief skills band is ticked.
 
