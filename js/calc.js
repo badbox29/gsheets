@@ -2082,7 +2082,13 @@ function renderUnarmedStyles(root) {
   // not the class alone.
   const clazz  = (val(root, 'clazz') || '').toLowerCase();
   const single = (val(root, 'char_type') || 'single').toLowerCase() === 'single';
-  const kitVal = (val(root, 'kit') || '').trim().toLowerCase();
+  // THE SELECT STORES THE KIT NAME WITH WHITESPACE STRIPPED, NOT THE OBJECT KEY
+  // (see the option builder: kit.name.toLowerCase().replace(/\s+/g,'')). The
+  // name is "Fighting-Monk", so the stored value is "fighting-monk" WITH THE
+  // HYPHEN -- the key `fightingmonk` never appears in the field. Punctuation is
+  // stripped here rather than matched, so a rename to "Fighting Monk" or
+  // "Fighting/Monk" still resolves.
+  const kitVal = (val(root, 'kit') || '').toLowerCase().replace(/[^a-z]/g, '');
   const isWarrior = single && (typeof getClassCategory === 'function') &&
                     getClassCategory(clazz) === 'warrior';
   const isMonk    = kitVal === 'fightingmonk';
