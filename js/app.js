@@ -6730,6 +6730,16 @@ function collectSheet(root){
       twoWeapon:    val(root,'style_two_weapon'),
       ambidextrous: val(root,'style_ambidextrous')
     },
+    // Separate from fightingStyles, and a separate band, because PHBR1 p.75 says
+    // the armed styles "do not grant any bonuses to Punching, Wrestling, or
+    // Martial Arts combat." Saved unconditionally on the same principle as its
+    // neighbour: disabling the book suspends the EFFECT, never the purchase.
+    // Values are SLOT COUNTS, not specialization levels.
+    unarmedStyles: {
+      punching:    val(root,'unarmed_punching'),
+      wrestling:   val(root,'unarmed_wrestling'),
+      martialArts: val(root,'unarmed_martial_arts')
+    },
     // A physical characteristic, on the Details tab with height and hair, and
     // UNGATED -- a character is right- or left-handed whatever books the table
     // uses. Only the RULE attached to it is PHBR1's (p.57): -2 to hit with all
@@ -7186,6 +7196,12 @@ function loadSheet(root, data){
   val(root, 'style_weapon_shield', styles.weaponShield || 0);
   val(root, 'style_two_weapon',    styles.twoWeapon    || 0);
   val(root, 'style_ambidextrous',  styles.ambidextrous || 0);
+  // Absent on every character saved before this shipped, so || 0 leaves them
+  // unspecialized and the block inert.
+  const unarmed = data.unarmedStyles || {};
+  val(root, 'unarmed_punching',     unarmed.punching    || 0);
+  val(root, 'unarmed_wrestling',    unarmed.wrestling   || 0);
+  val(root, 'unarmed_martial_arts', unarmed.martialArts || 0);
   // Right by the book's own default, which also means every character saved
   // before this field existed loads as right-handed rather than blank.
   val(root, 'handedness', data.handedness || 'right');
@@ -7672,6 +7688,7 @@ function loadSheet(root, data){
   if (typeof renderClassStatus === 'function') renderClassStatus(root);
   if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(root);
   if (typeof renderSpecialtyPriestChecks === 'function') renderSpecialtyPriestChecks(root);
+  if (typeof renderUnarmedStyles === 'function') renderUnarmedStyles(root);
   if (typeof populatePriesthoodTemplates === 'function') populatePriesthoodTemplates(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   renderCoinWeight(root);
@@ -8896,6 +8913,7 @@ function bindSheet(root, tab){
   if (typeof renderClassStatus === 'function') renderClassStatus(root);
   if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(root);
   if (typeof renderSpecialtyPriestChecks === 'function') renderSpecialtyPriestChecks(root);
+  if (typeof renderUnarmedStyles === 'function') renderUnarmedStyles(root);
   if (typeof populatePriesthoodTemplates === 'function') populatePriesthoodTemplates(root);
   if (typeof renderSpecialtyPriest === 'function') renderSpecialtyPriest(root);
   renderCoinWeight(root);
@@ -9061,6 +9079,9 @@ function bindSheet(root, tab){
         if (tab) markUnsaved(tab, true, root);
       }
       return;
+    }
+    if (f && /^unarmed_(punching|wrestling|martial_arts)$/.test(f)) {
+      if (typeof renderUnarmedStyles === 'function') renderUnarmedStyles(root);
     }
     if (f && /^sp_(prime_req2|hit_die|crossover|language_slot|weapon_spec|restrictions|restrict_\w+|faith_type|combat)$/.test(f)) {
       // MODIFIED-DETECTION. Any edit to any specialty priest field diverges the
@@ -10783,6 +10804,7 @@ function recalcAllOpenSheets() {
     // separate bugs in this codebase have had exactly that shape.
     if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(sheet);
     if (typeof renderSpecialtyPriestChecks === 'function') renderSpecialtyPriestChecks(sheet);
+    if (typeof renderUnarmedStyles === 'function') renderUnarmedStyles(root);
     if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(sheet);
     if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(sheet);
   });
@@ -16179,6 +16201,7 @@ function recalculateAll(root) {
   if (typeof renderClassStatus === 'function') renderClassStatus(root);
   if (typeof renderSpecialtyPriestBanners === 'function') renderSpecialtyPriestBanners(root);
   if (typeof renderSpecialtyPriestChecks === 'function') renderSpecialtyPriestChecks(root);
+  if (typeof renderUnarmedStyles === 'function') renderUnarmedStyles(root);
   // THE BANNER GOES IN THE MAINTAINED LIST. It has ten sources reading a dozen
   // fields -- class, race, alignment, kit, gender, six ability scores and three
   // specialty priest fields -- and was driven by a hand-picked list of field
