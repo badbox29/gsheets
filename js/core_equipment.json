@@ -681,7 +681,7 @@
     "Weight": "1 lb",
     "Cost": "5 sp",
     "Source": "Unattributed",
-    "Notes": "Hard tack and dried meat - lasts months SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Notes": "Hard tack and dried meat - lasts months SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. NOT A PHB ITEM, checked against Table 44 (p.90) August 2026. The PHB prices rations BY THE WEEK -- dry 10 gp, standard 3 gp, iron 5 sp -- and lists iron rations at 5 sp per week. A per-day ration and the term “trail rations” are both later-edition vocabulary, the same signature as the unsourced paraphrase found in the original kits.js. The three PHB entries are now in core_goods.json; this row is kept because characters may already carry it, but it is house content and its Source must stay Unattributed until someone names a book."
   },
   {
     "Item Name": "Rations, Trail (1 day)",
@@ -690,7 +690,7 @@
     "Weight": "1 lb",
     "Cost": "5 sp",
     "Source": "Unattributed",
-    "Notes": "Dried meat, bread, cheese - lasts weeks SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Notes": "Dried meat, bread, cheese - lasts weeks SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. NOT A PHB ITEM, checked against Table 44 (p.90) August 2026. The PHB prices rations BY THE WEEK -- dry 10 gp, standard 3 gp, iron 5 sp -- and lists no trail ration at all. A per-day ration and the term “trail rations” are both later-edition vocabulary, the same signature as the unsourced paraphrase found in the original kits.js. The three PHB entries are now in core_goods.json; this row is kept because characters may already carry it, but it is house content and its Source must stay Unattributed until someone names a book."
   },
   {
     "Item Name": "Rope, Hemp (50 ft)",
