@@ -7803,12 +7803,12 @@ const SUPPLEMENTS = {
 
     // ONE BAND FOR NOW, following PHBR3's rule: a toggle owning no implemented
     // rule is a checkbox that does nothing, so each band arrives with its code.
-    // Planned and surveyed but unbuilt: schoolPowers (Ch.1 acquired powers and
-    // save modifiers), wizardWeapons (the pp.71-72 list, which ADDS blowgun and
-    // staff sling), abandonSchool (p.20), militantOppositions (Table 6), and an
-    // optional band for the Restricted School and Restricted Level campaigns
-    // (p.66). Do not list an unbuilt band here -- getSupplementRuleOwner guards
-    // against it but renderSupplements is not known to.
+    // Planned and surveyed but unbuilt: wizardWeapons (the pp.71-72 list, which
+    // ADDS blowgun and staff sling), abandonSchool (p.20), militantOppositions
+    // (Table 6), and an optional band for the Restricted School and Restricted 
+	// Level campaigns (p.66). Do not list an unbuilt band here -- 
+	// getSupplementRuleOwner guards against it but renderSupplements is not
+	// known to.
     //
     // NO legacyBand ANYWHERE. The book is new to this app, so no table has a
     // stored phbr4.core or phbr4.optional value for a band to inherit.
@@ -7817,7 +7817,7 @@ const SUPPLEMENTS = {
     // ADDS takes nothing away from a PHB-only table: the 42 new spells, the ten
     // kits, the jitte and boku-toh, the eleven laboratory items and the twelve
     // magical items. A table not using this book simply never holds one.
-    bandOrder: ['lesserDivination'],
+    bandOrder: ['schoolPowers', 'lesserDivination'],
 
     lesserDivination: {
       label: 'Lesser divination counts as greater',
@@ -7835,8 +7835,33 @@ const SUPPLEMENTS = {
                 'Divination. The same page says the minor school exists precisely so that ' +
                 'he keeps access to the low-level divinations, and p.66 calls them ' +
                 'something a wizard can barely function without.',
-          caveat: 'So detect magic and read magic stay learnable by every specialist, ' +
-                  'ticked or not. Only the diviner\u2019s side of the rule changes.' }
+                  caveat: 'So detect magic and read magic stay learnable by every specialist, ' +
+                'ticked or not. Only the diviner\u2019s side of the rule changes.' }
+      ]
+    },
+
+    schoolPowers: {
+      label: 'School save modifiers and acquired powers',
+      hint:  'Specialists gain saving throw modifiers and high-level powers by school.',
+      rules: ['schoolPowersPHBR4'],
+      changes: [
+        { text: 'SAVING THROW MODIFIERS, all eight schools (Ch.1). Opponents modify ' +
+                'their saving throws by \\u22121 against spells of the specialist\\u2019s own ' +
+                'school, and the specialist adds +1 when saving against them. The PHB ' +
+                'grants neither.' },
+        { text: 'ACQUIRED POWERS at high level, listed on the character\\u2019s class ' +
+                'abilities. Most schools gain something at 17th and again at 20th, but ' +
+                'NOT all: the diviner\\u2019s middle power comes at 19th and the ' +
+                'illusionist\\u2019s first at 18th. Examples: an abjurer becomes immune to ' +
+                'hold spells and improves to AC 9; a conjurer stops needing material ' +
+                'components; a necromancer gains a special speak with dead.' },
+        { text: 'THE INVOKER AND NECROMANCER BONUSES STACK with the base modifier above, ' +
+                'as the book intends \\u2014 an invoker at 20th saves at +3 against ' +
+                'invocation/evocation, and an illusionist at 18th at +2 against illusions ' +
+                'cast by non-illusionists.',
+          caveat: 'Listed as abilities for reference. The saving throw fields are not ' +
+                  'adjusted automatically \\u2014 these modifiers depend on what is being ' +
+                  'saved against, which the sheet cannot know.' }
       ]
     }
   },
@@ -9257,6 +9282,44 @@ const SPECIALIST_POWERS_PHBR4 = {
     { level: 20, text: 'Cast a special speak with dead once per day by pointing and concentrating for one round, with no verbal or material components. Asks up to four questions of one dead creature over a full turn. The creature must have died within the past 100 years and must have spoken a language the caster knows. It receives no saving throw regardless of its level or alignment, but answers evasively and sometimes cryptically.' }
   ]
 };
+
+// Append the PHBR4 acquired powers a specialist has actually reached to an
+// ability list, plus the base save modifiers. Mutates and returns `out`.
+// Lives here rather than in calc.js so the reader sits beside the data.
+//
+// Gated on phbr4.schoolPowers: unticked, this returns immediately and the
+// class ability list is exactly what it was before the book existed.
+function addSpecialistPowersPHBR4(out, clazz, level) {
+  if (typeof isOptionalRule !== 'function' ||
+      !isOptionalRule('schoolPowersPHBR4')) return out;
+  const c = (clazz || '').trim().toLowerCase();
+  const key = Object.keys(SPECIALIST_POWERS_PHBR4).find(k => c.includes(k));
+  if (!key) return out;
+
+  const lvl = parseInt(level, 10) || 0;
+  out.push({
+    name: 'Specialist Saving Throws',
+    notes: 'Opponents modify their saving throws by ' +
+           SPECIALIST_SAVE_MODS_PHBR4.opponents +
+           ' against spells of your own school, and you add +' +
+           SPECIALIST_SAVE_MODS_PHBR4.self +
+           ' when saving against them. (PHBR4 Ch.1)',
+    isAuto: true
+  });
+
+  // Levels are NOT uniformly 17 and 20 -- the diviner has a 19th and the
+  // illusionist an 18th -- so this filters on the stored level rather than
+  // testing two thresholds.
+  SPECIALIST_POWERS_PHBR4[key].forEach(p => {
+    if (p.level > lvl) return;
+    out.push({
+      name: 'Acquired Power (' + p.level + 'th level)',
+      notes: p.text + ' (PHBR4 Ch.1)',
+      isAuto: true
+    });
+  });
+  return out;
+}
 
 // Check a character against Table 22. Returns an array of problem strings
 // (empty if valid). Advisory only -- never blocks the player.
