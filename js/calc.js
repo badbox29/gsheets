@@ -11735,14 +11735,34 @@ function renderClassAbilities(root) {
         break;
       }
     }
-    if (!classData) return out;
+    // SEVEN OF THE EIGHT SPECIALISTS MATCHED NOTHING HERE, and had shown no
+    // class abilities at all -- not even Spell Casting. The loop above tests
+    // the class NAME against CLASS_ABILITIES keys by substring, and abjurer,
+    // conjurer, diviner, enchanter, invoker, necromancer and transmuter
+    // contain none of them. Only illusionist has a key of its own.
+    // CLASS_ABILITIES.specialist existed for exactly this and nothing ever
+    // routed to it. getSpecialistSchool is the single resolver for "is this a
+    // specialist", so it decides here too rather than a second name list.
+    if (!classData && typeof getSpecialistSchool === 'function' &&
+        getSpecialistSchool(clazz)) {
+      classData = CLASS_ABILITIES.specialist;
+    }
 
-    for (let lvl in classData) {
-      if (parseInt(lvl, 10) <= level) {
-        classData[lvl].forEach(a => {
-          out.push({ name: a.name, notes: a.notes, isAuto: true });
-        });
+    if (classData) {
+      for (let lvl in classData) {
+        if (parseInt(lvl, 10) <= level) {
+          classData[lvl].forEach(a => {
+            out.push({ name: a.name, notes: a.notes, isAuto: true });
+          });
+        }
       }
+    }
+
+    // PHBR4 Ch.1 save modifiers and acquired powers. Returns immediately when
+    // phbr4.schoolPowers is unticked. Runs even when classData was null, so a
+    // future specialist name with no CLASS_ABILITIES entry still gets them.
+    if (typeof addSpecialistPowersPHBR4 === 'function') {
+      addSpecialistPowersPHBR4(out, clazz, level);
     }
     return out;
   }
