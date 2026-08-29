@@ -2781,7 +2781,7 @@
     "Cost": "",
     "Weight": "",
     "Source": "PHBR15",
-    "Notes": "RECORDED AS PRINTED, NOT RESOLVED. PHBR15 Table 24 prints these figures on the generic \"Polearm\" heading row itself, above its five named polearms, with no cost or weight. Size S with Speed Factor 9 is unusual for a polearm and the row may be a heading that acquired stats in layout, but the book prints it and this file does not resolve a printed contradiction. Compare the five named entries below it."
+    "Notes": "PHBR15 Table 24. SETTLED, August 2026 -- Chris’s ruling. The generic “Polearm” heading row carries its own figures: Size S, Type B, speed factor 9, damage 1d6/1d6, with no cost or weight printed. Five named polearms are listed beneath it (Kumade, Lajatang, Man catcher, Nagimaki, Naginata), each with its own line. THESE FIGURES WERE INITIALLY MISREAD AS A SCAN ARTIFACT because they duplicate the Nage teppo row directly above. They are not. Chris: “They’re the same as the Nage teppo but they don’t belong to Nage teppo. They belong to polearm.” The paragraph above Table 24 states that PHBR15 repeats weapons to show which western ones exist in oriental cultures and that a repeat carries the same statistics as its western cousin, so IDENTICAL FIGURES ON ADJACENT ROWS ARE EXPECTED IN THIS BOOK BY DESIGN. Treating repetition as evidence of a rendering fault was reasoning from the wrong prior. RECORDED AS PRINTED. This row is not provisional and does not need revisiting."
   },
   {
     "Weapon Name": "Quarterstaff",
