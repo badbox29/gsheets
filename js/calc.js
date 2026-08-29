@@ -5452,6 +5452,13 @@ async function renderWeaponInventoryBrowser(root) {
   if (searchTerm) {
     filteredWeapons = filteredWeapons.filter(weapon => 
       weapon['Weapon Name'].toLowerCase().includes(searchTerm) ||
+      // Alias carries the same weapon's name in another tradition -- "Bo" on
+      // the Quarterstaff, "Bill" on the Gaff/Hook. PHBR15 states outright that
+      // its repeated weapons are western weapons under Oriental names carrying
+      // identical statistics, so those become aliases rather than duplicate
+      // rows. Search had no way to find them; the Bill alias has sat unfindable
+      // in a Notes field since the PHBR3 pass.
+      (weapon.Alias && weapon.Alias.toLowerCase().includes(searchTerm)) ||
       (weapon.Group && weapon.Group.toLowerCase().includes(searchTerm))
     );
   }
@@ -7553,6 +7560,7 @@ async function renderWeaponBrowser(root) {
   if (searchTerm) {
     filteredWeapons = filteredWeapons.filter(weapon => 
       weapon['Weapon Name'].toLowerCase().includes(searchTerm) ||
+      (weapon.Alias && weapon.Alias.toLowerCase().includes(searchTerm)) ||
       (weapon.Group && weapon.Group.toLowerCase().includes(searchTerm))
     );
   }
