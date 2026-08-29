@@ -2,7 +2,7 @@
 
 A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and no build step.
 
-**Version 11.7.0**
+**Version 11.8.0**
 
 ## Live Demo
 
@@ -253,6 +253,46 @@ Follow these steps **in order** to avoid overwriting your data:
 * I am not a developer.
 
 ### Recent Updates
+
+#### v11.8.0
+
+**The Complete Wizard's Handbook — schools of magic**
+
+* Two new entries on the **Supplements** tab, both off by default, so an untouched
+  sheet plays exactly as the Player's Handbook does.
+* **School save modifiers and acquired powers.** Every specialist gains the
+  book's own saving throw modifiers — opponents save at −1 against spells of your
+  school, and you save at +1 against them — along with the powers each school
+  picks up at high level. An abjurer becomes immune to *hold* spells at 17th and
+  improves to Armor Class 9 at 20th; a conjurer stops needing material components
+  for his own school; a necromancer gains a *speak with dead* of his own. The
+  levels are **not** the same for everyone: the diviner's middle power arrives at
+  19th and the illusionist's first at 18th, and the sheet follows the book rather
+  than assuming a pattern.
+* The powers appear on your **class abilities** and disappear again if you untick
+  the book. The saving throw fields are **not** adjusted for you — those
+  modifiers depend on what you are saving against, which the sheet has no way to
+  know, so they are listed for you to apply at the table.
+* **Lesser divination counts as greater.** The Player's Handbook treats divination
+  spells of 4th level and below as a minor school open to any wizard, so a diviner
+  gets no specialist benefit from them. This book rules otherwise: with it ticked,
+  a diviner gets his +15% to learn *detect magic* and can use it toward his bonus
+  memorised spell.
+* This does **not** shut lesser divination away from the conjurer, whose
+  opposition school is Greater Divination. The book is explicit that the minor
+  school exists precisely so he keeps his low-level divinations, so *detect magic*
+  and *read magic* stay learnable by every specialist either way.
+
+**Fixes**
+
+* **Seven of the eight specialist wizards were showing no class abilities at
+  all** — not even Spell Casting. Abjurers, conjurers, diviners, enchanters,
+  invokers, necromancers and transmuters all failed a name lookup that only
+  illusionists happened to pass. They now list what they should at every level.
+* Ticking a supplement now refreshes the **spell browser** and the **spellbook**
+  without needing the browser's refresh button. The chance-to-learn figure, the
+  school rails, and the free-spell checkbox all update as soon as you change a
+  setting.
 
 #### v11.7.0
 
