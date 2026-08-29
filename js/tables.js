@@ -7793,6 +7793,50 @@ const SUPPLEMENTS = {
                 'character with a PHBR3 priesthood recorded under Specialty Priest: he is ' +
                 'a priest of a specific mythos, not a Cleric, and this rule exists ' +
                 'precisely so that he is no longer outshone by one.' }
+            ]
+    }
+  },
+  phbr4: {
+    code:  'PHBR4',
+    title: 'The Complete Wizard\u2019s Handbook',
+    order: 4,
+
+    // ONE BAND FOR NOW, following PHBR3's rule: a toggle owning no implemented
+    // rule is a checkbox that does nothing, so each band arrives with its code.
+    // Planned and surveyed but unbuilt: schoolPowers (Ch.1 acquired powers and
+    // save modifiers), wizardWeapons (the pp.71-72 list, which ADDS blowgun and
+    // staff sling), abandonSchool (p.20), militantOppositions (Table 6), and an
+    // optional band for the Restricted School and Restricted Level campaigns
+    // (p.66). Do not list an unbuilt band here -- getSupplementRuleOwner guards
+    // against it but renderSupplements is not known to.
+    //
+    // NO legacyBand ANYWHERE. The book is new to this app, so no table has a
+    // stored phbr4.core or phbr4.optional value for a band to inherit.
+    //
+    // NOT GATED, deliberately, per the framework rule that content a supplement
+    // ADDS takes nothing away from a PHB-only table: the 42 new spells, the ten
+    // kits, the jitte and boku-toh, the eleven laboratory items and the twelve
+    // magical items. A table not using this book simply never holds one.
+    bandOrder: ['lesserDivination'],
+
+    lesserDivination: {
+      label: 'Lesser divination counts as greater',
+      hint:  'Gives the diviner his specialist bonuses on 1st-4th level divination spells.',
+      rules: ['lesserDivinationIsGreaterPHBR4'],
+      changes: [
+        { text: 'Lesser divination is part of greater divination (p.21). The PHB treats ' +
+                'divination spells of 4th level and below as a minor school open to every ' +
+                'wizard, so a diviner gets no specialist benefit from them. PHBR4 rules ' +
+                'that they count as his own school after all: he gains the +15% on the ' +
+                'Intelligence Table to learn them, and they satisfy the requirement that ' +
+                'one memorized spell be from his school in order to claim his bonus slot.' },
+        { text: 'BENEFITS PROPAGATE, PROHIBITIONS DO NOT. This does NOT close lesser ' +
+                'divination to the conjurer, whose opposition school is Greater ' +
+                'Divination. The same page says the minor school exists precisely so that ' +
+                'he keeps access to the low-level divinations, and p.66 calls them ' +
+                'something a wizard can barely function without.',
+          caveat: 'So detect magic and read magic stay learnable by every specialist, ' +
+                  'ticked or not. Only the diviner\u2019s side of the rule changes.' }
       ]
     }
   },
