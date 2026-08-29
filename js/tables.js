@@ -9254,7 +9254,11 @@ const SPECIALIST_POWERS_PHBR4 = {
   ],
   necromancer: [
     { level: 17, text: '+1 to saving throws against necromancy spells and against attacks made by undead, effectively +2 with the base modifier.' },
-    { level: 20, text: 'Cast a special speak with dead once per day by pointing and concentrating for one round, with no verbal or material components. Asks up to four questions of one dead creature over a full turn. The creature must have died within the past
+    { level: 20, text: 'Cast a special speak with dead once per day by pointing and concentrating for one round, with no verbal or material components. Asks up to four questions of one dead creature over a full turn. The creature must have died within the past 100 years and must have spoken a language the caster knows. It receives no saving throw regardless of its level or alignment, but answers evasively and sometimes cryptically.' }
+  ]
+};
+
+// Check a character against Table 22. Returns an array of problem strings
 // (empty if valid). Advisory only -- never blocks the player.
 function validateSpecialist(root) {
   // Resolve the WIZARD component first so multi-class (gnome illusionist) and
