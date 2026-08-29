@@ -802,12 +802,12 @@
   },
   {
     "Item Name": "Spell Component Pouch",
-    "Category": "Magical",
+    "Category": "Container",
     "Capacity": "2 lb of components",
     "Weight": "2 lb",
     "Cost": "10 gp",
     "Source": "Unattributed",
-    "Notes": "Contains common spell components SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default."
+    "Notes": "Contains common spell components SOURCE NOT YET ESTABLISHED. Most of these records are almost certainly PHB Chapter 6 but none has been checked against the book; absence of an attribution means NOT YET ATTRIBUTED, never PHB by default. CATEGORY CHANGED from Magical to Container, August 2026. A pouch is a container; its contents being spell components does not make the pouch magical, and true magical items live in core_magic.json rather than in this file. Magical had become a place where uncertain things were parked — it held only this record and one mis-filed potion — so the category is now retired from this file entirely."
   },
   {
     "Item Name": "Spellbook, Blank",
@@ -1792,12 +1792,12 @@
   },
   {
     "Item Name": "Ravager Potion",
-    "Category": "Magical",
+    "Category": "Adventuring Gear",
     "Capacity": "",
     "Weight": "1 lb",
     "Cost": "250 gp",
     "Source": "PHBR15",
-    "Notes": "PHBR15 Table 26 (Miscellaneous Equipment). Listed among ordinary equipment in Table 26 rather than as a magical item; category assigned here, not by the book."
+    "Notes": "PHBR15 Table 26 (Miscellaneous Equipment), 250 gp, 1 lb. NOT A MAGICAL ITEM — alchemical. Chris’s ruling, August 2026, and the book’s own placement agrees: Table 26 lists it among ordinary equipment rather than in any magical item table. It was briefly filed under a Magical category here on the strength of the word “potion” and a 250 gp price, which was inference from a name and nothing else. WHAT IT DOES IS NOT YET SOURCED. Table 26 prints only name, cost and weight; the description lives in a PHBR15 chapter that has not been surveyed. A secondary summary describes it as an NPC combat drug tied to a Ravager kit, but that summary gives 50 gp PER DOSE against this table’s 250 gp, so it disagrees with the one figure we can check. Nothing from it is recorded here. Fill this in when PHBR15 is properly surveyed."
   },
   {
     "Item Name": "Rope, Light (50 ft)",
