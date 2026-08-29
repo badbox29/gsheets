@@ -1,5 +1,23 @@
 [
   {
+    "name": "Airboat",
+    "category": "misc",
+    "displayGroup": "Tools & Gear",
+    "slot": null,
+    "baseType": null,
+    "restriction": "none",
+    "xp": 20000,
+    "detectionResistance": false,
+    "source": {
+      "book": "PHBR4",
+      "page": 125
+    },
+    "magicBonus": null,
+    "hitAdj": null,
+    "dmgAdj": null,
+    "effects": "PHBR4 Chapter 9, Twelve New Magical Items (pp.124-125). The book assigns each item to a specific DMG magical item table so a DM rolling randomly can place it, and prints an XP value; both are recorded. Appears to be a canoe made of stone, 3 feet tall, 12 feet long and 4 feet wide. Inside are five evenly spaced stone planks, each capable of seating two human-sized passengers. A plank at one end is marked with a star symbol in the center. Fitted with two sets of stone oars that fit in ridges carved in both sides. Responds to the mental orders of its commander — the character sitting on the star plank. ONLY A WIZARD OR PRIEST CAN SERVE AS COMMANDER. Moves in any direction in any medium; while moving it is surrounded by an aura of light that allows all its passengers to breathe normally, even through water or airless space, extending 10 feet from the craft. Movement rate 40; can move only if one set of oars is being rowed, with at least one set in the ridges. If only one set is used the craft has a maximum movement rate of 20; if both are used, 40. A single character can operate two oars, or two characters can sit side by side on a plank each operating one. To move at maximum speed the rowers must complete a stroke every two seconds; if the stroking rate is less, the maximum speed decreases proportionately — one set of oars stroking once every four seconds gives a maximum rate of 10. The commander must remain seated on the star plank and can take no actions other than commanding; if he moves from his seat, attempts to operate the oars, or takes any other action, the airboat stops moving. If his concentration is interrupted the craft stops; if it stops moving while in the air, it hovers in place for only 1 turn, after which it sinks gently to the ground. If it stops moving while on water, the boat simply drifts. DMG placement: add to Table 104, Miscellaneous Magic (page 139)."
+  },
+  {
     "name": "Amulet of Dramatic Death",
     "category": "worn",
     "displayGroup": "Clothing & Jewelry",
@@ -97,6 +115,20 @@
     "effects": "A nicely-crafted bracelet of sturdy gold links, looking like any other bracelet to which small charms and mementos are attached. When a warrior (only a warrior, multi-class warrior, or dual-class warrior) slides the bracelet around the blade or haft of a weapon and speaks the command word engraved on the clasp, the weapon disappears and a gold charm matching the weapon appears on the bracelet. Thereafter, when the warrior speaks the command word and the name of the weapon, the weapon magically appears in the hand on whose wrist the bracelet rested, and the bracelet disappears. Holds up to four weapons/charms, normal or magical. Shields and miscellaneous equipment cannot be held; only weapons built as weapons. Siege weapons cannot be held. The change takes no time at all, but only once per turn; the bracelet can be used only eight times in a day, turning the bracelet into a weapon counting as one use and turning the weapon back into a bracelet as one use. If the weapon held in the bracelet's enchantment is called on, and wielded, and then disarmed, the character cannot call on another weapon from the bracelet -- the bracelet is within the weapon and must be retrieved first. A weapon can be taken out of the array: take the bracelet off the wrist, speak the name of the weapon and then the command word, a reversal of the previous procedure. The bracelet does not magically know its owner; anyone who steals it and discovers what it is can use it. Quivers count as part of the weapon they carry arrows for. If a weapon is broken the bracelet isn't; the user separates the broken weapon from it. Quivers are not magically replenished. MAY NOT BE USED ON THE SAME WEAPON AS A SET OF RINGS OF READINESS."
   },
   {
+    "name": "Bracelet of Scaly Command",
+    "category": "worn",
+    "displayGroup": "Clothing & Jewelry",
+    "slot": "Bracelet",
+    "restriction": "none",
+    "xp": 2500,
+    "detectionResistance": false,
+    "source": {
+      "book": "PHBR4",
+      "page": 125
+    },
+    "effects": "PHBR4 Chapter 9, Twelve New Magical Items (pp.124-125). The book assigns each item to a specific DMG magical item table so a DM rolling randomly can place it, and prints an XP value; both are recorded. A coral bracelet enabling the wearer to control water-dwelling creatures with animal intelligence or lower — mainly fishes and reptiles. The creatures must be within a half-mile radius of the caster in order to be controlled, and must be within 30 feet of each other. The number that can be affected is a function of Hit Dice: the spell affects 1-10 Hit Dice of monsters, and monsters with 5+3 Hit Dice or more are unaffected. The center of the area of effect is determined by the spellcaster; creatures with the fewest Hit Dice are affected first, and partial effects are ignored. The caster does NOT have to be in the water to command the creatures. Control lasts 2-12 (2d6) turns and cannot be dispelled. No saving throw is allowed against the magic of the bracelet. Usable once per week. DMG placement: add to Table 96, Miscellaneous Magic (page 137)."
+  },
+  {
     "name": "Cage of Shelter",
     "category": "misc",
     "displayGroup": "Tools & Gear",
@@ -108,6 +140,24 @@
       "page": 114
     },
     "effects": "Looks like a large bird-cage that has been neatly folded down into a package about the size of a medium shield. The user, who can be of any character class, places it upon the ground, steps back from it, and claps his hands loudly either two or three times. TWO CLAPS: the cage grows into a sturdy metal-framed tent housing eight people (substitute one horse for four people). The tent confers no magical blessing but by using it and huddling together for warmth a party can survive a snowstorm that would kill an unprotected party; erected in the desert it avoids the danger and discomfort of a sandstorm. THREE CLAPS: the cage grows into a strong 10' by 10' cell. The door to the cell has the equivalent of a wizard lock; the cage's owner can open it any time he wishes, and any magician with the knock spell can open it by using that spell. A person in the cell would have to make his Bend Bars/Lift Gates roll successfully (or use a knock) to escape; the door's lock cannot be picked. To return the cage to its original form the owner claps again, twice if it is in tent form, three times if it is in cage form. If someone is in it when it is a tent and begins collapsing, it opens up around the person inside; both he and it are unhurt. If someone is in it when it is a cage and begins collapsing, it collapses around him, inflicting 2d6 damage before it breaks open; thereafter it is ruined forever. The cage knows its owner. If someone finds it in a treasure, he must carry it in his gear for a month for the cage to attune itself to him. If its true owner sells it to someone else in the cage's presence, the cage will obey the claps of its new owner immediately."
+  },
+  {
+    "name": "Candle of Everburning",
+    "category": "misc",
+    "displayGroup": "Tools & Gear",
+    "slot": null,
+    "baseType": null,
+    "restriction": "none",
+    "xp": 300,
+    "detectionResistance": false,
+    "source": {
+      "book": "PHBR4",
+      "page": 124
+    },
+    "magicBonus": null,
+    "hitAdj": null,
+    "dmgAdj": null,
+    "effects": "PHBR4 Chapter 9, Twelve New Magical Items (pp.124-125). The book assigns each item to a specific DMG magical item table so a DM rolling randomly can place it, and prints an XP value; both are recorded. Resembles an ordinary wax candle about 6 inches tall. Once lit, the flame can be extinguished only by the spoken command of whoever is holding it; otherwise it continues to burn. It will burn underwater, in any alternate plane of existence, or in the strongest of winds. Dispel magic and similar spells have no effect on the flame. Burns for 24 hours before all of its wax melts away. DMG placement: add to Table 101, Miscellaneous Magic (page 138)."
   },
   {
     "name": "Chameleon Cloak",
@@ -169,6 +219,24 @@
       "page": 114
     },
     "effects": "Given by deities and other powerful beings when they are pleased with the deed of a mortal. A small charm or statuette, usually of semiprecious material, two or three inches in size, representing the god or one of his aspects. Rather like a limited wish: it represents a favor which the deity will do for the character at some time in the future. To use it, the owner must throw the item on the ground so hard that it breaks, and then call out his request. The request must have something to do with the attributes of the god. The god hears it when the favor is requested and, in the guise of the DM, evaluates the favor; if it pertains to one of his attributes, and if the god does not think that the character is making the request out of mere greed or selfishness, and if bestowing the favor will not conflict with any of the god's other aims or desires, he will grant it. Because the deity is evaluating the request, the asking character cannot expect an outrageous favor to be granted. Most enemies who steal the charm from the PC cannot use it successfully; one might take it, hurl it to the ground and break it with his request, and find the cranky god stomping on him and freeing the faithful PC -- this, however, constitutes using up the favor. An NPC friend of the owner might be able to get the item and ask the god to help the charm's true owner, particularly if he is ill or kidnapped and cannot do so for himself. Any character of any class can receive such a charm as a favor, but when they are found in treasure they are useless -- they were not intended for the character who finds them. THE CHARM OF FAVOR DOES NOT RADIATE MAGIC."
+  },
+  {
+    "name": "Collapsing Spell Book",
+    "category": "misc",
+    "displayGroup": "Tools & Gear",
+    "slot": null,
+    "baseType": null,
+    "restriction": "none",
+    "xp": 1500,
+    "detectionResistance": false,
+    "source": {
+      "book": "PHBR4",
+      "page": 125
+    },
+    "magicBonus": null,
+    "hitAdj": null,
+    "dmgAdj": null,
+    "effects": "PHBR4 Chapter 9, Twelve New Magical Items (pp.124-125). The book assigns each item to a specific DMG magical item table so a DM rolling randomly can place it, and prints an XP value; both are recorded. Resembles an ordinary traveling spell book, except that it can be folded over and over until it is a square one inch on each side. The book can be unfolded when its owner wishes, then folded back into its small size for easy carrying. DMG placement: add to Table 95, Miscellaneous Magic (page 137)."
   },
   {
     "name": "Crossbow of Angling",
@@ -266,6 +334,20 @@
       "page": 108
     },
     "effects": "+1 for attack and damage determination, but it has a peculiar, hollow bronze bulb at the end of its pommel. If this is gently tapped against a hollow surface, it gives a resounding ring quite different from the dull tone emitted if struck against solid stone. Tapping it gently against walls allows the thief a 5 in 6 chance for finding a secret door, rising to 11 in 12 if the thief is elven or half-elven. Also, the thief can search for secret doors at twice the normal rate when using this dagger. In other cases, the thief is 80% likely to be able to determine successfully the approximate thickness and nature of the material the dagger is used to sound."
+  },
+  {
+    "name": "Dragon Slippers",
+    "category": "worn",
+    "displayGroup": "Clothing & Jewelry",
+    "slot": "Boots",
+    "restriction": "none",
+    "xp": 3000,
+    "detectionResistance": false,
+    "source": {
+      "book": "PHBR4",
+      "page": 124
+    },
+    "effects": "PHBR4 Chapter 9, Twelve New Magical Items (pp.124-125). The book assigns each item to a specific DMG magical item table so a DM rolling randomly can place it, and prints an XP value; both are recorded. Slippers of green silk. The magic activates if the wearer concentrates and speaks the word “change”. If activated, the wearer appears as a 20-foot dragon with bright yellow scales, a barbed tail, and long green fangs; the wearer does NOT gain any of the abilities of a dragon. While the illusion is in effect he retains his normal abilities and statistics. The effect lasts one hour, but can be cancelled at any time by the wearer’s command. DMG placement: add to Table 98, Miscellaneous Magic (page 138)."
   },
   {
     "name": "Dust of Trail Dispersion",
@@ -405,6 +487,20 @@
     "effects": "A very ordinary, even shabby, brown or grey cloak that makes its wearer utterly unmemorable. Gives a 5% bonus to hide in shadows in all circumstances and makes the wearer 80% undetectable if in a crowd (detection resistance applies here also). It also makes the wearer almost impossible to recognize after having been seen -- very useful in avoiding identification after a crime. Unless a witness (and it must be an eye witness) makes a check against one-fourth of his Intelligence, the wearer of the mantle will have appeared so mundane and boring in appearance that the witness will be unable to relate him to the thief, regardless of whether the thief is wearing the mantle the next time the witness sees him."
   },
   {
+    "name": "Medallion of Steadiness",
+    "category": "worn",
+    "displayGroup": "Clothing & Jewelry",
+    "slot": "Medallion",
+    "restriction": "none",
+    "xp": 1000,
+    "detectionResistance": false,
+    "source": {
+      "book": "PHBR4",
+      "page": 124
+    },
+    "effects": "PHBR4 Chapter 9, Twelve New Magical Items (pp.124-125). The book assigns each item to a specific DMG magical item table so a DM rolling randomly can place it, and prints an XP value; both are recorded. A silver medallion of a horse’s head. While wearing it, a character can never be thrown from his mount — whether a horse, a dragon, or any other creature suitable for riding. DMG placement: add to Table 96, Miscellaneous Magic (page 137)."
+  },
+  {
     "name": "Oil of Slickness",
     "category": "potion",
     "displayGroup": "Potions & Oils",
@@ -416,6 +512,42 @@
       "page": 105
     },
     "effects": "Rubbed into the skin of the hands, taking one turn. Improves the speed and coordination of the hands so that all manually-based thieving skills -- pick pockets, open locks, find/remove traps -- are improved by 10%. A vial or pot holds 1d4+4 applications; the effect lasts 1d4+4 turns. The bonuses can be claimed by any thief wearing gauntlets or gloves of any kind, including magical ones."
+  },
+  {
+    "name": "Parchment of Monster Holding",
+    "category": "misc",
+    "displayGroup": "Tools & Gear",
+    "slot": null,
+    "baseType": null,
+    "restriction": "none",
+    "xp": 150,
+    "detectionResistance": false,
+    "source": {
+      "book": "PHBR4",
+      "page": 124
+    },
+    "magicBonus": null,
+    "hitAdj": null,
+    "dmgAdj": null,
+    "effects": "PHBR4 Chapter 9, Twelve New Magical Items (pp.124-125). The book assigns each item to a specific DMG magical item table so a DM rolling randomly can place it, and prints an XP value; both are recorded. A 1-foot-square piece of parchment that can hold any monster summoned by a monster summoning I spell. The wizard unfolds the parchment and lays it before himself prior to casting the spell; if the spell is successfully cast, the summoned monster is immediately absorbed into the parchment, appearing there as a colored image. The caster can then refold the parchment and carry it with him, holding the summoned monster indefinitely. When the parchment is unfolded and laid on the ground and the wizard speaks a command word, the monster appears and remains active for the normal duration of the monster summoning I spell. Any single parchment can be used ONLY ONCE; after the monster is released it crumbles to dust. It also crumbles if torn or defaced in any way. DMG placement: add to Table 104, Miscellaneous Magic (page 139)."
+  },
+  {
+    "name": "Pen of Excellence",
+    "category": "misc",
+    "displayGroup": "Tools & Gear",
+    "slot": null,
+    "baseType": null,
+    "restriction": "none",
+    "xp": 1200,
+    "detectionResistance": false,
+    "source": {
+      "book": "PHBR4",
+      "page": 125
+    },
+    "magicBonus": null,
+    "hitAdj": null,
+    "dmgAdj": null,
+    "effects": "PHBR4 Chapter 9, Twelve New Magical Items (pp.124-125). The book assigns each item to a specific DMG magical item table so a DM rolling randomly can place it, and prints an XP value; both are recorded. Grants the user three abilities. He can write at twice his normal speed, particularly helpful for wizards copying new spells into their spell books. He can draw accurate pictures of anything he sees with the precision of the finest artist. And if he has a sample of another person’s handwriting, he can create a perfect forgery of that handwriting. Any type of ink can be used with a pen of excellence. DMG placement: add to Table 102, Miscellaneous Magic (page 138)."
   },
   {
     "name": "Portable Shadow",
@@ -434,6 +566,19 @@
     "magicBonus": null,
     "hitAdj": null,
     "dmgAdj": null
+  },
+  {
+    "name": "Potion of Elasticity",
+    "category": "potion",
+    "displayGroup": "Potions & Oils",
+    "restriction": "none",
+    "xp": 300,
+    "detectionResistance": false,
+    "source": {
+      "book": "PHBR4",
+      "page": 124
+    },
+    "effects": "PHBR4 Chapter 9, Twelve New Magical Items (pp.124-125). The book assigns each item to a specific DMG magical item table so a DM rolling randomly can place it, and prints an XP value; both are recorded. One dose lets the drinker stretch his legs, arms, neck or any other appendage to a distance in feet equal to twice his Constitution score — a character with Constitution 15 can stretch up to 30 feet. Only ONE appendage at a time; he can stretch one arm, one finger or his neck. Each time he stretches he must make a Constitution Check; on a failure the stress of the stretch causes 1d6 hit points of damage. The potion lasts 1-4 turns, during which he may make as many stretches as he likes so long as he checks for damage on each. DMG placement: add to Table 89, Potions and Oils (page 135)."
   },
   {
     "name": "Potion of Master Thievery",
@@ -550,6 +695,20 @@
         ]
       ]
     }
+  },
+  {
+    "name": "Ring of Resistance to Breath Weapons",
+    "category": "worn",
+    "displayGroup": "Clothing & Jewelry",
+    "slot": "Ring",
+    "restriction": "none",
+    "xp": 5000,
+    "detectionResistance": false,
+    "source": {
+      "book": "PHBR4",
+      "page": 125
+    },
+    "effects": "PHBR4 Chapter 9, Twelve New Magical Items (pp.124-125). The book assigns each item to a specific DMG magical item table so a DM rolling randomly can place it, and prints an XP value; both are recorded. Gives the wearer complete immunity to all breath weapon attacks from creatures OTHER THAN DRAGONS; the wearer suffers half damage from dragon breath. DMG placement: add to Table 91, Rings (page 136)."
   },
   {
     "name": "Rings of Readiness",
@@ -778,6 +937,24 @@
     "effects": "In the hands of any character this is a +2 magical weapon, but in the hands of a thief it is especially potent. WHEN A THIEF MAKES A BACKSTAB ATTEMPT WITH THIS SHORT SWORD, IT ALLOWS HIM TO ATTACK AS IF FOUR LEVELS HIGHER than his actual experience level, with corresponding improvements in THAC0, attack rolls, and damage multiplier on a successful hit."
   },
   {
+    "name": "Singing Skull",
+    "category": "misc",
+    "displayGroup": "Tools & Gear",
+    "slot": null,
+    "baseType": null,
+    "restriction": "none",
+    "xp": 2000,
+    "detectionResistance": false,
+    "source": {
+      "book": "PHBR4",
+      "page": 124
+    },
+    "magicBonus": null,
+    "hitAdj": null,
+    "dmgAdj": null,
+    "effects": "PHBR4 Chapter 9, Twelve New Magical Items (pp.124-125). The book assigns each item to a specific DMG magical item table so a DM rolling randomly can place it, and prints an XP value; both are recorded. A small human skull about 3 inches in diameter, made of ivory. Once per day the owner can command the skull to sing. It sings eerie, depressing tunes for one hour, or less if the owner so orders. All those within 50 feet must make a successful saving throw vs. spells or suffer the effects of a fear spell. The owner of the singing skull is immune to its effects. DMG placement: add to Table 103, Miscellaneous Magic (page 139)."
+  },
+  {
     "name": "Species Enemy Medallion",
     "category": "worn",
     "displayGroup": "Clothing & Jewelry",
@@ -794,6 +971,24 @@
     "magicBonus": null,
     "hitAdj": null,
     "dmgAdj": null
+  },
+  {
+    "name": "Spoon of Mixing",
+    "category": "misc",
+    "displayGroup": "Tools & Gear",
+    "slot": null,
+    "baseType": null,
+    "restriction": "none",
+    "xp": 1500,
+    "detectionResistance": false,
+    "source": {
+      "book": "PHBR4",
+      "page": 125
+    },
+    "magicBonus": null,
+    "hitAdj": null,
+    "dmgAdj": null,
+    "effects": "PHBR4 Chapter 9, Twelve New Magical Items (pp.124-125). The book assigns each item to a specific DMG magical item table so a DM rolling randomly can place it, and prints an XP value; both are recorded. Increases the chance of successfully combining magical potions to create a new effect. When combining potions per the rules on page 141 of the DMG, the percentile dice roll on Table 111 is modified by +10 when using the spoon of mixing. Treat all results greater than 00 as 00. NOTE that by using the spoon there is no chance that the combined potions will create an explosion, a lethal poison, or a mild poison. DMG placement: add to Table 102, Miscellaneous Magic (page 138)."
   },
   {
     "name": "String Cage",

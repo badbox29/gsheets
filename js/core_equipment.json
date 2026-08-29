@@ -1843,5 +1843,104 @@
     "Cost": "100 gp",
     "Source": "PHBR15",
     "Notes": "PHBR15 Table 26 (Miscellaneous Equipment). “Dark kite” — a kite large enough to lift a person."
+  },
+  {
+    "Item Name": "Granite Table Top",
+    "Category": "Tool",
+    "Capacity": "",
+    "Weight": "",
+    "Cost": "150 gp",
+    "Source": "PHBR4",
+    "Notes": "PHBR4 Chapter 9, Eleven Useful Additions to a Wizard’s Laboratory (pp.113-114). The book describes these as less common but extremely useful items found in an especially well-furnished laboratory, and prints a cost for each. An ordinary desk with a top of polished granite or quartzite, to resist staining and damage from acids and other potent substances. WEIGHT NOT PRINTED: PHBR4 gives a cost only for these items, and an absent weight is recorded as absent rather than estimated."
+  },
+  {
+    "Item Name": "Glass Mask",
+    "Category": "Tool",
+    "Capacity": "",
+    "Weight": "",
+    "Cost": "10 gp",
+    "Source": "PHBR4",
+    "Notes": "PHBR4 Chapter 9, Eleven Useful Additions to a Wizard’s Laboratory (pp.113-114). The book describes these as less common but extremely useful items found in an especially well-furnished laboratory, and prints a cost for each. A face mask of glass, designed to protect the wizard from inhaling poisonous fumes and to protect his face from splashed chemicals. WEIGHT NOT PRINTED: PHBR4 gives a cost only for these items, and an absent weight is recorded as absent rather than estimated."
+  },
+  {
+    "Item Name": "Alchemist’s Globe",
+    "Category": "Tool",
+    "Capacity": "",
+    "Weight": "",
+    "Cost": "150-250 gp",
+    "Source": "PHBR4",
+    "Notes": "PHBR4 Chapter 9, Eleven Useful Additions to a Wizard’s Laboratory (pp.113-114). The book describes these as less common but extremely useful items found in an especially well-furnished laboratory, and prints a cost for each. A 3-foot-diameter glass globe separating into two sections. Assembled, the sections form a tight seal that prevents air from entering. Items and substances can be locked inside to isolate them from outside conditions. Small and large globes are available; PRICE IS A RANGE AS PRINTED. WEIGHT NOT PRINTED: PHBR4 gives a cost only for these items, and an absent weight is recorded as absent rather than estimated."
+  },
+  {
+    "Item Name": "Athanor",
+    "Category": "Tool",
+    "Capacity": "",
+    "Weight": "",
+    "Cost": "80 gp",
+    "Source": "PHBR4",
+    "Notes": "PHBR4 Chapter 9, Eleven Useful Additions to a Wizard’s Laboratory (pp.113-114). The book describes these as less common but extremely useful items found in an especially well-furnished laboratory, and prints a cost for each. A small furnace consisting of an oven and a deep pan of sifted ashes. Substances to be heated are placed in a sealed container and covered in ashes for slow, even heating. WEIGHT NOT PRINTED: PHBR4 gives a cost only for these items, and an absent weight is recorded as absent rather than estimated."
+  },
+  {
+    "Item Name": "Descensory Furnace",
+    "Category": "Tool",
+    "Capacity": "",
+    "Weight": "",
+    "Cost": "100 gp",
+    "Source": "PHBR4",
+    "Notes": "PHBR4 Chapter 9, Eleven Useful Additions to a Wizard’s Laboratory (pp.113-114). The book describes these as less common but extremely useful items found in an especially well-furnished laboratory, and prints a cost for each. A medium-sized furnace used primarily for heating liquids. The liquid is poured down a funnel on the top which runs into a container in the belly of the furnace. WEIGHT NOT PRINTED: PHBR4 gives a cost only for these items, and an absent weight is recorded as absent rather than estimated."
+  },
+  {
+    "Item Name": "Heat Bath",
+    "Category": "Tool",
+    "Capacity": "",
+    "Weight": "",
+    "Cost": "75 gp",
+    "Source": "PHBR4",
+    "Notes": "PHBR4 Chapter 9, Eleven Useful Additions to a Wizard’s Laboratory (pp.113-114). The book describes these as less common but extremely useful items found in an especially well-furnished laboratory, and prints a cost for each. A small furnace holding a deep pan of water containing metal rings to hold variously sized flasks and tubes. The substance to be dissolved is placed in a glass tube, which is placed in an appropriately-sized ring in the pan; the furnace gradually heats the water and thus the substance. WEIGHT NOT PRINTED: PHBR4 gives a cost only for these items, and an absent weight is recorded as absent rather than estimated."
+  },
+  {
+    "Item Name": "Dung Bed",
+    "Category": "Tool",
+    "Capacity": "",
+    "Weight": "",
+    "Cost": "25 gp",
+    "Source": "PHBR4",
+    "Notes": "PHBR4 Chapter 9, Eleven Useful Additions to a Wizard’s Laboratory (pp.113-114). The book describes these as less common but extremely useful items found in an especially well-furnished laboratory, and prints a cost for each. A box of glass or other non-flammable material with a tight-fitting lid, filled with hot dung or clean dry sand. Treated substances are placed in it to keep them warm. WEIGHT NOT PRINTED: PHBR4 gives a cost only for these items, and an absent weight is recorded as absent rather than estimated."
+  },
+  {
+    "Item Name": "Analytical Balance",
+    "Category": "Tool",
+    "Capacity": "",
+    "Weight": "",
+    "Cost": "400 gp",
+    "Source": "PHBR4",
+    "Notes": "PHBR4 Chapter 9, Eleven Useful Additions to a Wizard’s Laboratory (pp.113-114). The book describes these as less common but extremely useful items found in an especially well-furnished laboratory, and prints a cost for each. An extremely precise scale for weighing solid materials, sensitive enough to distinguish a blank piece of paper from a paper with writing on it. Kept dust-free under a glass case. WEIGHT NOT PRINTED: PHBR4 gives a cost only for these items, and an absent weight is recorded as absent rather than estimated."
+  },
+  {
+    "Item Name": "Burette",
+    "Category": "Tool",
+    "Capacity": "",
+    "Weight": "",
+    "Cost": "1 gp",
+    "Source": "PHBR4",
+    "Notes": "PHBR4 Chapter 9, Eleven Useful Additions to a Wizard’s Laboratory (pp.113-114). The book describes these as less common but extremely useful items found in an especially well-furnished laboratory, and prints a cost for each. A thick tube with a valve on one end, used to measure liquids precisely. WEIGHT NOT PRINTED: PHBR4 gives a cost only for these items, and an absent weight is recorded as absent rather than estimated."
+  },
+  {
+    "Item Name": "Filter Paper (10 sheets)",
+    "Category": "Tool",
+    "Capacity": "",
+    "Weight": "",
+    "Cost": "1 gp",
+    "Source": "PHBR4",
+    "Notes": "PHBR4 Chapter 9, Eleven Useful Additions to a Wizard’s Laboratory (pp.113-114). The book describes these as less common but extremely useful items found in an especially well-furnished laboratory, and prints a cost for each. Specially treated paper that filters solids from liquids. A funnel is lined with the paper and the liquid poured in; solid material will not pass through. PRICED PER 10 SHEETS as printed. WEIGHT NOT PRINTED: PHBR4 gives a cost only for these items, and an absent weight is recorded as absent rather than estimated."
+  },
+  {
+    "Item Name": "Hand Centrifuge",
+    "Category": "Tool",
+    "Capacity": "",
+    "Weight": "",
+    "Cost": "100 gp",
+    "Source": "PHBR4",
+    "Notes": "PHBR4 Chapter 9, Eleven Useful Additions to a Wizard’s Laboratory (pp.113-114). The book describes these as less common but extremely useful items found in an especially well-furnished laboratory, and prints a cost for each. A machine of several rings for holding test tubes, with a hand pump on top. Filled test tubes are placed in the rings and the pump worked rapidly, spinning the tubes in a circle; heavier substances sink to the bottom while lighter ones remain near the top. WEIGHT NOT PRINTED: PHBR4 gives a cost only for these items, and an absent weight is recorded as absent rather than estimated."
   }
 ]
