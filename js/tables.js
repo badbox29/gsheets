@@ -7711,7 +7711,7 @@ const SUPPLEMENTS = {
       ]
     }
   },
-    phbr3: {
+  phbr3: {
     code:  'PHBR3',
     title: 'The Complete Priest\u2019s Handbook',
     order: 3,
