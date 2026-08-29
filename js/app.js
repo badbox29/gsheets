@@ -10816,6 +10816,18 @@ function recalcAllOpenSheets() {
 	if (typeof renderUnarmedTables === 'function') renderUnarmedTables(sheet);
     if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(sheet);
     if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(sheet);
+    // Same gap again, spell side. Both consumers of isSpecialtySpell sat
+    // outside every refresh path, so PHBR4's lesser-divination band updated
+    // nothing until the player hit the browser's own refresh button.
+    // renderMemorizedSpellStatus cascades to renderSpecialistSpellNotes, which
+    // paints the spellbook rails AND decides whether the free-spell claim
+    // checkbox is offered -- that is the bonus-slot half of the rule, so it
+    // must repaint or the toggle only does half its job.
+    if (typeof renderMemorizedSpellStatus === 'function') renderMemorizedSpellStatus(sheet);
+    // Async, so a failure here rejects a promise rather than throwing and
+    // killing the rest of this loop. It returns early when .spell-results is
+    // absent, so it costs nothing on a sheet with the browser closed.
+    if (typeof renderSpellBrowser === 'function') renderSpellBrowser(sheet);
   });
 }
 
