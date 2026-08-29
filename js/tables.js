@@ -9154,7 +9154,7 @@ const SPECIALIST_WIZARDS = {
     minAbility: { stat: "wis", score: 16 },
     opposition: ["Illusion/Phantasm", "Enchantment/Charm"]
   },
-  "transmuter": {
+    "transmuter": {
     school: "Alteration",
     races: ["human", "half-elf"],
     minAbility: { stat: "dex", score: 15 },
@@ -9162,7 +9162,55 @@ const SPECIALIST_WIZARDS = {
   }
 };
 
-// Check a character against Table 22. Returns an array of problem strings
+// ===== PHBR4 specialist save modifiers and acquired powers =====
+// The Complete Wizard's Handbook Ch.1, pp.8-19. DELIBERATELY SEPARATE FROM
+// SPECIALIST_WIZARDS: that object is PHB Table 22 and nothing else, and all of
+// this is gated behind phbr4.schoolPowers. Putting gated supplement data inside
+// an ungated PHB structure is how a table that never ticked the book starts
+// quietly getting its numbers.
+//
+// The save modifiers are UNIFORM across all eight schools, so they are one
+// constant rather than a field repeated eight times. The bonuses in POWERS are
+// IN ADDITION to this base: an invoker at 20th is at +3, a necromancer at 17th
+// at +2, an illusionist at 18th at +2 against non-illusionist illusions.
+const SPECIALIST_SAVE_MODS_PHBR4 = { self: 1, opponents: -1 };
+
+// Keys match SPECIALIST_WIZARDS exactly. `level` is the wizard level at which
+// the power is acquired. NOTHING HERE MAY ASSUME 17-AND-20: the diviner has a
+// 19th-level power and the illusionist an 18th instead of a 17th.
+const SPECIALIST_POWERS_PHBR4 = {
+  abjurer: [
+    { level: 17, text: 'Immune to all forms of hold spells. +1 to saving throws against poison, paralyzation and death magic.' },
+    { level: 20, text: 'Armor Class improves from 10 to 9. Still forbidden to wear armor.' }
+  ],
+  transmuter: [
+    { level: 17, text: 'One extra wizard nonweapon proficiency, above the number normally allowed. If he already has every wizard proficiency available to him, he may take a general one instead.' },
+    { level: 20, text: 'A second extra wizard nonweapon proficiency, on the same terms.' }
+  ],
+  conjurer: [
+    { level: 17, text: 'No material components required to cast conjuration or summoning spells.' },
+    { level: 20, text: 'Instantly dispel creatures conjured by an opponent using monster summoning or its equivalent. Up to 10 Hit Dice worth, and only creatures of 5 HD or fewer. Three times per day, by pointing and concentrating.' }
+  ],
+  enchanter: [
+    { level: 17, text: 'Immune to all forms of charm spells.' },
+    { level: 20, text: 'Cast a special free action once per day, on himself or any creature he touches. No material components, casting time 1. Negates hold; underwater the subject moves at normal speed and inflicts full damage with a wielded weapon.' }
+  ],
+  diviner: [
+    { level: 17, text: 'Immune to all forms of scrying spells, such as ESP and know alignment.' },
+    { level: 19, text: 'Cast a special find traps three times per day: a 10-foot path out to 30 yards, no verbal or material components. Reveals magical and mechanical traps and their general nature, but not their exact effect or how to disarm them.' },
+    { level: 20, text: 'Cast a special divination once per day, concentrating for one full turn. Reveals one useful piece of advice about a goal, event or activity within the next seven days. Base chance of a correct divination is 80 percent.' }
+  ],
+  illusionist: [
+    { level: 18, text: '+1 to saving throws against illusions cast by non-illusionists, effectively +2 with the base modifier.' },
+    { level: 20, text: 'Cast a special dispel illusion three times per day: range 30 yards, casting time 1, no components. Dispels any phantasmal force including those augmented by audible glamer, but only works on phantasmal force cast by non-illusionists. Base 50 percent, +5 per level the illusionist exceeds the caster and -5 per level the caster exceeds him. Cast at something that is not an illusion it has no effect but still counts against the daily limit.' }
+  ],
+  invoker: [
+    { level: 17, text: '+1 to saving throws against invocation/evocation spells and against magical devices duplicating them, effectively +2 with the base modifier.' },
+    { level: 20, text: 'A further +1, raising the bonus to +3.' }
+  ],
+  necromancer: [
+    { level: 17, text: '+1 to saving throws against necromancy spells and against attacks made by undead, effectively +2 with the base modifier.' },
+    { level: 20, text: 'Cast a special speak with dead once per day by pointing and concentrating for one round, with no verbal or material components. Asks up to four questions of one dead creature over a full turn. The creature must have died within the past
 // (empty if valid). Advisory only -- never blocks the player.
 function validateSpecialist(root) {
   // Resolve the WIZARD component first so multi-class (gnome illusionist) and
@@ -9263,6 +9311,16 @@ function isSpecialtySpell(spell, clazz) {
     : parseInt(spell.level, 10) || 0;
 
   if (school === "Greater Divination") {
+    // PHBR4 p.21 rules that ALL lesser divination spells count as greater
+    // divination, so a diviner gets his +15% and his bonus slot on 1st-4th
+    // level divinations too. Deliberately NOT mirrored in isOppositionSpell:
+    // the same page says lesser divination exists precisely so the conjurer
+    // keeps access to low-level divinations, so benefits propagate and
+    // prohibitions do not. Chris's ruling, August 2026.
+    if (typeof isOptionalRule === 'function' &&
+        isOptionalRule('lesserDivinationIsGreaterPHBR4')) {
+      return schools.includes("Divination");
+    }
     return schools.includes("Divination") && level >= 5;
   }
   return schools.includes(school);
