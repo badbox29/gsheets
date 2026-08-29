@@ -207,12 +207,35 @@
     "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Optional rule - Renaissance weapons, cone effect"
   },
   {
+    "Weapon Name": "Boku-toh",
+    "Category": "Melee",
+    "Size": "M",
+    "Type": "B",
+    "Damage (S-M)": "1d4",
+    "Damage (L)": "1d2",
+    "Damage (S-M) 2H": "",
+    "Damage (L) 2H": "",
+    "Grip": "",
+    "No Proficiency": "",
+    "Speed Factor": "4",
+    "Speed Factor 2H": "",
+    "ROF": "",
+    "Range (S)": "",
+    "Range (M)": "",
+    "Range (L)": "",
+    "Group": "Sword",
+    "Cost": "6 cp",
+    "Weight": "3 lb",
+    "Source": "PHBR4",
+    "Notes": "PHBR4 Table 9 (p.48). A wooden replica of a short sword, normally used for practice since it cannot cut or slash; used aggressively it causes bludgeoning damage. GRIP DELIBERATELY BLANK: PHBR4 prints no grip marker for any weapon in Table 9. GROUP IS A JUDGEMENT CALL and is house taxonomy with no book behind it. Sword was chosen over Club because the weapon is a sword in shape and handling and a player will look for it there; it also means short sword proficiency partly covers it, which is the point of a practice weapon. The Type stays B."
+  },
+  {
     "Weapon Name": "Bo Stick",
     "Category": "Melee",
     "Size": "L",
     "Type": "B",
     "Damage (S-M)": "1d6",
-    "Damage (L)": "1d6",
+    "Damage (L)": "1d4",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
     "Grip": "two-handed",
@@ -224,10 +247,10 @@
     "Range (M)": "",
     "Range (L)": "",
     "Group": "Staff",
-    "Cost": "1 sp",
+    "Cost": "2 cp",
     "Weight": "4 lb",
-    "Source": "Unattributed",
-    "Notes": "Oriental weapon PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Cost 2 cp, Speed Factor 4, Damage (L) 1d4. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.100-101): shares a proficiency with QUARTERSTAFF -- if you can use one you can use the other. TWO-HANDED ONLY (PHBR1 pp.95, 119, marked '&'): intended for two-handed use only."
+    "Source": "PHBR4",
+    "Notes": "PHBR4 Table 9 (p.48) ADOPTED IN FULL, August 2026 -- Chris's ruling, and it closes an Unattributed row that had stood since the provenance pass. Cost was 1 sp and Damage (L) was 1d6; both now match PHBR4. Speed Factor 3 was already right and PHBR4 confirms it. WHY ADOPT: PHBR1 (pp.95, 119) prints Cost 2 cp and Damage (L) 1d4, AGREEING with PHBR4, but Speed Factor 4, which is NOT adopted. Two independently printed sources against one unsourced row -- and PHBR4 is demonstrably not a reprint of PHBR1, since a reprint would have matched on all three fields. That is what made the agreement real evidence rather than an echo. Same reasoning as the Maul, adopted from an unattributed row during the PHBR3 pass: an unattributed value has no provenance at all, and a printed value in a book in hand beats it. PHBR1's Speed Factor 4 is recorded here as the variant. PROFICIENCY RELATIONSHIP (PHBR1 pp.100-101): shares a proficiency with QUARTERSTAFF -- if you can use one you can use the other. TWO-HANDED ONLY (PHBR1 pp.95, 119, marked '&'). PHBR4 describes it as a staff of hard wood, very difficult to break, normally 6-7 feet long."
   },
   {
     "Weapon Name": "Bola",
@@ -1111,6 +1134,29 @@
     "Weight": "2 lb",
     "Source": "PHBR1",
     "Notes": "A javelin with a stone head. ONE-HANDED: 1d4 / 1d4. TWO-HANDED: 1d4+1 / 1d6. SHATTERS on a roll of 1 on 1d6 every time it hits; the attack does its full damage regardless. When thrown, the damage is always the ONE-HANDED figure, never the two-handed one. PHBR1 pp.93-95, 103, 119. GRIP: usable one- or two-handed, with DIFFERENT damage for each (PHBR1 p.95, 119). One-handed 1d4/1d4; two-handed 1d4+1/1d6. The main Damage columns now hold the ONE-HANDED line and the 2H columns the two-handed line. BEFORE THIS PASS this record held the one-handed line with no way to select the other. These spear-like weapons are as fast and maneuverable in two hands as in one, so the speed factor does NOT worsen two-handed -- unlike the bastard sword."
+  },
+  {
+    "Weapon Name": "Jitte",
+    "Category": "Melee",
+    "Size": "S",
+    "Type": "B",
+    "Damage (S-M)": "1d4",
+    "Damage (L)": "1d2",
+    "Damage (S-M) 2H": "",
+    "Damage (L) 2H": "",
+    "Grip": "",
+    "No Proficiency": "",
+    "Speed Factor": "2",
+    "Speed Factor 2H": "",
+    "ROF": "",
+    "Range (S)": "",
+    "Range (M)": "",
+    "Range (L)": "",
+    "Group": "Club",
+    "Cost": "10 cp",
+    "Weight": "2 lb",
+    "Source": "PHBR4",
+    "Notes": "PHBR4 Table 9 (p.48). A tapered iron bar with a short hook near the handle; the hook is not sharp enough to cut or pierce, so the jitte strikes blows only. GRIP DELIBERATELY BLANK: PHBR4 prints no grip marker for any weapon in Table 9, and an unset Grip is the permissive default the code already documents. Not inferred from the Sai, which this weapon physically resembles. GROUP IS A JUDGEMENT CALL and is house taxonomy with no book behind it. Club was chosen over Dagger because the jitte is bludgeoning and edgeless; the Sai, near-identical in form, sits in Dagger because it is piercing. Group is the fallback for the related-weapon half-penalty, so this decides which proficiency partly covers it."
   },
   {
     "Weapon Name": "Kama",
@@ -2069,7 +2115,7 @@
     "Cost": "3 sp",
     "Weight": "0.1 lb",
     "Source": "Unattributed",
-    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Oriental weapon PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Weight 1 lb. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.102): its own proficiency, not related to any other. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed."
+    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Oriental weapon PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Weight 1 lb. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. PROFICIENCY RELATIONSHIP (PHBR1 p.102): its own proficiency, not related to any other. ONE-HANDED ONLY (PHBR1 pp.95, 119, marked '!'): intended for one-handed use and may not be used two-handed. PHBR4 Table 9 (p.48) ALSO prints this weapon: Cost 10 sp, Damage 1d6/1d4, and a DASH for Speed Factor. NOT ADOPTED -- Chris's ruling, August 2026: leave it and let PHBR15, The Complete Ninja's Handbook, settle it. Adopting PHBR4 wholesale would trade one unsourced row for a partly blank sourced one and discard a speed factor for nothing. BUT PHBR4 SETTLES THE WEIGHT, AND CORRECTS A CLAIM IN THE PROJECT NOTES: its footnote reads 'Ten large shuriken weigh a total of 1 pound', which explains PHBR1's '1 lb' as a per-ten figure. The 0.1 lb stored here is the same number expressed per unit, so ours, PHBR1's and PHBR4's have agreed on weight all along. The old note that PHBR1 differs from us 'in every case' was a units mismatch read as a conflict. PHBR4 also prints a fire rate of 3 and ranges of 5/10/20 yards, which this record does not carry -- see the open item; those are a GAP being filled from a printed source rather than a conflict, and are a separate decision from the cost and damage above."
   },
   {
     "Weapon Name": "Sickle",
