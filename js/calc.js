@@ -11502,7 +11502,9 @@ function renderClassGroupValidation(root) {
     { heading: 'Gender and kit (Complete handbooks)',
       problems: (typeof validateKitGender === 'function') ? validateKitGender(root) : [] },
     { heading: 'Priesthood and kit (PHBR3 Ch.4)',
-      problems: (typeof validateKitPriesthood === 'function') ? validateKitPriesthood(root) : [] }
+      problems: (typeof validateKitPriesthood === 'function') ? validateKitPriesthood(root) : [] },
+    { heading: 'Specialisation and kit (PHBR4 p.34)',
+      problems: (typeof validateKitSchool === 'function') ? validateKitSchool(root) : [] }
   ];
 
   const active   = sources.filter(s => s.problems.length);
