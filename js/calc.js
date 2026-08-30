@@ -3715,6 +3715,58 @@ function populateKitVariantDropdown(root) {
   else                                                      sel.value = sel.options[0].value;
 }
 
+// Seeds the kit's benefits and hindrances into the player's own Special Powers
+// and Special Hindrances fields. THE SAME TEXT the reference disclosure shows,
+// deliberately -- that makes the disclosure a true immutable copy of what was
+// put in the field, and makes the comparison below a plain equality test.
+//
+// THESE ARE PLAYER-OWNED FIELDS, so the rule is: never overwrite writing that
+// is not ours. We know what we last seeded, so we can tell the two apart --
+// the same reasoning as _declinedGrants, which exists because the sheet cannot
+// otherwise distinguish a deliberate deletion from an absence.
+//
+//   empty            -> seed it
+//   equals our seed  -> untouched, so a kit change may replace it
+//   anything else    -> the player's, and left alone permanently
+//
+// A player who edits the field keeps his text through later kit changes. That
+// is intended: his writing outranks our convenience, and the disclosure still
+// shows the new kit's reference so nothing is hidden from him.
+function seedKitNotes(root) {
+  if (!root._seededNotes || typeof root._seededNotes !== 'object') {
+    root._seededNotes = { powers: '', hindrances: '' };
+  }
+  const kit = (typeof getSelectedKit === 'function') ? getSelectedKit(root) : null;
+  const want = {
+    powers:     (kit && kit.benefits)   ? String(kit.benefits)   : '',
+    hindrances: (kit && kit.hindrances) ? String(kit.hindrances) : ''
+  };
+
+  [['powers', 'notes_powers'], ['hindrances', 'notes_hindrances']].forEach(pair => {
+    const key = pair[0], field = pair[1];
+    const el  = root.querySelector('[data-field="' + field + '"]');
+    if (!el) return;
+
+    // NEVER WRITE INTO A FIELD BEING TYPED IN. recalculateAll runs on input
+    // events, so without this a render mid-sentence would replace the caret's
+    // line. Skipping is safe -- the next render after blur will catch up.
+    if (document.activeElement === el) return;
+
+    const cur  = el.value || '';
+    const seed = root._seededNotes[key] || '';
+    if (cur !== '' && cur !== seed) return;      // the player's writing; hands off
+    if (cur === want[key]) { root._seededNotes[key] = want[key]; return; }
+
+    el.value = want[key];
+    root._seededNotes[key] = want[key];
+    // Only ever reached when the text actually changed, so this cannot mark a
+    // freshly loaded sheet dirty for no reason.
+    if (typeof markUnsaved === 'function') {
+      markUnsaved(document.querySelector('.tab.active'), true, root);
+    }
+  });
+}
+
 // The creation-time half of the kit's data: starting money, required equipment,
 // secondary skills, school preferences, what abandoning costs. Consulted once
 // and then noise, so it lives collapsed rather than on the sheet.
@@ -3811,6 +3863,10 @@ function renderKitAbilities(root) {
   // same reason the proficiency grants do -- ABOVE the early return, because
   // clearing the kit is exactly when it must be emptied and hidden.
   if (typeof renderKitReference === 'function') renderKitReference(root);
+
+  // Same placement, same reason: clearing the kit must clear an unedited seed
+  // rather than leaving the old kit's benefits sitting under no kit at all.
+  if (typeof seedKitNotes === 'function') seedKitNotes(root);
 
   // DERIVED CARDS: benefits, hindrances, reaction and taboos. Fields the kit
   // carries that no other renderer consumes, and that assert a persistent fact
