@@ -315,25 +315,25 @@
     "Weapon Name": "Blunderbuss",
     "Alias": "",
     "Category": "Ranged",
-    "Size": "L",
+    "Size": "M",
     "Type": "P",
-    "Damage (S-M)": "1d10",
-    "Damage (L)": "1d10",
+    "Damage (S-M)": "1d8",
+    "Damage (L)": "1d8",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
     "Grip": "",
     "No Proficiency": "",
-    "Speed Factor": "15",
+    "Speed Factor": "10",
     "Speed Factor 2H": "",
     "ROF": "",
     "Range (S)": "",
     "Range (M)": "",
     "Range (L)": "",
     "Group": "Firearm",
-    "Cost": "500 gp",
-    "Weight": "8 lb",
-    "Source": "Unattributed",
-    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Optional rule - Renaissance weapons, cone effect"
+    "Cost": "20 gp",
+    "Weight": "10 lb",
+    "Source": "Combat & Tactics",
+    "Notes": "Player’s Option: Combat & Tactics, weapon tables (and the Firearms price list for cost), verified August 2026. C&T IS A USABLE SOURCE FOR THE CORE WEAPON LINE, not an alternate restatting: checked against four rows already attributed from other books — Nunchaku, Katana, Falchion and Trident — it matches all four exactly on weight, size, type, speed factor and both damage figures. Its Fa/Av/Sl speed notation carries the speed factor in the parenthetical. ITS RANGES ARE IN SQUARES, NOT YARDS, and are NOT imported — footnote 10 gives it away, the staff sling showing 6/12/18 against a footnote describing attacks “6 to 12 squares away”. C&T also carries Melee Reach and Knockdown columns this file has no home for. ATTRIBUTED AND HEAVILY CORRECTED, closing an Unattributed row. It was 500 gp, 8 lb, Size L, speed factor 15, damage 1d10/1d10; C&T prints 20 gp (Flintlock list), 10 lb, Size M, Sl(10), 1d8/1d8. THE OLD ROW WAS ALMOST CERTAINLY A CLONED ARQUEBUS. Its 500 gp, speed factor 15 and 1d10/1d10 are the Arquebus’s figures exactly, and this file already carries an Arquebus sourced to the PHB with them. The suspicion that this was a duplicate under a second name was right about the NUMBERS and wrong about the WEAPON — Chris: “blunderbuss is a unique weapon. ours might need tweaking but it’s real.” C&T lists it as a distinct flintlock alongside a Blunderbuss Pistol (35 gp, 6 lb, S, Sl(9), 1d6/1d6). SPECIAL RULE, C&T footnote 4: the blunderbuss inflicts 1d4 SEPARATE ATTACKS on targets at short range, and cannot cause the additional damage other firearms do. Flintlocks misfire on a natural attack roll of 1 (footnote 3). Rate of fire is one shot per three rounds. RANGE STAYS BLANK: C&T gives 3/6/12 in SQUARES, which is not this field’s unit."
   },
   {
     "Weapon Name": "Bo Stick",
@@ -357,7 +357,7 @@
     "Cost": "2 cp",
     "Weight": "4 lb",
     "Source": "PHBR4",
-    "Notes": "PHBR4 Table 9 (p.48) ADOPTED IN FULL, August 2026 -- Chris's ruling, and it closes an Unattributed row that had stood since the provenance pass. Cost was 1 sp and Damage (L) was 1d6; both now match PHBR4. Speed Factor 3 was already right and PHBR4 confirms it. WHY ADOPT: PHBR1 (pp.95, 119) prints Cost 2 cp and Damage (L) 1d4, AGREEING with PHBR4, but Speed Factor 4, which is NOT adopted. Two independently printed sources against one unsourced row -- and PHBR4 is demonstrably not a reprint of PHBR1, since a reprint would have matched on all three fields. That is what made the agreement real evidence rather than an echo. Same reasoning as the Maul, adopted from an unattributed row during the PHBR3 pass: an unattributed value has no provenance at all, and a printed value in a book in hand beats it. PHBR1's Speed Factor 4 is recorded here as the variant. PROFICIENCY RELATIONSHIP (PHBR1 pp.100-101): shares a proficiency with QUARTERSTAFF -- if you can use one you can use the other. TWO-HANDED ONLY (PHBR1 pp.95, 119, marked '&'). PHBR4 describes it as a staff of hard wood, very difficult to break, normally 6-7 feet long. PHBR15 Table 24 prints “Bo (staff)” at 5 cp, 4 lb, L, B, speed factor 4, 1d6/1d6 — statistics IDENTICAL to the PHB quarterstaff. Under PHBR15’s own stated reprint policy that is an equivalence claim about the quarterstaff, not a third set of figures for this weapon, so it is recorded on the Quarterstaff row as an alias and changes nothing here. The bo stick remains what PHBR1 and PHBR4 both print: a distinct Oriental weapon with its own line."
+    "Notes": "PHBR4 Table 9 (p.48) ADOPTED IN FULL, August 2026 -- Chris's ruling, and it closes an Unattributed row that had stood since the provenance pass. Cost was 1 sp and Damage (L) was 1d6; both now match PHBR4. Speed Factor 3 was already right and PHBR4 confirms it. WHY ADOPT: PHBR1 (pp.95, 119) prints Cost 2 cp and Damage (L) 1d4, AGREEING with PHBR4, but Speed Factor 4, which is NOT adopted. Two independently printed sources against one unsourced row -- and PHBR4 is demonstrably not a reprint of PHBR1, since a reprint would have matched on all three fields. That is what made the agreement real evidence rather than an echo. Same reasoning as the Maul, adopted from an unattributed row during the PHBR3 pass: an unattributed value has no provenance at all, and a printed value in a book in hand beats it. PHBR1's Speed Factor 4 is recorded here as the variant. PROFICIENCY RELATIONSHIP (PHBR1 pp.100-101): shares a proficiency with QUARTERSTAFF -- if you can use one you can use the other. TWO-HANDED ONLY (PHBR1 pp.95, 119, marked '&'). PHBR4 describes it as a staff of hard wood, very difficult to break, normally 6-7 feet long. PHBR15 Table 24 prints “Bo (staff)” at 5 cp, 4 lb, L, B, speed factor 4, 1d6/1d6 — statistics IDENTICAL to the PHB quarterstaff. Under PHBR15’s own stated reprint policy that is an equivalence claim about the quarterstaff, not a third set of figures for this weapon, so it is recorded on the Quarterstaff row as an alias and changes nothing here. The bo stick remains what PHBR1 and PHBR4 both print: a distinct Oriental weapon with its own line. A THIRD READING OF THE LARGE DAMAGE, recorded not adopted: Player’s Option: Combat & Tactics prints the bo stick at 4 lb, L, B, Fa(3), damage 1d6/1d6 — agreeing with this row on everything except Damage (L), where it gives 1d6 against the 1d4 adopted from PHBR4. PHBR1 and PHBR4 both print 1d4, so the adopted value still has two printings behind it against C&T’s one, and it stands. Noted because this row’s ORIGINAL unattributed value was also 1d6, so C&T is a second voice for the figure that was replaced."
   },
   {
     "Weapon Name": "Boku-toh",
@@ -930,10 +930,10 @@
     "Range (M)": "",
     "Range (L)": "",
     "Group": "Sword",
-    "Cost": "18 gp",
-    "Weight": "7 lb",
-    "Source": "Unattributed",
-    "Notes": ""
+    "Cost": "17 gp",
+    "Weight": "8 lb",
+    "Source": "DMGR3",
+    "Notes": "DMGR3 Arms and Equipment Guide, Table 6: Master Weapons Chart (pp.108-109), verified August 2026. ATTRIBUTED AND CORRECTED, closing an Unattributed row that had never been traced to any book. Cost was 18 gp and Weight 7 lb; DMGR3 prints 17 gp and 8 lb. Size M, Type S, speed factor 5 and damage 1d6+1/2d4 were already correct and DMGR3 confirms all four. Note the shape of the two errors -- each off by exactly one in opposite directions, which is a transcription signature rather than a variant printing. DMGR3 also describes it (p.110): a sword with a single-edged, heavy blade, the back usually straight while the edge curves; the blade broadens close to the tip, giving a cleaver-like appearance that increases the damage inflicted, and the weight contributes to a fearsome cutting blow."
   },
   {
     "Weapon Name": "Fang",
@@ -2571,7 +2571,7 @@
     "Weapon Name": "Net",
     "Alias": "",
     "Category": "Thrown",
-    "Size": "L",
+    "Size": "M",
     "Type": "",
     "Damage (S-M)": "-",
     "Damage (L)": "-",
@@ -2588,8 +2588,8 @@
     "Group": "Net",
     "Cost": "5 gp",
     "Weight": "10 lb",
-    "Source": "Unattributed",
-    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source. Entangles, no damage PHBR1 (pp.95, 119) ALSO prints this weapon, with different values: Size M. NOT adopted, and the Source stays Unattributed. PHBR1 p.102 says outright that its oriental weapons are a simplified conversion and points readers to Oriental Adventures for the full treatment, so the values here are more likely OA's than an error. Settles when someone opens Oriental Adventures. TWO-HANDED ONLY (PHBR1 pp.95, 119, marked '&'): intended for two-handed use only. A SECOND BOOK NOW PRINTS PHBR1'S VALUES. PHBR3 p.124 gives figures IDENTICAL to PHBR1's, and carries no equivalent of PHBR1 p.102's 'simplified conversion' disclaimer. VALUES STILL NOT ADOPTED and the Source stays Unattributed -- Chris's call, August 2026. The reason is that PHBR3 may simply be REPRINTING PHBR1's table: all six of its 'new' weapons are ones PHBR1 already printed, and it reproduces PHBR1's martial arts wholesale and says so on p.124. If it is a reprint, this is one source counted twice rather than two books agreeing, and the Oriental Adventures question is untouched. RECORDED, NOT RESOLVED: still settles when someone opens Oriental Adventures. Compare the Maul, adopted from PHBR3 in the same pass because nothing competed with it there.  NOT PRESENT IN PHBR15 Table 24, checked August 2026. The Oriental provenance question for this row is still open."
+    "Source": "DMGR3",
+    "Notes": "DMGR3 Arms and Equipment Guide, Table 6: Master Weapons Chart (pp.108-109), verified August 2026. ATTRIBUTED, closing an Unattributed row and an open item that had stood since the PHBR1 pass. Size was L; DMGR3 prints M. Cost 5 gp, weight 10 lb, speed factor 10 and the absent Type and damage were already correct. THIS ALSO CLOSES THE LAST OF THE ORIENTAL SET. The Net was the one weapon of that group ABSENT from PHBR15 Table 24, so the Oriental Adventures theory could never have settled it; it turns out not to be an oriental weapon at all. RANGE STAYS DELIBERATELY BLANK: DMGR3 Table 6 prints no rate of fire or range for the Net, so the reason the earlier 10/20/30 was removed still stands. Restore a range only from a printed source."
   },
   {
     "Weapon Name": "Nunchaku",
@@ -2739,15 +2739,15 @@
     "Weapon Name": "Pilum",
     "Alias": "",
     "Category": "Thrown",
-    "Size": "L",
+    "Size": "M",
     "Type": "P",
     "Damage (S-M)": "1d6",
-    "Damage (L)": "1d6+1",
+    "Damage (L)": "1d6",
     "Damage (S-M) 2H": "",
     "Damage (L) 2H": "",
     "Grip": "",
     "No Proficiency": "",
-    "Speed Factor": "6",
+    "Speed Factor": "5",
     "Speed Factor 2H": "",
     "ROF": "",
     "Range (S)": "",
@@ -2755,9 +2755,9 @@
     "Range (L)": "",
     "Group": "Spear",
     "Cost": "4 gp",
-    "Weight": "4 lb",
-    "Source": "Unattributed",
-    "Notes": "RANGE DELIBERATELY BLANK. This entry is unattributed -- no book has been identified for it -- and the 10/20/30 it previously carried sat in a field nothing reads. Five unrelated unattributed weapons all held that same value, which is the signature of a blank filled from a neighbouring row rather than of five separate transcriptions. Restore a range only from a printed source."
+    "Weight": "3 lb",
+    "Source": "Combat & Tactics",
+    "Notes": "Player’s Option: Combat & Tactics, weapon tables (and the Firearms price list for cost), verified August 2026. C&T IS A USABLE SOURCE FOR THE CORE WEAPON LINE, not an alternate restatting: checked against four rows already attributed from other books — Nunchaku, Katana, Falchion and Trident — it matches all four exactly on weight, size, type, speed factor and both damage figures. Its Fa/Av/Sl speed notation carries the speed factor in the parenthetical. ITS RANGES ARE IN SQUARES, NOT YARDS, and are NOT imported — footnote 10 gives it away, the staff sling showing 6/12/18 against a footnote describing attacks “6 to 12 squares away”. C&T also carries Melee Reach and Knockdown columns this file has no home for. ATTRIBUTED AND CORRECTED, closing the last Unattributed row in this file. Weight was 4 lb, Size L, speed factor 6 and Damage (L) 1d6+1; C&T prints 3 lb, M, Av(5), 1d6/1d6. Type P and Damage (S-M) 1d6 were already correct. COST NOT ADOPTED and stays at 4 gp UNSOURCED: C&T’s weapon table carries no cost column, and the separate price lists supplied cover firearms and armor rather than this weapon. The 4 gp here has never been traced and should be treated as unverified even though the rest of the row now is. RANGE STAYS BLANK: C&T gives 3/6/9 in SQUARES. It does print a rate of fire of 1 per round."
   },
   {
     "Weapon Name": "Polearm (Generic, Oriental)",
