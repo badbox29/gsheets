@@ -9559,7 +9559,8 @@ function bindSheet(root, tab){
   }
 
   // New faceted filter dropdowns: re-render on change so they filter and re-facet.
-  ['.spell-cat-filter', '.spell-source-filter', '.spell-save-filter'].forEach(sel => {
+  ['.spell-cat-filter', '.spell-source-filter', '.spell-save-filter',
+   '.spell-uw-filter'].forEach(sel => {
     const el = qs(root, sel);
     if (el) el.addEventListener('change', () => renderSpellBrowser(root));
   });
@@ -9571,7 +9572,7 @@ function bindSheet(root, tab){
   if (spellResetFilters) {
     spellResetFilters.addEventListener('click', () => {
       ['.spell-search', '.spell-level-filter', '.spell-cat-filter',
-       '.spell-source-filter', '.spell-save-filter'].forEach(sel => {
+       '.spell-source-filter', '.spell-save-filter', '.spell-uw-filter'].forEach(sel => {
         const el = qs(root, sel);
         if (el) el.value = '';
       });
