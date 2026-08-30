@@ -994,7 +994,44 @@ function getKitProficiencySurcharge(nwp, root) {
     .map(s => String(s).trim().toLowerCase());
   if (owned.indexOf(name) !== -1) return 0;
 
-  return 1;
+    return 1;
+}
+
+// Does the character's kit waive the PHB Table 38 crossover surcharge on this
+// proficiency? PHBR4 Ch.3 is the first book to grant one, in two shapes:
+//
+//   byName   an explicit list -- the Anagakok's five Warrior proficiencies
+//            tagged "all cost single slots"
+//   byGroup  a whole group -- the Militant Wizard may take ANY Warrior
+//            proficiency "at the listed number of slots"
+//
+// UNGATED, deliberately. Every other waiver-like rule in this file sits behind
+// a supplement band, but a kit's own printed proficiency costs are part of what
+// the kit IS: selecting the kit is the opt-in, exactly as the kit's bonus
+// proficiencies and weapon lists are ungated. A table that never opens PHBR4
+// never selects one of these kits and never reaches this code.
+//
+// GROUPS COME FROM THE CALLER, already resolved by getNWPGroups, so this does
+// not re-derive them and cannot disagree with the surcharge test it modifies.
+function kitWaivesCrossover(nwp, groups, root) {
+  if (!root || !nwp) return false;
+  const prof = (typeof getKitProficiencies === 'function') ? getKitProficiencies(root) : null;
+  const w = prof && prof.nonweapon && prof.nonweapon.crossoverWaiver;
+  if (!w) return false;
+
+  const name = String(nwp.name || nwp['Proficiency Name'] || '').trim().toLowerCase();
+  if (!name) return false;
+
+  // byName wins on its own; a named proficiency is waived whatever its group.
+  if (w.byName && Object.keys(w.byName)
+        .some(n => String(n).trim().toLowerCase() === name)) return true;
+
+  // byGroup waives everything in the named group(s).
+  if (Array.isArray(w.byGroup) && Array.isArray(groups)) {
+    const want = w.byGroup.map(g => String(g).trim().toLowerCase());
+    if (groups.some(g => want.indexOf(String(g).trim().toLowerCase()) !== -1)) return true;
+  }
+  return false;
 }
 
 // Slot cost of a single nonweapon proficiency, including the Table 38 crossover
@@ -1023,6 +1060,24 @@ function getNWPSurcharge(nwp, allowedGroups, root) {
     // PHB Table 38: a proficiency from ANY group the character has access to
     // costs its listed price. Only if it is outside ALL of them does it cost +1.
     classSur = groups.some(g => allowedGroups.has(g)) ? 0 : 1;
+  }
+
+  // A KIT MAY WAIVE THE CLASS CROSSOVER, and only the class one. PHBR4's
+  // Anagakok tags five Warrior proficiencies "all cost single slots" and the
+  // Militant Wizard may take ANY Warrior proficiency "at the listed number of
+  // slots"; the book's own worked example is Animal Lore costing him 1 instead
+  // of the wizard's 2. Zeroing classSur reproduces those numbers exactly --
+  // Animal Lore, Hunting, Mountaineering, Running and Set Snares are base 1,
+  // Blind-fighting and Tracking base 2, matching "single slots" and "2 slots
+  // only" respectively. The figures stored in crossoverWaiver.byName are the
+  // printed totals, kept as a cross-check rather than used as an input.
+  //
+  // IT DOES NOT TOUCH kitSur. That is PHBR2's separate charge for taking a
+  // proficiency outside the kit's own lists, and a PHBR4 waiver says nothing
+  // about it.
+  if (classSur && typeof kitWaivesCrossover === 'function' &&
+      kitWaivesCrossover(nwp, groups, root)) {
+    classSur = 0;
   }
 
   // MAX, NOT SUM -- see getKitProficiencySurcharge. 'both' therefore still costs
