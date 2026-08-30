@@ -85,12 +85,13 @@
   "components": "V S M",
   "source": "WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. INEFFECTIVE UNDERWATER, but marked with an asterisk in the book: it functions normally when cast within the bounds of an airy water spell.",
   "po": null,
   "description": "This spell enables the wizard to cause nonmagical fires—from as small as a torch or lantern to as large as the area of effect—to reduce in size and brightness to become mere coals or increase in light to become as bright as full daylight and increase the illumination to double the normal radius. Note that this does not affect either fuel consumption or damage caused by the fire.\nThe caster can affect any or all fires in the spell's area. He can alter their intensities with a single gesture as long as the spell is in effect. The spell lasts until the caster cancels it, all fuel is burned, or the duration expires. The caster can also extinguish all flames in the area, which expends the spell immediately. The spell does not affect fire elementals or similar creatures.\nNotes: Common spell ( PHB)",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.1 p.25",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective-unless-airy-water"
  },
  {
   "name": "Alarm",
@@ -859,13 +860,14 @@
   "components": "V S",
   "source": "WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. INEFFECTIVE UNDERWATER, but marked with an asterisk in the book: it functions normally when cast within the bounds of an airy water spell.",
   "po": null,
   "description": "When the wizard casts this spell, a jet of searing flame shoots from his fingertips. His hands must be held so as to send forth a fanlike sheet of flames: The wizard's thumbs must touch each other and the fingers must be spread. The burning hands send out flame jets 5 feet long in a horizontal arc of about 120 degrees in front of the wizard. Any creature in the area of the flames suffers 1d3 points of damage, plus 2 points for each level of experience of the spellcaster, to a maximum of 1d3+20 points of fire damage. Those successfully saving vs. spell receive half damage. Flammable materials touched by the fire burn (for example, cloth, paper, parchment, thin wood, etc.). Such materials can be extinguished in the next round if no other action is taken.\nNotes: Common spell ( PHB)",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.1 p.113",
   "levelSource": "wsc-index",
-  "sourceRef": "PHB page 170 WSC"
+  "sourceRef": "PHB page 170 WSC",
+  "underwater": "ineffective-unless-airy-water"
  },
  {
   "name": "Burning Sands",
@@ -1208,7 +1210,7 @@
   "class": "Wizard",
   "schools": [
    "Alteration",
-   "Illusion/Phantasm"
+   "Invocation/Evocation"
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
@@ -1222,14 +1224,15 @@
   "castingTime": "1",
   "save": "Negate",
   "components": "V S M",
-  "source": "WSC",
+  "source": "PHBR4, WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "SCHOOL CORRECTED FROM PHBR4, August 2026. The Complete Wizard’s Handbook p.95 prints this spell as “Alteration, Evocation”; this record previously held “Alteration, Illusion/Phantasm” from the WSC dataset. Verified by zooming the page image, not read at page scale. PHBR4 IS THE ORIGINAL PRINTING AND WE HOLD IT; the WSC data in this file is a THIRD-PARTY dataset carrying that label, not the book, so it is not an authority against a source in hand. A full audit of the WSC records is owed — Chris, August 2026 — and until it runs, a WSC value that a book in hand contradicts loses. SCHOOL IS NOT COSMETIC in this file: it drives isSpecialtySpell, isOppositionSpell and the Spell Access filter, so this changes which specialists may learn the spell. PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: The heat, fire and stinking cloud effects are unavailable underwater.",
   "po": null,
   "description": "This spell causes a 4-inch-diameter sphere to appear in the caster's hand. Within the limits described below, the sphere can appear in a variety of colors; each color indicates a different special power. The caster can hurl the sphere at an opponent up to 30 yards away, providing there are no barriers between the caster and the target. If the target is no more than 10 yards away, the caster's to hit roll is made with a +3 bonus. If the target is 10-20 yards away, the caster's roll is made with a +2 bonus. If the target is 20-30 yards away, the caster's roll is made with a +1 bonus.\nIf the chromatic orb misses its target, it dissipates without effect. If the target creature makes a successful saving throw, the chromatic orb is also ineffective. Otherwise, the color of the orb determines the amount of damage inflicted and its special power, as summarized on Table 16; details about the special powers are listed below. The caster can create a single orb of any color listed for his level or lower; for instance, a 3rd-level wizard can create an orange, red, or white orb. The material component for this spell is a gem of the appropriate hue or any diamond. The gem must have a value of at least 50 gp.\nLight from the orb causes the victim to become surrounded by light to a radius of 20 feet, as if affected by a light spell. The effect lasts for 1 round, during which time the victim makes his attack rolls and saving throws at a -4 penalty, and his AC is penalized by 4.\nHeat from the orb is intense enough to melt 1 cubic yard of ice. The victim suffers a loss of 1 point of Strength and 1 point of Dexterity (or for victims without these attributes, -1 to hit and a penalty of 1 to AC) for 1 round.\nFire from the orb ignites all combustible materials within 3 feet of the victim.\nBlindness from the orb causes the victim to become blind as per the spell. The effect lasts for 1 round/level of the caster.\nStinking cloud from the orb surrounds the victim in a 5-foot-radius noxious cloud. The victim must save vs. poison or will be reeling and unable to attack until he leaves the area of the vapors.\nMagnetism from the orb has an effect only if the victim is wearing armor made from iron. The iron armor becomes magically magnetized for 3-12 (3d4) rounds. Other iron objects within 3 feet of the caster will stick tight to the magnetized armor; only dispel magic or a similar spell can release the stuck items. At the end of the spell's duration, the stuck items are released.\nParalysis from the orb causes the victim to become paralyzed for 6-20 (2d8 + 4) rounds; a successful saving throw vs. paralyzation halves the number of rounds.\nPetrification from the orb turns the victim to stone. If the victim successfully saves vs. petrification, he avoids turning to stone and instead is slowed (as per the spell) for 2-8 (2d4) rounds.\nDeath from the orb causes the victim to die. If the victim successfully saves. vs death magic, he avoids death and instead is paralyzed for 2-5 (1d4 +1) rounds.",
-  "schoolSource": "wsc-index",
+  "schoolSource": "PHBR4 p.95",
   "wscRef": "Vol.1 p.140",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Circle",
@@ -1720,9 +1723,9 @@
   "castingTime": "1 round",
   "save": "Special",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.95, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "Copy enables the caster to make a perfect copy of a map, letter, or any other written or drawn document. The caster must have a blank parchment or a book with blank pages of sufficient size to hold the copy. The caster holds the blank object over the object to be copied, then casts the spell; the copy immediately appears on the formerly blank object. The copy is permanent and is a perfect duplicate of the original.\nCopy can also be used to copy spells from a new spell book into the caster's spell book, assuming the caster's spell book is of sufficient size to contain the new spells. The caster must first roll to see if he can learn the new spells; if so, he can cast copy to instantly copy them into his spell book.\nThe material components for this spell are a piece of blank parchment (or a book with blank pages, as described above), and a drop of black ink",
   "schoolSource": "wsc-index",
@@ -1778,9 +1781,9 @@
   "castingTime": "1 round",
   "save": "Negate",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.96, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "This spell transforms the caster's face or the face of any creature touched by the caster into the horrifying visage of a rotting corpse. The effect of this illusion is so startling that when it is viewed by opponents, the wizard's party adds a modifier of +2 to their surprise roll.\nCreatures with low Intelligence or higher (Intelligence of 5 or greater) and with 1 Hit Die or less (or who are 1st level or lower) must make a successful saving throw when first viewing corpse visage or flee in terror for 1-4 rounds.\nCorpse visage does not distinguish between friend and foe, and all who view it are subject to its effects. If the spell is cast upon an unwilling victim, the victim is allowed a saving throw to avoid the effect.\nThe material component is a rag or piece of cloth taken from a corpse. The cloth must be prepared by dotting it with paints of assorted colors.",
   "schoolSource": "wsc-index",
@@ -2044,9 +2047,9 @@
   "castingTime": "1",
   "save": "none",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.97, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "Detect disease reveals to the wizard whether a subject creature or object carries a disease, whether normal or magical. Additionally, there is a 10 percent chance per level of the caster that he is able to identify the exact type of disease.\nThe material component for this spell is a twig or small branch from any tree",
   "schoolSource": "wsc-index",
@@ -2538,9 +2541,9 @@
   "castingTime": "1 round",
   "save": "none",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.97, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "This spell enables the caster to enchant the branch of a ginkgo or fruit tree to locate a common item that is hidden from view. Unlike locate object, the caster does not need to have a specific mental image of a particular item; rather, he only needs to state the name of the general type of item he wishes to locate, such as buried treasure, edible plants, or fresh water. However, divining rod will not locate invisible or magical items, nor will it locate items protected by obscure item or a similar spell.\nOnce the branch is enchanted, the caster holds the branch with both hands. If the desired item is within the range of the spell, the enchanted branch points in the direction of the item and gently pulls the caster along. The spell is not blocked by lead or any other substance. However, if an impenetrable obstacle is reached, such as the ground or a wall, the branch presses against it and stops. If there is no item matching the description within the spell range, the branch does not react, although the caster can move about and continue to search.\nThe material component for this spell is the branch from a ginkgo tree or a fruit tree, such as peach, apple, or lemon. The branch must be shaped like the letter Y, so that the caster can grasp a fork of the branch in each hand.",
   "schoolSource": "wsc-index",
@@ -4461,12 +4464,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. INEFFECTIVE UNDERWATER, but marked with an asterisk in the book: it functions normally when cast within the bounds of an airy water spell.",
   "po": null,
   "description": "The individual touched when this spell is cast is empowered to leap once per round for the duration of the spell. Leaps can be up to 30 feet forward or straight upward or 10 feet backward. Horizontal leaps forward or backward have only a slight arc—about 2 feet per 10 feet of distance traveled. The 'jump 'spell does not ensure safety in landing or grasping at the end of the leap.\nThe material component of this spell is a grasshopper's hind leg, to be broken by the caster when the spell is cast.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.478",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective-unless-airy-water"
  },
  {
   "name": "Khinasi Trade Tongue",
@@ -5381,12 +5385,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. CANNOT BE CAST OR WILL NOT FUNCTION UNDERWATER. Not asterisked, so an airy water spell does not rescue it.",
   "po": null,
   "description": "By means of this spell, the caster conjures a normal animal to serve him as a mount. The animal serves willingly and well, but at the expiration of the spell duration it disappears, returning to its own place. The type of mount gained by this spell depends on the level of the caster; of course, a caster can choose a lesser mount if desired. Available mounts include the following:\nThe mount does not come with any riding gear, unless it is of a class lower than the caster would normally be entitled to; thus, a 4th-level wizard can gain a war horse without saddle and harness, or a light horse with saddle and harness. The statistics of the animal gained are typical of all creatures of the same class. The mount disappears when slain.\nThe material component of the spell is a bit of hair from the type of animal to be conjured.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.3 p.600",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective"
  },
  {
   "name": "Mournful Mutter",
@@ -8396,12 +8401,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. INEFFECTIVE UNDERWATER, but marked with an asterisk in the book: it functions normally when cast within the bounds of an airy water spell.",
   "po": null,
   "description": "By casting this spell, the wizard creates a billowing wall of misty vapors in any area within the spell range. The wall of fog obscures all sight, normal and infravision, beyond 2 feet. The caster may create less vapor if he wishes. The wall must be a roughly cubic or rectangular mass, at least 10 feet across in its smallest dimension. The misty vapors persist for three or more rounds. Their duration can be halved by a moderate wind, and they can be blown away by a strong wind.\nThe material component is a pinch of split dried peas.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.4 p.987",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective-unless-airy-water"
  },
  {
   "name": "Wandbane",
@@ -10210,9 +10216,9 @@
   "castingTime": "2",
   "save": "1⁄2",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.97, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "By means of choke, the caster causes a pair of ghostly hands to appear around the throat of a single victim. The victim must be a human, demihuman, or humanoid, and must be within 30 yards of the caster. The hands will choke and strangle the affected victim for the duration of the spell; each round, the victim suffers 1-4 hit points of damage from the choking hands. If the victim makes a successful saving throw, he suffers half-damage each round.\nChoke can be negated by dispel magic or a similar spell; the victim cannot wrench the ethereal hands away from his neck. The victim makes all attack rolls at a -2 penalty while affected by choke.\nThe material component for this spell is a handkerchief or similarly-sized piece of cloth that has been tied in a knot",
   "schoolSource": "wsc-index",
@@ -10864,9 +10870,9 @@
   "castingTime": "1 round",
   "save": "None",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.97, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "This spell enables the caster to visualize the final minutes of the life of any creature or person that died within the previous 24 hours. When the caster touches the subject's corpse, the caster goes into a trance. The caster then has a vision of the final 10 minutes of the subject's life as seen by the subject himself. The vision ends with the last scene the subject saw before he died, at which time the caster awakens from his trance and the spell is over.\nThe material component for this spell is a fragment from a shattered mirror",
   "schoolSource": "wsc-index",
@@ -11188,9 +11194,9 @@
   "castingTime": "2",
   "save": "None",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.98, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "By use of this spell, the caster can determine if a creature is alive, including creatures in a coma or trance, or under the influence of feign death. Any form of mental protection prevents the effectiveness of this spell, as does any thickness of metal. An inch of stone or wood is treated as 10 feet of open space for the purpose of determining whether the spell functions.\nThe material components for this spell are a holy symbol and a hair from the head of a newborn animal",
   "schoolSource": "wsc-index",
@@ -12318,14 +12324,15 @@
   "castingTime": "2",
   "save": "None",
   "components": "V M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Instead of filtering vapors, filter eliminates poisons in the water. VERIFIED AGAINST PHBR4 p.98, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "This spell creates an invisible globe of protection that filters out all noxious elements from poisonous vapors; therefore, a creature protected by filter takes no damage and suffers no penalties from poison gas of any kind, including those created magically (such as stinking cloud). The exceptions are poisonous vapors created by a dragon's breath weapon (such as the chlorine gas of a green dragon); in these cases, the creature protected by filter suffers half-damage.\nThe material components for this spell are a strand of spider web and a scrap of cotton cloth approximately one inch square",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.352",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Find Familiar - Necromancer",
@@ -12642,12 +12649,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. INEFFECTIVE UNDERWATER, but marked with an asterisk in the book: it functions normally when cast within the bounds of an airy water spell.",
   "po": null,
   "description": "A flaming sphere spell creates a burning globe of fire within 10 yards of the caster. This sphere rolls in whichever direction the wizard points, at a rate of 30 feet per round. It rolls over barriers less than 4 feet tall, such as furniture, low walls, etc. Flammable substances are set afire by contact with the sphere. Creatures in contact with the globe must successfully save vs. spell or suffer 2d4 points of fire damage. Those within 5 feet of the sphere's surface must also save or suffer 1d4 points of heat damage. A successful saving throw means no damage is suffered. The DM may adjust the saving throws if there is little or no room to dodge the sphere.\nThe sphere moves as long as the spellcaster actively directs it; otherwise, it merely stays at rest and burns. It can be extinguished by the same means as any normal fire of its size. The surface of the sphere has a spongy, yielding consistency and so does not cause damage except by its flame. It cannot push unwilling creatures aside or batter down large obstacles.\nThe material components are a bit of tallow, a pinch of sulphur, and a dusting of powdered iron.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.376",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective-unless-airy-water"
  },
  {
   "name": "Flann's Finery",
@@ -12824,13 +12832,14 @@
   "components": "V S",
   "source": "WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. INEFFECTIVE UNDERWATER, but marked with an asterisk in the book: it functions normally when cast within the bounds of an airy water spell.",
   "po": null,
   "description": "The fog cloud spell can be cast in one of two ways, at the caster's option: as a large, stationary bank of normal fog, or as a harmless fog that resembles the 5th-level wizard spell cloudkill.\nAs a fog bank, this spell creates a fog of any size and shape up to a maximum 20-foot cube per caster level. The fog obscures all sight, normal and infravision, beyond 2 feet.\nAs a cloudkill-like fog, this is a billowing mass of ghastly, yellowish-green vapors, measuring 40 feet x 20 feet x 20 feet. This moves away from the caster at 10 feet per round. The vapors are heavier than air and sink to the lowest level, even pouring down sinkholes and den openings. Very thick vegetation breaks up the fog after it has moved 20 feet into the vegetation.\nThe only effect of either version is to obscure vision. A strong breeze will disperse either effect in one round, while a moderate breeze will reduce the spell duration by 50%. The spell cannot be cast under water.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.385",
   "levelSource": "wsc-index",
-  "sourceRef": "PHB page 183"
+  "sourceRef": "PHB page 183",
+  "underwater": "ineffective-unless-airy-water"
  },
  {
   "name": "Fools' Copper",
@@ -13154,9 +13163,9 @@
   "castingTime": "2",
   "save": "Special",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.98, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "When this spell is in effect, the caster's touch causes any single human, dwarf, gnome, half-elf, or halfling to become rigid for 3-8 (1d6 +2) rounds unless the victim makes a successful saving throw vs. paralyzation. Additionally, the paralyzed victim exudes a carrion stench in a 10-foot radius that causes retching and nausea. Those within this area who fail to save vs. poison will make their attacks with a -2 penalty until the spell reaches the end of its duration.\nThe material component for this spell is a small scrap of cloth taken from the clothing of a ghoul or a pinch of earth from a ghoul's lair.\nNotes: Restricted to necromancers; uncommon.",
   "schoolSource": "wsc-index",
@@ -13453,14 +13462,15 @@
   "castingTime": "1 round",
   "save": "Neg",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Because of water resistance, an ice knife cast underwater can strike targets only within 10 yards, and causes a maximum of 1-4 hit points of damage. VERIFIED AGAINST PHBR4 p.98, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "This spell fires a dagger of ice at the target. The caster makes a normal attack roll as if attacking with a missile weapon, factoring in the range from the attacker to the target (the ice knife has a long range of 30 yards, a medium range of 20 yards, and a short range of 10 yards). A successful hit causes 2-8 (2d4) hit points of damage. If the ice knife misses its target, consult the rules for grenade-like missiles on pages 62-63 of the DMG to determine where it lands.\nWhen an ice knife strikes a solid object or a creature, the knife shatters, releasing a wave of numbing cold. All creatures within a 5-foot radius must make a successful saving throw vs. paralyzation or suffer 1-4 hit points of cold damage and become numb for 1-3 rounds. Numbed creatures have their movement rates reduced by half and their chance to hit reduced by 2. Proximity to major sources of heat, such as a roaring bonfire, improves a creature's saving throw by +2.\nAn ice knife that misses or is lost cannot be picked up by the caster (or anyone else) and thrown again. If the ice knife is touched, it instantly shatters, releasing a wave of cold as described above. If a lost ice knife is not touched, it melts away in a pool of water 1 round after it was originally created; this melting occurs regardless of the environmental temperature.\nThe material components for this spell are a drop of water from melted snow and a tiny silver dagger.\nNotes: Common in oriental lands; uncom­mon for Frost or Water mages; otherwise rare.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.444",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Immunity to Spider Venom",
@@ -14297,12 +14307,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: The acid lasts only a single round before it is washed away by surrounding water.",
   "po": null,
   "description": "By means of this spell, the wizard creates a magical arrow that speeds to its target as if fired from the bow of a fighter of the same level as the wizard. No modifiers for range, nonproficiency, or specialization are used. The arrow has no attack or damage bonus, but it inflicts 2d4 points of acid damage (with saving throws for items on the target); there is no splash damage. For every three levels that the caster has achieved, the acid, unless somehow neutralized, lasts for another round, inflicting another 2d4 points of damage each round. So at 3rd-5th level, the acid lasts two rounds; at 6th-8th level, the acid lasts for three rounds, etc.\nThe material components of the spell are a dart, powdered rhubarb leaf, and an adder's stomach.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.556",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Mimicry",
@@ -15858,12 +15869,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. INEFFECTIVE UNDERWATER, but marked with an asterisk in the book: it functions normally when cast within the bounds of an airy water spell.",
   "po": null,
   "description": "A pyrotechnics spell draws on an existing fire source to produce one of two effects, at the option of the caster. First, it can produce a flashing and fiery burst of glowing, colored aerial fireworks that lasts one round. This effect temporarily blinds those creatures in, under, or within 120 feet of the area and that have an unobstructed line of sight to the burst. Creatures viewing this are blinded for 1d4+1 rounds unless they successfully save vs. spell. The fireworks fill a volume 10 times greater than that of the original fire source.\nThis spell can also cause a thick, writhing stream of smoke to arise from the source and form a choking cloud that lasts for one round per experience level of the caster. This covers a roughly spherical volume from the ground or floor up (or conforming to the shape of a confined area) that totally obscures vision beyond 2 feet. The smoke fills a volume 100 times that of the fire source. All within the cloud must roll successful saving throws vs. spell or suffer -2 penalties to all combat rolls and Armor Class.\nThe spell uses one fire source within a 20-foot cube, which is immediately extinguished. An extremely large fire used as a source might be only partially extinguished. Magical fires are not extinguished, although a fire-based creature (such as a fire elemental) used as a source suffers 1 point of damage per caster level.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.3 p.719",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective-unless-airy-water"
  },
  {
   "name": "Quimby's Enchanting Gourmet",
@@ -17607,12 +17619,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. CANNOT BE CAST OR WILL NOT FUNCTION UNDERWATER. Not asterisked, so an airy water spell does not rescue it.",
   "po": null,
   "description": "The swarm of small animals (roll on following table to determine type, or the DM can assign an appropriate creature) drawn by the summon swarm spell will viciously attack all creatures in the area chosen by the caster. Creatures actively defending against the swarm to the exclusion of other activities suffer 1 point of damage for each round spent in the swarm. Those taking other actions, including leaving the swarm, receive damage equal to 1d4 points + 1 point per three levels of the caster each round. Note that spellcasting within the swarm is impossible.\nThe swarm cannot be fought effectively with weapons, but fire and area effects can force it to disperse by inflicting damage. The swarm disperses when it has taken a total of 2 hit points per caster level from these attacks. A protection from evil spell keeps the swarm at bay, and certain area-effect spells, such as gust of wind and stinking cloud, disperse a swarm immediately, if appropriate to the swarm summoned (for example, only flyers are affected by a gust of wind). The caster must remain stationary and undisturbed to control the swarm; if his concentration lapses or is broken, the swarm disperses in two rounds. The swarm is stationary once conjured.\nThe material component is a square of red cloth.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.4 p.899",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective"
  },
  {
   "name": "Sundazzle",
@@ -18154,9 +18167,9 @@
   "castingTime": "1 round",
   "save": "None",
   "components": "Somatic Material",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.99, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "This spell allows the recipient to cast spells that normally require a verbal component without the caster needing to make a sound. Such spells must be cast within the duration of the vocalize spell. This spell is also useful in situations where quiet is desired, or when the recipient is under the influence of a silence spell.\nVocalize does not negate a silence spell, but merely offsets it for the purpose of spell casting; if a spell caster under the effect of vocalize casts a spell that has some audible effect, that sound will be masked for as long as silence remains in force. Vocalize does not affect normal vocal communication.\nThe material component for this spell is a small golden bell without a clapper\nThe recipient of this spell can cast spells with a verbal component without having to make any noise, so long as the casting takes place entirely within the duration of the vocalize spell. Only the verbal requirement of spells is deleted. This spell has no effect on other noises or speech it simply removes a spell's verbal component.\nThis spell is of great use when quiet is desired in spellcasting, or when the individual has been magically silenced. The vocalize spell does not negate the magical silence, it merely allows the wizard to cast spells without verbal components.\nThe material component of this spell is a bell with no clapper.\nNotes: Uncommon spell.",
   "schoolSource": "wsc-index",
@@ -18458,13 +18471,14 @@
   "components": "V S",
   "source": "WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. INEFFECTIVE UNDERWATER, but marked with an asterisk in the book: it functions normally when cast within the bounds of an airy water spell.",
   "po": null,
   "description": "By means of this spell, the wizard is able to either send a message or cause some desired sound effect. The whispering wind can travel as many miles above ground as the spellcaster has levels of experience, to a specific location within range that is familiar to the wizard. The whispering wind is as gentle and unnoticed as a zephyr until it reaches the location. It then delivers its whisper-quiet message or other sound. Note that the message is delivered regardless of whether anyone is present to hear it. The wind then dissipates.\nThe wizard can prepare the spell to bear a message of up to 25 words, cause the spell to deliver other sounds for one round, or merely have the whispering wind seem to be a faint stirring of the air that has a susurrant sound. He can likewise cause the whispering wind to move as slowly as a mile per hour or as quickly as a mile per turn. When the spell reaches its objective, it swirls and remains until the message is delivered. As with the magic mouth spell, no spells may be cast via the whispering wind.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.4 p.1015",
   "levelSource": "wsc-index",
-  "sourceRef": "PHB page 189"
+  "sourceRef": "PHB page 189",
+  "underwater": "ineffective-unless-airy-water"
  },
  {
   "name": "Wings",
@@ -19585,9 +19599,9 @@
   "castingTime": "1 round",
   "save": "None",
   "components": "V M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.99, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "A wizard can use this spell to enchant a bone, causing it to become a magical club. This magical weapon acts as a club +4 against undead, inflicting 5-10 (1d6 +4) hit points of damage, and a club +1 against all other opponents, inflicting 2-7 (1d6 + 1) hit points of damage. The bone can be from any animal, providing the bone normally could be wielded as a club; for instance, a human femur could be enchanted by this spell, but a skull could not. At the end of the spell's duration, the bone club reverts to a normal bone.\nIf the proficiency rules are being used, characters with a weapon proficiency with a club also have a profiency with a bone club. Those wielding a bone club without the club profiency suffer the penalties described on page 52 of the PHB.\nThe material components for this spell are an appropriately-sized bone and a pinch of dirt from a grave\nNotes: Uncommon in savage settings or among wizards allied with Beast Cults; otherwise very rare.",
   "schoolSource": "wsc-index",
@@ -20757,9 +20771,9 @@
   "castingTime": "1 round",
   "save": "None",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.99, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "This spell enables one person or creature to postpone death. If delay death is cast before the indicated creature or person reaches 0 hit points, he is able to fight, cast spells, communicate, and take all other normal actions until he reaches -10 hit points. However, from the time he reaches 0 hit points until he is reduced to -10 hit points, the affected person or creature makes all attack rolls and saving throws at a -2 penalty, and his movement rate is reduced by half.\nWhen the subject reaches -10 hit points, he is dead and delay death is no longer in effect. Note that the spell has a limited duration; if the spell expires after the affected subject has reached 0 hit points but before he has been reduced to -10 hit points, the subject dies instantly. A deceased subject previously under the effect of delay death can be raised normally by raise dead and similar spells.\nThe material component for this spell is a chip from a tombstone or a sliver of wood from a coffin",
   "schoolSource": "wsc-index",
@@ -22442,12 +22456,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. CANNOT BE CAST OR WILL NOT FUNCTION UNDERWATER. Not asterisked, so an airy water spell does not rescue it.",
   "po": null,
   "description": "A fireball is an explosive burst of flame, which detonates with a low roar and delivers damage proportional to the level of the wizard who cast it—1d6 points of damage for each level of experience of the spellcaster (up to a maximum of 10d6). The burst of the fireball creates little pressure and generally conforms to the shape of the area in which it occurs. The fireball fills an area equal to its normal spherical volume (roughly 33,000 cubic feet—thirty-three 10-foot x 10-foot x 10-foot cubes). Besides causing damage to creatures, the fireball ignites all combustible materials within its burst radius, and the heat of the fireball melts soft metals such as gold, copper, silver, etc. Exposed items require saving throws vs. magical fire to determine if they are affected, but items in the possession of a creature that rolls a successful saving throw are unaffected by the fireball.\nThe wizard points his finger and speaks the range (distance and height) at which the fireball is to burst. A streak flashes from the pointing digit and, unless it impacts upon a material body or solid barrier prior to attaining the prescribed range, blossoms into the fireball (an early impact results in an early detonation). Creatures failing their saving throws each suffer full damage from the blast. Those who roll successful saving throws manage to dodge, fall flat, or roll aside, each receiving half damage (the DM rolls the damage and each affected creature suffers either full damage or half damage [round fractions down], depending on whether the creature saved or not).\nThe material component of this spell is a tiny ball of bat guano and sulphur.\nThis spell inflicts 1d2 points of structural damage against wooden targets (including those protected by wet hides) for every two dice of damage it normally inflicts; round fractions down. For example, a fireball from a 5th-level caster inflicts 2d2 points of structural damage. A fireball can set wooden constructions afire.\nSource: POCT",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.367",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective"
  },
  {
   "name": "Fireflow",
@@ -22505,12 +22520,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. INEFFECTIVE UNDERWATER, but marked with an asterisk in the book: it functions normally when cast within the bounds of an airy water spell.",
   "po": null,
   "description": "This spell has two effects. First, the wizard can cause normal arrows or crossbow bolts to become magical flaming missiles for one round. The missiles must be nocked and drawn (or cocked) at the completion of the spell. If they are not loosed within one round, they are consumed by the magic. For every five levels the caster has achieved, up to 10 arrows or bolts can be affected. The arrows inflict normal damage, plus 1 point of fire damage to any target struck. They may also cause incendiary damage. This version of the spell is used most often in large battles.\nThe second version of this spell enables the caster to hurl fiery bolts at opponents within range. Each bolt inflicts 1d6 points of piercing damage, plus 4d6 points of fire damage. Only half the fire damage is inflicted if the creature struck successfully saves vs. spell. The caster receives one bolt for every five experience levels (two bolts at 10th level, three at 15th level, etc.). Bolts must be used on creatures within 20 yards of each other and in front of the wizard.\nThe material components for this spell are a drop of oil and a small piece of flint.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.372",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective-unless-airy-water"
  },
  {
   "name": "Flashburst",
@@ -22591,12 +22607,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Enables the subject to swim effortlessly at any depth and in any direction, even if encumbered or normally too heavy to float. Maximum speed is 9.",
   "po": null,
   "description": "This spell enables the wizard to bestow the power of magical flight. The creature affected is able to move vertically and horizontally at a rate of 18 (half that if ascending, twice that if descending in a dive). The maneuverability class of the creature is B. Using the fly spell requires as much concentration as walking, so most spells can be cast while hovering or moving slowly (movement of 3). Possible combat penalties while flying are known to the DM (found in the \"Aerial Combat\" section of Chapter 9 of the DMG). The exact duration of the spell is always unknown to the spellcaster, as the variable addition is determined secretly by the DM.\nThe material component of the fly spell is a wing feather of any bird.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.382",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Fool's Speech",
@@ -22918,12 +22935,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. CANNOT BE CAST OR WILL NOT FUNCTION UNDERWATER. Not asterisked, so an airy water spell does not rescue it.",
   "po": null,
   "description": "When this spell is cast, a strong puff of air originates from the wizard and moves in the direction he is facing. The force of this gust of wind (about 30 m.p.h.) is sufficient to extinguish candles, torches, and similar unprotected flames. It causes protected flames—such as those of lanterns—to dance wildly and has a 5% chance per level of experience of the spellcaster to extinguish even such lights. It also fans large fires outward 1d6 feet in the direction of the wind's movement. It forces back small flying creatures 1d6 x 10 yards and causes man-sized beings to be held motionless if attempting to move against its force. It slows larger-than-man-sized flying creatures by 50% for one round. It blows over light objects, disperses most vapors, and forces away gaseous or unsecured levitating creatures. Its path is a constant 10 feet wide, by 10 yards long per level of experience of the caster (for example, an 8th-level wizard causes a gust of wind that travels 80 yards).\nThe material component of the spell is a legume seed.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.419",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective"
  },
  {
   "name": "Haelyn's Bow",
@@ -23299,9 +23317,9 @@
   "castingTime": "4",
   "save": "None",
   "components": "V S",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.99, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "This spell creates a glowing human skull with sharp fangs. The skull hovers about a foot above the caster's shoulder; as the caster moves, the skull hovers along with him. If the caster stops moving and concentrates, he can mentally command the hovering skull to move in any direction within a 30-foot radius.\nThe caster can see through the skull's eyes as if they were his own; for instance, the hovering skull could be ordered to investigate a dark cave or peek over a high wall. Additionally, the caster can order the hovering skull to attack victims with its razor-sharp teeth. If the caster's concentration is interrupted while controlling the skull, the skull immediately drops to the ground (but it takes no damage). If the caster resumes concentration, he can continue to command the skull.\nThe hovering skull has the same statistics as the caster, except the skull has 3 hit points and inflicts 1-6 hit points of damage with its bite. Attacks directed at the skull do not harm the caster, nor does damage directed at the caster affect the skull.\nThe material component for this spell is the tooth from a human skull.\nThe hovering skull has the same attack rolls and saving throws as the caster; the skull has 3 hit points and inflicts 1d6 points of damage with its bite. Most attacks directed at the skull do not harm the caster, nor does damage taken by the caster affect the skull.\nNotes: Uncommon for necromancers; otherwise very rare.\nGaze attacks against the skull do affect the caster.",
   "schoolSource": "wsc-index",
@@ -23415,12 +23433,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. INEFFECTIVE UNDERWATER, but marked with an asterisk in the book: it functions normally when cast within the bounds of an airy water spell.",
   "po": null,
   "description": "This spell enables the wizard to write instructions or other information on parchment, paper, etc. The illusionary script appears to be some form of foreign or magical writing. Only the person (or people) who the wizard desires to read the writing can do so. An illusionist recognizes it for illusionary script.\nUnauthorized creatures glancing at the script must roll saving throws vs. spell. A successful save means the creature can look away with only a mild sense of disorientation. Failure means the creature is subject to a suggestion implanted in the script by the caster at the time the illusionary script spell was cast. The suggestion cannot require more than three turns to carry out. The suggestion could be to close the book and leave, or to forget the existence of the book, for example. A successful dispel magic spell will remove the illusionary script, but an unsuccessful attempt erases all of the writing. The hidden writings can be read by a combination of the true seeing spell and either the read magic or comprehend languages spell, as applicable.\nThe material component is a lead-based ink that requires special manufacture by an alchemist, at a cost of not less than 300 gp per usage.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.447",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective-unless-airy-water"
  },
  {
   "name": "Improved Magic Missile",
@@ -23680,9 +23699,9 @@
   "castingTime": "2 (CWH)3 (WSC)",
   "save": "None",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.100, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "A variation of the armor spell, this spell enables the caster to cover his body with an invisible suit of plate mail to temporarily raise his AC to 3. Its effects are not cumulative with other armor or magical protection (a character cannot improve his AC better than 3 through use of this spell), but Dexterity bonuses still apply.\nFor each level of the caster, the invisible mail absorbs 1 hit point of damage that would normally hit AC 3; however, the invisible mail offers no protection against magical weapons or attacks. When the invisible mail has absorbed as many hit points of damage as the wizard has levels of experience, the invisible mail disappears. The invisible mail does not hinder movement, nor does it add weight or encumbrance. It does not interfere with spell casting.\nExample: A wizard with a normal AC of 10 has shielded himself with invisible mail. The first opponent attacks with a normal dagger; the attack is made against the AC 3 of the invisible mail. The attack is successful, causing 2 hit points of damage, but this damage is absorbed by the invisible mail and the wizard is unharmed. A second attack is made with a sword +1. The invisible armor offers no protection against this magical weapon, so the attack is made against the wizard's normal AC of 10.\nThe material component is a small fragment of plate mail.",
   "schoolSource": "wsc-index",
@@ -23741,9 +23760,9 @@
   "castingTime": "3",
   "save": "None",
   "components": "Somatic Material",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.100, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "The person or creature affected by iron mind is immune to all charm and hold spells for a full hour. Additionally, he automatically disbelieves all illusions cast by 3rd-level wizards (or their equivalent) or lower.\nThe material component for this spell is a small chunk of iron ore or any small item made of solid iron, such as a nail.\nNotes: Common for abjurers and mentalists; otherwise uncommon.",
   "schoolSource": "wsc-index",
@@ -24162,12 +24181,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Instead of a stroke, the discharge takes the form of a sphere with a 20-yard radius, centering on the point where a stroke would have occurred if cast above water. All within suffer 1d6 hit points per level of the caster, maximum 10-60; a successful saving throw halves this (round fractions down).",
   "po": null,
   "description": "Upon casting this spell, the wizard releases a powerful stroke of electrical energy that inflicts 1d6 points of damage per level of the spellcaster (maximum damage per level of 10d6) to each creature within its area of effect. A successful saving throw vs. spell reduces this damage to half (round fractions down). The bolt begins at a range and height decided by the caster and streaks outward in a direct line from the casting wizard (for example, if a 40-foot bolt was started at 180 feet from the wizard, the far end of the bolt would reach 220 feet (180 + 40). The lightning bolt may set fire to combustibles, sunder wooden doors, splinter up to a half-foot thickness of stone, and melt metals with a low melting point (lead, gold, copper, silver, bronze). Saving throws must be rolled for objects that withstand the full force of a stroke (see the fireball spell). If the damage caused to an interposing barrier shatters or breaks through it (i.e., the saving throw fails), the bolt continues. A bolt can breach 1 inch of wood or half an inch of stone per caster level, up to a maximum of 1 foot of wood or half a foot of stone.\nThe lightning bolt's area of effect is chosen by the spellcaster: either a forked bolt 10 feet wide and 40 feet long or a single bolt 5 feet wide and 80 feet long. If a bolt cannot reach its full length, because of an unyielding barrier (such as a stone wall), the lightning bolt rebounds from the barrier toward its caster, ending only when it reaches its full length.\nFor example: An 80-foot-long stroke is begun at a range of 40 feet, but it hits a stone wall at 50 feet. The bolt travels 10 feet, hits the wall, and rebounds for 70 feet back toward its creator (who is only 50 feet from the wall, and so is caught in his own lightning bolt!).\nThe DM might allow reflecting bolts. When this type of lightning bolt strikes a solid surface, the bolt reflects from the surface at an angle equal to the angle of incidence (like light off a mirror). A creature crossed more than once by the bolt must roll a saving throw for every time it is crossed, but it still suffers either full damage (if one saving throw is missed) or half damage (if all saving throws are made).\nThe material components of the spell are a bit of fur and an amber, crystal, or glass rod.\nThis spell damages wooden constructions just as a fireball does. It inflicts 1d2 points of structural damage against stone or metal targets for every three dice of damage it would normally inflict; round fractions down. For example, a lightning bolt from a 7th-level caster would inflict 3d2 points of damage against a mantlet (a wooden target) and 2d2 points of damage against a portcullis (a metal target). A lightning bolt can set wooden constructions afire just as a fireball can.\nSource: POCT",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.516",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Lightning Reflection",
@@ -24608,12 +24628,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. CANNOT BE CAST OR WILL NOT FUNCTION UNDERWATER. Not asterisked, so an airy water spell does not rescue it.",
   "po": null,
   "description": "This spell enables the wizard to cast small globes of fire (one for each experience level he has attained), each of which bursts into a 1-foot-diameter sphere upon impact, inflicting 1d4 points of damage to the creature struck. It can also ignite combustible materials (even solid planks). The meteors are treated as missiles hurled by the wizard with a +2 bonus to the attack rolls and with no penalty for range. Misses are treated as grenadelike missiles that inflict 1 point of damage to creatures within 3 feet.\nThe spell can be cast in either of two ways:\nA) The wizard discharges five meteors every round (see the “Multiple Attacks and Initiative” section in Chapter 9: Combat). Note that this carries over into at least the following round.\nB) The wizard discharges only one meteor per round. In addition to releasing the missile, the caster can perform other actions in the round, including spellcasting, melee, or device use. Spells requiring concentration force the wizard to forgo the rest of the missiles to maintain concentration. Also, if the wizard fails to maintain an exact mental count of the number of missiles he has remaining, he has involuntarily lost the remaining portion of the spell.\nThe spell ends when the caster has fired off as many meteors as he has experience levels, when he forgoes casting any still remaining, or when a successful dispel magic spell is thrown upon the caster.\nThe components necessary for the casting of this spell are nitre and sulphur formed into a bead by the addition of pine tar. The caster must also have a small hollow tube of minute proportion, fashioned from gold. The tube costs no less than 1,000 gp to construct, so fine is its workmanship and magical engraving, and it can be reused.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.556",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective"
  },
  {
   "name": "Mellix's Fire Mouth",
@@ -24914,12 +24935,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Only creatures that can breathe and function underwater can be summoned.",
   "po": null,
   "description": "Within one round of casting this spell, the wizard magically conjures 2d4 1st-level monsters (selected by the DM, from his 1st-level encounter tables). The monsters appear anywhere within the spell's area of effect, as desired by the wizard. They attack the spell user's opponents to the best of their ability until either he commands that the attacks cease, the spell duration expires, or the monsters are slain. These creatures do not check morale, but they vanish when slain. Note that if no opponent exists to fight, summoned monsters can, if the wizard can communicate with them and if they are physically able, perform other services for the summoning wizard.\nIn rare cases, adventurers have been known to disappear, summoned by powerful spellcasters using this spell. Those summoned recall all the details of their trip.\nThe material components of this spell are a tiny bag and a small (not necessarily lit) candle.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.3 p.585",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Moonglow Symbol",
@@ -25683,7 +25705,7 @@
   "level": 3,
   "class": "Wizard",
   "schools": [
-   "Necromancy"
+   "Divination"
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
@@ -25697,12 +25719,12 @@
   "castingTime": "3",
   "save": "None",
   "components": "V M",
-  "source": "WSC",
+  "source": "PHBR4, WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "SCHOOL CORRECTED FROM PHBR4, August 2026. The Complete Wizard’s Handbook p.100 prints this spell as “Divination”; this record previously held “Necromancy” from the WSC dataset. Verified by zooming the page image, not read at page scale. PHBR4 IS THE ORIGINAL PRINTING AND WE HOLD IT; the WSC data in this file is a THIRD-PARTY dataset carrying that label, not the book, so it is not an authority against a source in hand. A full audit of the WSC records is owed — Chris, August 2026 — and until it runs, a WSC value that a book in hand contradicts loses. SCHOOL IS NOT COSMETIC in this file: it drives isSpecialtySpell, isOppositionSpell and the Spell Access filter, so this changes which specialists may learn the spell.",
   "po": null,
   "description": "Pain touch enables the caster to touch an opponent in such a way as to induce extreme pain. The spell works if the caster touches any exposed part of an opponent's body. The caster must be within arm's length of the opponent for the spell to work. The spell requires a normal attack roll.\nThe pain causes no damage, but for the next 1-4 rounds, the victim will be -2 on his chance to hit and his AC is worsened by 2. The caster can cast the spell and touch the victim in the same round. Pain touch is only effective on human, demihuman, and humanoid opponents.\nThe material components for this spell are a needle and the finger from a scorched glove.\nNotes: Restricted to necromancers; uncommon.",
-  "schoolSource": "wsc-index",
+  "schoolSource": "PHBR4 p.100",
   "wscRef": "Vol.3 p.651",
   "levelSource": "wsc-index"
  },
@@ -25872,13 +25894,14 @@
   "components": "V S",
   "source": "WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: A phantom steed created underwater is a hippocampi with black forebody and silver-gray scales. It does not gain the special traveling or flying abilities of the regular spell, but does gain a movement rate of 4 per level of the caster (maximum 48).",
   "po": null,
   "description": "When this spell is cast, the wizard creates a quasi-real, horselike creature. The steed can be ridden only by the wizard who created it, or by any person for whom the wizard specifically creates such a mount. A phantom steed has a black head and body, gray mane and tail, and smoke-colored, insubstantial hooves that make no sound. Its eyes are milky-colored. It does not fight, but all normal animals shun it and only monstrous ones will attack. The mount has an Armor Class of 2 and 7 hit points, plus 1 per level of the caster. If it loses all of its hit points, the phantom steed disappears. A phantom steed moves at a movement rate of 4 per level of the spellcaster, to a maximum movement rate of 48. It has what seems to be a saddle and a bit and bridle. It can bear its rider's weight, plus up to 10 pounds per caster level.\nThese mounts gain certain powers according to the level of the wizard who created them:\n8th Level: The ability to pass over sandy, muddy, or even swampy ground without difficulty.\n10th Level: The ability to pass over water as if it were firm, dry ground.\n12th Level: The ability to travel in the air as if it were firm land, so chasms and the like can be crossed without benefit of a bridge. Note, however, that the mount cannot casually take off and fly; the movement must be between points of similar altitude.\n14th Level: The ability to perform as if it were a pegasus; it flies at a rate of 48 per round upon command.\nNote that a mount's abilities include those of lower levels; thus, a 12th-level mount has the 8th-, 10th-, and 12th-level abilities.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.3 p.662",
   "levelSource": "wsc-index",
-  "sourceRef": "PHB page 195"
+  "sourceRef": "PHB page 195",
+  "underwater": "modified"
  },
  {
   "name": "Phantom Wind",
@@ -27710,9 +27733,9 @@
   "castingTime": "3",
   "save": "None",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.100, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "By means of this spell, the caster causes a set of teeth to appear on a person or object; the teeth appear in the exact location touched by the caster. The snapping teeth are contained in a mouth-like orifice about 6 inches in diameter and are capable of snapping at victims within 1 foot. A person or creature with the snapping teeth can cause them to snap at will, effectively giving him an extra attack per round. A normal attack roll is made, and a successful hit inflicts 1-4 hit points of damage. Note that the victim must be within range of the teeth and that normal facing considerations must be accounted for (for instance, snapping teeth in the back of a person's head can only attack victims that are behind the person).\nSnapping teeth can also be placed on a non-living object, such as a tree or a door. In such cases, the snapping teeth are invisible until they make an attack. The snapping teeth will attack any victim that comes within 1 foot; they attack as a 4 HD monster, and each successful hit causes 1-4 hit points of damage. These attacks are automatic and are not controlled by the caster. Attacks cannot be directed against the snapping teeth, but dispel magic causes them to vanish.\nThe material component for this spell is a tooth from any carnivorous animal, such as a wolf, shark, or serpent.\nBy means of this spell, the caster causes a set of teeth to appear on a person or object; the teeth appear in the exact location touched by the caster. The snapping teeth are contained in a mouth-like orifice about 6 inches in diameter and are can snap at those within 1 foot.\nA) Cast on a Creature. A person or creature with the snapping teeth can cause them to snap at will, effectively giving him an extra attack per round. A normal attack roll is made, and a successful hit inflicts 1d4 points of damage. The creature attacked must be within range of the teeth and normal facing considerations apply (for instance, snapping teeth in the back of a person's head can only attack those who are behind the person).\nB) Cast on an Object. The spell can be placed on a non-living object, such as a tree or a door. In such cases, the teeth are invisible until they attack. The teeth attack any creature that comes within 1 foot of the object, attacking as a 4HD monster. A successful hit inflicts 1d4 points of damage. These attacks are automatic and are not controlled by the caster.\nMost attacks cannot be directed against the snapping teeth, but a dispel magic spell causes them to vanish.\nThe material component for this spell is a tooth from any carnivorous animal, such as a wolf, shark, or serpent.\nNotes: Uncommon spell.",
   "schoolSource": "wsc-index",
@@ -29395,12 +29418,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. CANNOT BE CAST OR WILL NOT FUNCTION UNDERWATER. Not asterisked, so an airy water spell does not rescue it.",
   "po": null,
   "description": "This spell brings forth an invisible vertical curtain of wind 2 feet thick and of considerable strength—a strong breeze sufficient to blow away any bird smaller than an eagle or tear papers and like materials from unsuspecting hands. (If in doubt, a saving throw vs. spell determines whether the subject maintains its grasp.) Normal insects cannot pass such a barrier. Loose materials, even cloth garments, fly upward when caught in a wind wall. Arrows and bolts are deflected upward and miss, while sling stones and other missiles under two pounds in weight receive a -4 penalty to a first shot and -2 penalties thereafter. Gases, most breath weapons, and creatures in gaseous form cannot pass this wall, although it is no barrier to noncorporeal creatures.\nThe material components are a tiny fan and a feather of exotic origin.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.4 p.1021",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective"
  },
  {
   "name": "Wings - Lvl 3",
@@ -32013,9 +32037,9 @@
   "castingTime": "1 round",
   "save": "None",
   "components": "Somatic Material",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.101, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "This spell creates an exact copy of any single item the caster touches. The item to be copied must fit inside a 20-foot cube. The spell has no effect on living creatures, including undead, nor will it copy magical items. The duplicated item is identical to the original in every way—for instance, a duplicated sword can be wielded to inflict damage as a normal sword—but detect magic can reveal its true nature and dispel magic can cause it to disappear. The duplicated object exists for 1 hour/level of the caster, at which time it vanishes; permanency does not affect duplicated items.\nThe material component for this spell is a pinch of coal dust.",
   "schoolSource": "wsc-index",
@@ -32823,14 +32847,15 @@
   "castingTime": "4",
   "save": "Special",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. CANNOT BE CAST OR WILL NOT FUNCTION UNDERWATER. Not asterisked, so an airy water spell does not rescue it. VERIFIED AGAINST PHBR4 p.101, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "By means of this spell, the caster surrounds his body with an aura of magical green fire. The fire aura extends 1 foot from the caster's body and provides illumination in a 10-foot radius. The fire aura provides complete immunity to all forms of fire, both natural and magical; the flames can be extinguished only by dispel magic or a similar spell.\nThose touching the fire aura suffer 2-8 (2d4) hit points of damage; additionally, if the touched victim fails to make his saving throw, his body is set afire with green flames.\nThe flames persist for 2-8 (2d4) rounds and can be extinguished only by dispel magic or a similar spell. Each round the victim is engulfed in these flames, he suffers an additional 1-6 hit points of damage; the victim's attack rolls are made with a -2 penalty during this time.\nThe material components for this spell are a scrap of singed paper and a piece of flint\nNotes: Restricted to abjurers and Fire mages; rare.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.359",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective"
  },
  {
   "name": "Fire Charm",
@@ -32857,12 +32882,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. CANNOT BE CAST OR WILL NOT FUNCTION UNDERWATER. Not asterisked, so an airy water spell does not rescue it.",
   "po": null,
   "description": "By means of this spell the wizard causes a normal fire source, such as a brazier, flambeau, or bonfire, to serve as a magical agent, for from this source he causes a gossamer veil of multihued flame to encircle the fire at a distance of 5 feet. Any creatures observing the fire or the dancing circle of flame around it must successfully roll a saving throw vs. spell or be charmed into remaining motionless and gazing, transfixed, at the flames. While so charmed, creatures are subject to suggestions of 12 or fewer words, saving vs. spell with a -3 penalty, adjusted for Wisdom. The caster can give one such suggestion to each creature, and the suggestions need not be the same. The maximum duration for such a suggestion is one hour, regardless of the caster's level.\nThe fire charm is broken if the charmed creature is physically attacked, if a solid object comes between the creature and the veil of flames so as to obstruct vision, or when the duration of the spell expires. Those exposed to the fire charm again may be affected at the DM's option, although bonuses may also be allowed to the saving throws. Note that the veil of flame is not a magical fire, and passing through it incurs the same damage as would be sustained from passing through its original fire source.\nThe material component for this spell is a small piece of multicolored silk of exceptional thinness that the spellcaster must throw into the fire source.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.360",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective"
  },
  {
   "name": "Fire Enchantment",
@@ -32947,12 +32973,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. INEFFECTIVE UNDERWATER, but marked with an asterisk in the book: it functions normally when cast within the bounds of an airy water spell.",
   "po": null,
   "description": "This spell can be cast in one of two forms: a warm shield that protects against cold-based attacks, or a chill shield that protects against fire-based attacks. Both return damage to creatures making physical attacks against the wizard. The wizard must choose which variation he memorizes when the spell is selected.\nWhen casting this spell, the wizard appears to immolate himself, but the flames are thin and wispy, shedding no heat, and giving light equal to only half the illumination of a normal torch. The color of the flames is determined randomly (50% chance of either color)—blue or green if the chill shield is cast, violet or blue if the warm shield is employed. The special powers of each shield are as follows:\nA) Warm shield. The flames are warm to the touch. Any cold-based attacks are saved against with a +2 bonus; either half normal damage or no damage is sustained. There is no bonus against fire-based attacks, but if the wizard fails to make the required saving throw (if any) against them, he sustains double normal damage.\nThe material component for this variation is a bit of phosphorous.\nB) Chill shield. The flames are cool to the touch. Any fire-based attacks are saved against with a +2 bonus; either half normal damage or no damage is sustained. There is no bonus against cold-based attacks, but if the wizard fails to make the required saving throw (if any) against them, he sustains double normal damage.\nThe material component for this variation is a live firefly or glow worm or the tail portions of four dead ones.\nAny creature striking the spellcaster with its body or hand-held weapons inflicts normal damage upon the wizard, but the attacker suffers the same amount of damage. An attacker's magical resistance, if any, is tested when the creature actually strikes the wizard. Successful resistance shatters the spell. Failure means the creature's magic resistance does not affect that casting of the spell.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.363",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective-unless-airy-water"
  },
  {
   "name": "Fire Trap",
@@ -32981,12 +33008,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. CANNOT BE CAST OR WILL NOT FUNCTION UNDERWATER. Not asterisked, so an airy water spell does not rescue it.",
   "po": null,
   "description": "Any closeable item (book, box, bottle, chest, coffer, coffin, door, drawer, and so forth) can be warded by a fire trap spell. The spell is centered on a point selected by the spellcaster. The item so trapped cannot have a second closure or warding spell placed upon it (if such is attempted, the chance is 25% that the first spell fails, 25% that the second spell fails, or 50% that both spells fail). A knock spell does not affect a fire trap in any way—as soon as the offending party enters or touches the item, the trap discharges. Thieves and others have only half their normal chance to detect a fire trap (by noticing the characteristic markings required to cast the spell). They have only half their normal chance to remove the trap (failure detonates the trap immediately). An unsuccessful dispel does not detonate the spell. The caster can use the trapped object without discharging it, as can any individual to whom the spell was specifically attuned when cast (the exact method usually involves a keyword). When the trap is discharged, there is an explosion of 5-foot radius from the spell's center; all creatures within this area must roll saving throws vs. spell. Damage is 1d4 points plus 1 point per level of the caster, or half this (round up) for creatures successfully saving. (Under water, this ward inflicts half damage and creates a large cloud of steam.) The item trapped is not harmed by this explosion.\nTo place this spell, the caster must trace the outline of the closure with a bit of sulphur or saltpeter and touch the center of the effect. Attunement to another individual requires a hair or similar object from that person.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.365",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective"
  },
  {
   "name": "Fire Wake",
@@ -33705,6 +33733,7 @@
   "level": 4,
   "class": "Wizard",
   "schools": [
+   "Abjuration",
    "Conjuration/Summoning"
   ],
   "schoolsOfEffect": [],
@@ -33719,12 +33748,12 @@
   "castingTime": "4",
   "save": "None",
   "components": "V M",
-  "source": "WSC",
+  "source": "PHBR4, WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "SCHOOL CORRECTED FROM PHBR4, August 2026. The Complete Wizard’s Handbook p.101 prints this spell as “Abjuration, Conjuration”; this record previously held “Conjuration/Summoning” from the WSC dataset. Verified by zooming the page image, not read at page scale. PHBR4 IS THE ORIGINAL PRINTING AND WE HOLD IT; the WSC data in this file is a THIRD-PARTY dataset carrying that label, not the book, so it is not an authority against a source in hand. A full audit of the WSC records is owed — Chris, August 2026 — and until it runs, a WSC value that a book in hand contradicts loses. SCHOOL IS NOT COSMETIC in this file: it drives isSpecialtySpell, isOppositionSpell and the Spell Access filter, so this changes which specialists may learn the spell.",
   "po": null,
   "description": "Halo of eyes creates a halo of functional eyeballs that sits atop the caster's head, enabling the caster to see in all directions at the same time. Additionally, these magical eyes all have infravison to a distance of 60 yards. The caster can see opponents on all sides of him, providing they are not invisible, and therefore can never by struck from behind or suffer a penalty for a back attack. Under normal conditions, the caster cannot be surprised. Attacks cannot be directed against the magical eyeballs, but their vision is obscured by blindness and other magical and natural effects that would hinder the wizard's normal sight.\nThe material components for this spell are the feather of an eagle and an eyelash from the corpse of any creature.",
-  "schoolSource": "wsc-index",
+  "schoolSource": "PHBR4 p.101",
   "wscRef": "Vol.2 p.423",
   "levelSource": "wsc-index"
  },
@@ -33898,12 +33927,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Hail stones are as large as normal but their downward force is greatly reduced, inflicting only 1-10 hit points before floating toward the surface. The sleet variation is useless underwater since all of the sleet melts as soon as it is created.",
   "po": null,
   "description": "This spell can have one of two effects, at the caster's option: Either great hail stones pound down for one round in a 40-foot-diameter area and inflict 3d10 points of damage to any creatures within the area of effect, or driving sleet falls in an 80-foot-diameter area for one round per caster level. The sleet blinds creatures within its area for the duration of the spell and causes the ground in the area to be icy, slowing movement by 50% and making it 50% probable that a creature trying to move in the area slips and falls. The sleet also extinguishes torches and small fires.\nNote that this spell will negate a heat metal spell.\nThe material components for this spell are a pinch of dust and a few drops of water.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.444",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Identify Race",
@@ -35314,12 +35344,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Only creatures that can breathe and function underwater can be summoned.",
   "po": null,
   "description": "This spell is much like the 3rd-level spell monster summoning I, except that this spell summons 1d6 2nd-level monsters. These appear anywhere within the spell's area of effect and attack the caster's opponents, until he commands them to cease, the spell duration expires, or the monsters are slain. These creatures do not check morale; they vanish when slain. If no opponent exists to fight and the wizard can communicate with them, the summoned monsters can perform other services for the summoning wizard.\nThe material components of this spell are a tiny bag and a small (not necessarily lit) candle.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.3 p.585",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Mordenkainen's Celerity",
@@ -35837,9 +35868,9 @@
   "castingTime": "5",
   "save": "None",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.101, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "This spell creates a shimmering screen of violet energy in any shape the caster desires. Any creature passing through the screen is affected by dispel magic with the same level of effectiveness as that spell cast by the wizard.\nThe material components for this spells are a sheet of fine lead crystal and a chysolite gemstone worth 1,000 gp (both vanish after the spell is cast).",
   "schoolSource": "wsc-index",
@@ -38154,12 +38185,13 @@
   "components": "V M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. INEFFECTIVE UNDERWATER, but marked with an asterisk in the book: it functions normally when cast within the bounds of an airy water spell.",
   "po": null,
   "description": "When a shout spell is cast, the wizard gives himself tremendous vocal powers. The caster can emit an ear-splitting noise that has a principal effect in a cone shape radiating from his mouth to a point 30 feet away. Any creature within this area is deafened for 2d6 rounds and suffers 2d6 points of damage. A successful saving throw vs. spell negates the deafness and reduces the damage by half. Any exposed brittle or crystal substance subject to sonic vibrations is shattered by a shout, while those brittle objects in the possession of a creature receive the creature's saving throw. Deafened creatures suffer a -1 penalty to surprise rolls, and those that cast spells with verbal components are 20% likely to miscast them.\nThe shout spell cannot penetrate the 2nd-level priest spell, silence, 10' radius. This spell can be employed only once per day; otherwise, the caster might permanently deafen himself.\nThe material components for this spell are a drop of honey, a drop of citric acid, and a small cone made from a bull or ram horn.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.3 p.812",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective-unless-airy-water"
  },
  {
   "name": "Sinuous Horrors",
@@ -38297,12 +38329,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. INEFFECTIVE UNDERWATER, but marked with an asterisk in the book: it functions normally when cast within the bounds of an airy water spell.",
   "po": null,
   "description": "When this spell is cast, the wizard creates a billowing mass of misty vapors similar to a wall of fog spell. The caster can create less vapor if desired, as long as a rectangular or cubic mass at least 10 feet on a side is formed. The fog obscures all sight, normal and infravision, beyond 2 feet. However, unlike normal fog, only a very strong wind can move these vapors, and any creature attempting to move through the solid fog progresses at a movement rate of 1 foot per round. A gust of wind spell cannot affect it. A fireball, flame strike, or wall of fire can burn it away in a single round.\nThe material components for the spell are a pinch of dried, powdered peas combined with powdered animal hoof.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.3 p.834",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective-unless-airy-water"
  },
  {
   "name": "Spark Burst",
@@ -39932,12 +39965,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. CANNOT BE CAST OR WILL NOT FUNCTION UNDERWATER. Not asterisked, so an airy water spell does not rescue it.",
   "po": null,
   "description": "The wall of fire spell brings forth an immobile, blazing curtain of magical fire of shimmering color—violet or reddish blue. The spell creates either an opaque sheet of flame up to one 20-foot square per level of the spellcaster, or a ring with a radius of up to 10 feet + 5 feet per two levels of experience of the wizard. In either form, the wall of fire is 20 feet high.\nThe wall of fire must be cast so that it is vertical with respect to the caster. One side of the wall, selected by the caster, sends forth waves of heat, inflicting 2d4 points of damage upon creatures within 10 feet and 1d4 points of damage upon those within 20 feet. In addition, the wall inflicts 2d6 points of damage, plus 1 point of damage per level of the spellcaster, upon any creature passing through it. Creatures especially subject to fire may take additional damage, and undead always take twice normal damage. Note that attempting to catch a moving creature with a newly-created wall of fire is difficult; a successful saving throw enables the creature to avoid the wall, while its rate and direction of movement determine which side of the created wall it is on. The wall of fire lasts as long as the wizard concentrates on maintaining it, or one round per level of experience of the wizard, in the event he does not wish to concentrate upon it.\nThe material component of the spell is phosphorus.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.4 p.986",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective"
  },
  {
   "name": "Wall of Ice",
@@ -39962,12 +39996,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Can be formed underwater, but it immediately floats to the surface and bobs in the water like an ice floe. This renders the ice plane and hemisphere variations useless. The ice sheet variation inflicts no damage underwater.",
   "po": null,
   "description": "This spell can be cast in one of three ways: as an anchored plane of ice, as a hemisphere, or as a horizontal sheet to fall upon creatures with the effect of an ice storm.\nA) Ice plane. When this spell is cast, a sheet of strong, hard ice is created. The wall is primarily defensive, stopping pursuers and the like. The wall is 1 inch thick per level of experience of the wizard. It covers a 10-foot-square area per level (a 10th-level wizard can create a wall of ice 100 feet long and 10 feet high, a wall 50 feet long and 20 feet high, etc.). Any creature breaking through the ice suffers 2 points of damage per inch of thickness of the wall. Fire-using creatures suffer 3 points of damage per inch, while cold-using creatures suffer only 1 point of damage per inch when breaking through. The plane can be oriented in any fashion as long as it is anchored along one or more sides.\nB) Hemisphere. This casting of the spell creates a hemisphere whose maximum radius is equal to 3 feet plus 1 foot per caster level. Thus, a 7th-level caster can create a hemisphere 10 feet in radius. The hemisphere lasts until it is broken, dispelled, or melted. Note that it is possible, but difficult, to trap mobile opponents under the hemisphere.\nC) Ice sheet. This casting of the spell causes a horizontal sheet to fall upon opponents. The sheet covers a 10-foot-square area per caster level. The sheet has the same effect as an ice storm's hail stones—3d10 points of damage inflicted to creatures beneath it.\nA wall of ice cannot form in an area occupied by physical objects or creatures; its surface must be smooth and unbroken when created. Magical fires such as fireballs and fiery dragon breath melt a wall of ice in one round, though this creates a great cloud of steamy fog that lasts one turn. Normal fires or lesser magical ones do not hasten the melting of a wall of ice.\nThe material component of this spell is a small piece of quartz or similar rock crystal.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.4 p.988",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Wall of Sand",
@@ -40233,14 +40268,15 @@
   "castingTime": "1 round",
   "save": "1⁄2",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. CANNOT BE CAST OR WILL NOT FUNCTION UNDERWATER. Not asterisked, so an airy water spell does not rescue it. VERIFIED AGAINST PHBR4 p.101, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "A variation of gust of wind, this spell allows the caster to fill his lungs with air and expel a powerful wind. The strength of this wind is about 5 miles per hour for every level of the caster. Those outside the area of effect do not notice the tremendous winds, though objects may be blown out of the spell's area into their path. The DM should determine the precise effects of the wind breath using the following parameters as guidelines.\nIf the wind breath is 30–50 miles per hour, there is a 10 percent chance that small boats capsize, a 1 percent chance that ships capsize, and a 10 percent chance that a man is knocked down. There is a 20 percent chance that branches snap, light articles are blown away, and tents and sails tear. Creatures caught in the cone of the wind breath suffer 1 hit points of damage from blown sand and grit.\nIf the wind breath is 50–70 miles per hour, there is a 70 percent chance that small boats capsize, a 20 percent chance that ships capsize, and a 50 percent chance that a man is knocked down. Trees bend and there is a 70 percent chance that branches snap, and a 20 percent chance that a trunk snaps. Medium-sized articles are blown away, and there is a 50 percent chance that tents and sails are torn, and a 40 percent chance that shacks are blown down. Creatures caught in the cone of the wind breath suffer 1-4 hit points of damage from sand and grit. Flying creatures are blown back 10-40 (10d4) feet.)\nIf the wind breath is 70 miles per hour or more, there is a 100 percent chance that small boats capsize, a 70 percent chance that ships capsize, and a 70 percent chance that a man is knocked down and blown 10-40 (10d4) feet to suffer 1-6 hit points of damage per 10 feet blown. There is a 70 percent chance that tree trunks snap, and a 100 percent chance that branches are ripped from trees. Heavy articles are blown away, medium articles are ripped from fastenings, and tents and sails have a 70 percent chance of being destroyed. There is a 20 percent chance that common buildings are blown down and a 60 percent chance that shacks are flattened. Creatures caught in the cone of the wind breath suffer 1-8 hit points of damage from blown objects. Flying creatures are blown back 50-100 (40+10d6) feet.\nThe material component for this spell is a handmade silk fan with a value of at least 1 gp.\nNotes: Uncommon spell.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.4 p.1017",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective"
  },
  {
   "name": "Wingbind - Lvl 4",
@@ -41378,13 +41414,14 @@
   "components": "V S",
   "source": "WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. INEFFECTIVE UNDERWATER, but marked with an asterisk in the book: it functions normally when cast within the bounds of an airy water spell.",
   "po": null,
   "description": "This spell generates a billowing cloud of ghastly yellowish green vapors that is so toxic as to slay any creature with fewer than 4+1 Hit Dice, cause creatures with 4+1 to 5+1 Hit Dice to roll saving throws vs. poison with -4 penalties or be slain, and creatures with up to 6 Hit Dice (inclusive) to roll unmodified saving throws vs. poison or be slain. Holding one's breath has no effect on the lethality of the spell. Those above 6th level (or 6 Hit Dice) must leave the cloud immediately or suffer 1d10 points of poison damage each round while in the area of effect.\nThe cloudkill moves away from the spellcaster at 10 feet per round, rolling along the surface of the ground. A moderate breeze causes it to alter course (roll for direction), but it does not move back toward its caster. A strong wind breaks it up in four rounds, and a greater wind force prevents the use of the spell. Very thick vegetation will disperse the cloud in two rounds. As the vapors are heavier than air, they sink to the lowest level of the land, even pouring down den or sinkhole openings; thus, the spell is ideal for slaying nests of giant ants, for example. It cannot penetrate liquids, nor can it be cast under water.\nNotes: Common spell ( PHB).",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.1 p.152",
   "levelSource": "wsc-index",
-  "sourceRef": "PHB page 212 WSC"
+  "sourceRef": "PHB page 212 WSC",
+  "underwater": "ineffective-unless-airy-water"
  },
  {
   "name": "The Clutches of Time",
@@ -41557,12 +41594,13 @@
   "components": "V S M",
   "source": "WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Air elementals cannot be conjured underwater. Earth elementals must remain on the floor of the sea, lake or river from which they are conjured; while unable to leave the floor they can still attack creatures resting on or imbedded in the floor. Water elementals can be conjured normally.",
   "po": null,
   "description": "There are actually four spells in the conjure elemental spell. The wizard is able to conjure an air, earth, fire, or water elemental with this spell—assuming he has the material component for the particular elemental. (A considerable fire source must be in range to conjure a fire elemental; a large amount of water must be available to conjure a water elemental.) Conjured elementals have 8 Hit Dice.\nIt is possible to conjure successive elementals of different types if the spellcaster has memorized two or more of these spells. The type of elemental to be conjured must be decided upon before memorizing the spell. Each type of elemental can be conjured only once per day.\nThe conjured elemental must be controlled by the wizard—the spellcaster must concentrate on the elemental doing his commands—or it turns on the wizard and attacks. The elemental will not break off a combat to do so, but it will avoid creatures while seeking its conjurer. If the wizard is wounded or grappled, his concentration is broken. There is always a 5% chance that the elemental turns on its conjurer regardless of concentration. This check is made at the end of the second and each succeeding round. An elemental that breaks free of its control can be dispelled by the caster, but the chance of success is only 50%. The elemental can be controlled up to 30 yards away per level of the spellcaster. The elemental remains until its form on this plane is destroyed due to damage or until the spell's duration expires. Note that water elementals are destroyed if they are ever more than 60 yards from a large body of water.\nThe material component of the spell (besides the quantity of the element at hand) is a small amount of one of the following:\nSpecial protection from uncontrolled elementals is available by means of a protection from evil spell.\nNotes: Common spell ( PHB)",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.1 p.166",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Conjure Nightmare",
@@ -42358,12 +42396,13 @@
   "components": "V S M",
   "source": "WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. CANNOT BE CAST OR WILL NOT FUNCTION UNDERWATER. Not asterisked, so an airy water spell does not rescue it.",
   "po": null,
   "description": "This spell can be cast only in an area completely surrounded or enclosed by earth, rock, sand, or similar materials. The wizard must also cast a conjure elemental spell to summon an earth elemental. The elemental serves without attempting to break free when the spellcaster announces that his intent is to cast a distance distortion spell. The spell places the earth elemental in the area of effect, and the elemental then causes the area's dimensions to be either doubled or halved for those traveling over it (spellcaster's choice). Thus, a 10-foot x 100-foot corridor could seem to be either 5 feet wide and 50 feet long or 20 feet wide and 200 feet long. When the spell duration has elapsed, the elemental returns to its own plane.\nThe true nature of an area affected by distance distortion is undetectable to any creature traveling along it, but the area dimly radiates magic, and a true seeing spell can reveal that an earth elemental is spread within the area.\nThe material needed for this spell is a small lump of soft clay.\nNotes: Common spell ( PHB).",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.1 p.258",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective"
  },
  {
   "name": "Distort Life II",
@@ -43326,9 +43365,9 @@
   "castingTime": "1",
   "save": "1⁄2",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.102, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "With this spell, the caster can force any shapechanger or magic-wielder using any form of a shapechanging spell to instantly revert to his true form (or his most common form). To use the spell, the caster points at creatures he knows or believes to be shapechangers. If the creatures are indeed shapechangers, they must make a successful saving throw or immediately revert to their true form and suffer 3-30 (3d10) hit points of damage from the wracking pain caused by the forced change. The change takes a full round, during which time a victim can take no other actions. If the saving throw was successful, the victim does not change form, but still suffers half damage (2d10/2).\nThe material components for this spell are a hair from the hide of any lycanthrope and a live butterfly, released when the verbal component is uttered.",
   "schoolSource": "wsc-index",
@@ -43822,9 +43861,9 @@
   "castingTime": "2",
   "save": "None",
   "components": "V M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.103, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "This spell creates an immobile, faintly shim­mering magical sphere around the caster that cannot be penetrated by non-magical blunt weapons, edged weapons, or missile weapons. The caster can use these weapons from inside the sphere to attack opponents normally. Spells can also be cast through the sphere. The sphere can be negated by dispel magic.\nAny effort to combine this spell with magics that grant immunity to magical weapons cause this spell to fail immediately.\nThe material components for this spell are a piece of a broken non-magical weapon and a scale from a dragon.\nNotes: Uncommon spell; typically known by abjurers.",
   "schoolSource": "sheet",
@@ -44087,9 +44126,9 @@
   "castingTime": "3(1 rd. - WSC)",
   "save": "None",
   "components": "V M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.103, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "Know value enables the caster to know the total value of all coins, gems, and jewelry within the area of effect, within the limits that follow.\nThe items must be clearly visible. They cannot be concealed on people, hidden in a chest, or buried in the ground. The items must also be contained within an area no larger than a 10-foot cube, and this area can be no farther than 10 yards from the caster.\nFurther, know value will only reveal the value of 75% of the total number of objects in a treasure pile, up to a maximum of 10 pieces; the DM determines which pieces the spell affects, and the caster does not know which particular pieces have been appraised. The spell does not detect the presence or value of magical items, and it ignores the value of personal property, such as clothing, weapons, and other equipment. Know value does not reveal the number or nature of any type of hidden objects.\nThe material components for this spell are a copper piece and a phony gem.\nKnow value enables the caster to determine the raw monetary value of all coins, gems, and jewelry within the area of effect, within the limits that follow.\nThe items must be laid out so they are clearly visible. They cannot be concealed on a person, hidden in a chest, or buried in the ground. The items must also be contained within an area no larger than a 10-foot cube, and this area can be no farther than 10 yards from the caster. The spell appraises the basic raw material value of precious metals and gemstones examined, regardless of magical enchantment, workman ship, or collectible value. Fools' gold is instantly detected.\nOptionally, the DM might allow this spell to duplicate the appraisal non-weapon proficiency with respect to the raw monetary value of treasure at an effective Intelligence of 15.\nThe material component of the spell is part of the material appraised, equal to 1% of the total value, rounded up to one whole item as necessary. This disappears from the area exam­ined. Thus, a pile of 20,000 sp is reduced by 200 sp when this spell is cast upon it.\nNotes: Uncommon spell. (Updated from the Complete Wizard's Handbook.)",
   "schoolSource": "wsc-index",
@@ -44960,12 +44999,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Only creatures that can breathe and function underwater can be summoned.",
   "po": null,
   "description": "This spell is much like the 3rd-level spell monster summoning I, except that this spell summons 1d4 3rd-level monsters. These appear within the spell's area of effect and attack the caster's opponents, until either he commands them to cease, the spell duration expires, or the monsters are slain. These creatures do not check morale and vanish when slain. If no opponent exists to fight, and the wizard can communicate with them, the summoned monsters can perform other services for the wizard.\nThe material components of this spell are a tiny bag and a small candle.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.3 p.586",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Mooncloak",
@@ -45111,9 +45151,9 @@
   "castingTime": "2 turns",
   "save": "None",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.103, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "With this spell, privacy is ensured in a room of up to 1600 square feet (40 feet x 40 feet, or the equivalent). From the outside, the windows of the room appear to be dark and cloudy, preventing those with normal vision, infravision, or any other type of vision from seeing inside. Those inside the room can see out the windows as they normally would. No sounds of any kind can escape from the room. Scrying attempts, such as ESP, clairaudience, clairvoyance, and crystal balls cannot penetrate the room, and a wizard eye cannot enter. The caster can leave the room without affecting the spell.\nThe material components for this spell are a thin sheet of lead, a piece of opaque glass, a wad of cotton or cloth, and a pinch of powdered chrysolite.\nThis spell insures privacy in a room of up to 1,600 square feet in area, or 40 feet by 40 feet in dimension. All windows in the room become dark and misty as seen from the outside, prevent­ing creatures with normal vision, infravision, or other special vision from looking into the room. Those inside can look out normally. X-ray vision cannot penetrate into the room, as if the room were completely enclosed in a lead shield. No sounds, no matter how loud, can escape the room, so a thief cannot eavesdrop from outside. Scrying attempts, such as ESP, clairaudience, clairvoyance, or crystal balls, cannot penetrate the protected room, and a wizard eye cannot get inside. The casting wizard can freely leave the room without the protection being dispelled.\nThe material components are a thin sheet of lead, a piece of opaque glass, a wad of cotton or cloth, and powdered chrysolite.\nNotes: Uncommon or rare spell (WoG).",
   "schoolSource": "wsc-index",
@@ -45376,9 +45416,9 @@
   "castingTime": "5",
   "save": "Special",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.103, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "This spell allows the caster to attack with a rotting touch similar to that of a mummy. If the caster touches a human, demihuman, or humanoid victim, the victim immediately loses 2-12 (2d6) hit points and is infected with a rotting disease which is fatal in 1–6 months. For each month the rot progresses, the victim permanently loses 2 points of Charisma. While infected, the victim recovers lost hit points at 10 percent of his normal rate.\nThe rotting disease can be cured only with a cure disease spell; cure wounds has no effect. A regenerate spell will restore damage but will not otherwise affect the course of the disease. If a victim makes a successful saving throw, he is not infected, but he still suffers 2-12 hit points of damage.\nThe material components for this spell are a piece of rotten fruit and a piece of a mummy's cloth wrapping.\nMummy Rot aka mummy touch: The various treatments of this effect have been combined into a single \"official\" version of the spell. (See 3rd level spell Mummy Touch).",
   "schoolSource": "single"
@@ -46459,9 +46499,9 @@
   "castingTime": "1 round",
   "save": "None",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.104, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "With this spell, the caster forms a telepathic bond between two or more creatures with Intelligence of 6 or higher. The bond can be established only between willing creatures who are within 20 yards of each other. The creatures need not speak the same language to communicate via the bond. The bond can be placed upon one creature for every three levels of the caster; therefore, a 9th-level caster can forge a bond among three creatures. The bonded creatures can remain in mental contact as long as they remain on the same plane of existence. If either creature enters a different plane, the spell is terminated.\nRary's telepathic bond can be cast only once to affect a single pair of subjects. However, if the caster is able to cast the spell twice, the same subjects can be affected again. Example: A wizard can cast telepathic bond twice. The first casting links Subject A to Subject B. The second casting can affect Subject A again, linking him with Subject C.\nThe material components for this spell are two pieces of eggshell; the pieces must be from the eggs of two different species of egg-laying creature.\nWith this spell, the wizard can forge a tele­pathic bond between two or more creatures with an Intelligence of 6 or higher. The bond can be established only between willing creatures. The creatures involved need not all speak the same language to communicate via the bond. The telepathic bond can be placed upon one creature for every three levels of the caster, so a 16th-level wizard can forge a telepathic link among five creatures.\nOnce the bond is formed, the creatures can stay in contact only if they remain on the same plane. No special power or influence is con­ferred by establishing the bond. A permanency spell cannot make a telepathic bond permanent. A wish spell can, but no more than two crea­tures can be permanently bonded together in this way.\nThe material components are a piece of a shell from the eggs of two species of egg-laying crea­tures.\nNotes: Uncommon or rare spell (WoG). A marginally different version appears in The Complete Wizard's Handbook. This is the pre­ferred form.",
   "schoolSource": "wsc-index",
@@ -48532,9 +48572,9 @@
   "castingTime": "3",
   "save": "1⁄2",
   "components": "V M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.104, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "This spell causes the bones of the affected creature to throb and pulsate inside his body. The spell can be cast upon any single living creature or person within the caster's range, providing the creature has a physical form and has bones inside its body; for instance, throbbing bones will not affect insects, ghosts, or worms.\nFor the duration of the spell, the affected creature's AC is worsened by 2, its movement rate is halved, and all its attacks are made with a -2 penalty. Additionally, it suffers 1-4 hit points of damage per round; this damage is halved if the creature makes a successful saving throw. However, a successful saving throw has no affect on the movement, attack, and AC penalties.\nThe material components for this spell are both pieces of a small bone that has been snapped in half.\nNotes: Uncommon spell. Optionally available to Savage mages.\nOptional: The issue of continuous damage and its effects on spellcasting can be resolved as follows: The damage has an initiative modifier of 0. The spellcaster must win (not tie) an individual initiative roll against die damage to successfully cast a spell, including the spell's casting time as a modifier. Failure means the attempt is unsuccessful and the attempted spell is lost.",
   "schoolSource": "wsc-index",
@@ -48627,13 +48667,14 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Operates underwater as elsewhere, except that the mud immediately begins to dissipate. If cast on the ocean floor, only extremely heavy creatures who are unable to swim are in any danger of sinking into the mud.",
   "po": null,
   "description": "This spell turns natural rock of any sort into an equal volume of mud. The depth of the mud can never exceed half its length or breadth. If it is cast upon a rock, for example, the rock affected collapses into mud. Creatures unable to levitate, fly, or otherwise free themselves from the mud sink at the rate of 10 feet per round and suffocate, except for lightweight creatures that could normally pass across such ground. Brush thrown atop the mud can support creatures able to climb on top of it, with the amount of brush required subject to the DM's discretion. The mud remains until a dispel magic spell or a reverse of this spell, mud to rock, restores its substance—but not necessarily its form. Evaporation turns the mud to normal dirt, at the rate of 1d6 days per 10 cubic feet.\nThe mud to rock reverse can harden normal mud into soft stone (sandstone or similar mineral) permanently unless magically changed.\nThe material components for the spell are clay and water (or sand, lime, and water for the reverse).\nTransmute Rock to Mud: This spell effects only “natural” stone. Stone which has been created or protected by magic is unaffected, as is stone which has been artificially shaped on all four sides. For example, the walls in a simple tunnel driven through solid rock are subject to this spell, but if the tunnel were lined with brick or stones that had been worked into blocks, a transmute rock to mud spell could not harm them. This spell still is very useful in a siege, however, as virtually all castles must be built upon bedrock in order to support the weight of the walls. It is possible to use a transmute rock to mud spell to undermine a wall by attacking the bedrock underneath, provided that the spell has enough area to reach under the wall and that the mud can flow out and leave a cavity under the wall. In some cases it might be necessary to employ sappers or a dig spell to get at the bedrock and provide a place for the mud to go. If these conditions are met, the wall still remains unaffected if the defender rolls a 10 or more on 1d20.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.4 p.949",
   "reversal": "Mud To Rock",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Transmute Snow to Stone",
@@ -48898,9 +48939,9 @@
   "castingTime": "1 round",
   "save": "None",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.104, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "This spell causes a wall of bones to erupt from the earth in whatever shape the caster desires within the limits of the area of effect. The wall is a random construction of bones from many types of creatures. The wall need not be vertical, but it must rest upon a firm foundation or it will collapse. Since the wall has many small openings and gaps, it provides only 50 percent cover. Missiles can easily be fired from behind the wall, and creatures of small size (less than 4 feet tall) can wriggle through openings in the wall at the rate of 10 feet per round. However, the wall has many sharp edges and creatures wriggling through it suffer 1-8 hit points of damage per 10 feet traveled.\nIf the spell is cast in an area occupied by creatures, the wall of bones appears everywhere except where the creatures stand. Creatures in the affected area suffer an immediate 2-16 (2d8) hit points of damage when the wall appears. The wall can be smashed by creatures wielding blunt weapons with a Strength of 18 or greater. Every 10 hit points of damage causes a 5 foot x 5 foot x 6 inch section of the wall to collapse. The wall of bones is unaffected by animate dead.\nThe material component for this spell is the branch of a withered tree taken from a cemetery",
   "schoolSource": "wsc-index",
@@ -50085,9 +50126,9 @@
   "castingTime": "1 round",
   "save": "Neg",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.104, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "Blackmantle creates a shimmering aura around all creatures within the affected area that negates all healing and regeneration, both natural and magical. For instance, a potion of healing has no effect on a creature under the influence of blackmantle, a troll cannot regenerate lost hit points, and cure light wounds is useless.\nBlackmantle is negated for any target creatures who make successful saving throws. Otherwise, it persists for 1 turn per level of the caster. If the creatures are still alive at the end of the spell's duration, any active curative forces will operate normally; for instance, a ring of regeneration will resume its function. However, consuming a potion of healing or applying a staff of curing while blackmantle is in effect will have no affect when blackmantle wears off, since these types of magic work instantly. In such cases, the dose of potion of healing and the charge from a staff of curing are not only wasted, but the aura generated by blackmantle actually negates the potion of healing or the staff of curing, rendering it useless. If a potion of healing or staff of healing is applied after the spell wears off, the healing magic works normally.\nThe material component for this spell is a small mummified animal, such as a mouse or a toad\nNotes: Restricted to necromancers; uncommon.",
   "schoolSource": "wsc-index",
@@ -50374,12 +50415,13 @@
   "components": "V S M",
   "source": "WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Acts as a lightning bolt of twice the normal size, either a forked bolt up to 20 feet wide and 80 feet long or a single bolt 10 feet wide and 160 feet long. However, it strikes only a single object and inflicts only 1d6 hp of damage for every level of the caster (save vs. spells for half damage). It will not arc to other targets.",
   "po": null,
   "description": "This spell creates an electrical discharge that begins as a single stroke of lightning, 2 1⁄2 feet wide, commencing from the fingertips of the caster. Unlike a lightning bolt spell, chain lightning strikes one object or creature initially, then arcs to a series of other objects or creatures within range, losing energy with each jump.\nThe bolt initially inflicts 1d6 points of damage per level of the caster, to a maximum of 12d6 (half damage if the object or creature rolls a successful saving throw vs. spell). After the first strike, the lightning arcs to the next nearest object or creature. Each jump reduces the strength of the lightning by 1d6. Each creature or magical object hit receives a saving throw vs. spell. Success on this save indicates the creature suffers only half damage from the bolt.\nThe chain can strike as many times (including the first object or creature) as the spellcaster has levels, although each creature or object can be struck only once. Thus, a bolt cast by a 12th-level wizard can strike up to 12 times, causing less damage with each strike. The bolt continues to arc until it has struck the appropriate number of objects or creatures, until it strikes an object that grounds it (interconnecting iron bars of a large cell or cage, a large pool of liquid, etc.), or until there are no more objects or creatures to strike.\nDirection is not a consideration when plotting chain lightning arcs. Distance is a factor—an arc cannot exceed the spell's range. If the only possible arc is greater than the spell's range, the stroke fades into nothingness. Creatures immune to electrical attack can be struck, even though no damage is taken. Note that it is possible for the chain to arc back to the caster!\nThe material components are a bit of fur, a piece of amber, glass, or crystal rod, and one silver pin for each experience level of the caster.\nNotes: Common spell ( PHB)",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.1 p.128",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Claws of the Umber Hulk",
@@ -50546,13 +50588,14 @@
   "components": "V S",
   "source": "WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Only creatures that can breathe and function underwater can be conjured.",
   "po": null,
   "description": "The conjure animals spell enables the wizard to magically create one or more mammals to attack his opponents. The total Hit Dice of the mammals cannot exceed twice his level, if determined randomly, or his level if a specific animal type is requested (see the Dungeon Master Guide). Thus, a wizard of 12th level could randomly conjure two mammals with 12 Hit Dice, four with 6 Hit Dice each, six with 4 Hit Dice each, eight with 3 Hit Dice each, twelve with 2 Hit Dice each, or 24 with 1 Hit Die each. Count every +1 hit point bonus of a creature as ź of a Hit Die; thus, a creature with 4+3 Hit Dice equals a 4 ž Hit Dice creature. The conjured animal remain for one round for each level of the conjuring wizard, or until slain. They follow the caster's verbal commands. Conjured animals unfailingly attack the wizard's opponents, but they resist being used for any other purpose.\nNotes: Common spell ( PHB).",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.1 p.164",
   "levelSource": "wsc-index",
-  "sourceRef": "PHB page 221 WSC"
+  "sourceRef": "PHB page 221 WSC",
+  "underwater": "modified"
  },
  {
   "name": "Construct Undead",
@@ -50663,12 +50706,13 @@
   "components": "V S M",
   "source": "WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. CANNOT BE CAST OR WILL NOT FUNCTION UNDERWATER. Not asterisked, so an airy water spell does not rescue it.",
   "po": null,
   "description": "The control weather spell enables a wizard to change the weather in the local area. The spell affects the weather for 4d6 hours in an area of 4d4 square miles. It requires one turn to cast the spell, and an additional 1d4 turns for the weather conditions to occur. The current weather conditions are decided by the DM, depending on the climate and season. Weather conditions have three components: precipitation, temperature, and wind. The spell can change these conditions according to the following chart.\nThe upper-cased headings represent the existing weather conditions. The small headings beneath each large heading are the new conditions to which the caster can change the existing conditions. Furthermore, the caster can control the direction of the wind. For example, a day that is clear and warm with moderate wind can be controlled to become hazy, hot, and calm. Contradictions are not possible—fog and strong wind, for example. Multiple control weather spells can be used only in succession.\nThe material components for this spell are burning incense and bits of earth and wood mixed in water. Obviously, this spell functions only in areas where there are appropriate climatic conditions.\nNotes: Common spell ( PHB).",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.1 p.179",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective"
  },
  {
   "name": "Control Winds",
@@ -50898,9 +50942,9 @@
   "castingTime": "1 round",
   "save": "Special",
   "components": "Somatic Material",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.105, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "Dead Man's Eyes causes the whites of the caster's eyes to turn black and his pupils to reshape themselves into small white skulls. The caster can affect one victim per round, providing the victim is within 3 feet of the caster and meets his gaze. Victims are affected as follows:\n· Victims with 2 Hit Dice or fewer (or victims of level 2 or lower) instantly die. No saving throw is allowed.\n· Victims with 2+ to 5 Hit Dice (or victims of level 3-5) instantly die unless they save vs. death magic at a -2 penalty. Those who succeed in their saving throws suffer 2-12 (2d6) hit points.\n· Victims with 5+ Hit Dice or more (or victims of level 6 or greater) suffer 2-12 (2d6) hit points of damage unless they save vs. death magic.\nIf the caster's gaze is reflected back on him (by a mirror, calm water, etc.), he must make a saving throw vs. spells or suffer the same effects as a 5+ Hit Dice victim. At the end of the spell's duration, there is a 5 percent chance that the caster will become blind for the next 5-10 (1d6 + 4 hours).\nThe material components for this spell are two eyeball-sized glass marbles. The marbles must be the same color as the caster's eyes",
   "schoolSource": "sheet",
@@ -50934,12 +50978,13 @@
   "components": "V S M",
   "source": "WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. INEFFECTIVE UNDERWATER, but marked with an asterisk in the book: it functions normally when cast within the bounds of an airy water spell.",
   "po": null,
   "description": "The casting of a death fog spell creates an area of solid fog that has the additional property of being highly acidic. The vapors are deadly to living things, so that vegetation exposed to them will die—grass and similar small plants in two rounds, bushes and shrubs in four, small trees in eight, and large trees in 16 rounds. Animal life not immune to acid suffers damage according to the length of time it is exposed to the vapors of a death fog, as follows:\nThe death fog otherwise resembles the 2nd-level fog cloud spell: rolling, billowing vapors that can be moved only by a very strong wind. Any creature attempting to move through the death fog progresses at a rate of 1 foot per unit of normal movement rate per round. A gust of wind spell cannot affect it, but a fireball, flame strike, or wall of fire can burn it away in a single round.\nThe material components are a pinch of dried and powdered peas, powdered animal hoof, and strong acid of any sort (including highly distilled vinegar or acid crystals), which must be obtained from an alchemist.\nNotes: Common spell ( PHB).",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.1 p.215",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective-unless-airy-water"
  },
  {
   "name": "Death Spell",
@@ -51295,9 +51340,9 @@
   "castingTime": "1 round",
   "save": "None",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.105, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "This spell causes the body of the caster (or any single person or creature touched by the caster) to become completely covered with dragon scales, effectively raising the subject's Armor Class by 2 for the duration of the spell; this modification is in addition to the subject's normal AC (for instance, if the subject's AC is 6, dragon scales raises it to 4).\nThe color of the dragon scales is the same as that of the scale used as the spell's material component; however, the color has no bearing on the effect of the spell. Dragon scales also temporarily reduces the subject's Charisma by 2 points.\nThe material component of a spell is a scale from any dragon.",
   "schoolSource": "wsc-index",
@@ -52450,12 +52495,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. INEFFECTIVE UNDERWATER, but marked with an asterisk in the book: it functions normally when cast within the bounds of an airy water spell.",
   "po": null,
   "description": "This special and powerful spell is primarily used to defend the wizard's stronghold. The ward protects a one-story stronghold, with a base dimension of 400 feet x 400 feet. The wizard can ward a multistory area by reducing the base area proportionately. The following take place in the warded area upon casting the spell:\nNote that items 6 and 7 function only when the wizard is totally familiar with the area of the spell's effect. Dispel magic can remove one effect, at random, per casting. A remove curse spell will not work.\nThe material components of the spell are burning incense, a small measure of sulphur and oil, a knotted string, a small amount of umber hulk blood, and a small silver rod.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.418",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective-unless-airy-water"
  },
  {
   "name": "Heal Self",
@@ -52787,9 +52833,9 @@
   "castingTime": "3",
   "save": "None",
   "components": "V M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.105, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "This spell creates an immobile, faintly shimmering magical sphere around the caster that cannot be penetrated by magical blunt, edged, or missile weapons; all such weapons are harmlessly deflected (missile weapons strike the sphere, then immediately fall to the ground). However, the sphere offers no protection against magically-created creatures (such as golems) or from creatures whose attacks are magically based (such as the gaze of a medusa). The sphere offers no protection against spells such as magic missile, or spells that simulate the effects of weapons.\nThe caster can use magical weapons from inside the sphere to attack opponents normally. Spells can also be cast through the sphere. The sphere can be negated by dispel magic.\nThe material component for this spell is a piece of a broken magical weapon.\nNotes: Uncommon spell, typically known by abjurers.",
   "schoolSource": "sheet",
@@ -53021,13 +53067,14 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. CANNOT BE CAST OR WILL NOT FUNCTION UNDERWATER. Not asterisked, so an airy water spell does not rescue it.",
   "po": null,
   "description": "The wizard casting a lower water spell causes water or similar fluid in the area of effect to sink away. The water can be lowered up to 2 feet for every experience level of the wizard, to a minimum depth of 1 inch. The water is lowered within a square area whose sides are 10 feet long per caster level. Thus, a 12th-level wizard affects a volume of 24 feet x 120 feet x 120 feet, a 13th-level caster a volume of 26 feet x 130 feet x 130 feet, and so on. In extremely large and deep bodies of water, such as deep ocean, the spell creates a whirlpool that sweeps ships and similar craft downward, putting them at risk and rendering them unable to leave by normal movement for the duration of the spell. When cast on water elementals and other water-based creatures, this spell acts as a slow spell: The creature moves at half speed and makes half the number of attacks each round. It has no effect on other creatures.\nThe material component of this spell is a small vial of dust.\nIts reverse, raise water, causes water or similar fluids to return to their highest natural level: spring flood, high tide, etc. This can make fords impassable, float grounded ships, and may even sweep away bridges, at the DM's option. It negates lower water and vice versa.\nThe material component of the raise water spell is a small vial of water.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.526",
   "reversal": "Raise Water",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective"
  },
  {
   "name": "Magic Manager",
@@ -53294,12 +53341,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Only creatures that can breathe and function underwater can be summoned.",
   "po": null,
   "description": "This spell is much like the 3rd-level spell monster summoning I, except that this spell summons 1d3 4th-level monsters. These appear within the spell's area of effect and attack the caster's opponents, until he commands them to cease, the spell duration expires, or the monsters are slain. These creatures do not check morale; they vanish when slain. If no opponent exists to fight, summoned monsters can, if the wizard can communicate with them, and if they are physically capable, perform other services for the summoning wizard.\nThe material components of this spell are a tiny bag and a small (not necessarily lit) candle.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.3 p.587",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Mordenkainen's Faithful Phantom Guardian",
@@ -53594,12 +53642,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: The frigid globe variation can be extremely dangerous to the caster when cast underwater. The globe of absolute zero matter will instantly freeze the water around the caster into a block of ice of a volume equal to 50 cubic feet per level of the caster. The entombed wizard will immediately float to the surface. Unless he receives assistance or is able to free himself, he will immediately begin to suffocate.",
   "po": null,
   "description": "Otiluke's Freezing Sphere is a multipurpose spell of considerable power. If the caster opts, he may create any of the following:\nA) Frigid globe. A small globe of matter at absolute zero temperature that spreads upon contact with water, or a liquid that is principally water, freezing it to a depth of 6 inches over an area equal to 100 square feet per level of the spellcaster. This ice lasts for one round per level of the caster.\nThe material component is a thin sheet of crystal about an inch square.\nB) Cold ray. The spell can be used as a thin ray of cold that springs from the caster's hand to a distance of 10 yards per level of the wizard; this ray inflicts 1d4+2 points of damage per level of the caster upon the first creature struck. A saving throw vs. spell is applicable; all damage is negated if it is successful (as the ray is so narrow a save indicates it missed). If the first creature is missed, the path of the ray is plotted to its full distance, and anything else in its path must save (if applicable) or suffer appropriate damage.\nThe material component is a white sapphire of not less than 1,000 gp value.\nC) Globe of cold. This creates a small globe about the size of a sling stone, cool to the touch, but not harmful. This globe can be hurled, either by hand to a distance of 40 yards (considered short range), or as a sling bullet. The globe shatters upon impact, inflicting 6d6 points of cold damage upon all creatures within a 10-foot radius (one-half damage if a saving throw vs. spell is successful). Use the Grenadelike Missile Table in the Dungeon Master Guide to find where misses strike. Note that if the globe is not thrown or slung within one round per level of the spellcaster, it shatters and causes cold damage as stated above. This timed effect can be employed against pursuers, although it can prove hazardous to the spellcaster and his associates as well.\nThe material component is a 1,000-gp diamond.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.3 p.640",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Otiluke's Orb of Containment",
@@ -53744,12 +53793,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Can be used to form a “tunnel” through water-filled areas, no wider than 10 feet in diameter. The tunnel contains air, enabling creatures inside it to breathe normally.",
   "po": null,
   "description": "By employing a part water spell, the wizard is able to cause water or similar liquid to move apart, thus forming a 20-foot-wide trough. The depth and length of the trough are dependent upon the level of the wizard, and a trough 3 feet deep by 10 yards long is created per level. For example, at 12th level the wizard would part water 36 feet deep by 20 feet wide by 120 yards long. The trough remains as long as the spell lasts or until the wizard who cast it opts to end its effects. If cast under water, this spell creates an air cylinder of appropriate length and diameter. If cast directly on a water elemental or other water-based creature, the creature receives 4d8 damage and must roll a successful saving throw vs. spell or flee in panic for 3d4 rounds.\nThe material components for the spell are two small sheets of crystal or glass.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.3 p.654",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Permanent Illusion",
@@ -55545,9 +55595,9 @@
   "castingTime": "1 round",
   "save": "None",
   "components": "V M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.105, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "By means of this spell, the caster causes two 10-foot-long greenish tentacles to grow from his body. One tentacle grows on each side of the caster's body, centered between his armpit and his thigh. The caster can use the tentacles as normal appendages to grasp tools, use weapons, or help with climbing.\nEach tentacle can make an attack, effectively giving the caster two extra attacks per round; a tentacle can strike to inflict 1-6 hit points of damage, or it can wield a sword, dagger, or other weapon (at the same ability of the caster). The flexible tentacles can easily reach victims on any side of the caster's body.\nIf an unarmed tentacle makes a successful strike against a victim who is man-sized or smaller (less than 7 feet tall), it also grabs and holds the victim to inflict an automatic 2-8 (2d4) hit points of damage in every subsequent round. To free himself, the victim must sever the tentacle; there is no way to loosen the grip other than severing the member, killing the caster, or negating the spell with dispel magic. A tentacle is severed if it takes 10 hit points of damage; damage directed at the tentacle has no adverse effects on the caster.\nA caster with two intact tentacles adds a 40 percent bonus modifier to his climbing success rate (see page 122 of the PHB, ) and adds a 20 percent modifier if he has only one intact tentacle.\nThe material component for this spell is a dried tentacle from a small octopus\nBy means of this spell, the caster causes two 10-foot-long greenish tentacles to grow from his body. One tentacle grows on each side of the caster's body, centered between his armpit and his thigh. The caster can use the tentacles as normal appendages to grasp tools, use weapons, or help with climbing.\nEach tentacle can make an attack, effectively giving the caster two extra attacks per round; a tentacle can strike to inflict 1d4 points of damage, or it can wield a sword, dagger, or other weapon (at the same ability of the caster). The flexible tentacles can easily reach creatures on any side of the caster's body.\nIf an unarmed tentacle makes a successful attack against a creature that is man-sized or smaller (less than 7 feet tall), it can hold and con­strict, inflicting an automatic 2d4 points of damage in every subsequent round. The tentacle's effective Strength is 18/20; creatures of equal or greater Strength take no constriction damage.\nConstriction continues until the tentacle is severed (requiring 8 points of damage, which does not otherwise affect the caster), until the caster is killed or rendered unconscious, or until the spell is successfully dispelled.\nA caster with two intact tentacles adds a 40% bonus modifier to his climbing success rate (see page 122 of the PHB.) and adds a 20% modifier if he has only one intact tentacle.\nThe material component for this spell is a dried tentacle from a small octopus.\nNotes: Rare spell.",
   "schoolSource": "wsc-index",
@@ -55641,13 +55691,14 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Casting this spell underwater causes a “hole” to open in a previously water-filled area. The size of the hole is up to 10 cubic feet per level of the caster. Assuming there is sufficient surrounding water, the unaffected water will rush in, inflicting 1 hit point of damage per level of the caster to all within (no saving throw).",
   "po": null,
   "description": "When this spell is cast, the subject area instantly undergoes a change from liquid to powdery dust. Note that if the water is already muddy, the area of effect is doubled, while if wet mud is being transmuted, the area of effect is quadrupled. If water remains in contact with the transmuted dust, the former quickly soaks the latter, turning the dust into silty mud (if a sufficient quantity of water exists to do so), otherwise soaking or dampening the dust accordingly.\nOnly liquid actually in the area of effect at the moment of spellcasting is affected. Liquids that are only partially water are affected only insofar as the actual water content is concerned; however, potions containing water are rendered useless. Living creatures are unaffected, except for those native to the Elemental Plane of Water. Such creatures receive saving throws vs. spell. Failure inflicts 1d6 points of damage per caster level upon the subject, while success means the creature receives half damage. Only one such creature can be affected by any single casting of this spell, regardless of the creature's size or the size of the spell's area of effect.\nThe reverse of the spell is simply a very high-powered create water spell that requires a pinch of normal dust as an additional material component.\nFor either usage of the spell, other components required are diamond dust of at least 500 gp value and a bit of seashell.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.4 p.950",
   "reversal": "Create Water",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Trollish Fortitude",
@@ -57379,12 +57430,13 @@
   "components": "V S M",
   "source": "WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. CANNOT BE CAST OR WILL NOT FUNCTION UNDERWATER. Not asterisked, so an airy water spell does not rescue it.",
   "po": null,
   "description": "This spell creates a fireball, with a +1 bonus to each of its dice of damage, which releases its blast anytime from instantly to five rounds later, according to the command given by the wizard. In other respects, the spell is the same as the 3rd-level spell fireball.\nNotes: Common spell ( PHB).",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.1 p.227",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "ineffective"
  },
  {
   "name": "Descent into Madness",
@@ -58912,12 +58964,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Only creatures that can breathe and function underwater can be summoned.",
   "po": null,
   "description": "This spell is much like the 3rd-level monster summoning I spell, except that this spell summons 1d3 5th-level monsters. These appear within the spell's area of effect and attack the caster's opponents until either he commands them to cease, the spell duration expires, or the monsters are slain. These creatures do not check morale, and they vanish when slain. If no opponent exists to fight, summoned monsters can, if the wizard can communicate with them, and if they are physically capable, perform other services for the summoning wizard.\nThe material components of this spell are a tiny bag and a small (not necessarily lit) candle.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.3 p.587",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Mordenkainen's Magnificent Mansion",
@@ -58943,12 +58996,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: At the caster's option, the mansion can be filled with water, or the influx of water can be prevented, keeping the mansion's interior tidy and dry.",
   "po": null,
   "description": "By means of this spell, the wizard conjures up an extradimensional dwelling, entrance to which can be gained only at a single point of space on the plane from which the spell was cast. From the entry point, those creatures observing the area see only a faint shimmering in the air, in an area 4 feet wide and 8 feet high. The caster of the spell controls entry to the mansion, and the portal is shut and made invisible behind him when he enters. He may open it again from his own side at will. Once observers have passed beyond the entrance, they behold a magnificent foyer and numerous chambers beyond. The place is furnished and contains sufficient foodstuffs to serve a nine-course banquet to as many dozens of people as the spellcaster has levels of experience. There is a staff of near-transparent servants, liveried and obedient, to wait upon all who enter. The atmosphere is clean, fresh, and warm.\nSince the place can be entered only through its special portal, outside conditions do not affect the mansion, nor do conditions inside it pass to the plane beyond. Rest and relaxation within the place is normal, but the food is not. It seems excellent and quite filling as long as one is within the place. Once outside, however, its effects disappear immediately, and if those resting have not eaten real food within a reasonable time span, ravenous hunger strikes. Failure to eat normal food immediately results in the onset of fatigue or starvation penalties as decided by the DM.\nThe material components of this spell are a miniature portal carved from ivory, a small piece of polished marble, and a tiny silver spoon. These are utterly destroyed when the spell is cast.\n(It is worth mentioning that this spell has been used in conjunction with a normal portal, as well as with illusion magic. There is evidence that the design and interior of the space created can be altered to suit the caster's wishes.)",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.3 p.596",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Mordenkainen's Penultimate Cogitation",
@@ -61819,9 +61873,9 @@
   "castingTime": "1 turn",
   "save": "None",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.106, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "This spell creates a ju-ju zombie duplicate of the caster. The zombie double has the same memories, consciousness, and alignment as the caster; essentially, the caster now exists in two bodies simultaneously. In all other respects, the zombie double is the same as a normal ju-ju zombie (AC 6; MV 9; HD 3+12; #AT 1; Dmg 3-12; SA strike as a 6 HD monster; SD immune to all mind-affecting spells, including illusions; immune to sleep, charm, hold, death magic, magic missiles, electricity, poisons, and cold-based spells; edged and cleaving weapons inflict normal damage while blunt and piercing weapons inflict half- damage; magical and normal fire inflicts half-damage); THAC0 16.\nThe zombie double cannot cast spells, but it can use any weapons that the caster can use. It is also able to climb walls as a thief (92 percent). The zombie double can be turned as a spectre. If it strays more than 30 yards from the caster, the zombie double becomes inactive and collapses to the ground; it becomes active again the instant the caster moves within 30 yards.\nThe material components for this spell are a bit of wax from a black candle and a lock of hair from the caster\nJuju Zombie: AC 6; MV 9; HD 3+12; #AT I; THAC0 16; Dmg 3d12; SA strikes as a 6 HD monster; SD immune to all mind-affecting spells, including illusions; immune to sleep, charm, hold, death magic, magic missile, elec­tricity, poisons, and cold-based spells; edged and cleaving weapons inflict normal damage while blunt and' piercing weapons inflict half-damage; magical and normal fire inflict half; damage.",
   "schoolSource": "wsc-index",
@@ -63109,9 +63163,9 @@
   "castingTime": "1 round",
   "save": "None",
   "components": "Somatic Material",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.106, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "By means of this spell, the caster causes all vegetation within the affected area to wither and die, crumbling into black ashes. All vegetation is affected, from the tallest tree to the tiniest blade of grass. Intelligent plant life, such as treants, are also destroyed. The power of a wish or its equivalent is required to restore the destroyed vegetation; otherwise, nothing can grow in the defoliated area for a full year. Note that since defoliate causes plants to crumble to ash, there is no danger of a creature being struck by a toppling tree; however, creatures hiding in trees will find themselves plummeting to the ground when this spell is cast.\nThe material components for this spell are the petal from a withered flower and a sliver of charred wood.",
   "schoolSource": "wsc-index",
@@ -63535,8 +63589,7 @@
   "level": 8,
   "class": "Wizard",
   "schools": [
-   "Abjuration",
-   "Necromancy"
+   "Abjuration"
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [
@@ -63552,12 +63605,12 @@
   "castingTime": "1 round",
   "save": "None",
   "components": "V S M",
-  "source": "WSC",
+  "source": "PHBR4, WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "SCHOOL CORRECTED FROM PHBR4, August 2026. The Complete Wizard’s Handbook p.106 prints this spell as “Abjuration”; this record previously held “Abjuration, Necromancy” from the WSC dataset. Verified by zooming the page image, not read at page scale. PHBR4 IS THE ORIGINAL PRINTING AND WE HOLD IT; the WSC data in this file is a THIRD-PARTY dataset carrying that label, not the book, so it is not an authority against a source in hand. A full audit of the WSC records is owed — Chris, August 2026 — and until it runs, a WSC value that a book in hand contradicts loses. SCHOOL IS NOT COSMETIC in this file: it drives isSpecialtySpell, isOppositionSpell and the Spell Access filter, so this changes which specialists may learn the spell.",
   "po": null,
   "description": "Fear ward creates an aura around the caster that makes him immune to all forms of fear, including that caused by dragons. Additionally, fear ward protects the caster from attacks by all forms of undead; the spell is equally effective against physical and magical attacks. Dispel magic has no effect on fear ward, but a wish will negate it.\nThe material components for this spell are the fangs of a spider and a hair from the head of a ghoul.\nNotes: Restricted to necromancers and abjurers; uncommon. (This version replaces the one in the Complete Wizard's Handbook).",
-  "schoolSource": "wsc-index",
+  "schoolSource": "PHBR4 p.106",
   "wscRef": "Vol.2 p.346",
   "levelSource": "wsc-index"
  },
@@ -64039,12 +64092,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. CANNOT BE CAST OR WILL NOT FUNCTION UNDERWATER. Not asterisked, so an airy water spell does not rescue it.",
   "po": null,
   "description": "An incendiary cloud spell exactly resembles the smoke effects of a pyrotechnics spell, except that its minimum dimensions are a cloud 10 feet tall, 20 feet wide, and 20 feet long. This dense vapor cloud billows forth, and on the third round of its existence begins to flame, causing 1-2 points of damage per level of the spellcaster. On the fourth round it inflicts 1d4 points of damage per level of the caster, and on the fifth round this drops back to 1-2 points of damage per level as its flames burn out. In any successive rounds of existence, the cloud is simply harmless smoke that obscures vision within its confines. Creatures within the cloud need to make only one saving throw if it is successful, but if they fail the first saving throw, they roll again on the fourth and fifth rounds (if necessary) to attempt to reduce the damage sustained by one-half.\nIn order to cast this spell, the wizard must have an available fire source (just as with a pyrotechnics spell), scrapings from beneath a dung pile, and a pinch of dust.\nThis spell does not harm structures or war machines directly, but it can set fire to wooden constructions during the fourth round of its existence. Roll for a fire once for each level of the caster.\nSource: POCT",
   "schoolSource": "sheet",
   "sheetRef": "WSC p.",
-  "levelSource": "sheet"
+  "levelSource": "sheet",
+  "underwater": "ineffective"
  },
  {
   "name": "Item Supercharger",
@@ -64605,12 +64659,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Only creatures that can breathe and function underwater can be summoned.",
   "po": null,
   "description": "This spell is much like the 3rd-level spell monster summoning I, except that it summons 1d3 6th-level monsters. These monsters appear in 1d3 rounds within the spell's area of effect and attack the caster's opponents, until either he commands them to cease, the spell duration expires, or the monsters are slain. These creatures do not check morale, and they vanish when slain. If no opponent exists to fight, summoned monsters can, if the wizard can communicate with them, and if they are physically capable, perform other services for the summoning wizard.\nThe material components of this spell are a tiny bag and a small (not necessarily lit) candle.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.3 p.588",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Mystic Shield",
@@ -65290,9 +65345,9 @@
   "castingTime": "1 round",
   "save": "None",
   "components": "V S M",
-  "source": "WSC",
+  "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "VERIFIED AGAINST PHBR4 p.106, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
   "po": null,
   "description": "By means of this spell, the caster temporarily changes himself into a shadow. The caster gains the movement rate, Armor Class, hit dice, and all abilities of a shadow. His chilling touch (requiring a normal attack roll) inflicts 2-5 (1d4+1) hit points of damage on his victims as well as draining one point of Strength. Lost Strength returns in 2-8 (2d4) turns after being touched. If a human or demihuman victim is reduced to 0 hit points or 0 Strength by the caster in shadow form, the victim has lost all of his life force and is immediately drawn into the Negative Material Plane where he will forever after exist as a shadow.\nAll of the caster's weapons and equipment stay with him, but he is unable to use them while in shadow form. He is also unable to cast spells while in shadow form, but he is immune to sleep, charm, and hold spells, and is unaffected by cold-based attacks. He is 90 percent undetectable in all but the brightest of surroundings. Unlike normal shadows, a wizard in shadow form cannot be turned by priests. At the end of the spell's duration, there is a 5% chance that the caster will permanently remain as a shadow. Nothing short of a wish can return the caster to his normal form.\nThe material components for this spell are the shroud from a corpse at least 100 years old and a black glass marble.\nNotes: Uncommon for necromancers, rare for shadow mages; otherwise, very rare.",
   "schoolSource": "sheet",
@@ -65381,13 +65436,14 @@
   "components": "V S",
   "source": "WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Places the subject a specified number of feet beneath the floor of the lake, ocean or sea. The magic of the containment will radiate through the water to the surface.",
   "po": null,
   "description": "By means of this spell, a wizard can force a creature or object into the very earth or floor upon which it stands. When casting the spell, the wizard must chant the spell for the remainder of the round without interruption. At that juncture, the subject creature or object becomes rooted to the spot unless a saving throw vs. spell (for a creature) or disintegration (for an object with magical properties) is successful. (Note: “magical properties” include those of magical items as listed in the Dungeon Master Guide, those of items enchanted or otherwise of magical origin, and those of items with protection-type spells or with permanent magical properties or similar spells upon them.) Items of a nonmagical nature are not entitled to a saving throw. If a subject fails its saving throw, it becomes of slightly greater density than the surface upon which it stands.\nThe spellcaster now has the option of ceasing his spell and leaving the subject as it is, in which case the spell expires in four turns, and the subject returns to normal. If the caster proceeds with the spell (into the next round), the subject begins to sink slowly into the ground. Before any actions are taken in the new round, the subject sinks one-quarter of its height; after the first group acts, another quarter; after the second group acts, another; and at the end of the round, the victim is totally sunken into the ground.\nThis entombment places a creature or object in a state of suspended animation. The cessation of time means that the subject does not grow older. Bodily and other functions virtually cease, but the subject is otherwise unharmed. The subject exists in undamaged form in the surface into which it was sunk, its upper point as far beneath the surface as the subject has height—a 6-foot-tall victim will be 6 feet beneath the surface, while a 60-foot-tall subject will have its uppermost point 60 feet below ground level. If the ground around the subject is somehow removed, the spell is broken and the subject returns to normal, but it does not rise up. Spells such as dig, transmute rock to mud, and freedom (the reverse of the 9th-level spell imprisonment) will not harm the sunken creature or object and will often be helpful in recovering it. If a detect magic spell is cast over an area upon which a sink spell was used, it reveals a faint magical aura of undefinable nature, even if the subject is beyond detection range. If the subject is within range of the detection, the spell's schools can be discovered (alteration and enchantment).",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.3 p.820",
   "levelSource": "wsc-index",
-  "sourceRef": "PHB page 244"
+  "sourceRef": "PHB page 244",
+  "underwater": "modified"
  },
  {
   "name": "Skeletal Guard",
@@ -68563,13 +68619,14 @@
   "components": "V S",
   "source": "WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. CANNOT BE CAST OR WILL NOT FUNCTION UNDERWATER. Not asterisked, so an airy water spell does not rescue it.",
   "po": null,
   "description": "A meteor swarm is a very powerful and spectacular spell which is similar to the fireball spell in many aspects. When it is cast, either four spheres of 2-foot diameter or eight spheres of 1-foot diameter spring from the outstretched hand of the wizard and streak in a straight line to the distance demanded by the spellcaster, up to the maximum range. Any creature in the straight-line path of these missiles receives the full effect, without benefit of a saving throw. The meteor missiles leave a fiery trail of sparks, and each bursts as a fireball.\nThe large spheres (2-foot diameter) inflict 10d4 points of damage, bursting in a diamond or box pattern. Each has a 30-foot diameter area of effect, and each sphere is 20 feet apart along the sides of the pattern, creating overlapping areas of effect and exposing the center to all four blasts.\nThe smaller spheres (1-foot diameter) each have a 15-foot diameter area of effect, and each inflicts 5d4 points of damage. They burst in a pattern of a box within a diamond or vice versa, with each of the outer sides 20 feet long. Note that the center has four areas of overlapping effect, and there are numerous peripheral areas that have two overlapping areas of effect. A saving throw for each area of effect will indicate whether full damage or half damage is sustained by creatures within each area, except as already stated with regard to the missiles impacting.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.2 p.563",
   "levelSource": "wsc-index",
-  "sourceRef": "PHB page 248"
+  "sourceRef": "PHB page 248",
+  "underwater": "ineffective"
  },
  {
   "name": "Monsoon",
@@ -68622,12 +68679,13 @@
   "components": "V S M",
   "source": "PHB",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "PHBR4 Ch.6 (pp.73-74), Casting Spells Underwater. ALTERED UNDERWATER: Only creatures that can breathe and function underwater can be summoned.",
   "po": null,
   "description": "This spell is much like the 3rd-level spell monster summoning I, except that this spell summons one or two 7th-level monsters that appear one round after the spell is cast, or one 8th-level monster that appears two rounds after the spell is cast.",
   "schoolSource": "wsc-index",
   "wscRef": "Vol.3 p.588",
-  "levelSource": "wsc-index"
+  "levelSource": "wsc-index",
+  "underwater": "modified"
  },
  {
   "name": "Mordenkainen's Disjunction",
@@ -130365,5 +130423,34 @@
   ],
   "spheresSetting": [],
   "sphereSource": "spells.json"
+ },
+ {
+  "name": "Protection from Hunger and Thirst",
+  "level": 1,
+  "class": "Wizard",
+  "schools": [
+   "Abjuration"
+  ],
+  "schoolsOfEffect": [],
+  "schoolsOfThaumaturgy": [],
+  "otherSchools": [],
+  "province": null,
+  "universal": false,
+  "sphere": null,
+  "range": "Touch",
+  "duration": "1 day/level",
+  "aoe": "One creature",
+  "castingTime": "1",
+  "save": "None",
+  "components": "S M",
+  "source": "PHBR4",
+  "cantripCategory": null,
+  "notes": "ADDED FROM PHBR4 p.97, August 2026. The only one of the book’s 42 new spells absent from this file — the other 41 were already present from the WSC dataset. Transcribed from the page, not from a summary.",
+  "po": null,
+  "description": "When protection from hunger and thirst is cast, the recipient requires no food, water, or nourishment of any kind for the duration of the spell. The recipient can be the caster or anyone he touches. Each day the caster (or the subject of the caster's choice) is under the effect of the spell, he is fully nourished as if he had eaten and drunk normally. At the end of the spell's duration, the subject is no more hungry or thirsty than he was when the spell was originally cast.\nThe material components for this spell are a small piece of dried meat and a cup of water.\nNotes: PHBR4, The Complete Wizard's Handbook.",
+  "schoolSource": "PHBR4 p.97",
+  "wscRef": null,
+  "reversal": null,
+  "levelSource": "PHBR4 p.97"
  }
 ]
