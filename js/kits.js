@@ -3229,176 +3229,791 @@ const KITS = {
   },
 
   // ========== MAGE KITS ==========
+  //
+  // ALL TEN KITS TRANSCRIBED FROM PHBR4 CHAPTER 3, August 2026, page by page from
+  // rasterised images. This block previously held ten UNVERIFIED entries whose
+  // mechanics were unsourced paraphrase. Four of those names had no page anywhere
+  // in the book and were DELETED on Chris's ruling -- Wild Mage (which is Tome of
+  // Magic), Spellfilcher, Dimensional Traveler and Geometer. kits.js is
+  // official-only; house kits, if ever supported, arrive as a custom JSON import.
+  // Recorded so no later session re-adds them as a helpful gap-fill.
+  //
+  // BARRED SCHOOLS MEANS "SHOULD NOT SPECIALISE IN", NOT "MAY NOT LEARN FROM".
+  // PHBR4 p.34 defines the entry once for every kit: "This entry explains which
+  // schools are inappropriate for the kit. Though the DM is free to make
+  // exceptions, it is usually not a good idea to assign a kit to a specialist
+  // from a barred school." Assigning a kit TO A SPECIALIST is specialisation. The
+  // Mystic's entry restates this in his own words and is NOT a narrower case; no
+  // kit in this book bars a wizard from learning a spell. A `barredSchoolsScope`
+  // field was proposed and then abandoned once the chapter's own definition was
+  // read -- it would have had one value and no second case.
+  //
+  // WEALTH IS PROSE, matching the other 91 kits in this file, with an OPTIONAL
+  // `wealthCalc` beside it only where the book gives a clean formula. The prose
+  // is the record; the structure is the affordance. `wealthCalc` is omitted for
+  // the normal (1d4+1) x 10 gp.
+  //
+  // REACTION MODIFIERS ARE STORED AS PRINTED and the consumer subtracts. PHBR4
+  // p.35 states the convention outright, identically to PHBR1 p.14: "do not add
+  // the bonus or subtract the penalty from the die roll... subtract that number
+  // from the die roll -- do not add it."
   mage: {
-    wildmage: {
-      name: "Wild Mage",
-      class: "mage",
-      source: {
-        status: "unverified",
-        work:   "PHBR4 The Complete Wizard's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
-      },
-      abilities: [
-        { name: "Wild Surge", notes: "Spells can trigger wild magic surges" },
-        { name: "Chaos Magic", notes: "Can manipulate probability" }
-      ],
-      requirements: { int: 15, alignment: "Chaotic" },
-      benefits: "+1 to spell level for wild surge. Can cast Nahal's Reckless Dweomer.",
-      hindrances: "5% chance of wild surge on every spell. Unpredictable results."
-    },
     academician: {
       name: "Academician",
       class: "mage",
       source: {
-        status: "unverified",
+        status: "verified",
         work:   "PHBR4 The Complete Wizard's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+        pages:  "35-36",
+        note:   "A learned scholar whose love of knowledge is matched only by his preoccupation with research. NO SPECIAL RULES FOR ABANDONING this kit; the book says so explicitly."
+      },
+      requirements: {
+        int: 13,
+        wis: 11,
+        intPrinted: "A character must have a minimum Intelligence of 13",
+        wisPrinted: "and a minimum Wisdom of 11 to become an Academician."
+      },
+      preferredSchools: ["Alteration", "Illusion/Phantasm", "Invocation/Evocation"],
+      preferredSchoolsPrinted: "The Academician is intrigued by all the schools of magic, but is especially drawn to schools with a wide range of spells, including alteration, illusion, and invocation/evocation.",
+      barredSchools: [],
+      barredSchoolsPrinted: "There are no barred schools for the Academician.",
+      secondarySkills: {
+        required: ["Scribe"],
+        printed: "Required: Scribe."
+      },
+      proficiencies: {
+        weapon: {
+          required: ["Dagger", "Dart", "Knife", "Sling"],
+          requiredCount: 1,
+          allowedPrinted: "Required (the player may choose from the following): Dagger, Dart, Knife, or Sling.",
+          note: "ONE of the four, not all four."
+        },
+        nonweapon: {
+          bonus: ["Reading/Writing"],
+          recommended: ["Artistic Ability", "Etiquette", "Heraldry", "Languages, Modern",
+                        "Ancient History", "Astrology", "Herbalism", "Languages, Ancient",
+                        "Spellcraft", "Local History"],
+          note: "The book groups the recommendations: (General) Artistic Ability, Etiquette, Heraldry, Languages (Modern); (Wizard) Ancient History, Astrology, Herbalism, Languages (Ancient), Spellcraft; (Priest) Local History. Local History is a PRIEST-group crossover and costs the extra slot. Bonus proficiencies are exempt from crossover surcharge entirely (p.34)."
+        }
       },
       abilities: [
-        { name: "Scholar", notes: "+3 to knowledge checks" },
-        { name: "Research", notes: "Can research spells at half cost/time" }
+        { name: "Scholarly Correspondence",
+          notes: "Maintains an extensive correspondence with scholars throughout the world, and his reputation as a man of wisdom often precedes him." },
+        { name: "Ability Check Bonuses",
+          notes: "A bonus to all Intelligence Checks and Wisdom Checks. The DM has two options: a flat +1 to both, or Table 5 (p.35), which takes the Academician's age and race into account so the bonuses increase as he ages. ONCE A METHOD IS CHOSEN IT CANNOT BE CHANGED LATER." }
       ],
-      requirements: { int: 16, alignment: "Any" },
-      benefits: "Start with extra spells in spellbook. +1 proficiency slot. Free reading/writing.",
-      hindrances: "Must study constantly. Poor combat skills (-2 to hit). Weak physically."
+      reaction: [
+        { modifier: 3,
+          applies: "an NPC familiar with his reputation, one of his correspondents, a self-styled intellectual, or an author, researcher, teacher, journalist or fellow scholar",
+          printed: "the Academician receives a +3 reaction bonus." }
+      ],
+      benefits: "Two benefits, both always in force. (1) A +3 reaction bonus from scholars, authors, researchers, teachers, journalists and self-styled intellectuals who know his reputation. (2) A bonus to all Intelligence and Wisdom Checks -- either a flat +1, or the age-and-race scale of Table 5 on p.35, at the DM's option; the choice is permanent.",
+      hindrances: "Academicians lack the training and instinct to make good hand-to-hand fighters. WHEN ATTACKING WITH ANY TYPE OF MELEE WEAPON, THE ACADEMICIAN ALWAYS HAS A -1 PENALTY TO HIT ON HIS FIRST BLOW. Subsequent blows against the same opponent are made without this penalty, since he has had an opportunity to size him up and adjust his attacks; if he attacks a different opponent, his first blow against that new victim is also at -1. Academicians also tend to be know-it-alls and unhesitatingly offer their opinions even on matters they know little about.",
+      wealth: "The Academician receives the normal (1d4+1) x 10 gp as starting money.",
+      races: null,
+      racesPrinted: "Races: No restrictions.",
+      abandonable: true,
+      abandonPrinted: "There are no special rules for abandoning this kit. An Academician who becomes disillusioned with the academic life or loses interest in intellectual pursuits can choose to neglect his studies or research, but he is free to resume them at any time."
     },
-    militantwizard: {
-      name: "Militant Wizard",
+
+    amazonsorceress: {
+      name: "Amazon Sorceress",
       class: "mage",
       source: {
-        status: "unverified",
+        status: "verified",
         work:   "PHBR4 The Complete Wizard's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+        pages:  "36-38",
+        note:   "Amazons belong to matriarchal societies that thrive in a world otherwise dominated by males. A PRINTED CONTRADICTION IS RECORDED, NOT RESOLVED: the Weapon Proficiency entry reads \"Required: None\", but the Races note on p.37 tells half-elves and gnomes to substitute weapons for \"the required Weapon Proficiency\". The races paragraph presumes a requirement the entry denies. Both are transcribed as printed."
+      },
+      requirements: {
+        gender: ["female"],
+        genderPrinted: "A character must be female to be an Amazon. There are no other requirements."
+      },
+      preferredSchools: ["Conjuration/Summoning", "Invocation/Evocation", "Divination"],
+      preferredSchoolsPrinted: "Amazons with high Constitution tend to be drawn to the schools of conjuration/summoning and invocation/evocation; both are especially useful on the battlefield. Diviners are also common, as they make excellent administrative advisors and counselors.",
+      barredSchools: ["Necromancy", "Illusion/Phantasm"],
+      barredSchoolsPrinted: "Amazons shun the dark forces associated with the school of necromancy. Because of its perceived uselessness in combat, they also avoid the school of illusion.",
+      secondarySkills: {
+        required: ["Groom"],
+        printed: "Required: Groom."
+      },
+      proficiencies: {
+        weapon: {
+          required: [],
+          recommended: ["Spear", "Bow, Long"],
+          allowedPrinted: "Required: None. Recommended: Spear or long bow. This is contrary to the weapons usually allowed wizards, but is typical for Amazon cultures.",
+          note: "SEE THE SOURCE NOTE: the Races entry contradicts \"Required: None\". Half-elves substitute short bow or spear; gnomes substitute throwing axe or short sword."
+        },
+        nonweapon: {
+          bonus: ["Riding, Land-Based", "Animal Training"],
+          recommended: ["Animal Handling", "Animal Lore", "Armorer", "Bowyer/Fletcher",
+                        "Hunting", "Running", "Survival", "Tracking"],
+          note: "The book groups them: (General) Animal Handling; (Warrior) Animal Lore, Armorer, Bowyer/Fletcher, Hunting, Running, Survival, Tracking. The Warrior entries carry the normal crossover surcharge for a wizard -- this kit grants NO waiver, unlike the Anagakok and Militant Wizard."
+        }
       },
       abilities: [
-        { name: "Battle Mage", notes: "Trained in combat magic" },
-        { name: "Weapon Training", notes: "Can use one additional weapon type" }
+        { name: "Underestimated",
+          notes: "Male opponents who have never encountered the formidable Amazon women tend to underestimate them. THE FIRST TIME such a male encounters an Amazon in combat, she receives +3 to hit and +3 to damage ON HER FIRST BLOW ONLY. The bonus applies whether the blow hits or misses, and can be used only once per victim." }
       ],
-      requirements: { int: 14, con: 13, alignment: "Any" },
-      benefits: "Can wear light armor. Extra weapon proficiency. THAC0 improves faster.",
-      hindrances: "Reduced spell progression (-1 spell per level). Must serve military."
-    },
-    mystic: {
-      name: "Mystic",
-      class: "mage",
-      source: {
-        status: "unverified",
-        work:   "PHBR4 The Complete Wizard's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+      reaction: [
+        { modifier: -3,
+          applies: "NPCs from male-dominated societies",
+          printed: "The Amazon suffers a -3 reaction roll adjustment from NPCs from male-dominated societies. This reaction adjustment no longer applies once characters come to know and respect her." }
+      ],
+      equipment: {
+        required: [],
+        restriction: "When first created, she must buy her weapons from among the following choices only: bow (any type), dagger/dirk, javelin, knife, spear. Once she has adventured elsewhere in the world, she may purchase other types of weapons.",
+        printed: "When an Amazon character is first created, she must buy her weapons from among the following choices only: bow (any type), dagger/dirk, javelin, knife, spear."
       },
-      abilities: [
-        { name: "Inner Power", notes: "Enhanced meditation and mental discipline" },
-        { name: "Mental Fortress", notes: "+2 to saves vs mental attacks" }
-      ],
-      requirements: { int: 14, wis: 15, alignment: "Any lawful" },
-      benefits: "Bonus to concentration checks. Can enter trance for enhanced recovery.",
-      hindrances: "Must meditate 2 hours daily. Limited material spell components."
-    },
-    witch: {
-      name: "Witch",
-      class: "mage",
-      source: {
-        status: "unverified",
-        work:   "PHBR4 The Complete Wizard's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+      benefits: "+3 to hit and +3 damage on her first blow against a male opponent who has never encountered an Amazon in combat. THE DM SHOULD RULE ON WHETHER IT APPLIES: the book excludes opponents of 5th level or higher (too seasoned to be surprised), opponents from cultures where females are accepted as equals and female warriors are common, and opponents who have fought alongside or against fighting women before. Against player characters the DM might ask the player whether his character would underestimate a female opponent.",
+      hindrances: "A -3 reaction adjustment from NPCs of male-dominated societies, which lapses once they come to know and respect her. Player characters need not respond with hostility unless they wish to for role-playing purposes.",
+      wealth: "The Amazon Sorceress receives the normal (1d4+1) x 10 gp as starting money.",
+      races: null,
+      racesPrinted: "Most Amazons are human, but other races are acceptable with the adjustments that follow.",
+      variants: {
+        axis: "race",
+        axisPrinted: "Most Amazons are human, but other races are acceptable, with the adjustments that follow.",
+        default: "human",
+        options: [
+          { key: "human", label: "Human",
+            note: "Follows the kit's own values above with no changes." },
+          { key: "half-elf", label: "Half-elf",
+            proficiencies: { weapon: { required: ["Bow, Short", "Spear"], requiredCount: 1,
+              allowedPrinted: "Half-elves: Substitute either short bow or spear for the required Weapon Proficiency." } },
+            note: "Substitutes the weapon proficiency only." },
+          { key: "gnome", label: "Gnome",
+            proficiencies: {
+              weapon: { required: ["Axe, Throwing", "Sword, Short"], requiredCount: 1,
+                allowedPrinted: "Gnomes: Substitute throwing axe or short sword for the required Weapon Proficiency, use ponies for mounts, and substitute Tracking and Survival for the bonus Nonweapon Proficiencies." },
+              nonweapon: { bonus: ["Tracking", "Survival"] }
+            },
+            note: "Replaces the weapon proficiency AND both bonus nonweapon proficiencies. Uses PONIES for mounts." },
+          { key: "elf", label: "Elf",
+            proficiencies: { nonweapon: { bonus: ["Endurance", "Set Snares"] } },
+            note: "Substitutes Endurance and Set Snares for the bonus Nonweapon Proficiencies." }
+        ]
       },
-      abilities: [
-        { name: "Familiar Bond", notes: "Enhanced familiar abilities" },
-        { name: "Hex", notes: "Can curse enemies (minor penalties)" }
-      ],
-      requirements: { int: 14, cha: 13, alignment: "Any" },
-      benefits: "Familiar gains extra abilities. Brewing and herbalism bonuses. Charm spells enhanced.",
-      hindrances: "Must have familiar. Society fears witches (-2 reaction). Limited spell selection."
+      abandonable: true,
+      abandonPrinted: "To abandon this kit, the character must renounce her Amazon citizenship, most likely because she has grown to identify more closely with a different culture."
     },
+
     anagakok: {
       name: "Anagakok",
       class: "mage",
       source: {
-        status: "unverified",
+        status: "verified",
         work:   "PHBR4 The Complete Wizard's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+        pages:  "38-39",
+        note:   "A wizard from a primitive society occupying one of the world's most extreme climates. Known by many names depending on his society of origin: Magian, Phylacterist, Veronican, Scarabor, Obeahist. TWO SUBTYPES, Frigid Climate and Torrid Climate, are the `variants` block. CANNOT BE ABANDONED."
+      },
+      requirements: {
+        con: 13,
+        conPrinted: "To be an Anagakok, a wizard must have a Constitution of at least 13. Female Anagakok are as common as males."
+      },
+      preferredSchools: ["Abjuration", "Alteration", "Enchantment/Charm",
+                         "Invocation/Evocation", "Divination"],
+      preferredSchoolsPrinted: "The preferred schools of the Anagakok are abjuration, alteration, enchantment/charm, invocation/evocation, and greater divination.",
+      barredSchools: ["Illusion/Phantasm", "Necromancy"],
+      barredSchoolsPrinted: "Anagakok are barred from the schools of illusion and necromancy because of their spells' relative uselessness for surviving in hostile environments.",
+      secondarySkills: {
+        required: ["Fisher", "Forester", "Hunter", "Navigator", "Trapper/Furrier"],
+        requiredCount: 1,
+        printed: "Required (choose one of the following, based on the Anagakok's background): Fisher, Forester, Hunter, Navigator, Trapper/Furrier."
+      },
+      proficiencies: {
+        weapon: {
+          required: ["Bow, Short", "Dagger", "Harpoon", "Javelin", "Knife", "Sling", "Trident"],
+          requiredCount: 1,
+          allowedPrinted: "Required (choose one of the following, based on the Anagakok's background): Bow (any), dagger, harpoon, javelin, knife, sling, trident.",
+          note: "HARPOON AND TRIDENT ARE NOT ON THE WIZARD'S NORMAL LIST. PHBR4 p.72 names this kit as one of its two stated exceptions to the weapon restriction: \"The Anagakok kit, for instance, allows for tridents and harpoons... If the DM gives permission for players to pick one of these kits, he should also allow him to use the kit's weapons.\" \"Bow (any)\" is recorded as Bow, Short here; the DM may allow any bow type."
+        },
+        nonweapon: {
+          bonus: ["Endurance", "Survival", "Weather Sense"],
+          recommended: ["Direction Sense", "Fire-building", "Riding, Land-Based", "Rope Use",
+                        "Swimming", "Astrology", "Animal Lore", "Hunting", "Mountaineering",
+                        "Running", "Set Snares"],
+          crossoverWaiver: {
+            byName: { "Animal Lore": 1, "Hunting": 1, "Mountaineering": 1, "Running": 1, "Set Snares": 1 },
+            printed: "(Warrior, all cost single slots) Animal Lore, Hunting, Mountaineering, Running, Set Snares"
+          },
+          note: "Grouped in the book as: (General) Direction Sense, Fire-building, Riding (Land-based), Rope Use, Swimming; (Wizard) Astrology; (Warrior, ALL COST SINGLE SLOTS) Animal Lore, Hunting, Mountaineering, Running, Set Snares. That last group is a CROSSOVER SURCHARGE WAIVER -- warrior proficiencies would normally cost a wizard an extra slot and here they do not."
+        }
       },
       abilities: [
-        { name: "Spirit Magic", notes: "Can communicate with spirits" },
-        { name: "Shamanic Trance", notes: "Enter trance for visions" }
+        { name: "Find Food",
+          notes: "Can find food in even the most barren of environments. In a 24-hour period he can find enough food to feed himself AND A NUMBER OF PEOPLE EQUAL TO HIS LEVEL -- a 4th-level Anagakok feeds himself and four others every day." },
+        { name: "Good Fortune",
+          notes: "ONCE PER WEEK, casts a special good fortune spell on himself and a number of people equal to his level. It lasts a number of turns equal to his level. All opponents have a -1 penalty on their chance to hit when attacking those under its effect. THE ABILITY IS INNATE: he need not memorize good fortune, and it does not count against his daily spell limit. To cast it he concentrates for 1 round and points to the subjects; no verbal or material components." },
+        { name: "Climate Immunity",
+          notes: "Natural immunity to environmental extremes based on his background. A Frigid Climate Anagakok suffers no penalties, damage or other restrictions in environments of extreme COLD; a Torrid Climate Anagakok suffers none in extreme HEAT. THE IMMUNITY APPLIES TO NATURAL CONDITIONS ONLY -- a Frigid Climate Anagakok suffers normal damage from cone of cold and other cold-based spells, and a Torrid Climate Anagakok normal damage from fireball and other heat-based spells." }
       ],
-      requirements: { int: 14, wis: 14, alignment: "Any" },
-      benefits: "Spirit allies. Enhanced divination. Cold resistance.",
-      hindrances: "Limited spell selection (spirit/nature themed). Must perform rituals. Cultural restrictions."
+      reaction: [
+        { modifier: -2,
+          applies: "all NPCs unfamiliar with the Anagakok's culture",
+          printed: "Because of his appearance and strange manner, an Anagakok suffers a -2 reaction penalty from all NPCs unfamiliar with the Anagakok's culture." }
+      ],
+      equipment: {
+        restriction: "Can buy weapons only from those listed in the Weapon Proficiency entry. He can buy only equipment that would normally be available in his home society; the DM has the right to veto any initial purchase. HE MUST SPEND ALL HIS INITIAL MONEY -- any not spent is lost.",
+        printed: "A beginning Anagakok can buy weapons only from those listed in the Weapon Proficiency entry above. He can buy only equipment that would normally be available in his home society; the DM has the right to veto any initial purchase. An Anagakok must spend all his initial money. Any money not spent is lost."
+      },
+      benefits: "Finds food for himself and one person per level per day; a weekly innate good fortune spell giving opponents -1 to hit against himself and one person per level for level turns; and total immunity to the natural environmental extreme of his own climate.",
+      hindrances: "Exposure to harsh climates gives the Anagakok an unusual appearance -- tough leathery skin for the Torrid Climate type, a head-to-toe covering of short coarse hair for the Frigid -- costing a -2 reaction from all NPCs unfamiliar with his culture. AND THE IMMUNITY CUTS BOTH WAYS: a Frigid Climate Anagakok suffers -1 to ALL attack rolls, damage rolls, Ability Checks and saving throws in environments above 100 degrees F, and a Torrid Climate Anagakok the same penalty below 0 degrees F.",
+      wealth: "A beginning Anagakok receives only (1d4+1) x 8 gp as starting money.",
+      wealthCalc: { multiplier: 8 },
+      races: null,
+      racesPrinted: "Races: No restrictions.",
+      variants: {
+        axis: "climate",
+        axisPrinted: "Although an Anagakok can originate from any number of hostile environments, two are considered in this discussion.",
+        default: "frigid",
+        options: [
+          { key: "frigid", label: "Frigid Climate",
+            note: "From a climate where the temperature never rises above 0 degrees F. Immune to natural extreme COLD. Suffers -1 to all attack rolls, damage rolls, Ability Checks and saving throws above 100 degrees F. Appearance: a head-to-toe covering of short, coarse hair." },
+          { key: "torrid", label: "Torrid Climate",
+            note: "From a climate where the temperature never falls below 100 degrees F. Immune to natural extreme HEAT. Suffers -1 to all attack rolls, damage rolls, Ability Checks and saving throws below 0 degrees F. Appearance: tough, leathery skin." }
+        ],
+        note: "PLAYERS AND DMS ARE ENCOURAGED TO INVENT OTHERS. The book names an Anagakok living at the bottom of an active volcano, in the depths of the ocean, or on an island continually battered by hurricane winds, and says to use the two above as examples for developing appropriate bonuses and penalties."
+      },
+      abandonable: false,
+      abandonPrinted: "Though an Anagakok can renounce his heritage and sever ties with his society, he cannot renounce this kit; the traits of an Anagakok are inborn and permanent."
     },
-    spellfilcher: {
-      name: "Spellfilcher",
+
+    militantwizard: {
+      name: "Militant Wizard",
       class: "mage",
       source: {
-        status: "unverified",
+        status: "verified",
         work:   "PHBR4 The Complete Wizard's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+        pages:  "39-40",
+        note:   "Skilled in both magical and military arts. TWO MECHANICS HERE ARE UNIQUE IN THE BOOK: Table 6 REPLACES PHB Table 22's oppositional schools for this kit's specialists, and a Militant Wizard MAGE takes one of three DM-chosen limitations. Both are recorded below and neither is derivable."
+      },
+      requirements: {
+        str: 13,
+        strPrinted: "A character must have a Strength of at least 13 to be a Militant Wizard. Though male Militant Wizards will be more common, female Militant Wizards are allowable as well, unless the DM's world specifically forbids them."
+      },
+      preferredSchools: ["Abjuration", "Alteration", "Conjuration/Summoning",
+                         "Invocation/Evocation", "Necromancy"],
+      preferredSchoolsPrinted: "Militant Wizards prefer schools with an excess of offensive and defensive spells, such as abjuration, alteration, conjuration/summoning, invocation/evocation, and necromancy. Though greater divination has uses on the battlefield, particularly in the area of reconnaissance, Militant Wizards are discouraged, but not barred, from divination specialization.",
+      barredSchools: ["Enchantment/Charm", "Illusion/Phantasm"],
+      barredSchoolsPrinted: "Militant Wizards are barred from specializing in the schools of enchantment/charm and illusion, as their cultures tend to consider them relatively useless in combat.",
+      oppositionOverride: {
+        printed: "Table 6 lists the oppositional schools for Militant Wizards of each speciality; the Militant Wizard is forbidden to learn spells from these schools.",
+        note: "REPLACES PHB Table 22 FOR THIS KIT. There is NO ILLUSIONIST ROW because illusion is a barred school -- but barred is advisory, so a Militant Wizard illusionist is buildable. Fall back to PHB Table 22 for him and let the kit-requirement advisory speak; do NOT invent a row.",
+        abjurer:     ["Illusion/Phantasm", "Alteration", "Divination"],
+        conjurer:    ["Alteration", "Divination", "Invocation/Evocation"],
+        enchanter:   ["Invocation/Evocation", "Necromancy", "Divination"],
+        diviner:     ["Conjuration/Summoning", "Abjuration"],
+        invoker:     ["Illusion/Phantasm", "Enchantment/Charm", "Conjuration/Summoning"],
+        necromancer: ["Enchantment/Charm", "Illusion/Phantasm", "Alteration"],
+        transmuter:  ["Necromancy", "Abjuration", "Conjuration/Summoning"]
+      },
+      mageLimitations: {
+        printed: "Militant Wizard mages are likewise limited. The DM may decide which of the following limitations affects Militant Wizard mages in his campaign (choose only one limitation).",
+        note: "APPLIES TO NON-SPECIALIST MAGES ONLY. The DM chooses ONE; it is a stored setting, not derivable. Option 2 is the invasive one -- the four consequences the book names are exactly PHB Table 4's columns.",
+        choose: 1,
+        options: [
+          { key: "noHighLevel", label: "No 8th- or 9th-level spells",
+            printed: "The Militant Wizard mage is forbidden to learn 8th-level and 9th-level spells from any school." },
+          { key: "intMinusTwo", label: "Learns as if Intelligence were two lower",
+            printed: "The Militant Wizard mage learns spells as if his Intelligence were two points lower than he actually has, as indicated on Table 4, page 16 of the Player's Handbook. This limitation also affects the number of languages he can learn, the highest level of spells he can cast, the maximum number of spells per level he can know, and his spell immunity.",
+            note: "The book's worked example: a Militant Wizard mage with Intelligence 15 can know only three languages, cast spells of no higher than 6th level, has a 55 percent chance to learn a new spell, and a maximum of nine spells per level. THE EXPERIENCE BONUS FOR A HIGH PRIME REQUISITE IS NOT MENTIONED and should not be reduced." },
+          { key: "fiveSchools", label: "Five schools only",
+            printed: "The Militant Wizard mage can learn spells from only five schools. To determine which schools are unavailable to him, roll 1d8 three times, where 1 = abjuration, 2 = conjuration/summoning, 3 = greater divination, 4 = enchantment/charm, 5 = illusion, 6 = invocation/evocation, 7 = necromancy, and 8 = alteration. If the same result occurs twice, roll again.",
+            note: "THE THREE UNAVAILABLE SCHOOLS ARE ROLLED ONCE AND MUST BE STORED; they are not derivable." }
+        ]
+      },
+      secondarySkills: {
+        required: [],
+        printed: "No particular Secondary Skill is recommended or required. He receives his Secondary Skill either by choosing or rolling randomly, whatever method is normal for the campaign."
+      },
+      proficiencies: {
+        weapon: {
+          required: ["Axe, Battle", "Bow, Short", "Crossbow, Light", "Dagger", "Javelin",
+                     "Sling", "Spear", "Sword, Long", "Warhammer"],
+          requiredCount: 1,
+          allowedPrinted: "Required (choose one from the following): Battle axe, bow (any), crossbow (any), dagger, javelin, sling, spear, sword (any), warhammer. These are different from the weapons normally associated with wizards, but are common for Militant Wizards.",
+          note: "FAR BEYOND THE WIZARD'S NORMAL LIST. \"Bow (any)\", \"crossbow (any)\" and \"sword (any)\" are open categories -- the specific entries here are one resolvable reading and the DM may allow any member of each category."
+        },
+        nonweapon: {
+          bonus: ["Endurance"],
+          recommended: ["Animal Handling", "Direction Sense", "Riding, Land-Based", "Swimming",
+                        "Languages, Ancient", "Blind-fighting", "Tracking",
+                        "Mountaineering", "Running", "Set Snares"],
+          crossoverWaiver: {
+            byName: { "Blind-fighting": 2, "Tracking": 2, "Mountaineering": 1, "Running": 1, "Set Snares": 1 },
+            byGroup: ["Warrior"],
+            printed: "Additionally, a Militant Wizard can acquire any of the Warrior's Nonweapon Proficiencies given on Table 37 on page 55 of the Player's Handbook at the listed number of slots; for instance, if a Militant Wizard wants the Animal Lore proficiency, it costs him only 1 slot instead of the normal 2 for a wizard."
+          },
+          note: "Grouped in the book as: (Warrior) Endurance as the BONUS; (General) Animal Handling, Direction Sense, Riding (Land-based), Swimming; (Wizard) Languages (Ancient); (Warrior; these take 2 slots only) Blind-fighting, Tracking; (Warrior; these take 1 slot only) Mountaineering, Running, Set Snares. THE CATEGORICAL WAIVER IS BROADER THAN THE NAMED ONES -- any Warrior proficiency at all costs him the listed slots, not the wizard surcharge."
+        }
       },
       abilities: [
-        { name: "Steal Spell", notes: "Can temporarily steal prepared spells from other casters" },
-        { name: "Magic Analysis", notes: "+4 to identify magical effects" }
+        { name: "Bonus Weapon Proficiency",
+          notes: "A bonus Weapon Proficiency FREE OF CHARGE, in addition to his normal Weapon Proficiency. It does not use any of the wizard's proficiency slots, but he must choose it from the weapons listed in the Weapon Proficiency entry." },
+        { name: "Warrior Proficiencies at Listed Cost",
+          notes: "May acquire any of the Warrior's Nonweapon Proficiencies from PHB Table 37 at the listed number of slots rather than paying the wizard's crossover surcharge. Animal Lore costs him 1 slot instead of 2." }
       ],
-      requirements: { int: 15, dex: 13, alignment: "Any non-lawful" },
-      benefits: "Can learn spells by observing them cast. Extra spell slots for stolen spells.",
-      hindrances: "Cannot research own spells. Distrusted by other mages. Unstable stolen magic."
+      bonusWeaponProf: 1,
+      benefits: "One free Weapon Proficiency outside his normal allotment, chosen from the kit's weapon list; and any Warrior nonweapon proficiency at the listed slot cost rather than the wizard crossover cost.",
+      hindrances: "Because a Militant Wizard devotes so much time and energy to the mastery of military skills, he is limited in his access to spells from various schools. Specialists use Table 6 in place of PHB Table 22 and are forbidden to learn spells from those schools; mages take one of the three limitations above at the DM's choice.",
+      wealth: "The Militant Wizard receives the standard (1d4+1) x 10 starting money.",
+      races: null,
+      racesPrinted: "Races: No restrictions.",
+      equipment: {
+        restriction: "May buy any equipment he chooses, keeping whatever money he might not use.",
+        printed: "The Militant Wizard may buy any equipment he chooses, keeping whatever money he might not use."
+      },
+      abandonable: true,
+      abandonPrinted: "Abandoning this kit is difficult. A Militant Wizard must abstain from using both of the weapons he has chosen for his Weapon Proficiencies for three full experience levels. Once he reaches the third experience level, he loses the use of his two Weapon Proficiencies. If he then renounces his citizenship from his home culture, he can successfully abandon this kit.",
+      abandonNote: "THE CLOCK RESTARTS IF HE USES EITHER WEAPON. The book's worked example: a 5th-level Militant Wizard with short sword and long bow who abstains from both loses those proficiencies at 8th level, and may abandon the kit if he then renounces his citizenship. If he uses either weapon before 8th level he must begin again, abstaining for another three levels -- using the long bow at 7th means abstaining until 10th."
     },
-    dimensionaltraveler: {
-      name: "Dimensional Traveler",
+
+    mystic: {
+      name: "Mystic",
       class: "mage",
       source: {
-        status: "unverified",
+        status: "verified",
         work:   "PHBR4 The Complete Wizard's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+        pages:  "40-42",
+        note:   "Thoughtful, reserved and extremely introspective, devoted to self-enlightenment. HIS BARRED SCHOOLS ENTRY IS WHERE PHBR4 RESTATES ITS OWN DEFINITION: 'He is not prevented from learning spells from these schools -- he simply prefers to limit his association with them.' That is p.34's general rule in the kit's own words, not a narrower exception; see the block comment at the head of this section."
+      },
+      requirements: {
+        wis: 13,
+        wisPrinted: "To be a Mystic, a wizard must have a Wisdom score of at least 13."
+      },
+      preferredSchools: ["Illusion/Phantasm", "Divination", "Enchantment/Charm"],
+      preferredSchoolsPrinted: "The Mystic prefers the schools of illusion, divination, and enchantment/charm.",
+      barredSchools: ["Necromancy", "Invocation/Evocation", "Conjuration/Summoning"],
+      barredSchoolsPrinted: "Because the Mystic is predisposed against magic that harms other living things, he is barred from specializing in the schools of necromancy, invocation/evocation, and conjuration/summoning. He is not prevented from learning spells from these schools -- he simply prefers to limit his association with them.",
+      secondarySkills: {
+        required: ["Farmer", "Forester", "Groom", "Mason", "Scribe", "Tailor/Weaver", "Woodworker"],
+        requiredCount: 1,
+        printed: "The Mystic must take one of the following as his Secondary Skill (player's choice, based on the Mystic's background): Farmer, Forester, Groom, Mason, Scribe, Tailor/Weaver, Woodworker."
+      },
+      proficiencies: {
+        weapon: {
+          required: ["Dagger", "Dart", "Sling"],
+          requiredCount: 1,
+          allowedPrinted: "Required (the player chooses one of the following): Dagger, dart, or sling."
+        },
+        nonweapon: {
+          bonus: ["Astrology", "Religion"],
+          recommended: ["Agriculture", "Artistic Ability", "Carpentry", "Etiquette",
+                        "Languages, Modern", "Leatherworking", "Pottery", "Seamstress/Tailor",
+                        "Stonemasonry", "Weaving", "Ancient History", "Herbalism",
+                        "Languages, Ancient", "Reading/Writing", "Spellcraft"],
+          note: "Grouped in the book as: (General) Agriculture, Artistic Ability, Carpentry, Etiquette, Languages (Modern), Leatherworking, Pottery, Seamstress/Tailor, Stonemasonry, Weaving; (Wizard) Ancient History, Herbalism, Languages (Ancient), Reading/Writing, Spellcraft. No crossover waiver."
+        }
+      },
+      specialAbilityChoice: {
+        printed: "The Mystic receives one of the following special abilities from the list below. The special ability is chosen when the character is first created and can never be changed.",
+        choose: 1,
+        permanent: true,
+        options: [
+          { key: "feignDeath", label: "Feign Death",
+            notes: "ONCE PER WEEK, casts feign death as per the 3rd-level wizard spell; he can use this ability only on himself. He can feign death for up to 24 hours, awakening at any time. To use it he concentrates for 1 round; no components are necessary." },
+          { key: "spiritForm", label: "Spirit Form",
+            notes: "ONCE PER WEEK, transforms his consciousness into a ghostly spirit form, leaving his physical body behind. The spirit form has the appearance of a misty cloud in the shape of the caster. IT CANNOT ATTACK, SPEAK, OR CAST SPELLS, but it can fly at movement rate 24 (Maneuverability Class B) and can pass through the smallest opening or tiniest crack. It can travel an unlimited distance from his physical body so long as it remains in the same plane of existence. The spirit form is invulnerable to all attack forms, but dispel magic or a similar spell causes it to instantly return to its body. WHILE IN SPIRIT FORM THE MYSTIC'S PHYSICAL BODY REMAINS COMATOSE, is subject to all regular attacks and suffers damage normally. The spirit form can remain away from the body for up to 24 hours, but once it returns the Mystic revives and cannot use spirit form again for another week. To use it he concentrates for 1 round; no components." },
+          { key: "levitateSelf", label: "Levitate Self",
+            notes: "ONCE PER WEEK, a special levitate self ability for one hour. Once initiated he can levitate straight up at 10 yards per round. He can stop, hover, descend and ascend at will, THOUGH HORIZONTAL MOVEMENT IS NOT EMPOWERED by this ability -- he could push himself along a wall to move laterally. While levitating he can carry as much weight as he can normally. UNLIKE THE LEVITATION SPELL, using levitate self he suffers NO attack roll penalties when attempting to use missile weapons. He concentrates for 1 round; no components. As soon as a levitating Mystic touches the ground his use of the ability is over and he cannot use it again for another week." }
+        ]
       },
       abilities: [
-        { name: "Planar Attunement", notes: "Enhanced abilities on other planes" },
-        { name: "Dimensional Step", notes: "Short-range teleport 1/day" }
+        { name: "One Special Ability, Chosen at Creation",
+          notes: "Feign death, spirit form, or levitate self -- each once per week. THE CHOICE IS MADE WHEN THE CHARACTER IS FIRST CREATED AND CAN NEVER BE CHANGED. Full text in the `specialAbilityChoice` block." }
       ],
-      requirements: { int: 16, alignment: "Any" },
-      benefits: "Teleportation spells improved. Can sense planar boundaries. Extra-planar knowledge.",
-      hindrances: "Unstable on Prime Material (-1 to saves). Must travel frequently."
+      equipment: {
+        restriction: "May buy only the weapon associated with his Weapon Proficiency. As his adventuring career progresses, he can buy and use only daggers, darts, knives and slings. HE MUST SPEND ALL OF HIS STARTING MONEY; any leftover gold is lost.",
+        printed: "The Mystic may buy only the weapon associated with his Weapon Proficiency. As his adventuring career progresses, he can buy (and use) only daggers, darts, knives, and slings. He must spend all of his starting money; any leftover gold is lost."
+      },
+      benefits: "One of feign death, spirit form or levitate self, once per week, chosen permanently at creation.",
+      hindrances: "A Mystic must spend TWO CONSECUTIVE HOURS PER DAY MEDITATING, and those two hours must always occur at the same time of day. The player decides which hours, but once decided the time period can never change; typical times are the first two hours of dawn, the first two hours after sunset, or midnight to 2 a.m. IF HE NEGLECTS HIS MEDITATION, IS UNABLE TO PERFORM IT, OR IS INTERRUPTED MORE THAN ONCE (for more than a total of 1 minute), the following day he is able to cast only the number of spells allowed to a wizard ONE LEVEL LOWER than his actual level. The book's example: a 4th-level Mystic unable to meditate on Day 1 casts as a 3rd-level wizard on Day 2.",
+      wealth: "The Mystic receives only (1d4+1) x 5 gp as starting money.",
+      wealthCalc: { multiplier: 5 },
+      races: null,
+      racesPrinted: "Races: No limitations.",
+      abandonable: true,
+      abandonPrinted: "There are no special rules for abandonment of this kit. If the Mystic grows weary of the contemplative life or feels that he has reached a pinnacle of self-awareness, he can simply leave this kit behind."
     },
-    geometer: {
-      name: "Geometer",
+
+    patrician: {
+      name: "Patrician",
       class: "mage",
       source: {
-        status: "unverified",
+        status: "verified",
         work:   "PHBR4 The Complete Wizard's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+        pages:  "42-43",
+        note:   "A wizard of noble birth, a member of his culture's aristocracy. A NOBLEWOMAN TAKING THIS KIT is called a Noblewoman or Aristocrat; the book names the alternative rather than gating the kit by gender, so no gender requirement is recorded."
+      },
+      requirements: {
+        note: "There are no special requirements to be a Patrician. The majority are male, but noblewomen are also included in this category (although such a character would more correctly be called a Noblewoman or Aristocrat)."
+      },
+      preferredSchools: ["Conjuration/Summoning", "Alteration", "Invocation/Evocation"],
+      preferredSchoolsPrinted: "The Patrician can specialize in any school, but prefers those that he perceives as most powerful, such as conjuration/summoning, alteration, and invocation/evocation.",
+      barredSchools: ["Necromancy"],
+      barredSchoolsPrinted: "The Patrician will not specialize in necromancy, a school he considers disgusting and repulsive.",
+      secondarySkills: {
+        required: ["Bowyer", "Gambler", "Groom", "Jeweler", "Limner/Painter", "Scribe"],
+        requiredCount: 1,
+        printed: "Required (the player must choose one of the following): Bowyer, Gambler, Groom, Jeweler, Limner/Painter, Scribe."
+      },
+      proficiencies: {
+        weapon: {
+          required: ["Dagger", "Knife"],
+          requiredCount: 1,
+          allowedPrinted: "Required (the player must choose one of the following): dagger, knife."
+        },
+        nonweapon: {
+          bonus: ["Etiquette", "Heraldry", "Riding, Land-Based"],
+          recommended: ["Dancing", "Languages, Modern", "Singing", "Ancient History",
+                        "Languages, Ancient", "Reading/Writing", "Religion", "Appraising",
+                        "Gaming", "Local History", "Musical Instrument"],
+          note: "Grouped in the book as: BONUS (General) Etiquette, Heraldry, Riding (Land-based). Recommended: (General) Dancing, Languages (Modern), Riding (Land-based), Singing; (Wizard) Ancient History, Languages (Ancient), Reading/Writing, Religion; (Rogue, DOUBLE SLOTS) Ancient History, Appraising, Gaming, Local History, Musical Instrument; (Priest, DOUBLE SLOTS) Languages (Ancient). The double-slot tags are the NORMAL crossover surcharge, not a waiver -- this kit grants none. Note Ancient History and Languages (Ancient) appear under two groups each; take the cheaper."
+        }
       },
       abilities: [
-        { name: "Spell Geometry", notes: "Enhanced area of effect control" },
-        { name: "Precision Casting", notes: "Can sculpt spells to avoid allies" }
+        { name: "Noble Reaction",
+          notes: "A +3 reaction modifier from any noble of his own culture, and +2 from nobles of other cultures." },
+        { name: "Demand Shelter",
+          notes: "When traveling, can demand shelter from any fellow nobleman of his own culture. Shelter is offered FREE OF CHARGE and is made available for the Patrician AND UP TO TWO PERSONS PER EXPERIENCE LEVEL -- a 3rd-level Patrician can demand shelter for himself and six others. NOTE THIS CUTS BOTH WAYS: just as the Patrician can demand shelter from other noblemen, so can they demand shelter from him, which can get expensive if the NPC noblemen stay for any length of time." }
       ],
-      requirements: { int: 16, alignment: "Any lawful" },
-      benefits: "Area spells can exclude targets. +1 to spell save DCs. Improved metamagic.",
-      hindrances: "Rigid casting requirements. Cannot improvise. Longer casting times."
+      reaction: [
+        { modifier: 3, applies: "any noble of his own culture",
+          printed: "he receives a +3 reaction modifier from any noble from his own culture" },
+        { modifier: 2, applies: "nobles from other cultures",
+          printed: "and a +2 reaction modifier from nobles from other cultures" }
+      ],
+      equipment: {
+        required: ["Horse (at least a riding horse)", "Riding saddle", "Bit and bridle",
+                   "Horseshoes and shoeing", "Halter", "Saddle blanket"],
+        restriction: "A beginning Patrician must buy all of the required items. He can spend the rest of his money as he wishes.",
+        printed: "A beginning Patrician must buy all of the following items: horse (must be at least a riding horse), riding saddle, bit and bridle, horseshoes and shoeing, halter, and saddle blanket. He can spend the rest of his money as he wishes."
+      },
+      purchaseMarkup: {
+        min: 10, max: 100,
+        printed: "When making purchases, the Patrician accepts nothing but the best, whether it be a meal, a room for the night, a weapon, or even a chest to carry his possessions. Any time he buys any item, the Patrician must pay 10 to 100 percent more than the listed price in the Player's Handbook. The DM will decide the price paid by the Patrician, which may vary from item to item, depending on the quality of merchandise in a particular locale. In all cases, the Patrician will settle for no less than the most expensive item available; he always pays at least 10 percent more than the listed price."
+      },
+      benefits: "More starting money than other wizards; +3 reaction from nobles of his own culture and +2 from nobles of others; and free shelter on demand from any fellow nobleman of his culture, for himself and two persons per experience level.",
+      hindrances: "MUST PAY 10 TO 100 PERCENT ABOVE LISTED PRICE for every purchase, and always at least 10 percent more, because he accepts nothing but the best available. IF HE LACKS THE FUNDS for high-quality items he can settle for cheaper goods, BUT HE NO LONGER RECEIVES HIS REACTION BONUS in that particular encounter or community -- NPCs simply do not believe he is a noble. The book's example: a Patrician settling for a standard 5 sp meal at an inn is treated as an ordinary man by all the NPCs there, word spreads through the community that an amusing fellow is pretending to be a nobleman, and soon all the NPCs in the community react to him normally. If he settles for shabby accoutrements such as a normal sword or average saddle, all NPCs react to him normally until he replaces them with more expensive items. And other noblemen can demand shelter from HIM.",
+      wealth: "The Patrician receives an extra 150 gp in addition to the standard (1d4+1) x 10 gp.",
+      wealthCalc: { multiplier: 10, bonus: 150 },
+      races: null,
+      racesPrinted: "No restrictions. However, if a particular race doesn't recognize or allow socio-economic stratifications in the DM's campaign world, that race will not have Patricians.",
+      abandonable: true,
+      abandonPrinted: "To abandon this kit, the Patrician must renounce his birthright. He will forever after be ostracized by all the nobility from his homeland and may even be disowned and disinherited by his family."
     },
+
+    peasantwizard: {
+      name: "Peasant Wizard",
+      class: "mage",
+      source: {
+        status: "verified",
+        work:   "PHBR4 The Complete Wizard's Handbook",
+        pages:  "43",
+        note:   "A spell caster of modest means whose exceptional skills and matchless courage have made him a champion of the masses. The most frequently encountered of all the wizards. HIS POSSESSION CAP IS COMPUTABLE and is the only one of its kind in the book."
+      },
+      requirements: {
+        note: "There are no additional ability requirements for the Peasant Wizard."
+      },
+      preferredSchools: [],
+      preferredSchoolsPrinted: "There are no preferred schools for the Peasant Wizard, though illusionists, abjurers, and invokers are among the most frequently encountered.",
+      barredSchools: [],
+      barredSchoolsPrinted: "There are no barred schools for the Peasant Wizard; however, there are fewer necromancers and diviners than any other specialist.",
+      secondarySkills: {
+        required: [],
+        printed: "The player may choose his Peasant Wizard's secondary skill. The DM might consider limiting this choice to skills that are useful to peasants such as swimming; it is unlikely (but not impossible) that a peasant wizard could learn heraldry or etiquette."
+      },
+      proficiencies: {
+        weapon: {
+          required: ["Bow, Short", "Dagger", "Knife", "Spear", "Dart", "Sling"],
+          requiredCount: 1,
+          allowedPrinted: "Required (player's choice): Bow (any), dagger, knife, spear, dart, sling.",
+          note: "\"Bow (any)\" is an open category; Bow, Short is one resolvable reading."
+        },
+        nonweapon: {
+          bonus: ["Agriculture", "Fishing"],
+          bonusCount: 1,
+          recommended: ["Animal Handling", "Blacksmithing", "Carpentry", "Cobbling", "Cooking",
+                        "Direction Sense", "Fire-building", "Leatherworking", "Pottery",
+                        "Riding, Land-Based", "Stonemasonry", "Weather Sense", "Weaving"],
+          note: "THE BONUS IS ONE OF THE TWO, NOT BOTH: \"Bonus (one of the following, player's choice: Agriculture, Fishing)\". All recommendations are General group."
+        }
+      },
+      abilities: [
+        { name: "Food and Shelter at Home",
+          notes: "When in his homeland, the Peasant Wizard will always be given food and shelter AT NO CHARGE from his fellow commoners. This courtesy extends to his companions, as long as he vouches for them. HE DOES NOT RECEIVE THIS BENEFIT IN LANDS OTHER THAN HIS OWN." },
+        { name: "Peasant Reaction",
+          notes: "Always receives a +2 reaction modifier from peasants in ANY culture." }
+      ],
+      reaction: [
+        { modifier: 2, applies: "peasants in any culture",
+          printed: "he always receives a +2 reaction modifier from peasants in any culture." }
+      ],
+      possessionCap: {
+        singleItem: 15,
+        otherItems: 10,
+        total: 75,
+        excludes: ["weapons"],
+        includesMoney: true,
+        printed: "Aside from weapons, a Peasant Wizard may own only one item worth as much as 15 gp. Aside from this item, all of his other items must be valued at 10 gp or less. The total value of all his possessions, including money but excluding weapons, can never exceed 75 gp. Any treasure or possessions in excess of this limit must be donated to some worthy cause."
+      },
+      equipment: {
+        restriction: "The Peasant Wizard can spend his money on anything he likes, within the limitations described in the possession cap.",
+        printed: "The Peasant Wizard can spend his money on anything he likes, within the limitations described in the Special Hindrances entry below."
+      },
+      benefits: "Free food and shelter from commoners in his homeland, extending to companions he vouches for; and +2 reaction from peasants in any culture.",
+      hindrances: "A HARD CAP ON POSSESSIONS. Aside from weapons he may own only ONE item worth as much as 15 gp; every other item must be 10 gp or less; and the TOTAL value of all his possessions INCLUDING MONEY but EXCLUDING WEAPONS can never exceed 75 gp. Any treasure or possessions in excess must be donated to some worthy cause. He also sees the wealthy as a primary reason for the commoners' miseries, has little respect or patience for noblemen, is likely to avoid associating with Patricians, will not recruit peasants for combat support unless they fully understand the risks, makes sure his companions pay a common man a fair price for goods or services, and demands that local citizens receive their fair share when the party recovers a treasure they helped find or that was recovered on their land.",
+      wealth: "The Peasant Wizard receives only (1d4+1) x 5 gp for starting money.",
+      wealthCalc: { multiplier: 5 },
+      races: null,
+      racesPrinted: "Races: No restrictions.",
+      abandonable: true,
+      abandonPrinted: "No special rules exist for abandoning this kit."
+    },
+
+    savagewizard: {
+      name: "Savage Wizard",
+      class: "mage",
+      source: {
+        status: "verified",
+        work:   "PHBR4 The Complete Wizard's Handbook",
+        pages:  "43-45",
+        note:   "The spell caster of a remote tribe, culturally and technologically primitive by the standards of the rest of the world. Known by a variety of names: Witch Doctor, Mundunugu, Wangateur, Isangoma. Table 7 (p.45) drives his omen ability."
+      },
+      requirements: {
+        str: 11,
+        con: 13,
+        strPrinted: "To be a Savage Wizard, a character must have a minimum Strength score of 11",
+        conPrinted: "and a minimum Constitution score of 13."
+      },
+      preferredSchools: ["Conjuration/Summoning", "Invocation/Evocation"],
+      preferredSchoolsPrinted: "Because their Constitutions tend to be exceptionally high, Savage Wizards excel in the schools of conjuration/summoning and invocation/evocation.",
+      barredSchools: ["Abjuration", "Enchantment/Charm"],
+      barredSchoolsPrinted: "Savage Wizards lack the natural aptitude for mastering the schools of abjuration and enchantment/charm.",
+      secondarySkills: {
+        required: ["Fisher", "Forester", "Groom", "Hunter", "Trapper/Furrier"],
+        requiredCount: 1,
+        printed: "The Savage Wizard's Secondary Skill should be based on the primary occupation of his tribe; that is, if his tribe is mostly fishermen, his Secondary Skill should be Fishing. Other likely skills include Forester, Groom, Hunter, and Trapper/Furrier."
+      },
+      proficiencies: {
+        weapon: {
+          required: ["Spear", "Blowgun", "Dagger", "Knife", "Sling"],
+          requiredCount: 1,
+          allowedPrinted: "Required (one of the following, representing his tribe's weapon of choice): spear, blowgun, dagger, knife, or sling. Regardless of whether the Savage Wizard eventually becomes familiar with new weapons, he is likely to prefer his tribal weapon throughout his adventuring career."
+        },
+        nonweapon: {
+          bonus: ["Direction Sense", "Weather Sense", "Endurance", "Survival"],
+          bonusCount: 2,
+          recommended: ["Animal Handling", "Animal Training", "Fire-Building", "Fishing",
+                        "Riding, Land-Based", "Rope Use", "Swimming", "Animal Lore",
+                        "Bowyer/Fletcher", "Hunting", "Mountaineering", "Running", "Set Snares",
+                        "Tracking", "Healing", "Local History", "Jumping", "Tightrope Walking",
+                        "Tumbling", "Herbalism", "Religion"],
+          note: "THE BONUS IS TWO CHOICES, NOT FOUR PROFICIENCIES: \"(General) Direction Sense or Weather Sense (player's choice); (Warrior) Endurance or Survival\" -- one from each pair. Recommended groups: (General) Animal Handling, Animal Training, Fire-Building, Fishing, Riding (Land-based), Rope Use, Swimming; (Warrior, DOUBLE SLOTS) Animal Lore, Bowyer/Fletcher, Hunting, Mountaineering, Running, Set Snares, Tracking; (Priest, DOUBLE SLOTS) Healing, Local History; (Rogue, DOUBLE SLOTS) Jumping, Tightrope Walking, Tumbling; (Wizard) Herbalism, Religion. NO CROSSOVER WAIVER -- unlike the Anagakok, this kit pays the surcharge. A Savage Wizard CANNOT take Etiquette or Heraldry when first created."
+        }
+      },
+      specialAbilityChoice: {
+        printed: "The Savage Wizard receives one of the following special abilities from the list below. The special ability is chosen when the character is first created and can never be changed.",
+        choose: 1,
+        permanent: true,
+        options: [
+          { key: "talisman", label: "Protective Talisman",
+            notes: "ONCE PER WEEK, manufactures a protective talisman -- a small pouch of herbs hung on a leather cord, worn around the subject's neck. It gives protection from evil to the wearer, identical to the effects of the 1st-level wizard spell. It offers continual protection for a full day, after which the herbs disintegrate. Dispel magic or a similar spell permanently cancels the magic of that particular talisman. REQUIRES NO LESS THAN ONE HOUR to manufacture." },
+          { key: "replicant", label: "Replicant",
+            notes: "ONCE PER WEEK, constructs a small replicant of any single victim of his choice. About 6 inches tall, made of clay, crudely resembling the victim's form; IT MUST CONTAIN A LOCK OF HAIR, A FINGERNAIL, OR OTHER SMALL PIECE OF ORGANIC MATERIAL FROM THE VICTIM. Requires one hour to manufacture. Whenever the Savage Wizard cuts a piece from the replicant, sticks a pin in it, or otherwise attacks it, the replicant suffers 1-4 hit points of damage AND THE VICTIM SUFFERS AN IDENTICAL AMOUNT regardless of the distance between them -- however, the victim must be on the same plane of existence as the replicant. EVERY type of damage inflicts 1-4; therefore the Savage Wizard must take care not to destroy the replicant, for burning, crushing or throwing it into a pool of quicksand still inflicts only 1-4. THE REPLICANT DISINTEGRATES when it has suffered 10 hit points or more of damage, when dispel magic or a similar spell is cast on it, or when a week passes since its creation." },
+          { key: "omen", label: "Forecast Omens",
+            notes: "ONCE PER WEEK, forecasts the general fortunes of some major undertaking by interpreting an omen from observing the natural conditions around him. To be receptive he must do nothing but concentrate for ONE UNINTERRUPTED TURN; if his concentration is broken he cannot attempt to interpret an omen for another week. After the turn of concentration he studies his surroundings -- a rippling pond, a gathering of clouds, a swarm of insects, or the veins in a leaf are all possible sources. A wizard usually consults an omen before starting a journey, engaging in a major battle, or embarking on some other significant task. IF THE DM HAS KNOWLEDGE ABOUT THE PROPOSED ACTION the omen should reveal the appropriate information; in situations where the DM has no information on which to base his judgement, roll 1d10 and consult TABLE 7 (p.45)." }
+        ]
+      },
+      abilities: [
+        { name: "One Special Ability, Chosen at Creation",
+          notes: "Protective talisman, replicant, or omen forecasting -- each once per week. THE CHOICE IS MADE WHEN THE CHARACTER IS FIRST CREATED AND CAN NEVER BE CHANGED. Full text in the `specialAbilityChoice` block; the omen results are Table 7 on p.45." }
+      ],
+      reaction: [
+        { modifier: -2, applies: "all NPCs not from his own tribe",
+          printed: "he suffers a -2 reaction adjustment from all NPCs not from his own tribe (PCs can react as they wish, but they should quickly become accustomed to the Savage and accept him as an equal)." }
+      ],
+      equipment: {
+        restriction: "The only weapon he can purchase initially is his tribal weapon (see Weapon Proficiency). HE MUST SPEND ALL OF HIS REMAINING GOLD BEFORE HE IS CREATED; he may not keep any unspent gold. He can purchase only equipment that would normally be available to his tribe.",
+        printed: "The only weapon the Savage Wizard can purchase initially is his tribal weapon (see Weapon Proficiency). He must spend all of his remaining gold before he is created; he may not keep any unspent gold. He can purchase only equipment that would normally be available to his tribe; for instance, his tribe probably has herbs, nuts, fishing nets, and rafts available, but they are unlikely to have chains, lanterns, hourglasses, or magnifying glasses. The DM has the final word as to what equipment is available to any particular Savage Wizard."
+      },
+      benefits: "One of the protective talisman, the replicant, or omen forecasting, once per week, chosen permanently at creation.",
+      hindrances: "The Savage Wizard's strange appearance and manners make strangers wary of him, costing a -2 reaction adjustment from all NPCs not from his own tribe. Player characters may react as they wish but should quickly come to accept him as an equal.",
+      wealth: "The Savage Wizard begins with only (1d4+1) x 5 gp. As the campaign progresses he will have the opportunity to acquire more treasure, and it is up to the player whether he appreciates its value or rejects it as worthless -- a Savage might accept gold but have a superstitious belief that requires him to reject gems.",
+      wealthCalc: { multiplier: 5 },
+      races: null,
+      racesPrinted: "Races: No restrictions.",
+      abandonable: true,
+      abandonPrinted: "To abandon this kit, a character must renounce his membership with his tribe and become a citizen of a different culture. Since tribal roots run deep, a dramatic change such as this should be slow in coming; a Savage Wizard must have advanced at least five levels since leaving his tribe and experiencing adventures in the outside world before cutting ties with his tribe."
+    },
+
+    witch: {
+      name: "Witch",
+      class: "mage",
+      source: {
+        status: "verified",
+        work:   "PHBR4 The Complete Wizard's Handbook",
+        pages:  "45-49",
+        note:   "A wizard whose powerful magical abilities are EXTRAPLANAR IN ORIGIN, learned from entities and their minions rather than from academies or mentors. THE MOST MECHANICALLY DENSE KIT IN THE BOOK. Male Witches are possible and are commonly called Warlocks. Table 8 (pp.47-48) drives witch's curse -- NOTE THAT TABLE 8 SPANS TWO PAGES: results 1-6 are on p.47 and results 7-8 on p.48, in the facing column. CANNOT BE ABANDONED without cost."
+      },
+      requirements: {
+        int: 13,
+        wis: 13,
+        con: 13,
+        intPrinted: "Because her training is more demanding than that received by most other wizards, she must have a minimum Intelligence and Wisdom of 13.",
+        wisPrinted: "Because her training is more demanding than that received by most other wizards, she must have a minimum Intelligence and Wisdom of 13.",
+        conPrinted: "To resist the corruption inherent from contact with extraplanar entities, she must have a minimum Constitution of 13.",
+        gender: ["female", "male"],
+        genderPrinted: "The vast majority of Witches are female, but male Witches are also possible, commonly called Warlocks."
+      },
+      preferredSchools: ["Enchantment/Charm", "Conjuration/Summoning", "Necromancy"],
+      preferredSchoolsPrinted: "The most appropriate school for Witches is enchantment/charm. Conjuration/summoning and necromancy are also good choices.",
+      barredSchools: [],
+      barredSchoolsPrinted: "There are no barred schools for Witches.",
+      secondarySkills: {
+        required: [],
+        recommended: ["Scribe"],
+        printed: "Required: None. Recommended: Scribe."
+      },
+      proficiencies: {
+        weapon: {
+          required: [],
+          allowedPrinted: "The Witch is not allowed an initial Weapon Proficiency, nor can she ever acquire a Weapon Proficiency as she advances in level.",
+          note: "UNIQUE IN THE BOOK: no initial weapon proficiency AND none ever. She may still buy and carry the weapons listed under equipment; she simply is never proficient."
+        },
+        nonweapon: {
+          bonus: ["Herbalism", "Spellcraft"],
+          recommended: ["Artistic Ability", "Brewing", "Cooking", "Languages, Modern",
+                        "Weather Sense", "Ancient History", "Astrology", "Languages, Ancient",
+                        "Reading/Writing", "Religion", "Healing"],
+          note: "The book prints the bonus as \"Herbalism, Spellcasting\"; SPELLCASTING IS NOT A PROFICIENCY IN THE PHB and Spellcraft is the resolvable reading. Recommended groups: (General) Artistic Ability, Brewing, Cooking, Languages (Modern), Weather Sense; (Wizard) Ancient History, Astrology, Languages (Ancient), Reading/Writing, Religion; (Priest, DOUBLE SLOT) Healing."
+        }
+      },
+      abilities: [
+        { name: "Detect Magic and Read Magic (at creation)",
+          notes: "When a Witch is initially created she AUTOMATICALLY GAINS the spells detect magic and read magic. These spells are IN ADDITION to any spells she normally receives." },
+        { name: "Secure Familiar (3rd level)",
+          notes: "ONCE PER WEEK. Identical to the 1st-level wizard spell find familiar, EXCEPT that a Witch does not need to burn 1,000 gp worth of incense in a brass brazier -- she merely concentrates for one turn. If a suitable familiar is within 1 MILE PER LEVEL of the Witch, it will arrive within 1d10 hours. A WITCH CAN HAVE ONLY ONE FAMILIAR AT A TIME." },
+        { name: "Brew Calmative (5th level)",
+          notes: "ONCE PER WEEK. Assuming access to the proper ingredients (usually available in any forest), brews one dose of an elixir with the effect of a sleep spell when a victim comes in contact with it. ONE DOSE IS SUFFICIENT TO COAT A SWORD OR ANY OTHER SINGLE WEAPON. NO EFFECT ON VICTIMS WITH MORE THAN 8 HD; victims can resist with a successful saving throw. Requires one hour to brew and LOSES ITS POTENCY AFTER 24 HOURS." },
+        { name: "Brew Poison (7th level)",
+          notes: "ONCE PER WEEK. With the proper ingredients, available in most forests, brews one dose of CLASS L CONTACT POISON (see p.73 of the DMG) sufficient to coat a single weapon. Requires one hour to brew and loses its potency in 24 hours." },
+        { name: "Beguile (9th level)",
+          notes: "ONCE PER WEEK. Beguiles any single person or monster, assuming the person is no higher than 8th level or the monster has no more than 8 HD. Identical to the 4th-level wizard spell charm monster and the 1st-level charm person, EXCEPT THAT THE VICTIM IS NOT ALLOWED A SAVING THROW. To cast it the Witch merely points at the victim and concentrates for 1 round; there are no verbal or material components." },
+        { name: "Brew Flying Ointment (11th level)",
+          notes: "ONCE PER WEEK. With the proper ingredients, available in any forest, brews one dose of an ointment which, rubbed on the skin, gives the recipient the ability to FLY as per the 3rd-level wizard spell. One dose is sufficient to affect one human-sized subject; the effects persist until the ointment loses its potency 24 hours after it is brewed. Requires one hour to brew." },
+        { name: "Witch's Curse (13th level)",
+          notes: "ONCE PER WEEK. Inflicts a witch's curse on any single person or creature. Exactly identical to the 4th-level wizard spell bestow curse EXCEPT THAT ITS EFFECT IS AUTOMATIC -- THE VICTIM IS NOT ALLOWED A SAVING THROW. The effect persists for 24 hours unless dispelled by a remove curse, wish, or similar spell. To cast it she points at the victim and concentrates for 1 round; no verbal or material components. Roll 1d8 and consult TABLE 8 (pp.47-48) for the effect." }
+      ],
+      reaction: [
+        { modifier: -3,
+          applies: "ordinary NPCs -- outsiders are generally terrified of Witches",
+          printed: "Unless an NPC is exceptionally open-minded or has extremely high Intelligence or Wisdom (13 or more in either ability), the Witch receives a -3 reaction roll." },
+        { modifier: -5,
+          applies: "an uneducated NPC, one from an extremely superstitious or unsophisticated culture, or one with low Intelligence AND Wisdom (under 10 both)",
+          printed: "If the NPC is uneducated, comes from an extremely superstitious or unsophisticated culture, or has low Intelligence and Wisdom (under 10 both), the Witch receives a -5 reaction roll." }
+      ],
+      equipment: {
+        restriction: "When first created she must buy her weapons from among the following choices: dagger or dirk, knife, sling, staff sling. ADDITIONALLY SHE CAN CHOOSE UP TO 1,500 GP WORTH OF MAGICAL ITEMS from DMG Tables 89 (Potions and Oils), 91 (Rings), 92 (Rods), 93 (Staves), 94 (Wands), and 95-103 (Miscellaneous Magic), pages 135-139. THESE ITEMS ARE FREE -- she doesn't have to pay for them, BUT SHE CANNOT KEEP ANY OF THE LEFTOVER 1,500 GP.",
+        printed: "When a Witch is first created, she must buy her weapons from among the following choices: Dagger or dirk, knife, sling, staff sling. Additionally, the Witch can choose up to 1,500 gp worth of magical items from Table 89 (Potions and Oils), Table 91 (Rings), Table 92 (Rods), Table 93 (Staves), Table 94 (Wands), and Tables 95-103 (Miscellaneous Magic) on pages 135-139 of the Dungeon Master's Guide. These items are free -- she doesn't have to pay for them (but she cannot keep any of the leftover 1,500 gp)."
+      },
+      periodicPenalty: {
+        printed: "The Witch must periodically struggle with the extraplanar forces striving to direct her. The forces are so powerful that they cannot be dispelled; all the Witch can do is endure them. When undergoing these internal struggles, the Witch suffers penalties to her combat abilities and saving throws. The DM has three options for determining the frequency and intensity of these penalties, depending on the needs of his campaign and how much bookkeeping he is willing to undertake.",
+        choose: 1,
+        options: [
+          { key: "fullMoon", label: "Full moon and the three nights either side",
+            notes: "-2 penalty to her attack rolls and -2 penalty to her saving throws on ANY NIGHT WITH A FULL MOON AND THE THREE NIGHTS BEFORE AND AFTER; the penalties apply to a 12-hour period from about 6 p.m. to 6 a.m. On most worlds a full moon occurs about once per month. If the moon of the DM's world has a shorter or longer cycle, increase or decrease the number of nights the Witch is affected -- she should be affected about seven nights out of four weeks. IF THERE ARE SEVERAL MOONS, the Witch is affected by only one of them." },
+          { key: "dailyChance", label: "25 percent chance per day",
+            notes: "There is a 25 PERCENT CHANCE PER DAY that the Witch will be subjected to an internal struggle with extraplanar forces. The DM determines this at the beginning of the day; the Witch is aware of the result. Throughout that night (a 12-hour period lasting from about 6 p.m. to 6 a.m.) the Witch suffers a -2 penalty to her attack rolls and a -2 penalty to her saving throws." },
+          { key: "everyNight", label: "Every night, lesser penalty",
+            notes: "The Witch struggles with the extraplanar forces EVERY NIGHT. For a 12-hour period lasting from about 6 p.m. to 6 a.m. she suffers a -1 penalty to her attack throws; THERE IS NO PENALTY TO HER SAVING THROWS." }
+        ]
+      },
+      benefits: "Detect magic and read magic free at creation, in addition to her normal spells; up to 1,500 gp of free magical items at creation; and a level-gated ladder of once-per-week abilities -- secure familiar at 3rd, brew calmative at 5th, brew poison at 7th, beguile at 9th, brew flying ointment at 11th and witch's curse at 13th. ALL ARE NATURALLY ACQUIRED and do not count against the number of spells she can know or use.",
+      hindrances: "THREE STRUCTURAL PENALTIES, ALL PERMANENT. (1) Because of their non-conventional training, WITCHES DO NOT EARN BONUSES TO THEIR EXPERIENCE FOR HIGH ABILITY SCORES. (2) WITCHES CANNOT BE MULTI-CLASSED OR DUAL-CLASSED. (3) A -3 reaction from ordinary NPCs and -5 from the uneducated or superstitious. PLUS A MOB RISK: if a Witch lingers in a superstitious or culturally unsophisticated community for more than a day, she runs the risk of facing a mob of hostile citizens bent on running her out of town, imprisoning her, torturing her, or executing her. As a rule of thumb, assume a 20 PERCENT CHANCE OF A 4d6-MEMBER MOB FORMING in a hostile community if the Witch stays for a day; this chance increases by 20 percent for every additional day she remains, and the size of the mob increases by 2d6 members. PLUS the periodic extraplanar struggle -- see `periodicPenalty`.",
+      wealth: "The Witch receives the standard (1d4+1) x 10 gp as starting money.",
+      races: null,
+      racesPrinted: "No racial restrictions.",
+      abandonable: false,
+      abandonPrinted: "The Witch kit cannot be abandoned. If a Witch manages to sever all ties with the entities responsible for her instruction (usually requiring the power of a wish or its equivalent), SHE LOSES TWO EXPERIENCE LEVELS. If she still wishes to pursue a magical career, she must relearn the experience levels that she lost.",
+      finalNote: "The Witch is among the most complex of the kits, and many of the details are left up to the player's discretion -- the specific daily rituals for the Witch, the nature of her relationship with the entities who originally trained her, who and where they are, whether she can contact them for favors, and what exactly happens if the forces succeed in controlling the Witch. The DM is encouraged to experiment as long as he avoids the temptation to make her excessively powerful and keeps in mind the potential disruptions in his campaign."
+    },
+
     wujen: {
       name: "Wu Jen",
       class: "mage",
       source: {
-        status: "unverified",
+        status: "verified",
         work:   "PHBR4 The Complete Wizard's Handbook",
-        pages:  null,
-        note:   "Kit name matches the published list. Mechanics below are unsourced paraphrase and have not been checked against the book. Re-transcribe before relying on any number here."
+        pages:  "49-50",
+        note:   "A wizard from cultures based on medieval oriental civilizations; a sorcerer of mysterious power and uncertain fealty. THIS KIT IS IN PHBR4 -- an earlier note in this file guessed Oriental Adventures and was WRONG. PHBR4 p.50 does point to Oriental Adventures for ADDITIONAL spells, weapons and proficiencies, noting the DM may need adjustments to convert them to 2nd Edition. THE ONLY KIT IN THE BOOK WITH AN ALIGNMENT RESTRICTION. Table 9 (p.48) lists his oriental weapon options. CANNOT BE ABANDONED."
+      },
+      requirements: {
+        int: 13,
+        intPrinted: "To be a Wu Jen, a wizard must have an Intelligence of at least 13.",
+        alignment: ["ng", "n", "cg", "ne", "cn", "ce"],
+        alignmentPrinted: "He cannot be of lawful alignment, but may still be good, evil, or neutral.",
+        note: "ALIGNMENT IS RECORDED AS THE SIX NON-LAWFUL VALUES, per the closed-domain rule -- the book states the exclusion (not lawful) and the enumeration here is that exclusion resolved against the nine alignments."
+      },
+      preferredSchools: ["Conjuration/Summoning", "Alteration", "Invocation/Evocation"],
+      preferredSchoolsPrinted: "Wu Jen prefer the schools of conjuration/summoning, alteration, and invocation/evocation.",
+      barredSchools: [],
+      barredSchoolsPrinted: "There are no barred schools for the Wu Jen.",
+      secondarySkills: {
+        required: ["Scribe"],
+        printed: "Required: Scribe."
+      },
+      proficiencies: {
+        weapon: {
+          required: ["Blowgun", "Bow, Short", "Dagger", "Dart", "Sling"],
+          requiredCount: 1,
+          alternates: ["Bo Stick", "Boku-toh", "Jitte", "Shuriken"],
+          allowedPrinted: "Required (choose one of the following): Blowgun, short bow, dagger, dart, sling. Alternately, the Wu Jen can choose from the selection of oriental weapons listed in Table 9.",
+          note: "TABLE 9 (p.48) IS THE ALTERNATE LIST: bo stick, boku-toh, jitte, shuriken. All four are in core_wp.json; jitte and boku-toh were added from this book."
+        },
+        nonweapon: {
+          bonus: ["Etiquette", "Artistic Ability"],
+          recommended: ["Riding, Land-Based", "Cooking", "Dancing", "Singing", "Astrology",
+                        "Herbalism", "Spellcraft", "Musical Instrument", "Blind-fighting",
+                        "Gaming", "Juggling", "Tumbling"],
+          note: "The Artistic Ability bonus is specified as Painting, Calligraphy, or Origami. Recommended groups: (General) Riding (Land-based), Cooking, Dancing, Singing; (Wizard) Astrology, Herbalism, Spellcraft; (Priest, DOUBLE SLOT) Musical Instrument; (Rogue, DOUBLE SLOT) Blind-fighting, Gaming, Juggling, Tumbling. No crossover waiver."
+        }
       },
       abilities: [
-        { name: "Elemental Mastery", notes: "Choose one element for specialization" },
-        { name: "Taboo", notes: "Follow strict personal taboos for power" }
+        { name: "Weapon Bonus",
+          notes: "The Wu Jen has an AUTOMATIC AND PERMANENT +1 BONUS TO HIT whenever using the weapon he has chosen for his Weapon Proficiency." },
+        { name: "Maximum Effect Spell (4th level)",
+          notes: "At 4th level he gains the power to summon massive magical energies that allow him to cast ANY ONE SPELL THAT IS THREE OR MORE LEVELS LOWER THAN HIS LEVEL AT MAXIMUM EFFECT. The spell automatically has maximum range, if desired, duration, and effect -- thus a 4th-level Wu Jen can cast a 1st-level spell at maximum effect. USABLE ONCE PER DAY." }
       ],
-      requirements: { int: 15, wis: 14, alignment: "Any" },
-      benefits: "+1 to spell level for chosen element. Elemental resistance. Enhanced elemental spells.",
-      hindrances: "Must follow personal taboos. Limited spell selection. Cultural isolation."
+      taboos: {
+        printed: "The Wu Jen operates under special taboos that do not affect other characters. Though the taboos may seem trivial or even ridiculous to other characters, the Wu Jen takes them quite seriously -- violating a taboo causes the Wu Jen to lose levels of ability, lose spells, become ill, or even die (the DM decides the exact penalty).",
+        atFirstLevel: 1,
+        everyNLevels: 5,
+        note: "A 1st-level Wu Jen has ONE taboo and gains an additional taboo EVERY FIVE LEVELS THEREAFTER -- at 6th level, 11th level, 16th and so on. THE DM SELECTS THE TABOOS.",
+        suggestions: [
+          "Can't eat meat or animal products (including milk, eggs, and cheese).",
+          "Can't sleep within 20 yards of a member of the opposite sex.",
+          "Can't wear a certain color.",
+          "Can't carry gold (or other precious metal) on his person.",
+          "Can't bathe, or must bathe frequently.",
+          "Can't cut his hair or fingernails.",
+          "Can't intentionally take the life of an insect.",
+          "Can't drink alcoholic beverages.",
+          "Can't sit facing the north (or other direction).",
+          "Can't speak after sunset (except to cast spells)."
+        ]
+      },
+      equipment: {
+        restriction: "The Wu Jen must buy ALL weapons from the choices listed in the Weapon Proficiency entry. HE MAY HAVE NO MORE THAN 10 GP REMAINING when he has finished purchasing his equipment.",
+        printed: "The Wu Jen must buy all weapons from the choices listed in the Weapon Proficiency entry above. He may have no more than 10 gp remaining when he has finished purchasing his equipment."
+      },
+      benefits: "A permanent +1 to hit with his chosen weapon; and from 4th level, once per day, any spell three or more levels below his own cast at maximum range, duration and effect.",
+      hindrances: "TABOOS. One at 1st level and another every five levels thereafter, selected by the DM. Violating one costs levels of ability, spells, illness, or death, at the DM's discretion.",
+      wealth: "The Wu Jen starts with the normal (1d4+1) x 10 gp.",
+      races: ["human", "elf", "half-elf"],
+      racesPrinted: "Normally, a Wu Jen must be human. The DM may make exceptions in his campaign, with elves and half-elves being the most likely choices.",
+      abandonable: false,
+      abandonPrinted: "The Wu Jen kit cannot be abandoned."
     }
   },
 
