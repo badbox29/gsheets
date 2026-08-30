@@ -96,7 +96,14 @@ async function loadSpells() {
           components: spell.components || '',
           description: spell.description || '',  // already clean; no stripping needed
           source: spell.source || '',
-          wscRef: spell.wscRef || ''
+          wscRef: spell.wscRef || '',
+          // PHBR4 Ch.6 pp.73-74. THIS LOADER REBUILDS EVERY RECORD from a fixed
+          // field list rather than passing the raw JSON through, so a field
+          // added to spells-clean.json is INVISIBLE to every consumer until it
+          // is named here. The underwater filter was written and wired end to
+          // end before anyone noticed it was reading a field this map dropped.
+          // Adding data to the JSON is not enough on its own.
+          underwater: spell.underwater || ''
         };
       });
 
