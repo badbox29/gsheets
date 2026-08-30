@@ -730,6 +730,27 @@ function getCharacterProficiencySlots(root) {
   if (wpAdj)  sources.push(`Manual adjustment: ${wpAdj > 0 ? "+" : ""}${wpAdj} WP`);
   if (nwpAdj) sources.push(`Manual adjustment: ${nwpAdj > 0 ? "+" : ""}${nwpAdj} NWP`);
 
+  // A kit may grant weapon proficiency slots outside the normal allotment.
+  // PHBR4's Militant Wizard is the first: "a bonus Weapon Proficiency free of
+  // charge... this bonus Weapon Proficiency does not use any of the wizard's
+  // proficiency slots". Read from the kit, so any future kit carrying the field
+  // works with no change here.
+  //
+  // ADDITIVE WITH wpAdj, NOT INSTEAD OF IT -- the manual field exists precisely
+  // because there was no automatic path, so anyone who typed +1 there for a
+  // Militant Wizard NOW HAS BOTH. Both appear as separate lines in the tooltip
+  // breakdown, which is the only warning the sheet can give; it cannot tell a
+  // kit-motivated adjustment from a DM ruling.
+  let wpKit = 0;
+  if (typeof getSelectedKit === 'function') {
+    const kitForWP = getSelectedKit(root);
+    const bonus = kitForWP && parseInt(kitForWP.bonusWeaponProf, 10);
+    if (bonus && bonus > 0) {
+      wpKit = bonus;
+      sources.push(`${kitForWP.name} kit: +${wpKit} WP (free, outside the normal allotment)`);
+    }
+  }
+
   return {
     valid:    valid,
     wpBase:   wpBase,
@@ -737,7 +758,8 @@ function getCharacterProficiencySlots(root) {
     intBonus: intBonus,
     wpAdj:    wpAdj,
     nwpAdj:   nwpAdj,
-    wpTotal:  Math.max(0, wpBase  + wpAdj),
+    wpKit:    wpKit,
+    wpTotal:  Math.max(0, wpBase  + wpAdj + wpKit),
     nwpTotal: Math.max(0, nwpBase + intBonus + nwpAdj),
     sources:  sources
   };
