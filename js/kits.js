@@ -4852,6 +4852,25 @@ function getKitsForClass(className) {
       return Object.values(KITS[classKey]);
     }
   }
+
+  // ALL EIGHT SPECIALIST WIZARDS RETURNED AN EMPTY LIST until August 2026, so
+  // the Kit dropdown read "No kits available" for every one of them. Neither
+  // test above can match: "illusionist", "abjurer", "conjurer", "diviner",
+  // "enchanter", "invoker", "necromancer" and "transmuter" are not KITS keys and
+  // contain none of them as substrings.
+  //
+  // This blocked most of PHBR4, whose kits are written largely FOR specialists
+  // -- the book says outright that any kit can be assigned to a specialist from
+  // any school, and its Militant Wizard even carries a table of replacement
+  // opposition schools per specialty. It also blocked PHBR4's own statement that
+  // "unless the DM determines otherwise, all kits are available to mages".
+  //
+  // getSpecialistSchool is the single resolver for "is this a specialist", the
+  // same one that fixed the identical hole in getAbilitiesFor, so the two cannot
+  // drift apart. Do not add a second list of specialist names here.
+  if (typeof getSpecialistSchool === 'function' && getSpecialistSchool(className)) {
+    return Object.values(KITS.mage || {});
+  }
   
   return [];
 }
