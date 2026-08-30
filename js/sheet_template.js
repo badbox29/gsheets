@@ -1482,8 +1482,8 @@ const SHEET_HTML = `
                says nothing when a kit carries none of it.
 
                <details> IS SAFE HERE PRECISELY BECAUSE THERE ARE NO FORM FIELDS
-               INSIDE. The known trap is that <details> fires `toggle`, not
-               `change`, so autosave never hears it -- irrelevant for read-only
+               INSIDE. The known trap is that details elements fire a toggle
+               event, not a change event, so autosave never hears it -- irrelevant for read-only
                content, but do not put an input in here later without wiring the
                toggle event. The whole element is hidden by the renderer when a
                kit has nothing to show. -->
