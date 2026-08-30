@@ -1087,6 +1087,117 @@ function getNWPSurcharge(nwp, allowedGroups, root) {
   return { amount, source };
 }
 
+// ===== KIT DETAIL BLOCKS =====
+// Turns whatever a kit carries into displayable blocks. BUILT AS AN EXCLUDE
+// LIST, NOT AN INCLUDE LIST, so a field added to a future kit surfaces on its
+// own: anything not named below and not already consumed elsewhere becomes a
+// reference block with a humanised label. Promoting one to a card is a single
+// name in KIT_CARD_FIELDS.
+//
+// EXCLUDED because something already renders them, and a second rendering would
+// duplicate. `requirements` especially: a renderer for it was built and REMOVED
+// once before for duplicating validateKitAlignment.
+const KIT_DETAIL_EXCLUDE = new Set([
+  'name', 'class', 'source',            // structural
+  'abilities',                          // renderKitAbilities
+  'requirements', 'requirementsPrinted',// four validators -> class-group banner
+  'proficiencies',                      // getKitProficiencies and friends
+  'thiefSkillMods',                     // getKitSkillMods
+  'variants',                           // the variant dropdown and its card
+  'abandonable',                        // a boolean; abandonPrinted carries the prose
+  'wealthCalc',                         // machine-readable twin of `wealth`
+  'oppositionOverride', 'mageLimitations', 'bonusWeaponProf',
+  'preferredSchoolsPrinted', 'barredSchoolsPrinted', 'racesPrinted',
+  'abandonNote'                         // folded into abandonPrinted below
+]);
+
+// CARDS assert a persistent fact about the character and belong beside his
+// abilities. Everything else is reference consulted once at creation.
+const KIT_CARD_FIELDS = ['benefits', 'hindrances', 'reaction', 'taboos'];
+
+// Reference order: mechanical before flavour. Unlisted fields follow, sorted,
+// so a new one is visible rather than lost.
+const KIT_REFERENCE_ORDER = [
+  'secondarySkills', 'equipment', 'wealth', 'races',
+  'preferredSchools', 'barredSchools', 'possessionCap', 'purchaseMarkup',
+  'specialAbilityChoice', 'periodicPenalty', 'abandonPrinted', 'notes', 'finalNote'
+];
+
+const KIT_FIELD_LABELS = {
+  benefits: 'Kit Benefits', hindrances: 'Kit Hindrances',
+  reaction: 'Reaction Adjustments', taboos: 'Taboos',
+  secondarySkills: 'Secondary Skills', equipment: 'Equipment',
+  wealth: 'Starting Money', races: 'Races',
+  preferredSchools: 'Preferred Schools', barredSchools: 'Barred Schools',
+  possessionCap: 'Limits on Possessions', purchaseMarkup: 'Purchase Prices',
+  specialAbilityChoice: 'Special Ability (choose one)',
+  periodicPenalty: 'Periodic Penalty', abandonPrinted: 'Abandoning This Kit',
+  notes: 'Notes', finalNote: 'Note'
+};
+
+// Prefer the PRINTED wording wherever a `*Printed` twin exists -- the book's own
+// sentence beats a reconstruction from an array.
+function kitFieldText(kit, field) {
+  const printed = kit[field + 'Printed'];
+  if (typeof printed === 'string' && printed.trim()) return printed.trim();
+
+  const v = kit[field];
+  if (v === null || v === undefined) return '';
+  if (typeof v === 'string') return v.trim();
+
+  if (Array.isArray(v)) {
+    if (!v.length) return '';
+    if (typeof v[0] === 'string') return v.join(', ');
+    // Array of objects: reaction entries, variant-style options.
+    return v.map(o => (o && (o.printed || o.notes ||
+      (o.label ? o.label + (o.notes ? ': ' + o.notes : '') : ''))) || '')
+      .filter(Boolean).join(' ');
+  }
+
+  if (typeof v === 'object') {
+    if (typeof v.printed === 'string' && v.printed.trim()) return v.printed.trim();
+    // A choice block: lead with its own printed line, then each option.
+    const parts = [];
+    if (Array.isArray(v.options)) {
+      v.options.forEach(o => {
+        if (!o) return;
+        parts.push((o.label ? o.label + ': ' : '') + (o.notes || o.printed || ''));
+      });
+    }
+    if (Array.isArray(v.suggestions)) parts.push(v.suggestions.join(' '));
+    if (v.note) parts.push(v.note);
+    return parts.filter(Boolean).join(' ');
+  }
+  return '';
+}
+
+function humaniseKitField(f) {
+  return f.replace(/([A-Z])/g, ' $1').replace(/^./, c => c.toUpperCase()).trim();
+}
+
+// Returns { cards: [{name, notes}], reference: [{label, text}] }.
+function getKitDetailBlocks(kit) {
+  const out = { cards: [], reference: [] };
+  if (!kit) return out;
+
+  KIT_CARD_FIELDS.forEach(f => {
+    const t = kitFieldText(kit, f);
+    if (t) out.cards.push({ name: KIT_FIELD_LABELS[f] || humaniseKitField(f), notes: t });
+  });
+
+  const seen = new Set(KIT_CARD_FIELDS);
+  const rest = Object.keys(kit).filter(f =>
+    !KIT_DETAIL_EXCLUDE.has(f) && !seen.has(f) && !/Printed$/.test(f));
+  const ordered = KIT_REFERENCE_ORDER.filter(f => rest.indexOf(f) !== -1)
+    .concat(rest.filter(f => KIT_REFERENCE_ORDER.indexOf(f) === -1).sort());
+
+  ordered.forEach(f => {
+    const t = kitFieldText(kit, f);
+    if (t) out.reference.push({ label: KIT_FIELD_LABELS[f] || humaniseKitField(f), text: t });
+  });
+  return out;
+}
+
 function getNWPSlotCost(nwp, allowedGroups, root) {
   // A kit-GRANTED proficiency is free and cannot become unfree -- neither
   // surcharge may apply to it. The Stalker's Alertness and Camouflage are
