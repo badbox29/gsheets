@@ -1651,6 +1651,7 @@ const SHEET_HTML = `
               <select class="spell-cat-filter" style="width:170px;"><option value="">All Schools</option></select>
               <select class="spell-source-filter" style="width:140px;display:none;"><option value="">All Sources</option></select>
               <select class="spell-save-filter" style="width:140px;display:none;"><option value="">All Saves</option></select>
+              <select class="spell-uw-filter" style="width:190px;"><option value="">Any environment</option><option value="ok">Works underwater</option><option value="modified">Modified underwater</option><option value="airy">Needs airy water</option><option value="no">Fails underwater</option></select>
               <button class="spell-reset-filters" style="padding:8px 16px;">Reset</button>
               <button class="refresh-spells">Refresh List</button>
             </div>
