@@ -3715,6 +3715,50 @@ function populateKitVariantDropdown(root) {
   else                                                      sel.value = sel.options[0].value;
 }
 
+// The creation-time half of the kit's data: starting money, required equipment,
+// secondary skills, school preferences, what abandoning costs. Consulted once
+// and then noise, so it lives collapsed rather than on the sheet.
+//
+// FULLY DATA-DRIVEN. getKitDetailBlocks works from an EXCLUDE list, so a field
+// added to any future kit appears here on its own with a humanised label -- no
+// edit to this function. Promoting one to an ability card is a single entry in
+// KIT_CARD_FIELDS.
+//
+// Hidden entirely when a kit carries nothing, and when no kit is selected. That
+// second case is why this is called ABOVE renderKitAbilities' early return:
+// clearing the kit is precisely when the disclosure must be emptied.
+function renderKitReference(root) {
+  const wrap = root.querySelector('.kit-reference');
+  const body = root.querySelector('.kit-reference-body');
+  if (!wrap || !body) return;
+
+  const kit    = (typeof getSelectedKit === 'function') ? getSelectedKit(root) : null;
+  const blocks = (kit && typeof getKitDetailBlocks === 'function')
+    ? getKitDetailBlocks(kit).reference : [];
+
+  if (!blocks.length) {
+    body.innerHTML = '';
+    wrap.style.display = 'none';
+    wrap.open = false;
+    return;
+  }
+
+  // escapeHtml, not raw interpolation -- this is transcribed book prose and
+  // carries quotes, ampersands and the occasional angle bracket.
+  const esc = (typeof escapeHtml === 'function') ? escapeHtml : (x => x);
+  body.innerHTML = blocks.map(b =>
+    '<div style="margin-bottom:8px;">' +
+      '<strong>' + esc(b.label) + ':</strong> ' + esc(b.text) +
+    '</div>').join('');
+
+  // The summary carries the kit name so a collapsed row still says whose rules
+  // these are -- there is no other label on the element.
+  const summary = wrap.querySelector('summary');
+  if (summary) summary.textContent = 'About this kit: ' + (kit.name || '');
+
+  wrap.style.display = '';
+}
+
 function renderKitAbilities(root) {
   const kitAbilitiesList = root.querySelector('.kit-abilities-list');
   if (!kitAbilitiesList) return;
@@ -3763,16 +3807,39 @@ function renderKitAbilities(root) {
   if (typeof renderKitAdvisories === 'function') renderKitAdvisories(root);
   if (typeof renderNWProficiencies === 'function') renderNWProficiencies(root);
 	
-  // No kit, unknown class, or a kit carrying no abilities: manual entries are
-  // preserved and nothing is added.
-  if (!abilities) return;
+  // The reference disclosure syncs wherever the kit's abilities render, for the
+  // same reason the proficiency grants do -- ABOVE the early return, because
+  // clearing the kit is exactly when it must be emptied and hidden.
+  if (typeof renderKitReference === 'function') renderKitReference(root);
+
+  // DERIVED CARDS: benefits, hindrances, reaction and taboos. Fields the kit
+  // carries that no other renderer consumes, and that assert a persistent fact
+  // about the character rather than asking anything of him -- so cards, not
+  // banners, per the test in renderKitAdvisories.
+  const detailKit   = (typeof getSelectedKit === 'function') ? getSelectedKit(root) : null;
+  const detailCards = (detailKit && typeof getKitDetailBlocks === 'function')
+    ? getKitDetailBlocks(detailKit).cards : [];
+
+  // CHECKED AGAINST detailCards TOO, not just `abilities`. A kit can carry
+  // hindrances and no abilities at all, and the old early return would have
+  // dropped its cards on the floor.
+  if (!abilities && !detailCards.length) return;
 
   // A NEW object per node -- never the kit's own ability object, which is
   // shared across every character on screen.
-  abilities.forEach(ability => {
+  (abilities || []).forEach(ability => {
     const node = makeAbilityNode({
       name:   ability.name,
       notes:  ability.notes,
+      isAuto: true
+    }, () => markUnsaved(document.querySelector('.tab.active'), true, root));
+    kitAbilitiesList.appendChild(node);
+  });
+
+  detailCards.forEach(card => {
+    const node = makeAbilityNode({
+      name:   card.name,
+      notes:  card.notes,
       isAuto: true
     }, () => markUnsaved(document.querySelector('.tab.active'), true, root));
     kitAbilitiesList.appendChild(node);
