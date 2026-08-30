@@ -1472,6 +1472,25 @@ const SHEET_HTML = `
         <section class="section">
           <h3>Kit Abilities <button class="add-kit-ability">+ Add</button></h3>
           <div class="list kit-abilities-list"></div>
+
+          <!-- KIT REFERENCE. Creation-time material a player consults once and
+               then never again: starting money, required equipment, secondary
+               skills, what he must renounce to abandon the kit. It is NOT
+               clearable, so by renderKitAdvisories' own test it must not be a
+               banner; and it does not assert a persistent trait, so it is not a
+               card either. A collapsed disclosure costs nothing on screen and
+               says nothing when a kit carries none of it.
+
+               <details> IS SAFE HERE PRECISELY BECAUSE THERE ARE NO FORM FIELDS
+               INSIDE. The known trap is that <details> fires `toggle`, not
+               `change`, so autosave never hears it -- irrelevant for read-only
+               content, but do not put an input in here later without wiring the
+               toggle event. The whole element is hidden by the renderer when a
+               kit has nothing to show. -->
+          <details class="kit-reference" style="display:none;margin-top:10px;">
+            <summary class="small muted" style="cursor:pointer;">About this kit</summary>
+            <div class="kit-reference-body small" style="margin-top:8px;"></div>
+          </details>
         </section>
 		
 		</div>
