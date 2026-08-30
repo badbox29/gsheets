@@ -6786,6 +6786,10 @@ function collectSheet(root){
     // this the next syncKitGrantedNWPs puts every one of them straight back, so
     // the decision survived only until the character was reloaded.
     declinedGrants: root._declinedGrants || [],
+    // Travels with the character for the same reason declinedGrants does: it
+    // records a decision the sheet cannot re-derive. Without it, every reload
+    // would read a seeded note as hand-written and seeding would quietly stop.
+    seededNotes: root._seededNotes || { powers: '', hindrances: '' },
     selectedSpheres: selectedSpheres,
     selectedSchools: selectedSchools,
 	languages: languages,
@@ -7050,6 +7054,18 @@ function loadSheet(root, data){
   // Absent on records saved before this existed, which reads as an empty list:
   // nothing declined, every grant restored exactly as before.
   root._declinedGrants = Array.isArray(data.declinedGrants) ? data.declinedGrants : [];
+
+  // WHAT THE KIT LAST SEEDED into notes_powers and notes_hindrances. Kept for
+  // exactly one purpose: telling an untouched seed from a player's own writing.
+  // If the field still matches this, nobody has edited it and a kit change may
+  // replace it; if it differs, the text is the player's and is never overwritten.
+  //
+  // ABSENT ON OLDER RECORDS, which reads as an empty seed -- so any existing
+  // text in those fields counts as player-authored and is left alone. That is
+  // the safe direction to fail: the cost is a stale note the player can clear
+  // himself, against the cost of eating writing he did by hand.
+  root._seededNotes = (data.seededNotes && typeof data.seededNotes === 'object')
+    ? data.seededNotes : { powers: '', hindrances: '' };
 
   // Twelve list builders below pass ()=>markUnsaved(tab,true,root) as their
   // onChange, but this function's signature is (root, data) -- there has never
