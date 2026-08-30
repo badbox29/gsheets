@@ -3253,6 +3253,18 @@ const KITS = {
   // is the record; the structure is the affordance. `wealthCalc` is omitted for
   // the normal (1d4+1) x 10 gp.
   //
+  // VOCABULARY: USE THE KEYS THE CONSUMERS ALREADY READ. These ten kits were
+  // first written with `requiredCount: 1` beside a flat `required` list, and
+  // `bonusCount` beside a flat `bonus` list. BOTH WERE INVENTED AND NOTHING READ
+  // THEM -- renderKitAdvisories reads `requiredChoice` and `bonusChoice`, which
+  // are arrays of GROUPS, one group per choice. The effect was live: an
+  // Academician was told to buy all four of dagger, dart, knife and sling when
+  // the book says choose one, the Militant Wizard all nine, and the Peasant
+  // Wizard was granted BOTH Agriculture and Fishing free when he may have one.
+  // Corrected August 2026. Before adding any field here, grep for a consumer --
+  // a key that matches the file's style but that nothing reads is worse than a
+  // missing one, because it looks done.
+  //
   // REACTION MODIFIERS ARE STORED AS PRINTED and the consumer subtracts. PHBR4
   // p.35 states the convention outright, identically to PHBR1 p.14: "do not add
   // the bonus or subtract the penalty from the die roll... subtract that number
@@ -3283,8 +3295,7 @@ const KITS = {
       },
       proficiencies: {
         weapon: {
-          required: ["Dagger", "Dart", "Knife", "Sling"],
-          requiredCount: 1,
+          requiredChoice: [["Dagger", "Dart", "Knife", "Sling"]],
           allowedPrinted: "Required (the player may choose from the following): Dagger, Dart, Knife, or Sling.",
           note: "ONE of the four, not all four."
         },
@@ -3422,8 +3433,7 @@ const KITS = {
       },
       proficiencies: {
         weapon: {
-          required: ["Bow, Short", "Dagger", "Harpoon", "Javelin", "Knife", "Sling", "Trident"],
-          requiredCount: 1,
+          requiredChoice: [["Bow, Short", "Dagger", "Harpoon", "Javelin", "Knife", "Sling", "Trident"]],
           allowedPrinted: "Required (choose one of the following, based on the Anagakok's background): Bow (any), dagger, harpoon, javelin, knife, sling, trident.",
           note: "HARPOON AND TRIDENT ARE NOT ON THE WIZARD'S NORMAL LIST. PHBR4 p.72 names this kit as one of its two stated exceptions to the weapon restriction: \"The Anagakok kit, for instance, allows for tridents and harpoons... If the DM gives permission for players to pick one of these kits, he should also allow him to use the kit's weapons.\" \"Bow (any)\" is recorded as Bow, Short here; the DM may allow any bow type."
         },
@@ -3528,9 +3538,8 @@ const KITS = {
       },
       proficiencies: {
         weapon: {
-          required: ["Axe, Battle", "Bow, Short", "Crossbow, Light", "Dagger", "Javelin",
-                     "Sling", "Spear", "Sword, Long", "Warhammer"],
-          requiredCount: 1,
+          requiredChoice: [["Axe, Battle", "Bow, Short", "Crossbow, Light", "Dagger",
+                            "Javelin", "Sling", "Spear", "Sword, Long", "Warhammer"]],
           allowedPrinted: "Required (choose one from the following): Battle axe, bow (any), crossbow (any), dagger, javelin, sling, spear, sword (any), warhammer. These are different from the weapons normally associated with wizards, but are common for Militant Wizards.",
           note: "FAR BEYOND THE WIZARD'S NORMAL LIST. \"Bow (any)\", \"crossbow (any)\" and \"sword (any)\" are open categories -- the specific entries here are one resolvable reading and the DM may allow any member of each category."
         },
@@ -3592,8 +3601,7 @@ const KITS = {
       },
       proficiencies: {
         weapon: {
-          required: ["Dagger", "Dart", "Sling"],
-          requiredCount: 1,
+          requiredChoice: [["Dagger", "Dart", "Sling"]],
           allowedPrinted: "Required (the player chooses one of the following): Dagger, dart, or sling."
         },
         nonweapon: {
@@ -3659,8 +3667,7 @@ const KITS = {
       },
       proficiencies: {
         weapon: {
-          required: ["Dagger", "Knife"],
-          requiredCount: 1,
+          requiredChoice: [["Dagger", "Knife"]],
           allowedPrinted: "Required (the player must choose one of the following): dagger, knife."
         },
         nonweapon: {
@@ -3725,14 +3732,12 @@ const KITS = {
       },
       proficiencies: {
         weapon: {
-          required: ["Bow, Short", "Dagger", "Knife", "Spear", "Dart", "Sling"],
-          requiredCount: 1,
+          requiredChoice: [["Bow, Short", "Dagger", "Knife", "Spear", "Dart", "Sling"]],
           allowedPrinted: "Required (player's choice): Bow (any), dagger, knife, spear, dart, sling.",
           note: "\"Bow (any)\" is an open category; Bow, Short is one resolvable reading."
         },
         nonweapon: {
-          bonus: ["Agriculture", "Fishing"],
-          bonusCount: 1,
+          bonusChoice: [["Agriculture", "Fishing"]],
           recommended: ["Animal Handling", "Blacksmithing", "Carpentry", "Cobbling", "Cooking",
                         "Direction Sense", "Fire-building", "Leatherworking", "Pottery",
                         "Riding, Land-Based", "Stonemasonry", "Weather Sense", "Weaving"],
@@ -3797,13 +3802,11 @@ const KITS = {
       },
       proficiencies: {
         weapon: {
-          required: ["Spear", "Blowgun", "Dagger", "Knife", "Sling"],
-          requiredCount: 1,
+          requiredChoice: [["Spear", "Blowgun", "Dagger", "Knife", "Sling"]],
           allowedPrinted: "Required (one of the following, representing his tribe's weapon of choice): spear, blowgun, dagger, knife, or sling. Regardless of whether the Savage Wizard eventually becomes familiar with new weapons, he is likely to prefer his tribal weapon throughout his adventuring career."
         },
         nonweapon: {
-          bonus: ["Direction Sense", "Weather Sense", "Endurance", "Survival"],
-          bonusCount: 2,
+          bonusChoice: [["Direction Sense", "Weather Sense"], ["Endurance", "Survival"]],
           recommended: ["Animal Handling", "Animal Training", "Fire-Building", "Fishing",
                         "Riding, Land-Based", "Rope Use", "Swimming", "Animal Lore",
                         "Bowyer/Fletcher", "Hunting", "Mountaineering", "Running", "Set Snares",
@@ -3965,8 +3968,7 @@ const KITS = {
       },
       proficiencies: {
         weapon: {
-          required: ["Blowgun", "Bow, Short", "Dagger", "Dart", "Sling"],
-          requiredCount: 1,
+          requiredChoice: [["Blowgun", "Bow, Short", "Dagger", "Dart", "Sling"]],
           alternates: ["Bo Stick", "Boku-toh", "Jitte", "Shuriken"],
           allowedPrinted: "Required (choose one of the following): Blowgun, short bow, dagger, dart, sling. Alternately, the Wu Jen can choose from the selection of oriental weapons listed in Table 9.",
           note: "TABLE 9 (p.48) IS THE ALTERNATE LIST: bo stick, boku-toh, jitte, shuriken. All four are in core_wp.json; jitte and boku-toh were added from this book."
