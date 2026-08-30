@@ -1113,11 +1113,20 @@ const KIT_DETAIL_EXCLUDE = new Set([
 
 // CARDS assert a persistent fact about the character and belong beside his
 // abilities. Everything else is reference consulted once at creation.
-const KIT_CARD_FIELDS = ['benefits', 'hindrances', 'reaction', 'taboos'];
+//
+// `benefits` AND `hindrances` ARE DELIBERATELY NOT CARDS. They read like the
+// obvious candidates and were listed here first; they are SUMMARIES of the
+// abilities array, not additional content. 40 of the 87 kits carrying them show
+// over 50% word overlap with their own abilities -- the Justifier is 84%, and
+// the Beastmaster would have gained a thirteenth card restating the twelve
+// above it. They sit in the reference disclosure instead, where a summary
+// paragraph beside the other reference material is exactly right.
+const KIT_CARD_FIELDS = ['reaction', 'taboos'];
 
 // Reference order: mechanical before flavour. Unlisted fields follow, sorted,
 // so a new one is visible rather than lost.
 const KIT_REFERENCE_ORDER = [
+  'benefits', 'hindrances',
   'secondarySkills', 'equipment', 'wealth', 'races',
   'preferredSchools', 'barredSchools', 'possessionCap', 'purchaseMarkup',
   'specialAbilityChoice', 'periodicPenalty', 'abandonPrinted', 'notes', 'finalNote'
