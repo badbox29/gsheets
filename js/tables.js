@@ -8818,6 +8818,51 @@ function validateKitAlignment(root) {
   return problems;
 }
 
+// Is the character specialised in a school his kit considers inappropriate?
+//
+// BARRED MEANS "SHOULD NOT SPECIALISE IN", NOT "MAY NOT LEARN FROM". PHBR4 p.34
+// defines the entry once for every kit: "This entry explains which schools are
+// inappropriate for the kit... it is usually not a good idea to assign a kit to
+// a specialist from a barred school." Assigning a kit TO A SPECIALIST is
+// specialisation, so this checks the character's SCHOOL and never touches what
+// he may learn. The Mystic's entry restates the same rule in his own words and
+// is not a narrower case.
+//
+// CLEARABLE, which is why it belongs in the shared banner rather than the
+// reference disclosure: the player can change specialisation or change kit.
+//
+// PREFERRED SCHOOLS ARE DELIBERATELY NOT REPORTED. A preference that is not
+// followed is not a problem, and a banner line that says "this kit prefers
+// alteration" would never clear -- exactly the warning fatigue the note above
+// describes. Preferences surface in the kit reference disclosure instead.
+function validateKitSchool(root) {
+  const problems = [];
+  if (typeof getKitsForClass !== 'function') return problems;
+
+  const kitValue = (val(root, 'kit') || '').trim();
+  const clazz    = (val(root, 'clazz') || '').trim().toLowerCase();
+  if (!kitValue || !clazz) return problems;
+
+  const kit = getKitsForClass(clazz)
+    .find(k => k.name.toLowerCase().replace(/\s+/g, '') === kitValue);
+  if (!kit || !Array.isArray(kit.barredSchools) || !kit.barredSchools.length) return problems;
+
+  // getSpecialistSchool is the single resolver for "what school is this
+  // character specialised in", and returns nothing for a plain mage -- who has
+  // no specialisation to be barred from.
+  const school = (typeof getSpecialistSchool === 'function') ? getSpecialistSchool(clazz) : '';
+  if (!school) return problems;
+
+  const nz = s => String(s || '').trim().toLowerCase();
+  if (kit.barredSchools.some(b => nz(b) === nz(school))) {
+    problems.push('The ' + kit.name + ' kit considers ' + school +
+      ' an inappropriate specialisation. The DM is free to make exceptions ' +
+      '(PHBR4 p.34); nothing is blocked.');
+  }
+
+  return problems;
+}
+
 // Shared resolver for the three kit validators below. Same lookup
 // validateKitAlignment and renderKitAbilities use: the select stores the kit
 // NAME with whitespace removed, not the KITS object key.
