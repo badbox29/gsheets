@@ -6421,6 +6421,7 @@ async function renderSpellBrowser(root) {
   const catFilter    = root.querySelector('.spell-cat-filter')?.value || '';
   const sourceFilter = root.querySelector('.spell-source-filter')?.value || '';
   const saveFilter   = root.querySelector('.spell-save-filter')?.value || '';
+  const uwFilter     = root.querySelector('.spell-uw-filter')?.value || '';
   const catField     = isPriest ? 'sphere' : 'school';
 
   // Independent predicates (AND when combined). Kept separate so each dropdown's
@@ -6438,6 +6439,26 @@ async function renderSpellBrowser(root) {
     splitClassification(spell[catField]).some(t => t.toLowerCase() === catFilter.toLowerCase());
   const matchSource = spell => !sourceFilter || (spell.source || '') === sourceFilter;
   const matchSave   = spell => !saveFilter || (spell.save || '') === saveFilter;
+  // PHBR4 Ch.6 pp.73-74. DELIBERATELY NOT A FACETED DROPDOWN like the three
+  // above: its vocabulary is a fixed set of four states rather than values
+  // discovered from the data, and one of them -- "works underwater" -- is the
+  // ABSENCE of a flag, which populateFacet cannot express because it filters
+  // falsy values out. So the options are hard-coded in sheet_template.js and
+  // this predicate reads them directly.
+  //
+  // Three stored states, four choices. 'airy' is its own option rather than a
+  // sub-case of failure because it is genuinely actionable: those spells work
+  // normally inside an airy water spell, and a caster who has one wants them
+  // listed. 'no' covers ONLY the spells with no reprieve.
+  const matchUW = spell => {
+    if (!uwFilter) return true;
+    const uw = spell.underwater || '';
+    if (uwFilter === 'ok')       return !uw;
+    if (uwFilter === 'modified') return uw === 'modified';
+    if (uwFilter === 'airy')     return uw === 'ineffective-unless-airy-water';
+    if (uwFilter === 'no')       return uw === 'ineffective';
+    return true;
+  };
 
   // Faceted population: fill a <select> with the distinct values still reachable
   // given the OTHER active filters. Always keep the current selection as an
@@ -6456,7 +6477,7 @@ async function renderSpellBrowser(root) {
 
   const catValues = new Set();
   pool.forEach(spell => {
-    if (matchSearch(spell) && matchLevel(spell) && matchSource(spell) && matchSave(spell)) {
+    if (matchSearch(spell) && matchLevel(spell) && matchSource(spell) && matchSave(spell) && matchUW(spell)) {
       splitClassification(spell[catField]).forEach(t => catValues.add(t));
     }
   });
@@ -6466,7 +6487,7 @@ async function renderSpellBrowser(root) {
   const sourceValues = new Set();
   pool.forEach(spell => {
     if (matchSearch(spell) && matchLevel(spell) && matchCat(spell) && matchSave(spell)) {
-      if (spell.source) sourceValues.add(spell.source);
+      if (spell.source && matchUW(spell)) sourceValues.add(spell.source);
     }
   });
   populateFacet(root.querySelector('.spell-source-filter'), 'All Sources', sourceValues);
@@ -6474,14 +6495,15 @@ async function renderSpellBrowser(root) {
   const saveValues = new Set();
   pool.forEach(spell => {
     if (matchSearch(spell) && matchLevel(spell) && matchCat(spell) && matchSource(spell)) {
-      if (spell.save) saveValues.add(spell.save);
+      if (spell.save && matchUW(spell)) saveValues.add(spell.save);
     }
   });
   populateFacet(root.querySelector('.spell-save-filter'), 'All Saves', saveValues);
 
   // Final filtered list for display (all predicates ANDed).
   let filteredSpells = pool.filter(spell =>
-    matchSearch(spell) && matchLevel(spell) && matchCat(spell) && matchSource(spell) && matchSave(spell));
+    matchSearch(spell) && matchLevel(spell) && matchCat(spell) && matchSource(spell) &&
+    matchSave(spell) && matchUW(spell));
   
   // Sort by level, then name
   filteredSpells.sort((a, b) => {
