@@ -9188,13 +9188,36 @@ function bindSheet(root, tab){
           return;
         }
       }
-      // PREFILL THE FORMER SPECIALTY AT THE MOMENT IT IS STILL KNOWABLE. Once
-      // the player edits Class to Mage, as the book tells him to, nothing can
-      // recover which school he gave up.
-      if (now === 'fallen' && wasSpecialist) {
-        const fs = root.querySelector('[data-field="former_school"]');
-        if (fs && !fs.value) {
-          fs.value = String(val(root, 'clazz') || '').trim().toLowerCase();
+      // ABANDONING A SCHOOL IS THE ONE STATUS THAT REWRITES THE CLASS FIELD, and
+      // it is a deliberate exception to the rule stated for the paladin and the
+      // priest that "the sheet does not change your class". Chris's call, and the
+      // reason is that this is the one case with no ambiguity: a fallen paladin
+      // has three grades, PHBR3's priest loses a variable number of levels, but
+      // PHBR4 p.20 says a specialist can only ever become a mage -- "he must
+      // remain a mage for the duration of his career".
+      //
+      // REVERSIBLE, which is what makes it safe. former_school records what he
+      // was, so setting the status back to Active restores it. The confirmation
+      // above is the first guard and this is the second.
+      //
+      // SINGLE-CLASS ONLY. A multi-class or dual-class wizard's clazz field
+      // holds a composed string ("Cleric 7 / Fighter 9"), and overwriting it
+      // with "Mage" would destroy the other class.
+      const fsEl = root.querySelector('[data-field="former_school"]');
+      const singleClass = (val(root, 'char_type') || 'single').toLowerCase() === 'single';
+      if (now === 'fallen' && wasSpecialist && singleClass) {
+        if (fsEl && !fsEl.value) {
+          fsEl.value = String(val(root, 'clazz') || '').trim().toLowerCase();
+        }
+        val(root, 'clazz', 'Mage');
+      } else if (prev === 'fallen' && now !== 'fallen' && singleClass) {
+        // RESTORE, but only from a value we actually hold. With former_school
+        // empty there is nothing to put back, and blanking clazz would be worse
+        // than leaving it as Mage.
+        const was = fsEl ? String(fsEl.value || '').trim() : '';
+        if (was) {
+          val(root, 'clazz', was.charAt(0).toUpperCase() + was.slice(1));
+          if (fsEl) fsEl.value = '';
         }
       }
       root._prevClassStatus = now;
