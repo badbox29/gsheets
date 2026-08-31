@@ -2406,12 +2406,23 @@ function renderClassStatus(root) {
   const isPaladin = single && clazz.includes('paladin');
   const isPriest  = single && (typeof getClassCategory === 'function') &&
                     getClassCategory(clazz) === 'priest';
-  const show = isPaladin || isPriest;
+  // A SPECIALIST WIZARD, or a mage who used to be one. The second half matters:
+  // PHBR4 p.20 says he "must remain a mage for the duration of his career", so
+  // the class field is expected to read Mage afterwards -- and the control that
+  // records what happened must not vanish the moment he edits it.
+  const wasSpec   = ((val(root, 'former_school') || '').trim() !== '');
+  const isSpecialist = single &&
+    (((typeof getSpecialistSchool === 'function') && !!getSpecialistSchool(clazz)) || wasSpec);
+  const show = isPaladin || isPriest || isSpecialist;
 
   if (col) col.style.display = show ? '' : 'none';
   if (!show) { if (note) note.style.display = 'none'; return; }
 
-  const L = isPriest
+  const L = isSpecialist
+    ? { graced:    'Abandoned \u2014 bonuses retained by DM',
+        suspended: '',
+        fallen:    'Abandoned his school \u2014 irrevocable' }
+    : isPriest
     ? { graced:    'Renounced \u2014 abilities retained by DM',
         suspended: 'Spells withheld pending atonement',
         fallen:    'Renounced \u2014 irrevocable' }
@@ -2420,12 +2431,44 @@ function renderClassStatus(root) {
         fallen:    'Fallen \u2014 irrevocable' };
   Object.keys(L).forEach(k => {
     const opt = col && col.querySelector('.cs-' + k);
-    if (opt) opt.textContent = L[k];
+    if (!opt) return;
+    // PHBR4's abandonment IS VOLUNTARY AND HAS NO ATONEMENT PATH, so there is
+    // no wizard analogue of 'suspended' and none is invented. Hidden rather
+    // than relabelled -- a state the book does not describe should not be
+    // offered under a name we made up. 'graced' is dropped for the same reason
+    // in a different direction: abandoning is the player's own choice, so
+    // "abandoned but the DM let him keep it" is a state nobody asks for.
+    // Chris's call on both.
+    const hideForWizard = isSpecialist && (k === 'suspended' || k === 'graced');
+    opt.hidden = hideForWizard;
+    opt.disabled = hideForWizard;
+    opt.textContent = L[k] || '';
   });
+
+  // THE FORMER SPECIALTY COLUMN, shown only once he has actually abandoned one.
+  // Kept visible when the value is set even if the class no longer resolves as a
+  // specialist -- which is the normal end state, since the book has him become a
+  // mage. Hiding it then would strand the value where nobody could correct it.
+  const fsCol = root.querySelector('.former-school-col');
+  if (fsCol) {
+    const fsVal = (val(root, 'former_school') || '').trim();
+    const st    = (typeof getFallenStatus === 'function') ? getFallenStatus(root) : '';
+    fsCol.style.display = (st === 'fallen' && (isSpecialist || fsVal)) ? '' : 'none';
+  }
 
   if (!note) return;
   const status = (typeof getFallenStatus === 'function') ? getFallenStatus(root) : '';
-  const NOTE = {
+  const NOTE = isSpecialist ? {
+    graced: '',
+    suspended: '',
+    fallen: 'PHBR4 p.20: he keeps every spell he already knows and his spellbook is untouched. ' +
+            'What stops is his specialist saving throw modifiers, his acquired powers, and any ' +
+            'further bonus spells \u2014 he keeps the bonus spells he had before the change. His ' +
+            'learn chances become: no bonus in his former school, still \u221215% in other schools, ' +
+            'and half of (base \u2212 15) in the schools that used to oppose him. PERMANENT: he can ' +
+            'never regain the school, and can only ever become a mage, never another specialist. ' +
+            'THE SHEET DOES NOT CHANGE YOUR CLASS \u2014 edit it to Mage yourself when your DM says so.'
+  } : {
     graced: isPriest
       ? 'RECORDED, NOT ENFORCED. This priest has renounced his faith, but his DM has left his powers intact \u2014 nothing on the sheet is withdrawn. PHBR3 p.122 sets out what would otherwise follow.'
       : 'RECORDED, NOT ENFORCED. This paladin has fallen, but his DM has left his abilities intact \u2014 nothing on the sheet is withdrawn. PHB Ch.3 sets out what would otherwise follow.',
@@ -10737,7 +10780,13 @@ function showSpellDetails(root, spell) {
   // permitted to multi-class -- and for every dual-class specialist too.
   const wizComp = (typeof getWizardComponent === 'function') ? getWizardComponent(root) : null;
   const clazz = wizComp ? wizComp.clazz : (val(root, 'clazz') || '');
-  if (typeof isOppositionSpell === 'function' && isOppositionSpell(spell, clazz)) {
+  // AN ABANDONED SPECIALIST IS NO LONGER OPPOSED BY ANYTHING. PHBR4 p.20 gives
+  // him a chance to learn from his former opposition schools -- half of (base
+  // minus 15) -- so leaving the block in place would deny him a spell the book
+  // explicitly lets him attempt, and the formula above would never be reached.
+  const hasAbandoned = (typeof hasAbandonedSchool === 'function') && hasAbandonedSchool(root);
+  if (!hasAbandoned &&
+      typeof isOppositionSpell === 'function' && isOppositionSpell(spell, clazz)) {
     const oppList = (typeof getOppositionSchools === 'function') ? getOppositionSchools(clazz).join(', ') : '';
     reasons.push('Opposition school for your specialty' +
                  (oppList ? ' (' + oppList + ')' : '') +
@@ -10814,15 +10863,39 @@ function showSpellDetails(root, spell) {
   if (specSchool && !blocked && spellLevelNum > 0) {
     const intScore = parseInt(val(root, 'int') || 0, 10);
     const baseLearn = (typeof INT_TABLE !== 'undefined' && INT_TABLE[intScore]) ? INT_TABLE[intScore][1] : 0;
+
+    // ABANDONED SPECIALIST (PHBR4 p.20). Three branches, and the third is not a
+    // modifier at all but a different formula: for schools that opposed the one
+    // he gave up, the chance is HALF of (base minus 15). The book's worked
+    // example is a former necromancer with Intelligence 13 learning an illusion
+    // spell at 1/2 x (55 - 15) = 20 percent.
+    //
+    // Computed from getFormerSpecialty, NOT from the class field -- he is a mage
+    // now, and the class field is expected to say so.
+    const abandoned = (typeof getFormerSpecialty === 'function') ? getFormerSpecialty(root) : '';
+    let halvedLearn = 0;
+    if (abandoned && typeof getOppositionSchools === 'function') {
+      const wasOpp = getOppositionSchools(abandoned);
+      const schools = (typeof splitClassification === 'function')
+        ? splitClassification(spell.school) : [String(spell.school || '')];
+      const nz = x => String(x || '').trim().toLowerCase();
+      if (schools.some(sc => wasOpp.some(o => nz(o) === nz(sc)))) {
+        halvedLearn = Math.max(1, Math.floor((baseLearn - 15) / 2));
+      }
+    }
     if (intScore >= 9 && baseLearn > 0) {
       const own = (typeof isSpecialtySpell === 'function') && isSpecialtySpell(spell, clazz);
       const mod = own ? 15 : -15;
-      const eff = Math.max(1, Math.min(100, baseLearn + mod));
+      const eff = halvedLearn
+        ? halvedLearn
+        : Math.max(1, Math.min(100, baseLearn + mod));
       const learnNote = document.createElement('div');
       learnNote.className = 'spell-learn-note';
       learnNote.style.cssText = 'font-size:11px;color:var(--muted);text-align:right;margin-top:8px;';
       learnNote.textContent =
-        'Chance to learn: ' + eff + '% (' + baseLearn + '% ' +
+        'Chance to learn: ' + eff + '% (' + (halvedLearn
+          ? 'half of ' + baseLearn + '% \u2212 15%, a school that opposed your former specialty'
+          : baseLearn + '% ') +
         (mod > 0 ? '+' : '\u2212') + '15% ' +
         (own ? 'specialty school' : 'non-specialty school') + ')';
       buttonContainer.parentNode.insertBefore(learnNote, buttonContainer);
