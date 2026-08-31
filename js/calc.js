@@ -2454,10 +2454,44 @@ function renderClassStatus(root) {
   // specialist -- which is the normal end state, since the book has him become a
   // mage. Hiding it then would strand the value where nobody could correct it.
   const fsCol = root.querySelector('.former-school-col');
+  const fsSel = root.querySelector('[data-field="former_school"]');
+  const clzEl = root.querySelector('[data-field="clazz"]');
+  const stNow = (typeof getFallenStatus === 'function') ? getFallenStatus(root) : '';
+  const fsVal = (val(root, 'former_school') || '').trim();
   if (fsCol) {
-    const fsVal = (val(root, 'former_school') || '').trim();
-    const st    = (typeof getFallenStatus === 'function') ? getFallenStatus(root) : '';
-    fsCol.style.display = (st === 'fallen' && (isSpecialist || fsVal)) ? '' : 'none';
+    fsCol.style.display = (stNow === 'fallen' && (isSpecialist || fsVal)) ? '' : 'none';
+  }
+
+  // BOTH FIELDS LOCK WHILE THE STATUS IS SET, because neither is a decision --
+  // they are consequences of one. The decision is the status dropdown, which
+  // stays live, and setting it back to Active unlocks and restores both.
+  //
+  // Former Specialty is not something a player should be able to revise: it
+  // records what he WAS at the moment he gave it up, and editing it silently
+  // rewrites his learn chances for every spell in the game.
+  //
+  // GREYED, NOT DISABLED, for the class field: a disabled input is not
+  // submitted by some browsers and this one is read by val() everywhere.
+  // readOnly keeps the value intact.
+  const lockDown = (stNow === 'fallen' && !!fsVal);
+  if (fsSel) {
+    fsSel.disabled = lockDown;
+    fsSel.style.opacity = lockDown ? '0.6' : '';
+    fsSel.title = lockDown
+      ? 'Locked \u2014 this records the school he gave up. Set Class Status back to Active to change it.'
+      : 'The school this wizard abandoned. Used to work out his learn chances (PHBR4 p.20).';
+  }
+  if (clzEl) {
+    const wasLocked = clzEl.readOnly;
+    clzEl.readOnly = lockDown;
+    clzEl.style.opacity = lockDown ? '0.6' : '';
+    if (lockDown) {
+      clzEl.title = 'Locked \u2014 PHBR4 p.20: a wizard who abandons his school "must remain a ' +
+                    'mage for the duration of his career". Set Class Status back to Active to ' +
+                    'restore ' + (fsVal.charAt(0).toUpperCase() + fsVal.slice(1)) + '.';
+    } else if (wasLocked) {
+      clzEl.title = '';
+    }
   }
 
   if (!note) return;
