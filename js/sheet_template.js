@@ -2454,6 +2454,7 @@ const SHEET_HTML = `
 				<option value="">All</option>
 				<option value="Animal">Animals</option>
 				<option value="Transport">Transport</option>
+				<option value="Familiar">Familiars</option>
 			  </select>
 			  <button class="refresh-animals">Refresh</button>
 			</div>
