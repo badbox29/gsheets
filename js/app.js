@@ -13485,6 +13485,32 @@ function addNewOrganization(root) {
   markUnsaved(document.querySelector('.tab.active'), true, root);
 }
 
+// Creates a normal organization record pre-filled from the reference catalogue.
+// DELIBERATELY THE SAME SHAPE addNewOrganization PRODUCES -- once created there
+// is nothing special about it, no link back to the reference, and every field is
+// editable. A DM who halves the dues just edits the field.
+//
+// Only the fields the books actually print are filled. Rank, guildhouse, leader,
+// cut and fence stay empty because they are properties of THIS character's
+// membership, not of the organization.
+function addOrganizationFromReference(root, name) {
+  if (typeof ORGANIZATION_REFERENCE === 'undefined') return;
+  const ref = ORGANIZATION_REFERENCE.find(o => o.name === name);
+  if (!ref) return;
+
+  const data = getOrganizationsData(root);
+  const org = { id: generateOrgId(), name: ref.name, status: 'active',
+                obligations: ref.obligations || '' };
+  ORG_FIELDS.forEach(f => { org[f.key] = ''; });
+  if (ref.type) org.type = ref.type;
+  if (ref.dues) org.dues = ref.dues;
+
+  data.organizations.push(org);
+  data.activeOrgId = org.id;
+  renderOrganizations(root);
+  markUnsaved(document.querySelector('.tab.active'), true, root);
+}
+
 function renameOrganization(root, id) {
   const data = getOrganizationsData(root);
   const org = data.organizations.find(o => o.id === id);
@@ -13562,6 +13588,17 @@ function renderOrganizations(root) {
 
     // A status change re-sorts the strip, so it must re-render.
     sec.addEventListener('change', (ev) => {
+      // The reference picker is a COMMAND, not a field: it adds a record and
+      // resets itself. Handled before the status branch below because that
+      // branch returns early on anything it does not recognise.
+      if (ev.target.classList.contains('org-reference-picker')) {
+        const name = ev.target.value;
+        ev.target.value = '';
+        if (name && typeof addOrganizationFromReference === 'function') {
+          addOrganizationFromReference(root, name);
+        }
+        return;
+      }
       if (!ev.target.classList.contains('org-status')) return;
       const d = getOrganizationsData(root);
       const org = d.organizations.find(o => o.id === d.activeOrgId);
@@ -13570,6 +13607,33 @@ function renderOrganizations(root) {
       renderOrganizations(root);
       markUnsaved(document.querySelector('.tab.active'), true, root);
     });
+  }
+
+  // REBUILT ON EVERY RENDER, because the character's class can change and the
+  // list is filtered by it. Cheap at this size, and it means the picker cannot
+  // go stale the way a bind-once list would.
+  const picker = sec.querySelector('.org-reference-picker');
+  if (picker && typeof getOrganizationReference === 'function') {
+    const clazz = (typeof val === 'function') ? (val(root, 'clazz') || '') : '';
+    const refs  = getOrganizationReference(clazz);
+    const groups = {};
+    refs.forEach(o => {
+      const g = (o.suitableFor || ['any']).join(', ');
+      (groups[g] = groups[g] || []).push(o);
+    });
+    let html = '<option value="">&mdash; add from reference &mdash;</option>';
+    Object.keys(groups).sort().forEach(g => {
+      const label = g === 'any' ? 'Any class' :
+        g.charAt(0).toUpperCase() + g.slice(1) + ' organizations';
+      html += '<optgroup label="' + escapeHtml(label) + '">';
+      groups[g].forEach(o => {
+        html += '<option value="' + escapeHtml(o.name) + '">' +
+                escapeHtml(o.name) + ' (' + escapeHtml(o.source || '') + ')</option>';
+      });
+      html += '</optgroup>';
+    });
+    picker.innerHTML = html;
+    picker.value = '';   // always a command, never a stored selection
   }
 
   if (banner) banner.style.display = list.length ? 'none' : '';
