@@ -1109,6 +1109,135 @@ function getNWPSurcharge(nwp, allowedGroups, root) {
   return { amount, source };
 }
 
+// ===== ORGANIZATION REFERENCE =====
+// A catalogue the player can pick from, filling an Organizations record rather
+// than typing one from scratch. THE SUBSYSTEM EXISTS BECAUSE PHBR2 REFUSED TO
+// PRICE GUILD MEMBERSHIP; this is the other half -- a book that does.
+//
+// `suitableFor` AND `source` ARE HERE FROM DAY ONE, on Chris's instruction,
+// because PHBR15's ninja clans and PHBR5's barbarian tribes will land in this
+// same list. A wizard-only flat array would repeat the "naming a thing after
+// where you found it" mistake the Organizations notes already warn about.
+// suitableFor is an array of class or group names, or ['any'].
+//
+// SUMMARISED, NOT TRANSCRIBED, per the policy in gsheets_project_notes.md:
+// every fee, due and requirement is kept and the book's wording is not.
+const ORGANIZATION_REFERENCE = [
+  { name: 'The Brotherhood of Alchemy', suitableFor: ['wizard'], source: 'PHBR4 p.116',
+    type: 'Research brotherhood', dues: '20 gp/year',
+    obligations:
+      'ENTRY: 100 gp, plus evidence of original magical item research within the last year. ' +
+      'MEMBERS: mostly transmuters, with some enchanters and invokers. ' +
+      'BENEFITS: help obtaining hard-to-find research supplies and laboratory equipment, and ' +
+      'assistance when a member reaches a dead end. ' +
+      'OBLIGATION: the group pools information on current projects on the understanding that ' +
+      'none of it leaves the Brotherhood. Violating that means immediate expulsion.' },
+
+  { name: 'The Legal Defense Front', suitableFor: ['wizard'], source: 'PHBR4 pp.116-117',
+    type: 'Legal aid society', dues: '50 gp/year',
+    obligations:
+      'ENTRY: 200 gp and a current member as sponsor. The fee can be waived on a majority vote. ' +
+      'MEMBERS: any wizard of lawful good alignment. ' +
+      'BENEFITS: if a member is accused of a crime the Front puts up 1,000 gp or more toward his ' +
+      'defence, and can provide expert witnesses and legal representation. Its counselling service ' +
+      'advises members on how magic-users are received in particular cities and cultures, with ' +
+      'special attention to places where they are persecuted or jailed for minor infractions.' },
+
+  { name: 'The Silver Swan Club', suitableFor: ['wizard'], source: 'PHBR4 p.117',
+    type: 'Social club', dues: '5 gp/year',
+    obligations:
+      'ENTRY: 20 gp. ' +
+      'MEMBERS: open to all wizards, but chiefly young and low-level ones, and unmarried. ' +
+      'BENEFITS: dances, picnics and other social events, and a good chance of meeting friends ' +
+      'and prospective mates. The year turns on the Harvest Moon Festival, an all-night party in ' +
+      'a rented castle.' },
+
+  { name: "The Wizards' Liberation Society", suitableFor: ['wizard'], source: 'PHBR4 p.117',
+    type: 'Political lobby', dues: '10 gp/year',
+    obligations:
+      'ENTRY: 50 gp and a current member as sponsor. The fee is waived for anyone with exploitable ' +
+      'political connections, such as a relation in government office. ' +
+      'MEMBERS: all wizards eligible. ' +
+      'BENEFITS: real influence over governments considering laws that affect wizards, and ' +
+      'introductions to officials who can help a member navigate a bureaucracy. ' +
+      'NOTE: its methods run to negotiation, demonstrations and lobbying, but some factions are ' +
+      'rumoured to use violence.' },
+
+  { name: 'Foes of the Wand', suitableFor: ['wizard'], source: 'PHBR4 p.117',
+    type: 'Purist order', dues: 'None',
+    obligations:
+      'ENTRY: donate a magical item, which the Foes destroy in a solemn ceremony while the ' +
+      'prospective member vows NEVER TO USE A MAGICAL ITEM AGAIN. ' +
+      'MEMBERS: open to all, but mostly older mages of higher level. ' +
+      'BENEFITS: once a year a member may exchange a magical item for a spell of comparable power ' +
+      '-- the item is destroyed and he may copy one spell OF THE ORDER\u2019S CHOOSING, not his own, ' +
+      'from their books. ' +
+      'EXPULSION: immediate, if a member is ever caught using a magical item.' },
+
+  { name: 'The Diviners Syndicate', suitableFor: ['wizard'], source: 'PHBR4 pp.117-118',
+    type: 'Commercial syndicate', dues: 'None, but eight weeks of exclusive work each year',
+    obligations:
+      'ENTRY: 500 gp, plus at least one new client brought to the syndicate. ' +
+      'MEMBERS: diviners of 8th level or higher only. ' +
+      'BENEFITS: members in good standing split the syndicate\u2019s profits at year end, usually ' +
+      '5,000-30,000 gp (1d6 x 5,000). ' +
+      'OBLIGATION: to stay in good standing a member must spend a minimum of eight weeks per year ' +
+      'working exclusively for the syndicate. ' +
+      'NOTE: more a business than a fraternity. It sells advice, predictions and omen readings to ' +
+      'the aristocracy at high prices, and is accurate because it pools a great many skilled ' +
+      'wizards.' },
+
+  { name: 'The Center for Monster Control', suitableFor: ['wizard'], source: 'PHBR4 p.118',
+    type: 'Information exchange', dues: 'None if meetings are attended',
+    obligations:
+      'ENTRY: 10 gp, plus first-hand knowledge of a magical monster or of a monster wielding ' +
+      'magical powers -- usually acquired in a fight. The membership votes on whether that ' +
+      'knowledge is useful enough to admit him. ' +
+      'BENEFITS: free access to the Center\u2019s files on magical monsters, their abilities, their ' +
+      'weaknesses and suggested strategies for defeating or avoiding them. ' +
+      'OBLIGATION: attend the bi-monthly meetings. Missing too many without good reason may draw ' +
+      'a fine.' },
+
+  { name: 'The League of Extraplanar Travelers', suitableFor: ['wizard'], source: 'PHBR4 p.118',
+    type: 'Information exchange', dues: 'None if meetings are attended',
+    obligations:
+      'ENTRY: 20 gp, plus proof of a visit to at least one alternate plane. The membership votes ' +
+      'on whether his knowledge of that plane is useful enough. ' +
+      'MEMBERS: any wizard who has visited one or more alternate planes. ' +
+      'BENEFITS: free information on the alternate planes -- inhabitants, physical laws, and how ' +
+      'spellcasting is affected there. ' +
+      'OBLIGATION: attend the bi-monthly meetings, or risk a fine.' },
+
+  { name: 'The Fellowship of Sages', suitableFor: ['wizard'], source: 'PHBR4 p.118',
+    type: 'Scholarly fellowship', dues: '15 percent of the fees he charges for sage advice',
+    obligations:
+      'ENTRY: 100 gp, plus a nonweapon proficiency in one or more of the fields of study on DMG ' +
+      'Table 61. A recognised authority in a field not available as a proficiency may still be ' +
+      'admitted with the DM\u2019s permission. ' +
+      'MEMBERS: wizards of all kinds, each with one or more areas of expertise. ' +
+      'BENEFITS: free access to the advice of every other member. The chance of finding a ' +
+      'Fellowship sage expert in a given field is DOUBLE the DMG Table 61 figure, and a Fellowship ' +
+      'sage is always assumed to have a complete library when the Sage Modifiers of Table 62 are ' +
+      'applied. ' +
+      'OBLIGATION: pass 15 percent of his own sage fees to the Fellowship for its upkeep.' }
+];
+
+// Entries suitable for a class, plus anything marked 'any'. Falls back to the
+// whole catalogue when the class is unknown, because an empty picker is worse
+// than an unfiltered one.
+function getOrganizationReference(clazz) {
+  const c = String(clazz || '').trim().toLowerCase();
+  if (!c) return ORGANIZATION_REFERENCE.slice();
+  const cat = (typeof getClassCategory === 'function') ? getClassCategory(c) : '';
+  const want = [c, String(cat || '').toLowerCase()].filter(Boolean);
+  const hits = ORGANIZATION_REFERENCE.filter(o =>
+    (o.suitableFor || []).some(s => {
+      const t = String(s).toLowerCase();
+      return t === 'any' || want.indexOf(t) !== -1;
+    }));
+  return hits.length ? hits : ORGANIZATION_REFERENCE.slice();
+}
+
 // ===== KIT DETAIL BLOCKS =====
 // Turns whatever a kit carries into displayable blocks. BUILT AS AN EXCLUDE
 // LIST, NOT AN INCLUDE LIST, so a field added to a future kit surfaces on its
