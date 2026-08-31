@@ -109,6 +109,29 @@ const SHEET_HTML = `
                 <option value="fallen" class="cs-fallen"></option>
               </select>
             </div>
+            <!-- FORMER SPECIALTY. Stored because the abandonment maths outlives
+                 the class that produced it. PHBR4 p.20 sets a former opposition
+                 school's learn chance at half of (base minus 15), and those
+                 opposition schools are a property of the school he GAVE UP.
+                 The book says he "must remain a mage for the duration of his
+                 career", so the player is expected to edit Class to Mage -- at
+                 which point deriving the oppositions from Class would silently
+                 fall back to a flat -15% and nobody would see it happen.
+                 Prefilled when the status is set, editable after. -->
+            <div class="col former-school-col" style="display:none;">
+              <label>Former Specialty</label>
+              <select data-field="former_school" title="The school this wizard abandoned. Used to work out his learn chances (PHBR4 p.20); set automatically when you mark him as having abandoned it.">
+                <option value="">&mdash; none &mdash;</option>
+                <option value="abjurer">Abjurer</option>
+                <option value="conjurer">Conjurer</option>
+                <option value="diviner">Diviner</option>
+                <option value="enchanter">Enchanter</option>
+                <option value="illusionist">Illusionist</option>
+                <option value="invoker">Invoker</option>
+                <option value="necromancer">Necromancer</option>
+                <option value="transmuter">Transmuter</option>
+              </select>
+            </div>
             <div class="col single-class-field">
               <label>Kit</label>
               <select data-field="kit">
