@@ -7476,17 +7476,33 @@ function addAnimalFromBrowser(root, entry, destination) {
     if (activeTab) markUnsaved(activeTab, true, root);
   };
 
-  if (destination === 'bonded') {
+  // 'familiar' IS THE BONDED PATH WITH THE BOND PRESET. It must be named
+  // explicitly: the else branch below is the UNBONDED list, so an unrecognised
+  // destination would file a wizard's familiar among his carts.
+  if (destination === 'bonded' || destination === 'familiar') {
     const list = root.querySelector('.companions-list');
     if (!list) return;
     // Species holds the book name and Name is left BLANK, because a companion is
     // named by its owner. The companion node has no cost field, so the price
     // rides along in notes rather than being silently dropped.
-    const notes = [entry.Cost ? 'Cost: ' + entry.Cost : '', capacityNote, entry.Notes || '']
-      .filter(Boolean).join(' ');
+    //
+    // SENSORY POWERS RIDE ALONG UNGATED. Only the PHB prints them, and only for
+    // its six, but PHBR4 Table 17 substitutes the ROLL TABLE, not the creatures
+    // -- a cat's night vision does not stop existing because the DM uses a
+    // longer list. So with PHBR4 on, six of the twenty-five carry them and the
+    // rest carry none, which is exactly what the two books say between them.
+    const notes = [
+      entry.Cost ? 'Cost: ' + entry.Cost : '',
+      (destination === 'familiar' && entry.sensoryPowers)
+        ? 'Sensory powers: ' + entry.sensoryPowers : '',
+      capacityNote,
+      entry.Notes || ''
+    ].filter(Boolean).join(' ');
     list.appendChild(makeCompanionNode({
       name:     '',
       species:  entry.Name,
+      // The bond select already offers Familiar; this just presets it.
+      bond:     destination === 'familiar' ? 'Familiar' : '',
       capacity: entry['Base Move'] || '',
       // Ticked only for the 14 Table 49 mounts -- an animal with a carrying
       // capacity is one you can ride or load. One click undoes it.
