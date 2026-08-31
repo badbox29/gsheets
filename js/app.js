@@ -6761,6 +6761,9 @@ function collectSheet(root){
     // what happened at the table; it survives the class being edited, the
     // character being exported, and every supplement toggle.
     classStatus: val(root,'class_status'),
+    // Same reasoning as classStatus above: a fact about what happened at the
+    // table, which must survive the class field being edited to Mage.
+    formerSchool: val(root,'former_school'),
     specialtyPriest: {
       primeReq2:    val(root,'sp_prime_req2'),
       hitDie:       val(root,'sp_hit_die'),
@@ -7238,6 +7241,7 @@ function loadSheet(root, data){
   // || '' leaves them Active. _prevClassStatus seeds the confirmation baseline
   // so loading a fallen character does not immediately prompt about itself.
   val(root, 'class_status', data.classStatus || '');
+  val(root, 'former_school', data.formerSchool || '');
   root._prevClassStatus = data.classStatus || '';
 
   const sp = data.specialtyPriest || {};
@@ -9141,19 +9145,48 @@ function bindSheet(root, tab){
     if (f === 'class_status') {
       const prev = root._prevClassStatus || '';
       const now  = (e.target.value || '').trim().toLowerCase();
+      // A SPECIALIST ABANDONING HIS SCHOOL LOSES NOTHING HE ALREADY KNOWS, so
+      // the paladin and priest wording -- which promises that greyed spells come
+      // back -- would be actively misleading. PHBR4 p.20 withdraws his saving
+      // throw bonuses and stops further bonus spells; his spellbook is untouched
+      // and no spell is ever greyed.
+      const wasSpecialist = (typeof getSpecialistSchool === 'function') &&
+                            !!getSpecialistSchool(val(root, 'clazz') || '');
       if ((now === 'suspended' || now === 'fallen') && now !== prev) {
         const isPriest = (typeof getClassCategory === 'function') &&
                          getClassCategory(val(root, 'clazz') || '') === 'priest';
-        const what = isPriest
-          ? 'granted powers, turning and spell access'
-          : 'saving throw bonus, turning, special benefits and spell access';
-        const irrev = now === 'fallen'
-          ? '\n\nThe books call this one irrevocable.' : '';
-        if (!confirm('Withdraw this character\u2019s ' + what + '?' + irrev +
-                     '\n\nNothing is deleted \u2014 spells and spellbooks are kept and ' +
-                     'greyed, and everything returns if you set the status back.')) {
+        let msg;
+        if (wasSpecialist) {
+          msg = 'Record that this wizard has abandoned his school?' +
+                '\n\nHe keeps every spell he knows and his spellbook is not touched. ' +
+                'What stops is his specialist saving throw modifiers, his acquired ' +
+                'powers, and any further bonus spells. His chance to learn new spells ' +
+                'changes: no bonus in his old school, and half of (base minus 15) in ' +
+                'the schools that used to oppose it.' +
+                '\n\nPHBR4 p.20 calls this permanent \u2014 he can never regain the school, ' +
+                'and can only ever become a mage.';
+        } else {
+          const what = isPriest
+            ? 'granted powers, turning and spell access'
+            : 'saving throw bonus, turning, special benefits and spell access';
+          const irrev = now === 'fallen'
+            ? '\n\nThe books call this one irrevocable.' : '';
+          msg = 'Withdraw this character\u2019s ' + what + '?' + irrev +
+                '\n\nNothing is deleted \u2014 spells and spellbooks are kept and ' +
+                'greyed, and everything returns if you set the status back.';
+        }
+        if (!confirm(msg)) {
           e.target.value = prev;
           return;
+        }
+      }
+      // PREFILL THE FORMER SPECIALTY AT THE MOMENT IT IS STILL KNOWABLE. Once
+      // the player edits Class to Mage, as the book tells him to, nothing can
+      // recover which school he gave up.
+      if (now === 'fallen' && wasSpecialist) {
+        const fs = root.querySelector('[data-field="former_school"]');
+        if (fs && !fs.value) {
+          fs.value = String(val(root, 'clazz') || '').trim().toLowerCase();
         }
       }
       root._prevClassStatus = now;
