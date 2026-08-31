@@ -8143,7 +8143,7 @@ const SUPPLEMENTS = {
     // ADDS takes nothing away from a PHB-only table: the 42 new spells, the ten
     // kits, the jitte and boku-toh, the eleven laboratory items and the twelve
     // magical items. A table not using this book simply never holds one.
-    bandOrder: ['schoolPowers', 'lesserDivination'],
+    bandOrder: ['schoolPowers', 'lesserDivination', 'familiarList'],
 
     lesserDivination: {
       label: 'Lesser divination counts as greater',
@@ -8163,6 +8163,26 @@ const SUPPLEMENTS = {
                 'something a wizard can barely function without.',
                   caveat: 'So detect magic and read magic stay learnable by every specialist, ' +
                 'ticked or not. Only the diviner\u2019s side of the rule changes.' }
+      ]
+    },
+
+    familiarList: {
+      label: 'Expanded familiar list',
+      hint:  'Replaces the six familiars on PHB p.134 with the twenty-five of Table 17.',
+      rules: ['familiarListPHBR4'],
+      changes: [
+        { text: 'PHBR4 p.108 says to substitute Table 17 for the list on page 134 of the ' +
+                'Player\u2019s Handbook. That takes the find familiar candidates from six to ' +
+                'twenty-five, adding bat, chipmunk, dog, fox, gull, hare, lizard, monkey, mouse, ' +
+                'otter, parrot, raccoon, rat, rooster, raven, skunk, snake, squirrel and ' +
+                'wolverine to the PHB\u2019s cat, crow, hawk, owl, toad and weasel.' },
+        { text: 'IT SUBSTITUTES THE LIST, IT DOES NOT EXTEND IT. The two are alternatives, so ' +
+                'the animals browser shows one or the other rather than a union, and the roll ' +
+                'ranges differ \u2014 d20 in the PHB, d100 in Table 17.',
+          caveat: 'Familiars work with this unticked; you simply get the shorter list. The ' +
+                  'sensory powers the PHB gives its six are shown either way, since Table 17 ' +
+                  'replaces the roll table rather than the animals. Both books let the DM allow ' +
+                  'other small animals suitable to the area, so the browser never blocks one.' }
       ]
     },
 
