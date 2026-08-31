@@ -2391,7 +2391,24 @@ const SHEET_HTML = `
               <div class="org-tabs" style="display:flex;gap:4px;"></div>
             </div>
           </div>
-          <button type="button" class="ghost add-organization" style="margin-bottom:12px;">+ Organization</button>
+          <!-- ADD FROM REFERENCE. The Organizations subsystem exists because
+               PHBR2 declines to price guild membership and leaves it to the DM;
+               where a book DOES print fees, dues and requirements, the player
+               should not have to retype them. Picking an entry fills a normal
+               organization record which he is then free to edit, exactly as if
+               he had typed it -- nothing here is locked.
+
+               Grouped by suitability rather than by book, so a thief browsing
+               guilds is not reading past nine wizard societies. The list is
+               filtered to the character class, falling back to everything when
+               the class is unknown, because an empty picker is worse than an
+               unfiltered one. -->
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">
+            <button type="button" class="ghost add-organization">+ Organization</button>
+            <select class="org-reference-picker" style="min-width:260px;">
+              <option value="">&mdash; add from reference &mdash;</option>
+            </select>
+          </div>
           <div class="org-panel"></div>
         </section>
 		</div>
