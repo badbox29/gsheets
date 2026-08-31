@@ -9680,12 +9680,20 @@ const SPECIALIST_POWERS_PHBR4 = {
 //
 // Gated on phbr4.schoolPowers: unticked, this returns immediately and the
 // class ability list is exactly what it was before the book existed.
-function addSpecialistPowersPHBR4(out, clazz, level) {
+// `root` is OPTIONAL and last, so any caller passing only three arguments keeps
+// its old behaviour rather than silently losing the powers -- the same shape
+// hasPaladinSaveBonus uses for the same reason.
+function addSpecialistPowersPHBR4(out, clazz, level, root) {
   if (typeof isOptionalRule !== 'function' ||
       !isOptionalRule('schoolPowersPHBR4')) return out;
   const c = (clazz || '').trim().toLowerCase();
   const key = Object.keys(SPECIALIST_POWERS_PHBR4).find(k => c.includes(k));
   if (!key) return out;
+  // PHBR4 p.20: on abandoning his school "he loses all saving throw bonuses at
+  // the time of his conversion" and receives no further acquired powers. THE
+  // BONUS SPELLS HE ALREADY HAD ARE A SEPARATE THING and are not touched here --
+  // the book lets him keep those and only stops further ones.
+  if (root && typeof hasAbandonedSchool === 'function' && hasAbandonedSchool(root)) return out;
 
   const lvl = parseInt(level, 10) || 0;
   out.push({
