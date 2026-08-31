@@ -2932,7 +2932,15 @@ function toggleSpellbookSection(root) {
   //
   // Same treatment the hirelings Duration field already uses, and for the same
   // reason: a field that VANISHED would quietly contradict the PDF.
-  const spellsGated = (typeof abilitiesAreWithdrawn === 'function') && abilitiesAreWithdrawn(root);
+  // AN ABANDONED SPECIALIST IS THE ONE GATING STATUS THAT DOES NOT TOUCH SPELLS.
+  // PHBR4 p.20 takes his saving throw modifiers, his acquired powers and his
+  // future bonus spells; it takes nothing he already knows, and the book never
+  // suggests his book becomes unreadable. Greying it would say the opposite of
+  // what happened -- and unlike the paladin, there is no status to set back that
+  // would return it, because the change is permanent.
+  const spellsGated = (typeof abilitiesAreWithdrawn === 'function') &&
+                      abilitiesAreWithdrawn(root) &&
+                      !((typeof hasAbandonedSchool === 'function') && hasAbandonedSchool(root));
   const lockMsg = 'Locked while this character\u2019s class status is set \u2014 a forgotten ' +
                   'memory, not a deleted one. Nothing here is removed, and it all returns ' +
                   'when the status goes back to Active.';
