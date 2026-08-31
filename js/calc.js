@@ -7371,8 +7371,20 @@ function renderAnimalsBrowser(root) {
   const t   = ((root.querySelector('.animals-search') || {}).value || '').toLowerCase();
   const cat = (root.querySelector('.animals-category-filter') || {}).value || '';
 
+  // "Familiars" is not a Category -- a cat is livestock AND a familiar, and
+  // splitting it into two rows would put two cats in the browser. It is a
+  // filter over a field instead.
+  //
+  // THE CONTROL IS ALWAYS PRESENT; THE BAND DECIDES WHAT IT CONTAINS. Familiars
+  // are a PHB feature, so a table that never opens PHBR4 still needs the list --
+  // just the shorter one. PHBR4 Table 17 SUBSTITUTES the PHB p.134 list rather
+  // than extending it, which is why this is either/or and not a union.
+  const useP4 = (typeof isOptionalRule === 'function' &&
+                 isOptionalRule('familiarListPHBR4'));
   const rows = ANIMALS_DATA.filter(a =>
-    (!cat || a.Category === cat) &&
+    (cat === 'Familiar'
+       ? !!(useP4 ? a.familiarPHBR4 : a.familiarPHB)
+       : (!cat || a.Category === cat)) &&
     (!t   || (a.Name     || '').toLowerCase().indexOf(t) !== -1
           || (a.Category || '').toLowerCase().indexOf(t) !== -1)
   );
@@ -7417,6 +7429,24 @@ function renderAnimalsBrowser(root) {
     unbonded.style.cssText = 'padding:2px 8px;font-size:11px;';
     unbonded.title = 'Add to Unbonded Mounts & Vehicles.';
     unbonded.addEventListener('click', () => addAnimalFromBrowser(root, a, 'unbonded'));
+
+    // THE QUICK PATH ONLY, and only for creatures eligible under the rules in
+    // force -- the PHB six with PHBR4 off, its twenty-five with it on. The
+    // ordinary + Bonded route stays open for ANY creature, because both books
+    // say so outright: PHB p.134 "the referee can substitute other small
+    // animals suitable to the area", and PHBR4 p.108 the same. A DM permitting
+    // a raven as a familiar under PHB-only rules is doing what the book invites.
+    const uw = (typeof isOptionalRule === 'function' &&
+                isOptionalRule('familiarListPHBR4'));
+    if (uw ? a.familiarPHBR4 : a.familiarPHB) {
+      const fam = document.createElement('button');
+      fam.textContent = '+ Familiar';
+      fam.style.cssText = 'padding:2px 8px;font-size:11px;';
+      fam.title = 'Add to Bonded Mounts & Animal Companions with the bond set to ' +
+                  'Familiar.' + (a.sensoryPowers ? ' Sensory powers: ' + a.sensoryPowers : '');
+      fam.addEventListener('click', () => addAnimalFromBrowser(root, a, 'familiar'));
+      btns.appendChild(fam);
+    }
 
     btns.appendChild(bonded);
     btns.appendChild(unbonded);
