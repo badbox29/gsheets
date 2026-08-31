@@ -12051,7 +12051,7 @@ function renderClassAbilities(root) {
     // phbr4.schoolPowers is unticked. Runs even when classData was null, so a
     // future specialist name with no CLASS_ABILITIES entry still gets them.
     if (typeof addSpecialistPowersPHBR4 === 'function') {
-      addSpecialistPowersPHBR4(out, clazz, level);
+      addSpecialistPowersPHBR4(out, clazz, level, root);
     }
     return out;
   }
