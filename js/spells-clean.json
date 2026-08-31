@@ -838,6 +838,123 @@
   "levelSource": "wsc-index"
  },
  {
+  "name": "Bubble Breath",
+  "level": 4,
+  "class": "Wizard",
+  "schools": [
+   "Invocation/Evocation"
+  ],
+  "schoolsOfEffect": [],
+  "schoolsOfThaumaturgy": [],
+  "otherSchools": [],
+  "province": null,
+  "universal": false,
+  "sphere": null,
+  "range": "30 yds. + 10 yds./level",
+  "duration": "Instantaneous",
+  "aoe": "Creates 1d6 bubbles",
+  "castingTime": "4",
+  "save": "Neg.",
+  "components": "V S M",
+  "source": "WSC",
+  "cantripCategory": null,
+  "notes": "Uncommon for invokers; otherwise rare. (Updated from Dragon Magazine.)",
+  "po": null,
+  "description": "The wizard breathes forth 1d6 bubbles at one or more foes, making a separate attack roll for each; a bubble that misses drifts off and pops harmlessly. A creature struck is instantly coated in a filmy goo that halves its movement rate and imposes a -2 penalty on all combat rolls and saving throws. The material component is a bit of tree sap, which the wizard must swallow.\nNotes: Uncommon for invokers; otherwise rare. (Updated from Dragon Magazine.)",
+  "schoolSource": "wsc-book",
+  "wscRef": "Vol.1 p.111",
+  "reversal": null,
+  "levelSource": "wsc-book"
+ },
+ {
+  "name": "Bug",
+  "level": 7,
+  "class": "Wizard",
+  "schools": [
+   "Conjuration/Summoning"
+  ],
+  "schoolsOfEffect": [],
+  "schoolsOfThaumaturgy": [],
+  "otherSchools": [],
+  "province": null,
+  "universal": false,
+  "sphere": null,
+  "range": "10 mi./level",
+  "duration": "1d4 days + 1 day/2 levels",
+  "aoe": "1 insect",
+  "castingTime": "1 rd.",
+  "save": "None",
+  "components": "V S M",
+  "source": "WSC",
+  "cantripCategory": null,
+  "notes": "Rare for conjurers; otherwise very rare. Known to be in Prismal's Pocket Library, Vol. IX.",
+  "po": null,
+  "description": "Creates a mental link between the caster and an insect, which then serves as a spy: the caster hears whatever the insect hears, and by concentrating can see through its eyes. Because the audial link can startle him, there is a 20% chance that any other effort at concentration -- casting or memorising a spell, initiating psionic powers -- is disrupted. The link runs both ways: spells that affect the insect affect the caster too, with no saving throw, and if the insect is killed while linked the caster takes 1d4 points of damage. The caster may break the link at will. The material components are a live bug of any type and a crushed rose petal.\nNotes: Rare for conjurers; otherwise very rare. Known to be in Prismal's Pocket Library, Vol. IX.",
+  "schoolSource": "wsc-book",
+  "wscRef": "Vol.1 p.112",
+  "reversal": null,
+  "levelSource": "wsc-book"
+ },
+ {
+  "name": "Bugman's Mug",
+  "level": 1,
+  "class": "Wizard",
+  "schools": [
+   "Alteration"
+  ],
+  "schoolsOfEffect": [],
+  "schoolsOfThaumaturgy": [],
+  "otherSchools": [],
+  "province": null,
+  "universal": false,
+  "sphere": null,
+  "range": "Touch",
+  "duration": "2 rds./level",
+  "aoe": "1 mug of water",
+  "castingTime": "1",
+  "save": "None",
+  "components": "V S M",
+  "source": "WSC",
+  "cantripCategory": null,
+  "notes": "Rare or very rare. (Updated from Dragon Magazine.)",
+  "po": null,
+  "description": "Created by Bugman for a dwarf friend who often visited, this spell alters normal water into a magical potion that must be drunk before the duration ends. The potion removes hangovers and other ill effects of drinking, and negates any current state of inebriation. It is effective only against alcohol-based changes to the target's physiology, and so is useless against drugged stupors and poisons. The material component is common water served in a pewter mug.\nNotes: Rare or very rare. (Updated from Dragon Magazine.)",
+  "schoolSource": "wsc-book",
+  "wscRef": "Vol.1 p.112",
+  "reversal": null,
+  "levelSource": "wsc-book"
+ },
+ {
+  "name": "Burn Path",
+  "level": 8,
+  "class": "Wizard",
+  "schools": [
+   "Abjuration",
+   "Necromancy"
+  ],
+  "schoolsOfEffect": [],
+  "schoolsOfThaumaturgy": [],
+  "otherSchools": [],
+  "province": null,
+  "universal": false,
+  "sphere": null,
+  "range": "Touch",
+  "duration": "Permanent",
+  "aoe": "1 wizard",
+  "castingTime": "8 hrs.",
+  "save": "Special",
+  "components": "V S M",
+  "source": "WSC",
+  "cantripCategory": null,
+  "notes": "Very rare. (Updated from Dragon Magazine.)",
+  "po": null,
+  "description": "Destroys all knowledge a wizard has of one path of magic -- a series of related spells -- chosen by the caster. The spells and formulas of that path are instantly forgotten, memorised spells vanish from the victim's mind, and every spell on the path must be relearned as though the subject had never known them. The effect cannot be reversed, though if the target's saving throw succeeds the path is merely sealed, as by a seal path spell. The spell cannot be reflected, and can be cast only on a helpless or unconscious recipient. The material component is a thin sheet of beaten gold inscribed with the formula for the spell that begins the path; this scroll costs no less than 3,000 gp and is consumed in the casting.\nNotes: Very rare. (Updated from Dragon Magazine.)",
+  "schoolSource": "wsc-book",
+  "wscRef": "Vol.1 p.113",
+  "reversal": null,
+  "levelSource": "wsc-book"
+ },
+ {
   "name": "Burning Hands",
   "level": 1,
   "class": "Wizard",
@@ -1683,9 +1800,7 @@
   "schoolsOfThaumaturgy": [
    "Geometry"
   ],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -2038,9 +2153,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -2505,9 +2618,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -2716,9 +2827,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -2750,9 +2859,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -4187,9 +4294,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -4837,9 +4942,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -4960,9 +5063,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -5704,9 +5805,7 @@
    "Artifice",
    "Song"
   ],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -6101,7 +6200,7 @@
   "levelSource": "wsc-index"
  },
  {
-  "name": "Protection from Hunger and Thirst - Lvl 1",
+  "name": "Protection from Hunger and Thirst",
   "level": 1,
   "class": "Wizard",
   "schools": [
@@ -6117,15 +6216,17 @@
   "duration": "1 day/level",
   "aoe": "One creature",
   "castingTime": "1",
-  "save": "none",
-  "components": "Somatic Material",
-  "source": "WSC",
+  "save": "None",
+  "components": "S M",
+  "source": "PHBR4",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "ADDED FROM PHBR4 p.97, August 2026. The only one of the book’s 42 new spells absent from this file — the other 41 were already present from the WSC dataset. Transcribed from the page, not from a summary.",
   "po": null,
-  "description": "When protection from hunger and thirst is cast, the recipient requires no food, water, or nourishment of any kind for the duration of the spell. The recipient can be the caster or anyone he touches. Each day the caster (or the subject of the caster's choice) is under the effect of the spell, he is fully nourished as if he had eaten and drunk normally. At the end of the spell's duration, the subject is no more hungry or thirsty than he was when the spell was originally cast.\nThe material components for this spell are a small piece of dried meat and a cup of water.\nLost knowledge. This 1st-level spell is rumored to have prevented hunger and thirst for one day per caster level.\nReplaced with level 7 spell: Protection from Hunger and Thirst (Lvl 7)",
-  "schoolSource": "single",
-  "sourceRef": "The Complete Wizard's Handbook, Chapter 8"
+  "description": "When protection from hunger and thirst is cast, the recipient requires no food, water, or nourishment of any kind for the duration of the spell. The recipient can be the caster or anyone he touches. Each day the caster (or the subject of the caster's choice) is under the effect of the spell, he is fully nourished as if he had eaten and drunk normally. At the end of the spell's duration, the subject is no more hungry or thirsty than he was when the spell was originally cast.\nThe material components for this spell are a small piece of dried meat and a cup of water.\nNotes: PHBR4, The Complete Wizard's Handbook.",
+  "schoolSource": "PHBR4 p.97",
+  "wscRef": null,
+  "reversal": null,
+  "levelSource": "PHBR4 p.97"
  },
  {
   "name": "Protection from Vermin",
@@ -6204,9 +6305,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -6236,9 +6335,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -6256,6 +6353,37 @@
   "schoolSource": "wsc-index",
   "wscRef": "Vol.3 p.727",
   "levelSource": "wsc-index"
+ },
+ {
+  "name": "Rary's Replay",
+  "level": 5,
+  "class": "Wizard",
+  "schools": [
+   "Divination"
+  ],
+  "schoolsOfEffect": [],
+  "schoolsOfThaumaturgy": [
+   "Mentalism"
+  ],
+  "otherSchools": [],
+  "province": null,
+  "universal": false,
+  "sphere": null,
+  "range": "0",
+  "duration": "Special",
+  "aoe": "Special",
+  "castingTime": "1 turn",
+  "save": "None",
+  "components": "V S",
+  "source": "WSC",
+  "cantripCategory": null,
+  "notes": "Uncommon or rare spell (WoG).",
+  "po": null,
+  "description": "Reads the residual psychic impressions left in a room or area by past events; the more important or violent the event, the stronger the residue and the longer it lasts. The strongest impression currently present enters the caster's mind and replays in real time, taking as long to complete as the original event took, and clearly enough that people, creatures and objects can be readily identified. Cast again in the same area, the spell replays the next strongest impression, and so on, reading weaker and weaker traces until all psychic residue in the area has been reviewed.\nNotes: Uncommon or rare spell (WoG).",
+  "schoolSource": "wsc-book",
+  "wscRef": "Vol.3 p.729",
+  "reversal": null,
+  "levelSource": "wsc-book"
  },
  {
   "name": "Ray of Fatigue",
@@ -6915,9 +7043,7 @@
   "schoolsOfThaumaturgy": [
    "Geometry"
   ],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -7480,9 +7606,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -8771,9 +8895,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -10271,9 +10393,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -11780,9 +11900,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -11930,9 +12048,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -12642,9 +12758,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -12861,10 +12975,7 @@
    "Mentalism",
    "Song"
   ],
-  "otherSchools": [
-   "Incantation",
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -13656,7 +13767,6 @@
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
   "otherSchools": [
-   "Incantation",
    "Universal Magic - POSM"
   ],
   "province": null,
@@ -14483,9 +14593,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -14517,9 +14625,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -14873,9 +14979,7 @@
    "Artifice",
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -15922,9 +16026,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -16420,9 +16522,7 @@
   "schoolsOfThaumaturgy": [
    "Alchemy"
   ],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -16645,8 +16745,7 @@
    "Wild Magic"
   ],
   "otherSchools": [
-   "Chronomancy",
-   "Incantation"
+   "Chronomancy"
   ],
   "province": null,
   "universal": true,
@@ -18764,8 +18863,7 @@
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
   "otherSchools": [
-   "Chronomancy",
-   "Incantation"
+   "Chronomancy"
   ],
   "province": null,
   "universal": false,
@@ -19093,9 +19191,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -19937,10 +20033,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation",
-   "Metamagic"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -20083,9 +20176,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -20733,9 +20824,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -21229,9 +21318,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -21498,9 +21585,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -21911,9 +21996,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -23633,9 +23716,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -24075,35 +24156,6 @@
   "underwater": "modified"
  },
  {
-  "name": "Lightning Reflection",
-  "level": 3,
-  "class": "Wizard",
-  "schools": [
-   "Abjuration",
-   "Alteration"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": null,
-  "range": "0",
-  "duration": "1 turn",
-  "aoe": "1 being",
-  "castingTime": "3",
-  "save": "None",
-  "components": "V S M",
-  "source": "WSC",
-  "cantripCategory": null,
-  "notes": null,
-  "po": null,
-  "description": "This spell protects the caster or a touched recipient (and all worn or carried material) against all effects of energy discharges. All such attacks are reflected straight back at their sources for full normal effect. Magical or natural lightning and other raw energy discharges are protected against. Magic missiles are also reflected. Fire is not protected against.\nThe material components of the spell are a drop of quicksilver and a shard of metal of any size.",
-  "schoolSource": "sheet",
-  "sheetRef": "WSC p.",
-  "levelSource": "sheet"
- },
- {
   "name": "Lightning Rod",
   "level": 3,
   "class": "Wizard",
@@ -24344,9 +24396,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -24594,9 +24644,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -24656,9 +24704,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -24687,9 +24733,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -27789,9 +27833,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -28113,9 +28155,7 @@
    "Mentalism",
    "Song"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -30635,9 +30675,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -31351,9 +31389,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -31411,9 +31447,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -32428,9 +32462,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -32516,9 +32548,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -33122,10 +33152,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation",
-   "Metamagic"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -33507,9 +33534,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -34417,9 +34442,7 @@
    "Mentalism",
    "Song"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -35096,9 +35119,7 @@
   "schoolsOfThaumaturgy": [
    "Geometry"
   ],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -35126,9 +35147,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -35247,9 +35266,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -36071,9 +36088,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -36788,9 +36803,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -36820,9 +36833,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -36852,9 +36863,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -37038,9 +37047,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -37071,9 +37078,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -37104,10 +37109,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Incantation",
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -37135,10 +37137,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation",
-   "Metamagic"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -37200,9 +37199,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -39961,9 +39958,7 @@
    "Artifice",
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -40257,9 +40252,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -40724,9 +40717,7 @@
    "Force"
   ],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -42203,9 +42194,7 @@
   "schoolsOfThaumaturgy": [
    "Song"
   ],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -42235,9 +42224,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -42356,9 +42343,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -42653,9 +42638,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -42860,9 +42843,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -42952,10 +42933,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Incantation",
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -43882,9 +43860,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -44323,7 +44299,7 @@
  },
  {
   "name": "Lightning Reflection",
-  "level": 3,
+  "level": 5,
   "class": "Wizard",
   "schools": [
    "Abjuration",
@@ -44343,12 +44319,13 @@
   "components": "V S M",
   "source": "WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "Known to the Seven Sisters and some other wizards in the Forgotten Realms setting, rare; virtually unknown elsewhere.",
   "po": null,
   "description": "This spell protects the caster or a touched recipient, and all worn or carried material, against all effects of energy discharges. All such attacks are reflected straight back at their sources for full normal effect. Magical or nat­ural lightning and other raw energy discharges are protected against. Magic missiles are also reflected. Fire is not protected against.\nThe material components of the spell are a drop of quicksilver and a shard of metal of any size.\nNotes: Known to the Seven Sisters and some other wizards in the FR set­ting, rare; virtually unknown elsewhere.",
-  "schoolSource": "sheet",
+  "schoolSource": "wsc-book",
   "sheetRef": "WSC p.",
-  "levelSource": "sheet"
+  "levelSource": "wsc-book",
+  "wscRef": "Vol.2 p.518"
  },
  {
   "name": "Liquid Earth",
@@ -44390,9 +44367,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -44422,9 +44397,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -44454,9 +44427,7 @@
   "schoolsOfThaumaturgy": [
    "Artifice"
   ],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -44544,9 +44515,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -44780,9 +44749,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -44991,10 +44958,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Incantation",
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -45792,10 +45756,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation",
-   "Metamagic"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -46306,10 +46267,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Incantation",
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -46338,9 +46296,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Metamagic"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -46372,9 +46328,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -46436,9 +46390,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -46614,9 +46566,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -46916,9 +46866,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -47209,35 +47157,34 @@
   "sourceRef": "WSC POLY"
  },
  {
-  "name": "Shadow-Form",
+  "name": "Shadow-Form - Ninja",
   "level": 5,
   "class": "Wizard",
   "schools": [
    "Illusion/Phantasm"
   ],
-  "schoolsOfEffect": [
-   "Shadow"
-  ],
+  "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
   "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
   "range": "Unlimited",
-  "duration": "One hour or until struck",
-  "aoe": "One creature",
-  "castingTime": "5 rounds",
+  "duration": "1 hr. or until struck",
+  "aoe": "Creates 1 shadow-form",
+  "castingTime": "5 rds.",
   "save": "None",
-  "components": "Somatic",
+  "components": "S",
   "source": "WSC",
   "cantripCategory": null,
   "notes": null,
   "po": null,
   "description": "With this spell, the ninja creates a transparent duplicate of himself. The duplicate, or shadow-form, appears adjacent to the spellcaster. It wears all the clothing and carries all the equipment that were in the ninja's possession when he cast the spell, leaving him unclothed and unarmed; the clothing and equipment are not transparent.\nFor the duration of the spell, the ninja controls the shadow-form''s actions and sees through its eyes. It is an extension of him and possesses all of his physical and mental skills but not his magical abilities. (In other words, it moves, sounds, and fights just as he does but cannot cast spells.) The ninja sees through both sets of eyes at once. When the shadowform is waiting or resting, the ninja can take actions on his own, but he cannot make both his real body and his shadow-form act at the same time.\nIf the shadow-form is hit in combat or struck with a dispel magic spell, it disappears—leaving behind all the clothing and equipment it was carrying. Also left behind is a handful of leaves inside the clothes, all that remains of the insubstantial body.\nSpirit Warriors and spellcasting shinobi use this spell to perform particularly frightening short-term assignments. The shadow-form may be sent off to attack someone, to deliver a message, to scout a dangerous area, or to undertake any sort of action in which the ninja cannot afford to be caught. Usually the spellcaster dresses in a ninja night-suit before casting this spell, so that it is not readily obvious that the person within the clothing is transparent. When the shadow-form wears a night-suit and moves around in the dark, it is difficult to see that it is not a physical being.\nNotes: Restricted to ninja spellcasters and those trained by them; common.",
-  "schoolSource": "sheet",
+  "schoolSource": "wsc-book",
   "sheetRef": "WSC p.",
-  "levelSource": "sheet",
-  "sourceRef": "The Complete Ninja's Handbook Page 21 WSC"
+  "levelSource": "wsc-book",
+  "sourceRef": "The Complete Ninja's Handbook Page 21 WSC",
+  "wscRef": "Vol.3 p.796"
  },
  {
   "name": "Shandaril's Tracer",
@@ -48207,9 +48154,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -48844,9 +48789,7 @@
    "Force"
   ],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -49761,9 +49704,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -50549,9 +50490,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -50968,9 +50907,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -51097,9 +51034,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -51443,10 +51378,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation",
-   "Metamagic"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -51693,9 +51625,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -51727,9 +51657,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -52032,9 +51960,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -52157,9 +52083,7 @@
   "schoolsOfThaumaturgy": [
    "Geometry"
   ],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -52793,9 +52717,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -53063,9 +52985,7 @@
    "Mentalism",
    "Song"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -53273,10 +53193,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Incantation",
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -53989,9 +53906,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -54021,9 +53936,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -54054,9 +53967,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -54084,10 +53995,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation",
-   "Metamagic"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -55500,9 +55408,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -56036,9 +55942,7 @@
    "Artifice",
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -56507,9 +56411,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -57334,9 +57236,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -57540,9 +57440,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -57697,9 +57595,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -57756,9 +57652,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -57934,9 +57828,7 @@
    "Force"
   ],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -58327,9 +58219,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -58592,9 +58482,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -58687,9 +58575,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -58900,11 +58786,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Incantation",
-   "Mentalism",
-   "Metamagic"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -59350,10 +59232,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation",
-   "Metamagic"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -59482,10 +59361,7 @@
    "Mentalism",
    "Song"
   ],
-  "otherSchools": [
-   "Incantation",
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -59617,10 +59493,12 @@
   "components": "V S M",
   "source": "WSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "Uncommon spell.",
   "po": null,
   "description": "When protection from hunger and thirst is cast, the recipient requires no food, water, or nourishment of any kind for the duration of the spell. The recipient can be the caster or any creature touched. Each day the creature remains under the effect of the spell, it is fully nour­ished, as if it had eaten and drunk normally. At the end of the spell's duration, the creature is no more hungry or thirsty than when the spell was originally cast.\nThe spell can be divided among multiple creatures, which are protected proportionately. A maximum of one creature per level of the caster can be protected. For example, an 18th-level wizard can protect one creature for 18 days, two creatures for 9 days, and so on, to eighteen creatures for a single day.\nThe material components for this spell are a small piece of dried meat and a cup of water.\nNotes: Uncommon spell.",
-  "schoolSource": "single"
+  "schoolSource": "wsc-book",
+  "wscRef": "Vol.3 p.703",
+  "levelSource": "wsc-book"
  },
  {
   "name": "Rary's Plane Truth",
@@ -59894,9 +59772,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -60013,10 +59889,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation",
-   "Metamagic"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -60289,9 +60162,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -60409,9 +60280,7 @@
   "schoolsOfThaumaturgy": [
    "Artifice"
   ],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -60439,9 +60308,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -60789,10 +60656,10 @@
    "Enchantment/Charm"
   ],
   "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [
+  "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -61515,9 +61382,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -63070,9 +62935,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -64438,9 +64301,7 @@
   "schoolsOfThaumaturgy": [
    "Geometry"
   ],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -64471,9 +64332,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -64562,9 +64421,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -64770,7 +64627,6 @@
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
   "otherSchools": [
-   "Incantation",
    "Universal Magic - POSM"
   ],
   "province": null,
@@ -64888,9 +64744,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -65232,12 +65086,13 @@
   "components": "V S M",
   "source": "WSC, PHBR4",
   "cantripCategory": null,
-  "notes": "VERIFIED AGAINST PHBR4 p.106, August 2026. This spell was first printed in The Complete Wizard’s Handbook, Chapter 8; its level and schools here were checked against the page and MATCH. Recorded so a later audit of the third-party WSC data does not have to re-check it. Four of the book’s 42 spells did NOT match and were corrected — see Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward.",
+  "notes": "Uncommon for necromancers, rare for shadow mages; otherwise, very rare.",
   "po": null,
   "description": "By means of this spell, the caster temporarily changes himself into a shadow. The caster gains the movement rate, Armor Class, hit dice, and all abilities of a shadow. His chilling touch (requiring a normal attack roll) inflicts 2-5 (1d4+1) hit points of damage on his victims as well as draining one point of Strength. Lost Strength returns in 2-8 (2d4) turns after being touched. If a human or demihuman victim is reduced to 0 hit points or 0 Strength by the caster in shadow form, the victim has lost all of his life force and is immediately drawn into the Negative Material Plane where he will forever after exist as a shadow.\nAll of the caster's weapons and equipment stay with him, but he is unable to use them while in shadow form. He is also unable to cast spells while in shadow form, but he is immune to sleep, charm, and hold spells, and is unaffected by cold-based attacks. He is 90 percent undetectable in all but the brightest of surroundings. Unlike normal shadows, a wizard in shadow form cannot be turned by priests. At the end of the spell's duration, there is a 5% chance that the caster will permanently remain as a shadow. Nothing short of a wish can return the caster to his normal form.\nThe material components for this spell are the shroud from a corpse at least 100 years old and a black glass marble.\nNotes: Uncommon for necromancers, rare for shadow mages; otherwise, very rare.",
-  "schoolSource": "sheet",
+  "schoolSource": "wsc-book",
   "sheetRef": "WSC p.",
-  "levelSource": "sheet"
+  "levelSource": "wsc-book",
+  "wscRef": "Vol.3 p.796"
  },
  {
   "name": "Shooting Stars",
@@ -65424,9 +65279,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Metamagic"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -66413,10 +66266,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation",
-   "Metamagic"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -66505,10 +66355,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation",
-   "Metamagic"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -66537,9 +66384,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -66919,9 +66764,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -66949,10 +66792,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation",
-   "Metamagic"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -67364,9 +67204,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -68403,9 +68241,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -68582,9 +68418,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -68673,9 +68507,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -68761,10 +68593,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation",
-   "Metamagic"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -68822,9 +68651,7 @@
    "Dimension"
   ],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -68918,9 +68745,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -68951,9 +68776,7 @@
   "schoolsOfThaumaturgy": [
    "Mentalism"
   ],
-  "otherSchools": [
-   "Mentalism"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -69075,9 +68898,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Metamagic"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -70108,10 +69929,7 @@
   ],
   "schoolsOfEffect": [],
   "schoolsOfThaumaturgy": [],
-  "otherSchools": [
-   "Incantation",
-   "Metamagic"
-  ],
+  "otherSchools": [],
   "province": null,
   "universal": false,
   "sphere": null,
@@ -70946,1852 +70764,6 @@
   "schoolSource": "sheet",
   "levelSource": "sheet",
   "classSource": "sheet"
- },
- {
-  "name": "Aspiration",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Invocation/Evocation"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "All",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "The caster",
-  "castingTime": "1 segment ( 1⁄2 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "All",
-  "notes": null,
-  "po": null,
-  "description": "An aspiration is a quick prayer on the order of: “Give me strength!” or “Don’t let me goof up!” The player rolls a d20 out of the player’s own sight for the DM, who records it. At any time during the next game hour, the player can ask to have a bad die roll replaced by the hidden roll. The d20 can replace an attack roll, a saving throw, or a percentile dice roll (multiplying the secret roll by 5). Upon the player’s request, the secret roll is revealed, and becomes the official dice roll. There is no guaran­tee that the secret roll will be better, but it is a second chance",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "All"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Benediction",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Conjuration/Summoning"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "All",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "15-ft. cube",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "All",
-  "notes": null,
-  "po": null,
-  "description": "A benediction is a minor form of bless, centered on the caster, raising morale of friendly creatures by +1 and their attack rolls by +1 for three rounds. It does not affect creatures already engaged in combat",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "All"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Bless Meal",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Alteration"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "All",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "10-ft. sq. area",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "All",
-  "notes": null,
-  "po": null,
-  "description": "This orison blesses a meal, including drink, giving those who eat it a +1 saving throw vs. any poison or disease it may contain. If no saving throw is allowed, the orison allows a saving throw of 20",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "All"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Ceremony: Oath",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Conjuration/Summoning"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "All",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 individual",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "All",
-  "notes": null,
-  "po": null,
-  "description": "An individual of the priest's religion takes an oath in the presence of a priest, pledging his or her honor to do some minor task. All parties touch the priest's symbol, as the priest ratifies the oath with a ritual sign and some formula such as “so be it!” The oath stands until the pledge is fulfilled or broken. If broken, the oathbreaker suffers a -5% penalty to the base loyalty of followers and allies until satisfactory reparations are made. A third party of the caster's religion can pledge for the oath of a nonbeliever. The priest might pledge for a non-believer, but this is extremely rare",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "All"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Consecrate",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Invocation/Evocation"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "All",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "10-ft. sq. area",
-  "castingTime": "1 segment ( 1⁄2 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "All",
-  "notes": null,
-  "po": null,
-  "description": "This orison consecrates a material component used in spell casting, allowing the spell to operate at a +1 (or +5%) bonus. The DM decides exactly how the bonus is applied. The component must be used the round after consecration, or the benefit is lost",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "All"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Cure Minor Wounds",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Necromancy"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Healing",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "Creature touched",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "All",
-  "notes": null,
-  "po": null,
-  "description": "A minor cure, similar to cure light wounds. This orison restores 1 point of damage. This orison is not reversible",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Healing"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Dowse",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Divination"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Divination",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "Special",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "All",
-  "notes": null,
-  "po": null,
-  "description": "Sometimes referred to as find water, this orison allows the caster to locate the nearest amount of water at least 10 gallons in volume, within 100 yards. There is no guarantee the water is fresh, drinkable, or accessible",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Divination"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Freshen",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Alteration"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "All",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 object",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "All",
-  "notes": null,
-  "po": null,
-  "description": "By means of this orison, the caster brings new life or freshness to the object desired. The magic applies to food and drink items such as milk, beer, meat, and raw vegetables. It also works with cut vegetables, flowers, herbs, and so on. Although it removes a slight taint of spoilage, restores drooping flowers, and so on, it is not as effective as a purify food & drink spell, and lasts for but an hour. The object must be of relatively small size: a small cask of liquid, a sheep, a bushel of vegetables, etc. If used on a creature that is harmed by magics such as purify food and drink, the orison inflicts 1d2 points of damage",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "All"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Haze",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Alteration"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Protection, Weather",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "The caster",
-  "castingTime": "1 segment ( 1⁄2 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "All",
-  "notes": null,
-  "po": null,
-  "description": "The caster causes a haze to envelop his or her person. This haze gives the caster a +1 bonus to Armor Class and saving throws. The haze lasts for only two rounds, then fades away",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Protection",
-   "Weather"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Judgement",
-  "level": "O",
-  "class": "Priest",
-  "schools": [],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Divination",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "The caster",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "All",
-  "notes": null,
-  "po": null,
-  "description": "A priest can cast this orison to gain a +1 bonus to one Wisdom ability check. This orison can be applied only once to any given check. The DM might disallow use of this orison for various rea­sons; for example, if insufficient time is available",
-  "schoolSource": null,
-  "spheres": [
-   "Divination"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Malediction",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Conjuration/Summoning"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Charm",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "15-ft. cube",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "All",
-  "notes": null,
-  "po": null,
-  "description": "The reverse of benediction, a malediction gives the morale of opponents a -1 penalty and worsens their attack roll by 1 for three rounds. The male­diction can be hurled at opponents up to 30 feet away. It does not affect creatures already engaged in combat. Using this orison is not a good act",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Charm"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Parch",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Enchantment/Charm"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Elemental Water",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 creature",
-  "castingTime": "1 segment ( 1⁄2 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "All",
-  "notes": null,
-  "po": null,
-  "description": "The reverse of the quench spell, this orison causes a subject of up to large size to experience an intense thirst – no matter how recently it has drunk. Lips crack and the mouth and throat become dry until a quantity of liquid is again consumed",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Elemental Water"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Petition",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Conjuration/Summoning"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "All",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "The caster",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "All",
-  "notes": null,
-  "po": null,
-  "description": "A petition is a direct appeal to the patron deity for a specific favorable event to occur sometime during the current day. Examples include finding a misplaced item, meeting an old friend, remember­ing forgotten information, making a favorable impression, and so on. A petition that would affect an attack roll, damage roll, saving throw or profi­ciency check grants a +1 bonus to one die roll. If no opportunity occurs for the granting of the petition or if it is not granted that day, then it is wasted\nThe DM secretly rolls 1d20 for each petition. On a roll of 1, the priest suffers a minor penalty or unlucky event (the patron is annoyed). The DM may increase this chance if the priest casts it too often, asks for favors of excessive value, or makes the same request continuously.",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "All"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Preserve",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Alteration"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Protection",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "6-in. cube",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "All",
-  "notes": null,
-  "po": null,
-  "description": "This orison is used to preserve material of an animal or vegetable nature for future use, such as herbs or spell components. If used on fresh materi­als, these will not decay for a year",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Protection"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Quench",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Enchantment/Charm"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Elemental Water",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 creature",
-  "castingTime": "1 segment ( 1⁄2 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "All",
-  "notes": null,
-  "po": null,
-  "description": "This orison soothes a creature of up to large size that suffers from water deprivation. While no water is actually created, cracked lips are softened and a dry mouth and throat are moistened, giving the illu­sion of having partaken of liquid refreshment",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Elemental Water"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Temperature",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Alteration"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Protection, Weather",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "All",
-  "notes": null,
-  "po": null,
-  "description": "This orison protects an individual from extreme temperatures for 4 hours. Exposure to temperatures between -100 °F and 200 °F inflicts no damage",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Protection",
-   "Weather"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Watch",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Conjuration/Summoning"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "All, Animal, Guardian",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 animal",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "All",
-  "notes": null,
-  "po": null,
-  "description": "The caster charges an animal to watch over her while she sleeps (the animal may, however, make its saving throw vs. spell and ignore the charge). If the animal accepts, it remains alert and awake to the best of its ability. If anyone approaches within 20 feet of the caster, the creature will attempt to awaken the caster. The animal will not fight for the caster unless it is also attacked",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Animal",
-   "Guardian"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Candle",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Conjuration/Summoning"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Creation",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 candle",
-  "castingTime": "1 segment ( 1⁄2 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Cleric Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison causes a candle held in the caster’s hand to light. For the next turn, the candle cannot be extinguished as long as the caster continues to hold it. The candle is consumed normally, but drafts, gusts of wind, and so on cannot put out the flame. Drowning or smothering the flame extin­guishes it, however",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Creation"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Canticle",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Abjuration"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Protection",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "The caster",
-  "castingTime": "Special",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Cleric Orison",
-  "notes": null,
-  "po": null,
-  "description": "A canticle is a minor form of sanctuary, in which the caster chants recitations of the priest’s sacred literature. As long as the chanting continues, opponents must make a successful saving throw vs. spell at a +2 bonus in order to strike or otherwise attack the caster. The caster cannot engage in any other activity than movement at half speed during this time",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Protection"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Chill",
-  "level": null,
-  "class": "Priest",
-  "schools": [
-   "Invocation/Evocation"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Creation",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1-ft. cube",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Cleric Orison",
-  "notes": null,
-  "po": null,
-  "description": "The caster, using this orison, can reduce the temperature of nonliving liquid or solid material by about 40 °F, subject to a minimum temperature of freezing (32 °F). The chill lasts for but an instant, after which the object warms slowly back to normal temperature",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Combat"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "spells.json"
- },
- {
-  "name": "Clean",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Abjuration"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Protection, Travelers",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "4 sq. yds.",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Cleric Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison enables the caster to remove heavy soil, dirt, and like foreign objects from floors, walls, dishes, windows, etc. These surfaces are then spotless. Usually only one type of material is treated in a single application, as care must be taken in removal of pigments and the like",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Protection",
-   "Travelers"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Disinfect",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Necromancy"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Healing",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 creature",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Cleric Orison",
-  "notes": null,
-  "po": null,
-  "description": "When cast on a minor wound, this orison does nothing to heal the injury; it prevents the wound from becoming infected. The wound heals as if well-tended even if not bandaged or kept clean. This orison does not negate the need for rest while healing",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Healing"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Dry",
-  "level": "O",
-  "class": "Priest",
-  "schools": [],
-  "schoolsOfEffect": [
-   "Water"
-  ],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": null,
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 cu. yd.",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Cleric Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison removes dampness and excess moisture from materials in the area of effect. It is useful for drying cloth or herbs and for cleaning chores",
-  "schoolSource": null,
-  "spheres": [
-   "Elemental Water"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Handfire",
-  "level": null,
-  "class": "Priest",
-  "schools": [
-   "Invocation/Evocation"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Combat",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "The caster’s hand",
-  "castingTime": "1⁄2 segment ( 1⁄4 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Cleric Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison fills the palm of the priest’s hand with a momentary bright flash of flame. The flame can ignite ready flammables, such as powders, incenses, and volatile oils. The flash can scorch or blister exposed flesh and might inflict as much as 1 point of damage to a creature that fails a saving throw vs. spell",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Combat"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "spells.json"
- },
- {
-  "name": "Incense",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Illusion/Phantasm"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Charm",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "20-ft. radius",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Cleric Orison",
-  "notes": null,
-  "po": null,
-  "description": "When this orison is invoked, the caster creates a sudden burst of some scent, which quickly rolls out to a distance of 20 feet. The scent can be anything the priest desires, from rose petals to brimstone, from a metallic tang to an exotic spice, so long as the caster has some small item that the smell has clung to, however faintly: perfume vial, charcoal fragment, and so on). This item acts a focus and is not expended in the casting. The scent fades within a turn, though a creature with exceptionally keen senses might be able to detect it for an hour or more",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Charm"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Meditation",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Conjuration/Summoning"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Charm",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "The caster",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Cleric Orison",
-  "notes": null,
-  "po": null,
-  "description": "A minor (and nonreversible) form of remove fear, a meditation gives the caster (and only the caster) a +1 bonus to any saving throw against mag­ical fear attacks for 1 turn",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Charm"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Mouse",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Conjuration/Summoning"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Animal, Summoning",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 mouse",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Cleric Orison",
-  "notes": null,
-  "po": null,
-  "description": "The mouse orison enables the caster to bring forth a mouse up to 10 feet away. The animal is a typical field mouse (or as similar a species as pos­sible). When it arrives, the caster has no control over the mouse. The animal behaves as would any mouse in the given situation",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Animal",
-   "Summoning"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Polish",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Alteration"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Protection",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 object",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Cleric Orison",
-  "notes": null,
-  "po": null,
-  "description": "When this orison is used, the caster magically smoothes and brings luster to materials such as wood, metal, stone, leather, or ceramic. Naturally, the desired object must be relatively clean for this orison to be effective. The object must be of rea­sonable size – a floor of up to 1,000 square feet, for example. It works best on smaller objects such as boots, mirrors, crystal containers, and so on",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Protection"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Remove Pain",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Necromancy"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Healing",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 creature",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Cleric Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison negates the effects of pain, allowing the recipient to gain 1 hit point, but only if currently wounded. This orison cannot help a healthy character, nor can a creature that has received this benefit receive it again for 24 hours",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Healing"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Restful Sleep",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Necromancy"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Necromantic, Travelers",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 creature",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Cleric Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison allows a willing recipient to gain full benefit from half the rest; thus, the creature touched gains the benefits of eight hours of rest from only four hours of actual sleep. The creature can be awakened at any time, and may wake of its own volition in an emergency. The orison ends when the creature wakes",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Necromantic",
-   "Travelers"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Shine",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Abjuration"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Protection",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 object",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Cleric Orison",
-  "notes": null,
-  "po": null,
-  "description": "Similar to the polish orison, this magic allows the caster to remove tarnish, rust, corrosion, and similar substances from the desired object. This orison brings about a mirror-bright shine to objects capable of such, causing their surfaces to be smooth and unmarred. A piece of jewelry, for instance, could be made more attractive. A single object up to a cubic yard in volume can be treated by this orison",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Protection"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Stone",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Enchantment/Charm"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Combat",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 small stone",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Cleric Orison",
-  "notes": null,
-  "po": null,
-  "description": "By means of this orison, the caster can enchant a single stone the size of a sling stone. This mis­sile receives a +1 bonus to hit and damage. The caster (only) can hurl it by hand, sling, etc. The casting and attack occur in the same round, for if the stone is not used immediately, the dweomer fades and is wasted",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Combat"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Tweak",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Conjuration/Summoning"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Summoning",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 creature",
-  "castingTime": "1 segment ( 1⁄2 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Cleric Orison",
-  "notes": null,
-  "po": null,
-  "description": "By means of this orison, the caster causes an unseen thumb and forefinger to harmlessly, but annoyingly, tweak some portion of a chosen subject within a 10-foot radius of the caster. These portions are: cheek, nose, ear, beard, moustache, whiskers, or tail. The orison’s effects do not disturb spell casting, although the tweaking might distract any creature by causing it to rum to discover the source of the annoyance. A failure to make a successful saving throw vs. spell (for creatures with an Intelligence under 7), or failure to roll a score greater than Intelligence on 3d6 (for to creatures with intelligence of 7 or greater), means a 1-segment distraction",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Summoning"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Warding",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Abjuration"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Protection",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "Creature touched",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Cleric Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison is a minor form of the protection from evil spell. For two rounds, it prevents enchanted, conjured, or summoned creatures of 3 Hit Dice or less from making bodily contact with the recipient, unless these are attacked by the pro­tected creature. Against more powerful creatures, or after the primary protection is broken, the orison improves Armor Class against evil creatures by 1. The orison adds no bonus to saving throws. To complete the spell, the caster sprinkles holy water on the recipient",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Protection"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Warm",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Invocation/Evocation"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Creation",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1-ft. cube",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Cleric Orison",
-  "notes": null,
-  "po": null,
-  "description": "The caster, using this orison, can increase the temperature of nonliving liquid or solid material by at most about 40 °F. The orison cannot raise the tem­peratures of a living creature above its normal body temperature, nor the temperature of an object above 140 °F. The orison lasts but an instant, after which the object slowly cools to normal temperatures",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Creation"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Animal",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Conjuration/Summoning"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Animal",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 animal up to 3 HD",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison summons one ordinary mammal, bird, or reptile of up to 3 Hit Dice, to the druid. The animal, which may come from up to a half mile away, is not under the druid’s control, but can be subjected to further spells after it arrives. A summoned animal remains generally available for one turn before wandering off\nTo activate this orison, the caster vocalizes a soft clucking or clicking sound.",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Animal"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Animal Command",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Enchantment/Charm"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Animal",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 animal up to 3 HD",
-  "castingTime": "1⁄2 segment ( 1⁄4 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison enables the druid to command an ordinary mammal, bird, or reptile with up to 3 Hit Dice with a single word. The animal obeys to the best of its ability, if the command is absolutely clear and unequivocal. Typical commands are stop, sit, go, sleep, etc. The commands attack and kill, require the caster to point at the desired target. The effect lasts for but a single round; thereafter, the creature acts according to its nature",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Animal"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Bird Call",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Invocation/Evocation"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Animal",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "Special",
-  "castingTime": "1⁄2 segment ( 1⁄4 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "The orison allows the druid to imitate the call of a number of common, feathered avians. The druid must have heard the call to be imitated at some pre­vious time. Only one call can be mimicked, but the caster can do so for an entire turn after the casting. The call can carry as far as a natural birdcall\nThe somatic gesture consists of clasping both hands around the mouth while the lips are puckered to create a whistling noise when breath is exhaled.",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Animal"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Cause Rash",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Necromancy"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Plant",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 man-sized creature",
-  "castingTime": "1 segment ( 1⁄2 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison causes a red, itchy rash to appear on an arm or leg of the subject. The rash is, for all practical purposes, the same as that caused by exposure to a rash-causing plant (poison ivy, poison oak) and must be treated in the same manner\nThe druid makes a scratching motion while whispering the arm or leg to be affected.",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Plant"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Disguise Scent",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Alteration"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Animal",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 creature",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison neutralizes the particular body odor of the recipient for one turn. Animals that normally rely on smell to detect strangers won’t be aware of the subject. Any creature or object the subject encounters can’t learn its scent\nThe caster goes through the motions of pouring an imaginary liquid into his cupped hand and splashing it on the subject’s body, while humming a short ditty.",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Animal"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Drywood",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Abjuration"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Plant",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 cubic foot of wood",
-  "castingTime": "1 segment ( 1⁄2 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison enables the caster to dry pieces of wood that may be too green or too damp to be ignited. Once treated (which takes a full turn), the wood burns as if dried for several months\nThe somatic gesture is a sawing motion with a small flame over the wood to be affected.",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Plant"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Edible Plant",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Divination"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Plant",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 plant",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "When cast on a plant, this orison allows the druid to determine whether or not consuming that type of vegetation would endanger his or her health. If only certain parts of the plant (such as the berries or leaves) are edible, the entire plant registers as inedible unless the caster checks those specific parts. Such matter as grass or maple leaves, while normally not eaten, are revealed as edible, since their consumption causes no actual harm\nThe caster points to the plant to be identified while making a chewing motion.",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Plant"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Elemental Shield",
-  "level": "O",
-  "class": "Priest",
-  "schools": [],
-  "schoolsOfEffect": [
-   "Water"
-  ],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": null,
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "The caster",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison protects the caster from an attack based upon one element (air, earth, fire, water). The first 4 points of damage taken from an attack based on the named element are negated; this occurs after the effects of magic resistance and saving throws are resolved. The protection lasts a maximum of 1 turn\nThe caster places both hands palm up and out­ward before him, circling them once in opposite directions, while whispering the name of the element protected against.",
-  "schoolSource": null,
-  "spheres": [
-   "Elemental Air",
-   "Elemental Earth",
-   "Elemental Fire",
-   "Elemental Water"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Find a Stray",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Divination"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Animal",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 domestic animal",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison enables the caster to locate any missing domestic animal within two miles. The animal could be a cow, sheep, dog, horse, cat, pig, or similar animal. The caster stands in a place well-known to the animal (a barnyard, pasture, etc.), spits on the ground, makes a sign, and calls the animal by name (Rover, Buttercup, Porky, Old Tom, and so on). If the animal is within two miles of the caster, the caster’s tongue will tingle slightly, revealing direction and approximate distance. The effects last until the animal is found, the caster gives up, or the animal moves beyond a two-mile distance from the caster",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Animal"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Flamefinger",
-  "level": "O",
-  "class": "Priest",
-  "schools": [],
-  "schoolsOfEffect": [
-   "Fire"
-  ],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": null,
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "The caster",
-  "castingTime": "1 segment ( 1⁄2 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison creates a small flame on the end of the caster’s forefinger. The caster can maintain it by concentration for up to 1 turn. The flame can be used to ignite combustible materials. The flame can scorch or blister exposed flesh and might inflict as much as 1 point of damage to a creature that fails a saving throw vs. spell\nThe caster snaps his fingers while blowing on them gently.",
-  "schoolSource": null,
-  "spheres": [
-   "Elemental Fire"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Heal Rash",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Necromancy"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Plant",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 sq. ft.",
-  "castingTime": "1 segment ( 1⁄2 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "This is the reverse of the cause rash orison. In addition to countering the cause rash orison, it heals any rash caused by exposure to an irritating plant (such as poison ivy, poison oak, or poison sumac). An exceptionally large rash may require several castings, and magical effects are beyond its power\nThe caster makes a gentle stroking motion above the affected skin.",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Plant"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Holly Dart",
-  "level": null,
-  "class": "Priest",
-  "schools": [
-   "Alteration"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Plant",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 holly leaf",
-  "castingTime": "1 segment ( 1⁄2 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "The druid can enchant a leaf of holly to become a magical dart +1 for one round, if not used by the round after the casting, the leaf reverts to its normal state\nThe caster presses his lips to the leaf.",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Plant"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "spells.json"
- },
- {
-  "name": "Humidity",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Alteration"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Weather",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "10-ft. radius",
-  "castingTime": "1 segment ( 1⁄2 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "The orison causes all objects in the area of effect to become damp and slippery. The moisture remains until the area dries naturally. The orison can be reversed to dry objects in a damp area\nThe caster’s hands, palms down before him, are flicked rapidly outward. For the reverse, the spread fingers are drawn quickly inward.",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Weather"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Liven",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Alteration"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Plant",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 plant",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison restores vigor to one small plant or tree branch. A plant that can bring forth fruit will on command. After one turn, the plant returns to its original state and any fruit not consumed turns to dust\nThe caster gently strokes the branch or plant from root to leaf.",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Plant"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Mark Path",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Enchantment/Charm"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Plant, Travelers",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 object",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison places a small mark on an object, such as a rock or tree, to mark a path. The mark is com­pletely harmless and remains invisible until the caster or another druid passes within 10 feet of the spot. At this time, the mark appears briefly as glowing arrow, pointing in the direction the caster has chosen. Once the mark has revealed itself, the orison fades\nThe caster lightly draws a small arrow with a fingertip on the object to be marked, while whistling a jaunty traveling song.",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Plant",
-   "Travelers"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Pet",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Enchantment/Charm"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Animal",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "Special",
-  "castingTime": "1 segment ( 1⁄2 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison allows the druid to calm one animal of up to 3 HD, domesticating the animal for one turn if a saving throw vs. spell is failed. The animal must have a low Intelligence or less. Any attack on the animal breaks the orison\nThe caster makes a soft cooing noise while pat­ting the animal.",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Animal"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Prod",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Invocation/Evocation"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Weather",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 creature",
-  "castingTime": "1 segment ( 1⁄2 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison produces an electrical spark spring­ing forth from the caster’s hand to strike any one creature within 10 feet. This spark inflicts 4 points of subdual damage (1 point of actual damage)\nThe caster rubs his foot upon the ground while making a soft buzzing sound.",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Weather"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Repel Insects",
-  "level": null,
-  "class": "Priest",
-  "schools": [
-   "Alteration"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Animal",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "The caster",
-  "castingTime": "1 segment ( 1⁄2 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison makes the caster’s body repel normal insects (including normal insects magically summoned or controlled). It has no effect on giant insects. The effect lasts for one hour. While the insects may still swarm around the caster, they will not bite or even light on his or her person\nThe caster twirls his index finger around his head in a circle.",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Animal"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "spells.json"
- },
- {
-  "name": "Ripen",
-  "level": null,
-  "class": "Priest",
-  "schools": [
-   "Alteration"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Plant",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 lb. of fruit",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "By casting this orison, the user causes unripe fruit to ripen within one round. The ripened fruit is otherwise normal in every way, and is subject to normal spoilage and decay\nThe caster makes a clockwise circular motion with his palm over the fruit to be affected.",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Plant"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "spells.json"
- },
- {
-  "name": "Smokeball",
-  "level": "O",
-  "class": "Priest",
-  "schools": [],
-  "schoolsOfEffect": [
-   "Fire"
-  ],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": null,
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1-ft.-radius sphere",
-  "castingTime": "2 segments (1 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison brings into being a sphere of dense smoke anywhere within the range that the caster desires. Any living creature within the smoke cannot see or breathe, and must leave the smoke immediately. The smoke dissipates in 1 turn, sooner if subjected to any breeze or wind\nThe caster makes a soft popping sound with his tongue while pointing his index Finger at the point the puff is to appear.",
-  "schoolSource": null,
-  "spheres": [
-   "Elemental Fire"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
- },
- {
-  "name": "Test Soil",
-  "level": "O",
-  "class": "Priest",
-  "schools": [
-   "Divination"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": "Plant",
-  "range": "10-yard",
-  "duration": null,
-  "aoe": "1 sq. yd. of soil",
-  "castingTime": "1 segment ( 1⁄2 2e Round)",
-  "save": null,
-  "components": null,
-  "source": "PSC",
-  "cantripCategory": "Druid Orison",
-  "notes": null,
-  "po": null,
-  "description": "This orison tells the druid if a section of ground contains the right minerals and nutrients to support healthy plant growth. The balance of acid to alka­line can be divined, as well as the amount of fertil­izer the soil contains\nA small pinch of the dirt to be tested is placed between the lip and gums, as the jaw is worked up and down.",
-  "schoolSource": "spells.json",
-  "spheres": [
-   "Plant"
-  ],
-  "spheresSetting": [],
-  "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
  },
  {
   "name": "Alert Vigil",
@@ -96343,10 +94315,12 @@
   "levelSource": "sheet"
  },
  {
-  "name": "Sunstroke",
+  "name": "Sunstroke - Old Empire",
   "level": 3,
   "class": "Priest",
-  "schools": [],
+  "schools": [
+   "Alteration"
+  ],
   "schoolsOfEffect": [
    "Fire"
   ],
@@ -96363,18 +94337,18 @@
   "components": "V S M",
   "source": "PSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "Granted by the Mulhorandi god Horus-Re of the Forgotten Realms setting.",
   "po": null,
   "description": "Sunstroke afflicts the target with the effects of heat stroke for the duration of the spell. While suffering from the effects of insolation, the target's internal body temperature rises by 1 ° Fahrenheit per round, to a maximum of 8° higher than normal.\nUndead and creatures immune to heat or fire are totally unaffected by this spell. Cold-blooded animals simply move slower and slower. For every degree of increased temperature, cold-blooded creatures have a -1 penalty to initiative.\nWarm-blooded creatures display increasingly feverish side effects while under the effects of this spell. For every degree of increased temperature, warm-blooded creatures suffer 1 point of damage and suffer a -1 penalty to their attack, damage, saving throw, and initiative rolls, to a maximum penalty of -5. If the target 's body temperature rises 6° or more above normal, the target is wracked by convulsions and cannot attack, defend, or cast spells. If the target's body temperature rises 8° above normal, it immediately lapses into a coma and cannot be revived until the spell effect expires.\nA successful saving throw vs. spell negates this spell immediately. Targets are entitled to a saving throw when the spell is cast and once every second round thereafter. An endure heat spell in effect on the target when sunstroke is cast grant s the target a + 1 bonus to its saving throw; a resist fire grants the target a + 3 bonus; and a protection from fire grants immunity to the spell's effects.\nSunstroke's effects can be halted immediately by means of a dispel magic, remove curse, cure disease, or heal spell. Other healing spells have no effect.\nThe material components of this spell are the priest's holy symbol and a small piece of flammable material (paper, cloth, dry wood).\nNotes: Granted by the Mulhorandi god Horus-Re of the FR setting.",
-  "schoolSource": null,
+  "schoolSource": "psc-book",
   "spheres": [
    "Elemental Fire",
    "Sun"
   ],
   "spheresSetting": [],
   "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
+  "sheetRef": "PSC p.624",
+  "levelSource": "psc-book"
  },
  {
   "name": "Surf",
@@ -121675,7 +119649,9 @@
   "name": "Sunstroke",
   "level": 6,
   "class": "Priest",
-  "schools": [],
+  "schools": [
+   "Conjuration/Summoning"
+  ],
   "schoolsOfEffect": [
    "Fire"
   ],
@@ -121692,10 +119668,10 @@
   "components": "V M",
   "source": "PSC",
   "cantripCategory": null,
-  "notes": null,
+  "notes": "Common for priests of the spheres of Sun and Elemental Fire of the Dark Sun setting.",
   "po": null,
   "description": "The caster points his finger at a creature and a brilliant beam of sunlight shoots outward to cause a severe case of heat exhaustion. The crea­ture must make a successful saving throw vs. spell or instantly collapse into a convulsive mass until treated or dead. The creature's skin becomes cold and clammy, it does not sweat regardless of the heat, and its muscles convulse dangerously. This causes the creature to lose 1d4 hit points per round. The condition can be stopped by a heal or cure critical wounds spell, or by pouring at least one gallon of cool water over the creature's head.\nA creature that has suffered a severe heat stroke once is forever susceptible. Those affected require twice their normal amounts of water if exposed to the sun for more than four hours, and may go into convulsions if not adequately hydrated.\nIf the saving throw is successful, the creature is affected as if by the 3rd level heat exhaustion spell. All attack rolls and saving throws are made at a -2 penalty until the effect is countered by cooling (a canteen of water poured on the head is sufficient), by magical healing (such as cure light wounds), or by a dispel magic spell.\nNotes: Common for priests of the spheres of Sun and Elemental Fire of the DS setting.",
-  "schoolSource": null,
+  "schoolSource": "psc-book",
   "spheres": [
    "Elemental Fire"
   ],
@@ -121703,8 +119679,8 @@
    "Elemental Sun"
   ],
   "sphereSource": "sheet",
-  "sheetRef": "PSC p.",
-  "levelSource": "sheet"
+  "sheetRef": "PSC p.624",
+  "levelSource": "psc-book"
  },
  {
   "name": "Superheroism",
@@ -128151,34 +126127,5 @@
   ],
   "spheresSetting": [],
   "sphereSource": "spells.json"
- },
- {
-  "name": "Protection from Hunger and Thirst",
-  "level": 1,
-  "class": "Wizard",
-  "schools": [
-   "Abjuration"
-  ],
-  "schoolsOfEffect": [],
-  "schoolsOfThaumaturgy": [],
-  "otherSchools": [],
-  "province": null,
-  "universal": false,
-  "sphere": null,
-  "range": "Touch",
-  "duration": "1 day/level",
-  "aoe": "One creature",
-  "castingTime": "1",
-  "save": "None",
-  "components": "S M",
-  "source": "PHBR4",
-  "cantripCategory": null,
-  "notes": "ADDED FROM PHBR4 p.97, August 2026. The only one of the book’s 42 new spells absent from this file — the other 41 were already present from the WSC dataset. Transcribed from the page, not from a summary.",
-  "po": null,
-  "description": "When protection from hunger and thirst is cast, the recipient requires no food, water, or nourishment of any kind for the duration of the spell. The recipient can be the caster or anyone he touches. Each day the caster (or the subject of the caster's choice) is under the effect of the spell, he is fully nourished as if he had eaten and drunk normally. At the end of the spell's duration, the subject is no more hungry or thirsty than he was when the spell was originally cast.\nThe material components for this spell are a small piece of dried meat and a cup of water.\nNotes: PHBR4, The Complete Wizard's Handbook.",
-  "schoolSource": "PHBR4 p.97",
-  "wscRef": null,
-  "reversal": null,
-  "levelSource": "PHBR4 p.97"
  }
 ]
