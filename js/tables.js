@@ -9800,6 +9800,28 @@ function isOppositionSpell(spell, clazz) {
 // learn bonus. Mirrors isOppositionSpell's token matching, including the
 // Greater Divination = Divination-of-5th-level-or-higher wrinkle, so a diviner's
 // specialty correctly excludes the lesser divinations any wizard can learn.
+// The school a wizard GAVE UP, or '' if he has not. Stored rather than derived,
+// because PHBR4 p.20 has him become a mage and the class field is expected to
+// say so -- at which point the school is unrecoverable. Falls back to the
+// current class while it is still a specialist, so the value is right even
+// before the field is filled.
+//
+// RETURNS ONLY WHEN THE STATUS IS 'fallen'. A wizard who has not abandoned
+// anything has no former specialty, and every consumer below leans on that.
+function getFormerSpecialty(root) {
+  if (!root || typeof val !== 'function') return '';
+  if (typeof getFallenStatus !== 'function' || getFallenStatus(root) !== 'fallen') return '';
+  const stored = String(val(root, 'former_school') || '').trim().toLowerCase();
+  if (stored) return stored;
+  const c = String(val(root, 'clazz') || '').trim().toLowerCase();
+  return (typeof getSpecialistSchool === 'function' && getSpecialistSchool(c)) ? c : '';
+}
+
+// Has this wizard abandoned his school? One question, one place to ask it.
+function hasAbandonedSchool(root) {
+  return !!getFormerSpecialty(root);
+}
+
 function isSpecialtySpell(spell, clazz) {
   const school = getSpecialistSchool(clazz);
   if (!school) return false;
