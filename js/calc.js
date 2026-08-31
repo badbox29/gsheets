@@ -10906,13 +10906,16 @@ function showSpellDetails(root, spell) {
       learnNote.className = 'spell-learn-note';
       learnNote.style.cssText = 'font-size:11px;color:var(--muted);text-align:right;margin-top:8px;';
       learnNote.textContent =
+        // THE WHOLE PARENTHETICAL IS ONE OR THE OTHER. Leaving the modifier and
+        // the school label outside the ternary appended them to the halved
+        // branch too, producing "half of 85% - 15%, a school that opposed your
+        // former specialty-15% no specialty school - abandoned".
         'Chance to learn: ' + eff + '% (' + (halvedLearn
           ? 'half of ' + baseLearn + '% \u2212 15%, a school that opposed your former specialty'
-          : baseLearn + '% ') +
-        (mod > 0 ? '+' : '\u2212') + '15% ' +
-        (own ? 'specialty school'
-             : abandoned ? 'no specialty school \u2014 abandoned'
-             : 'non-specialty school') + ')';
+          : baseLearn + '% ' + (mod > 0 ? '+' : '\u2212') + '15% ' +
+            (own ? 'specialty school'
+                 : abandoned ? 'no specialty school \u2014 abandoned'
+                 : 'non-specialty school')) + ')';
       buttonContainer.parentNode.insertBefore(learnNote, buttonContainer);
     }
   }
@@ -12003,7 +12006,14 @@ function renderClassAbilities(root) {
   // about the character -- the paladin who fell had a detect evil, and gets it
   // back on atonement. Dimming the whole list is also far cheaper than testing
   // every ability individually and looks identical.
-  const gated = (typeof abilitiesAreWithdrawn === 'function') && abilitiesAreWithdrawn(root);
+  // AN ABANDONED SPECIALIST KEEPS HIS CLASS ABILITIES. He is a mage now, and
+  // Spell Casting and Create Magic Items are the mage's, not the specialist's.
+  // What he loses -- the saving throw modifiers and the acquired powers -- is
+  // removed at source by addSpecialistPowersPHBR4, so there is nothing here to
+  // grey and greying it would claim he had stopped being a wizard.
+  const gated = (typeof abilitiesAreWithdrawn === 'function') &&
+                abilitiesAreWithdrawn(root) &&
+                !((typeof hasAbandonedSchool === 'function') && hasAbandonedSchool(root));
   classAbilitiesList.style.opacity       = gated ? '0.45' : '';
   classAbilitiesList.style.pointerEvents = gated ? 'none' : '';
   classAbilitiesList.title = gated
