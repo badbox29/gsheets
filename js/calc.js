@@ -1045,7 +1045,11 @@ function renderCombatQuickReference(root) {
   const specSavesEl = root.querySelector('.combat-specialist-saves');
   if (specSavesEl) {
     const specSchool = (typeof getSpecialistSchool === 'function') ? getSpecialistSchool(clazz) : null;
-    if (specSchool) {
+    // PHBR4 p.20: on abandoning his school "he loses all saving throw bonuses at
+    // the time of his conversion", so these modifiers stop even while the class
+    // field still names the school.
+    const gaveUpSchool = (typeof hasAbandonedSchool === 'function') && hasAbandonedSchool(root);
+    if (specSchool && !gaveUpSchool) {
       const specKey = (typeof SPECIALIST_WIZARDS !== 'undefined')
         ? Object.keys(SPECIALIST_WIZARDS).find(k => (clazz || '').toLowerCase().includes(k))
         : null;
@@ -10860,7 +10864,11 @@ function showSpellDetails(root, spell) {
   const specSchool = (typeof getSpecialistSchool === 'function') ? getSpecialistSchool(clazz) : null;
   // Cantrips (level 0) follow Tome of Magic acquisition rules, not the standard
   // Table 4 chance-to-learn roll, so skip the +/-15% note for them.
-  if (specSchool && !blocked && spellLevelNum > 0) {
+  // `abandonedForNote` joins the gate because once the class field reads Mage,
+  // specSchool is null and this whole note disappears -- taking the half-chance
+  // formula with it at exactly the moment it matters.
+  const abandonedForNote = (typeof getFormerSpecialty === 'function') ? getFormerSpecialty(root) : '';
+  if ((specSchool || abandonedForNote) && !blocked && spellLevelNum > 0) {
     const intScore = parseInt(val(root, 'int') || 0, 10);
     const baseLearn = (typeof INT_TABLE !== 'undefined' && INT_TABLE[intScore]) ? INT_TABLE[intScore][1] : 0;
 
@@ -10884,7 +10892,12 @@ function showSpellDetails(root, spell) {
       }
     }
     if (intScore >= 9 && baseLearn > 0) {
-      const own = (typeof isSpecialtySpell === 'function') && isSpecialtySpell(spell, clazz);
+      // PHBR4 p.20: an abandoned specialist "no longer receives a bonus" for
+      // spells of his former school. isSpecialtySpell knows nothing about
+      // status -- it takes a class string, not a root -- so the gate is here,
+      // where root is already in scope.
+      const own = !abandoned &&
+                  (typeof isSpecialtySpell === 'function') && isSpecialtySpell(spell, clazz);
       const mod = own ? 15 : -15;
       const eff = halvedLearn
         ? halvedLearn
@@ -10897,7 +10910,9 @@ function showSpellDetails(root, spell) {
           ? 'half of ' + baseLearn + '% \u2212 15%, a school that opposed your former specialty'
           : baseLearn + '% ') +
         (mod > 0 ? '+' : '\u2212') + '15% ' +
-        (own ? 'specialty school' : 'non-specialty school') + ')';
+        (own ? 'specialty school'
+             : abandoned ? 'no specialty school \u2014 abandoned'
+             : 'non-specialty school') + ')';
       buttonContainer.parentNode.insertBefore(learnNote, buttonContainer);
     }
   }
