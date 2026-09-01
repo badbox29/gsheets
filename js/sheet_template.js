@@ -132,6 +132,60 @@ const SHEET_HTML = `
                 <option value="transmuter">Transmuter</option>
               </select>
             </div>
+            <!-- PHBR4 p.40. A Militant Wizard MAGE takes one of three
+                 limitations, chosen by the DM: "choose only one limitation".
+                 Specialists are unaffected -- they get Table 6 instead, and a
+                 character cannot be under both.
+                 THE SHEET DOES NOT ROLL. The book has the DM roll 1d8 three
+                 times for the third limitation; the dice are named in the hint
+                 and the result is entered here. -->
+            <div class="col mw-limitation-col" style="display:none;">
+              <label>Kit Limitation</label>
+              <select data-field="mw_limitation" title="PHBR4 p.40. The DM picks one limitation for a Militant Wizard mage. Specialists take the Table 6 oppositions instead and are not affected by this.">
+                <option value="">&mdash; none chosen &mdash;</option>
+                <option value="noHighLevel">No 8th- or 9th-level spells</option>
+                <option value="intMinusTwo">Learns as if Intelligence were 2 lower</option>
+                <option value="fiveSchools">Five schools only</option>
+              </select>
+            </div>
+            <div class="col mw-barred-col" style="display:none;">
+              <label>Schools Barred (roll 1d8 three times, rerolling duplicates)</label>
+              <div style="display:flex;gap:6px;">
+                <select data-field="mw_barred_1" title="1 = abjuration, 2 = conjuration/summoning, 3 = greater divination, 4 = enchantment/charm, 5 = illusion, 6 = invocation/evocation, 7 = necromancy, 8 = alteration. Your DM rolls; enter the result.">
+                  <option value="">&mdash;</option>
+                  <option value="Abjuration">1 Abjuration</option>
+                  <option value="Conjuration/Summoning">2 Conjuration/Summoning</option>
+                  <option value="Greater Divination">3 Greater Divination</option>
+                  <option value="Enchantment/Charm">4 Enchantment/Charm</option>
+                  <option value="Illusion/Phantasm">5 Illusion/Phantasm</option>
+                  <option value="Invocation/Evocation">6 Invocation/Evocation</option>
+                  <option value="Necromancy">7 Necromancy</option>
+                  <option value="Alteration">8 Alteration</option>
+                </select>
+                <select data-field="mw_barred_2" title="Second roll.">
+                  <option value="">&mdash;</option>
+                  <option value="Abjuration">1 Abjuration</option>
+                  <option value="Conjuration/Summoning">2 Conjuration/Summoning</option>
+                  <option value="Greater Divination">3 Greater Divination</option>
+                  <option value="Enchantment/Charm">4 Enchantment/Charm</option>
+                  <option value="Illusion/Phantasm">5 Illusion/Phantasm</option>
+                  <option value="Invocation/Evocation">6 Invocation/Evocation</option>
+                  <option value="Necromancy">7 Necromancy</option>
+                  <option value="Alteration">8 Alteration</option>
+                </select>
+                <select data-field="mw_barred_3" title="Third roll.">
+                  <option value="">&mdash;</option>
+                  <option value="Abjuration">1 Abjuration</option>
+                  <option value="Conjuration/Summoning">2 Conjuration/Summoning</option>
+                  <option value="Greater Divination">3 Greater Divination</option>
+                  <option value="Enchantment/Charm">4 Enchantment/Charm</option>
+                  <option value="Illusion/Phantasm">5 Illusion/Phantasm</option>
+                  <option value="Invocation/Evocation">6 Invocation/Evocation</option>
+                  <option value="Necromancy">7 Necromancy</option>
+                  <option value="Alteration">8 Alteration</option>
+                </select>
+              </div>
+            </div>
             <div class="col single-class-field">
               <label>Kit</label>
               <select data-field="kit">
