@@ -3872,7 +3872,7 @@ function renderMilitantWizardLimits(root) {
   const kitName = (kit && kit.name) || 'kit';
 
   const limCol = root.querySelector('.mw-limitation-col');
-  const barCol = root.querySelector('.mw-barred-col');
+  const barCol = root.querySelector('.mw-barred-row');
   const offers = !!(kit && kit.mageLimitations) &&
                  !((typeof getSpecialistSchool === 'function') &&
                    getSpecialistSchool(val(root, 'clazz') || ''));
