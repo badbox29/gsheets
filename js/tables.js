@@ -9786,6 +9786,51 @@ function validateSpecialist(root) {
 // the kit. Barred is advisory, so a Militant Wizard illusionist is buildable --
 // he falls through to PHB Table 22 and the kit-requirement advisory says the
 // rest. THE GAP IS RECORDED, NOT INVENTED.
+// ===== PHBR4 MILITANT WIZARD MAGE LIMITATIONS =====
+// The kit's specialists are handled by oppositionOverride above. Its MAGES take
+// one of three limitations instead, chosen by the DM (PHBR4 p.40, "choose only
+// one limitation"). Stored per character, not derivable.
+//
+// SPECIALISTS ARE EXCLUDED. The book gives them Table 6 and gives mages these;
+// a character cannot be under both, and reading the field for a specialist would
+// stack a mage restriction on top of a specialist one.
+function getMageLimitation(root) {
+  if (!root || typeof val !== 'function') return '';
+  if (typeof getSelectedKit !== 'function') return '';
+  const kit = getSelectedKit(root);
+  if (!kit || !kit.mageLimitations) return '';
+  const clazz = val(root, 'clazz') || '';
+  if (typeof getSpecialistSchool === 'function' && getSpecialistSchool(clazz)) return '';
+  return String(val(root, 'mw_limitation') || '').trim();
+}
+
+// The Intelligence score to read PHB Table 4 with. EVERY TABLE 4 CONSUMER USES
+// THIS; nothing else does.
+//
+// PHBR4 p.40's second limitation is "learns spells as if his Intelligence were
+// two points lower... This limitation also affects the number of languages he
+// can learn, the highest level of spells he can cast, the maximum number of
+// spells per level he can know, and his spell immunity." THOSE ARE EXACTLY
+// TABLE 4'S FIVE COLUMNS -- the book is describing that table and nothing else.
+//
+// THE EXPERIENCE BONUS FOR A HIGH PRIME REQUISITE IS NOT AFFECTED, and gets that
+// for free: renderPrimeRequisiteBonus tests the raw ability against 16 and never
+// touches INT_TABLE. A blanket "effective Intelligence" would have quietly cut a
+// Militant Wizard's experience.
+function getEffectiveIntForSpellTable(root) {
+  const raw = parseInt((typeof val === 'function' ? val(root, 'int') : 0) || 0, 10) || 0;
+  if (getMageLimitation(root) === 'intMinusTwo') return Math.max(1, raw - 2);
+  return raw;
+}
+
+// The three schools rolled unavailable under the third limitation, or [].
+function getMageBarredSchools(root) {
+  if (getMageLimitation(root) !== 'fiveSchools') return [];
+  return ['mw_barred_1', 'mw_barred_2', 'mw_barred_3']
+    .map(f => String(val(root, f) || '').trim())
+    .filter(Boolean);
+}
+
 function getOppositionSchools(clazz, root) {
   const c = (clazz || "").trim().toLowerCase();
   if (!c) return [];
