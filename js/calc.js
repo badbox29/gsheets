@@ -10826,9 +10826,22 @@ function showSpellDetails(root, spell) {
   if (!hasAbandoned &&
     typeof isOppositionSpell === 'function' && isOppositionSpell(spell, clazz, root)) {
     const oppList = (typeof getOppositionSchools === 'function') ? getOppositionSchools(clazz, root).join(', ') : '';
+    // WHICH TABLE ACTUALLY APPLIED. A kit may replace Table 22 outright -- PHBR4
+    // Table 6 does for the Militant Wizard -- and citing the PHB for a list that
+    // did not come from it sends the player to the wrong page.
+    let oppCite = 'PHB Table 22';
+    if (typeof getSelectedKit === 'function' && typeof SPECIALIST_WIZARDS !== 'undefined') {
+      const oppKit = getSelectedKit(root);
+      const oppKey = Object.keys(SPECIALIST_WIZARDS)
+        .find(k => String(clazz || '').trim().toLowerCase().includes(k));
+      if (oppKit && oppKit.oppositionOverride && oppKey &&
+          Array.isArray(oppKit.oppositionOverride[oppKey])) {
+        oppCite = oppKit.name + ' kit, PHBR4 Table 6';
+      }
+    }
     reasons.push('Opposition school for your specialty' +
                  (oppList ? ' (' + oppList + ')' : '') +
-                 ' \u2014 cannot be learned (PHB Table 22).');
+                 ' \u2014 cannot be learned (' + oppCite + ').');
   }
 
   // (3) and (4) are PRIEST rules and apply only to priest spells. Detected from
