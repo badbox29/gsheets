@@ -1836,7 +1836,11 @@ function renderIntelligenceEffects(root) {
     return;
   }
   
-  const intData = INT_TABLE[int];
+  // ONLY THE TABLE 4 READ SHIFTS. INT_BONUS_PROFS below keeps the RAW score --
+  // PHBR4 p.40 names four things its limitation touches and bonus proficiencies
+  // is not among them, and neither is the experience bonus.
+  const spInt = (typeof getEffectiveIntForSpellTable === 'function') ? getEffectiveIntForSpellTable(root) : int;
+  const intData = INT_TABLE[spInt];
   const bonusProfs = INT_BONUS_PROFS[int];
   
   // Arcane casters use INT for spells: wizards, all 8 specialists, and bards.
@@ -3846,6 +3850,85 @@ function seedKitNotes(root) {
       markUnsaved(document.querySelector('.tab.active'), true, root);
     }
   });
+}
+
+// PHBR4 p.40's three Militant Wizard mage limitations. THREE BANNERS, NOT ONE,
+// because the three effects surface in three different places on the sheet and a
+// banner belongs at the top of the section it explains -- Chris's call.
+//
+// THE PICKER IS THE SOURCE OF TRUTH FOR THE THIRD ONE. Barred schools are
+// unticked AND disabled in Spell Access, so the only way back is the picker.
+// UNTICKING IS WHAT ACTUALLY ENFORCES IT: renderSpellBrowser reads :checked, so
+// a disabled-but-still-ticked box would go on granting access.
+//
+// SCHOOLS THE PLAYER UNTICKED HIMSELF ARE NEVER RE-TICKED. This only ever turns
+// boxes OFF, and only ever releases ones it had locked, so his own choices
+// survive a change of limitation untouched -- the same rule as the kit notes
+// seeding.
+function renderMilitantWizardLimits(root) {
+  const lim    = (typeof getMageLimitation === 'function') ? getMageLimitation(root) : '';
+  const barred = (typeof getMageBarredSchools === 'function') ? getMageBarredSchools(root) : [];
+  const kit    = (typeof getSelectedKit === 'function') ? getSelectedKit(root) : null;
+  const kitName = (kit && kit.name) || 'kit';
+
+  const limCol = root.querySelector('.mw-limitation-col');
+  const barCol = root.querySelector('.mw-barred-col');
+  const offers = !!(kit && kit.mageLimitations) &&
+                 !((typeof getSpecialistSchool === 'function') &&
+                   getSpecialistSchool(val(root, 'clazz') || ''));
+  if (limCol) limCol.style.display = offers ? '' : 'none';
+  if (barCol) barCol.style.display = (offers && lim === 'fiveSchools') ? '' : 'none';
+
+  const show = (sel, html) => {
+    const el = root.querySelector(sel);
+    if (!el) return;
+    el.innerHTML = html || '';
+    el.style.display = html ? '' : 'none';
+  };
+
+  show('.mw-int-banner', lim === 'intMinusTwo'
+    ? '<strong>' + escapeHtml(kitName) + ' limitation (PHBR4 p.40):</strong> he learns spells ' +
+      'as if his Intelligence were <strong>two points lower</strong>. Every figure in this ' +
+      'section is read from Table 4, so all of them shift \u2014 additional languages, chance to ' +
+      'learn, maximum spells per level, spell immunity, and the highest level he can cast. ' +
+      'His experience bonus for a high prime requisite is <em>not</em> affected.'
+    : '');
+
+  show('.mw-highlevel-banner', lim === 'noHighLevel'
+    ? '<strong>' + escapeHtml(kitName) + ' limitation (PHBR4 p.40):</strong> forbidden to learn ' +
+      '<strong>8th- and 9th-level spells from any school</strong>. His maximum spell level is ' +
+      'capped at 7th however high his level and Intelligence go.'
+    : '');
+
+  const named = barred.length ? barred.map(escapeHtml).join(', ') : 'none chosen yet';
+  show('.mw-barred-banner', lim === 'fiveSchools'
+    ? '<strong>' + escapeHtml(kitName) + ' limitation (PHBR4 p.40):</strong> he may learn from ' +
+      'only five schools. Your DM rolls 1d8 three times, rerolling duplicates, to decide which ' +
+      'three are closed to him \u2014 currently <strong>' + named + '</strong>. Those schools are ' +
+      'switched off and locked below. To change them, edit <em>Schools Barred</em> beside the ' +
+      'Kit field; they cannot be re-enabled here.'
+    : '');
+
+  const boxes = root.querySelectorAll('.school-checkboxes input[type="checkbox"]');
+  const nz = s => String(s || '').trim().toLowerCase();
+  let changed = false;
+  boxes.forEach(cb => {
+    const school = cb.getAttribute('data-school') || '';
+    const isBarred = (lim === 'fiveSchools') && barred.some(b => nz(b) === nz(school));
+    if (isBarred) {
+      if (cb.checked) { cb.checked = false; changed = true; }
+      cb.disabled = true;
+      if (cb.parentElement) cb.parentElement.style.opacity = '0.5';
+      cb.title = 'Closed by the ' + kitName + ' limitation (PHBR4 p.40). Change it beside the Kit field.';
+    } else if (cb.disabled) {
+      // Releases only a box THIS function locked, and leaves it UNTICKED --
+      // re-ticking would hand back access the player may never have had.
+      cb.disabled = false;
+      if (cb.parentElement) cb.parentElement.style.opacity = '';
+      cb.title = '';
+    }
+  });
+  if (changed && typeof renderSpellBrowser === 'function') renderSpellBrowser(root);
 }
 
 // The creation-time half of the kit's data: starting money, required equipment,
@@ -6564,7 +6647,8 @@ async function renderSpellBrowser(root) {
   // PHB Table 4: Intelligence caps a wizard's highest castable spell level.
   let intCapped = false;
   if (isWizard && typeof INT_TABLE !== 'undefined') {
-    const intScore = parseInt(val(root, 'int') || 0, 10);
+    const intScore = (typeof getEffectiveIntForSpellTable === 'function')
+      ? getEffectiveIntForSpellTable(root) : (parseInt(val(root, 'int') || 0, 10));
     const intRow   = INT_TABLE[intScore];
     const intMax   = intRow ? intRow[4] : 0;   // index 4 = max spell level
 
@@ -7098,7 +7182,9 @@ function addLanguageProficiency(root, lang) {
   
   // Intelligence language cap (PHB Table 4). The native tongue is NOT counted --
   // Table 4 lists languages the character can learn IN ADDITION to it.
-  const int = parseInt(val(root, 'int') || 0, 10);
+  // "the number of languages he can learn" -- PHBR4 p.40.
+  const int = (typeof getEffectiveIntForSpellTable === 'function')
+    ? getEffectiveIntForSpellTable(root) : (parseInt(val(root, 'int') || 0, 10));
   const intData = INT_TABLE[int];
   const languageLimit = intData ? intData[0] : 0;
 
@@ -7202,7 +7288,9 @@ function renderLanguageProficiencies(root) {
   
   // Intelligence language cap (PHB Table 4). The NATIVE tongue is excluded --
   // Table 4 counts languages learned IN ADDITION to it.
-  const int = parseInt(val(root, 'int') || 0, 10);
+  // "the number of languages he can learn" -- PHBR4 p.40.
+  const int = (typeof getEffectiveIntForSpellTable === 'function')
+    ? getEffectiveIntForSpellTable(root) : (parseInt(val(root, 'int') || 0, 10));
   const intData = INT_TABLE[int];
   const languageLimit = intData ? intData[0] : 0;
 
@@ -7683,7 +7771,9 @@ function addCustomLanguage(root) {
   }
   
   // Calculate language limit based on Intelligence
-  const int = parseInt(val(root, 'int') || 0, 10);
+  // "the number of languages he can learn" -- PHBR4 p.40.
+  const int = (typeof getEffectiveIntForSpellTable === 'function')
+    ? getEffectiveIntForSpellTable(root) : (parseInt(val(root, 'int') || 0, 10));
   const intData = INT_TABLE[int];
   const languageLimit = intData ? intData[0] : 0;
   
@@ -10916,7 +11006,9 @@ function showSpellDetails(root, spell) {
   // formula with it at exactly the moment it matters.
   const abandonedForNote = (typeof getFormerSpecialty === 'function') ? getFormerSpecialty(root) : '';
   if ((specSchool || abandonedForNote) && !blocked && spellLevelNum > 0) {
-    const intScore = parseInt(val(root, 'int') || 0, 10);
+    // "chance to learn" -- PHBR4 p.40.
+    const intScore = (typeof getEffectiveIntForSpellTable === 'function')
+      ? getEffectiveIntForSpellTable(root) : (parseInt(val(root, 'int') || 0, 10));
     const baseLearn = (typeof INT_TABLE !== 'undefined' && INT_TABLE[intScore]) ? INT_TABLE[intScore][1] : 0;
 
     // ABANDONED SPECIALIST (PHBR4 p.20). Three branches, and the third is not a
@@ -11320,7 +11412,9 @@ function getMaxSpellLevel(root) {
   }
 
   const int = parseInt(val(root, 'int') || 0, 10);
-  const intRow = (typeof INT_TABLE !== 'undefined') ? INT_TABLE[int] : null;
+  // "the highest level of spells he can cast" -- PHBR4 p.40.
+  const spInt = (typeof getEffectiveIntForSpellTable === 'function') ? getEffectiveIntForSpellTable(root) : int;
+  const intRow = (typeof INT_TABLE !== 'undefined') ? INT_TABLE[spInt] : null;
   const intMax = intRow ? (parseInt(intRow[4], 10) || 0) : 0;
 
   pairs.forEach(p => {
@@ -11378,7 +11472,10 @@ function renderKnownSpellStatus(root) {
 
   // Table 4 column 3 is a number below INT 19 and the string "All" from 19 up.
   const int = parseInt(val(root, 'int') || 0, 10);
-  const row = (typeof INT_TABLE !== 'undefined') ? INT_TABLE[int] : null;
+  // PHBR4 p.40 names "the maximum number of spells per level he can know" as one
+  // of the four things its Intelligence limitation touches.
+  const spInt = (typeof getEffectiveIntForSpellTable === 'function') ? getEffectiveIntForSpellTable(root) : int;
+  const row = (typeof INT_TABLE !== 'undefined') ? INT_TABLE[spInt] : null;
   const rawCap = row ? row[2] : 0;
   const uncapped = (typeof rawCap === 'string');
   const cap = uncapped ? Infinity : (parseInt(rawCap, 10) || 0);
