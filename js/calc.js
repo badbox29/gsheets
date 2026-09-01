@@ -10824,8 +10824,8 @@ function showSpellDetails(root, spell) {
   // explicitly lets him attempt, and the formula above would never be reached.
   const hasAbandoned = (typeof hasAbandonedSchool === 'function') && hasAbandonedSchool(root);
   if (!hasAbandoned &&
-      typeof isOppositionSpell === 'function' && isOppositionSpell(spell, clazz)) {
-    const oppList = (typeof getOppositionSchools === 'function') ? getOppositionSchools(clazz).join(', ') : '';
+    typeof isOppositionSpell === 'function' && isOppositionSpell(spell, clazz, root)) {peof isOppositionSpell === 'function' && isOppositionSpell(spell, clazz)) {
+    const oppList = (typeof getOppositionSchools === 'function') ? getOppositionSchools(clazz, root).join(', ') : '';
     reasons.push('Opposition school for your specialty' +
                  (oppList ? ' (' + oppList + ')' : '') +
                  ' \u2014 cannot be learned (PHB Table 22).');
@@ -10917,7 +10917,11 @@ function showSpellDetails(root, spell) {
     const abandoned = (typeof getFormerSpecialty === 'function') ? getFormerSpecialty(root) : '';
     let halvedLearn = 0;
     if (abandoned && typeof getOppositionSchools === 'function') {
-      const wasOpp = getOppositionSchools(abandoned);
+      // Passing root so an abandoned MILITANT WIZARD is judged against the
+      // oppositions his kit gave him, not the PHB's -- those were the schools
+      // that actually opposed him, and the half-chance formula turns on which
+      // list applies.
+      const wasOpp = getOppositionSchools(abandoned, root);
       const schools = (typeof splitClassification === 'function')
         ? splitClassification(spell.school) : [String(spell.school || '')];
       const nz = x => String(x || '').trim().toLowerCase();
@@ -11914,7 +11918,7 @@ function renderSpecialistSpellNotes(root) {
     const sd = item._spellData || {};
     const probe = { school: sd.schoolSphere || '', level: sd.level };
     const own = (typeof isSpecialtySpell === 'function') && isSpecialtySpell(probe, component.clazz);
-    const opp = (typeof isOppositionSpell === 'function') && isOppositionSpell(probe, component.clazz);
+    const opp = (typeof isOppositionSpell === 'function') && isOppositionSpell(probe, component.clazz, root);
 
     const railEl = item.querySelector('.rail');
     if (railEl) railEl.className = 'rail ' + (own ? 'own' : opp ? 'opposition' : 'neutral');
