@@ -148,44 +148,6 @@ const SHEET_HTML = `
                 <option value="fiveSchools">Five schools only</option>
               </select>
             </div>
-            <div class="col mw-barred-col" style="display:none;">
-              <label>Schools Barred (roll 1d8 three times, rerolling duplicates)</label>
-              <div style="display:flex;gap:6px;">
-                <select data-field="mw_barred_1" title="1 = abjuration, 2 = conjuration/summoning, 3 = greater divination, 4 = enchantment/charm, 5 = illusion, 6 = invocation/evocation, 7 = necromancy, 8 = alteration. Your DM rolls; enter the result.">
-                  <option value="">&mdash;</option>
-                  <option value="Abjuration">1 Abjuration</option>
-                  <option value="Conjuration/Summoning">2 Conjuration/Summoning</option>
-                  <option value="Greater Divination">3 Greater Divination</option>
-                  <option value="Enchantment/Charm">4 Enchantment/Charm</option>
-                  <option value="Illusion/Phantasm">5 Illusion/Phantasm</option>
-                  <option value="Invocation/Evocation">6 Invocation/Evocation</option>
-                  <option value="Necromancy">7 Necromancy</option>
-                  <option value="Alteration">8 Alteration</option>
-                </select>
-                <select data-field="mw_barred_2" title="Second roll.">
-                  <option value="">&mdash;</option>
-                  <option value="Abjuration">1 Abjuration</option>
-                  <option value="Conjuration/Summoning">2 Conjuration/Summoning</option>
-                  <option value="Greater Divination">3 Greater Divination</option>
-                  <option value="Enchantment/Charm">4 Enchantment/Charm</option>
-                  <option value="Illusion/Phantasm">5 Illusion/Phantasm</option>
-                  <option value="Invocation/Evocation">6 Invocation/Evocation</option>
-                  <option value="Necromancy">7 Necromancy</option>
-                  <option value="Alteration">8 Alteration</option>
-                </select>
-                <select data-field="mw_barred_3" title="Third roll.">
-                  <option value="">&mdash;</option>
-                  <option value="Abjuration">1 Abjuration</option>
-                  <option value="Conjuration/Summoning">2 Conjuration/Summoning</option>
-                  <option value="Greater Divination">3 Greater Divination</option>
-                  <option value="Enchantment/Charm">4 Enchantment/Charm</option>
-                  <option value="Illusion/Phantasm">5 Illusion/Phantasm</option>
-                  <option value="Invocation/Evocation">6 Invocation/Evocation</option>
-                  <option value="Necromancy">7 Necromancy</option>
-                  <option value="Alteration">8 Alteration</option>
-                </select>
-              </div>
-            </div>
             <div class="col single-class-field">
               <label>Kit</label>
               <select data-field="kit">
@@ -211,6 +173,49 @@ const SHEET_HTML = `
               <select data-field="kit_variant"></select>
             </div>
             <div class="col single-class-field"><label>Level</label><input data-field="level" type="number" min="1" value="1"></div>
+          </div>
+          <!-- ITS OWN ROW, not a column in the one above. Three selects wide
+               enough to read "3 Greater Divination" will not fit beside Class,
+               Kit Limitation, Kit and Level -- squeezed in there the option text
+               truncated to "3", "1", "7" and the label wrapped over three lines.
+               Label inline to the left, then the three dropdowns. -->
+          <div class="row mw-barred-row" style="display:none;margin-top:8px;">
+            <div class="col" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <label style="margin:0;white-space:nowrap;">Schools Barred (roll 1d8 three times, rerolling duplicates):</label>
+              <select data-field="mw_barred_1" style="min-width:200px;" title="1 = abjuration, 2 = conjuration/summoning, 3 = greater divination, 4 = enchantment/charm, 5 = illusion, 6 = invocation/evocation, 7 = necromancy, 8 = alteration. Your DM rolls; enter the result.">
+                <option value="">&mdash;</option>
+                <option value="Abjuration">1 Abjuration</option>
+                <option value="Conjuration/Summoning">2 Conjuration/Summoning</option>
+                <option value="Greater Divination">3 Greater Divination</option>
+                <option value="Enchantment/Charm">4 Enchantment/Charm</option>
+                <option value="Illusion/Phantasm">5 Illusion/Phantasm</option>
+                <option value="Invocation/Evocation">6 Invocation/Evocation</option>
+                <option value="Necromancy">7 Necromancy</option>
+                <option value="Alteration">8 Alteration</option>
+              </select>
+              <select data-field="mw_barred_2" style="min-width:200px;" title="Second roll.">
+                <option value="">&mdash;</option>
+                <option value="Abjuration">1 Abjuration</option>
+                <option value="Conjuration/Summoning">2 Conjuration/Summoning</option>
+                <option value="Greater Divination">3 Greater Divination</option>
+                <option value="Enchantment/Charm">4 Enchantment/Charm</option>
+                <option value="Illusion/Phantasm">5 Illusion/Phantasm</option>
+                <option value="Invocation/Evocation">6 Invocation/Evocation</option>
+                <option value="Necromancy">7 Necromancy</option>
+                <option value="Alteration">8 Alteration</option>
+              </select>
+              <select data-field="mw_barred_3" style="min-width:200px;" title="Third roll.">
+                <option value="">&mdash;</option>
+                <option value="Abjuration">1 Abjuration</option>
+                <option value="Conjuration/Summoning">2 Conjuration/Summoning</option>
+                <option value="Greater Divination">3 Greater Divination</option>
+                <option value="Enchantment/Charm">4 Enchantment/Charm</option>
+                <option value="Illusion/Phantasm">5 Illusion/Phantasm</option>
+                <option value="Invocation/Evocation">6 Invocation/Evocation</option>
+                <option value="Necromancy">7 Necromancy</option>
+                <option value="Alteration">8 Alteration</option>
+              </select>
+            </div>
           </div>
           <div class="row" style="margin-top:8px">
             <div class="col">
