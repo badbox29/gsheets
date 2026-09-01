@@ -10824,7 +10824,7 @@ function showSpellDetails(root, spell) {
   // explicitly lets him attempt, and the formula above would never be reached.
   const hasAbandoned = (typeof hasAbandonedSchool === 'function') && hasAbandonedSchool(root);
   if (!hasAbandoned &&
-    typeof isOppositionSpell === 'function' && isOppositionSpell(spell, clazz, root)) {peof isOppositionSpell === 'function' && isOppositionSpell(spell, clazz)) {
+    typeof isOppositionSpell === 'function' && isOppositionSpell(spell, clazz, root)) {
     const oppList = (typeof getOppositionSchools === 'function') ? getOppositionSchools(clazz, root).join(', ') : '';
     reasons.push('Opposition school for your specialty' +
                  (oppList ? ' (' + oppList + ')' : '') +
