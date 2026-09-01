@@ -3906,7 +3906,12 @@ function renderMilitantWizardLimits(root) {
       'only five schools. Your DM rolls 1d8 three times, rerolling duplicates, to decide which ' +
       'three are closed to him \u2014 currently <strong>' + named + '</strong>. Those schools are ' +
       'switched off and locked below. To change them, edit <em>Schools Barred</em> beside the ' +
-      'Kit field; they cannot be re-enabled here.'
+      'Kit field; they cannot be re-enabled here.' +
+      (barred.some(b => String(b).trim().toLowerCase() === 'greater divination')
+        ? ' <em>Greater divination has no checkbox of its own \u2014 it means divination of 5th ' +
+          'level and above, so the Divination box stays ticked and only the higher-level ' +
+          'spells are refused.</em>'
+        : '')
     : '');
 
   const boxes = root.querySelectorAll('.school-checkboxes input[type="checkbox"]');
@@ -10952,6 +10957,26 @@ function showSpellDetails(root, spell) {
   const spellIsPriest =
     String(spell.class || '').toLowerCase().includes('priest') ||
     ((typeof getSpellSpheres === 'function') && getSpellSpheres(spell).length > 0);
+
+  // GREATER DIVINATION CANNOT BE A CHECKBOX. Spell Access offers "Divination"
+  // as one box, but PHBR4's 1d8 list bars "greater divination" -- divination of
+  // 5TH LEVEL OR HIGHER -- and lesser divination stays open to every wizard.
+  // Unticking the box would take both. So the other seven schools are enforced
+  // by unticking in Spell Access and this one is enforced here, on the level,
+  // exactly as isOppositionSpell handles the same distinction.
+  const mwBarred = (typeof getMageBarredSchools === 'function') ? getMageBarredSchools(root) : [];
+  if (mwBarred.some(b => String(b).trim().toLowerCase() === 'greater divination')) {
+    const mwSchools = (typeof splitClassification === 'function')
+      ? splitClassification(spell.school) : [String(spell.school || '')];
+    const mwLevel = (typeof spell.level === 'number')
+      ? spell.level : (parseInt(spell.level, 10) || 0);
+    if (mwLevel >= 5 && mwSchools.some(s => String(s).trim().toLowerCase() === 'divination')) {
+      reasons.push('Greater divination is closed to you by your kit limitation ' +
+                   '(PHBR4 p.40) \u2014 divination spells of 5th level and above ' +
+                   'cannot be learned. Lesser divination, 4th level and below, ' +
+                   'is unaffected.');
+    }
+  }
 
   if (spellIsPriest) {
     const accessMap = (typeof getSphereAccessMap === 'function') ? getSphereAccessMap(root) : {};
