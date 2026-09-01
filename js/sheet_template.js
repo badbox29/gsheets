@@ -182,7 +182,7 @@ const SHEET_HTML = `
           <div class="row mw-barred-row" style="display:none;margin-top:8px;">
             <div class="col" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
               <label style="margin:0;white-space:nowrap;">Schools Barred (roll 1d8 three times, rerolling duplicates):</label>
-              <select data-field="mw_barred_1" style="min-width:200px;" title="1 = abjuration, 2 = conjuration/summoning, 3 = greater divination, 4 = enchantment/charm, 5 = illusion, 6 = invocation/evocation, 7 = necromancy, 8 = alteration. Your DM rolls; enter the result.">
+              <select data-field="mw_barred_1" style="width:auto;flex:0 1 200px;" title="1 = abjuration, 2 = conjuration/summoning, 3 = greater divination, 4 = enchantment/charm, 5 = illusion, 6 = invocation/evocation, 7 = necromancy, 8 = alteration. Your DM rolls; enter the result.">
                 <option value="">&mdash;</option>
                 <option value="Abjuration">1 Abjuration</option>
                 <option value="Conjuration/Summoning">2 Conjuration/Summoning</option>
@@ -193,7 +193,7 @@ const SHEET_HTML = `
                 <option value="Necromancy">7 Necromancy</option>
                 <option value="Alteration">8 Alteration</option>
               </select>
-              <select data-field="mw_barred_2" style="min-width:200px;" title="Second roll.">
+              <select data-field="mw_barred_2" style="width:auto;flex:0 1 200px;" title="Second roll.">
                 <option value="">&mdash;</option>
                 <option value="Abjuration">1 Abjuration</option>
                 <option value="Conjuration/Summoning">2 Conjuration/Summoning</option>
@@ -204,7 +204,7 @@ const SHEET_HTML = `
                 <option value="Necromancy">7 Necromancy</option>
                 <option value="Alteration">8 Alteration</option>
               </select>
-              <select data-field="mw_barred_3" style="min-width:200px;" title="Third roll.">
+              <select data-field="mw_barred_3" style="width:auto;flex:0 1 200px;" title="Third roll.">
                 <option value="">&mdash;</option>
                 <option value="Abjuration">1 Abjuration</option>
                 <option value="Conjuration/Summoning">2 Conjuration/Summoning</option>
