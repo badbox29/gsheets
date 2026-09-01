@@ -9169,6 +9169,14 @@ function bindSheet(root, tab){
     if (f === 'mw_limitation' || f === 'mw_barred_1' ||
         f === 'mw_barred_2'   || f === 'mw_barred_3') {
       if (typeof renderMilitantWizardLimits === 'function') renderMilitantWizardLimits(root);
+      // renderIntelligenceEffects IS NOT IN recalculateAll. Its only callers are
+      // loadSheet and the ability-score listeners in bindSheet, because until
+      // now the only thing that changed those five readouts was editing the
+      // Intelligence box itself. The kit limitation is the first thing that
+      // moves them without the score moving, so it must call this directly.
+      if (typeof renderIntelligenceEffects === 'function') renderIntelligenceEffects(root);
+      // Carries the max spell level and the known-spell status, which read
+      // Table 4 through the same resolver.
       if (typeof recalculateAll === 'function') recalculateAll(root);
       if (typeof renderSpellBrowser === 'function') renderSpellBrowser(root);
     }
