@@ -849,6 +849,12 @@ const SHEET_HTML = `
 		<!-- Intelligence Effects -->
         <section class="section">
           <h3>Intelligence</h3>
+          <!-- PHBR4 p.40, second limitation: he learns spells as if his
+               Intelligence were two points lower. Every figure in this section
+               is read from Table 4, so all of them shift -- which is exactly
+               why the banner belongs at the top of it rather than beside any
+               one field. -->
+          <div class="mw-int-banner advisory-note" style="display:none;"></div>
           <div class="row">
             <div class="col">
               <label>Additional Languages</label>
@@ -1623,6 +1629,13 @@ const SHEET_HTML = `
 		    Select which spheres (priests) or schools (wizards) your character has access to. This filters available spells.
 		  </p>
 		
+          <!-- PHBR4 p.40, the Militant Wizard mage's third limitation. The
+               picker is the source of truth; the checkboxes below are the
+               display. Barred schools are unticked AND disabled, so the only
+               way back is through the picker -- a DM-imposed limit should not be
+               undoable by clicking a checkbox. Schools the player unticked for
+               his own reasons are never re-ticked by this. -->
+          <div class="mw-barred-banner advisory-note" style="display:none;"></div>
           <div class="spell-access-container" style="display:none;">
 		    <!-- Priest Spheres -->
 		    <div class="priest-spheres" style="display:none;">
@@ -1820,6 +1833,11 @@ const SHEET_HTML = `
 			</div>
 			
 			<!-- Spells known per level vs the PHB Table 4 Intelligence cap (wizards only) -->
+			<!-- PHBR4 p.40, first limitation: no 8th- or 9th-level spells from any
+			     school. getMaxSpellLevel enforces it as a real cap, so this says
+			     why the cap is lower than the character's level and Intelligence
+			     would otherwise allow. -->
+			<div class="mw-highlevel-banner advisory-note" style="display:none;"></div>
 			<div class="spellbook-known-status stat-strip" style="display:none;">
 			  <span class="lab">SPELLS KNOWN</span>
 			  <span class="prose spellbook-known-text">&mdash;</span>
