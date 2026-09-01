@@ -6772,6 +6772,11 @@ function collectSheet(root){
     // Same reasoning as classStatus above: a fact about what happened at the
     // table, which must survive the class field being edited to Mage.
     formerSchool: val(root,'former_school'),
+    // The DM's choice and his three rolls. Stored as an array because they are
+    // one decision with three parts, and because a future limitation might use
+    // a different count -- the book's "roll three times" is not a law of nature.
+    mwLimitation: val(root,'mw_limitation'),
+    mwBarred: [val(root,'mw_barred_1'), val(root,'mw_barred_2'), val(root,'mw_barred_3')],
     specialtyPriest: {
       primeReq2:    val(root,'sp_prime_req2'),
       hitDie:       val(root,'sp_hit_die'),
@@ -7250,6 +7255,12 @@ function loadSheet(root, data){
   // so loading a fallen character does not immediately prompt about itself.
   val(root, 'class_status', data.classStatus || '');
   val(root, 'former_school', data.formerSchool || '');
+  // PHBR4 p.40. Absent on older records, which reads as no limitation chosen --
+  // the correct default, since the DM has to choose one for it to apply.
+  val(root, 'mw_limitation', data.mwLimitation || '');
+  val(root, 'mw_barred_1',   (data.mwBarred && data.mwBarred[0]) || '');
+  val(root, 'mw_barred_2',   (data.mwBarred && data.mwBarred[1]) || '');
+  val(root, 'mw_barred_3',   (data.mwBarred && data.mwBarred[2]) || '');
   root._prevClassStatus = data.classStatus || '';
 
   const sp = data.specialtyPriest || {};
@@ -9221,6 +9232,7 @@ function bindSheet(root, tab){
         }
       }
       root._prevClassStatus = now;
+      if (typeof renderMilitantWizardLimits === 'function') renderMilitantWizardLimits(root);
       if (typeof recalculateAll === 'function') recalculateAll(root);
       // recalculateAll carries saves, spell slots, turn undead and class
       // abilities, but NOT these two -- so the spellbook stayed crisp and the
