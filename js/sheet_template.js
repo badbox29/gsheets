@@ -1689,13 +1689,6 @@ const SHEET_HTML = `
                way back is through the picker -- a DM-imposed limit should not be
                undoable by clicking a checkbox. Schools the player unticked for
                his own reasons are never re-ticked by this. -->
-          <div class="mw-barred-banner advisory-note" style="display:none;"></div>
-          <!-- PHBR4 p.40, the Militant Wizard mage's third limitation. The
-               picker is the source of truth; the checkboxes below are the
-               display. Barred schools are unticked AND disabled, so the only
-               way back is through the picker -- a DM-imposed limit should not be
-               undoable by clicking a checkbox. Schools the player unticked for
-               his own reasons are never re-ticked by this. -->
           <div class="mw-barred-banner" style="display:none;margin-bottom:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
           <div class="spell-access-container" style="display:none;">
 		    <!-- Priest Spheres -->
@@ -1894,11 +1887,6 @@ const SHEET_HTML = `
 			</div>
 			
 			<!-- Spells known per level vs the PHB Table 4 Intelligence cap (wizards only) -->
-			<!-- PHBR4 p.40, first limitation: no 8th- or 9th-level spells from any
-			     school. getMaxSpellLevel enforces it as a real cap, so this says
-			     why the cap is lower than the character's level and Intelligence
-			     would otherwise allow. -->
-			<div class="mw-highlevel-banner advisory-note" style="display:none;"></div>
 			<!-- PHBR4 p.40, first limitation: no 8th- or 9th-level spells from any
 			     school. getMaxSpellLevel enforces it as a real cap, so this says
 			     why the cap is lower than the character's level and Intelligence
