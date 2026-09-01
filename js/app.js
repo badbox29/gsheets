@@ -9157,6 +9157,22 @@ function bindSheet(root, tab){
       // this, changing Combat Abilities left the budget line stale.
       if (typeof renderSphereAccessSummary === 'function') renderSphereAccessSummary(root);
     }
+    // THE MILITANT WIZARD LIMITATION PICKER AND ITS THREE SCHOOL SELECTS.
+    // recalculateAll does not touch the kit renderers -- the same reason the kit
+    // and kit_variant branches above call renderKitAbilities explicitly -- so
+    // without this the banners, the Spell Access locking and the spell-level cap
+    // all waited for a reload.
+    //
+    // recalculateAll IS ALSO NEEDED, not just the kit renderer: the Intelligence
+    // section, the max spell level and the chance-to-learn all read Table 4
+    // through getEffectiveIntForSpellTable and are rendered elsewhere.
+    if (f === 'mw_limitation' || f === 'mw_barred_1' ||
+        f === 'mw_barred_2'   || f === 'mw_barred_3') {
+      if (typeof renderMilitantWizardLimits === 'function') renderMilitantWizardLimits(root);
+      if (typeof recalculateAll === 'function') recalculateAll(root);
+      if (typeof renderSpellBrowser === 'function') renderSpellBrowser(root);
+    }
+
     // CLASS STATUS. Moving INTO a gating state withdraws saves, turning, class
     // abilities and spell access at once, so it asks first -- a misclick must
     // not be able to strip a character. Moving OUT, or into 'graced' (which
