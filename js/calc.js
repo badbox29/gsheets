@@ -4027,6 +4027,9 @@ function renderKitAbilities(root) {
   // same reason the proficiency grants do -- ABOVE the early return, because
   // clearing the kit is exactly when it must be emptied and hidden.
   if (typeof renderKitReference === 'function') renderKitReference(root);
+  // Same placement and the same reason: clearing the kit must clear the
+  // limitation banners and release any schools it had locked.
+  if (typeof renderMilitantWizardLimits === 'function') renderMilitantWizardLimits(root);
 
   // Same placement, same reason: clearing the kit must clear an unedited seed
   // rather than leaving the old kit's benefits sitting under no kit at all.
@@ -6680,8 +6683,17 @@ async function renderSpellBrowser(root) {
   // be browsed but not added.
   const capNoticeEl = root.querySelector('.spell-int-cap-notice');
   if (capNoticeEl && maxSpellLevel > 0) {
-    if (intCapped) {
-      const intScore = parseInt(val(root, 'int') || 0, 10);
+    const kitCapNotice = (typeof getMageLimitation === 'function') &&
+                         getMageLimitation(root) === 'noHighLevel' && maxSpellLevel === 7;
+    if (kitCapNotice) {
+      capNoticeEl.style.display = 'block';
+      capNoticeEl.textContent =
+        'Your kit forbids 8th- and 9th-level spells from any school (PHBR4 p.40), ' +
+        'capping you at level 7. Higher-level spells show for reference but can\u2019t be added.';
+    } else if (intCapped) {
+      // The EFFECTIVE score, so the number quoted matches the cap it explains.
+      const intScore = (typeof getEffectiveIntForSpellTable === 'function')
+        ? getEffectiveIntForSpellTable(root) : (parseInt(val(root, 'int') || 0, 10));
       capNoticeEl.style.display = 'block';
       capNoticeEl.textContent =
         'Intelligence ' + intScore + ' caps you at level ' + maxSpellLevel +
@@ -11392,7 +11404,7 @@ function renderSpecialistMemorizedStatus(root) {
 // by whichever side reaches higher. The browser already filters by class
 // access, so this is an approximation rather than a hole.
 function getMaxSpellLevel(root) {
-  const out = { max: 0, intCapped: false, clazz: '', level: 0 };
+  const out = { max: 0, intCapped: false, kitCapped: false, clazz: '', level: 0 };
 
   const charType = (val(root, 'char_type') || 'single').toLowerCase();
   const pairs = [];
@@ -11446,7 +11458,17 @@ function getMaxSpellLevel(root) {
     }
 
     if (cap > out.max) {
-      out.max = cap; out.intCapped = capped; out.clazz = p.clazz; out.level = p.level;
+      // PHBR4 p.40's FIRST limitation: "forbidden to learn 8th-level and
+      // 9th-level spells from any school". A REAL CAP, not an advisory --
+      // Chris's call -- with the mw-highlevel-banner saying why, because a cap
+      // that does not explain itself reads as a bug.
+      let kitCapped = false;
+      if ((typeof getMageLimitation === 'function') &&
+          getMageLimitation(root) === 'noHighLevel' && cap > 7) {
+        cap = 7; kitCapped = true;
+      }
+      out.max = cap; out.intCapped = capped; out.kitCapped = kitCapped;
+      out.clazz = p.clazz; out.level = p.level;
     }
   });
 
