@@ -9774,15 +9774,34 @@ function validateSpecialist(root) {
 // flat one: only Divination spells of 5th level or higher are Greater
 // Divination. Lesser divination (<=4th) is available to every wizard, so it is
 // never opposed.
-function getOppositionSchools(clazz) {
+// `root` is OPTIONAL and last. Without it this returns PHB Table 22, which is
+// what every caller wanted before PHBR4; with it, a kit may replace the list.
+//
+// PHBR4's Militant Wizard is the first kit to do so -- Table 6 (p.40) gives its
+// specialists a DIFFERENT set of oppositional schools, and the book is explicit
+// that "the Militant Wizard is forbidden to learn spells from these schools".
+// It replaces Table 22 rather than adding to it.
+//
+// NO ILLUSIONIST ROW EXISTS in Table 6, because illusion is a barred school for
+// the kit. Barred is advisory, so a Militant Wizard illusionist is buildable --
+// he falls through to PHB Table 22 and the kit-requirement advisory says the
+// rest. THE GAP IS RECORDED, NOT INVENTED.
+function getOppositionSchools(clazz, root) {
   const c = (clazz || "").trim().toLowerCase();
   if (!c) return [];
   const key = Object.keys(SPECIALIST_WIZARDS).find(k => c.includes(k));
-  return key ? SPECIALIST_WIZARDS[key].opposition : [];
+  if (!key) return [];
+
+  if (root && typeof getSelectedKit === 'function') {
+    const kit = getSelectedKit(root);
+    const ov  = kit && kit.oppositionOverride;
+    if (ov && Array.isArray(ov[key])) return ov[key];
+  }
+  return SPECIALIST_WIZARDS[key].opposition;
 }
 
-function isOppositionSpell(spell, clazz) {
-  const opposition = getOppositionSchools(clazz);
+function isOppositionSpell(spell, clazz, root) {
+  const opposition = getOppositionSchools(clazz, root);
   if (opposition.length === 0) return false;
 
   // The spell's school tokens. spell.school is the comma-joined string the
