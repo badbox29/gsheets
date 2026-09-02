@@ -3398,6 +3398,35 @@ const SHEET_HTML = `
           Breath-holding lives on the Core tab instead, because 1/3 Constitution
           is a flat derived number with nothing to choose.
         -->
+        <!-- SPELL RESEARCH. PHBR4 Chapter 7 pp.90-94, which offers its rules as
+             SUGGESTIONS the DM may adjust -- so this panel stores what the DM
+             decided and derives only what follows arithmetically from it.
+
+             THE SHEET NEVER ROLLS AND NEVER ADVANCES A WEEK. The success chance
+             is displayed; the DM rolls it. Weeks elapsed is typed by the player
+             after a session, because only the table knows whether the study was
+             interrupted.
+
+             Gated by canResearchSpells: a spellbook owner, minus priests unless
+             the DM ticks the Table Ruling. renderSpellResearch owns the display
+             decision and the TOOLS_SUBTABS strip reads it. -->
+        <section class="section spell-research-section" style="display:none;">
+          <div class="section-group-head">
+            <span class="grp-name">Spell Research</span>
+            <span class="grp-rule"></span>
+          </div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
+            PHBR4 pp.90-94. Enter what your DM has set; the rest is worked out for you.
+            Several projects can run at once. Nothing here rolls the success check or
+            advances the calendar.
+          </p>
+          <button type="button" class="ghost add-research-project" style="margin-bottom:12px;">+ Research Project</button>
+          <div class="research-projects-list"></div>
+          <div class="research-empty" style="font-size:12px;color:var(--muted);">
+            No research projects. Add one when your DM approves a spell for research.
+          </div>
+        </section>
+
         <section class="section overland-section">
           <div class="section-group-head">
             <span class="grp-name">Overland &amp; Endurance</span>
