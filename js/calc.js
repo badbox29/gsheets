@@ -4023,7 +4023,6 @@ function renderSpellResearch(root) {
 
   const list  = root.querySelector('.research-projects-list');
   const empty = root.querySelector('.research-empty');
-  const empty = root.querySelector('.research-empty');
   const n = list ? list.querySelectorAll('.research-project').length : 0;
   if (empty) empty.style.display = n ? 'none' : '';
 }
