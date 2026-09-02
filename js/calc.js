@@ -3948,6 +3948,74 @@ function renderMilitantWizardLimits(root) {
 // Hidden entirely when a kit carries nothing, and when no kit is selected. That
 // second case is why this is called ABOVE renderKitAbilities' early return:
 // clearing the kit is precisely when the disclosure must be emptied.
+// Everything PHBR4 pp.90-94 lets us work out for one project. PURE -- takes a
+// stored project and the character, returns numbers. No DOM, so the printed
+// sheet and the panel cannot disagree.
+//
+// INTELLIGENCE IS THE RAW SCORE. The formula reads "10% base + Intelligence +
+// experience level", using the ability score itself as a percentage addend --
+// not a Table 4 lookup. PHBR4 p.40's intMinusTwo limitation names four Table 4
+// columns and research is not among them, so getEffectiveIntForSpellTable is
+// deliberately NOT used here.
+function computeResearchProject(root, proj) {
+  const lvl   = Math.max(1, Math.min(9, parseInt(proj.level, 10) || 1));
+  const isNew = (proj.kind || 'new') !== 'existing';
+  const intScore  = parseInt(val(root, 'int') || 0, 10) || 0;
+  const charLevel = parseInt(val(root, 'level') || 0, 10) || 0;
+
+  // Table 15, p.91. The library a wizard must have ACCESS to, not own.
+  const LIB = [0, 2000, 4000, 8000, 14000, 22000, 32000, 44000, 58000, 74000];
+  const libNeeded = LIB[lvl] || 0;
+
+  const weekly     = parseInt(proj.weeklyCost || 0, 10) || 0;
+  const weeks      = parseInt(proj.weeksElapsed || 0, 10) || 0;
+  const libStart   = parseInt(proj.libraryStart || 0, 10) || 0;
+  // "Half of the operational cost goes toward new books, so the value of the
+  // library increases." The one figure nobody tracks by hand.
+  const libNow     = libStart + Math.floor(weekly / 2) * weeks;
+  const libShort   = Math.max(0, libNeeded - libNow);
+
+  const prepWeeks  = lvl + 1;              // "spell level plus one weeks"
+  const minWeeks   = lvl * 2;              // "two weeks per level of the spell"
+  const totalWeeks = prepWeeks + minWeeks;
+
+  const base   = (isNew ? 10 : 30) + intScore + charLevel - (lvl * 2);
+  const cap    = isNew ? 50 : 70;
+  const extra  = parseInt(proj.extraThisWeek || 0, 10) || 0;
+  // "+10% per additional 2,000 gp, to a maximum of 8,000 gp."
+  const bought = Math.min(40, Math.floor(extra / 2000) * 10);
+  // AMBIGUOUS IN THE BOOK and read the narrow way: money raises the chance
+  // TOWARD the cap and never past it, but a base already above the cap is not
+  // pulled down -- the cap is on what spending can buy, not on the wizard.
+  const chance = base >= cap ? base : Math.min(cap, base + bought);
+
+  return {
+    lvl: lvl, isNew: isNew, libNeeded: libNeeded, libNow: libNow, libShort: libShort,
+    prepWeeks: prepWeeks, minWeeks: minWeeks, totalWeeks: totalWeeks,
+    base: base, bought: bought, cap: cap, chance: chance,
+    intScore: intScore, charLevel: charLevel, weekly: weekly, weeks: weeks,
+    // p.94: some DMs require a roll even at 100%, with 95+ always a failure.
+    autoSuccess: chance >= 100,
+    spent: parseInt(proj.goldSpent || 0, 10) || 0,
+    labCost: parseInt(proj.labCost || 0, 10) || 0
+  };
+}
+
+// OWNS THE DISPLAY DECISION for the Tools sub-tab, which reads this section's
+// style.display rather than re-deriving the gate.
+function renderSpellResearch(root) {
+  const sec = root.querySelector('.spell-research-section');
+  if (!sec) return;
+  const allowed = (typeof canResearchSpells === 'function') && canResearchSpells(root);
+  sec.style.display = allowed ? '' : 'none';
+  if (!allowed) return;
+
+  const list  = root.querySelector('.research-projects-list');
+  const empty = root.querySelector('.research-empty');
+  const n = list ? list.querySelectorAll('.research-project').length : 0;
+  if (empty) empty.style.display = n ? 'none' : '';
+}
+
 function renderKitReference(root) {
   const wrap = root.querySelector('.kit-reference');
   const body = root.querySelector('.kit-reference-body');
@@ -4032,6 +4100,9 @@ function renderKitAbilities(root) {
   // same reason the proficiency grants do -- ABOVE the early return, because
   // clearing the kit is exactly when it must be emptied and hidden.
   if (typeof renderKitReference === 'function') renderKitReference(root);
+  // Class, Intelligence and level all feed the projects, and the Table Ruling
+  // can change the gate, so this repaints wherever the kit renderers do.
+  if (typeof renderSpellResearch === 'function') renderSpellResearch(root);
   // Same placement and the same reason: clearing the kit must clear the
   // limitation banners and release any schools it had locked.
   if (typeof renderMilitantWizardLimits === 'function') renderMilitantWizardLimits(root);
