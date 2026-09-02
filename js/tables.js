@@ -7481,6 +7481,18 @@ const OPTIONAL_RULES = {
     category: 'table',
     default: true      // checked = the 2e figure, the commoner reading
   },
+  priestSpellResearch: {
+    label:   'Priests may research new spells',
+    detail:  'The PHB never says a priest cannot research spells -- the research rules simply ' +
+             'sit in a wizard context, and PHBR4 Chapter 7 is a wizard chapter throughout. So ' +
+             'neither answer is RAW. Unticked follows the commoner reading, that a priest ' +
+             'receives his spells from his deity rather than developing them, and the Spell ' +
+             'Research panel stays hidden for priest classes. Ticked offers the panel to any ' +
+             'spellbook owner, priests included. Multi-class characters are unaffected either ' +
+             'way -- a fighter/mage qualifies on his wizard half. Ask your DM.',
+    category: 'table',
+    default: false     // unticked = the commoner reading
+  },
   ammoBonusStacks: {
     label:   'Enchanted ammunition stacks with an enchanted launcher',
     detail:  'The PHB does not say whether a +1 arrow fired from a +1 bow gives +2 or +1. ' +
@@ -9829,6 +9841,38 @@ function getMageBarredSchools(root) {
   return ['mw_barred_1', 'mw_barred_2', 'mw_barred_3']
     .map(f => String(val(root, f) || '').trim())
     .filter(Boolean);
+}
+
+// May this character research spells? GATED ON OWNING A SPELLBOOK, minus priests
+// unless the DM allows them -- Chris's call, and the priest question is a Table
+// Ruling because the PHB never answers it.
+//
+// READS toggleSpellbookSection'S ANSWER rather than repeating its nineteen
+// clazz.includes() tests. That list has to name every specialist by hand and is
+// complete today only because somebody typed carefully; a second copy would be a
+// second thing to forget an entry in, and the two would drift the first time a
+// supplement adds a caster. See the specialist-wizard sweep in the project
+// notes -- that list is one of the things it should catch.
+//
+// THE PRIEST TEST IS DELIBERATELY LAST. A cleric/mage owns a spellbook and casts
+// wizard spells; excluding him on a composed class string would be the
+// specialist blind spot in another costume. So a character only fails here if
+// he is a priest AND has no arcane side.
+function canResearchSpells(root) {
+  if (!root) return false;
+  const sb = root.querySelector('.spellbook-section');
+  if (!sb || sb.style.display === 'none') return false;
+
+  if (typeof isOptionalRule === 'function' && isOptionalRule('priestSpellResearch')) return true;
+
+  const clazz = String((typeof val === 'function' ? val(root, 'clazz') : '') || '').toLowerCase();
+  const arcane = ['mage', 'wizard', 'bard', 'illusionist', 'abjurer', 'conjurer', 'diviner',
+                  'enchanter', 'invoker', 'necromancer', 'transmuter', 'evoker', 'specialist']
+                 .some(k => clazz.includes(k)) ||
+                 ((typeof getSpecialistSchool === 'function') && !!getSpecialistSchool(clazz));
+  if (arcane) return true;
+
+  return !((typeof getClassCategory === 'function') && getClassCategory(clazz) === 'priest');
 }
 
 function getOppositionSchools(clazz, root) {
