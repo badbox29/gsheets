@@ -7215,6 +7215,13 @@ const TOOLS_SUBTABS = [
   // up underneath every sub-tab. Fixed August 2026.
   { key: 'thiefrules', label: 'Thief Rules',     section: 'advanced-thief-section', band: 'class',     gated: true },
   { key: 'turning',  label: 'Turn Undead',       section: 'turn-undead-section',    band: 'class',     gated: true },
+  // Gated: renderSpellResearch hides the section unless canResearchSpells says
+  // otherwise, and toolsSubtabApplies reads that display. THE GATE IS NOT
+  // RE-DERIVED HERE -- one answer, one place, per the rule at the head of this
+  // array. Band 'class' because it is gated on what the character is, which is
+  // also what puts it beside Thief Skills and Turn Undead rather than out among
+  // the reference panels.
+  { key: 'research', label: 'Spell Research',    section: 'spell-research-section', band: 'class',     gated: true },
   // GATED on carrying a qualifying weapon, not on class or race -- at most ten
   // weapons in the book have a breakage rule and most characters carry none.
   // renderWeaponBreakage hides the section when the list is empty, which is
