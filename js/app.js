@@ -6806,6 +6806,7 @@ function collectSheet(root){
     // records a decision the sheet cannot re-derive. Without it, every reload
     // would read a seeded note as hand-written and seeding would quietly stop.
     seededNotes: root._seededNotes || { powers: '', hindrances: '' },
+    researchProjects: root._researchProjects || [],
     selectedSpheres: selectedSpheres,
     selectedSchools: selectedSchools,
 	languages: languages,
@@ -7080,6 +7081,9 @@ function loadSheet(root, data){
   // text in those fields counts as player-authored and is left alone. That is
   // the safe direction to fail: the cost is a stale note the player can clear
   // himself, against the cost of eating writing he did by hand.
+  root._researchProjects = Array.isArray(data.researchProjects) ? data.researchProjects : [];
+  if (typeof renderResearchProjects === 'function') renderResearchProjects(root);
+
   root._seededNotes = (data.seededNotes && typeof data.seededNotes === 'object')
     ? data.seededNotes : { powers: '', hindrances: '' };
 
@@ -13569,6 +13573,133 @@ function setActiveOrganization(root, id) {
   const data = getOrganizationsData(root);
   data.activeOrgId = id;
   renderOrganizations(root);
+}
+
+// ===== SPELL RESEARCH PROJECTS (PHBR4 pp.90-94) =====
+// Stored as a plain array on the root, like organizations, because a project is
+// a record the sheet cannot re-derive: every input is something the DM set or
+// the player tracked.
+//
+// WHAT THE DM OWNS vs WHAT THE SHEET WORKS OUT is the whole design. The book
+// calls its rules "suggested" and hands the DM the lab cost, the weekly cost,
+// the library, whether the spell is permissible and the roll itself. So those
+// are typed in, and only what follows arithmetically is computed.
+function getResearchData(root) {
+  if (!Array.isArray(root._researchProjects)) root._researchProjects = [];
+  return root._researchProjects;
+}
+
+function makeResearchCard(root, proj) {
+  const c = (typeof computeResearchProject === 'function')
+    ? computeResearchProject(root, proj) : null;
+  const wrap = document.createElement('div');
+  wrap.className = 'item research-project';
+  wrap.dataset.id = proj.id;
+
+  const num = (v) => (parseInt(v, 10) || 0).toLocaleString();
+  const dirty = () => markUnsaved(document.querySelector('.tab.active'), true, root);
+
+  const fld = (label, key, type, hint) =>
+    '<div class="col"><label>' + label + '</label>' +
+    '<input data-rp="' + key + '" type="' + type + '" value="' +
+    escapeHtml(String(proj[key] == null ? '' : proj[key])) + '"' +
+    (hint ? ' title="' + escapeHtml(hint) + '"' : '') + '></div>';
+
+  let html =
+    '<div class="row" style="align-items:flex-end;">' +
+      '<div class="col" style="flex:2;"><label>Spell Name</label>' +
+        '<input data-rp="name" type="text" value="' + escapeHtml(proj.name || '') + '"></div>' +
+      '<div class="col"><label>Spell Level</label>' +
+        '<select data-rp="level">' +
+        [1,2,3,4,5,6,7,8,9].map(function (n) {
+          return '<option value="' + n + '"' +
+                 (String(proj.level) === String(n) ? ' selected' : '') + '>' + n + '</option>';
+        }).join('') + '</select></div>' +
+      '<div class="col"><label>Kind</label><select data-rp="kind">' +
+        '<option value="new"' + (proj.kind !== 'existing' ? ' selected' : '') + '>New spell</option>' +
+        '<option value="existing"' + (proj.kind === 'existing' ? ' selected' : '') + '>Existing spell</option>' +
+        '</select></div>' +
+      '<div class="col" style="flex:0 0 auto;"><button type="button" class="ghost rp-remove">Remove</button></div>' +
+    '</div>' +
+    '<div class="row" style="margin-top:6px;">' +
+      fld('Laboratory cost (1d6&times;1,000)', 'labCost', 'number',
+          'PHBR4 p.91. Your DM rolls or sets it. Leave 0 if you already own or rent a lab.') +
+      fld('Library value now', 'libraryStart', 'number',
+          'PHBR4 p.91. What your DM says the library you have access to is worth. Grows as you work.') +
+      fld('Weekly operational cost', 'weeklyCost', 'number',
+          'PHBR4 p.91. 2d6x100 for a new spell, 1d6x100 for an existing one. Your DM rolls or sets it.') +
+    '</div>' +
+    '<div class="row" style="margin-top:6px;">' +
+      fld('Weeks elapsed', 'weeksElapsed', 'number',
+          'You type this after a session. The sheet never advances the calendar -- only your table knows whether the study was interrupted.') +
+      fld('Gold spent so far', 'goldSpent', 'number', 'Your running total.') +
+      fld('Extra spent this week', 'extraThisWeek', 'number',
+          'PHBR4 p.92. Every 2,000 gp above the operational cost adds +10%, to a maximum of 8,000 gp. Applies to THIS week only.') +
+    '</div>';
+
+  if (c) {
+    const libLine = c.libShort
+      ? '<span style="color:var(--warning,#e0a34a);">short ' + num(c.libShort) + ' gp</span>'
+      : 'sufficient';
+    html +=
+      '<div style="margin-top:8px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.5;background:color-mix(in srgb, var(--accent) 6%, transparent);">' +
+      '<strong>Library (Table 15):</strong> needs ' + num(c.libNeeded) + ' gp, worth ' +
+        num(c.libNow) + ' gp &mdash; ' + libLine +
+        (c.weekly ? ' <span style="color:var(--muted);">(half of each ' + num(c.weekly) +
+          ' gp week becomes books, so this grows by ' + num(Math.floor(c.weekly / 2)) +
+          ' gp a week)</span>' : '') + '<br>' +
+      '<strong>Time:</strong> ' + c.prepWeeks + ' weeks preparation, then ' + c.minWeeks +
+        ' weeks minimum research &mdash; ' + c.totalWeeks + ' weeks before the first check. ' +
+        'Elapsed: ' + c.weeks + '.<br>' +
+      '<strong>Chance:</strong> ' + c.chance + '% ' +
+        '<span style="color:var(--muted);">(' + (c.isNew ? '10' : '30') + ' base + ' +
+        c.intScore + ' Int + ' + c.charLevel + ' level &minus; ' + (c.lvl * 2) +
+        ' for a level ' + c.lvl + ' spell = ' + c.base + '%' +
+        (c.bought ? ', +' + c.bought + '% bought this week' : '') +
+        ', cap ' + c.cap + '%)</span>' +
+        (c.autoSuccess ? ' <em>Over 100% &mdash; PHBR4 p.94 suggests rolling anyway, with 95 or higher always a failure.</em>' : '') +
+        '<br><span style="color:var(--muted);">Your DM rolls the check at the end of the minimum period, then weekly.</span>' +
+      '</div>';
+  }
+  wrap.innerHTML = html;
+
+  wrap.querySelectorAll('[data-rp]').forEach(function (el) {
+    el.addEventListener('change', function () {
+      proj[el.getAttribute('data-rp')] = el.value;
+      dirty();
+      renderResearchProjects(root);
+    });
+  });
+  wrap.querySelector('.rp-remove').addEventListener('click', function () {
+    if (!confirm('Remove this research project?')) return;
+    const list = getResearchData(root);
+    const i = list.findIndex(function (p) { return p.id === proj.id; });
+    if (i >= 0) list.splice(i, 1);
+    dirty();
+    renderResearchProjects(root);
+  });
+  return wrap;
+}
+
+function renderResearchProjects(root) {
+  const list = root.querySelector('.research-projects-list');
+  if (!list) return;
+  list.innerHTML = '';
+  getResearchData(root).forEach(function (p) {
+    list.appendChild(makeResearchCard(root, p));
+  });
+  if (typeof renderSpellResearch === 'function') renderSpellResearch(root);
+}
+
+function addResearchProject(root) {
+  getResearchData(root).push({
+    id: 'rp-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6),
+    name: '', level: 1, kind: 'new',
+    labCost: '', libraryStart: '', weeklyCost: '',
+    weeksElapsed: '', goldSpent: '', extraThisWeek: ''
+  });
+  renderResearchProjects(root);
+  markUnsaved(document.querySelector('.tab.active'), true, root);
 }
 
 function addNewOrganization(root) {
