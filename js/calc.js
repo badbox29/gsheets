@@ -4010,7 +4010,19 @@ function renderSpellResearch(root) {
   sec.style.display = allowed ? '' : 'none';
   if (!allowed) return;
 
+  // BOUND TO THE SECTION, ONCE, and not in bindSheet. The section is hidden
+  // until the class allows research, so a sheet that loads as a Fighter and is
+  // later changed to Mage would never have had its button wired. Same fault the
+  // organizations block documents: wiring belongs to the section, which always
+  // exists; the contents come and go.
+  if (!sec._researchBound) {
+    sec._researchBound = true;
+    const add = sec.querySelector('.add-research-project');
+    if (add) add.onclick = () => addResearchProject(root);
+  }
+
   const list  = root.querySelector('.research-projects-list');
+  const empty = root.querySelector('.research-empty');
   const empty = root.querySelector('.research-empty');
   const n = list ? list.querySelectorAll('.research-project').length : 0;
   if (empty) empty.style.display = n ? 'none' : '';
