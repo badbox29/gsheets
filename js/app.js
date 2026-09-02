@@ -16492,6 +16492,12 @@ function recalculateAll(root) {
   // tab exists.
   if (typeof renderThiefEquipment === 'function') renderThiefEquipment(root);
   if (typeof renderPHBR1OnlyControls === 'function') renderPHBR1OnlyControls(root);
+  // BEFORE renderToolsSubtabs below, which reads this section's inline display
+  // to decide whether the tab exists. Depends on the class, the spellbook
+  // section's own visibility and the priestSpellResearch Table Ruling, so it
+  // belongs in recalculateAll -- changing class or ticking that ruling must be
+  // able to make the tab appear and disappear.
+  if (typeof renderSpellResearch === 'function') renderSpellResearch(root);
 
   // DEAD LAST, and deliberately after the Quick Reference. This does not break
   // the "Quick Reference stays last" rule -- that rule is about reading THAC0,
