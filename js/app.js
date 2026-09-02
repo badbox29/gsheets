@@ -13593,7 +13593,15 @@ function makeResearchCard(root, proj) {
   const c = (typeof computeResearchProject === 'function')
     ? computeResearchProject(root, proj) : null;
   const wrap = document.createElement('div');
+  // COLUMN, NOT ROW. `.item` is display:flex, so the three field rows and the
+  // summary box below them laid out as four side-by-side columns -- every label
+  // wrapped to three lines and the whole card was unreadable. The card wants
+  // .item's padding and background but stacks its children.
   wrap.className = 'item research-project';
+  wrap.style.flexDirection = 'column';
+  wrap.style.alignItems = 'stretch';
+  wrap.style.gap = '0';
+  wrap.style.marginBottom = '10px';
   wrap.dataset.id = proj.id;
 
   const num = (v) => (parseInt(v, 10) || 0).toLocaleString();
@@ -13619,7 +13627,7 @@ function makeResearchCard(root, proj) {
         '<option value="new"' + (proj.kind !== 'existing' ? ' selected' : '') + '>New spell</option>' +
         '<option value="existing"' + (proj.kind === 'existing' ? ' selected' : '') + '>Existing spell</option>' +
         '</select></div>' +
-      '<div class="col" style="flex:0 0 auto;"><button type="button" class="ghost rp-remove">Remove</button></div>' +
+      '<div class="col" style="flex:0 0 auto;align-self:flex-end;"><button type="button" class="ghost rp-remove">Remove</button></div>' +
     '</div>' +
     '<div class="row" style="margin-top:6px;">' +
       fld('Laboratory cost (1d6&times;1,000)', 'labCost', 'number',
@@ -13642,7 +13650,7 @@ function makeResearchCard(root, proj) {
       ? '<span style="color:var(--warning,#e0a34a);">short ' + num(c.libShort) + ' gp</span>'
       : 'sufficient';
     html +=
-      '<div style="margin-top:8px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.5;background:color-mix(in srgb, var(--accent) 6%, transparent);">' +
+      '<div style="margin-top:10px;padding:10px;border-radius:var(--radius);font-size:12px;line-height:1.6;background:color-mix(in srgb, var(--accent) 6%, transparent);">' +
       '<strong>Library (Table 15):</strong> needs ' + num(c.libNeeded) + ' gp, worth ' +
         num(c.libNow) + ' gp &mdash; ' + libLine +
         (c.weekly ? ' <span style="color:var(--muted);">(half of each ' + num(c.weekly) +
