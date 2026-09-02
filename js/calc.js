@@ -4100,9 +4100,6 @@ function renderKitAbilities(root) {
   // same reason the proficiency grants do -- ABOVE the early return, because
   // clearing the kit is exactly when it must be emptied and hidden.
   if (typeof renderKitReference === 'function') renderKitReference(root);
-  // Class, Intelligence and level all feed the projects, and the Table Ruling
-  // can change the gate, so this repaints wherever the kit renderers do.
-  if (typeof renderSpellResearch === 'function') renderSpellResearch(root);
   // Same placement and the same reason: clearing the kit must clear the
   // limitation banners and release any schools it had locked.
   if (typeof renderMilitantWizardLimits === 'function') renderMilitantWizardLimits(root);
