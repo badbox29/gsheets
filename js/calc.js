@@ -3084,6 +3084,34 @@ function renderThiefSkills(root) {
 // Table 29 armor percentages, and their armor rule is a binary gate instead.
 // Class armor restrictions (PHB Ch.3). Advisory only -- a DM may have granted
 // an exception, and the specialist suite's no-blocking philosophy applies.
+function renderWeaponRestrictions(root) {
+  const el = root.querySelector('.weapon-restriction-note');
+  if (!el) return;
+
+  const problems = (typeof getWeaponRestrictionProblems === 'function')
+    ? getWeaponRestrictionProblems(root) : [];
+  if (!problems.length) {
+    el.style.display = 'none';
+    el.innerHTML = '';
+    return;
+  }
+
+  const rule = (typeof getWeaponAllowedList === 'function')
+    ? getWeaponAllowedList(val(root, 'clazz') || '') : null;
+  const allowed = Array.isArray(rule) ? rule.join(', ')
+    : (rule && rule.type === 'B') ? 'blunt, bludgeoning weapons only' : '';
+
+  el.innerHTML =
+    '<strong style="color:var(--warning, #e0a34a);">\u26A0 Weapon restrictions</strong>' +
+    problems.map(p => '<div style="margin-top:4px;">\u2022 ' + escapeHtml(p) + '</div>').join('') +
+    (allowed ? '<div style="margin-top:6px;color:var(--muted);font-size:11px;">Allowed: ' +
+               escapeHtml(allowed) + '.</div>' : '') +
+    '<div style="margin-top:6px;color:var(--muted);font-size:11px;">' +
+      'Advisory only \u2014 nothing is blocked. PHBR1 p.37 says a DM may modify any of this. ' +
+      'Untick under Table Rulings in Settings to silence it.</div>';
+  el.style.display = '';
+}
+
 function renderArmorRestrictions(root) {
   // BEFORE the early return below: rails must be repainted even when there are
   // no problems to report, or a piece of armor that has just become legal keeps
