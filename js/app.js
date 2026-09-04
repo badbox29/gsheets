@@ -7759,6 +7759,7 @@ function loadSheet(root, data){
   renderThiefSkillsSection(root);
   if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
   if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
+  if (typeof renderWeaponRestrictions === 'function') renderWeaponRestrictions(root);
   renderThiefPointsSection(root);
   updateThiefPointsDisplay(root);
   renderCharacterBonuses(root);
@@ -8995,6 +8996,7 @@ function bindSheet(root, tab){
   if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
   if (typeof renderAnimalEmpathy === 'function') renderAnimalEmpathy(root);
   if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
+  if (typeof renderWeaponRestrictions === 'function') renderWeaponRestrictions(root);
   if (typeof renderDruidRole === 'function') renderDruidRole(root);
   // Vision & Light (PHB Ch.13). bindSheet ONLY -- deliberately NOT added to
   // loadSheet or recalculateAll, unlike everything above it. The panel reads
@@ -9044,6 +9046,7 @@ function bindSheet(root, tab){
       if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
       if (typeof renderAnimalEmpathy === 'function') renderAnimalEmpathy(root);
       if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
+      if (typeof renderWeaponRestrictions === 'function') renderWeaponRestrictions(root);
     }
   });
   root.addEventListener('change', (e) => {
@@ -9052,6 +9055,7 @@ function bindSheet(root, tab){
       if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
       if (typeof renderAnimalEmpathy === 'function') renderAnimalEmpathy(root);
       if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
+	  if (typeof renderWeaponRestrictions === 'function') renderWeaponRestrictions(root);
     }
   });
 
@@ -10988,6 +10992,7 @@ function renderOneOptionalRule(listEl, key) {
         if (typeof recalculateAll === 'function') recalculateAll(sheet);
         if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(sheet);
         if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(sheet);
+        if (typeof renderWeaponRestrictions === 'function') renderWeaponRestrictions(sheet);
       });
     });
   }
