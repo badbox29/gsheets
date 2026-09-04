@@ -4252,6 +4252,68 @@ const CLASS_ARMOR_ALLOWED = {
 };
 const DRUID_ARMOR_HOUSE = ['none', 'padded', 'leather', 'hide'];
 
+// PHB Chapter 3, keyed the same mixed way as CLASS_ARMOR_ALLOWED and for the
+// same reason: the book states some restrictions per class and some per group.
+//
+//   null            no restriction. Warriors: "allowed to use any weapon."
+//                   Bards: "as a rogue, he can use any weapon."
+//   { type: 'B' }   A DAMAGE TYPE, NOT A LIST. The cleric is the only class the
+//                   PHB restricts by category -- "allowed to use only blunt,
+//                   bludgeoning weapons" -- and every weapon in core_wp.json
+//                   already carries a Type of B, P, S or a combination. Testing
+//                   the type covers the jitte and boku-toh added from PHBR4 and
+//                   every weapon a future book brings, with nothing to maintain.
+//   [names]         An explicit list, matched against Weapon Name and Alias.
+//
+// THE WIZARD LIST IS PHBR4's SEVEN, NOT THE PHB's FIVE, and ungated -- Chris's
+// call. PHBR4 p.72 prints the fullest statement in any book we hold, adding
+// blowgun and staff sling to dagger, dart, knife, quarterstaff and sling, and
+// extends the restriction to magical versions: "just as a wizard is denied the
+// use of a two-handed sword, he is denied the use of a two-handed sword +1."
+// Content a supplement ADDS takes nothing away from a PHB-only table.
+const CLASS_WEAPON_ALLOWED = {
+  wizard:  ['Dagger', 'Dart', 'Knife', 'Quarterstaff', 'Sling', 'Blowgun', 'Staff Sling'],
+  druid:   ['Club', 'Sickle', 'Dart', 'Spear', 'Dagger', 'Scimitar', 'Sling', 'Quarterstaff'],
+  thief:   ['Club', 'Dagger', 'Dart', 'Hand Crossbow', 'Knife', 'Lasso', 'Short Bow',
+            'Sling', 'Sword, Broad', 'Sword, Long', 'Sword, Short', 'Quarterstaff'],
+  cleric:  { type: 'B' },
+  bard:    null,
+  warrior: null
+};
+
+// What this class may carry. null means no restriction.
+//
+// SPECIFIC NAMES BEFORE GROUPS, exactly as getArmorAllowedList does: druid must
+// beat priest and bard must beat rogue, or both would inherit a rule the book
+// does not give them.
+function getWeaponAllowedList(clazz) {
+  const c = (clazz || '').trim().toLowerCase();
+  if (!c) return null;
+
+  if (c.includes('druid')) return CLASS_WEAPON_ALLOWED.druid;
+  if (c.includes('bard'))  return CLASS_WEAPON_ALLOWED.bard;
+  if (c.includes('thief') || c.includes('assassin')) return CLASS_WEAPON_ALLOWED.thief;
+
+  const cat = (typeof getClassCategory === 'function') ? getClassCategory(clazz) : null;
+  if (cat === 'wizard') return CLASS_WEAPON_ALLOWED.wizard;
+  if (cat === 'rogue')  return CLASS_WEAPON_ALLOWED.thief;
+  if (cat === 'priest') return CLASS_WEAPON_ALLOWED.cleric;
+  return null;                                  // warrior: anything
+}
+
+// Is this weapon permitted to this class? Advisory only -- nothing calls this to
+// block anything.
+//
+// MATCHES ALIAS AS WELL AS NAME, so a wizard's "Bo" is the quarterstaff he is
+// allowed rather than an unknown weapon.
+function isWeaponAllowedForClass(weaponRow, clazz) {
+  const rule = getWeaponAllowedList(clazz);
+  if (!rule) return true;
+  if (!weaponRow) return true;
+
+  if (!Array.isArray(rule) && rule.type) {
+    // Any weapon whose Type INCLUDES the required letter. A
+
 function getArmorTypeData(key) { return ARMOR_TYPES[key] || null; }
 function getShieldTypeData(key) { return SHIELD_TYPES[key] || null; }
 
@@ -7487,6 +7549,16 @@ const OPTIONAL_RULES = {
     // preference survives the move.
     category: 'table',
     default: true      // checked = the 2e figure, the commoner reading
+  },
+  weaponRestrictions: {
+    label:   'Warn when a weapon is not allowed to the class',
+    detail:  'PHB Chapter 3 restricts what most classes may carry -- wizards to seven weapons ' +
+             '(PHBR4 p.72), druids to eight, thieves to twelve, and clerics to blunt weapons ' +
+             'only. Warriors and bards may use anything. Ticked, the sheet points out a weapon ' +
+             'outside the list; nothing is ever blocked, and a DM may allow anything he likes. ' +
+             'Untick if your table does not enforce it, or to quieten the sheet.',
+    category: 'table',
+    default: true      // the book's rule; ticked shows the advisory
   },
   priestSpellResearch: {
     label:   'Priests may research new spells',
