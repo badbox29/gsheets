@@ -4358,7 +4358,19 @@ function isWeaponAllowedForClass(weaponRow, clazz) {
   if (!weaponRow) return true;
 
   if (!Array.isArray(rule) && rule.type) {
-    // Any weapon whose Type INCLUDES the required letter. A
+    // Any weapon whose Type INCLUDES the required letter. A P/B weapon like
+    // the sai qualifies for a cleric, which is the reading that lets a
+    // priesthood hand him one without the sheet arguing.
+    return String(weaponRow.Type || '').toUpperCase().indexOf(rule.type) !== -1;
+  }
+
+  const nz = function (s) { return String(s || '').trim().toLowerCase(); };
+  const name = nz(weaponRow['Weapon Name']);
+  const alias = String(weaponRow.Alias || '').split(';').map(nz).filter(Boolean);
+  return rule.some(function (r) {
+    return nz(r) === name || alias.indexOf(nz(r)) !== -1;
+  });
+}
 
 function getArmorTypeData(key) { return ARMOR_TYPES[key] || null; }
 function getShieldTypeData(key) { return SHIELD_TYPES[key] || null; }
