@@ -2,7 +2,7 @@
 
 A browser-based Advanced Dungeons & Dragons 2nd Edition character sheet designed for fast use, clean organization, and no build step.
 
-**Version 11.8.0**
+**Version 11.9.0**
 
 ## Live Demo
 
@@ -253,6 +253,90 @@ Follow these steps **in order** to avoid overwriting your data:
 * I am not a developer.
 
 ### Recent Updates
+
+#### v11.9.0
+
+**The Complete Wizard's Handbook, in full**
+
+Everything in the book that belongs on a character sheet is now here. Nothing below
+is switched on unless you ask for it, except where the book simply *adds* something
+— a new spell or weapon takes nothing away from a table that plays PHB-only.
+
+*Wizard kits*
+
+* All **ten kits from the book** are now available: Academician, Amazon Sorceress,
+  Anagakok, Militant Wizard, Mystic, Patrician, Peasant Wizard, Savage Wizard,
+  Witch and Wu Jen. Four kits that had been sitting in the list with no book behind
+  them have been removed.
+* **Specialist wizards could not select a kit at all.** Illusionists, abjurers,
+  necromancers and the rest saw "No kits available" — which quietly hid most of
+  this book, since its kits are written largely for specialists. Fixed.
+* Each kit now shows an **About this kit** panel with its starting money, required
+  equipment, secondary skills, school preferences and what abandoning it costs.
+  Its benefits and hindrances are also copied into your own Special Powers and
+  Special Hindrances boxes, where you can edit them — and if you do, your writing
+  is never overwritten.
+* **Fourteen fighter kits gained the benefits and hindrances they never had.**
+  Barbarian, Berserker, Cavalier, Savage and the rest were missing them entirely.
+
+*Spells*
+
+* **Four spell schools were wrong** and have been corrected against the book:
+  Chromatic Orb, Pain Touch, Halo of Eyes and Fear Ward. School decides which
+  specialist may learn a spell, so these were affecting real characters.
+* Added **Protection from Hunger and Thirst**.
+* **Underwater casting.** Around sixty spells are now marked for what happens
+  beneath the surface — some fail outright, some work only inside an *airy water*
+  spell, and some behave differently. A new filter on the spell browser lets you
+  see them by category, and each modified spell explains how it changes.
+
+*Research, organizations and familiars*
+
+* **Spell research** (Tools tab). Enter what your DM has set — laboratory cost,
+  library value, weekly cost — and the sheet works out the library you need,
+  the preparation and research time, your chance of success and what extra
+  spending buys. Several projects can run at once, they print, and the library
+  value grows as you work, since half of each week's cost becomes new books.
+  Nothing rolls the check or advances the calendar.
+* **Nine wizard organizations** you can add from a reference list, with their
+  entrance fees, dues, membership requirements and benefits already filled in.
+* **Familiars.** The Player's Handbook's six familiars are now in the animals
+  browser with their sensory powers, and this book's expanded list of
+  twenty-five is available as an option. A new "Familiars" filter and an
+  **Add as Familiar** button make the quick path easy; you can still bond any
+  creature your DM allows.
+
+*Rules*
+
+* **Abandoning a school.** A specialist who gives up his speciality keeps every
+  spell he knows — his spellbook is never touched — but loses his saving throw
+  modifiers and acquired powers, and his chance to learn changes: no bonus in his
+  old school, and half the usual chance in the schools that used to oppose him.
+  Setting the status changes his class to Mage and records what he was, and
+  setting it back to Active restores both.
+* **Militant Wizard.** Its specialists use the kit's own oppositional schools
+  rather than the Player's Handbook's, and its mages take whichever of the three
+  limitations your DM chooses — no high-level spells, an effective Intelligence
+  two points lower, or only five schools.
+* **Weapon restrictions by class.** The sheet now points out when you have
+  *equipped* a weapon your class may not use — wizards to seven weapons, druids
+  to eight, thieves to twelve, clerics to blunt weapons. Warriors and bards may
+  use anything. Carrying a weapon is never flagged; only using one. A specialty
+  priest is pointed at his own priesthood's rules instead. Advisory only, and it
+  can be switched off under Table Rulings.
+* **Twelve magical items** and **eleven pieces of laboratory equipment** from the
+  book, each with the details a DM needs to place it.
+
+**Fixes**
+
+* **Seven of the eight specialist wizards showed no class abilities at all** —
+  not even Spell Casting. Only illusionists were unaffected.
+* The **Combat Quick Reference** did not update when you equipped or unequipped a
+  weapon on a character loaded from a save.
+* Weapon and armour data now carries a source for **every single record**. Along
+  the way: the whetstone was priced a hundred times too high, writing ink ten
+  times too low, and the falchion, dart and several oriental weapons had figures
+  that no book supported.
 
 #### v11.8.0
 
