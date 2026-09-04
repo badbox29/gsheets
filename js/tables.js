@@ -4306,6 +4306,52 @@ function getWeaponAllowedList(clazz) {
 //
 // MATCHES ALIAS AS WELL AS NAME, so a wizard's "Bo" is the quarterstaff he is
 // allowed rather than an unknown weapon.
+// Which carried weapons the class may not use. Advisory only.
+//
+// THE SPECIALTY PRIEST DEFERS RATHER THAN BEING JUDGED. Chris's design: alert
+// normally for a cleric, but as soon as PHBR3 specialty priests is enabled and a
+// priesthood template is applied, say so and point at that priesthood instead.
+// getSpecialtyPriestOverride already checks the band, single-class and priest
+// category, so the gate is not re-derived here.
+//
+// TRIGGERED ON A TEMPLATE BEING APPLIED, not on sp_restrict_weapons being
+// non-empty -- a Priest of War whose restriction field is blank should not be
+// told he cannot carry his specialised sword.
+function getWeaponRestrictionProblems(root) {
+  const out = [];
+  if (!root) return out;
+  if (typeof isOptionalRule === 'function' && !isOptionalRule('weaponRestrictions')) return out;
+
+  const clazz = String((typeof val === 'function' ? val(root, 'clazz') : '') || '').trim();
+  const rule  = getWeaponAllowedList(clazz);
+  if (!rule) return out;                      // warriors and bards: anything
+
+  const tmpl = (typeof getSpecialtyPriestOverride === 'function')
+    ? getSpecialtyPriestOverride(root, 'sp_template_source') : '';
+  if (tmpl) {
+    const txt = (typeof getSpecialtyPriestOverride === 'function')
+      ? getSpecialtyPriestOverride(root, 'sp_restrict_weapons') : '';
+    out.push('Specialty priest detected (' + tmpl + '). The cleric\u2019s blunt-weapon rule does ' +
+             'not necessarily apply \u2014 refer to this priesthood\u2019s own weapon restrictions' +
+             (txt ? ': ' + txt : ', on the Details tab.'));
+    return out;
+  }
+
+  const seen = {};
+  root.querySelectorAll('.weapons-list .item').forEach(function (n) {
+    const sel = n.querySelector('.weapon-wtype');
+    const key = sel ? String(sel.value || '').trim() : '';
+    if (!key || seen[key]) return;
+    seen[key] = true;
+    const row = (typeof getWeaponTypeStats === 'function') ? getWeaponTypeStats(key) : null;
+    if (!row) return;                          // custom or unrecognised: say nothing
+    if (!isWeaponAllowedForClass(row, clazz)) {
+      out.push(key + ' is not among the weapons this class may use.');
+    }
+  });
+  return out;
+}
+
 function isWeaponAllowedForClass(weaponRow, clazz) {
   const rule = getWeaponAllowedList(clazz);
   if (!rule) return true;
