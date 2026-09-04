@@ -10937,6 +10937,7 @@ function recalcAllOpenSheets() {
 	if (typeof renderUnarmedTables === 'function') renderUnarmedTables(sheet);
     if (typeof renderClassGroupValidation === 'function') renderClassGroupValidation(sheet);
     if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(sheet);
+    if (typeof renderWeaponRestrictions === 'function') renderWeaponRestrictions(sheet);
     // Same gap again, spell side. Both consumers of isSpecialtySpell sat
     // outside every refresh path, so PHBR4's lesser-divination band updated
     // nothing until the player hit the browser's own refresh button.
@@ -16561,6 +16562,10 @@ function recalculateAll(root) {
   if (typeof renderRangerStealth === 'function') renderRangerStealth(root);
   if (typeof renderAnimalEmpathy === 'function') renderAnimalEmpathy(root);
   if (typeof renderArmorRestrictions === 'function') renderArmorRestrictions(root);
+  // Same list, same reason: class, the weapons carried and the weaponRestrictions
+  // Table Ruling all feed it, so it belongs in recalculateAll rather than in
+  // field listeners alone.
+  if (typeof renderWeaponRestrictions === 'function') renderWeaponRestrictions(root);
   if (typeof renderTurnUndeadTable === 'function') renderTurnUndeadTable(root);
   if (typeof renderCurrentHP === 'function') renderCurrentHP(root);
   if (typeof renderHitDice === 'function') renderHitDice(root);
