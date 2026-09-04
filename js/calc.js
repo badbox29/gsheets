@@ -4021,6 +4021,20 @@ function renderSpellResearch(root) {
     if (add) add.onclick = () => addResearchProject(root);
   }
 
+  // REBUILD THE CARDS, not just the section's visibility. Every project reads
+  // the character's Intelligence and level, and those live elsewhere on the
+  // sheet -- so editing them left the cards showing figures from whenever they
+  // were last drawn, and only changing a field ON a card refreshed it. Toggling
+  // Kind and back was the workaround that exposed it.
+  if (typeof renderResearchProjects === 'function' &&
+      !root._researchRendering) {
+    // renderResearchProjects calls back into this function, so the flag stops
+    // the two from recursing.
+    root._researchRendering = true;
+    renderResearchProjects(root);
+    root._researchRendering = false;
+  }
+
   const list  = root.querySelector('.research-projects-list');
   const empty = root.querySelector('.research-empty');
   const n = list ? list.querySelectorAll('.research-project').length : 0;
