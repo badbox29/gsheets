@@ -4337,8 +4337,15 @@ function getWeaponRestrictionProblems(root) {
     return out;
   }
 
+  // EQUIPPED ONLY. The PHB restricts what a class may USE -- "warriors are
+  // allowed to use any weapon", "a wizard can use a dagger or a staff" -- and
+  // says nothing about what he may CARRY. A wizard hauling a looted sword to
+  // sell is breaking no rule, and flagging his inventory would be the sheet
+  // inventing a restriction. Same `.equipped` test getTwoWeaponState uses.
   const seen = {};
   root.querySelectorAll('.weapons-list .item').forEach(function (n) {
+    const eq = n.querySelector('.equipped');
+    if (!eq || !eq.checked) return;
     const sel = n.querySelector('.weapon-wtype');
     const key = sel ? String(sel.value || '').trim() : '';
     if (!key || seen[key]) return;
