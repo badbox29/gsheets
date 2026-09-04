@@ -2341,12 +2341,18 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
           ...researchRows
         ]
       },
-      layout: 'lightHorizontalLines'
+      // gridLayout and the same trailing margin as ORGANIZATIONS below. The
+      // first attempt used lightHorizontalLines with no margin, which left the
+      // block with no left or right rule and the first column butted against
+      // the page edge -- visibly a different kind of thing from every other
+      // table on the sheet.
+      layout: gridLayout,
+      margin: [0, 0, 0, 5]
     });
     researchBlocks.push({
       text: 'Chance is checked by the DM at the end of the minimum period, then weekly. ' +
             'Half of each weekly cost becomes books, so the library value grows as work continues.',
-      fontSize: 6, italics: true, margin: [0, 3, 0, 0]
+      fontSize: 6, italics: true, margin: [0, 0, 0, 5]
     });
   }
 
