@@ -2115,6 +2115,19 @@ const SHEET_HTML = `
 			<button class="add-weapon">+ Add Custom Weapon</button>
 		  </div>
 
+		  <!-- Weapon restrictions. PHB Chapter 3 limits what most classes may
+		       carry: wizards to seven weapons (PHBR4 p.72), druids to eight,
+		       thieves to twelve, clerics to blunt weapons only. Warriors and
+		       bards may use anything, so this stays hidden for them.
+
+		       AT THE TOP OF THE SECTION, matching where every other banner sits,
+		       and above the browser rather than below it -- a player about to
+		       add a weapon should see the rule before he picks, not after.
+
+		       Styled to match .armor-restriction-note. Advisory only; nothing is
+		       ever blocked, and it can be silenced under Table Rulings. -->
+		  <div class="weapon-restriction-note" style="display:none;margin-bottom:10px;padding:8px;border-radius:var(--radius);font-size:12px;line-height:1.4;border:1px solid var(--warning, #e0a34a);background:color-mix(in srgb, var(--accent) 8%, transparent);"></div>
+
 		<!-- Weapon Browser -->
 		<section class="section utility weapon-inventory-browser-section">
 		  <div style="display:flex;justify-content:space-between;align-items:center;">
