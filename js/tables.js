@@ -4353,7 +4353,10 @@ function getWeaponRestrictionProblems(root) {
     const row = (typeof getWeaponTypeStats === 'function') ? getWeaponTypeStats(key) : null;
     if (!row) return;                          // custom or unrecognised: say nothing
     if (!isWeaponAllowedForClass(row, clazz)) {
-      out.push(key + ' is not among the weapons this class may use.');
+      // THE ROW'S NAME, NOT THE LOOKUP KEY. weapon-wtype holds an internal
+      // identifier -- "sword_broad", "firearm_blunderbuss" -- which is not what
+      // the player calls his weapon and not what appears on the card above.
+      out.push((row['Weapon Name'] || key) + ' is not among the weapons this class may use.');
     }
   });
   return out;
