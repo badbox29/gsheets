@@ -3986,6 +3986,7 @@ const SHEET_HTML = `
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="abilities"><span>Class / Racial / Kit Abilities</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="powersHindrances"><span>Powers &amp; Hindrances</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="thiefSkills"><span>Thief Skills</span></label>
+	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="spellResearch"><span>Spell Research</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="languages"><span>Languages</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="conditions"><span>Active Conditions</span></label>
 	      <label class="print-opt-row"><input type="checkbox" class="print-opt" data-opt="portrait"> <span>Character Portrait</span></label>
