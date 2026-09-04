@@ -2293,6 +2293,63 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
     })
     .map(x => x.o);
 
+  // SPELL RESEARCH (PHBR4 pp.90-94). Top level on the record, not inside
+  // `details` -- collectSheet writes `researchProjects` beside `seededNotes`.
+  //
+  // THE FIGURES COME FROM computeResearchProject, the same function the panel
+  // uses, with the same `root`. One implementation, so a printed sheet and the
+  // screen cannot disagree -- which matters here because the player is carrying
+  // this away from the table to work on between sessions.
+  const researchList = (sheet.researchProjects || [])
+    .filter(p => p && (String(p.name || '').trim() || p.level));
+  const showResearch = !!opts.spellResearch && researchList.length > 0;
+  const researchBlocks = [];
+
+  if (showResearch) {
+    const g = n => (parseInt(n, 10) || 0).toLocaleString();
+    const researchRows = researchList.map(p => {
+      const c = (typeof computeResearchProject === 'function')
+        ? computeResearchProject(root, p) : null;
+      if (!c) return [cell(String(p.name || ' '), 6), cell(' ', 6), cell(' ', 6), cell(' ', 6)];
+      const lib = g(c.libNow) + ' / ' + g(c.libNeeded) +
+                  (c.libShort ? ' (short ' + g(c.libShort) + ')' : '');
+      const time = c.weeks + ' of ' + c.totalWeeks + ' wks' +
+                   ' (' + c.prepWeeks + ' prep + ' + c.minWeeks + ' min)';
+      const money = 'Spent ' + g(c.spent) + ' gp' +
+                    (c.weekly ? ' \u00B7 ' + g(c.weekly) + '/wk' : '') +
+                    (c.labCost ? ' \u00B7 lab ' + g(c.labCost) : '');
+      return [
+        cell((String(p.name || '').trim() || 'Unnamed') +
+             '\nLevel ' + c.lvl + ', ' + (c.isNew ? 'new' : 'existing'), 6, { bold: true }),
+        cell(c.chance + '%', 6, { margin: [0, 2, 0, 2] }),
+        cell(time + '\n' + lib, 6, { margin: [0, 2, 0, 2] }),
+        cell(money, 6, { margin: [0, 2, 0, 2] })
+      ];
+    });
+
+    researchBlocks.push({
+      table: {
+        headerRows: 1,
+        widths: ['30%', '10%', '35%', '25%'],
+        body: [
+          [
+            hdrCell('Project', 6),
+            hdrCell('Chance', 6),
+            hdrCell('Time / Library', 6),
+            hdrCell('Cost', 6)
+          ],
+          ...researchRows
+        ]
+      },
+      layout: 'lightHorizontalLines'
+    });
+    researchBlocks.push({
+      text: 'Chance is checked by the DM at the end of the minimum period, then weekly. ' +
+            'Half of each weekly cost becomes books, so the library value grows as work continues.',
+      fontSize: 6, italics: true, margin: [0, 3, 0, 0]
+    });
+  }
+
   const showOrganizations = !!opts.details && orgList.length > 0;
   const organizationBlocks = [];
 
@@ -4081,6 +4138,14 @@ function _buildCharacterPDF(root, opts, titleFont, logoData, bodyFont) {
       // === CHARACTER DETAILS (optional) ===
       ...optional(showDetails,
         printSection('CHARACTER DETAILS', ...detailBlocks)
+      ),
+
+      // === SPELL RESEARCH (optional) ===
+      // Above Organizations because it is live work in progress rather than
+      // standing affiliation, and a player checking a sheet between sessions
+      // wants the project before the guild.
+      ...optional(showResearch,
+        printSection('SPELL RESEARCH', ...researchBlocks)
       ),
 
       // === ORGANIZATIONS (optional) ===
