@@ -4326,9 +4326,18 @@ function getWeaponRestrictionProblems(root) {
   const rule  = getWeaponAllowedList(clazz);
   if (!rule) return out;                      // warriors and bards: anything
 
-  const tmpl = (typeof getSpecialtyPriestOverride === 'function')
+  // "DM-Created" IS THE DEFAULT, NOT A TEMPLATE. sp_template_source ships
+  // hardcoded to that value in the markup and is re-defaulted to it on load, so
+  // testing "is it non-empty" is always true and every vanilla cleric got the
+  // deferral instead of his blunt-weapon rule.
+  //
+  // The (Modified) suffix is stripped first, the same way renderSpecialtyPriest
+  // reads this field: a template that has since been edited is still a template.
+  const tmplRaw = (typeof getSpecialtyPriestOverride === 'function')
     ? getSpecialtyPriestOverride(root, 'sp_template_source') : '';
-  if (tmpl) {
+  const tmpl = String(tmplRaw || '').replace(/\s*\(Modified\)\s*$/, '').trim();
+  const hasTemplate = !!tmpl && tmpl.toLowerCase() !== 'dm-created';
+  if (hasTemplate) {
     const txt = (typeof getSpecialtyPriestOverride === 'function')
       ? getSpecialtyPriestOverride(root, 'sp_restrict_weapons') : '';
     out.push('Specialty priest detected (' + tmpl + '). The cleric\u2019s blunt-weapon rule does ' +
